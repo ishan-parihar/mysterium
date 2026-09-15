@@ -18,6 +18,12 @@
   import { ALL_LINES } from '$core/domain/Line.js';
   import { describeStage } from '$core/presentation/veilDescriptors.js';
   import holonsJson from '$core/data/red-layer-holons.json';
+  // BUGFIX (Full-Development Audit 2026-09-15): the page previously read
+  // `(holonsJson as any).holons ?? []` on a JSON *array* — `.holons` is
+  // undefined on arrays, so the diagnostic holons panel always rendered 0.
+  // Also now includes the full stage-holon set (all 8 stages), matching the
+  // CLI's loadHolons().
+  import stageHolonsJson from '$core/data/stage-holons.json';
 
   type Status = 'idle' | 'loading' | 'ready' | 'error';
   let status: Status = $state('idle');
@@ -36,7 +42,7 @@
       const reg = bootModuleRegistry();
       moduleCount = reg.count();
 
-      const holons = (holonsJson as any).holons ?? [];
+      const holons = [...(holonsJson as any[]), ...(stageHolonsJson as any[])];
       holonBreakdown = {
         total: holons.length,
         npc: holons.filter((h: any) => h.kind === 'NPC').length,

@@ -6,6 +6,13 @@ import type { Significator } from './domain/Significator.js';
 import type { ScheduledEncounter } from './domain/EncounterSpecNew.js';
 import { scheduleNextWithHolonicReturn, scheduleThresholdMode, type WorldState, type SessionContext } from './engines/EncounterScheduler.js';
 import { processOutcome, applyConsequences, type PlayerResponse } from './engines/ConsequenceEngine.js';
+// P0-FIX (Full-Development Audit 2026-09-15): static imports replace the three
+// require() calls that crashed endSession in every ESM runtime (tsx/vitest/dev)
+// with "require is not defined". The production tsup bundle masked this by
+// bundling the call sites; every non-bundled runtime hit a dead macro-event
+// lifecycle and a silently no-op harvest check.
+import { advanceMacroEvent, resolveMacroEvent, type MacroEventState } from './engines/MacroCatalystEngine.js';
+import { checkHarvest } from './engines/PolarityEngine.js';
 import { InfraConfig } from './config/InfraConfig.js';
 import { detectThreshold, advanceTransformation, commitTransformation, recordKnotResolution, reconstructTransformationState, detectPerLineTransformation, type TransformationSignal, type TransformationState, type PerLineTransformationSignal } from './engines/TransformationDetector.js';
 import { detectBleedThrough } from './engines/ThetaDecay.js';
@@ -274,7 +281,7 @@ export function startSession(sig: Significator, session: SessionContext): Sessio
   // by 5% so the first encounter back isn't too aggressive. Pure
   // heuristic — measured by sig's `lastSessionAt` (added as a Sig
   // extension) or, falling back, the highest theta.lastEncounter ts.
-  let lastSessionTs = (migratedSig as any).lastSessionAt as number | undefined;
+  let lastSessionTs = migratedSig.lastSessionAt;
   // FIX-B6 (Audit): fallback to highest theta timestamp when lastSessionAt is missing.
   // The audit doc says to use theta as fallback but the code never did — so
   // recalibration never triggered for saves that predate lastSessionAt.
@@ -298,19 +305,19 @@ export function startSession(sig: Significator, session: SessionContext): Sessio
   let strategy = generateSessionStrategy(cci, session, null, migratedSig.knowledge);
 
   // WIRE-BRIDGE: If the previous session's curriculum probe flagged shouldIntervene,
-  // force the consolidation theme for this session. The flag was persisted to sig
-  // by endSession() when the probe detected critical progression issues or rubric
-  // calibration errors. Clear it after consuming so the next session starts fresh.
-  const interventionReason = (migratedSig as any)._curriculumIntervention;
+  // force the consolidation theme for this session. The flag is persisted to sig
+  // as `curriculumIntervention` by endSession() and OVERWRITTEN at each session
+  // end (set on intervene, cleared otherwise), so it is a one-shot signal by
+  // construction. (P5-FIX: typed Significator field that survives save/load —
+  // previously an `as any` field stripped by the validator AND sticky forever,
+  // because the old consume-in-local-copy never reached the persisted state.)
+  const interventionReason = migratedSig.curriculumIntervention;
   if (interventionReason) {
     strategy = {
       ...strategy,
       theme: 'consolidation',
       themeRationale: `Curriculum intervention: ${interventionReason}`,
     };
-    // Clear the flag so the next session doesn't re-trigger intervention.
-    migratedSig = { ...migratedSig } as any;
-    delete (migratedSig as any)._curriculumIntervention;
   }
   // P1-B8 (Architecture Audit Phase B): per-line transformation readiness.
   // Supplements the single global currentStage with cluster-based signals so the
@@ -710,9 +717,16 @@ function estimateResponseQuality(response: PlayerResponse): number {
   // Shadow resolution indicates integration
   if (response.shadowResolvedId !== null) quality += 0.1;
 
-  // Longer narrative suggests deeper engagement
-  if (response.narrativeSummary.length > 100) quality += 0.1;
-  else if (response.narrativeSummary.length > 50) quality += 0.05;
+  // P5-FIX (Full-Development Audit 2026-09-15): engagement depth is scored by
+  // WORD count with a saturating ceiling, not raw character length. The old
+  // `length > 100` heuristic rewarded verbose-but-empty answers over
+  // terse-but-considered ones. Bonus tiers: ≥40 words = full 0.10, ≥15 = 0.07,
+  // ≥6 = 0.03, below that no bonus. The maximum possible bonus is unchanged
+  // (0.10) so downstream quality thresholds (>0.5, >0.7) keep their semantics.
+  const words = response.narrativeSummary.trim().split(/\s+/).filter(Boolean).length;
+  if (words >= 40) quality += 0.1;
+  else if (words >= 15) quality += 0.07;
+  else if (words >= 6) quality += 0.03;
 
   return Math.min(1.0, quality);
 }
@@ -950,14 +964,18 @@ export function endSession(
   let macroEventsAdvanced = 0;
   let updatedWorld = world;
   if (world && world.activeMacroEvents.length > 0) {
-    const { advanceMacroEvent, resolveMacroEvent } = require('./engines/MacroCatalystEngine.js');
+    // P0-FIX: advanceMacroEvent/resolveMacroEvent are now statically imported.
     const existingStates = world.macroEventStates ?? [];
-    const newStates: { eventId: string; state: any }[] = [];
+    const newStates: { eventId: string; state: MacroEventState }[] = [];
     const resolvedEvents: string[] = [];
 
     for (const event of world.activeMacroEvents) {
       const existing = existingStates.find(s => s.eventId === event.id);
-      const currentState = existing?.state ?? { phase: 'onset', sessionsInPhase: 0, playerChoices: [], encountersSinceStart: 0 };
+      // SHAPE-FIX: the fallback state must carry the event itself (mirrors the
+      // endSessionAsync path). The previous object literal omitted `event`, so
+      // a first-session event resolved via resolveMacroEvent would spread an
+      // undefined event and reset tension under an `undefined` key.
+      const currentState: MacroEventState = existing?.state ?? { event, phase: 'onset', sessionsInPhase: 0, playerChoices: [], encountersSinceStart: 0 };
       const advanced = advanceMacroEvent(currentState);
       newStates.push({ eventId: event.id, state: advanced });
       macroEventsAdvanced++;
@@ -1006,30 +1024,25 @@ export function endSession(
   // STO 51% / STS 95% thresholds per foundations/19 §5.
   let harvestResult: { harvestable: boolean; direction: 'STO' | 'STS' | null; reason: string } | null = null;
   if (updatedSig.currentStage === 'White') {
-    try {
-      // Use static import to avoid async in sync function
-      const { checkHarvest } = require('./engines/PolarityEngine.js');
-      // WIRE-5: Fix checkHarvest inputs — use crystallization (direction commitment)
-      // not coherence (consistency). Per foundations/19 §5, the harvest requires
-      // mean(direction_strength) ≥ 0.51 (STO) / 0.95 (STS). Direction strength =
-      // how committed the polarity is, measured by crystallization progress.
-      // Previously passed coherence (consistency) which is a different metric.
-      const directionStrengths = Object.keys(updatedSig.polarity.lineProfiles ?? {}).length > 0
-        ? Object.keys(updatedSig.polarity.lineProfiles ?? {}).map(line => {
-            // WIRE-5: Use crystallization from polarity cells as direction strength
-            // (not coherence). Crystallization measures commitment; coherence
-            // measures consistency. The spec requires commitment.
-            const cellKey = `${line}:${updatedSig.currentStage}`;
-            const cell = updatedSig.polarity.cells[cellKey];
-            return cell?.crystallization ?? 0;
-          })
-        : [updatedSig.polarity.master.crystallizationProgress ?? 0];
-      const violetRay = updatedSig.rayProfile.Violet ?? 0;
-      const altitudeFloor = Math.min(...Object.values(updatedSig.altitudes).map(s => stageOrdinal(s)));
-      harvestResult = checkHarvest(updatedSig.polarity.master, directionStrengths, altitudeFloor, violetRay);
-    } catch {
-      // checkHarvest unavailable — skip
-    }
+    // P0-FIX: checkHarvest is now statically imported — the previous
+    // require()-inside-try silently swallowed "require is not defined" and the
+    // harvest check ALWAYS returned null at White stage. No try/catch is needed
+    // for the import; validateSignificator guarantees the polarity/altitude
+    // shapes consumed below.
+    // WIRE-5: Use crystallization (direction commitment) not coherence
+    // (consistency). Per foundations/19 §5, the harvest requires
+    // mean(direction_strength) ≥ 0.51 (STO) / 0.95 (STS). Direction strength =
+    // how committed the polarity is, measured by crystallization progress.
+    const directionStrengths = Object.keys(updatedSig.polarity.lineProfiles ?? {}).length > 0
+      ? Object.keys(updatedSig.polarity.lineProfiles ?? {}).map(line => {
+          const cellKey = `${line}:${updatedSig.currentStage}`;
+          const cell = updatedSig.polarity.cells[cellKey];
+          return cell?.crystallization ?? 0;
+        })
+      : [updatedSig.polarity.master.crystallizationProgress ?? 0];
+    const violetRay = updatedSig.rayProfile.Violet ?? 0;
+    const altitudeFloor = Math.min(...Object.values(updatedSig.altitudes).map(s => stageOrdinal(s)));
+    harvestResult = checkHarvest(updatedSig.polarity.master, directionStrengths, altitudeFloor, violetRay);
   }
 
   // Phase 4C: Update learning profile with analytics data so the scheduler
@@ -1076,14 +1089,22 @@ export function endSession(
   // errors, flag the significator so the next session's strategy generation
   // forces consolidation theme. This is the session-end counterpart to the
   // safety override in tickWithStrategy.
-  if (curriculumProbe?.shouldIntervene) {
-    finalSig = {
-      ...finalSig,
-      // Persist intervention flag so next session's startSession can read it
-      // and force consolidation theme via generateSessionStrategy.
-      _curriculumIntervention: curriculumProbe.interventionReason ?? 'health below threshold',
-    } as any;
-  }
+  //
+  // P5-FIX (audit): lifecycle moved here. The old startSession consumed the
+  // flag only in a local copy it never returned, so an intervention once set
+  // stuck FOREVER — every subsequent session was forced to consolidation.
+  // Now: endSession OVERWRITES the flag each session end (set when the probe
+  // says intervene, explicitly cleared when it doesn't), and startSession only
+  // READS it (a one-shot signal by construction).
+  finalSig = {
+    ...finalSig,
+    curriculumIntervention: curriculumProbe?.shouldIntervene
+      ? (curriculumProbe.interventionReason ?? 'health below threshold')
+      : undefined,
+    // P5-FIX: stamp the session-end time so the >30-day re-calibration in
+    // startSession works on the primary signal, not just the theta fallback.
+    lastSessionAt: now,
+  };
 
   // Hook 4: onSessionEnd — fire fire-and-forget for the sync path.
   // Callers that need to await the hook (e.g. CLI --agent before stopTDGBridge)
@@ -1130,7 +1151,7 @@ export async function endSessionAsync(
   let macroEventsAdvanced = 0;
   let updatedWorld = world;
   if (world && world.activeMacroEvents.length > 0) {
-    const { advanceMacroEvent, resolveMacroEvent } = require('./engines/MacroCatalystEngine.js');
+    // P0-FIX: statically imported (was require() — dead in ESM).
     const existingStates = world.macroEventStates ?? [];
     const newStates: { eventId: string; state: import('./engines/MacroCatalystEngine.js').MacroEventState }[] = [];
     const resolvedEvents: string[] = [];
@@ -1177,7 +1198,10 @@ export async function endSessionAsync(
 
   // Phase 5A parity: Apply retention decay + persist forgetting curves
   // via shared helper (same logic as sync endSession path).
-  const finalSig = persistKnowledgeDecay(updatedSig, now);
+  const decayedSig = persistKnowledgeDecay(updatedSig, now);
+  // P5-FIX: stamp session-end time (parity with sync endSession) so the
+  // >30-day re-calibration in startSession has a reliable primary signal.
+  const finalSig: Significator = { ...decayedSig, lastSessionAt: now };
 
   return {
     sig: finalSig,

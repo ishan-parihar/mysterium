@@ -135,6 +135,24 @@ export interface Significator {
    * Empty by default — backward-compatible with existing saves.
    */
   readonly knowledge?: KnowledgeState;
+  /**
+   * P5-FIX (Full-Development Audit 2026-09-15): timestamp of the last session
+   * end (ms epoch). Previously read via an `as any` cast but NEVER written, so
+   * the >30-day re-calibration heuristic only ever fired through its theta
+   * fallback. Written by endSession/endSessionAsync; preserved by
+   * validateSignificator. Absent on fresh saves — the reader falls back to
+   * theta timestamps (P1-B6 behavior).
+   */
+  readonly lastSessionAt?: number;
+  /**
+   * P5-FIX: persisted intervention flag from the session-end metacognitive
+   * curriculum probe. When probeCurriculum reports shouldIntervene, the reason
+   * is stored here so the NEXT startSession can force the consolidation theme
+   * and clear the flag. Previously an `as any` field that validateSignificator
+   * stripped on every load — the intervention bridge silently never survived a
+   * save/load round-trip.
+   */
+  readonly curriculumIntervention?: string;
 }
 
 function zeroRecord<K extends string>(keys: readonly K[]): Record<K, number> {

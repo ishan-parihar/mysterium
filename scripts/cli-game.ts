@@ -311,6 +311,10 @@ import { buildCLITelemetry, recordCLITelemetry, flushCLITelemetry } from '../src
 import { describeStage, describePersonalResonance } from '../src/core/presentation/veilDescriptors.js';
 
 import holonsJson from '../src/core/data/red-layer-holons.json';
+// P3-FIX (Full-Development Audit 2026-09-15): all 8 stages now have authored
+// holons (8 per stage, one per line). Previously only Red had world content,
+// so higher-stage scheduling relied entirely on module items + LLM generation.
+import stageHolonsJson from '../src/core/data/stage-holons.json';
 import { GLOSSARY_TERMS, PLAYER_GLOSSARY_TERMS, ADVANCED_GLOSSARY_TERMS, TIER2_GLOSSARY_TERMS, checkTermUnlocks } from '../src/core/data/glossary.js';
 import type { ConsequenceRecord } from '../src/core/domain/ConsequenceRecord.js';
 import type { Modality } from '../src/core/domain/enums.js';
@@ -340,7 +344,10 @@ import {
 } from '../src/infra/profiles/ProfileManager.js';
 import { computeConfidence } from '../src/core/assessments/engine.js';
 import type { TrialResult } from '../src/core/assessments/types.js';
-import { renderLayers, renderLayersCompact } from '../src/cli/LayerRenderer.js';
+// BUILD-FIX (Full-Development Audit 2026-09-15): removed the dead import of
+// '../src/cli/LayerRenderer.js' — the file was purged in 42078ad but the import
+// survived, breaking `npm run build:cli` (esbuild) while tsx runtime resolution
+// masked it. renderLayers/renderLayersCompact had no remaining call sites.
 import { detectBleedThrough } from '../src/core/engines/ThetaDecay.js';
 import { toSnapshot } from '../src/core/domain/SignificatorSnapshot.js';
 import { computeCCI } from '../src/core/engines/CCIEngine.js';
@@ -1017,13 +1024,37 @@ async function checkLLMAvailability(url: string, key: string): Promise<boolean> 
 }
 
 // ── Holon loading ─────────────────────────────────────────────────────
+/**
+ * P3-FIX (Full-Development Audit 2026-09-15): merge migration for existing
+ * saves. loadWorldState() returns whatever holons were persisted at first run
+ * — for every pre-existing player that is the Red-only corpus (36 holons).
+ * Without this merge, saved worlds NEVER receive new authored stage content:
+ * the 92-holon world would exist only for fresh installs. Idempotent by ID,
+ * so re-running with an already-merged save is a no-op.
+ */
+function mergeAuthoredHolons(savedHolons: readonly any[]): any[] {
+  const authored = [...(holonsJson as any[]), ...(stageHolonsJson as any[])];
+  const byId = new Map<string, any>();
+  for (const h of savedHolons) byId.set(h.id, h);
+  for (const h of authored) if (!byId.has(h.id)) byId.set(h.id, h);
+  return [...byId.values()];
+}
+
 function loadHolons(): WorldState {
   // Try to load saved world state first (skip if --new-game)
   if (!NEW_GAME) {
     const savedWorld = loadWorldState();
-    if (savedWorld && savedWorld.holons?.length) return savedWorld;
+    if (savedWorld && savedWorld.holons?.length) {
+      const merged = { ...savedWorld, holons: mergeAuthoredHolons(savedWorld.holons) };
+      if (merged.holons.length !== savedWorld.holons.length) {
+        // New authored content arrived — persist the merged world so the
+        // merge runs once, not on every startup.
+        saveWorldState(merged);
+      }
+      return merged;
+    }
   }
-  const holons = holonsJson as any[];
+  const holons = [...(holonsJson as any[]), ...(stageHolonsJson as any[])];
   return createInitialWorldState(holons);
 }
 

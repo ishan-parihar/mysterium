@@ -188,6 +188,23 @@ export function validateSignificator(input: unknown): Significator | null {
     for (const [key, val] of Object.entries(subjectProgressRaw)) {
       subjectProgress.set(key, val);
     }
+    // FIX (Full-Development Audit 2026-09-15): reconstruct forgettingCurves Map.
+    // The validator previously dropped this field on load, so forgetting-curve
+    // persistence (Phase 5A, persistKnowledgeDecay in GameLoop) never survived
+    // a save/load round-trip and review candidates lost their history.
+    const forgettingCurvesRaw = asRecord(kRaw.forgettingCurves);
+    const forgettingCurves = new Map<string, any>();
+    for (const [key, val] of Object.entries(forgettingCurvesRaw)) {
+      const fc = asRecord(val);
+      forgettingCurves.set(key, {
+        conceptId: isString(fc.conceptId) ? fc.conceptId : key,
+        firstLearnedAt: isNumber(fc.firstLearnedAt) ? fc.firstLearnedAt : 0,
+        lastRetrievedAt: isNumber(fc.lastRetrievedAt) ? fc.lastRetrievedAt : 0,
+        retention: isNumber(fc.retention) ? fc.retention : 1,
+        retrievalCount: isNumber(fc.retrievalCount) ? fc.retrievalCount : 0,
+        halfLifeMs: isNumber(fc.halfLifeMs) ? fc.halfLifeMs : 0,
+      });
+    }
     knowledge = {
       conceptStates: conceptStates as ReadonlyMap<string, ConceptState>,
       subjectProgress: subjectProgress as ReadonlyMap<string, any>,
@@ -195,6 +212,7 @@ export function validateSignificator(input: unknown): Significator | null {
       learningProfile: (kRaw.learningProfile && typeof kRaw.learningProfile === 'object')
         ? kRaw.learningProfile as KnowledgeState['learningProfile']
         : { preferredModalities: [], metacognitionScore: 0.5, calibrationAccuracy: 0.5, transferCapacity: 0.5, studyEfficiency: 0.5 },
+      forgettingCurves: forgettingCurves as ReadonlyMap<string, any>,
     };
   }
 
@@ -224,6 +242,10 @@ export function validateSignificator(input: unknown): Significator | null {
     avoidedEncounters,
     recentEncounters,
     knowledge,
+    // P5-FIX (Full-Development Audit 2026-09-15): preserve the typed session
+    // bookkeeping fields that were previously `as any` casts stripped on load.
+    lastSessionAt: isNumber(obj.lastSessionAt) ? obj.lastSessionAt : undefined,
+    curriculumIntervention: isString(obj.curriculumIntervention) ? obj.curriculumIntervention : undefined,
   };
 
   return result;

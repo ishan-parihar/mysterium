@@ -1,0 +1,530 @@
+[
+  {
+    "id": "integral.foundations",
+    "name": "Integral Foundations",
+    "description": "The map of human development this game is built on: stages of consciousness, lines of intelligence, holons, quadrants, and states — the framework through which the world of Mysterium breathes.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": ["integral.stages", "integral.lines", "integral.holons", "integral.quadrants", "integral.states", "integral.shadow", "integral.transformation"],
+    "phases": {
+      "observation": { "question": "Where do you notice different 'parts' of yourself operating at different levels of maturity?", "assessmentType": "factual_recall", "completionEvidence": "Student can name at least two areas where their development is uneven" },
+      "principle": { "question": "What is the difference between growing up (stages) and waking up (states)?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain the stage/state distinction in their own words" },
+      "application": { "question": "How does the stage/line map explain a real disagreement you have had with someone?", "assessmentType": "application_problem", "completionEvidence": "Student can analyze one conflict through the stages-and-lines lens" },
+      "integration": { "question": "How do stages, lines, quadrants, and states combine into one map of a person?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can sketch how the five elements relate" },
+      "creation": { "question": "Where would you add to or amend this map from your own experience?", "assessmentType": "project_based", "completionEvidence": "Student proposes one extension or correction to the framework" }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Cognitive", "Intrapersonal"], "stageRange": { "min": "Amber", "max": "White" } },
+    "depthMeta": { "requiredPrerequisiteDepth": "absent", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
+    "forgettingParams": { "initialHalfLifeMs": 86400000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
+    "content": {
+      "explanation": "Integral theory maps human development along several independent dimensions. Stages are hierarchical levels of complexity a person's meaning-making can occupy — like rungs that are climbed in order and are not skipped. Lines are relatively independent capacities — cognitive, emotional, moral, and so on — each of which develops through the stages at its own pace, which is why someone can be highly developed in one line and ordinary in another. Quadrants locate any phenomenon in one of four irreducible perspectives: individual-interior, individual-exterior, collective-interior, collective-exterior. States are temporary conditions of consciousness — waking, dreaming, deep sleep, and the meditative states — that can be visited at any stage but are interpreted through the stage you are at. A holon is anything that is simultaneously a whole and a part of a larger whole; atoms are parts of molecules, molecules of cells, cells of organisms — and selves are parts of families, cultures, and the biosphere.",
+      "examples": [
+        "A brilliant scientist (high cognitive line) who cannot keep a friendship (lower interpersonal line) — lines develop independently",
+        "The same mystical experience reported by a teenager in magical terms and by a contemplative in systemic terms — states are interpreted through stages",
+        "A family is a whole made of persons and itself a part of a culture — holonic nesting"
+      ],
+      "nonExamples": [
+        "A personality type system (types are horizontal styles, not vertical stages)",
+        "An IQ score (one line measured at one moment, not a developmental trajectory)",
+        "A skill ladder within one craft (local expertise, not a general meaning-making stage)"
+      ],
+      "analogies": [
+        "Lines are like the strings of an instrument — each can be tuned independently, but music requires several at once",
+        "Stages are like the water an fish cannot see — the medium in which meaning-making happens, noticed only when it shifts"
+      ],
+      "visuals": [
+        "A grid with 8 vertical stage columns and 8 horizontal line rows, cells shaded by developmental altitude",
+        "The four quadrants as a 2x2: interior-exterior crossed with individual-collective"
+      ],
+      "practiceProblems": [
+        { "id": "intf.p1", "problemText": "Name one line where you are unusually developed and one that lags. What does the independence of lines predict about how they developed?", "targetDepth": "comprehended" },
+        { "id": "intf.p2", "problemText": "Give an example of a holon from biology and one from social life, and say what each is a whole-of and a part-of.", "targetDepth": "comprehended" }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "intf.mc1",
+        "statement": "Higher stage means better person",
+        "whyItFeelsRight": "The word 'higher' implies superiority, and stage models are often marketed as ladders of worth",
+        "structuralReason": "Stages describe increasing complexity of meaning-making, not virtue or worth. A person at a later stage can act destructively; a person at an earlier stage can act with complete integrity within their structure. In this game the stage index is never shown to the player precisely because it carries no moral valence.",
+        "diagnosticTaskId": "intf.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "integral.foundations",
+      "levels": {
+        "memorized": { "evidence": "Can name the five elements: stages, lines, quadrants, states, holons", "canDo": ["List the elements of the map"], "cannotDo": ["Explain how they interact"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
+        "comprehended": { "evidence": "Can explain stage-vs-line and stage-vs-state distinctions", "canDo": ["Explain vertical vs horizontal development"], "cannotDo": ["Apply the map to real conflicts"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
+        "applied": { "evidence": "Can analyze a real person or conflict with the map", "canDo": ["Profile uneven development in a real case"], "cannotDo": ["Compare the map with rival frameworks"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
+        "analyzed": { "evidence": "Can decompose a complex situation into all five elements", "canDo": ["Multi-axis analysis of a case"], "cannotDo": ["Evaluate the framework's limits"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
+        "evaluated": { "evidence": "Can judge when the map clarifies and when it distorts", "canDo": ["Assess framework fit for a problem"], "cannotDo": ["Extend the framework originally"], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
+        "transformed": { "evidence": "The map is used fluidly and self-applied without prompting", "canDo": ["Teach the map", "Extend or correct it from experience"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "ImmersiveRPG"]
+  },
+  {
+    "id": "integral.stages",
+    "name": "Stages of Consciousness",
+    "description": "The eight stage-structures of meaning-making — from sensorimotor survival to non-dual openness — and why each stage must be made healthy before it is transcended.",
+    "level": "subject",
+    "parentId": "integral.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": { "question": "Have you ever watched yourself outgrow a way of seeing that once felt like the whole truth?", "assessmentType": "factual_recall", "completionEvidence": "Student can describe one worldview they have outgrown" },
+      "principle": { "question": "Why can stages be skipped in appearance but not in structure?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain why each stage handles the previous one's problems" },
+      "application": { "question": "Which stage's fears do you recognize in your own reactions under stress?", "assessmentType": "application_problem", "completionEvidence": "Student identifies their own stage-typical stress pattern" },
+      "integration": { "question": "How do earlier stages remain alive in you as sub-personalities?", "assessmentType": "analogy_mapping", "completionEvidence": "Student maps a current behavior to an earlier stage's logic" },
+      "creation": { "question": "Describe a stage transition you lived through, from the inside.", "assessmentType": "project_based", "completionEvidence": "Student narrates one transition with before/after world-views" }
+    },
+    "isomorphisms": [],
+    "prerequisites": ["integral.foundations"],
+    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Cognitive"], "stageRange": { "min": "Amber", "max": "White" } },
+    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "transformed" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated", "transformed"] },
+    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
+    "content": {
+      "explanation": "A stage of consciousness is a coherent structure of meaning-making: the implicit answers a person lives by to the questions 'who am I, what is real, and what matters'. Each stage transcends and includes the previous one — it can handle problems the previous stage could not, while preserving what worked. The eight stages tracked here run from sensorimotor survival (Infrared), through magic and mythic belonging and power and reason and pluralism, to integral vision-logic (Turquoise) and non-dual openness (White). Two principles govern the whole arc. First, stages cannot be skipped: a later structure is built out of a stabilized earlier one, and apparent skips show up later as gaps. Second, the holon is never outgrown: an unhealthy earlier stage does not disappear — it goes underground and leaks into the present as reactivity, which is why this game keeps earlier-stage holons alive as shadow-mode encounters rather than declaring them complete.",
+      "examples": [
+        "Amber takes the child's magical world and gives it rules and roles — mythic order",
+        "Orange takes Amber's loyalty to the group and generalizes it to universal individual rights",
+        "Under stress an adult can regress to Red's might-makes-right for a moment, then re-stabilize"
+      ],
+      "nonExamples": [
+        "Mood swings (states, not stages — they pass in minutes, not years)",
+        "Learning a new skill (line development within a stage, not a new structure)",
+        "Adopting a later stage's vocabulary (content borrowed without structure — 'spy vs spy')"
+      ],
+      "analogies": [
+        "Stages are like the grammar a language develops through — each grammar makes new sentences possible",
+        "Like a building: each floor is built on the one below; you cannot furnish the sixth floor while the third is still on fire"
+      ],
+      "visuals": [
+        "A spiral staircase where each landing is a stage and the view from each includes the previous landings",
+        "A color-gradient tower from deep infrared to luminous white"
+      ],
+      "practiceProblems": [
+        { "id": "ints.p1", "problemText": "Pick two adjacent stages and name one problem the later stage can solve that the earlier cannot.", "targetDepth": "comprehended" },
+        { "id": "ints.p2", "problemText": "Describe a situation where you borrowed a later-stage vocabulary without the structure, and what happened when it was tested.", "targetDepth": "analyzed" }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "ints.mc1",
+        "statement": "You can skip stages by insight or effort",
+        "whyItFeelsRight": "Peak states and genuine insights can feel like total restructuring, and spiritual marketing promises instant transformation",
+        "structuralReason": "States can be visited in an afternoon; stages take years of lived consolidation because each stage reorganizes how the whole self makes meaning. A state experience is interpreted through your current stage — which is why the same 'awakening' produces a prophet at one stage and a cult leader at another.",
+        "diagnosticTaskId": "ints.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "integral.stages",
+      "levels": {
+        "memorized": { "evidence": "Can name and order the eight stages", "canDo": ["Recite the stage sequence with colors"], "cannotDo": ["Explain the logic of the sequence"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
+        "comprehended": { "evidence": "Can explain transcend-and-include", "canDo": ["Say what each stage adds and keeps"], "cannotDo": ["Spot stage-signatures in real behavior"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
+        "applied": { "evidence": "Can identify stage-signatures in real speech and choice", "canDo": ["Profile a conversation or decision by stage"], "cannotDo": ["Analyze regressions and shadow-returns"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
+        "analyzed": { "evidence": "Can trace how an earlier stage survives inside the present one", "canDo": ["Map a current reaction to its stage of origin"], "cannotDo": ["Evaluate competing stage models"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
+        "evaluated": { "evidence": "Can judge stage claims critically — spotting vocabulary-borrowing and pseudo-transcendence", "canDo": ["Detect faked or premature stage claims"], "cannotDo": ["Originate new stage research"], "appropriateTasks": ["peer_review", "debate_position"], "threshold": 0.9 },
+        "transformed": { "evidence": "Stage-awareness is reflexive and self-applied, held lightly", "canDo": ["Use the map on self in real time", "Teach the arc without jargon"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice"]
+  },
+  {
+    "id": "integral.lines",
+    "name": "Lines of Intelligence",
+    "description": "The eight relatively independent developmental lines — cognitive, emotional, moral, intrapersonal, spiritual, somatic, willpower, interpersonal — and why unevenness between them is the norm.",
+    "level": "subject",
+    "parentId": "integral.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": { "question": "Where in your life does one capacity clearly run ahead of another?", "assessmentType": "factual_recall", "completionEvidence": "Student names one personal strength-line and one lagging-line" },
+      "principle": { "question": "What makes a 'line' a line rather than a skill or a trait?", "assessmentType": "concept_explanation", "completionEvidence": "Student can state the criteria for calling something a developmental line" },
+      "application": { "question": "How would you deliberately train your most lagging line?", "assessmentType": "application_problem", "completionEvidence": "Student designs one concrete practice for a chosen line" },
+      "integration": { "question": "How do two lines interact — for example moral and cognitive?", "assessmentType": "analogy_mapping", "completionEvidence": "Student explains one cross-line dependency" },
+      "creation": { "question": "Propose a line not on the list and argue for it.", "assessmentType": "project_based", "completionEvidence": "Student proposes and defends one additional line" }
+    },
+    "isomorphisms": [],
+    "prerequisites": ["integral.foundations"],
+    "devMapping": { "primaryLine": "Intrapersonal", "secondaryLines": ["Cognitive"], "stageRange": { "min": "Amber", "max": "Green" } },
+    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "evaluated" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"] },
+    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
+    "content": {
+      "explanation": "A developmental line is a semi-independent capacity that unfolds through the stages at its own pace. The eight lines tracked here are cognitive (how you think), emotional (how you feel and read feeling), moral (how you choose), intrapersonal (how you know yourself), spiritual (what you take as ultimate), somatic (what your body knows), willpower (what holds you upright), and interpersonal (how you connect). The key finding is unevenness: a person's lines rarely develop in lockstep, and the altitude of one line tells you little about another. This explains the perennials — the brilliant tyrant, the saint who cannot balance a checkbook, the therapist who cannot hold a boundary. It also grounds this game's whole design: rather than one global score, the engine tracks eight altitudes, and every encounter targets a specific line at a specific stage.",
+      "examples": [
+        "A surgeon with exceptional cognitive line whose interpersonal line lags — colleagues experience them as brilliant and impossible",
+        "A meditation teacher with high spiritual and intrapersonal lines whose financial-cognitive line is undeveloped",
+        "An athlete with elite somatic line discovering emotional vocabulary late in life"
+      ],
+      "nonExamples": [
+        "IQ (a trait measure within one line, not a line itself)",
+        "The Big Five (horizontal personality styles, not vertical stage development)",
+        "A talent like perfect pitch (a capacity, but not one that climbs the eight stages)"
+      ],
+      "analogies": [
+        "Lines are eight rivers running through the same landscape — each flows at its own rate, fed by different rains",
+        "A stereo equalizer with eight sliders: the mix is almost never flat, and the mix is the person"
+      ],
+      "visuals": [
+        "An 8-axis radar chart showing a realistically jagged profile",
+        "Eight staircases side by side, each climbed to a different height"
+      ],
+      "practiceProblems": [
+        { "id": "intl.p1", "problemText": "Take a public figure you admire. Name their strongest and weakest visible lines, with evidence.", "targetDepth": "applied" },
+        { "id": "intl.p2", "problemText": "Explain why 'smart but cruel' is a statement about two different lines, not a contradiction.", "targetDepth": "comprehended" }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "intl.mc1",
+        "statement": "If someone is advanced in one line, they are advanced overall",
+        "whyItFeelsRight": "We halo: one visible excellence makes us assume general excellence, and credentialing systems reinforce it",
+        "structuralReason": "Lines develop independently because they are supported by different practices, relationships, and demands. Authority in one line does not transfer — which is why the game assesses each line separately and never collapses them into a single number shown to the player.",
+        "diagnosticTaskId": "intl.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "integral.lines",
+      "levels": {
+        "memorized": { "evidence": "Can list the eight lines", "canDo": ["Name all eight lines with one-phrase glosses"], "cannotDo": ["Distinguish lines from traits"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
+        "comprehended": { "evidence": "Can explain line independence and the jagged-profile norm", "canDo": ["Explain why unevenness is expected"], "cannotDo": ["Profile a real person by lines"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
+        "applied": { "evidence": "Can profile a real person with evidence", "canDo": ["Assign line-altitudes to a case with citations"], "cannotDo": ["Analyze line interactions"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
+        "analyzed": { "evidence": "Can trace how two lines interact or compensate", "canDo": ["Analyze a cross-line dynamic"], "cannotDo": ["Evaluate the line taxonomy itself"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
+        "evaluated": { "evidence": "Can judge what belongs in the taxonomy and what does not", "canDo": ["Defend inclusion/exclusion of candidate lines"], "cannotDo": [], "appropriateTasks": ["debate_position", "peer_review"], "threshold": 0.9 },
+        "transformed": { "evidence": "Line-awareness is reflexive — reads people and self by lines in real time, holds the taxonomy lightly", "canDo": ["Profile any conversation by lines live", "Teach line-independence without jargon"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Deterministic"]
+  },
+  {
+    "id": "integral.holons",
+    "name": "Holons and Holarchy",
+    "description": "Everything is a whole that is also a part — atoms in molecules, selves in cultures — and healthy development keeps every level of the nest alive.",
+    "level": "topic",
+    "parentId": "integral.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": { "question": "Pick any object near you. What is it a whole of, and a part of?", "assessmentType": "factual_recall", "completionEvidence": "Student can run the whole/part analysis on one object" },
+      "principle": { "question": "Why does destroying a lower level destroy the higher but not vice versa?", "assessmentType": "concept_explanation", "completionEvidence": "Student explains asymmetric depth and foundational care" },
+      "application": { "question": "Identify a real system where a level is being neglected and the cost.", "assessmentType": "application_problem", "completionEvidence": "Student names one real holarchy neglect case" },
+      "integration": { "question": "How does the holonic nest explain why 'the personal is political'?", "assessmentType": "analogy_mapping", "completionEvidence": "Student links individual and collective holarchy levels" },
+      "creation": { "question": "Draw the holarchy of your own life from body to biosphere.", "assessmentType": "project_based", "completionEvidence": "Student produces a personal 7+ level holarchy sketch" }
+    },
+    "isomorphisms": [],
+    "prerequisites": ["integral.foundations"],
+    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Interpersonal"], "stageRange": { "min": "Orange", "max": "Turquoise" } },
+    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "evaluated" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"] },
+    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
+    "content": {
+      "explanation": "A holon is an entity that is simultaneously a whole and a part: a whole to its own constituents, a part of the larger wholes above it. Cells are wholes made of organelles and parts of tissues; persons are wholes made of a self and parts of families and cultures. Reality is not built from either wholes or parts but from whole/parts nested in a holarchy. Two consequences matter for this game. First, depth is asymmetric: a higher holon depends on all below it (injure the cell and the organ dies), but not conversely (the death of the organism does not immediately kill its cells' chemistry). That asymmetry is why the game keeps lower-stage capacities healthy forever — a neglected lower stage degrades the whole nest, which is the engine's theta-decay and holonic-return mechanic. Second, every holon has interior and exterior: a cell has behavior and also a regenerative 'interior' drive; a person has actions and also a self-understanding. This is the bridge from holons to the four quadrants.",
+      "examples": [
+        "Letter → word → sentence → paragraph: each level has its own rules that its parts do not",
+        "A person is a whole (a self) and a part (of a team); the team is a part of an organization",
+        "Organelle → cell → organ → organism: injury at the bottom propagates up"
+      ],
+      "nonExamples": [
+        "A heap of sand (aggregates without emergent interior rules are not holons)",
+        "A random collection of people in a queue (no shared interior, no emergent whole)",
+        "Pure hierarchy diagrams of command (holarchy is nestedness, not reporting lines)"
+      ],
+      "analogies": [
+        "Reality as a set of Russian dolls where each doll adds a new kind of interior",
+        "A coral reef: polyps make colonies, colonies make reef, the reef makes a sea"
+      ],
+      "visuals": [
+        "Nested circles from atom to biosphere with 'interior' and 'exterior' faces labeled",
+        "A tree diagram where every node is labeled whole-of / part-of"
+      ],
+      "practiceProblems": [
+        { "id": "inth.p1", "problemText": "For three nested systems in your life, name what emergent rule exists at the higher level that no part has.", "targetDepth": "comprehended" },
+        { "id": "inth.p2", "problemText": "Explain why ignoring sleep (a lower holon's need) eventually degrades every higher project you have.", "targetDepth": "applied" }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "inth.mc1",
+        "statement": "Higher levels matter more than lower levels",
+        "whyItFeelsRight": "Emergence sounds like an ascent story, and we flatter ourselves as the 'higher' term",
+        "structuralReason": "Depth of dependence runs the other way: higher holons are more elaborate but more fragile, resting entirely on lower ones. Care therefore flows down as much as ambition flows up — the game encodes this as the holon-is-never-outgrown rule and theta decay for neglected stages.",
+        "diagnosticTaskId": "inth.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "integral.holons",
+      "levels": {
+        "memorized": { "evidence": "Can define holon and give one example", "canDo": ["State the whole/part definition"], "cannotDo": ["Run the analysis on new cases"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
+        "comprehended": { "evidence": "Can distinguish holons from aggregates and explain emergence", "canDo": ["Classify cases as holon or heap"], "cannotDo": ["Analyze nest neglect"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
+        "applied": { "evidence": "Can map a real system's holarchy and spot the neglected level", "canDo": ["Produce a labeled holarchy of a real case"], "cannotDo": ["Connect to quadrant theory"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
+        "analyzed": { "evidence": "Can trace injury-propagation through a nest", "canDo": ["Trace bottom-up failure in a system"], "cannotDo": ["Evaluate holonic theory's claims"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
+        "evaluated": { "evidence": "Can judge when holonic framing clarifies vs over-nests", "canDo": ["Critique over- and under-nesting in a theory"], "cannotDo": [], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
+        "transformed": { "evidence": "Whole/part analysis is habitual — runs automatically on any system encountered", "canDo": ["Run whole-of/part-of on novel systems instantly", "Spot nest-neglect before it bites"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "integral.quadrants",
+    "name": "The Four Quadrants",
+    "description": "Every event has an interior and an exterior, individual and collective — intention, behavior, culture, and system — and each needs its own kind of truth.",
+    "level": "topic",
+    "parentId": "integral.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": { "question": "Pick an argument you saw today. What was felt inside, what was said aloud, what norms governed it, what system shaped it?", "assessmentType": "factual_recall", "completionEvidence": "Student can fill all four quadrant slots for one event" },
+      "principle": { "question": "Why can the quadrants not be reduced to each other?", "assessmentType": "concept_explanation", "completionEvidence": "Student explains irreducibility with one example" },
+      "application": { "question": "Analyze a workplace or family problem across all four quadrants.", "assessmentType": "application_problem", "completionEvidence": "Student produces a four-quadrant analysis of a real case" },
+      "integration": { "question": "How do quadrants and levels combine into an integral grid?", "assessmentType": "analogy_mapping", "completionEvidence": "Student sketches quadrant × stage combinations" },
+      "creation": { "question": "Design an intervention that addresses all four quadrants of one problem.", "assessmentType": "project_based", "completionEvidence": "Student proposes a four-pronged intervention" }
+    },
+    "isomorphisms": [],
+    "prerequisites": ["integral.foundations", "integral.holons"],
+    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Interpersonal", "Moral"], "stageRange": { "min": "Orange", "max": "Turquoise" } },
+    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "evaluated" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"] },
+    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
+    "content": {
+      "explanation": "Any occasion can be viewed from four irreducible perspectives: the individual interior (first-person intention, feeling, consciousness), the individual exterior (third-person behavior, brain, body), the collective interior (shared culture, meaning, values — the 'we'), and the collective exterior (systems, institutions, environments — the 'its'). Truth-talk differs by quadrant: sincerity and trustworthiness inside, objective correspondence for behavior, mutual understanding for culture, and functional fit for systems. Problems misdiagnosed in one quadrant are prescribed in the wrong one — a purely pharmacological answer to a meaning-crisis, or a purely attitudinal answer to a toxic system. Each quadrant also develops through stages, so the full map is quadrant-times-level: interiors deepen, behaviors complexify, cultures widen, systems integrate.",
+      "examples": [
+        "Depression read in all four quadrants: despair (interior), serotonin and sleep (behavioral), a culture of isolation (cultural), an exploitative job (systemic)",
+        "A team failure: misread intentions, misreported metrics, no safety culture, misaligned incentives",
+        "Education: curiosity (interior), practice behaviors, classroom ethos, curriculum structures"
+      ],
+      "nonExamples": [
+        "A four-element personality typology (the quadrants are perspectives on any event, not styles)",
+        "The classical four elements (categorical substances, not irreducible perspectives)",
+        "Body-mind-spirit-community as a lifestyle grid (no level dimension, no truth-criteria)"
+      ],
+      "analogies": [
+        "Four camera angles on the same play — each angle is partial, the game is the whole",
+        "Four currencies: each buys what the others cannot"
+      ],
+      "visuals": [
+        "The classic 2x2 quadrant diagram with UL/UR/LL/LR and one developmental arrow in each",
+        "One event photographed from four angles with captions naming each quadrant"
+      ],
+      "practiceProblems": [
+        { "id": "intq.p1", "problemText": "Take one personal problem and write one sentence for each quadrant, then say which quadrant you usually over-focus on.", "targetDepth": "applied" },
+        { "id": "intq.p2", "problemText": "Explain why 'it's all just brain chemistry' is a quadrant-reduction, and name what is lost.", "targetDepth": "analyzed" }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "intq.mc1",
+        "statement": "The interior quadrants are just softer language for exterior states",
+        "whyItFeelsRight": "Scientific materialism treats first-person data as derivative of third-person data — a widely taught default",
+        "structuralReason": "Interior data has its own evidence standards (sincerity, trustworthiness, depth of disclosure) that cannot be generated from behavioral measurement. Pain asked about is not the same datum as pain behavior; the map keeps both as real and irreducible, which is why this game scores felt-sense and performance in different channels.",
+        "diagnosticTaskId": "intq.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "integral.quadrants",
+      "levels": {
+        "memorized": { "evidence": "Can name the four quadrants and their pronouns", "canDo": ["Recall I/we/it/its"], "cannotDo": ["Apply to real cases"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
+        "comprehended": { "evidence": "Can explain irreducibility and each quadrant's truth-standard", "canDo": ["State what each quadrant excludes"], "cannotDo": ["Four-quadrant analysis of a case"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
+        "applied": { "evidence": "Can fill all four quadrants for a real situation", "canDo": ["Produce a complete quadrant analysis"], "cannotDo": ["Combine quadrants with levels"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
+        "analyzed": { "evidence": "Can trace how a quadrant-neglect produced a real failure", "canDo": ["Diagnose quadrant-reduction in an argument"], "cannotDo": ["Evaluate quadrant theory itself"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
+        "evaluated": { "evidence": "Can judge when quadrant-talk illuminates vs fragments", "canDo": ["Critique over-application of the grid"], "cannotDo": [], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
+        "transformed": { "evidence": "Quadrant-awareness is ambient — all four perspectives are held simultaneously without effort", "canDo": ["Hold four-perspective awareness live in conversation", "Teach the grid as lived practice"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice"]
+  },
+  {
+    "id": "integral.states",
+    "name": "States and State-Stages",
+    "description": "Waking, dreaming, sleeping, and the contemplative states — visitable at any stage, interpreted by your stage, trainable through practice.",
+    "level": "topic",
+    "parentId": "integral.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": { "question": "Recall one experience that changed how things looked — a peak, a flow, a loss of self.", "assessmentType": "factual_recall", "completionEvidence": "Student names one memorable state experience" },
+      "principle": { "question": "What is the difference between a state and a stage?", "assessmentType": "concept_explanation", "completionEvidence": "Student can state the visit-vs-live distinction" },
+      "application": { "question": "How did your stage interpret one of your peak experiences?", "assessmentType": "application_problem", "completionEvidence": "Student re-reads one state memory through their current stage" },
+      "integration": { "question": "How do states and stages jointly explain 'crazy-wisdom' teachers?", "assessmentType": "analogy_mapping", "completionEvidence": "Student explains high-state low-stage cases" },
+      "creation": { "question": "Design a practice sequence that stabilizes one state for you.", "assessmentType": "project_based", "completionEvidence": "Student proposes a state-training protocol" }
+    },
+    "isomorphisms": [],
+    "prerequisites": ["integral.foundations", "integral.stages"],
+    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Somatic", "Intrapersonal"], "stageRange": { "min": "Amber", "max": "White" } },
+    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "evaluated" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"] },
+    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
+    "content": {
+      "explanation": "States are temporary modes of consciousness: the everyday waking, dreaming, and deep-sleep states, plus the contemplative states — witness, absorption, nondual — that practices can induce deliberately. States can be visited at any developmental stage, but what the state means is interpreted by the stage you bring to it: the same blissful dissolution reads as union with a tribal totem at one stage, as cosmic oneness with a self at another, and as empty radiance without a knower at a third. State-stages are the trainable progression of how reliably you can enter and hold these states, which is why a person can be a state-expert (a gifted meditator) while remaining stage-limited in how they use it. The game's design consequence: encounters can induce state shifts (flow, reflection, awe) as catalyst, but the durable developmental signal is always read at the stage-line level, never from the intensity of the experience itself.",
+      "examples": [
+        "Flow while coding or climbing — a state, trainable and temporary",
+        "The witness position in meditation — enterable in minutes, stabilized over years",
+        "Awe under a night sky — interpreted as gods, as vast physics, or as empty luminosity depending on stage"
+      ],
+      "nonExamples": [
+        "A mood (briefer, biologically pegged, not a consciousness-mode shift)",
+        "A skill plateau (line development, not state)",
+        "Personality (a stable structure — the opposite of state transience)"
+      ],
+      "analogies": [
+        "States are weather, stages are climate",
+        "States are channels on a receiver; stages are the receiver's resolution"
+      ],
+      "visuals": [
+        "A day-cycle diagram of waking/dreaming/sleep with contemplative overlays",
+        "A ladder (state-stages) beside a tower (stages) — independent climbs"
+      ],
+      "practiceProblems": [
+        { "id": "intst.p1", "problemText": "Name one state you can enter reliably and one you cannot. What training separates them?", "targetDepth": "comprehended" },
+        { "id": "intst.p2", "problemText": "Re-interpret a past peak experience at your current stage; note what survives the re-read.", "targetDepth": "applied" }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "intst.mc1",
+        "statement": "An intense state experience proves spiritual advancement",
+        "whyItFeelsRight": "Intensity feels like depth, and traditions often rank experiences by drama",
+        "structuralReason": "State access and stage consolidation are different lines of growth; intensity is a property of the visit, not the visitor. The dangerous version is using peak experiences to bypass developmental work — spiritual bypassing — which the game counters by reading development only from stabilized response patterns, never from reported intensity.",
+        "diagnosticTaskId": "intst.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "integral.states",
+      "levels": {
+        "memorized": { "evidence": "Can list the basic states", "canDo": ["Name waking/dreaming/sleep and contemplative states"], "cannotDo": ["Distinguish state from stage"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
+        "comprehended": { "evidence": "Can state the visit-vs-live distinction and stage-interpretation principle", "canDo": ["Explain why the same state reads differently by stage"], "cannotDo": ["Analyze real cases"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
+        "applied": { "evidence": "Can re-read a personal peak experience through stage lens", "canDo": ["Apply the interpretive principle to memory"], "cannotDo": ["Analyze teacher scandals via state/stage split"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
+        "analyzed": { "evidence": "Can decompose a complex case into state-access vs stage-interpretation", "canDo": ["Analyze 'crazy-wisdom' and bypass cases"], "cannotDo": ["Evaluate state-taxonomies"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
+        "evaluated": { "evidence": "Can judge claims about states critically", "canDo": ["Assess a tradition's state-claims for category errors"], "cannotDo": [], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
+        "transformed": { "evidence": "State-tracking is continuous and self-informing — the visit/live distinction is used in real time", "canDo": ["Track own states and their stage-interpretation live", "Teach state-stage distinctions experientially"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "Embodied", "ScenarioChoice"]
+  },
+  {
+    "id": "integral.shadow",
+    "name": "Shadow and Integration",
+    "description": "What is split off returns as symptom — the four-quadrant shadow map of addiction and allergy, dark and golden, and the mechanics of re-integration.",
+    "level": "subject",
+    "parentId": "integral.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": { "question": "What kind of person irritates you disproportionately, and what might that cost them in you?", "assessmentType": "factual_recall", "completionEvidence": "Student names one disproportionate trigger" },
+      "principle": { "question": "Why does the split-off material return stronger, and why as symptom?", "assessmentType": "concept_explanation", "completionEvidence": "Student explains the return-of-the-repressed mechanism" },
+      "application": { "question": "Classify one of your patterns into the four-quadrant shadow map.", "assessmentType": "application_problem", "completionEvidence": "Student places one pattern as dark/golden, addiction/allergy" },
+      "integration": { "question": "How do drives (agency, communion, eros, agape) color shadow formation?", "assessmentType": "analogy_mapping", "completionEvidence": "Student links one drive to one shadow pattern" },
+      "creation": { "question": "Design one integration practice for your own golden shadow.", "assessmentType": "project_based", "completionEvidence": "Student commits to one golden-shadow practice" }
+    },
+    "isomorphisms": [],
+    "prerequisites": ["integral.foundations", "integral.stages"],
+    "devMapping": { "primaryLine": "Intrapersonal", "secondaryLines": ["Emotional", "Spiritual"], "stageRange": { "min": "Amber", "max": "Turquoise" } },
+    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "transformed" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated", "transformed"] },
+    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
+    "content": {
+      "explanation": "Shadow is the material a person cannot currently own: impulses, capacities, or needs that were disallowed and therefore split off. Split-off material does not vanish — it returns indirectly, as triggers, projections, and repetitive symptoms, usually stronger than its owned equivalent would have been. The four-quadrant shadow map crosses two axes. Dark versus golden: dark shadow is disowned lower or same-stage material (the impulse we punish), golden shadow is disowned higher potential (the greatness we refuse). Addiction versus allergy: addiction is clinging to the split-off material compulsively, allergy is flinching away from it reflexively. The four cells — dark addiction, dark allergy, golden addiction, golden allergy — name four different wounds requiring four different medicines. Crucially, no drive maps one-to-one to a shadow quadrant: all four drives (agency, communion, eros, agape) can appear in all four cells. Integration is the re-owning: meeting the split material in safe doses until it can be held in awareness and choice, which is exactly what this game's shadow-work encounters rehearse.",
+      "examples": [
+        "Dark allergy: the person who flinches from their own anger, then meets it as everyone else's aggression",
+        "Golden addiction: endless seeking of the next teacher, method, or high — bypassing the unglamorous work",
+        "Golden allergy: declining a promotion because being seen as capable feels unbearable"
+      ],
+      "nonExamples": [
+        "A character flaw you admit freely (owned material is not shadow)",
+        "A mood triggered by real danger (appropriate response, not projection)",
+        "A preference (liking jazz over rock is taste, not split-off material)"
+      ],
+      "analogies": [
+        "The basement you never visit shapes the heating bill of the whole house",
+        "Shadow is the undertow: invisible from the beach, decisive in the water"
+      ],
+      "visuals": [
+        "A 2x2: dark/golden crossed with addiction/allergy, with a worked example in each cell",
+        "The 'owning' arc: split-off → projected → met → re-owned"
+      ],
+      "practiceProblems": [
+        { "id": "intsh.p1", "problemText": "Take one recurring irritation. Write the projection sentence ('I am the one who...') and see which cell it lands in.", "targetDepth": "applied" },
+        { "id": "intsh.p2", "problemText": "Explain why praise can feel as unbearable as criticism for someone with a golden allergy.", "targetDepth": "analyzed" }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "intsh.mc1",
+        "statement": "Shadow work is about finding your dark side",
+        "whyItFeelsRight": "The word 'shadow' suggests darkness, and pop psychology equates it with the sinister",
+        "structuralReason": "Half the map is golden — disowned greatness and refused callings — and the cell that traps the most ambitious people is golden addiction, not dark anything. The game's canon is explicit: there is no drive-to-shadow mapping, and both heal/evolve (bottom-up, agape plus agency for dark) and evolve/heal (top-down, eros plus communion for golden) vectors are required.",
+        "diagnosticTaskId": "intsh.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "integral.shadow",
+      "levels": {
+        "memorized": { "evidence": "Can name the four cells", "canDo": ["List dark/golden × addiction/allergy"], "cannotDo": ["Classify real patterns"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
+        "comprehended": { "evidence": "Can explain projection and the return mechanism", "canDo": ["Explain why disowned material escalates"], "cannotDo": ["Classify subtle cases"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
+        "applied": { "evidence": "Can classify personal patterns into cells with evidence", "canDo": ["Place two personal patterns with rationale"], "cannotDo": ["Design integration practices"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
+        "analyzed": { "evidence": "Can trace a symptom back to its split and forward to its medicine", "canDo": ["Analyze one pattern's origin and remedy"], "cannotDo": ["Evaluate the shadow model itself"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
+        "evaluated": { "evidence": "Can judge shadow claims — distinguishing projection from real threat", "canDo": ["Discern genuine boundary issues from projection"], "cannotDo": ["Originate shadow theory"], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
+        "transformed": { "evidence": "Self-catch happens in real time and integration is practiced habitually", "canDo": ["Catch projection live", "Hold both dark and golden work"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "SocialCooperative"]
+  },
+  {
+    "id": "integral.transformation",
+    "name": "Translation and Transformation",
+    "description": "Two things people call 'growth': becoming better within your current frame, and the rare frame-change itself — why confusing them stalls development.",
+    "level": "topic",
+    "parentId": "integral.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": { "question": "Recall self-improvement wins that left you fundamentally the same.", "assessmentType": "factual_recall", "completionEvidence": "Student names two improvements that changed content, not structure" },
+      "principle": { "question": "What changes in a frame-change that no amount of improvement produces?", "assessmentType": "concept_explanation", "completionEvidence": "Student defines horizontal vs vertical movement" },
+      "application": { "question": "Sort your last year's growth into translation vs transformation.", "assessmentType": "application_problem", "completionEvidence": "Student classifies three growth episodes" },
+      "integration": { "question": "How does the crucible model of transformation fit frame-change?", "assessmentType": "analogy_mapping", "completionEvidence": "Student maps crucible phases to a real transition" },
+      "creation": { "question": "What would you need to let go of for your next frame-change?", "assessmentType": "project_based", "completionEvidence": "Student names one attachment that guards the current frame" }
+    },
+    "isomorphisms": [],
+    "prerequisites": ["integral.foundations", "integral.stages"],
+    "devMapping": { "primaryLine": "Intrapersonal", "secondaryLines": ["Willpower", "Spiritual"], "stageRange": { "min": "Orange", "max": "White" } },
+    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "transformed" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated", "transformed"] },
+    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
+    "content": {
+      "explanation": "Translation is improvement within your current meaning-making frame: better skills, better habits, better stories about the same self. Transformation is a change of frame: the self that was doing the improving is restructured — what felt like 'me' becomes an object I can look at. Most self-development is translation, and there is nothing wrong with that; it is the daily bread of a healthy life. But translation cannot solve problems constituted by the frame itself: the achiever who optimizes rest to achieve harder is still inside the achiever frame. Transformation, by contrast, is rare, uncomfortable, and usually cruciform: the old frame unravels, a middle passage of disorientation (the crucible) follows, and a new frame stabilizes that includes and transcends the old. This game operationalizes the crucible as a three-phase structure — unravelling, crucible, emergence — and deliberately resists selling translation as transformation, which is the most common way growth gets faked.",
+      "examples": [
+        "Translation: a manager takes a course and delegates better — the manager-self is intact",
+        "Transformation: the manager realizes their identity-as-needed-and-in-control was the problem and reorganizes life around trust",
+        "The crucible: a career-defining identity dissolves after loss, and two years later a sturdier self has formed"
+      ],
+      "nonExamples": [
+        "Learning jargon from a later stage (borrowed content, not frame-change)",
+        "A vacation or retreat high (state visit, not structural change)",
+        "Quitting a habit through willpower (within-frame discipline)"
+      ],
+      "analogies": [
+        "Translation upgrades the furniture; transformation moves the house",
+        "A caterpillar eating more leaves is translation; the chrysalis is transformation"
+      ],
+      "visuals": [
+        "Horizontal arrow (translation) vs vertical arrow (transformation) across stage layers",
+        "The crucible curve: stability → unravelling → disorientation → emergence → new stability"
+      ],
+      "practiceProblems": [
+        { "id": "inttr.p1", "problemText": "Name one thing you call growth that was translation. What would its transformation-version have required?", "targetDepth": "comprehended" },
+        { "id": "inttr.p2", "problemText": "Describe a frame you are currently inside. What evidence would show its limits to you?", "targetDepth": "analyzed" }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "inttr.mc1",
+        "statement": "Transformation is always better and should be pursued constantly",
+        "whyItFeelsRight": "Growth culture treats 'leveling up' as unqualified good and rest as stagnation",
+        "structuralReason": "Transformation requires a stable base to transform from and destabilizes everything built on the old frame — pursuing it constantly prevents the consolidation that makes it possible, and unfinished transitions leave a person between frames. Healthy development alternates: long translation plateaus with rare, well-supported frame-changes — the rhythm the game encodes as consolidation themes and safety overrides.",
+        "diagnosticTaskId": "inttr.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "integral.transformation",
+      "levels": {
+        "memorized": { "evidence": "Can define both terms", "canDo": ["Recite the translation/transformation distinction"], "cannotDo": ["Classify real episodes"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
+        "comprehended": { "evidence": "Can explain why translation cannot solve frame-constituted problems", "canDo": ["Give one worked contrast"], "cannotDo": ["Sort own history"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
+        "applied": { "evidence": "Can sort real growth episodes correctly", "canDo": ["Classify three personal episodes with reasoning"], "cannotDo": ["Analyze stuck cases"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
+        "analyzed": { "evidence": "Can diagnose translation-disguised-as-transformation in real offerings", "canDo": ["Analyze a program or teacher's claims"], "cannotDo": ["Evaluate the model's limits"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
+        "evaluated": { "evidence": "Can judge when transformation-seeking itself is a defense", "canDo": ["Assess spiritual-bypassing via transformation-seeking"], "cannotDo": [], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
+        "transformed": { "evidence": "The two arrows are distinguished reflexively in self and others; frame-changes are neither chased nor feared", "canDo": ["Hold the translation/transformation distinction live", "Support others through crucible passages"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "ImmersiveRPG"]
+  }
+]

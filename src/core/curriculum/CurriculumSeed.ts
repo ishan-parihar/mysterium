@@ -23,6 +23,9 @@ import csProgram from './data/cs.program.json';
 import mathFoundations from './data/math.foundations.json';
 import physicsFoundations from './data/physics.foundations.json';
 import physicsProgram from './data/physics.program.json';
+// P4-FIX (Full-Development Audit 2026-09-15): add the integral.foundations
+// subject — the game's own developmental map as studyable curriculum holons.
+import integralFoundations from './data/integral.foundations.json';
 
 /** All seed data modules. Each entry is an array of CurriculumHolon objects. */
 const SEED_MODULES: readonly { name: string; data: CurriculumHolon[] }[] = [
@@ -31,6 +34,7 @@ const SEED_MODULES: readonly { name: string; data: CurriculumHolon[] }[] = [
   { name: 'math.foundations', data: mathFoundations as unknown as CurriculumHolon[] },
   { name: 'physics.foundations', data: physicsFoundations as unknown as CurriculumHolon[] },
   { name: 'physics.program', data: physicsProgram as unknown as CurriculumHolon[] },
+  { name: 'integral.foundations', data: integralFoundations as unknown as CurriculumHolon[] },
 ];
 
 /**
