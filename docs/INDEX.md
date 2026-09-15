@@ -10,7 +10,7 @@
 2. `01-first-principles.md` — the eight questions, expanded.
 3. `02-glossary.md` — every term used anywhere in /docs.
 4. `03-research-methodology.md` — DSR, OMDE, INFORM, citation policy.
-5. `foundations/00-...36-...` (in order — **00-09 substrate, 10-14 lesser cycle, 15-27 greater cycle, 28-34 curriculum expansion, 35-36 curriculum upgrade plan**)
+5. `foundations/00-...41-...` (in order — **00-09 substrate, 10-14 lesser cycle, 15-27 greater cycle, 28-34 curriculum expansion, 35-36 curriculum upgrade plan, 37-41 domain expansion**)
 6. `lines/00-overview-multi-line.md` then `01-...08-...` (any order)
 7. `stages/00-overview-eight-stages.md` then `01-...08-...` (in order)
 8. `architecture/10-stage-assessment-architecture.md`
@@ -30,7 +30,7 @@
 - `03-research-methodology.md`
 - `REQUIREMENTS.md` — the contract for the whole tree
 
-### `foundations/` (37)
+### `foundations/` (42)
 
 #### Theoretical substrate (00–09)
 
@@ -83,6 +83,17 @@
 - `34-curriculum-engine-bridge.md` — the integration contract between curriculum modules and the existing engine
 - `35-framework-complexity-curriculum-mapping.md` — mapping framework complexity to curriculum depth
 - `36-curriculum-upgrade-plan.md` — the phased curriculum upgrade plan
+
+#### Domain expansion (37–41)
+> Extends the system's reach beyond the single-player developmental core: full academic
+> coverage, real social structure, real-world practice, explicit competency measurement,
+> and external recognition.
+
+- `37-k12-curriculum-expansion.md` — school-subject → line mapping, grade-band policy (non-authoritative), K-12 corpus plan, the schooling rejection list
+- `38-cohort-weave-multiplayer.md` — cohort pods, shared rituals, recognition-of-practice; the anti-over-engineering scope fence
+- `39-action-induction-journal-system.md` — real-world practice objectives (Vow evolution), journal reflection check-ins, the agent practice toolset
+- `40-measurement-packs-efficacy-infra.md` — swappable psychometric measurement packs, the scoring harness, the honest efficacy evidence chain
+- `41-global-recognition-credentialing.md` — GDPR substrate, claim-based credential ledger, EU pathway (micro-credentials → ECTS → EQF), canon revision of blueprint decision #2
 
 ### `lines/` (9) — one per line of intelligence
 
