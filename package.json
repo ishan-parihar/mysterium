@@ -23,6 +23,7 @@
     "preview": "vite preview --port 4173",
     "typecheck": "svelte-kit sync && tsc --noEmit",
     "test": "vitest run",
+    "bench:validation": "tsx scripts/run-validation-benchmark.ts --tier=full",
     "test:watch": "vitest",
     "test:cli": "vitest run tests/cli.test.ts",
     "cap:sync": "npm run build && cap sync",

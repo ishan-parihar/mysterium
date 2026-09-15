@@ -187,7 +187,7 @@ export function generateCandidates(
     }
 
     const moduleRef = `${holon.line}:${holon.stage}`;
-
+    const rotationKey = holon.id ?? moduleRef;
     // T-0.4 (HS-13 fix): look up the module's task types and pass them to
     // getEligibleModalities so modalities are filtered by module support.
     const moduleTaskTypes = moduleTaskTypesProvider?.(moduleRef);
@@ -195,7 +195,7 @@ export function generateCandidates(
     // Generate candidates across eligible modalities (2-3 per holon)
     const eligible = session?.forceModality
       ? [session.forceModality as Modality]
-      : getEligibleModalities(holon, blockedModalities, moduleTaskTypes);
+      : getEligibleModalities(holon, blockedModalities, moduleTaskTypes, rotationKey);
 
     const anyForcing = !!(session?.forceLine || session?.forceStage || session?.forceModality);
 
@@ -255,10 +255,27 @@ function getAllTaskTypes(): Set<string> {
   return allTypes;
 }
 
+/**
+ * Deterministic rotation offset derived from the holon identity: different
+ * holons start their modality rotation at different points (preserving the
+ * variety the old Math.random() call provided) while remaining fully
+ * reproducible for the same world state.
+ */
+function modalityRotationOffset(key: string): number {
+  const s = String(key);
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return Math.abs(h);
+}
+
 function getEligibleModalities(
   holon: Holon,
   blocked: Set<Modality>,
   moduleTaskTypes?: Set<string>,
+  rotationKey = '',
 ): Modality[] {
   const primary = holon.modality ?? 'ImmersiveRPG';
   
@@ -275,10 +292,18 @@ function getEligibleModalities(
   const selected: Modality[] = [];
   if (eligible.includes(primary)) selected.push(primary);
   
+  // P0-BENCH (Validation Benchmark 2026-09-15): this selection previously used
+  // Math.random(), which made encounter scheduling non-deterministic — violating
+  // the core architecture's determinism claim (README: "fully deterministic given
+  // the same inputs and registry state") and failing the benchmark's G1
+  // reproducibility gate. Round-robin over a stable rotation order preserves the
+  // intent (variety across candidates) deterministically.
   const alternatives = eligible.filter(m => m !== primary);
+  let rot = modalityRotationOffset(rotationKey);
   while (selected.length < 3 && alternatives.length > 0) {
-    const idx = Math.floor(Math.random() * alternatives.length);
+    const idx = rot % alternatives.length;
     selected.push(alternatives.splice(idx, 1)[0]);
+    rot++;
   }
   
   return selected;
