@@ -463,6 +463,73 @@ export function validateLevellingMechanism(): GateResult {
   return { gate: 'G11-levelling-mechanism', passed: true, hard: true, details: 'levelling deterministic, evidence-driven, shadow-gated; no demographic vocabulary in engine' };
 }
 
+// ---------------------------------------------------------------------------
+// G12 — Identity firewall (doc 42 §1.1, doc 16 §2.1):
+// measurement paths must not import the healing/identity layer
+// ---------------------------------------------------------------------------
+
+/**
+ * The competence/identity firewall: identity context exists FOR HEALING
+ * (voicing/texture via projectHealingContext) and must be structurally
+ * unreachable from measurement machinery. Asserts by source lint:
+ *   - src/core/curriculum/**, src/core/engines/**, src/core/adaptive/** must
+ *     not import HealingContext or IdentityProfile.
+ *   - The projector must check consent (isFieldUsable) before any field use.
+ *   - The Significator's identity field stays OPTIONAL (consent-gated existence).
+ */
+export function validateIdentityFirewall(): GateResult {
+  let ok = true;
+  const problems: string[] = [];
+  try {
+    const roots = ['src/core/curriculum', 'src/core/engines', 'src/core/adaptive'];
+    const walk = (dir: string): string[] => {
+      const out: string[] = [];
+      let entries: fs.Dirent[] = [];
+      try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return out; }
+      for (const e of entries) {
+        const p = path.join(dir, e.name);
+        if (e.isDirectory()) out.push(...walk(p));
+        else if (e.name.endsWith('.ts')) out.push(p);
+      }
+      return out;
+    };
+    for (const root of roots) {
+      for (const file of walk(path.resolve(process.cwd(), root))) {
+        const src = fs.readFileSync(file, 'utf8');
+        const code = src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/^\s*\/\/.*$/gm, ' ');
+        if (/HealingContext|projectHealingContext|IdentityProfile/.test(code)) {
+          ok = false;
+          problems.push(`${file} references the identity/healing layer`);
+        }
+      }
+    }
+    // The projector must be consent-checked: source must call isFieldUsable.
+    const hcPath = path.resolve(process.cwd(), 'src/core/healing/HealingContext.ts');
+    if (fs.existsSync(hcPath)) {
+      const hc = fs.readFileSync(hcPath, 'utf8');
+      if (!hc.includes('isFieldUsable')) {
+        ok = false;
+        problems.push('HealingContext projector does not check per-field consent (isFieldUsable)');
+      }
+    }
+    // Consent-gated existence: identity must be optional on the Significator type.
+    const sigPath = path.resolve(process.cwd(), 'src/core/domain/Significator.ts');
+    if (fs.existsSync(sigPath)) {
+      const sigSrc = fs.readFileSync(sigPath, 'utf8');
+      if (!/readonly identity\?\s*:\s*IdentityProfile/.test(sigSrc)) {
+        ok = false;
+        problems.push('Significator.identity must be optional (consent-gated existence)');
+      }
+    }
+  } catch (err) {
+    return { gate: 'G12-identity-firewall', passed: false, hard: true, details: `firewall check failed to run: ${err}` };
+  }
+  if (!ok) {
+    return { gate: 'G12-identity-firewall', passed: false, hard: true, details: `identity firewall breached: ${problems.join('; ')}` };
+  }
+  return { gate: 'G12-identity-firewall', passed: true, hard: true, details: 'measurement paths clean of identity imports; projector consent-checked; identity optional on Significator' };
+}
+
 export interface ValidationReport {
   tier: Tier;
   results: GateResult[];
@@ -490,6 +557,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validateNeedsDetection(effective));
   results.push(validateVeilCompliance());
   results.push(validateLevellingMechanism());
+  results.push(validateIdentityFirewall());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

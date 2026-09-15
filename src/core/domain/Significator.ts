@@ -8,6 +8,7 @@ import type { ShadowLedger } from './ShadowLedger.js';
 import type { CodexEntry } from './SharedTypes.js';
 import type { TransformationPhase } from '../engines/TransformationDetector.js';
 import type { KnowledgeState } from '../curriculum/types.js';
+import type { IdentityProfile } from './IdentityProfile.js';
 
 import { ALL_DRIVES } from './Drive.js';
 import { ALL_RAYS } from './Ray.js';
@@ -153,6 +154,15 @@ export interface Significator {
    * save/load round-trip.
    */
   readonly curriculumIntervention?: string;
+  /**
+   * IdentityProfile (doc 16 §2.1): consent-bound identity context for the
+   * HEALING layer only. Collected at onboarding under per-field consent;
+   * consumed exclusively via projectHealingContext (src/core/healing/) for
+   * voicing/texture. Structurally unreachable from measurement paths (levelling,
+   * difficulty, scoring, credentials) — kernel firewall gate G12. Optional:
+   * absent on saves without identity, and after full withdrawal.
+   */
+  readonly identity?: IdentityProfile;
 }
 
 function zeroRecord<K extends string>(keys: readonly K[]): Record<K, number> {

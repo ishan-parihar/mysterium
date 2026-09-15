@@ -25,6 +25,35 @@ This document specifies the **vessel that holds all of the above** — the Playe
 
 ## 2. The PlayerProfile as Significator
 
+### 2.1 The IdentityProfile — consent-bound identity context (added 2026-09-15)
+
+The Significator gains an OPTIONAL `identity?: IdentityProfile` — the consent-bound
+home for the identity context the user directed be collected at onboarding (age band,
+sex/gender, lineage/ancestry, culture, location/region, language, life situation).
+Its architecture is defined by three hard properties:
+
+1. **Consent-gated existence.** Every field is voluntary, collected only after an
+   explicit consent step, and the player can view/withdraw/revoke at any time.
+   Withdrawing nulls the field and its derived healing context (the game continues
+   unimpaired — identity tunes voicing, never progression).
+2. **Purpose-bound exposure.** Raw identity fields are NEVER read directly by game
+   systems. The only sanctioned consumer is `projectHealingContext(identity, purposes)`
+   (healing-layer module), which checks the field's recorded consent purposes and
+   emits a *derived* `HealingContext` (metaphor-set hints, example-domain hints,
+   life-stage texture, locale) for presentation/LLM-voicing use. Measurement paths —
+   levelling (42), difficulty, scoring, credential evidence — are structurally
+   unable to import it (kernel firewall gate G12).
+3. **Separation from the developmental ledger.** Identity tunes HOW catalyst feels;
+   it never touches WHAT level is assigned or WHAT evidence counts (42 §1.1's
+   competence/identity firewall). A healer must know who you are; a grader must
+   not.
+
+Schema: `src/core/domain/IdentityProfile.ts` (types + consent ledger), projector in
+`src/core/healing/HealingContext.ts`. Onboarding collects it after the developmental
+probes (CLI: `mysterium onboard` consent flow), one prompt per field, all skippable.
+
+(Original §2 content follows.)
+
 ### 2.1 The vessel, not the save file
 
 The `PlayerProfile` is not a serialisation convenience. It is the Significator — the self-pattern that persists across sessions, accumulates the traces of every encounter, and reorganises as the player evolves. Every field in the profile corresponds to a dimension of the Hierophant's complexity:

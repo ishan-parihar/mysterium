@@ -170,6 +170,9 @@ program
   .command('events')
   .description('Show recent CLI telemetry events (opt-in). Enable via ~/.mysterium/config.json: { "telemetry": true }')
   .option('--tail <n>', 'show only the most recent N events', (v) => parseInt(v, 10), 20);
+program
+  .command('privacy [action]')
+  .description('View or withdraw identity consent (show, withdraw <field>, withdraw-all)');
 
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
@@ -304,6 +307,7 @@ import { InfraConfig } from '../src/core/config/InfraConfig.js';
 import type { ModuleRegistry } from '../src/core/assessments/registry.js';
 import type { AskUserQuestionParams, AskUserQuestionResult, UserAnswer } from '../src/core/assessments/agentTypes.js';
 import { loadSave, saveGame, hasSave, deleteSave, saveWorldState, loadWorldState, deleteWorldSave, saveAll, deleteAllSaves } from '../src/infra/persistence/SaveRepository.js';
+import { createEmptyIdentityProfile, grantIdentityField, withdrawIdentityField, IDENTITY_FIELDS, type IdentityField, type HealingPurpose } from '../src/core/domain/IdentityProfile.js';
 import { runTrainCommand, runInsightsCommand, runExportCommand, runCalibrateCommand, buildTrainingIntegration, buildUnifiedProfileServices } from '../src/cli/TrainingRuntime.js';
 // P1-QW3 (Architecture Audit Phase A): CLI telemetry — opt-in only, no behaviour change when off.
 import { buildCLITelemetry, recordCLITelemetry, flushCLITelemetry } from '../src/cli/CLITelemetry.js';
@@ -4260,10 +4264,64 @@ async function runSetupProfile(): Promise<void> {
 
     console.log(`\n  ${chalk.green('✓')} Profile "${name}" created and set as active.`);
     console.log(`  ${chalk.dim('Profile directory: ' + profileDir)}`);
+
+    // ── Identity onboarding (doc 16 §2.1): consent-first, all-optional ──
+    // Identity tunes HOW the game speaks to you (healing), never WHAT level
+    // you're assigned (levelling stays evidence-only). Every field skippable;
+    // withdrawable any time via `mysterium privacy`.
+    await collectIdentityConsent();
+
     console.log(`\n  ${chalk.dim('Run `mysterium` to start your first session.')}\n`);
   } catch (err: any) {
     error(err.message);
   }
+}
+
+/**
+ * Identity onboarding — consent-first identity collection for the healing
+ * layer (doc 16 §2.1). One prompt per field, all skippable, per-field consent
+ * recorded with healing purposes. Values are saved into the Significator's
+ * optional identity profile (local-only storage).
+ */
+async function collectIdentityConsent(): Promise<void> {
+  console.log(`\n  ${chalk.bold('Identity context (entirely optional)')}`);
+  console.log(`  ${chalk.dim('These help the game speak in ways that resonate with your life —')}`);
+  console.log(`  ${chalk.dim('metaphors, examples, pacing. They NEVER affect your level, difficulty,')}`);
+  console.log(`  ${chalk.dim('or progress — that comes only from what you demonstrate. Skip anything.')}`);
+
+  const existing = loadSave();
+  let identity = existing?.identity ?? createEmptyIdentityProfile();
+  const now = Date.now();
+  let anyGranted = false;
+
+  const ALL_PURPOSES: HealingPurpose[] = ['narrativeVoice', 'exampleDomains', 'lifeStageTexture', 'localeFormat'];
+
+  const askIdentity = async (
+    field: IdentityField,
+    message: string,
+  ): Promise<void> => {
+    const input = await clackText({ message: `${message} (Enter to skip)`, defaultValue: '' });
+    const value = typeof input === 'string' ? input.trim() : '';
+    if (!value) return;
+    identity = grantIdentityField(identity, field, value, ALL_PURPOSES, now);
+    anyGranted = true;
+  };
+
+  await askIdentity('region', 'Region (e.g. europe, south-asia, north-america, global)?');
+  await askIdentity('culture', "Cultural background you'd like examples drawn from?");
+  await askIdentity('language', 'Preferred language for presentation?');
+  await askIdentity('lifeSituation', 'Life situation (student, parent, professional, retired, in-transition)?');
+  await askIdentity('ageBand', 'Age band (under-13, 13-17, 18-24, 25-34, 35-44, 45-59, 60+, prefer-not-to-say)?');
+
+  if (!anyGranted) {
+    console.log(`  ${chalk.dim('No identity context shared — the game will speak in its universal voice.')}\n`);
+    return;
+  }
+
+  if (existing) {
+    saveGame({ ...existing, identity });
+  }
+  console.log(`  ${chalk.green('✓')} Identity context saved (local-only, withdrawable via ${chalk.bold('mysterium privacy')}).`);
 }
 
 // Refactored to use ProviderRegistry instead of the hardcoded PROVIDERS catalog.
@@ -4952,6 +5010,61 @@ function printHelp(): void {
 }
 
 // ── Main ──────────────────────────────────────────────────────────────
+/**
+ * `mysterium privacy` — the player's identity-consent dashboard (doc 16 §2.1).
+ * show: lists shared fields + active consents. withdraw <field|all>: removes
+ * the value and records the withdrawal. The game continues unimpaired.
+ */
+async function runPrivacyCommand(action: string | undefined, fieldArg: string | undefined): Promise<void> {
+  const sig = loadSave();
+  const identity = sig?.identity;
+
+  if (action === 'withdraw-all') {
+    if (!sig || !identity) { info('No identity context stored.'); return; }
+    let updated = identity;
+    for (const f of IDENTITY_FIELDS) {
+      if (identity.fields[f] !== undefined) updated = withdrawIdentityField(updated, f, Date.now());
+    }
+    saveGame({ ...sig, identity: updated });
+    success('All identity context withdrawn. The game continues in its universal voice.');
+    return;
+  }
+
+  if (action === 'withdraw') {
+    const field = fieldArg as IdentityField | undefined;
+    if (!field || !(IDENTITY_FIELDS as readonly string[]).includes(field)) {
+      error(`Specify a field to withdraw: ${IDENTITY_FIELDS.join(', ')}`);
+      return;
+    }
+    if (!sig || !identity || identity.fields[field] === undefined) {
+      info(`No identity data stored for "${field}".`);
+      return;
+    }
+    const updated = withdrawIdentityField(identity, field, Date.now());
+    saveGame({ ...sig, identity: updated });
+    success(`Identity field "${field}" withdrawn. Voicing falls back to the universal voice.`);
+    return;
+  }
+
+  // default: show
+  if (!identity || Object.keys(identity.fields).length === 0) {
+    console.log(`\n  ${chalk.dim('No identity context shared. The game speaks in its universal voice.')}`);
+    console.log(`  ${chalk.dim('You can share context during')} ${chalk.bold('mysterium setup-profile')}${chalk.dim('.')}`);
+    return;
+  }
+  console.log(`\n  ${chalk.bold('Identity context (local-only)')}`);
+  for (const f of IDENTITY_FIELDS) {
+    const value = identity.fields[f];
+    if (value === undefined) continue;
+    const consent = identity.consents[f];
+    const purposes = consent ? consent.purposes.join(', ') : 'no purposes';
+    console.log(`  ${chalk.cyan(f.padEnd(14))} ${value}  ${chalk.dim('· used for: ' + purposes)}`);
+  }
+  console.log(`\n  ${chalk.dim('Withdraw any field:')} ${chalk.bold('mysterium privacy withdraw <field>')}`);
+  console.log(`  ${chalk.dim('Withdraw everything:')} ${chalk.bold('mysterium privacy withdraw-all')}`);
+  console.log(`  ${chalk.dim('This data never leaves your device and never affects levels or difficulty.')}`);
+}
+
 async function main(): Promise<void> {
   // ponytail: --version and --help handled by commander automatically
 
@@ -4968,7 +5081,7 @@ async function main(): Promise<void> {
   // treat ALL subcommands as potentially interactive EXCEPT the truly
   // non-interactive ones (`status`, `glossary`). This is safer than
   // enumerating interactive ones — new subcommands default to safe.
-  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate']);
+  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy']);
   const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand) && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
     HEADLESS = true;
@@ -4999,6 +5112,7 @@ async function main(): Promise<void> {
   if (subcommand === 'calibrate') { process.exitCode = await runCalibrateCommand(program.args.slice(1)); return; }
   if (subcommand === 'export') { process.exitCode = await runExportCommand(program.args.slice(1)); return; }
   if (subcommand === 'events') { await runEvents(program.args.slice(1)); return; }
+  if (subcommand === 'privacy') { await runPrivacyCommand(program.args[1], program.args[2]); return; }
   // P0-5 + P0-6: Use deleteAllSaves (clears sig + world + atomic envelope).
   // P0-6: Also clear TDG graph state if the TDG bridge is running, so a new
   // game doesn't inherit the old player's developmental graph.

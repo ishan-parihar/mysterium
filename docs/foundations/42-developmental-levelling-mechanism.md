@@ -15,6 +15,34 @@ language, or any demographic property must never appear anywhere in the levellin
 machinery — not in data, not in thresholds, not in scheduling, not in display.**
 Progression is a pure function of demonstrated developmental evidence.
 
+### 1.1 The competence/identity firewall (revision 2026-09-15)
+
+The user's refinement: **"competence is what matters for the evolution, but identity
+matters for the healing."** The blindness above governs the *measurement* machinery
+(levels, difficulty, promotion, credentialed evidence). It does NOT forbid **identity
+context as presentation/healing texture**: age, lineage, culture, locale, language —
+collected at onboarding under explicit consent — may tune HOW catalyst is *voiced*,
+*framed*, and *situated* (metaphor sets, example domains, life-stage resonance,
+locale formatting), never WHAT level is assigned, WHAT difficulty is offered, or WHAT
+evidence counts. The enforcement line:
+
+| Healing paths (identity MAY flow) | Measurement paths (identity NEVER flows) |
+|---|---|
+| narrative voice / metaphor selection (22) | LevellingEngine inputs & rungs (42) |
+| example domains & cultural resonance in content | encounter difficulty & scheduler weights (24) |
+| life-stage texture in practice objectives (39) | depth classification & rubric thresholds (31) |
+| locale/language of presentation | pack scoring & theta (40) |
+| accessibility preferences (derived from context, not identity itself) | credential evidence claims (41) |
+
+Implementation: identity lives in a **purpose-bound container** (`IdentityProfile`,
+doc 16 §2.1) whose data is only reachable through a consent-checked projector
+(`projectHealingContext`) that emits a *derived view* — never raw fields — and only
+for the healing-column purposes above. `LevellingEngine` and all measurement paths
+take NO parameter of this type; the kernel firewall gate (G12) asserts this
+structurally (source lint: measurement modules must not import the projector), and
+the one-way rule is: healing context may be *built from* engine state, engine state
+is never *built from* healing context.
+
 Mysterium already has the substrate: per-line altitudes and theta timestamps on the
 Significator (developmental lines), per-concept `DepthLevel` + retention on the
 KnowledgeState (syllabus side), the prerequisite graph with readiness checks, and a
@@ -133,8 +161,13 @@ cross-ladder reading is coherent.
 | D1 | No demographic field exists in any levelling input type | kernel gate asserts input shapes |
 | D2 | Thresholds/bars contain no demographic terms or age proxies | kernel gate lints constants |
 | D3 | Encounter difficulty follows evidence, never identity | scheduler already evidence-only; gate asserts |
-| D4 | Display never references demographics | descriptor layer has no such vocabulary |
-| D5 | Corpus voice is age-neutral (37 §2.1) | linter check |
+| D4 | Display never references demographics *in measurement reports* (healing context may voice levels qualitatively per §1.1) | descriptor layer enforces |
+| D5 | Corpus voice is age-neutral *by default*; identity-tuned voicing is opt-in via consented healing context (37 §2.1 + 16 §2.1) | linter check |
+
+**Revision note (2026-09-15):** D4/D5 originally forbade demographic vocabulary in
+display/corpus outright. Per §1.1, identity-tuned *voicing* of qualitative, already-
+veiled content is a healing use and is permitted behind consent — the quantitative
+measurement surface remains absolutely identity-blind.
 
 An "age proxy" is any threshold derivable from age bands (e.g., "expected tier by 8")
 — D2's lint rejects the vocabulary that would express them.

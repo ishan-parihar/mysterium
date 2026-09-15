@@ -19,6 +19,7 @@ import type { ShadowLedger, ShadowEntry } from '../../core/domain/ShadowLedger.j
 import type { PolarityState } from '../../core/domain/PolarityCellVector.js';
 import type { KnowledgeState, ConceptState } from '../../core/curriculum/types.js';
 import { ALL_DEPTH_LEVELS } from '../../core/curriculum/types.js';
+import { IDENTITY_FIELDS, HEALING_PURPOSES, type IdentityProfile, type IdentityField, type FieldConsent, type HealingPurpose } from '../../core/domain/IdentityProfile.js';
 
 const VALID_STAGES = new Set<string>(ALL_STAGES);
 const VALID_LINES = new Set<string>(ALL_LINES);
@@ -213,7 +214,34 @@ export function validateSignificator(input: unknown): Significator | null {
         ? kRaw.learningProfile as KnowledgeState['learningProfile']
         : { preferredModalities: [], metacognitionScore: 0.5, calibrationAccuracy: 0.5, transferCapacity: 0.5, studyEfficiency: 0.5 },
       forgettingCurves: forgettingCurves as ReadonlyMap<string, any>,
-    };
+    } as KnowledgeState;
+  }
+
+  // --- Identity (doc 16 §2.1: consent-bound, healing-layer-only) ---
+  // Whitelist reconstruction: only known fields/consents survive. A value
+  // without an active consent record is DROPPED (consent-gated existence).
+  let identity: IdentityProfile | undefined;
+  if (obj.identity && typeof obj.identity === 'object') {
+    const iRaw = asRecord(obj.identity);
+    const fieldsRaw = asRecord(iRaw.fields);
+    const consentsRaw = asRecord(iRaw.consents);
+    const fields: Partial<Record<IdentityField, string>> = {};
+    const consents: Partial<Record<IdentityField, FieldConsent>> = {};
+    for (const field of IDENTITY_FIELDS) {
+      const value = fieldsRaw[field];
+      const consentRaw = asRecord(consentsRaw[field]);
+      const grantedAtMs = isNumber(consentRaw.grantedAtMs) ? consentRaw.grantedAtMs : 0;
+      const withdrawnAtMs = isNumber(consentRaw.withdrawnAtMs) ? consentRaw.withdrawnAtMs : null;
+      const purposesRaw = asArray<unknown>(consentRaw.purposes).filter(isString);
+      const purposes = purposesRaw.filter((p): p is HealingPurpose => (HEALING_PURPOSES as readonly string[]).includes(p));
+      if (isString(value) && withdrawnAtMs === null && purposes.length > 0) {
+        fields[field] = value;
+        consents[field] = { grantedAtMs, purposes, withdrawnAtMs: null };
+      }
+    }
+    if (Object.keys(fields).length > 0) {
+      identity = { fields, consents, version: 1 };
+    }
   }
 
   const result: Significator = {
@@ -246,6 +274,7 @@ export function validateSignificator(input: unknown): Significator | null {
     // bookkeeping fields that were previously `as any` casts stripped on load.
     lastSessionAt: isNumber(obj.lastSessionAt) ? obj.lastSessionAt : undefined,
     curriculumIntervention: isString(obj.curriculumIntervention) ? obj.curriculumIntervention : undefined,
+    identity,
   };
 
   return result;
