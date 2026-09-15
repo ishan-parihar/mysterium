@@ -10,7 +10,7 @@
 2. `01-first-principles.md` — the eight questions, expanded.
 3. `02-glossary.md` — every term used anywhere in /docs.
 4. `03-research-methodology.md` — DSR, OMDE, INFORM, citation policy.
-5. `foundations/00-...41-...` (in order — **00-09 substrate, 10-14 lesser cycle, 15-27 greater cycle, 28-34 curriculum expansion, 35-36 curriculum upgrade plan, 37-41 domain expansion**)
+5. `foundations/00-...42-...` (in order — **00-09 substrate, 10-14 lesser cycle, 15-27 greater cycle, 28-34 curriculum expansion, 35-36 curriculum upgrade plan, 37-41 domain expansion, 42 levelling mechanism**)
 6. `lines/00-overview-multi-line.md` then `01-...08-...` (any order)
 7. `stages/00-overview-eight-stages.md` then `01-...08-...` (in order)
 8. `architecture/10-stage-assessment-architecture.md`
@@ -30,7 +30,7 @@
 - `03-research-methodology.md`
 - `REQUIREMENTS.md` — the contract for the whole tree
 
-### `foundations/` (42)
+### `foundations/` (43)
 
 #### Theoretical substrate (00–09)
 
@@ -94,6 +94,7 @@
 - `39-action-induction-journal-system.md` — real-world practice objectives (Vow evolution), journal reflection check-ins, the agent practice toolset
 - `40-measurement-packs-efficacy-infra.md` — swappable psychometric measurement packs, the scoring harness, the honest efficacy evidence chain
 - `41-global-recognition-credentialing.md` — GDPR substrate, claim-based credential ledger, EU pathway (micro-credentials → ECTS → EQF), canon revision of blueprint decision #2
+- `42-developmental-levelling-mechanism.md` — the unified grading/staging mechanism: one evidence-only law for line ladders and syllabus ladders, promotion/demotion hysteresis, demographic-blindness invariants D1–D5 (kernel-gated)
 
 ### `lines/` (9) — one per line of intelligence
 

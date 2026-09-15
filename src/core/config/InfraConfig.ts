@@ -42,6 +42,16 @@ export const InfraConfig = {
   CURRICULUM_WEAVE_FIRST_AT: 2,
   CURRICULUM_WEAVE_EVERY: 3,
 
+  // ── Levelling (doc 42) ───────────────────────────────────────────
+  /** Consecutive session-end evaluations evidence must hold to promote/demote. */
+  LEVELLING_STABILITY_WINDOW: 3,
+  /** Promotion bar minus demotion bar — anti-oscillation hysteresis. */
+  LEVELLING_HYSTERESIS_MARGIN: 0.05,
+  /** Evidence score at/above which promotion becomes eligible. */
+  LEVELLING_PROMOTION_BAR: 0.75,
+  /** Evidence score at/below which demotion becomes eligible. */
+  LEVELLING_DEMOTION_BAR: 0.55,
+
   // ── CCI ──────────────────────────────────────────────────────────
   // Weights live in CCIEngine.DEFAULT_CCI_WEIGHTS; not duplicated here.
   // Felt-sense bands live in unifiedProfileTools.getDevelopmentalSnapshot

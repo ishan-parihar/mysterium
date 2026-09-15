@@ -26,4 +26,16 @@ export type { RubricCalibrationReport } from './RubricCalibrator.js';
 export { probeCurriculum, formatProbeSummary } from './MetaCognitiveProbe.js';
 export type { MetaCognitiveProbeResult } from './MetaCognitiveProbe.js';
 export { detectDevelopmentalNeeds } from './DevelopmentalNeedsDetector.js';
+export {
+  buildSyllabusLadder,
+  buildLineLadder,
+  evaluateSyllabusLevel,
+  evaluateLineLevel,
+  evaluateAllLevels,
+  DEFAULT_LEVELLING_CONFIG,
+  SYLLABUS_RUNG_TITLES,
+  LINE_RUNG_TITLES,
+  EMPTY_PRIOR,
+} from './LevellingEngine.js';
+export type { LevelRung, LevelLadder, LevelPrior, LevelPriors, LevelEvaluation, LevelCap, LevellingConfig, LineLevelInputs, EvaluateAllResult } from './LevellingEngine.js';
 export { seedInitialKnowledge } from './SeedInitialKnowledge.js';

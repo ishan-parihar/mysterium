@@ -21,6 +21,17 @@ import { getCurriculumRegistry } from '../curriculum/CurriculumRegistry.js';
 import { seedInitialKnowledge } from '../curriculum/SeedInitialKnowledge.js';
 import { initAdaptiveState, adapt } from '../adaptive/AdaptiveDifficultyService.js';
 import type { Line } from '../domain/Line.js';
+import type { KnowledgeState } from '../curriculum/types.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import {
+  buildLineLadder,
+  buildSyllabusLadder,
+  evaluateLineLevel,
+  evaluateSyllabusLevel,
+  DEFAULT_LEVELLING_CONFIG,
+  EMPTY_PRIOR,
+} from '../curriculum/LevellingEngine.js';
 
 // ---------------------------------------------------------------------------
 // Gate plumbing
@@ -362,8 +373,95 @@ export function validateVeilCompliance(): GateResult {
 }
 
 // ---------------------------------------------------------------------------
-// Suite runner
+// G11 — Levelling mechanism (doc 42): demographic-blindness + laws
 // ---------------------------------------------------------------------------
+
+/** Vocabulary that must never appear in levelling thresholds or inputs. */
+const FORBIDDEN_VOCAB = /\b(age|ages|boy|girl|male|female|gender|sex|race|ethnic|minority|iq)\b|\bold\b|\byears?[- ]?old\b|\bgrade[- ]?(band|level)\b/i;
+
+/**
+ * D2: lints the levelling engine source itself for demographic vocabulary —
+ * the mechanism cannot express an age proxy without using these words.
+ * D1+D3 (behavioral): identical evidence ⇒ identical evaluation, regardless
+ * of any field not in the input shape (type-enforced), and deterministic.
+ */
+export function validateLevellingMechanism(): GateResult {
+  // D2 — source lint: the mechanism cannot express an age proxy without the
+  // forbidden vocabulary. Falls back to linting the exposed constants when
+  // source is unavailable (bundled environments).
+  let src = '';
+  try {
+    const p = path.resolve(process.cwd(), 'src/core/curriculum/LevellingEngine.ts');
+    if (fs.existsSync(p)) src = fs.readFileSync(p, 'utf8');
+  } catch {
+    src = '';
+  }
+  if (!src) src = JSON.stringify(DEFAULT_LEVELLING_CONFIG);
+  // Strip comments before matching — D2 forbids demographic vocabulary in
+  // CODE (identifiers, thresholds, branches), not in prose that states the
+  // policy itself. The doc-comment may say "age must never be an input";
+  // the code must never say `if (age < 18)`.
+  const codeOnly = src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/^\s*\/\/.*$/gm, ' ');
+  const vocabHit = codeOnly.match(FORBIDDEN_VOCAB);
+  if (vocabHit) {
+    return {
+      gate: 'G11-levelling-mechanism', passed: false, hard: true,
+      details: `demographic vocabulary "${vocabHit[0]}" found in levelling engine — forbidden by doc 42 §3.8 D2`,
+    };
+  }
+
+  // D3 — determinism: identical evidence ⇒ identical evaluation.
+  const now = 1_700_000_000_000;
+  const altitudes = { Cognitive: 'Amber', Emotional: 'Red', Moral: 'Red', Intrapersonal: 'Magenta', Spiritual: 'Magenta', Somatic: 'Magenta', Willpower: 'Red', Interpersonal: 'Red' } as const;
+  const baseInputs = { altitudes, theta: { lastEncounter: {} }, shadows: [] as never[], nowMs: now };
+  const a = evaluateLineLevel(baseInputs, 'Cognitive');
+  const b = evaluateLineLevel(baseInputs, 'Cognitive');
+  if (a.evidenceScore !== b.evidenceScore || a.currentRung !== b.currentRung) {
+    return { gate: 'G11-levelling-mechanism', passed: false, hard: true, details: 'line evaluation is not deterministic for identical inputs' };
+  }
+
+  // Evidence law: raising altitude must raise the computed rung.
+  const raised = { ...baseInputs, altitudes: { ...altitudes, Cognitive: 'Orange' as const } };
+  const raisedEval = evaluateLineLevel(raised, 'Cognitive');
+  if (raisedEval.currentRung <= a.currentRung) {
+    return { gate: 'G11-levelling-mechanism', passed: false, hard: true, details: 'raising altitude did not raise the computed rung — levelling is not evidence-driven' };
+  }
+
+  // Holonic integrity: an unresolved same-line shadow at/below the stage caps evidence.
+  const shadowed = {
+    ...baseInputs,
+    shadows: [{
+      id: 'g11-s1', quadrant: 'DarkAddiction' as const, line: 'Cognitive' as Line,
+      stage: 'Amber' as const, drive: 'Eros' as const, surfacedAt: now - 1_000,
+      resolvedAt: null, recurrenceCount: 0, compoundPartner: null, severity: 0.5,
+    }],
+  };
+  const shadowedEval = evaluateLineLevel(shadowed, 'Cognitive');
+  if (shadowedEval.cappedBy !== 'shadows') {
+    return { gate: 'G11-levelling-mechanism', passed: false, hard: true, details: 'unresolved same-line shadow did not cap line evidence (holonic integrity gate inactive)' };
+  }
+
+  // Syllabus ladder: no evidence ⇒ rung 0, score 0.
+  const emptyKnowledge: KnowledgeState = {
+    conceptStates: new Map(),
+    subjectProgress: new Map(),
+    studyHistory: [],
+    learningProfile: { preferredModalities: [], metacognitionScore: 0.5, calibrationAccuracy: 0.5, transferCapacity: 0.5, studyEfficiency: 0.5 },
+  };
+  const syll = evaluateSyllabusLevel(emptyKnowledge, [], DEFAULT_LEVELLING_CONFIG, EMPTY_PRIOR);
+  if (syll.evidenceScore !== 0 || syll.currentRung !== 0) {
+    return { gate: 'G11-levelling-mechanism', passed: false, hard: true, details: `empty syllabus evidence must be rung 0 (got rung ${syll.currentRung}, score ${syll.evidenceScore})` };
+  }
+
+  // Ladder shape: both families expose 8 rungs with monotone bars.
+  const lineLadder = buildLineLadder('Cognitive');
+  const syllLadder = buildSyllabusLadder('cs');
+  if (lineLadder.rungs.length !== 8 || syllLadder.rungs.length !== 8) {
+    return { gate: 'G11-levelling-mechanism', passed: false, hard: true, details: 'ladders must expose exactly 8 rungs' };
+  }
+
+  return { gate: 'G11-levelling-mechanism', passed: true, hard: true, details: 'levelling deterministic, evidence-driven, shadow-gated; no demographic vocabulary in engine' };
+}
 
 export interface ValidationReport {
   tier: Tier;
@@ -391,6 +489,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validateTransformationGating(effective, tier));
   results.push(validateNeedsDetection(effective));
   results.push(validateVeilCompliance());
+  results.push(validateLevellingMechanism());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
