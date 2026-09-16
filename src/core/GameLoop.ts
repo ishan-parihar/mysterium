@@ -434,20 +434,21 @@ export function tickWithStrategy(
 
   // 5b. Training beats: weave brain-game interludes into narrative sessions.
   // Fires at most 1 per tick, respecting the session's trainingSlots budget.
+  // WIRE-7 (training-beat parity): the weave DECISION lives in the exported
+  // computeTrainingWeave() policy so the WebUI binding weaves identically —
+  // one definition of the cadence, consumed by both surfaces.
   let trainingEncountersConsumed = sessionState.trainingEncountersThisSession ?? 0;
-  const trainingSlots = sessionState.strategy.trainingSlots ?? 0;
-  const isThresholdPhase = tsPhase === 'unravelling' || tsPhase === 'crucible' || tsPhase === 'emergence';
-  const shouldWeaveTraining = trainingSlots > trainingEncountersConsumed
-    && scheduled.length > 0
-    && !isThresholdPhase
-    && encountersSinceRefresh >= InfraConfig.TRAINING_WEAVE_FIRST_AT
-    && (trainingEncountersConsumed === 0 || encountersSinceRefresh % InfraConfig.TRAINING_WEAVE_EVERY === 0);
-  if (shouldWeaveTraining) {
-    const paradigm = pickTrainingParadigm(trainingEncountersConsumed);
-    const beat = makeTrainingBeat(paradigm, updatedSig, now);
+  const weave = computeTrainingWeave(
+    sessionState.strategy.trainingSlots ?? 0,
+    trainingEncountersConsumed,
+    encountersSinceRefresh,
+    tsPhase,
+  );
+  if (weave.shouldWeave && weave.paradigmId !== null && scheduled.length > 0) {
+    const beat = makeTrainingBeat(weave.paradigmId, updatedSig, now);
     // Make the training beat the next encounter (primary), with narrative offers behind it.
     scheduled = [beat, ...scheduled].slice(0, 5);
-    trainingEncountersConsumed++;
+    trainingEncountersConsumed = weave.nextConsumed;
   }
 
   const encounter = scheduled[0] ?? null;
@@ -660,6 +661,45 @@ function makeTrainingBeat(paradigmId: string, sig: Significator, now: number): S
     executionMode: 'capacity',
     isTrainingBeat: true,
     trainingParadigmId: paradigmId,
+  };
+}
+
+/**
+ * WIRE-7 (training-beat parity): the training-weave decision policy, shared by
+ * the core loop (CLI/harness) and the WebUI binding (gameEngine.ts).
+ *
+ * Given the session's trainingSlots budget, how many beats are already consumed,
+ * how many encounters have run since the last schedule refresh, and the current
+ * transformation phase, decides whether the NEXT encounter should be a training
+ * beat — and which paradigm it runs. Fires at most 1 per scheduling pass:
+ * - never during a threshold phase (unravelling/crucible/emergence);
+ * - never before TRAINING_WEAVE_FIRST_AT encounters;
+ * - then at most 1 per TRAINING_WEAVE_EVERY encounters until the budget is spent.
+ * Cadence constants: InfraConfig.TRAINING_WEAVE_FIRST_AT / TRAINING_WEAVE_EVERY.
+ */
+export function computeTrainingWeave(
+  trainingSlots: number,
+  trainingEncountersConsumed: number,
+  encountersSinceRefresh: number,
+  tsPhase: string,
+): { shouldWeave: boolean; paradigmId: string | null; nextConsumed: number } {
+  if (trainingSlots <= trainingEncountersConsumed) {
+    return { shouldWeave: false, paradigmId: null, nextConsumed: trainingEncountersConsumed };
+  }
+  const isThresholdPhase = tsPhase === 'unravelling' || tsPhase === 'crucible' || tsPhase === 'emergence';
+  if (isThresholdPhase) {
+    return { shouldWeave: false, paradigmId: null, nextConsumed: trainingEncountersConsumed };
+  }
+  if (encountersSinceRefresh < InfraConfig.TRAINING_WEAVE_FIRST_AT) {
+    return { shouldWeave: false, paradigmId: null, nextConsumed: trainingEncountersConsumed };
+  }
+  if (!(trainingEncountersConsumed === 0 || encountersSinceRefresh % InfraConfig.TRAINING_WEAVE_EVERY === 0)) {
+    return { shouldWeave: false, paradigmId: null, nextConsumed: trainingEncountersConsumed };
+  }
+  return {
+    shouldWeave: true,
+    paradigmId: pickTrainingParadigm(trainingEncountersConsumed),
+    nextConsumed: trainingEncountersConsumed + 1,
   };
 }
 

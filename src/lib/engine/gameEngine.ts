@@ -24,12 +24,14 @@ import type { ScheduledEncounter } from '$core/domain/EncounterSpecNew.js';
 import type { SessionContext } from '$core/engines/PriorityComputation.js';
 import type { SessionState } from '$core/GameLoop.js';
 import type { OrchestratorResult, AgenticUIHandler } from '$core/assessments/AgenticOrchestrator.js';
-import { startSession, applyResponseOnly } from '$core/GameLoop.js';
+import { startSession, applyResponseOnly, computeTrainingWeave } from '$core/GameLoop.js';
 import { scheduleNextWithHolonicReturn } from '$core/engines/EncounterScheduler.js';
 import { createModuleTaskTypesProvider } from '$core/engines/CandidateGeneration.js';
 import { DEFAULT_WEIGHTS } from '$core/engines/PriorityComputation.js';
 import { AgenticOrchestrator } from '$core/assessments/AgenticOrchestrator.js';
 import { bootModuleRegistry } from '$core/assessments/bootModules.js';
+import { getParadigm } from '$core/braingame/registry.js';
+import type { Line } from '$core/domain/Line.js';
 import { SaveRepository } from '$infra/persistence/SaveRepository.js';
 import { createKeyValueStore } from '$infra/persistence/createKeyValueStore.js';
 import { setSignificator, setLastEncounter } from '$lib/stores/gameStore.js';
@@ -140,7 +142,7 @@ export function scheduleEncounters(): void {
   if (!significator || !world || !session) return;
 
   const now = Date.now();
-  const encounters = scheduleNextWithHolonicReturn(
+  let encounters = scheduleNextWithHolonicReturn(
     significator,
     world,
     {
@@ -158,7 +160,46 @@ export function scheduleEncounters(): void {
     session.encountersSinceRefresh,
   );
 
+  // WIRE-7 (training-beat parity): apply the SAME weave policy as the kernel
+  // loop (computeTrainingWeave) after every scheduling pass — exactly where
+  // tickWithStrategy applies it for the CLI/harness. Skipped when the queue
+  // already carries an unplayed beat (decline/completion re-schedules).
+  if (!encounters.some((e) => e.isTrainingBeat)) {
+    const weave = computeTrainingWeave(
+      session.strategy.trainingSlots ?? 0,
+      session.trainingEncountersThisSession ?? 0,
+      session.encountersSinceRefresh,
+      session.transformationState.phase,
+    );
+    if (weave.shouldWeave && weave.paradigmId && encounters.length > 0) {
+      encounters = [makeTrainingBeatEncounter(weave.paradigmId, significator.currentStage, now), ...encounters].slice(0, 5);
+    }
+  }
+
   engineStore.update((s) => ({ ...s, encounters }));
+}
+
+/** Build a training-beat encounter (mirror of GameLoop.makeTrainingBeat). */
+function makeTrainingBeatEncounter(paradigmId: string, stage: Significator['currentStage'], now: number): ScheduledEncounter {
+  const paradigm = getParadigm(paradigmId);
+  const lines = (paradigm?.domains ?? ['Cognitive']) as readonly Line[];
+  return {
+    id: `training:${paradigmId}:${now}:${Math.floor(Math.random() * 10000)}`,
+    moduleRef: `Training:${paradigmId}`,
+    modality: 'Deterministic',
+    targetLines: lines,
+    stage,
+    holonSource: 'training-dojo',
+    shadowTarget: null,
+    polarityMode: 'Exploring',
+    difficulty: 0.5,
+    sessionPosition: 'peak',
+    priority: 0.95,
+    driveTarget: null,
+    executionMode: 'capacity',
+    isTrainingBeat: true,
+    trainingParadigmId: paradigmId,
+  };
 }
 
 // ─── Encounter execution ─────────────────────────────────────────────
@@ -249,6 +290,36 @@ export async function runEncounter(
     }));
     throw err;
   }
+}
+
+// ─── Training beats ─────────────────────────────────────────────────
+
+/**
+ * Complete a training beat (WIRE-7). Parity with the CLI's training-beat
+ * branch: a beat NEVER advances narrative polarity/shadow — it records no
+ * outcome and leaves significator/world untouched. It DOES consume its slot:
+ * the session's training + refresh counters advance and the offer queue is
+ * rescheduled (dropping the completed beat), mirroring the kernel tick.
+ * Telemetry (trials/index/calibration) is persisted by the TrainingBeatRunner
+ * through trainingBridge before this is called.
+ */
+export async function completeTrainingBeat(encounter: ScheduledEncounter): Promise<void> {
+  recordEvent('training_beat_completed', {
+    encounterId: encounter.id,
+    paradigmId: encounter.trainingParadigmId ?? null,
+  });
+  engineStore.update((s) => ({
+    ...s,
+    activeEncounter: null,
+    session: s.session
+      ? {
+          ...s.session,
+          trainingEncountersThisSession: (s.session.trainingEncountersThisSession ?? 0) + 1,
+          encountersSinceRefresh: s.session.encountersSinceRefresh + 1,
+        }
+      : s.session,
+  }));
+  scheduleEncounters();
 }
 
 /**

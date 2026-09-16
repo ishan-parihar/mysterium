@@ -23,14 +23,15 @@
   import Spinner from '$lib/components/Spinner.svelte';
   import Stack from '$lib/components/Stack.svelte';
   import Cluster from '$lib/components/Cluster.svelte';
-  import { engineStore, bootEngine, startGameSession, runEncounter, declineEncounter, clearTransformationSignal } from '$lib/engine/gameEngine.js';
+  import { engineStore, bootEngine, startGameSession, declineEncounter, clearTransformationSignal, completeTrainingBeat } from '$lib/engine/gameEngine.js';
   import StageTransitionOverlay from '$lib/components/StageTransitionOverlay.svelte';
   import { gameStore } from '$lib/stores/gameStore.js';
   import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
   import { setSignificator } from '$lib/stores/gameStore.js';
   import { describeStage } from '$core/presentation/veilDescriptors.js';
-  import { stageFade, stageFly } from '$lib/transitions/stageMotion.js';
+  import { stageFade } from '$lib/transitions/stageMotion.js';
   import LLMDialogueRunner from '$lib/components/gameplay/LLMDialogueRunner.svelte';
+  import TrainingBeatRunner from '$lib/components/gameplay/TrainingBeatRunner.svelte';
   import type { ScheduledEncounter } from '$core/domain/EncounterSpecNew.js';
 
   // State
@@ -42,7 +43,6 @@
   const sig = $derived($engineStore.significator);
   const world = $derived($engineStore.world);
   const encounters = $derived($engineStore.encounters);
-  const activeEncounter = $derived($engineStore.activeEncounter);
   const lastResult = $derived($engineStore.lastResult);
   const engineError = $derived($engineStore.error);
   const transformationSignal = $derived($engineStore.transformationSignal);
@@ -71,7 +71,8 @@
       return;
     }
 
-    // Start a session
+    // Start a session (scheduleEncounters applies the shared training-weave
+    // policy internally — WIRE-7 parity with the kernel loop).
     startGameSession();
     phase = 'world';
   });
@@ -83,6 +84,16 @@
   }
 
   async function onEncounterComplete() {
+    // Training beats bypass the narrative reflection result entirely (CLI parity:
+    // no polarity/shadow consequence, no session outcome). Their only player-facing
+    // echo was already shown by the runner's felt-sense card.
+    if (selectedEncounter?.isTrainingBeat === true) {
+      const beat = selectedEncounter;
+      selectedEncounter = null;
+      await completeTrainingBeat(beat);
+      phase = 'world';
+      return;
+    }
     phase = 'reflection';
     selectedEncounter = null;
   }
@@ -133,6 +144,11 @@
     {:else if phase === 'world' && sig}
       <div class="world-view" in:stageFade={{ duration: 500 }}>
         <Stack gap="space-5">
+          {#if encounterError}
+            <Card variant="accent" padding="space-4">
+              <p class="encounter-error" role="alert">{encounterError}</p>
+            </Card>
+          {/if}
           <div class="world-header">
             <h1 class="world-title">{stageAesthetic}</h1>
             <p class="world-subtitle">Encounters await</p>
@@ -144,7 +160,7 @@
             </Card>
           {:else}
             <Stack gap="space-3">
-              {#each encounters as encounter, i (encounter.id)}
+              {#each encounters as encounter (encounter.id)}
                 {@const holon = world?.holons.find((h) => h.id === encounter.holonSource)}
                 {@const isShadow = encounter.executionMode === 'shadow'}
                 {@const arcLabel = encounter.sessionPosition === 'warmup' ? 'Warmup' : encounter.sessionPosition === 'cooldown' ? 'Cooldown' : 'Peak'}
@@ -155,7 +171,6 @@
                   interactive
                   onclick={() => startEncounter(encounter)}
                   class="encounter-card"
-                  style="animation-delay: {i * 80}ms"
                 >
                   <div class="encounter-card-inner">
                     <div class="encounter-info">
@@ -189,12 +204,21 @@
       </div>
     {:else if phase === 'encounter' && selectedEncounter}
       <div class="encounter-view" in:stageFade={{ duration: 400 }}>
-        <LLMDialogueRunner
-          encounter={selectedEncounter}
-          oncomplete={onEncounterComplete}
-          onerror={onEncounterError}
-          onexit={backToWorld}
-        />
+        {#if selectedEncounter.isTrainingBeat}
+          <TrainingBeatRunner
+            encounter={selectedEncounter}
+            oncomplete={onEncounterComplete}
+            onerror={onEncounterError}
+            onexit={backToWorld}
+          />
+        {:else}
+          <LLMDialogueRunner
+            encounter={selectedEncounter}
+            oncomplete={onEncounterComplete}
+            onerror={onEncounterError}
+            onexit={backToWorld}
+          />
+        {/if}
       </div>
     {:else if phase === 'reflection' && lastResult}
       <div class="reflection-view" in:stageFade={{ duration: 500 }}>
@@ -314,6 +338,12 @@
     color: var(--mysterium-fg-muted);
     text-align: center;
     max-width: 32rem;
+  }
+
+  .encounter-error {
+    font-family: var(--mysterium-font-body);
+    font-size: var(--mysterium-text-sm);
+    color: var(--mysterium-danger);
   }
 
   .world-view {
