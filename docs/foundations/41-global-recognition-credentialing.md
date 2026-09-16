@@ -1,5 +1,6 @@
 # 41 — Global Recognition & Credentialing Architecture (EU-First)
 
+> **Cross-references:** [[docs/validation/BENCHMARK-ARCHITECTURE|Validation Benchmark Architecture]]
 > **Status:** canonical-hypothesis (architecture; contains a **canon revision** — see §0).
 > **Lateral:** the external-legitimacy layer — how demonstrated in-game competence
 > becomes *recognizable, portable, legally-compliant* credentialing, EU-first. This

@@ -1,5 +1,6 @@
 # 42 — The Developmental Levelling Mechanism
 
+> **Cross-references:** [[docs/foundations/16-significator-architecture|16 — Significator Architecture]]
 > **Status:** canonical-hypothesis (implemented: `src/core/curriculum/LevellingEngine.ts`, kernel-tested).
 > **Lateral:** the UNIFIED grading/staging mechanism — how "level" is defined, computed,
 > promoted, demoted, and displayed, such that progression is a pure function of

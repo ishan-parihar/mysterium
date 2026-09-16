@@ -1,5 +1,6 @@
 # 23 — Polarity Ontology: The 64-Cell Texture Catalogue
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/16-significator-architecture|16 — Significator Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Lateral:** Per-line × per-stage polarity textures grounded in concept-drafts
 > **Depends on:** 19 (polarity engine), 10 (shadow model), 05 (drives), 06 (Law of One)
 > **Referenced by:** 19 (§5), 22 (frequency conditioning), 24 (scheduler)

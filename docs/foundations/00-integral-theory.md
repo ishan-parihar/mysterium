@@ -1,5 +1,6 @@
 # foundations/00 — Integral Theory
 
+> **Cross-references:** [[docs/foundations/26-unified-core-architecture|26 — Unified Core Architecture]]
 > **Status:** canonical-hypothesis (Mysterium-specific extension of HoloOS coordinate system).
 >
 > HoloOS uses a 4-axis coordinate `⟨V=⟨O,D,S⟩, C, R⟩` (Verticality, Collectivity, Realm-placement) with `N` as a query parameter — see HoloOS `_THEORY/02_Ontology/08.8_Redesigned_Coordinate_System.md` (rev 2, canonical-hypothesis). Mysterium uses a 7-tuple `(quadrant, stage, line, state, type, ray, polarity)` inherited from Wilber's AQAL plus Law-of-One Ray and Polarity extensions.

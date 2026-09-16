@@ -1,10 +1,13 @@
 # 22 — The Holon Context Engine
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Lateral:** Implementation architecture for the LLM-driven world. Specifies how holons deliver context to the LLM, how generation is conditioned on the player's frequency (line×stage altitude), and how consequences propagate through the system.
 >
 > **Status:** Foundation. Implementation specification.
 > **Depends on:** 11, 14, 15, 18, 21
-> **Forward-references:** 16 (Significator), 19 (Choice/polarity), 20 (Veil)
+> **Forward-references:** 16 (Significator), 19 (Choice/polarity), 20 (Veil), 43 (agentic orchestration — J-council agents are the persona lenses that carry this engine's context to the foreground)
+>
+> **Orchestration note (43):** the context pipeline this document specifies is *delivered* by agents — the Journey-Guide council holds the foreground while holon context flows; the primary orchestrator never voices holon content directly.
 
 ---
 
@@ -427,7 +430,7 @@ Consequence produced:
 
 | Hot path | Handler |
 |---|---|
-| Combat micro-interactions (ATB timing) | Engine physics |
+| Real-time encounter micro-interactions (task timing) | Engine physics |
 | Deterministic-modality task execution | Engine task runner |
 | Input detection, score computation, checkpoint save | Engine systems |
 

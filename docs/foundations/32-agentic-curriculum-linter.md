@@ -1,5 +1,6 @@
 # 32 — Agentic Curriculum Linter
 
+> **Cross-references:** [[docs/foundations/30-holonic-curriculum-architecture|30 — Holonic Curriculum Architecture]] · [[docs/foundations/31-depth-assessment-model|31 — Depth Assessment Model]]
 > **Status:** canonical-hypothesis (Mysterium-specific agentic workflow for curriculum validation).
 >
 > **Lateral:** The validation workflow that ensures curriculum content is pedagogically sound, holonically coherent, and developmentally integrated. No other document covers this: foundations/29 covers learning science; foundations/30 covers holonic structure; foundations/31 covers depth assessment. This document covers the *agent-based validation process* that ensures all three are satisfied before content reaches the learner.

@@ -383,7 +383,7 @@ JSON Seed Data → CurriculumRegistry → CurriculumLinter (validation)
 - `src/core/curriculum/KnowledgeGraph.ts` — Prerequisite DAG (topological sort, cycle detection)
 - `src/core/curriculum/DepthAssessment.ts` — Dual-depth evaluation (knowledge + developmental)
 - `src/core/curriculum/LearningAnalytics.ts` — Modality effectiveness, velocity, review intervals
-- `src/core/curriculum/CalibrationBias.ts` — Over/under-confidence detection from calibration history
+- `src/core/curriculum/DepthAssessment.ts` — Over/under-confidence detection (`computeCalibrationBias`) from calibration history
 - `src/core/curriculum/CurriculumMigration.ts` — Schema versioning and forward-compatible migration
 - `src/core/engines/CandidateGeneration.ts` — Candidate generation with adaptive difficulty
 - `src/core/engines/AutoModeStrategy.ts` — Study theme selection from CCI signals

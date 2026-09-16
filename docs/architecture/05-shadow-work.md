@@ -48,7 +48,7 @@ Each module specifies which capacity dimension surfaces which shadow first:
 - `src/core/engines/ShadowContentGenerator.ts` — generates shadow-specific encounter content
 - `src/core/assessments/AgenticOrchestrator.ts` — keyword-based shadow detection in evaluateResponse()
 - `src/core/engines/ConsequenceEngine.ts` — shadow ledger updates
-- `src/core/assessments/ShadowDetector.ts` — behavioral pattern detection (currently dead code)
+- `src/core/usecases/ShadowDetector.ts` — behavioral pattern detection
 
 ## 5. Open questions
 

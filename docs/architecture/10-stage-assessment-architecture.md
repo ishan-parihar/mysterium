@@ -1,5 +1,6 @@
 # Stage Assessment Architecture
 
+> **Cross-references:** [[docs/foundations/10-shadow-and-pathology|10 — Shadow And Pathology]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]] · [[docs/foundations/12-drive-assessment-mechanics|12 — Drive Assessment Mechanics]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Purpose:** Define the modular assessment system where each stage of each line has its own dedicated assessment module. The onboarding is then a composite that samples from these modules — not a separate system.
 
 ---

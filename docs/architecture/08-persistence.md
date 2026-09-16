@@ -61,8 +61,7 @@ interface Significator {
 
 ## 4. Architectural contract
 
-- `src/infra/persistence/SignificatorStore.ts` — Significator persistence
-- `src/infra/persistence/WorldStateStore.ts` — World state persistence
+- `src/infra/persistence/SaveRepository.ts` — Significator + world-state persistence (single repository over the KeyValueStore backends)
 - `src/infra/crypto/CryptoStore.ts` — AES-GCM encryption
 - `src/infra/profiles/ProfileManager.ts` — Multi-profile management
 - `~/.mysterium/` — config directory (renamed from `~/.ccrpg/`)

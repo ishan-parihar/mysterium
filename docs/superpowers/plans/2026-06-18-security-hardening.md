@@ -1,5 +1,8 @@
 # Security Hardening (AES-GCM Encryption) Implementation Plan
 
+> **Status (2026-09-16):** Implemented — `src/infra/crypto/CryptoStore.ts` (AES-GCM) is live in the persistence path. Plan retained as implementation record.
+> **Related:** `docs/architecture/08-persistence.md` (current persistence contract)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Implement robust, cryptographically secure AES-GCM 256-bit at-rest encryption for telemetry, world state, and Significator data.

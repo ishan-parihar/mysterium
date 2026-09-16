@@ -1,5 +1,6 @@
 # 17 — Transformation Mechanics
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/16-significator-architecture|16 — Significator Architecture]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Lateral:** Transformation as a discrete game event — the violent frame-change of the Significator at stage thresholds. The GAME-DESIGN translation of the Lovers archetype (Card Six) into Mysterium architecture. NOT the lesser-cycle integration within encounters (that is foundations/14); this is the *qualitative leap* between stages that requires ego-dissolution.
 >
 > **Depends on:** 15, 14, 13, 10, 02

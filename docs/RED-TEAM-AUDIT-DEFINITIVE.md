@@ -1,5 +1,6 @@
 # Red-Team Audit: Definitive Assessment of Gameplay as Evolutionary Catalyst
 
+> **Cross-references:** [[docs/foundations/10-shadow-and-pathology|10 — Shadow And Pathology]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/foundations/26-unified-core-architecture|26 — Unified Core Architecture]]
 **Date:** June 23, 2026
 **Status:** CRITICAL — 3 architectural pillars must be rebuilt before the game can function as a genuine catalyst
 **Scope:** End-to-end audit of how the game's process leads individuals through genuine evolutionary catalysts vs superficial QnA, across both gameplay modes

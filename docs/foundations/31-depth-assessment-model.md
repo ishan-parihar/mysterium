@@ -1,5 +1,6 @@
 # 31 — Depth Assessment Model
 
+> **Cross-references:** [[docs/foundations/12-drive-assessment-mechanics|12 — Drive Assessment Mechanics]] · [[docs/foundations/30-holonic-curriculum-architecture|30 — Holonic Curriculum Architecture]] · [[docs/foundations/32-agentic-curriculum-linter|32 — Agentic Curriculum Linter]]
 > **Status:** canonical-hypothesis (Mysterium-specific operationalization of Bloom's taxonomy, depth-of-knowledge frameworks, and dual-depth assessment for curriculum modules).
 >
 > **Lateral:** The model that answers HOW DEEPLY a learner understands a concept — not just whether they know it. No other document covers this: foundations/29 covers the learning process; foundations/30 covers knowledge organization; this document covers the *measurement of understanding depth* and the dual-depth model that simultaneously assesses knowledge depth and developmental capacity.

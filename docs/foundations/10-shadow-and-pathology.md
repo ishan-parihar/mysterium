@@ -1,5 +1,6 @@
 # foundations/10 — Shadow, Pathology, and the 256-Shadow Model
 
+> **Cross-references:** [[docs/foundations/13-architecture-of-consciousness|13 — Architecture Of Consciousness]]
 ## 1. Purpose
 
 Specify how *unhealthy* development manifests across the full 64-module matrix (8 lines × 8 stages), how each module can produce exactly **4 shadow pathologies** (dark-addiction, dark-allergy, golden-addiction, golden-allergy), how the **4 drives** determine the health or pathology of each capacity, and how the game implements **holonic return** — the requirement that a player must always come back to heal earlier-stage shadows before advancing.

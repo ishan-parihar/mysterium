@@ -1,5 +1,6 @@
 # 02 — Glossary
 
+> **Cross-references:** [[docs/foundations/10-shadow-and-pathology|10 — Shadow And Pathology]] · [[docs/foundations/23-polarity-ontology|23 — Polarity Ontology]] · [[docs/foundations/25-cumulative-consciousness-index|25 — Cumulative Consciousness Index]] · [[docs/foundations/30-holonic-curriculum-architecture|30 — Holonic Curriculum Architecture]] · [[docs/foundations/31-depth-assessment-model|31 — Depth Assessment Model]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]]
 ## 1. Purpose
 
 A single, canonical, alphabetised definition for every domain term used anywhere in `/docs/`. If a term has nuance, the glossary entry says so and points to the document where the nuance is explored.

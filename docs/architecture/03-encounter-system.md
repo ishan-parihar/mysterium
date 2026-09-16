@@ -57,7 +57,7 @@ Budget: max 2 LLM calls per encounter (hardcoded).
 ## 4. Architectural contract
 
 - `src/core/assessments/AgenticOrchestrator.ts` — central orchestrator
-- `src/core/assessments/TaskRenderers.ts` — deterministic task rendering
+- `src/core/assessments/cli/TaskRenderers.ts` — deterministic task rendering (CLI surface)
 - `src/core/assessments/itemSelection.ts` — adaptive item selection
 - `src/core/data/` — 1,280 assessment items across all modules
 

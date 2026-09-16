@@ -1,9 +1,12 @@
 # 27 -- Auto-Mode Strategy Engine
 
+> **Cross-references:** [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Lateral:** The session-level strategy layer that consumes the CCI (foundations/25) and produces a session plan -- parameterising the encounter scheduler's session arc, biasing its priority weights, and adjusting mid-session based on engagement signals. Auto-mode wraps the scheduler; it never replaces it.
 >
 > **Depends on:** 24, 25, 16
-> **Referenced by:** 26 (unified architecture, pipeline diagram)
+> **Referenced by:** 26 (unified architecture, pipeline diagram), 43 (agentic orchestration — the orchestrator consumes session strategy and expresses it as delegation plans)
+>
+> **Orchestration note (43):** a session strategy names *what* should happen; the orchestration layer decides *which agent* delivers each element (council presence scheduling, 43 §3.3). Strategy generation stays engine-deterministic; agent selection is the orchestrator's ratification surface.
 
 ---
 

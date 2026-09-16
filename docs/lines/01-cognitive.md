@@ -153,7 +153,7 @@ synthesised stage.
 ### 5.2 Cross-line encounters archetypes (cognitive-line dual-task pairs)
 
 - **Cognitive × Somatic:** "The Drumheart" — n-back stimuli must be
-  matched on a beat. Late dropouts cost ATB.
+  matched on a beat. Late dropouts cost encounter momentum.
 - **Cognitive × Emotional:** "The Sorrowful Geometer" — Stroop with
   emotional-face stimuli (Stroop-aff) instead of colour-word.
 - **Cognitive × Willpower:** "The Long Vigil" — sustained n-back over

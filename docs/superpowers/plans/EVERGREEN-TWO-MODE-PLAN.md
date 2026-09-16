@@ -1,8 +1,8 @@
 # Evergreen Plan: Two-Mode Gameplay System
 
 **Date:** June 22, 2026
-**Status:** Active
-**Nature:** First-principles-based, living document — evolves through development cycles
+**Status:** Superseded — the assessment/engagement duality this plan formalized is now canon in `docs/foundations/26-unified-core-architecture.md` (4 execution modes) and `docs/architecture/10-stage-assessment-architecture.md` (module contract). Retained as the design rationale for the two-mode principle.
+**Nature:** First-principles-based, living document — evolved through development cycles until absorbed into the foundations
 
 ---
 

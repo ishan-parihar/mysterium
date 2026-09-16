@@ -1,5 +1,6 @@
 # 20 — The Veil of Forgetting
 
+> **Cross-references:** [[docs/foundations/16-significator-architecture|16 — Significator Architecture]] · [[docs/foundations/17-transformation-mechanics|17 — Transformation Mechanics]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]]
 > **Status:** canonical (Mysterium design decision; alignment with HoloOS now exact, not rhyming — see §1.1 below).
 >
 > **HoloOS anchor:** `_THEORY/02_Ontology/08.8.7_Primal_Distortion_Genesis_Theorem.md` §6.5 (canonical-hypothesis). Under the Primal Distortion Genesis Theorem, HoloOS's Veil is the within-octave membrane gating access to cross-octave established Laws (Free Will, Love, Light). Mysterium's Veil gates exactly this: it hides the Law-structure (stage labels, drive labels, shadow quadrant names, numerical scores, polarity data) from the player, making choices authentic rather than compliant.

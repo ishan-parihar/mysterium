@@ -1,5 +1,6 @@
 # Mysterium — Identity Document
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/15-macro-scale-archetypal-mind|15 — Macro Scale Archetypal Mind]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]]
 > **This is the source of truth for what Mysterium IS.** Every other document in the R&D set provides depth on one facet; this document provides the identity.
 
 ---

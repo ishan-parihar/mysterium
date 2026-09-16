@@ -1,11 +1,13 @@
 # 36 — Curriculum Upgrade Plan: From Basics to Ph.D
 
+> **Cross-references:** [[docs/foundations/30-holonic-curriculum-architecture|30 — Holonic Curriculum Architecture]] · [[docs/foundations/31-depth-assessment-model|31 — Depth Assessment Model]]
 > **Status:** draft (awaiting user ratification).
 >
 > **Lateral:** The formal implementation plan for upgrading Mysterium's curriculum system from its current 8-holon prototype to a full graduation-level architecture that scales from foundational concepts through Ph.D.-level research. No other document covers this: foundations/35 maps framework-complexity stages to curriculum tiers; this document specifies *what to build, in what order, and why*.
 >
 > **Depends on:** 29 (meta-learning science), 30 (holonic curriculum architecture), 31 (depth assessment model), 35 (framework-complexity mapping)
 > **Referenced by:** Implementation tickets
+> **Heading contract:** working-plan format — Purpose is §1 Current State Assessment; Open Questions are carried in the risk/dependency sections; Principles served is §7. The six-heading contract applies in substance, not literal headings.
 
 ---
 

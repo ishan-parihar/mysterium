@@ -1,5 +1,6 @@
 # 18 — The Great Way: World Architecture
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/16-significator-architecture|16 — Significator Architecture]] · [[docs/foundations/17-transformation-mechanics|17 — Transformation Mechanics]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Lateral:** The WORLD as a co-created macro-environment composed of collective holons mapped to PESTLE dimensions, that both triggers the Significator's transformations and is shaped by them. The game-design translation of the Chariot archetype (Card Seven) into Mysterium architecture. This document answers: *what is the structure of the world the player inhabits?*
 >
 > **Depends on:** foundations/15 (macro-scale archetypal theory), foundations/06 (Law-of-One correspondence), foundations/01 (AQAL quadrants)

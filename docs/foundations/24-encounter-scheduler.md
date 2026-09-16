@@ -1,5 +1,6 @@
 # 24 — Encounter Scheduler & Macro-Catalyst Engine
 
+> **Cross-references:** [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]]
 > **Lateral:** The algorithmic engine that selects, routes, and conditions encounters — the operational bridge between the Significator's state, the world's state, and the encounter content pool.
 >
 > **Depends on:** 14, 16, 17, 18, 19, 21, 22

@@ -1,11 +1,13 @@
 # 35 — Framework Complexity × Curriculum Mapping
 
+> **Cross-references:** [[docs/foundations/30-holonic-curriculum-architecture|30 — Holonic Curriculum Architecture]] · [[docs/foundations/31-depth-assessment-model|31 — Depth Assessment Model]] · [[docs/foundations/36-curriculum-upgrade-plan|36 — Curriculum Upgrade Plan]]
 > **Status:** canonical-hypothesis (mapping KosmOS framework-complexity line to Mysterium curriculum architecture).
 >
 > **Lateral:** How the structural complexity of conceptual frameworks (the framework-complexity line from the KosmOS ontology) maps to curriculum holon levels, depth rubrics, assessment modalities, and pedagogical strategies. No other document covers this: foundations/30 covers *how knowledge is organized* (the holonic structure); this document covers *how framework complexity determines what the curriculum must teach and how*. Foundations/29 covers *how learning happens* (the process); this document covers *what level of complexity the learner is navigating*.
 >
 > **Depends on:** 29 (meta-learning science), 30 (holonic curriculum architecture), 31 (depth assessment model)
 > **Referenced by:** 36 (curriculum upgrade plan)
+> **Heading contract:** working-mapping format — Purpose, Open Questions, and Principles served are carried by the numbered section set below; the six-heading contract applies in substance, not literal headings.
 
 ---
 

@@ -1,5 +1,6 @@
 # 40 — Measurement Packs & the Efficacy Infrastructure
 
+> **Cross-references:** [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/validation/BENCHMARK-ARCHITECTURE|Validation Benchmark Architecture]]
 > **Status:** canonical-hypothesis (architecture; kernel precedent exists and is load-bearing).
 > **Lateral:** the *explicit measurement* substrate — swappable "measurement packs" that
 > assess concrete competencies (coding, language, cognition, memory, …) with psychometric
@@ -10,6 +11,12 @@
 > `docs/validation/BENCHMARK-ARCHITECTURE.md` and `src/core/validation/`), the implicit
 > drive/shadow assessment inside the 64 modules (12), or what credentials may be built
 > from pack evidence (41).
+>
+> **Orchestration note (43):** pack administration and scoring are delegated to Pack
+> Agents (S1) with `pack_administer`/`pack_score` toolsets; the Validator (A3) handles
+> certification-claim instruments. Pack agents sit on the measurement side of the
+> competence/identity firewall (42 §1.1) — HealingContext never enters a
+> DelegationSpec for them.
 
 ## 1. Purpose
 

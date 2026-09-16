@@ -1,5 +1,6 @@
 # 30 — Holonic Curriculum Architecture
 
+> **Cross-references:** [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]] · [[docs/foundations/16-significator-architecture|16 — Significator Architecture]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/foundations/31-depth-assessment-model|31 — Depth Assessment Model]] · [[docs/foundations/32-agentic-curriculum-linter|32 — Agentic Curriculum Linter]]
 > **Status:** canonical-hypothesis (Mysterium-specific application of Koestler/Wilber holonic principles to curriculum design).
 >
 > **Lateral:** The structural principle that makes curricula self-similar, recursively composable, and resilient. No other document covers this: foundations/29 covers *how learning happens* (the process); this document covers *how knowledge is organized* (the structure). Foundations/21 (Incarnation Architecture) applies holonic thinking to the game world; this document applies it to the knowledge domain.

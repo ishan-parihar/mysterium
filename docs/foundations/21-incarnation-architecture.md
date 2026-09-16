@@ -1,5 +1,6 @@
 # 21 — Incarnation Architecture (Option C)
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/05-drives-and-polarities|05 — Drives And Polarities]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]] · [[docs/foundations/13-architecture-of-consciousness|13 — Architecture Of Consciousness]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]]
 > **Lateral:** Master synthesis — how greater-cycle archetypes + concept-drafts + modalities compose into a playable game.
 > **Depends on:** 11, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24
 > **Referenced by:** all implementation work; MVP-BLUEPRINT
@@ -265,7 +266,7 @@ The Immersive-RPG modality IS the world itself. It is not a discrete encounter t
 - Navigation choices (where they go, what they explore, what they avoid)
 - Spontaneous NPC interactions (greetings, observations, micro-dialogues)
 - Environmental engagement (picking up objects, reading inscriptions, observing weather)
-- Combat encounters (ATB fights with cognitive overlays)
+- High-intensity assessment-module encounters (real-time tasking with cognitive overlays)
 - Resource decisions (inventory, upgrades, rest)
 
 The Immersive-RPG modality is the **ecological validator** — it confirms whether capacities demonstrated in discrete encounters transfer to spontaneous behaviour. If a player shows high Moral-line scores in Scenario-Choice encounters but makes consistently cruel choices in free-play, the discrepancy is diagnostic.

@@ -1,5 +1,6 @@
 # 19 — The Choice & Polarity Engine
 
+> **Cross-references:** [[docs/foundations/05-drives-and-polarities|05 — Drives And Polarities]] · [[docs/foundations/16-significator-architecture|16 — Significator Architecture]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]] · [[docs/foundations/23-polarity-ontology|23 — Polarity Ontology]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Lateral:** The multi-scale polarity tracking system — how per-encounter polarity traces aggregate through four hierarchical levels into the macro-arc Choice; how crystallization emerges from coherence across lines and stages; how consequence propagation carries multi-dimensional polarity data; and how the system maintains mechanical fairness between STO and STS paths.
 >
 > **Depends on:** 15 (macro-architecture theory), 10 (shadow & pathology / 4-quadrant model), 05 (drives and polarities), 06 (Law-of-One cosmology)

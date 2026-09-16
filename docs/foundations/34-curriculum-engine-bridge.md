@@ -1,11 +1,14 @@
 # 34 — Curriculum-Engine Bridge
 
+> **Cross-references:** [[docs/foundations/29-meta-learning-science|29 — Meta Learning Science]]
 > **Status:** canonical-hypothesis (Mysterium-specific integration contract between curriculum modules and the existing developmental engine).
 >
 > **Lateral:** The integration contract that specifies exactly how curriculum content plugs into Mysterium's existing hooks — Significator, ModuleRegistry, EncounterScheduler, AgenticOrchestrator, CCI Engine, and Auto-Mode Strategy. No other document covers this: foundations/29-33 cover the curriculum subsystem in isolation; this document covers the *bridge* between curriculum and the existing engine.
 >
 > **Depends on:** 29 (meta-learning), 30 (holonic architecture), 31 (depth model), 32 (linter), 33 (dashboard), 16 (Significator), 24 (scheduler), 25 (CCI), 26 (unified architecture), 27 (auto-mode)
-> **Referenced by:** All implementation work for the curriculum expansion
+> **Referenced by:** All implementation work for the curriculum expansion; 43 (agentic orchestration — Teacher/Assessor councils and the Curriculum Aligner consume this bridge's hooks through purpose-scoped projections)
+>
+> **Orchestration note (43):** the bridge functions and the curriculum-enhanced orchestrator extension (§3.4) execute *through* the delegated councils: tutoring, revision, prescription, examination, and alignment adjustments are agent mandates, not menu actions. Curriculum alignment context itself is assembled by the Context Steward (S2) and ratified by the orchestrator.
 
 ---
 

@@ -1,5 +1,6 @@
 # 26 -- Unified Core Architecture
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Lateral:** The modular architecture overview -- how the 64-cell assessment module system is the SINGLE building block serving all gameplay purposes (onboarding, encounters, practice, shadow work), the module lifecycle from creation to re-scheduling, the renderer abstraction, and the relationship between the module contract, the encounter scheduler, and the CCI. This is the architectural thesis that unifies architecture/10-stage-assessment-architecture's technical spec with the greater-cycle engines.
 >
 > **Depends on:** 11, 12, 16, 24, 25

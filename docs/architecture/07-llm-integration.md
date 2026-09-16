@@ -1,5 +1,6 @@
 # LLM Integration Architecture
 
+> **Cross-references:** [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]]
 ## 1. Purpose
 
 Describes how LLMs are integrated as "voice, not brain" — providing narrative depth, qualitative assessment, and reflective prose while the deterministic engine handles scoring, scheduling, and state management. The LLM enriches the experience without becoming a single point of failure.

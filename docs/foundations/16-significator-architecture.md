@@ -1,5 +1,6 @@
 # 16 — Significator Architecture
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/05-drives-and-polarities|05 — Drives And Polarities]] · [[docs/foundations/17-transformation-mechanics|17 — Transformation Mechanics]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Lateral:** The player as Significator — the persistent self-pattern that survives session transitions, accumulates distortions, holds the entire developmental story, and exercises true free will. The game-design translation of the Hierophant archetype into Mysterium's data architecture and encounter-scheduling logic.
 >
 > **Status:** Canonical design document.

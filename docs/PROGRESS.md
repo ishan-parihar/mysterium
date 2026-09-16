@@ -1,5 +1,8 @@
 # Mysterium — Progress Tracker
 
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/architecture/00-mysterium-identity|Mysterium Identity]] · [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/architecture/11-curriculum-authoring|Curriculum Authoring]] · [[docs/architecture/ONBOARDING-REDESIGN-PLAN|Onboarding Redesign Plan]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/02-eight-stages-overview|02 — Eight Stages Overview]]
+> **Status (2026-09-16):** FROZEN SNAPSHOT — progress history is now tracked in `docs/CHANGELOG.md`; the live document set is indexed in `docs/INDEX.md`. Nothing below is normative.
+>
 > **Current phase:** Documentation Architecture — Epistemological Refactor Complete
 > **Last updated:** 2026-07-24
 

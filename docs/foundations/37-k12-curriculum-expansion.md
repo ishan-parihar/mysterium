@@ -1,5 +1,6 @@
 # 37 — K-12+ Curriculum Expansion
 
+> **Cross-references:** [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Status:** canonical-hypothesis (architecture; content work follows 36's phase protocol).
 > **Lateral:** HOW mainstream academic domains (primary school through pre-university) map
 > onto the 8-line × 8-stage architecture and integrate with the existing curriculum engine.

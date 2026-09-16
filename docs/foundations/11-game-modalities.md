@@ -294,7 +294,7 @@ When the engine needs to assess a player at (line, stage):
 **Game types within this modality:**
 | Game type | What it measures | Lines it serves |
 |---|---|---|
-| Combat encounters (ATB + cognitive overlays) | Cognitive ceiling, motor control, willpower | Cognitive, Somatic, Willpower |
+| Assessment-module encounters (real-time cognitive tasking + overlays) | Cognitive ceiling, motor control, willpower | Cognitive, Somatic, Willpower |
 | Dialogue trees (NPC conversations) | Moral reasoning, empathy, communication | Moral, Interpersonal, Emotional |
 | Exploration choices (where do they go?) | Curiosity (Eros), avoidance patterns (allergy) | All lines (drive measurement) |
 | Resource management (inventory, upgrades) | Strategic thinking, value priorities | Willpower, Spiritual |

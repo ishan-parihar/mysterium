@@ -1,5 +1,6 @@
 # foundations/12 — Drive Assessment Mechanics: The 64-Module × 4-Drive Matrix
 
+> **Cross-references:** [[docs/foundations/11-game-modalities|11 — Game Modalities]]
 ## 1. Purpose
 
 Define **how each of the four drives (Agency, Communion, Eros, Agape) is implicitly measured** within each of the 64 assessment modules (8 lines × 8 stages). This is the operational specification that tells game designers exactly what to build for each module's drive-health probes.

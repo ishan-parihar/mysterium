@@ -1,5 +1,6 @@
 # 25 -- Cumulative Consciousness Index (CCI)
 
+> **Cross-references:** [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
 > **Status:** canonical-hypothesis (Mysterium-specific operationalization; G_z/P_z framework grounded in HoloOS Primal Distortion Genesis Theorem).
 >
 > **HoloOS anchor:** `_THEORY/02_Ontology/02.1_Microcosmic_Metabolic_Architecture.md` (canonical) + `_THEORY/02_Ontology/08.8.7_Primal_Distortion_Genesis_Theorem.md` (canonical-hypothesis). HoloOS requires both `G_z` (Lesser-Cycle health, Agape, rewards balance/integration) AND `P_z` (Greater-Cycle health, Eros, rewards polarization/transcendence) for total metabolic health.

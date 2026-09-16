@@ -70,7 +70,7 @@ sunk-cost mistakes. They are weak in fast reflexive combat. They are
 
 | Verb | Task vehicle | Mechanic | Stage gating |
 |---|---|---|---|
-| Witness Pause | Sustained meta-awareness | Pauses ATB for self/all; cost rises if used reactively | Red+ |
+| Witness Pause | Sustained meta-awareness | Pauses encounter tasking for self/all; cost rises if used reactively | Red+ |
 | Self-Tag | Affect / motive labelling | Correctly labels own current state from a list; unlocks next-action choices | Red+ |
 | Integrate | Hold an aspect "as object" rather than "as subject" | Brief mini-game of describing a felt aspect *as if* from outside | Orange+ |
 | Reflection Strike | Damage scales with accuracy of post-fight self-report | Post-fight quiz: "What did you do well? Where did you slip?" | Orange+ |

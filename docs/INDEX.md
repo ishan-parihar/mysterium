@@ -1,5 +1,6 @@
 # `/docs/` — Index
 
+> **Cross-references:** [[docs/architecture/00-mysterium-identity|Mysterium Identity]] · [[docs/architecture/01-overview|Overview]] · [[docs/architecture/02-core-engine|Core Engine]] · [[docs/architecture/03-encounter-system|Encounter System]] · [[docs/architecture/04-curriculum-system|Curriculum System]] · [[docs/architecture/05-shadow-work|Shadow Work]] · [[docs/architecture/06-polarity-engine|Polarity Engine]] · [[docs/architecture/07-llm-integration|Llm Integration]]
 > The research foundation of Mysterium. The binding build plan lives at
 > `superpowers/plans/`. This tree is the *why* and the
 > *what*; the architecture docs are the *how* and the *when*.
@@ -10,11 +11,11 @@
 2. `01-first-principles.md` — the eight questions, expanded.
 3. `02-glossary.md` — every term used anywhere in /docs.
 4. `03-research-methodology.md` — DSR, OMDE, INFORM, citation policy.
-5. `foundations/00-...42-...` (in order — **00-09 substrate, 10-14 lesser cycle, 15-27 greater cycle, 28-34 curriculum expansion, 35-36 curriculum upgrade plan, 37-41 domain expansion, 42 levelling mechanism**)
+5. `foundations/00-...43-...` (in order — **00-09 substrate, 10-14 lesser cycle, 15-27 greater cycle, 28-34 curriculum expansion, 35-36 curriculum upgrade plan, 37-41 domain expansion, 42 levelling mechanism, 43 agentic orchestration**)
 6. `lines/00-overview-multi-line.md` then `01-...08-...` (any order)
 7. `stages/00-overview-eight-stages.md` then `01-...08-...` (in order)
 8. `architecture/10-stage-assessment-architecture.md`
-9. `architecture/01-overview.md` → `architecture/08-rendering-layer.md`
+9. `architecture/01-overview.md` → `architecture/09-rendering-layer.md`
 10. `concept-drafts/README.md` then a sampled module to see the lesser-cycle design briefs in concrete form
 11. `CHANGELOG.md` — what changed, and when.
 
@@ -124,21 +125,24 @@
 
 - `architecture/10-stage-assessment-architecture.md` — module contract, composition rules, 4 execution modes
 - `ONBOARDING-REDESIGN-PLAN.md` — binary-search composite assessment for Significator seeding
+- `architecture/00-mysterium-identity.md` — what Mysterium is (and is not) at the identity level
 - `architecture/01-overview.md` — the binding architectural contract
 - `architecture/02-core-engine.md` — Significator, CCI, AutoMode, Scheduler
-- `architecture/02-encounter-system.md` — 64 modules, 7 modalities, AgenticOrchestrator
-- `architecture/03-curriculum-system.md` — holonic curriculum, depth assessment, spaced repetition
-- `architecture/04-shadow-work.md` — 4-quadrant shadow model, detection→integration
-- `architecture/05-polarity-engine.md` — STO/STS crystallization, harvest mechanics
-- `architecture/06-llm-integration.md` — LLM as voice, not brain; ContextPipeline
-- `architecture/07-persistence.md` — Significator serialization, encryption, profiles
-- `architecture/08-rendering-layer.md` — SvelteKit WebUI, CLI, Capacitor
+- `architecture/03-encounter-system.md` — 64 modules, 7 modalities, AgenticOrchestrator
+- `architecture/04-curriculum-system.md` — holonic curriculum, depth assessment, spaced repetition
+- `architecture/05-shadow-work.md` — 4-quadrant shadow model, detection→integration
+- `architecture/06-polarity-engine.md` — STO/STS crystallization, harvest mechanics
+- `architecture/07-llm-integration.md` — LLM as voice, not brain; ContextPipeline
+- `architecture/08-persistence.md` — Significator serialization, encryption, profiles
+- `architecture/09-rendering-layer.md` — SvelteKit WebUI, CLI, Capacitor
 
 ### Supporting docs
 
 - `progression/00-progression-overview.md` — how the player ascends
 - `narrative/00-narrative-architecture.md` — story as scaffolding for development
 - `architecture/11-curriculum-authoring.md` — how to author curriculum holons
+- `validation/BENCHMARK-ARCHITECTURE.md` — the validation kernel spec (13 runtime gates, `src/core/validation/`)
+- `research/references/` — competitive analyses of four brain-training platforms (grounding corpus for the cognitive-training surface)
 
 ### `concept-drafts/` (512)
 

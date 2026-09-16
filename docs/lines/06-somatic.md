@@ -92,7 +92,7 @@ gravitate to.
 
 ### 4.3 Module parameters(s) backed
 
-- **Agility** — reflex windows; primary input to ATB fill rate
+- **Agility** — reflex windows; primary input to real-time encounter pacing
 - **Stamina** — posture / breath-gate budget
 - **Presence** — late-game; non-action mitigation and regen
 

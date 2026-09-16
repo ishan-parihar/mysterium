@@ -1,5 +1,6 @@
 # Rendering Layer Architecture
 
+> **Cross-references:** [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]]
 ## 1. Purpose
 
 Describes the rendering surfaces of Mysterium — SvelteKit WebUI, CLI, and Capacitor native bridge. The rendering layer consumes the core via the infra layer and presents the contemplative practice to the player.

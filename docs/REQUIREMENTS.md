@@ -1,5 +1,6 @@
 # Mysterium Research Requirements — The Document of Documents
 
+> **Cross-references:** [[docs/architecture/01-overview|Overview]] · [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/architecture/11-curriculum-authoring|Curriculum Authoring]] · [[docs/architecture/ONBOARDING-REDESIGN-PLAN|Onboarding Redesign Plan]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/36-curriculum-upgrade-plan|36 — Curriculum Upgrade Plan]]
 > **Status:** Active — Research + Implementation phases running concurrently.
 > See `architecture/01-overview.md` for the binding architectural contract.
 

@@ -1,5 +1,6 @@
 # foundations/14 — Game as Developmental Catalyst: The Catalyst→Experience→Integration Mechanics
 
+> **Cross-references:** [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]]
 ## 1. Purpose
 
 Define how each game in the Mysterium ecosystem functions as a **developmental catalyst** — not merely an assessment instrument but a living practice that moves the player through the catalyst→experience→integration cycle mapped directly onto the Law-of-One Archetypal Mind and the 5-layer topography of the unconscious.

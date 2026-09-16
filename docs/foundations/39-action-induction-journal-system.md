@@ -1,5 +1,6 @@
 # 39 — Action Induction & the Journal System
 
+> **Cross-references:** [[docs/validation/BENCHMARK-ARCHITECTURE|Validation Benchmark Architecture]]
 > **Status:** canonical-hypothesis (architecture; builds on existing `Vow` machinery).
 > **Lateral:** the bridge between the virtual game and the player's actual life —
 > real-world practice objectives ("homework-like" without homework's coercion), their
@@ -9,6 +10,13 @@
 > model, and the **agent toolset** through which orchestrator agents run this loop.
 > It does NOT own pods (38 consumes it for witness), measurement-pack reliability (40),
 > or legal/credential surfaces (41).
+>
+> **Orchestration note (43):** the four practice tools (`propose_objective`,
+> `process_checkin`, `review_practice`, `witness_objective`) are held by named agents in
+> the 43 council: `propose_objective`/`process_checkin` by the Teacher council,
+> `review_practice` by the Reviewer (A2), `witness_objective` via the pod surface. The
+> Reviewer's synthesis is a delegated mandate returning a Veil-safe narrative, not an
+> orchestrator-side function call.
 
 ## 1. Purpose
 

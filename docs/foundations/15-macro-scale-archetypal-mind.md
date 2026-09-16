@@ -1,5 +1,6 @@
 # 15 — Macro-Scale Architecture of the Archetypal Mind
 
+> **Cross-references:** [[docs/foundations/13-architecture-of-consciousness|13 — Architecture Of Consciousness]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/16-significator-architecture|16 — Significator Architecture]] · [[docs/foundations/17-transformation-mechanics|17 — Transformation Mechanics]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]]
 > **Lateral:** The pure theoretical substrate for the **greater cycle** of consciousness — Significator, Transformation, Great Way, Choice — and the Veil of Forgetting that governs them. This document is to the macro-cycle what `13-architecture-of-consciousness.md` is to the micro-cycle (Matrix/Potentiator/Catalyst/Experience). It contains pure theory; game-design translation lives in `16` through `22`.
 >
 > **Status:** Imported reference document. Treat as canonical theoretical source.

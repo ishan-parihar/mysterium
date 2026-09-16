@@ -1,5 +1,7 @@
 # Brain-Game Upgrade — Unified Plan
 
+> **Status (2026-09-16):** Implemented and absorbed — the as-built architecture lives in `06-as-built-architecture.md`; the cognitive-training surface is part of the assessment-module execution modes (`docs/foundations/26-unified-core-architecture.md`) and the training tools on the agent loop (`docs/foundations/43-agentic-orchestration-architecture.md` §4.3). This directory is a completed work-stream record.
+>
 > **Goal:** Upgrade Mysterium's agentic loop so the in-game agent can **execute, orchestrate, and deploy** real brain-training games to the player at the CLI level — turning the existing narrative-assessment loop into a full cognitive training platform for mental development.
 
 **Status:** Implemented — Phases A–E shipped (06-as-built-architecture.md) · 2026-08-27

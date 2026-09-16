@@ -1,5 +1,6 @@
 # 29 — Meta-Learning Science
 
+> **Cross-references:** [[docs/foundations/07-neuroscience-of-development|07 — Neuroscience Of Development]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/foundations/30-holonic-curriculum-architecture|30 — Holonic Curriculum Architecture]] · [[docs/foundations/31-depth-assessment-model|31 — Depth Assessment Model]]
 > **Status:** canonical-hypothesis (Mysterium-specific operationalization of established learning science for curriculum plug architecture).
 >
 > **Lateral:** The scientific substrate explaining HOW learning happens at the neurological, cognitive, and metacognitive levels — and how Mysterium's curriculum plug architecture must be designed to harness these mechanisms. No other document covers this: foundations/08 covers psychophysics of difficulty adaptation; foundations/09 covers flow theory; foundations/11 covers game modalities as assessment axes. This document covers the *learning process itself* — encoding, consolidation, retrieval, transfer, and the metacognitive layer that governs all of them.

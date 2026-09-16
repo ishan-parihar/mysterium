@@ -53,7 +53,12 @@ docs/
 │   ├── 24-encounter-scheduler.md           ← Encounter selection algorithm & macro-catalyst engine
 │   ├── 25-cumulative-consciousness-index.md← CCI composite metric
 │   ├── 26-unified-core-architecture.md     ← The unified core architecture spec
-│   └── 27-auto-mode-strategy-engine.md     ← Auto-mode session strategy generation
+│   ├── 27-auto-mode-strategy-engine.md     ← Auto-mode session strategy generation
+│   ├── 28-holoos-open-joints-mapping.md    ← HoloOS open-joints tracking
+│   ├── 29–36 ...                           ← Curriculum expansion set (29 meta-learning, 30 holonic curriculum, 31 depth, 32 agentic linter, 33 dashboard, 34 engine bridge, 35 framework complexity, 36 upgrade plan)
+│   ├── 37–41 ...                           ← Domain expansion set (37 K-12, 38 cohort/multiplayer, 39 action-induction/journal, 40 measurement packs, 41 global recognition)
+│   ├── 42-developmental-levelling-mechanism.md ← Unified evidence-only grading/staging (competence/identity firewall)
+│   └── 43-agentic-orchestration-architecture.md ← Primary orchestrator + sub-agent council + tool systems + log protocol
 │
 ├── concept-drafts/      ← 512 game concept documents (64 modules × 8 files)
 │   ├── README.md        ← Templates and requirements for each file
@@ -97,10 +102,10 @@ docs/
 | **-- Architecture / process docs --** ||
 | STAGE-ASSESSMENT-ARCHITECTURE | The MODULE CONTRACT (composition rules, interfaces, 4 execution modes) |
 | ONBOARDING-REDESIGN-PLAN | Binary-search composite assessment for initial Significator seeding |
-| UNIFIED-IMPLEMENTATION-PLAN | The binding build plan replacing ATB combat with assessment-module architecture |
+| UNIFIED-IMPLEMENTATION-PLAN | ARCHIVED (`docs/archive/old-plans/`) — legacy-removal phase record; superseded by the current phase in §4.2 |
 | concept-drafts/README | TEMPLATES for what each concept-draft file must contain |
 | concept-drafts/ROADMAP | The TRAJECTORY for developing all 512 concept-drafts |
-| MVP-BLUEPRINT.md | Vision & philosophy authoritative (Parts I-IV, canon decisions, modular architecture philosophy); implementation details superseded by UNIFIED-IMPLEMENTATION-PLAN.md |
+| MVP-BLUEPRINT.md | ARCHIVED (`docs/archive/old-plans/`) — historical canon record; live canon = `docs/foundations/` + `docs/INDEX.md` (blueprint decision #2 revised in `docs/foundations/41-global-recognition-credentialing.md` §0) |
 
 ### 2.3 Document Relationships (No Circular Dependencies)
 
@@ -205,16 +210,19 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current Phase: Implementation Phase 0 — Legacy Removal
+### 4.2 Current Phase: Orchestration-Layer Implementation (per docs/foundations/43)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules x 8 files).
-The current phase is **Implementation Phase 0: Legacy Removal** per
-`UNIFIED-IMPLEMENTATION-PLAN.md`. The process:
+Legacy removal is **DONE** (ATB documents archived to `docs/archive/`, ATB code removed;
+see `docs/audits/DOC-SET-AUDIT-2026-09-16.md` for the reconciliation record).
+The current phase implements the agentic orchestration layer per `docs/foundations/43-agentic-orchestration-architecture.md`:
 
-1. **Archive obsolete ATB-based documents** (combat philosophy, enemy taxonomy, old plans)
-2. **Align all documentation** to the unified architecture (assessment modules, Significator, 64-cell system)
-3. **Remove legacy ATB code** from `src/` and replace with assessment-module architecture
-4. **Phase order per unified plan:** Legacy removal -> Core architecture -> First playable
+1. **Delegation kernel** — `DelegationSpec` / `DelegationResult` / `Proposal` types (43 §6), `delegate_session` on the orchestrator, session-log store (43 §4.4)
+2. **Council toolsets** — purpose-scoped read projections + `propose_*` tools per council (43 §4.3); ratification-only commit path (L4)
+3. **Profile/context agents** — Context Steward (S2) + Data Warden (S4) conducting all profile and consent surfaces agentically (43 §4.2)
+4. **Kernel gates** — extend the validation kernel with delegation determinism + toolset-firewall checks (43 §4.7, §5.3)
+
+Standing constraints for ALL phases: workspace-lint → build+test → commit → push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5.
 
 ### 4.3 The Grounding Principle
 
