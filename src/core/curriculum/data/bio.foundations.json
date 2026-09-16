@@ -1,0 +1,853 @@
+[
+  {
+    "id": "bio.foundations",
+    "name": "Biology Foundations",
+    "description": "The foundational concepts of living systems: cells as units of life, evolution as the organizing process, homeostasis as the maintenance of viable conditions, and ecology as the web of interdependence.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": ["bio.cells", "bio.evolution", "bio.homeostasis", "bio.ecology", "bio.genetics"],
+    "phases": {
+      "observation": {
+        "question": "What distinguishes a living system from a non-living one?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can list the criteria of life and apply them to edge cases (viruses, fire, crystals)"
+      },
+      "principle": {
+        "question": "Why do all living systems share these criteria despite their diversity?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains common ancestry and physical constraints as sources of unity"
+      },
+      "application": {
+        "question": "How do biologists decide whether a novel entity is alive?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student applies criteria to a novel case and justifies the verdict"
+      },
+      "integration": {
+        "question": "How do cells, evolution, homeostasis, and ecology explain one organism at four scales?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student maps one organism's story across all four scale-concepts"
+      },
+      "creation": {
+        "question": "What would a convincing non-terrestrial life form need?",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student designs a life-criteria-respecting alien metabolism sketch"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "units nested in larger functional wholes",
+        "targetConceptId": "integral.holons",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "Cells are holons: wholes to their organelles, parts of tissues — biology is the original holarchy science"
+      }
+    ],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Somatic"],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": { "min": "memorized", "max": "transformed" },
+      "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 86400000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Biology rests on four scale-linking ideas. Cells are the universal unit: every organism is built from them, and every cell runs the same core chemistry. Evolution by selection explains why cells and organisms are the way they are — variation plus differential survival, iterated over deep time. Homeostasis explains how organisms maintain viable internal conditions against a shifting environment. Ecology explains how organisms and environments form interdependent systems. Each idea is also a lens: what looks like design is history; what looks like stability is active regulation; what looks like an individual is a node in a web.",
+      "examples": [
+        "A bacterial cell and a neuron share membranes, DNA, and metabolism — unity of life",
+        "Antibiotic resistance: evolution observed on human timescales",
+        "Sweating on a hot day: homeostasis spending energy to defend a setpoint"
+      ],
+      "nonExamples": [
+        "A crystal growing (order without metabolism or reproduction-with-variation)",
+        "A river delta (change without inheritance)"
+      ],
+      "analogies": [
+        "Evolution is a search algorithm run by reality itself — no designer, endless iteration",
+        "Homeostasis is a thermostat you are made of"
+      ],
+      "visuals": [
+        "Scale ladder: molecule → organelle → cell → tissue → organism → population → ecosystem"
+      ],
+      "practiceProblems": [
+        {
+          "id": "bio.f.p1",
+          "problemText": "Apply the criteria of life to a virus and defend your verdict.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "bio.f.mc1",
+        "statement": "Evolution is organisms trying to improve",
+        "whyItFeelsRight": "Purpose is intuitive; we explain behavior by goals",
+        "structuralReason": "Selection has no foresight — it filters variants that already exist. 'Trying' language smuggles a designer back in and blocks comprehension of neutral drift and constraint.",
+        "diagnosticTaskId": "bio.f.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "bio.foundations",
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the criteria of life and name the four scale-ideas",
+          "canDo": ["List criteria of life", "Name cell/evolution/homeostasis/ecology"],
+          "cannotDo": ["Apply them to edge cases"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain what each scale-idea contributes and how they differ",
+          "canDo": ["Distinguish proximate from ultimate explanation"],
+          "cannotDo": ["Chain the ideas across scales"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.45
+        },
+        "applied": {
+          "evidence": "Can apply criteria and lenses to novel cases",
+          "canDo": ["Classify edge cases with justified verdicts"],
+          "cannotDo": ["Analyze multi-scale systems"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.6
+        },
+        "analyzed": {
+          "evidence": "Can trace one phenomenon through multiple scales",
+          "canDo": ["Explain a disease at cell, organism, and population scales"],
+          "cannotDo": ["Evaluate competing frameworks"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.75
+        },
+        "evaluated": {
+          "evidence": "Can weigh competing explanations (design vs selection, equilibrium vs regulation)",
+          "canDo": ["Adjudicate a frameworks dispute with evidence"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Multi-scale biological thinking is habitual — organisms are read as evolved, regulated, ecological systems by default",
+          "canDo": ["Spontaneously apply the four lenses to novel phenomena"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "bio.cells",
+    "name": "Cells: The Unit of Life",
+    "description": "All life is cellular: membranes that decide what enters, metabolism that trades energy, and DNA that carries the recipe forward.",
+    "level": "concept",
+    "parentId": "bio.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What must a boundary accomplish for something inside it to be alive?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student describes the membrane's selective-permeability role"
+      },
+      "principle": {
+        "question": "Why is compartmentalization the precondition for metabolism?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains concentration gradients and local chemistry"
+      },
+      "application": {
+        "question": "Predict what a toxin that punches holes in membranes does to a cell.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student traces gradient collapse → metabolic failure"
+      },
+      "integration": {
+        "question": "How does the cell foreshadow the organism (specialization, communication, repair)?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student maps organelle roles to organ roles"
+      },
+      "creation": {
+        "question": "Sketch the minimal cell: what could you remove and stay alive?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student proposes a minimal-genome argument"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "selective boundary maintaining internal order",
+        "targetConceptId": "bio.homeostasis",
+        "targetDomain": "Biology",
+        "mappingDescription": "The membrane is homeostasis at the smallest scale — regulation begins at the boundary"
+      }
+    ],
+    "prerequisites": ["bio.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "A cell is a compartment that maintains different interior chemistry from its surroundings. The membrane makes this possible: a lipid bilayer studded with channels and pumps that decide what crosses. Inside, metabolism runs — networks of reactions that harvest energy (respiration, photosynthesis) and spend it building and repairing. DNA encodes the proteins that do the work; the recipe outlives the cook. Cells are not bags of goo but coordinated factories: compartments (organelles) specialize, signals travel, damage is repaired. Every capability of every organism is cellular capability scaled up.",
+      "examples": [
+        "Insulin secretion: signal → vesicle traffic → membrane fusion",
+        "Mitochondria: ancient bacteria that became organelles (endosymbiosis)"
+      ],
+      "nonExamples": [
+        "A soap bubble (boundary without metabolism)",
+        "A fire (energy flow without inheritance)"
+      ],
+      "analogies": [
+        "The cell as a walled city: gates, power plants, workshops, archives, messengers",
+        "DNA as a cookbook that outlives the kitchen"
+      ],
+      "visuals": [
+        "Labeled cell diagram grouped by function: boundary, energy, information, traffic"
+      ],
+      "practiceProblems": [
+        {
+          "id": "bio.cell.p1",
+          "problemText": "A poison blocks ATP synthesis. List the first three cellular systems to fail and why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "bio.cell.mc1",
+        "statement": "Cells are mostly empty bags of fluid",
+        "whyItFeelsRight": "Diagrams show mostly blank space",
+        "structuralReason": "The cytoplasm is densely packed and structured — the diagram's whitespace erases the traffic, scaffolding, and crowding that make cellular chemistry work.",
+        "diagnosticTaskId": "bio.cell.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "bio.cells",
+      "levels": {
+        "memorized": {
+          "evidence": "Can name organelles and their one-line functions",
+          "canDo": ["Label a cell diagram"],
+          "cannotDo": ["Explain compartmentalization's necessity"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain why compartments and gradients matter",
+          "canDo": ["Explain selective permeability's role"],
+          "cannotDo": ["Predict perturbation effects"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict toxin/drug effects from mechanism",
+          "canDo": ["Trace a mechanism to a cellular outcome"],
+          "cannotDo": ["Integrate across systems"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace multi-step failure cascades",
+          "canDo": ["Order a failure cascade with reasons"],
+          "cannotDo": ["Evaluate experimental evidence"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can judge competing models of early-cell evolution",
+          "canDo": ["Weigh endosymbiotic vs abiotic evidence"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Reads all life mechanistically through cellular lenses by default",
+          "canDo": ["Explain any organismic phenomenon cellularly"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "bio.evolution",
+    "name": "Evolution by Selection",
+    "description": "Variation, inheritance, and differential survival — iterated — organize all of life without a designer.",
+    "level": "concept",
+    "parentId": "bio.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What three ingredients are enough for evolution to occur?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student states variation, heritability, differential reproductive success"
+      },
+      "principle": {
+        "question": "Why does selection produce apparent design without a designer?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains cumulative filtering over generations"
+      },
+      "application": {
+        "question": "Why do antibiotics prescribed incompletely breed resistance?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student applies selection pressure reasoning to the case"
+      },
+      "integration": {
+        "question": "How do constraints and trade-offs explain imperfection in organisms?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student explains the recurrent laryngeal nerve or similar as history, not design"
+      },
+      "creation": {
+        "question": "Design a selection experiment: what will you select for, and what costs might emerge?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student designs the experiment and names trade-offs"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "variation + selection + retention",
+        "targetConceptId": "cs.foundations",
+        "targetDomain": "Computer Science",
+        "mappingDescription": "Genetic algorithms encode evolution directly: mutation, fitness function, generation loop"
+      }
+    ],
+    "prerequisites": ["bio.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Moral"],
+      "stageRange": { "min": "Orange", "max": "Turquoise" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "transformed" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated", "transformed"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Evolution needs only three ingredients: individuals vary, variation is heritable, and some variants survive and reproduce more than others. Given those, filtering is automatic — the variants that fit the current environment become more common, generation after generation. No foresight, no goal: the 'design' accumulates backward from what survived, which is why organisms are full of historical accidents, compromises, and vestiges. Selection also operates within bodies (immune systems) and outside them (culture evolves the same way: variation, memory, differential spread). The theory's power is its generality — the same loop explains fins, antibodies, and languages.",
+      "examples": [
+        "Darwin's finches: beak shapes tracking food sources",
+        "Peppered moths: industrial soot shifting the selective environment",
+        "Immune clonal selection: evolution run inside your body this week"
+      ],
+      "nonExamples": [
+        "An individual acclimating (lamarkian confusion — acquired traits aren't inherited)",
+        "Random drift alone (no differential fit, though drift is real and matters)"
+      ],
+      "analogies": [
+        "Selection as a sieve, not a sculptor — it can only keep what falls through",
+        "Evolution as hill-climbing without a map: local peaks, no guarantee of global best"
+      ],
+      "visuals": [
+        "Fitness-landscape sketch with population dots climbing peaks"
+      ],
+      "practiceProblems": [
+        {
+          "id": "bio.evo.p1",
+          "problemText": "Explain why 'evolution is just a theory' misunderstands the word theory.",
+          "targetDepth": "evaluated"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "bio.evo.mc1",
+        "statement": "Humans evolved from modern monkeys",
+        "whyItFeelsRight": "Family trees are drawn upward toward 'better' species",
+        "structuralReason": "Humans and modern monkeys share a common ancestor; both lineages have evolved for the same time. Progress language ('higher', 'primitive') distorts branching into a ladder.",
+        "diagnosticTaskId": "bio.evo.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "bio.evolution",
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the three ingredients and give one example",
+          "canDo": ["Recall ingredients, examples"],
+          "cannotDo": ["Explain the mechanism"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain cumulative filtering and why design-language misleads",
+          "canDo": ["Explain selection without agency"],
+          "cannotDo": ["Apply to novel pressures"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict outcomes of specified selection pressures",
+          "canDo": ["Reason resistance, domestication cases"],
+          "cannotDo": ["Analyze trade-offs historically"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose traits into history, constraint, and trade-off",
+          "canDo": ["Analyze imperfect design as evidence"],
+          "cannotDo": ["Evaluate theory-level critiques"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate selection vs drift vs constraint in real cases",
+          "canDo": ["Weigh competing mechanisms with evidence"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Selection thinking generalizes — sees the loop in immunity, markets, culture",
+          "canDo": ["Apply the loop outside biology unprompted"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "bio.homeostasis",
+    "name": "Homeostasis & Regulation",
+    "description": "Life is a defended setpoint: sensors, comparators, and effectors working in loops to keep internal conditions viable.",
+    "level": "concept",
+    "parentId": "bio.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What happens to your blood temperature and glucose an hour after a meal?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student identifies the regulated variables and their stability"
+      },
+      "principle": {
+        "question": "Why does regulation require sensing, comparison, and correction?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student describes negative feedback structure"
+      },
+      "application": {
+        "question": "Diagnose diabetes as a broken feedback loop.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student maps sensor (beta cells), signal (insulin), effector (uptake) failure"
+      },
+      "integration": {
+        "question": "How do allostasis and stress show regulation is predictive, not just reactive?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student distinguishes setpoint defense from anticipatory range shifts"
+      },
+      "creation": {
+        "question": "Map one habit of yours onto a feedback loop: sensor, comparator, effector.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student produces a personal regulation-loop analysis"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "feedback loops defending setpoints",
+        "targetConceptId": "integral.foundations",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "Psychological self-regulation (emotional, attentional) is homeostasis's structure at the interior scale — same loop, different holon"
+      }
+    ],
+    "prerequisites": ["bio.foundations", "bio.cells"],
+    "devMapping": {
+      "primaryLine": "Somatic",
+      "secondaryLines": ["Cognitive", "Intrapersonal"],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Every cell and organism maintains internal conditions within narrow viable ranges — temperature, pH, glucose, ion concentrations. The mechanism is always the same structure: a sensor detects the variable, a comparator checks it against a setpoint, and effectors correct deviations. Negative feedback is self-stabilizing; positive feedback (childbirth, blood clotting) amplifies toward completion and must terminate. Regulation costs energy, and chronic activation (stress) reshapes the system — setpoints shift, sensitivity changes, wear accumulates (allostatic load). Homeostasis is not just a biological topic: it is the general grammar of self-regulating systems, from thermostats to emotional regulation.",
+      "examples": [
+        "Thermoregulation: shivering, sweating, vasodilation",
+        "Blood glucose: insulin/glucagon as opposing effectors",
+        "Fever: a deliberate setpoint change, not a malfunction"
+      ],
+      "nonExamples": [
+        "Positive feedback alone (destabilizing without a terminator)",
+        "A stone's stability (passive, unregulated)"
+      ],
+      "analogies": [
+        "Body as a house with thousands of thermostats, each with its own crew",
+        "Stress as a thermostat recalibrated by the weather it expects"
+      ],
+      "visuals": [
+        "Generic feedback-loop diagram: sensor → comparator → effector → variable → sensor"
+      ],
+      "practiceProblems": [
+        {
+          "id": "bio.homeo.p1",
+          "problemText": "For sleep deprivation, name the regulated variables that drift and the compensation attempts.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "bio.homeo.mc1",
+        "statement": "Homeostasis means keeping everything constant",
+        "whyItFeelsRight": "'Homeo' suggests sameness",
+        "structuralReason": "Setpoints shift deliberately (fever, circadian rhythms, exercise) — the system defends dynamic ranges, not static points. Confusing the two blocks understanding of adaptation and allostasis.",
+        "diagnosticTaskId": "bio.homeo.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "bio.homeostasis",
+      "levels": {
+        "memorized": {
+          "evidence": "Can name regulated variables and loop components",
+          "canDo": ["List loop parts"],
+          "cannotDo": ["Assemble the loop"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain negative feedback structure",
+          "canDo": ["Draw and narrate a loop"],
+          "cannotDo": ["Map loops to diseases"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can diagnose broken loops in disease cases",
+          "canDo": ["Locate sensor/signal/effector failure"],
+          "cannotDo": ["Analyze chronic dysregulation"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace allostatic load across systems",
+          "canDo": ["Explain stress cascades multi-system"],
+          "cannotDo": ["Evaluate regulation models"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can judge reactive vs predictive regulation accounts",
+          "canDo": ["Weigh allostasis vs homeostasis framing"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Reads self, body, and habits as regulation loops by default",
+          "canDo": ["Apply loop analysis to personal and clinical cases"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Somatic"]
+  },
+  {
+    "id": "bio.ecology",
+    "name": "Ecology & Interdependence",
+    "description": "Organisms exist in webs: energy flows, matter cycles, and every population is both constrained by and constitutive of its community.",
+    "level": "concept",
+    "parentId": "bio.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Where does the mass of a tree come from?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student traces air, water, and light into wood"
+      },
+      "principle": {
+        "question": "Why do energy pyramids narrow while matter cycles closed?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student distinguishes thermodynamic loss from element cycling"
+      },
+      "application": {
+        "question": "Predict cascade effects of removing a top predator.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons a trophic cascade through three levels"
+      },
+      "integration": {
+        "question": "How do niches explain both competition and cooperation?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student connects niche overlap to competitive exclusion and niche partitioning"
+      },
+      "creation": {
+        "question": "Design a restoration plan for a degraded local ecosystem.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student proposes interventions with ecological reasoning"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "nested interdependent holons",
+        "targetConceptId": "integral.holons",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "Ecosystems are the exterior-collective quadrant's holarchy — populations as holons in communities"
+      }
+    ],
+    "prerequisites": ["bio.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Moral", "Naturalist"],
+      "stageRange": { "min": "Orange", "max": "Turquoise" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Ecology studies the webs that organisms form. Energy enters as sunlight, flows through producers to consumers, and dissipates as heat — one-way, which is why food pyramids narrow and top predators are rare. Matter, unlike energy, cycles: carbon, nitrogen, and water loop through organisms and environment indefinitely. Populations are regulated by limiting factors (food, space, predation), and communities are shaped by niches — overlap breeds competition, partitioning permits coexistence. Removing keystones reorganizes whole systems (trophic cascades), which is why ecology is ultimately the science of consequences: nothing lives alone, and no action stays local.",
+      "examples": [
+        "Wolves in Yellowstone: cascade through elk to willows to rivers",
+        "Nitrogen-fixing bacteria: the invisible keystone of agriculture",
+        "Coral bleaching: symbiosis failure cascading through a reef"
+      ],
+      "nonExamples": [
+        "A food chain drawn as isolated linear (real webs branch and loop)",
+        "Ecosystems as stable climax states (disturbance and succession are normal)"
+      ],
+      "analogies": [
+        "Energy as a one-way river, matter as a wheel",
+        "Keystone species as load-bearing walls in a building"
+      ],
+      "visuals": [
+        "Energy pyramid beside a nutrient-cycle wheel for the same system"
+      ],
+      "practiceProblems": [
+        {
+          "id": "bio.eco.p1",
+          "problemText": "Why can a ecosystem support many herbivores but few hawks?",
+          "targetDepth": "comprehended"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "bio.eco.mc1",
+        "statement": "Ecosystems are naturally balanced and return to normal after disturbance",
+        "whyItFeelsRight": "Nature documentaries end in serene equilibrium",
+        "structuralReason": "Ecosystems are dynamic mosaics with shifting baselines; some disturbances push systems past thresholds into alternate stable states. Equilibrium nostalgia weakens conservation reasoning.",
+        "diagnosticTaskId": "bio.eco.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "bio.ecology",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define energy flow, matter cycling, niche",
+          "canDo": ["Recall terms with examples"],
+          "cannotDo": ["Reason cascades"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain pyramid narrowing and closed cycles",
+          "canDo": ["Distinguish energy vs matter fate"],
+          "cannotDo": ["Predict perturbations"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict cascade outcomes",
+          "canDo": ["Reason three-level perturbations"],
+          "cannotDo": ["Analyze regime shifts"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose a real ecosystem into flows, cycles, keystones",
+          "canDo": ["Produce a systems analysis of a case"],
+          "cannotDo": ["Evaluate management strategies"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can weigh conservation interventions by ecological reasoning",
+          "canDo": ["Adjudicate competing restoration plans"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Perceives interdependence habitually — no act or organism is read as local",
+          "canDo": ["Apply web-thinking to novel systems, social included"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "bio.genetics",
+    "name": "Genetics & Inheritance",
+    "description": "DNA is the recipe that outlives the cook: how information is stored, expressed, shuffled, and mistaken.",
+    "level": "concept",
+    "parentId": "bio.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why do children resemble but not copy their parents?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student states heritable information plus recombination and mutation"
+      },
+      "principle": {
+        "question": "How does a one-dimensional molecule specify a three-dimensional organism?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains gene → protein → interaction → trait"
+      },
+      "application": {
+        "question": "Predict inheritance patterns in a mendelian cross and a sex-linked case.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student solves punnett and pedigree problems"
+      },
+      "integration": {
+        "question": "How do epigenetics and gene regulation complicate the one-gene-one-trait story?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student explains expression as conditional, not fixed"
+      },
+      "creation": {
+        "question": "Argue an informed position on a gene-editing scenario.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student weighs a CRISPR case with technical and ethical reasoning"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "discrete information encoding and execution",
+        "targetConceptId": "cs.foundations.logic",
+        "targetDomain": "Computer Science",
+        "mappingDescription": "Genetic code and machine code are both discrete-symbol instruction sets; genes are data and program at once"
+      }
+    ],
+    "prerequisites": ["bio.foundations", "bio.cells", "bio.evolution"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Moral"],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Heredity is information transfer. DNA stores instructions in a four-letter alphabet; genes are transcribed to RNA, translated into proteins, and proteins build and run the cell.Traits emerge from gene products interacting with each other and the environment — which is why 'the gene for X' is almost always false. Inheritance follows patterns: Mendelian segregation for simple traits, sex-linkage and polygeny for others. Variation enters by mutation and recombination — the raw material evolution filters. Regulation is the deep story: every cell has the same genome but expresses a different subset, and epigenetic marks record environment onto expression without changing the letters. Genetics is therefore less a blueprint than a recipe followed in a kitchen that edits the recipe's meaning.",
+      "examples": [
+        "Sickle-cell trait: one letter, changed protein, environment-dependent advantage",
+        "Lactase persistence: a regulatory mutation spreading with dairying culture",
+        "Identical twins diverging: same genome, different expression histories"
+      ],
+      "nonExamples": [
+        "Acquired traits inherited (weights don't reach grandchildren)",
+        "Genetic determinism (genes propose, environment disposes)"
+      ],
+      "analogies": [
+        "Genome as a cookbook, cells as kitchens, expression as what the chef actually cooks today",
+        "Mutation as typos: most harmless, some fatal, occasionally a better sentence"
+      ],
+      "visuals": [
+        "Central dogma flow diagram: DNA → RNA → protein → trait, with regulation arrows"
+      ],
+      "practiceProblems": [
+        {
+          "id": "bio.gen.p1",
+          "problemText": "Two carriers of a recessive allele have four children. What is the expected distribution, and why might reality differ?",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "bio.gen.mc1",
+        "statement": "There is a gene for each trait",
+        "whyItFeelsRight": "Media headlines name single genes for traits",
+        "structuralReason": "Most traits are polygenic and environment-conditional; single-gene stories are the exception. Determinism distorts both science understanding and bioethics reasoning.",
+        "diagnosticTaskId": "bio.gen.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "bio.genetics",
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the central dogma and mendel's ratios",
+          "canDo": ["Recall dogma, solve trivial crosses"],
+          "cannotDo": ["Explain regulation"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain gene→protein→trait chains and their conditionality",
+          "canDo": ["Explain why 'gene for' claims mislead"],
+          "cannotDo": ["Solve multi-gene problems"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can solve pedigree and probability problems",
+          "canDo": ["Analyze crosses, predict distributions"],
+          "cannotDo": ["Analyze regulation systems"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose trait causation into genetic and environmental terms",
+          "canDo": ["Analyze gene-environment interplay cases"],
+          "cannotDo": ["Evaluate editing ethics frameworks"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can weigh biotechnology claims and risks critically",
+          "canDo": ["Adjudicate CRISPR/marking debates with mechanism"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Information-flow thinking is habitual — heredity, development, and expression read as one system",
+          "canDo": ["Apply gene-expression reasoning to novel cases"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  }
+]

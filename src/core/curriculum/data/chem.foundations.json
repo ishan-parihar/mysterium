@@ -1,0 +1,712 @@
+[
+  {
+    "id": "chem.foundations",
+    "name": "Chemistry Foundations",
+    "description": "The foundational concepts of matter and its transformations: atoms and bonding, reactions and energy, equilibrium and rates, and the carbon chemistry of life.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": ["chem.atoms", "chem.reactions", "chem.equilibrium", "chem.organic"],
+    "phases": {
+      "observation": {
+        "question": "What must any explanation of matter account for?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student states atoms, interaction, energy, and change as the explanatory targets"
+      },
+      "principle": {
+        "question": "Why do electron interactions explain nearly all of chemistry?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains nuclei as fixed scaffolds and electrons as the active players"
+      },
+      "application": {
+        "question": "Predict whether two everyday materials will interact, and what the product is.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons from composition and bonding to outcome"
+      },
+      "integration": {
+        "question": "How do bonding, energy, and equilibrium jointly determine what reactions happen and how far they go?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student chains the three concepts into one account of a real reaction"
+      },
+      "creation": {
+        "question": "Design a synthesis route or materials choice for a stated purpose.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student proposes a route with justified constraints"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "stability through minimized energy states",
+        "targetConceptId": "physics.foundations",
+        "targetDomain": "Physics",
+        "mappingDescription": "Chemical stability is energy landscape descent — the same principle that governs mechanical systems"
+      }
+    ],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": { "min": "memorized", "max": "transformed" },
+      "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 86400000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Chemistry is the science of electrons. Nuclei define which atom you have; electrons define what it does. Bonds form because shared or transferred electrons lower energy — ionic (transfer), covalent (share), metallic (delocalized sea). Reactions rearrange bonds toward lower-energy arrangements, releasing or absorbing energy in the process. But thermodynamics says only whether a reaction CAN go far; kinetics says how fast; equilibrium says where it settles — a dynamic standoff, not a stopped state. Carbon's four bonds and middling electronegativity make it the great connector, which is why life is carbon chemistry. Master these four ideas and every laboratory smell, stain, and fire becomes a sentence you can read.",
+      "examples": [
+        "Salt dissolving: ionic lattice → hydrated ions",
+        "Rusting: iron + oxygen + water, an energy-releasing rearrangement",
+        "Carbonated drinks: CO2 equilibrium shifting with pressure and temperature"
+      ],
+      "nonExamples": [
+        "Nuclear decay (chemistry does not change nuclei)",
+        "Mixtures vs compounds (salad vs water — no bonds in the salad)"
+      ],
+      "analogies": [
+        "Atoms as LEGO with strict socket counts (valence)",
+        "Equilibrium as a busy two-way bridge with equal traffic in both directions"
+      ],
+      "visuals": [
+        "Energy-level diagram from reactants to products with activation hump"
+      ],
+      "practiceProblems": [
+        {
+          "id": "chem.f.p1",
+          "problemText": "Explain why table salt dissolves in water but not in oil, using interactions vocabulary.",
+          "targetDepth": "comprehended"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "chem.f.mc1",
+        "statement": "Chemical reactions 'use up' matter",
+        "whyItFeelsRight": "Wood burning seems to vanish",
+        "structuralReason": "Mass is conserved — products (CO2, ash, water vapor) are less visible, not less real. Vanishing-matter intuition blocks mass-balancing and energy accounting.",
+        "diagnosticTaskId": "chem.f.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "chem.foundations",
+      "levels": {
+        "memorized": {
+          "evidence": "Can name bond types and the four organizing ideas",
+          "canDo": ["Recall terms and examples"],
+          "cannotDo": ["Predict interactions"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain why electrons govern chemistry",
+          "canDo": ["Explain bonding in energy terms"],
+          "cannotDo": ["Predict reactions from first principles"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.45
+        },
+        "applied": {
+          "evidence": "Can predict interaction outcomes from composition",
+          "canDo": ["Reason solubility, reactivity cases"],
+          "cannotDo": ["Analyze equilibrium shifts"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.6
+        },
+        "analyzed": {
+          "evidence": "Can chain thermodynamics, kinetics, and equilibrium on one reaction",
+          "canDo": ["Produce a full reaction account"],
+          "cannotDo": ["Evaluate competing mechanisms"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.75
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate mechanism claims with evidence",
+          "canDo": ["Weigh proposed pathways against data"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Reads matter as interacting electron systems by default",
+          "canDo": ["Explain unfamiliar materials chemistry fluently"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "chem.atoms",
+    "name": "Atoms & Bonding",
+    "description": "Electron configuration is destiny: how shells, valence, and electronegativity produce the bond inventory of the universe.",
+    "level": "concept",
+    "parentId": "chem.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why is the periodic table shaped the way it is?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student relates rows to shells and columns to valence"
+      },
+      "principle": {
+        "question": "Why do atoms bond at all — and why do noble gases not?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains energy minimization and closed shells"
+      },
+      "application": {
+        "question": "Predict bond type and properties for chosen element pairs.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student uses electronegativity to predict ionic/covalent character"
+      },
+      "integration": {
+        "question": "How does bond type scale up to material properties (melting point, conductivity)?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links micro-bonding to macro-behavior"
+      },
+      "creation": {
+        "question": "Given desired material properties, propose candidate bonds/compounds.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student reverse-engineers a material spec"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "discrete states and fill-order",
+        "targetConceptId": "cs.foundations",
+        "targetDomain": "Computer Science",
+        "mappingDescription": "Electron shells fill by discrete rules like queue/stack protocols — the periodic table is a fill-order visualization"
+      }
+    ],
+    "prerequisites": ["chem.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "An atom's electrons arrange themselves into shells and subshells of fixed capacity — a fill-order dictated by quantum rules. Chemistry is the outermost layer's story: valence electrons are the only ones that interact. Atoms bond to reach lower-energy arrangements: metals hand electrons to nonmetals (ionic bonds, lattices, salts), nonmetals share (covalent bonds, molecules), all metals pool (metallic bonds, conductivity). Electronegativity — an atom's electron-pull — predicts which: big gaps mean ionic, small gaps mean covalent, and intermediate sharing (polar covalent) explains water's astonishing solvent behavior. Bond type cascades to material properties: melting points, conductivity, hardness, flexibility. Read the outer shell and you can predict the world's texture.",
+      "examples": [
+        "NaCl: electronegativity gap → transfer → brittle crystal, soluble, conductive when dissolved",
+        "Diamond vs graphite: same element, different bonding geometry, opposite hardness",
+        "Water's polarity: hydrogen bonding, high boiling point, universal-ish solvent"
+      ],
+      "nonExamples": [
+        "Electrons 'orbiting' like planets (probability clouds, not paths)",
+        "Sharing that is always equal (polarity is a spectrum)"
+      ],
+      "analogies": [
+        "Valence as socket count: bonds are plugs seeking full sockets",
+        "Electronegativity as tug-of-war strength over shared rope (electrons)"
+      ],
+      "visuals": [
+        "Periodic table annotated with electronegativity gradient and bond-type zones"
+      ],
+      "practiceProblems": [
+        {
+          "id": "chem.atom.p1",
+          "problemText": "Predict and justify: will magnesium and chlorine bond ionically or covalently? What properties follow?",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "chem.atom.mc1",
+        "statement": "Atoms 'want' full outer shells",
+        "whyItFeelsRight": "Textbooks anthropomorphize stability",
+        "structuralReason": "Atoms have no desires; closed shells are simply lower-energy states that persist. Want-language feels explanatory but hides the physics and blocks quantitative reasoning about energy.",
+        "diagnosticTaskId": "chem.atom.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "chem.atoms",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define bond types and read valence off the table",
+          "canDo": ["Recall, locate, name"],
+          "cannotDo": ["Predict bonds"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain bonding via energy minimization",
+          "canDo": ["Explain why nobles are inert"],
+          "cannotDo": ["Predict from electronegativity"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict bond character and properties",
+          "canDo": ["Reason pairs → bonds → properties"],
+          "cannotDo": ["Analyze multi-property systems"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace property differences to bonding differences (allotropes, polymorphs)",
+          "canDo": ["Analyze diamond/graphite class cases"],
+          "cannotDo": ["Evaluate models of bonding"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can weigh bonding models' domains (ionic/covalent as poles, not bins)",
+          "canDo": ["Critique binary bond classification"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Outer-shell reading is automatic — materials are seen as bonding diagrams",
+          "canDo": ["Predict unfamiliar material behavior from composition"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "chem.reactions",
+    "name": "Reactions & Energy",
+    "description": "Reactions rearrange bonds toward lower energy; activation barriers decide what actually happens today.",
+    "level": "concept",
+    "parentId": "chem.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why do some reactions start on their own while others need a spark?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student distinguishes thermodynamic favorability from activation energy"
+      },
+      "principle": {
+        "question": "Why is energy released or absorbed when bonds change?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains bond-breaking (cost) vs bond-forming (release) accounting"
+      },
+      "application": {
+        "question": "Balance equations and compute whether a reaction is exo- or endothermic.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student balances and assigns energy sign correctly"
+      },
+      "integration": {
+        "question": "How do catalysts change rate without changing the destination?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student explains lowered activation barrier with unchanged endpoint"
+      },
+      "creation": {
+        "question": "Design an energy-safe demonstration or reaction plan.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student produces a plan with energy accounting and safety reasoning"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "activation barriers and state transitions",
+        "targetConceptId": "integral.transformation",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "Developmental frame-shifts have activation costs too — stable states persist until a threshold of energy (catalyst) is crossed"
+      }
+    ],
+    "prerequisites": ["chem.foundations", "chem.atoms"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "A chemical reaction is a bond rearrangement. Breaking bonds costs energy; forming bonds releases it; the difference is the reaction's energy change. Exothermic reactions (burning, rusting) release the surplus; endothermic ones (photosynthesis, cold packs) require input. Favorability is not immediacy: most stable destinations sit behind an activation-energy hill, which is why gasoline is stable until ignited and why catalysts matter — they offer a lower pass over the same mountain, accelerating reactions without changing where they end. Energy accounting (enthalpy) plus barrier accounting (kinetics) together explain what chemists actually see: some favorable reactions never happen, and some fast reactions go nowhere.",
+      "examples": [
+        "Combustion of methane: strong C=O bonds form, net release",
+        "Enzymes: biological catalysts lowering barriers at body temperature",
+        "Ice melting: endothermic yet spontaneous above 0°C (entropy's role)"
+      ],
+      "nonExamples": [
+        "Catalysts as participants that get used up (they emerge unchanged)",
+        "'Stable means inert' (kinetic trapping: diamond is metastable)"
+      ],
+      "analogies": [
+        "Activation energy as the mountain pass between valleys",
+        "Catalyst as a tunnel dug through the pass — same cities, faster road"
+      ],
+      "visuals": [
+        "Reaction coordinate diagram with and without catalyst overlay"
+      ],
+      "practiceProblems": [
+        {
+          "id": "chem.reac.p1",
+          "problemText": "Why does wood react with oxygen 'wanting' to burn, yet a log sits safely for years?",
+          "targetDepth": "comprehended"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "chem.reac.mc1",
+        "statement": "Exothermic reactions happen fast, endothermic ones slowly",
+        "whyItFeelsRight": "Fire is fast and hot; cold packs feel sluggish",
+        "structuralReason": "Rate is governed by activation energy and concentration, not by energy sign. Conflating thermodynamics with kinetics is the single most persistent reaction-misconception.",
+        "diagnosticTaskId": "chem.reac.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "chem.reactions",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define exo/endothermic, catalyst, activation energy",
+          "canDo": ["Recall definitions"],
+          "cannotDo": ["Account for energy in reactions"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain bond-energy accounting and barriers",
+          "canDo": ["Explain spark-needing favorable reactions"],
+          "cannotDo": ["Balance and compute"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can balance equations and classify energy changes",
+          "canDo": ["Solve stoichiometry with energy signs"],
+          "cannotDo": ["Analyze multi-step mechanisms"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose reactions into thermodynamic and kinetic parts",
+          "canDo": ["Explain metastability, catalysis cases"],
+          "cannotDo": ["Evaluate mechanism evidence"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate competing pathway claims",
+          "canDo": ["Weigh kinetic data against proposed mechanisms"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Dual-lens (thermo + kinetic) reading is habitual for all change",
+          "canDo": ["Apply barrier thinking to unfamiliar systems"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "chem.equilibrium",
+    "name": "Equilibrium & Rates",
+    "description": "Reversible reactions settle into dynamic standoffs; Le Châtelier's principle predicts how they respond to pressure.",
+    "level": "concept",
+    "parentId": "chem.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why do some reactions never finish?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student identifies reversibility and dynamic balance"
+      },
+      "principle": {
+        "question": "Why is equilibrium dynamic rather than static?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains equal forward/reverse rates with ongoing activity"
+      },
+      "application": {
+        "question": "Predict yield shifts under added pressure, heat, or concentration (Haber process).",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student applies Le Châtelier correctly to industrial cases"
+      },
+      "integration": {
+        "question": "How do buffers in blood and oceans demonstrate equilibrium at planetary scale?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student traces buffer chemistry in a biological and a geological system"
+      },
+      "creation": {
+        "question": "Propose conditions to maximize yield for a chosen industrial synthesis.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student justifies temperature/pressure/catalyst choices"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "dynamic balance under flows",
+        "targetConceptId": "bio.homeostasis",
+        "targetDomain": "Biology",
+        "mappingDescription": "Physiological setpoints are chemical equilibria actively defended — Le Châtelier at body scale"
+      }
+    ],
+    "prerequisites": ["chem.foundations", "chem.reactions"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Somatic"],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Many reactions run both directions. Equilibrium is not the reaction stopping — forward and reverse proceed at equal rates, so concentrations hold steady while molecules keep interconverting. The equilibrium constant expresses the standoff ratio; Le Châtelier's principle predicts the response to stress: add reactant, the system consumes it; heat an exothermic reaction, it shifts backward; squeeze a gas-phase equilibrium, it shifts toward fewer molecules. Buffers exploit this: paired acid/base forms absorb added acid or base, holding pH nearly constant — how blood survives a meal and the ocean resists (only so far) CO2. Equilibrium thinking replaces 'reaction finished' with 'reaction settled', a genuinely adult concept of chemical change.",
+      "examples": [
+        "Haber process: pressure favoring ammonia, heat (exothermic) opposing it — the classic trade-off",
+        "Blood bicarbonate buffer: pH defended at 7.4",
+        "Ocean acidification: carbonate equilibrium absorbing CO2 at a cost"
+      ],
+      "nonExamples": [
+        "Equilibrium as equal amounts (ratio equals K, not 50/50)",
+        "Catalysts shifting equilibrium (they speed both directions equally)"
+      ],
+      "analogies": [
+        "Two-way bridge with equal traffic: the crowd statistics stay constant",
+        "Buffer as a sponge that soaks up whatever is added, until saturated"
+      ],
+      "visuals": [
+        "Concentration-vs-time curves converging to steady (not zero-slope-molecule) values"
+      ],
+      "practiceProblems": [
+        {
+          "id": "chem.eq.p1",
+          "problemText": "For N2 + 3H2 ⇌ 2NH3 + heat, predict shift for: raising T, raising P, removing NH3. Justify each.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "chem.eq.mc1",
+        "statement": "At equilibrium the forward and reverse reactions stop",
+        "whyItFeelsRight": "Nothing seems to change visually",
+        "structuralReason": "Macroscopic stasis conceals molecular churn — equal rates, not zero rates. The static picture blocks buffer chemistry and radioisotope reasoning.",
+        "diagnosticTaskId": "chem.eq.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "chem.equilibrium",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define K, dynamic equilibrium, Le Châtelier",
+          "canDo": ["Recall the vocabulary"],
+          "cannotDo": ["Predict shifts"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain dynamic balance and stress-response logic",
+          "canDo": ["Narrate why shifts occur"],
+          "cannotDo": ["Quantify yields"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict and justify shift outcomes",
+          "canDo": ["Solve Le Châtelier and K problems"],
+          "cannotDo": ["Analyze coupled equilibria"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace buffer and coupled-equilibrium systems",
+          "canDo": ["Analyze blood/ocean chemistry cases"],
+          "cannotDo": ["Evaluate industrial trade-offs rigorously"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate yield-vs-cost industrial decisions",
+          "canDo": ["Weigh thermodynamic, kinetic, economic factors"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Equilibrium thinking generalizes — sees dynamic standoffs in economics, ecology, psychology",
+          "canDo": ["Apply settled-state reasoning beyond chemistry"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "chem.organic",
+    "name": "Organic Chemistry of Life",
+    "description": "Carbon's versatility builds the molecules of life: hydrocarbon skeletons, functional groups, and the four macromolecule families.",
+    "level": "concept",
+    "parentId": "chem.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What is common to sugars, fats, proteins, and DNA?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student identifies carbon skeletons and specific functional groups"
+      },
+      "principle": {
+        "question": "Why is carbon uniquely suited as life's backbone?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains tetravalence, bond strength, and catenation"
+      },
+      "application": {
+        "question": "Identify functional groups and predict reactivity/solubility of simple molecules.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons from groups to properties"
+      },
+      "integration": {
+        "question": "How do polymerization and hydrolysis drive both digestion and synthesis?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student explains monomer↔polymer economics with water"
+      },
+      "creation": {
+        "question": "Design a molecule for a stated function (drug shape, material, surfactant).",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student proposes structure-justified design"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "simple units combinatorially expanded",
+        "targetConceptId": "cs.foundations",
+        "targetDomain": "Computer Science",
+        "mappingDescription": "Macromolecules are strings: monomers as characters, polymers as programs — biology's data structures"
+      }
+    ],
+    "prerequisites": ["chem.foundations", "chem.atoms"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Somatic"],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Carbon sits at the periodic table's sweet spot: four bonds, moderate electronegativity, strong self-bonding — so it builds long, stable, branching skeletons no other element matches. Functional groups (hydroxyl, carboxyl, amino, phosphate) are the reactive villages on those skeletons; they determine solubility, acidity, and the sites where reactions happen. From this grammar come the four macromolecule families: carbohydrates (fuel and structure), lipids (membranes and dense storage), proteins (machinery built from 20 amino-acid letters), and nucleic acids (information in a 4-letter alphabet). Polymers assemble by dehydration (releasing water) and disassemble by hydrolysis — the economics of every meal you digest and every protein you build. Structure determines function with unusual literalness here: protein shape IS protein job.",
+      "examples": [
+        "Glucose → cellulose vs starch: same monomer, different linkage, opposite digestibility",
+        "Soap: hydrophobic tail + hydrophilic head bridging oil and water",
+        "Hemoglobin: shape change carrying oxygen — structure as function"
+      ],
+      "nonExamples": [
+        "'Organic' as pesticide-free marketing (the chemistry term means carbon-based)",
+        "Proteins as rigid strings (folding dynamics are the function)"
+      ],
+      "analogies": [
+        "Carbon as the great LEGO brick that also snaps to itself",
+        "Functional groups as app icons on a skeleton's home screen — tap them for reactions"
+      ],
+      "visuals": [
+        "Four macromolecule families chart: monomer, bond, function, example"
+      ],
+      "practiceProblems": [
+        {
+          "id": "chem.org.p1",
+          "problemText": "Explain why cellulose feeds termites but not you, at the linkage level.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "chem.org.mc1",
+        "statement": "Fat is bad and sugar is energy, full stop",
+        "whyItFeelsRight": "Nutritional folk wisdom",
+        "structuralReason": "Both are essential macromolecule chemistry: lipids build every membrane and signal system; refined sugars are energy dense but nutrient-poor. Molecular understanding replaces moral categories with structural ones.",
+        "diagnosticTaskId": "chem.org.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "chem.organic",
+      "levels": {
+        "memorized": {
+          "evidence": "Can name the four families and their monomers",
+          "canDo": ["Recall the chart"],
+          "cannotDo": ["Explain carbon's uniqueness"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain tetravalence and group-based reactivity",
+          "canDo": ["Explain structure→function logic"],
+          "cannotDo": ["Predict from groups"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict properties from functional groups",
+          "canDo": ["Reason solubility, linkage cases"],
+          "cannotDo": ["Analyze folding/metabolism systems"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose metabolism/synthesis into hydrolysis/dehydration economics",
+          "canDo": ["Analyze digestion, polymerization cases"],
+          "cannotDo": ["Evaluate drug-design claims"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can weigh structure-activity arguments critically",
+          "canDo": ["Adjudicate molecular design claims"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Reads food, drugs, and cells as organic-chemistry systems by default",
+          "canDo": ["Apply molecular reasoning to daily life fluently"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Somatic"]
+  }
+]

@@ -1,0 +1,712 @@
+[
+  {
+    "id": "hist.foundations",
+    "name": "History Foundations",
+    "description": "The foundational concepts of historical reasoning: evidence and interpretation, causation across scales, change and continuity, and perspective as constitutive rather than decorative.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": ["hist.evidence", "hist.causation", "hist.change", "hist.perspective"],
+    "phases": {
+      "observation": {
+        "question": "What is the difference between the past and history?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student distinguishes events from accounts of events"
+      },
+      "principle": {
+        "question": "Why is all history interpretive, and how does that not make it arbitrary?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains evidence-constrained interpretation"
+      },
+      "application": {
+        "question": "Compare two accounts of the same event and locate their disagreement.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student identifies factual vs interpretive divergence"
+      },
+      "integration": {
+        "question": "How do evidence, causation, change, and perspective jointly produce a historical account?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student analyzes one narrative through all four lenses"
+      },
+      "creation": {
+        "question": "Construct a defended account of a local history question from primary sources.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces a sourced mini-argument"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "inference to unobservable causes from present evidence",
+        "targetConceptId": "physics.foundations",
+        "targetDomain": "Physics",
+        "mappingDescription": "Historians and physicists both reconstruct unobservables from traces — inference to the best explanation under uncertainty"
+      }
+    ],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Moral", "Interpersonal"],
+      "stageRange": { "min": "Amber", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": { "min": "memorized", "max": "transformed" },
+      "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 86400000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "History is not the past; it is the disciplined argument about the past. Four ideas organize the discipline. Evidence: accounts must rest on sources — documents, artifacts, data — and every source has a maker, an audience, and a purpose, which makes sourcing and corroboration non-negotiable. Causation: events have multiple causes at multiple scales (individual decision, institutional structure, ecological pressure, long-duration trend), and single-cause stories are always incomplete. Change and continuity: nothing changes utterly, nothing stays identical — the historian's craft is specifying what changed, for whom, how fast, and at what cost. Perspective: every account is from somewhere; rather than a defect, this is the discipline's raw material, because comparing perspectives is how the past becomes visible. History trained this way is not memorized stories but a defense against being governed by other people's stories.",
+      "examples": [
+        "The same 1857 revolt is 'mutiny' in British textbooks and 'first war of independence' in Indian ones — perspective in action",
+        "Radiocarbon dating and ledger books as equally load-bearing evidence",
+        "The 'decline of Rome' debate: change of what, for whom, when?"
+      ],
+      "nonExamples": [
+        "History as fixed storybook (one narrative, no argument)",
+        "History as mere opinion (interpretation without evidence is not history)"
+      ],
+      "analogies": [
+        "The historian as detective: the scene is contaminated, the witnesses are gone, the traces remain",
+        "Sources as lenses: each bends the view; only stacking lenses corrects some of the bending"
+      ],
+      "visuals": [
+        "Onion diagram: event → accounts → archives → histories, with distortion at each layer"
+      ],
+      "practiceProblems": [
+        {
+          "id": "hist.f.p1",
+          "problemText": "Pick a current news event. What three future sources would a historian need, and what would each distort?",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "hist.f.mc1",
+        "statement": "History is just memorizing what happened",
+        "whyItFeelsRight": "School exams reward dated recall",
+        "structuralReason": "Recall is the entry level, not the discipline. What makes history a discipline is the machinery of sourcing, corroboration, and argued causation — the part school often skips, which is why educated adults can still be manipulated by bad narratives.",
+        "diagnosticTaskId": "hist.f.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "hist.foundations",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define source, evidence, perspective; recite one dated narrative",
+          "canDo": ["Recall terms and one story"],
+          "cannotDo": ["Distinguish past from history"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain evidence-constrained interpretation",
+          "canDo": ["Explain why accounts differ without 'anything goes'"],
+          "cannotDo": ["Analyze competing accounts"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.45
+        },
+        "applied": {
+          "evidence": "Can source, corroborate, and locate disagreement between accounts",
+          "canDo": ["Compare two accounts of one event"],
+          "cannotDo": ["Weigh multi-scale causes"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.6
+        },
+        "analyzed": {
+          "evidence": "Can decompose a narrative into causes at multiple scales",
+          "canDo": ["Layer individual, institutional, structural causes"],
+          "cannotDo": ["Evaluate historiographic frameworks"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.75
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate between competing historical interpretations",
+          "canDo": ["Weigh schools of interpretation against evidence"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Historical consciousness is habitual — present claims are automatically source-checked and placed in causal and perspectival context",
+          "canDo": ["Apply the four lenses to contemporary narratives unprompted"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "hist.evidence",
+    "name": "Evidence & Sources",
+    "description": "Reading sources against their grain: provenance, audience, purpose, corroboration — the machinery that separates history from myth.",
+    "level": "concept",
+    "parentId": "hist.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Who wrote this, for whom, and why — and how do you know?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student interrogates a source's provenance and purpose"
+      },
+      "principle": {
+        "question": "Why can a biased source still be excellent evidence?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student distinguishes reliability-about-X from evidence-about-Y"
+      },
+      "application": {
+        "question": "Corroborate a claim across two sources with different interests.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student triangulates a claim and states residual uncertainty"
+      },
+      "integration": {
+        "question": "How do silence and absence in archives function as evidence?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student reasons from who is missing in the record"
+      },
+      "creation": {
+        "question": "Build a three-source dossier on one question and state what remains unknown.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student produces a dossier with an explicit uncertainty statement"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "bias as signal",
+        "targetConceptId": "integral.shadow",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "A source's distortions are its shadow — systematic, interpretable, and diagnostic of the maker's position"
+      }
+    ],
+    "prerequisites": ["hist.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Intrapersonal"],
+      "stageRange": { "min": "Amber", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "A source is evidence twice over: about what it says, and about whoever made it. Reading with the grain asks what the source claims; reading against the grain asks what its form, silences, and slant reveal about its maker and moment. Every source answers three questions before it is believed: provenance (where did it come from), audience (who was it for), purpose (what did it try to do). Corroboration then triangulates: claims that survive independent lines of evidence harden; claims resting on a single lineage stay soft — and historians say so. Absence is also data: who could write, who was allowed to be remembered, which materials survive archivally, all pattern the record. The craft is not cynicism ('sources lie') but calibration — every source usable, every use qualified.",
+      "examples": [
+        "A colonizer's trade ledger: unreliable for native prosperity claims, superb for commodity prices",
+        "Court records as evidence of both crime and state anxiety",
+        "Petitions: evidence of grievance and of what power tolerated being asked"
+      ],
+      "nonExamples": [
+        "Dismissing sources as 'biased' and therefore useless",
+        "Accepting official records as neutral (they record what power saw)"
+      ],
+      "analogies": [
+        "Sources as witnesses with interests: even the liar testifies — to the lie",
+        "Archive as a net: what it catches and what it lets through are both patterned"
+      ],
+      "visuals": [
+        "Source-interrogation flowchart: provenance → audience → purpose → corroboration → claim strength"
+      ],
+      "practiceProblems": [
+        {
+          "id": "hist.evi.p1",
+          "problemText": "A royal inscription claims a great victory. List four things it might still reliably tell you, none of which is the victory.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "hist.evi.mc1",
+        "statement": "Primary sources are reliable, secondary ones are not",
+        "whyItFeelsRight": "Closeness to events feels like accuracy",
+        "structuralReason": "Proximity buys detail, not perspective — participants are the most invested narrators alive. Reliability is claim-specific and assessed per use, not by document class.",
+        "diagnosticTaskId": "hist.evi.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "hist.evidence",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define primary/secondary and the three source questions",
+          "canDo": ["Classify sources, recall questions"],
+          "cannotDo": ["Interrogate bias productively"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain with-grain vs against-grain reading",
+          "canDo": ["Explain bias-as-evidence"],
+          "cannotDo": ["Corroborate independently"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can interrogate and corroborate real sources",
+          "canDo": ["Triangulate claims across sources"],
+          "cannotDo": ["Reason from archival silence"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose a source's layered interests and audiences",
+          "canDo": ["Analyze compound-source cases"],
+          "cannotDo": ["Evaluate evidentiary frameworks"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate competing evidentiary weighings",
+          "canDo": ["Defend a claim-weighting against rivals"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Source-consciousness is habitual — news, ads, and memos are read provenance-first",
+          "canDo": ["Apply the machinery to contemporary information ecosystems"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "hist.causation",
+    "name": "Causation & Scales",
+    "description": "Events never have one cause: nesting individual decisions inside institutional structures inside long-duration forces.",
+    "level": "concept",
+    "parentId": "hist.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What started World War I — one assassination, or something else?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student names multiple contributing layers"
+      },
+      "principle": {
+        "question": "Why do historians distinguish immediate, intermediate, and long-duration causes?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains timescales and Braudel's three durations"
+      },
+      "application": {
+        "question": "Layer the causes of a chosen historical event across three scales.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student produces a multi-scale causal account"
+      },
+      "integration": {
+        "question": "How do structure and agency jointly produce outcomes (neither alone suffices)?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student weighs decision-space against constraint in one case"
+      },
+      "creation": {
+        "question": "Argue a counterfactual: what specific change would most plausibly have altered the outcome?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student defends a disciplined counterfactual with stated limits"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "nested causal holons",
+        "targetConceptId": "integral.holons",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "Causes nest like holons: individual events inside institutions inside civilizational trends — each level with its own dynamics"
+      }
+    ],
+    "prerequisites": ["hist.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Moral"],
+      "stageRange": { "min": "Amber", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Historical causation operates at nested timescales. Events-level causes are the visible sparks: decisions, accidents, assassinations. Conjunctural causes are the medium term: institutions, alliances, economic cycles — the structures that make sparks consequential. Long-duration causes are the slow geology: climate, demography, technology diffusion, deep ideologies. A war needs all three — a spark without a powder keg is a boundary incident. Two disciplines follow. First, avoid single-cause narratives: they are almost always motivated. Second, respect both structure and agency: people make choices, but within option-spaces their era hands them — judging past actors by present option-spaces is anachronism, excusing them entirely is condescension. Counterfactuals, used with discipline (change one thing, trace consequences, respect what was knowable), are how historians test which causes carried real weight.",
+      "examples": [
+        "WWI: assassination (event) + alliance rigidity (conjecture) + imperial rivalry and rail timetables (long-duration)",
+        "The printing press: long-duration cause reshaping everything from religion to science",
+        "Monsoon failure + colonial grain policy + market integration: layered famine causation"
+      ],
+      "nonExamples": [
+        "Great-man-only narratives (agency without structure)",
+        "Determinism (structure without agency — nobody ever chooses)"
+      ],
+      "analogies": [
+        "Causal layers as an earthquake: fault stress (long), fault geometry (medium), the final jolt (event)",
+        "Option-space as a chess board: pieces matter, so do the rules"
+      ],
+      "visuals": [
+        "Three-band timeline: event sparks, conjunctural structures, long-duration trends converging on the outcome"
+      ],
+      "practiceProblems": [
+        {
+          "id": "hist.cau.p1",
+          "problemText": "Take a revolution you know. Assign one cause to each timescale and argue which was least dispensable.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "hist.cau.mc1",
+        "statement": "If X had not happened, the outcome would not have occurred (all listed causes are equal)",
+        "whyItFeelsRight": "Necessary conditions all feel load-bearing",
+        "structuralReason": "Many things are necessary and few are decisive — the discipline is weighing contribution, not just counting prerequisites. Counterfactual discipline exists precisely to rank causes.",
+        "diagnosticTaskId": "hist.cau.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "hist.causation",
+      "levels": {
+        "memorized": {
+          "evidence": "Can name the three timescales with one example each",
+          "canDo": ["Recall the bands"],
+          "cannotDo": ["Layer causes independently"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain why single-cause accounts fail",
+          "canDo": ["Explain spark-vs-keg logic"],
+          "cannotDo": ["Produce layered analyses"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can layer causes for a real event",
+          "canDo": ["Build three-scale accounts"],
+          "cannotDo": ["Weigh contributions rigorously"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can weigh structure against agency and defend the weighting",
+          "canDo": ["Analyze decision-spaces of past actors"],
+          "cannotDo": ["Evaluate counterfactual discipline"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate between historians' causal rankings",
+          "canDo": ["Weigh rival causal theses against evidence"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Multi-scale causal vision is habitual — present events are automatically read in layered time",
+          "canDo": ["Apply layered causation to news and personal history"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "hist.change",
+    "name": "Change & Continuity",
+    "description": "Specifying what changed, for whom, how fast, and at what cost — against the backdrop of what endured.",
+    "level": "concept",
+    "parentId": "hist.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Name one thing that changed and one that persisted across a period you know.",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student gives a paired change/continuity example"
+      },
+      "principle": {
+        "question": "Why does 'revolution' rarely mean total transformation?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains layered, uneven, differential change"
+      },
+      "application": {
+        "question": "Periodize a chosen span: what marks its beginning and end, for whom?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student defends periodization choices and their blind spots"
+      },
+      "integration": {
+        "question": "How do turning points look different at different scales (event vs process)?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student contrasts event-view and process-view of one transformation"
+      },
+      "creation": {
+        "question": "Write a 'what actually changed' memo for a celebrated transformation.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student produces a change/continuity audit"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "punctuated stability and rapid transition",
+        "targetConceptId": "bio.evolution",
+        "targetDomain": "Biology",
+        "mappingDescription": "Punctuated equilibrium: long stability interrupted by rapid shifts — historians and biologists share the pattern language"
+      }
+    ],
+    "prerequisites": ["hist.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [],
+      "stageRange": { "min": "Amber", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Change is never total and never zero. The historian's craft is specification: what changed (institutions? daily practice? ideas? all three at different speeds), for whom (peasants often experienced 'revolutions' as re-branded taxes), how fast (decision, decade, generation), and at what cost (every transformation has losers whose experience is the audit). Continuity is not the absence of change — old structures persist inside new ones (the Roman roads outlived Rome; colonial land systems outlived colonialism). Turning points deserve suspicion: what looks like an event at human timescale is often a process at structural timescale, and vice versa. Periodization is an argument, not a fact — 'early modern' is a claim about what matters, and different periodizations make different people visible.",
+      "examples": [
+        "Indian independence: constitution changed overnight; land, caste, and gender relations changed over generations",
+        "The 'fall' of Rome: imperial administration ended; roads, law, and language continued for centuries",
+        "Industrial revolution: factories arrived in decades; agrarian calendars and family structures lagged generations"
+      ],
+      "nonExamples": [
+        "History as before/after snapshots (erases the uneven middle)",
+        "Continuity as stasis (institutions persist by adapting)"
+      ],
+      "analogies": [
+        "Change as sedimentation: new layers settle on old ones without erasing them",
+        "Periods as camera zoom settings — each makes different things visible"
+      ],
+      "visuals": [
+        "Layered timeline showing differential change speeds across institutions, economy, culture"
+      ],
+      "practiceProblems": [
+        {
+          "id": "hist.cha.p1",
+          "problemText": "For any 'revolutionary' year you know, list one thing that changed by morning, one by decade, one not at all.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "hist.cha.mc1",
+        "statement": "Major events produce major, immediate change",
+        "whyItFeelsRight": "Schools teach years as turning points",
+        "structuralReason": "Legal-political change is fast; social and economic change is slow. The gap between them is where most historical disappointment and nostalgia live.",
+        "diagnosticTaskId": "hist.cha.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "hist.change",
+      "levels": {
+        "memorized": {
+          "evidence": "Can give one change and one continuity per period studied",
+          "canDo": ["Pair recall"],
+          "cannotDo": ["Specifying dimensions"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain differential, uneven change",
+          "canDo": ["Explain layered speeds"],
+          "cannotDo": ["Audit a real transformation"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can specify what changed, for whom, how fast",
+          "canDo": ["Produce change audits on cases"],
+          "cannotDo": ["Analyze competing periodizations"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace persistence inside transformation (institutions surviving regimes)",
+          "canDo": ["Analyze continuity-in-change cases"],
+          "cannotDo": ["Evaluate periodization debates"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate rival periodizations and their visibility choices",
+          "canDo": ["Weigh what each periodization makes seen/unseen"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Change-literate perception is habitual — 'new eras' claims are automatically audited for depth and distribution",
+          "canDo": ["Apply change audits to contemporary transformations"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "hist.perspective",
+    "name": "Perspective & Voice",
+    "description": "Every account is from somewhere: multiplicity as the discipline's method, empathy with discipline, and the ethics of whose story gets told.",
+    "level": "concept",
+    "parentId": "hist.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Find the same event told by two sides. What does each see that the other does not?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student identifies asymmetrical visibility between accounts"
+      },
+      "principle": {
+        "question": "Why is multiplicity a method, not just fairness?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains visibility asymmetry and triangulation of viewpoints"
+      },
+      "application": {
+        "question": "Reconstruct one event from two structurally different vantage points.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student produces two defensible accounts with different positions"
+      },
+      "integration": {
+        "question": "How does empathic reconstruction differ from endorsement?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student explains disciplined empathy's boundary"
+      },
+      "creation": {
+        "question": "Write the history of a silence: reconstruct an experience the archive barely recorded.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student produces a sourced reconstruction with stated speculation limits"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "quadrant-informed multi-perspectival viewing",
+        "targetConceptId": "integral.quadrants",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "Integral's four quadrants are a perspective discipline: every historical moment has interior-individual, exterior-individual, interior-collective, exterior-collective faces"
+      }
+    ],
+    "prerequisites": ["hist.foundations", "hist.evidence"],
+    "devMapping": {
+      "primaryLine": "Interpersonal",
+      "secondaryLines": ["Moral", "Cognitive"],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Perspective is not decoration on the facts; it determines which facts are visible. Victors see their costs clearly and others' resistance dimly; the conquered preserve what official records miss — memory, song, practice. Taking multiplicity seriously is therefore a method: an event fully reconstructed requires its different positional sightings, the way depth requires two eyes. Disciplined empathy — reconstructing how past actors understood their own choices without endorsing those choices — is the skill this demands: it differs from both presentist condemnation (judging by option-spaces people never had) and nostalgic identification (adopting their blind spots). Finally, perspective is an ethical question: the archive was assembled by power, so whose voices were never recorded is itself a finding. The historian's craft includes telling the history of the silence.",
+      "examples": [
+        "1857 through a sepoy's family, a planter's ledger, and a London newspaper — three different events",
+        "Subaltern studies: reading colonial archives against their grain for peasant voice",
+        "Oral history recovering what administration never deemed worth recording"
+      ],
+      "nonExamples": [
+        "Relativism ('every perspective is equally right')",
+        "Empathy as endorsement (understanding is not excusing)"
+      ],
+      "analogies": [
+        "Perspectives as depth-stereo: two different-positioned views yield the third dimension",
+        "The archive as a lighthouse: it illuminates the shore it was built for"
+      ],
+      "visuals": [
+        "Event surrounded by viewing positions, each with a different visible face"
+      ],
+      "practiceProblems": [
+        {
+          "id": "hist.per.p1",
+          "problemText": "Choose a contested monument. Write its history three times: the state's, the protesters', and the stone's (material history).",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "hist.per.mc1",
+        "statement": "Considering all perspectives means history has no truth",
+        "whyItFeelsRight": "Multiplication feels like dissolution",
+        "structuralReason": "Perspectives constrain each other — claims that survive multiple positioned sightings are MORE robust, not less. Relativism abandons the discipline precisely where it is strongest.",
+        "diagnosticTaskId": "hist.per.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "hist.perspective",
+      "levels": {
+        "memorized": {
+          "evidence": "Can state why accounts differ and name perspective types",
+          "canDo": ["Recall the vocabulary"],
+          "cannotDo": ["Reconstruct positions"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain visibility asymmetry and disciplined empathy",
+          "canDo": ["Distinguish empathy from endorsement"],
+          "cannotDo": ["Produce multi-position accounts"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can reconstruct events from multiple positions",
+          "canDo": ["Write defensible positioned accounts"],
+          "cannotDo": ["Recover silenced histories"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can analyze what each perspective structurally cannot see",
+          "canDo": ["Map blind spots as data"],
+          "cannotDo": ["Evaluate reconstruction ethics"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate contested memorialization with historical reasoning",
+          "canDo": ["Weigh memory-claims against evidence"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Perspective-discipline is habitual — every narrative is automatically located and multiplicity-seeking",
+          "canDo": ["Apply multi-perspectival method to present conflicts"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  }
+]

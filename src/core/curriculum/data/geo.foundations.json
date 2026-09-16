@@ -1,0 +1,712 @@
+[
+  {
+    "id": "geo.foundations",
+    "name": "Geography Foundations",
+    "description": "The foundational concepts of spatial reasoning: place and scale, human-environment interaction, spatial systems and flows, and region as a constructed analytical lens.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": ["geo.place", "geo.human-env", "geo.flows", "geo.region"],
+    "phases": {
+      "observation": {
+        "question": "What does looking at things in space reveal that looking at things in lists does not?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student names spatial pattern, distance, and distribution as geographic variables"
+      },
+      "principle": {
+        "question": "Why does scale change the answer (neighborhood vs planet)?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains scale-dependent processes and the modifiable areal unit problem informally"
+      },
+      "application": {
+        "question": "Explain a real-world pattern (migration, monsoon agriculture, city locations) spatially.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student produces a spatial explanation of one pattern"
+      },
+      "integration": {
+        "question": "How do place, human-environment interaction, and flows jointly explain a region?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student synthesizes one region through all four concepts"
+      },
+      "creation": {
+        "question": "Design a spatial intervention (transit line, flood defense, zoning) and defend its siting.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student justifies spatial choices with geographic reasoning"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "nested spatial holons",
+        "targetConceptId": "integral.holons",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "Places nest like holons — building, street, city, region, planet — each scale with its own emergent dynamics"
+      }
+    ],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Interpersonal", "Moral"],
+      "stageRange": { "min": "Amber", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": { "min": "memorized", "max": "transformed" },
+      "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 86400000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Geography asks where things are, why there, and with what consequences. Four ideas organize the discipline. Place: locations have physical character (terrain, climate) and human character (built form, meaning) — both matter. Scale: processes are scale-dependent; a drought is meteorology regionally, hydrology locally, and political economy nationally when crops fail — choosing the wrong scale produces wrong answers. Human-environment interaction: neither 'nature decides' nor 'people decide' holds; landscapes are co-productions, from terrace farming to floodplains settled anyway. Flows and systems: rivers, goods, people, pathogens, and information move through spatial networks whose structure (distance, barriers, nodes) shapes what happens where. Region — the discipline's synthesis — is an analytical lens, not a fact: drawing a boundary makes some patterns visible and always has costs.",
+      "examples": [
+        "Cities at river confluences and passes: transportation geography predicting settlement",
+        "Monsoon agriculture: climate, crop, and culture as one system",
+        "A pandemic's spread curve read as a flow network, not just a biology problem"
+      ],
+      "nonExamples": [
+        "Geography as capital-city trivia (names without processes)",
+        "Environmental determinism (climate doesn't cause politics)"
+      ],
+      "analogies": [
+        "Maps as arguments: every projection and boundary is a claim",
+        "Scale as microscope magnification: each setting reveals and hides different structures"
+      ],
+      "visuals": [
+        "Nested scale diagrams: building → neighborhood → city → region → planet"
+      ],
+      "practiceProblems": [
+        {
+          "id": "geo.f.p1",
+          "problemText": "Pick your city. Name one physical feature, one human decision, and one flow that best explain where it sits.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "geo.f.mc1",
+        "statement": "Geography is memorizing capitals and rivers",
+        "whyItFeelsRight": "School atlas drills",
+        "structuralReason": "Recall of locations is the entry skill. The discipline is spatial PROCESS reasoning — distribution, interaction, scale — which is why geographers work on pandemics, logistics, climate adaptation, and elections.",
+        "diagnosticTaskId": "geo.f.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "geo.foundations",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define place, scale, region; locate major features",
+          "canDo": ["Recall terms, read basic maps"],
+          "cannotDo": ["Explain patterns spatially"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain scale-dependence and co-production of landscapes",
+          "canDo": ["Explain why scale changes answers"],
+          "cannotDo": ["Analyze real patterns"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.45
+        },
+        "applied": {
+          "evidence": "Can produce spatial explanations of real patterns",
+          "canDo": ["Reason settlement, migration, agriculture cases"],
+          "cannotDo": ["Analyze systems and flows"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.6
+        },
+        "analyzed": {
+          "evidence": "Can decompose a region into interacting spatial systems",
+          "canDo": ["Produce multi-system regional analyses"],
+          "cannotDo": ["Evaluate regionalization choices"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.75
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate competing spatial interventions",
+          "canDo": ["Weigh siting and boundary choices with reasoning"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Spatial vision is habitual — claims about 'everywhere' are automatically scale-checked and pattern-mapped",
+          "canDo": ["Apply spatial reasoning to news, planning, and travel unprompted"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "geo.place",
+    "name": "Place & Site",
+    "description": "Every location is a bundle: physical setting, human modification, and meaning — site and situation together.",
+    "level": "concept",
+    "parentId": "geo.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What gives your town its specific character — physical, built, felt?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student inventories site and situation factors"
+      },
+      "principle": {
+        "question": "Why do 'site' (local conditions) and 'situation' (connections) both shape a place's fate?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student distinguishes intrinsic vs relational location advantages"
+      },
+      "application": {
+        "question": "Explain a city's growth or decline through site and situation.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student produces a two-factor account of an urban case"
+      },
+      "integration": {
+        "question": "How does sense of place drive both attachment and conflict?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student analyzes place-identity in one cooperative and one contested case"
+      },
+      "creation": {
+        "question": "Write the site-and-situation resume of a place you love.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student produces a place analysis with all three bundles"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "identity through relations, not essence",
+        "targetConceptId": "integral.lines",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "A place's capabilities (like a person's lines) are relational — what it is FOR depends on what it connects to"
+      }
+    ],
+    "prerequisites": ["geo.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Intrapersonal"],
+      "stageRange": { "min": "Amber", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "A place is a bundle of three things. Site: the intrinsic physical conditions — water, soil, shelter, hazard exposure. Situation: the extrinsic relations — what a place is near, connected to, between; a mediocre harbor on a great route beats a great harbor off the route. Meaning: the felt and symbolic layer — sacred rivers, homes, homelands, 'the neighborhood' — which drives migration attachment, heritage, and wars. The three interact: site favored settlements (water, defense); situation then compounded advantages (trade multiplied cities); meaning then locked attachment in place (people stay in risky floodplains because it is home). Reading any real place requires all three lenses — which is why 'why is this city here?' always has a layered answer.",
+      "examples": [
+        "Constantinople: defensible peninsula (site) commanding two sea lanes (situation), sacred city (meaning)",
+        "New Orleans: river port advantage vs flood hazard — site blessing and curse",
+        "Jerusalem, Varanasi: meaning so dense it dominates geopolitics"
+      ],
+      "nonExamples": [
+        "Place as mere coordinate (a point without bundles)",
+        "Site determinism (situation can override local disadvantages)"
+      ],
+      "analogies": [
+        "Place as a resume: skills (site), network (situation), reputation (meaning)",
+        "Site vs situation as quality vs connections in a career"
+      ],
+      "visuals": [
+        "Place-analysis template: three rings — site, situation, meaning — around a map pin"
+      ],
+      "practiceProblems": [
+        {
+          "id": "geo.pla.p1",
+          "problemText": "Why did Singapore outgrow nearby better-endowed sites? Answer in site/situation/meaning terms.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "geo.pla.mc1",
+        "statement": "The best-endowed site wins",
+        "whyItFeelsRight": "Resource advantage looks decisive",
+        "structuralReason": "Situation often dominates: connectivity and access outweigh local endowment (Singapore, Japan, the Dutch coast). The confusion breeds resource-curse misreadings too.",
+        "diagnosticTaskId": "geo.pla.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "geo.place",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define site, situation, sense of place",
+          "canDo": ["Recall the triad"],
+          "cannotDo": ["Apply to real places"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain the three bundles and their interaction",
+          "canDo": ["Explain layered place-fate"],
+          "cannotDo": ["Analyze specific cities"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can analyze real places through the triad",
+          "canDo": ["Produce place resumes"],
+          "cannotDo": ["Analyze meaning-driven conflict"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can weigh site vs situation vs meaning in contested cases",
+          "canDo": ["Adjudicate place-fate disputes"],
+          "cannotDo": ["Evaluate place-branding/heritage claims"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can critique place-claims (development plans, heritage narratives) with the triad",
+          "canDo": ["Expose what a plan ignores spatially"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Place-literacy is habitual — every location is automatically read as bundle",
+          "canDo": ["Apply triad reading to travel, news, and home"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "geo.human-env",
+    "name": "Human-Environment Interaction",
+    "description": "Landscapes are co-productions: possibility, not destiny; constraint, not command — from terrace farming to floodplain settlement.",
+    "level": "concept",
+    "parentId": "geo.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Find one landscape feature near you that is half-human, half-natural.",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student identifies a co-produced landscape element"
+      },
+      "principle": {
+        "question": "Why are both environmental determinism and its total rejection wrong?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student articulates possibility-space reasoning"
+      },
+      "application": {
+        "question": "Analyze a hazard-prone settlement: what does environment constrain, what do people choose?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student separates constraint from choice in a flood/quake/coastal case"
+      },
+      "integration": {
+        "question": "How does feedback (deforestation → flood → migration → pressure) couple the systems?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student traces one coupled human-environment feedback loop"
+      },
+      "creation": {
+        "question": "Propose an adaptation plan for one climate-exposed community.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student designs adaptation respecting both constraint and agency"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "mutual regulation between system levels",
+        "targetConceptId": "bio.ecology",
+        "targetDomain": "Biology",
+        "mappingDescription": "Human-environment systems are ecologies: populations, resources, and feedbacks — geography extends the loop to intentional agents"
+      }
+    ],
+    "prerequisites": ["geo.foundations"],
+    "devMapping": {
+      "primaryLine": "Moral",
+      "secondaryLines": ["Cognitive", "Somatic"],
+      "stageRange": { "min": "Orange", "max": "Turquoise" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "The environment does not dictate human fate, and humans do not command the environment — they hold a negotiation. Environment sets possibility-spaces: monsoons permit rice; deserts permit herding; rivers permit cities but demand flood management. Within those spaces, culture, technology, and politics choose — and the choices feed back: deforestation raises flood peaks, which pushes levee-building, which raises the next flood's stakes. Hazards make the negotiation vivid: an earthquake is geology, a disaster is geology plus building codes plus income plus response capacity. The correct lesson is neither fatalism (nothing can be done) nor hubris (engineering conquers all) but risk literacy: who lives where, exposed to what, with what defenses, and who decides. Climate change raises the stakes of exactly this literacy.",
+      "examples": [
+        "Rice terraces of Luzon and Bali: steep slopes made arable by generations of co-production",
+        "The Netherlands: living below sea level as permanent negotiation",
+        "Hurricane deaths differing by income and code enforcement within one city"
+      ],
+      "nonExamples": [
+        "Environmental determinism (monsoons don't cause political systems)",
+        "A 'pristine nature' baseline (most landscapes are co-produced, often for millennia)"
+      ],
+      "analogies": [
+        "Environment as a game board: it fixes the board, not the moves",
+        "Hazard as an unfair card game: geology deals, but housing codes stack the deck"
+      ],
+      "visuals": [
+        "Coupled-loop diagram: environment → possibility → choice → modification → feedback → environment"
+      ],
+      "practiceProblems": [
+        {
+          "id": "geo.he.p1",
+          "problemText": "Why do people rebuild in floodplains? Give three reasons spanning meaning, economics, and policy.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "geo.he.mc1",
+        "statement": "Natural disasters are natural",
+        "whyItFeelsRight": "The trigger is geophysical",
+        "structuralReason": "The trigger is natural; the disaster is social — exposure, vulnerability, and preparedness decide death tolls. Equal earthquakes kill unequally, which is the whole policy lesson.",
+        "diagnosticTaskId": "geo.he.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "geo.human-env",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define possibility-space, hazard, vulnerability",
+          "canDo": ["Recall the vocabulary"],
+          "cannotDo": ["Apply to cases"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain co-production against both determinisms",
+          "canDo": ["Explain the negotiation framing"],
+          "cannotDo": ["Analyze coupled feedbacks"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can separate constraint from choice in hazard cases",
+          "canDo": ["Analyze settlement decisions"],
+          "cannotDo": ["Trace multi-loop feedbacks"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace coupled human-environment feedback loops",
+          "canDo": ["Analyze deforestation-migration-cascade cases"],
+          "cannotDo": ["Evaluate adaptation strategies"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate adaptation and retreat proposals",
+          "canDo": ["Weigh interventions by risk and equity"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Risk literacy is habitual — landscapes are read as negotiations with visible stakes",
+          "canDo": ["Apply coupled-system reasoning to climate news and local planning"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "geo.flows",
+    "name": "Spatial Systems & Flows",
+    "description": "Distance, barriers, and networks: migration, trade, disease, and information all obey spatial grammars.",
+    "level": "concept",
+    "parentId": "geo.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why is it cheaper to ship goods across an ocean than across some land borders?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student distinguishes physical distance from friction of distance"
+      },
+      "principle": {
+        "question": "Why does distance still decay interaction in a connected world?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains distance-decay and its uneven abolition"
+      },
+      "application": {
+        "question": "Predict a disease's or trend's spread pattern from network structure.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons hub-and-spoke diffusion for a real case"
+      },
+      "integration": {
+        "question": "How do flows create cores and peripheries (and uneven development)?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student explains core-periphery dynamics through flow control"
+      },
+      "creation": {
+        "question": "Map the flows of one object you own from origin to you.",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student produces a commodity-chain map with nodes and frictions"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "network topology shaping diffusion",
+        "targetConceptId": "cs.foundations",
+        "targetDomain": "Computer Science",
+        "mappingDescription": "Graph structure governs spread — the same hub/edge logic as epidemic models and packet routing"
+      }
+    ],
+    "prerequisites": ["geo.foundations"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Interpersonal"],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Geography's deepest discovery is that space still matters even after the internet: what moves — people, goods, pathogens, ideas — moves through networks, and network structure shapes outcomes. Distance-decay weakens interaction with separation, but unevenly: container shipping collapsed ocean freight cost while borders still choke land crossings; video calls erased conversation but not trust-building or freight. Diffusion follows topology: hierarchies jump between hubs before filling in between (AIDS went city-to-city by air routes before rural spread); contagions trace commutes; fashions trace media. Flows also build structure: places that capture through-traffic become cores; bypassed places become peripheries — uneven development is partly a network position story. Reading flows turns 'globalization' from a mood word into an analyzable diagram.",
+      "examples": [
+        "Suez blockage 2021: one node's failure repricing global trade overnight",
+        "Hubs: airline maps, internet exchange points, and cholera's 19th-century port spread",
+        "Remittance corridors: migration networks persisting across generations"
+      ],
+      "nonExamples": [
+        "'Distance is dead' (friction changed form, not to zero)",
+        "Flows as even carpets (they are channelled and lumpy)"
+      ],
+      "analogies": [
+        "The world as a subway map: connectivity, not straight-line distance, decides access",
+        "Cores and peripheries as mainline stations vs bypassed towns on the same line"
+      ],
+      "visuals": [
+        "Hub-and-spoke diffusion diagram beside a distance-decay curve"
+      ],
+      "practiceProblems": [
+        {
+          "id": "geo.fl.p1",
+          "problemText": "A new high-speed rail connects two regions. Who gains, who loses, and why might the between-towns decline?",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "geo.fl.mc1",
+        "statement": "The internet made location irrelevant",
+        "whyItFeelsRight": "Instant communication everywhere",
+        "structuralReason": "Digital flows erased some frictions while amplifying the value of physical hubs — cities, ports, data centers. 'Death of distance' confuses one channel's collapse with all friction's collapse.",
+        "diagnosticTaskId": "geo.fl.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "geo.flows",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define friction of distance, diffusion, core-periphery",
+          "canDo": ["Recall the terms"],
+          "cannotDo": ["Predict flows"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain distance-decay's unevenness and network structure",
+          "canDo": ["Explain hub logic"],
+          "cannotDo": ["Analyze real networks"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict diffusion patterns from network shape",
+          "canDo": ["Reason spread and trade cases"],
+          "cannotDo": ["Analyze core-periphery formation"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose a commodity chain or migration corridor into nodes and frictions",
+          "canDo": ["Produce flow analyses of real systems"],
+          "cannotDo": ["Evaluate infrastructure interventions"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate infrastructure and connectivity proposals",
+          "canDo": ["Weigh corridor gains, bypass losses, equity"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Flow vision is habitual — goods, news, and people are automatically traced to networks",
+          "canDo": ["Apply network reasoning to supply chains and information ecosystems"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  },
+  {
+    "id": "geo.region",
+    "name": "Region as Lens",
+    "description": "Regions are drawn, not found: formal, functional, and vernacular — every boundary is an argument with costs.",
+    "level": "concept",
+    "parentId": "geo.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "List three different 'regions' you belong to. Who drew each?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student distinguishes formal, functional, vernacular memberships"
+      },
+      "principle": {
+        "question": "Why is every regionalization an argument?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains visibility gains and erasure costs of boundaries"
+      },
+      "application": {
+        "question": "Compare two regionalizations of one area (climate vs linguistic vs economic).",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student shows how each boundary makes different facts visible"
+      },
+      "integration": {
+        "question": "How do drawn regions become real (policy, identity, investment feedback)?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student traces a region's boundary hardening into lived reality"
+      },
+      "creation": {
+        "question": "Propose a better regionalization for a policy problem (watershed-based planning, say).",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student defends a boundary choice against alternatives"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "maps as models with costs and benefits",
+        "targetConceptId": "integral.stages",
+        "targetDomain": "Integral Theory",
+        "mappingDescription": "Every map simplifies; every simplification is stage-conditioned — regionalizations are stage-colored lenses on territory"
+      }
+    ],
+    "prerequisites": ["geo.foundations", "geo.place"],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": ["Moral", "Interpersonal"],
+      "stageRange": { "min": "Orange", "max": "Green" }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
+      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Regions are the discipline's synthesis — and its confession: drawing boundaries is choosing what to emphasize. Formal regions share measurable traits (climate zones, language areas); functional regions are organized around nodes (a metro area's commuter shed); vernacular regions live in identity ('the South', 'the North-East') with fuzzy edges and real force. None is 'true' — each is a lens that makes some patterns visible and erases others: an economic region's boundary hides the watershed; a language region's hides the commute. The deep twist is performativity: drawn regions become real. Boundaries attract policy, investment, and grievance; identity regions shape voting and conflict; colonial boundary-drawing still shapes wars. The skill is double vision: using regions while watching what they hide, and asking who benefits from a particular drawing.",
+      "examples": [
+        "Colonial 'straight-line' borders in Africa slicing ethnic and ecological unities",
+        "The EU's NUTS regions: statistics made, then policy follows the statistics",
+        "Watershed-based planning vs county lines for flood management"
+      ],
+      "nonExamples": [
+        "Regions as natural kinds waiting to be discovered",
+        "One true map (the request is always: a map for what?)"
+      ],
+      "analogies": [
+        "Regionalization as framing a photo: what's inside is highlighted, the rest is out of view",
+        "Boundaries as spotlights — whoever holds them chooses the stage"
+      ],
+      "visuals": [
+        "One area shown through three overlay transparencies: formal, functional, vernacular"
+      ],
+      "practiceProblems": [
+        {
+          "id": "geo.re.p1",
+          "problemText": "Your country's provinces: who drew them, for what, and what do they hide? Propose one redraw for a modern purpose.",
+          "targetDepth": "evaluated"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "geo.re.mc1",
+        "statement": "Regions are objective units on the ground",
+        "whyItFeelsRight": "Atlas maps look found, not made",
+        "structuralReason": "Every regional boundary was drawn by someone for some purpose; treating maps as discoveries hides the choices — and the politics — inside them.",
+        "diagnosticTaskId": "geo.re.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "geo.region",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define formal, functional, vernacular regions",
+          "canDo": ["Classify example regions"],
+          "cannotDo": ["Explain boundary politics"],
+          "appropriateTasks": ["factual_recall"],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain regionalization as argument with gains and costs",
+          "canDo": ["Explain visibility trade-offs"],
+          "cannotDo": ["Compare real regionalizations"],
+          "appropriateTasks": ["concept_explanation"],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can compare regionalizations of one area",
+          "canDo": ["Show what each boundary reveals/hides"],
+          "cannotDo": ["Analyze performative effects"],
+          "appropriateTasks": ["application_problem"],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace drawn regions hardening into reality (policy, identity, conflict)",
+          "canDo": ["Analyze feedback cases"],
+          "cannotDo": ["Evaluate boundary redesigns"],
+          "appropriateTasks": ["case_study_analysis"],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can adjudicate boundary proposals by purpose and blind spots",
+          "canDo": ["Defend regional redesigns against alternatives"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_review"],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Map-literacy is habitual — every regional claim is automatically asked 'drawn by whom, for what, hiding what?'",
+          "canDo": ["Apply lens-discipline to media maps and policy debates"],
+          "cannotDo": [],
+          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "threshold": 0.95
+        }
+      }
+    },
+    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+  }
+]

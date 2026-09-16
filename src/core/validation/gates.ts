@@ -27,9 +27,16 @@ import path from 'node:path';
 import { createSignificator } from '../domain/Significator.js';
 import { createInitialWorldState } from '../engines/CandidateGeneration.js';
 import { ALL_LINES } from '../domain/Line.js';
+import { ALL_STAGES } from '../domain/Stage.js';
 import { delegateSession, emptyLedgerState } from '../orchestration/orchestratorTools.js';
 import { validateSpec } from '../orchestration/delegate.js';
 import { validatePracticeLoop } from '../practice/practiceTools.js';
+import { seedCurriculumRegistry, getCachedLintResult } from '../curriculum/CurriculumSeed.js';
+import { lintRegistry } from '../curriculum/CurriculumLinter.js';
+import redHolonsJson from '../data/red-layer-holons.json';
+import stageHolonsJson from '../data/stage-holons.json';
+import conceptDraftsJson from '../data/concept-drafts.json';
+import type { ConceptDraftIndex } from '../data/ConceptDraftIndex.js';
 import type { DelegatedTool, DelegationSpec, ProjectionKey } from '../orchestration/types.js';
 import type { Stage } from '../domain/Stage.js';
 import {
@@ -538,6 +545,56 @@ export function validateIdentityFirewall(): GateResult {
   return { gate: 'G12-identity-firewall', passed: true, hard: true, details: 'measurement paths clean of identity imports; projector consent-checked; identity optional on Significator' };
 }
 
+// ---------------------------------------------------------------------------
+// G17 — Corpus integrity (hard): the content corpus must resolve as a closed
+// graph — every stage-holon cell populated, every relationship resolvable,
+// every curriculum branch lint-clean with resolvable prerequisites, and the
+// concept-draft index covering all 64 modules (plan Phase 3).
+// ---------------------------------------------------------------------------
+
+export function validateCorpusIntegrity(): GateResult {
+  try {
+    // 1. Stage-holon cells: all 8 stages × 8 lines covered by the combined
+    //    red-layer + stage corpus, with all relationships resolvable.
+    const holons = [...redHolonsJson, ...stageHolonsJson] as unknown as import('../domain/Holon.js').Holon[];
+    const cells = new Set(holons.map((h) => `${h.line}:${h.stage}`));
+    for (const line of ALL_LINES) {
+      for (const stage of ALL_STAGES) {
+        if (!cells.has(`${line}:${stage}`)) {
+          return { gate: 'G17 corpus integrity', passed: false, hard: true, details: `missing stage-holon cell ${line}:${stage}` };
+        }
+      }
+    }
+    const ids = new Set(holons.map((h) => h.id));
+    for (const h of holons) {
+      for (const rel of h.relationships) {
+        if (!ids.has(rel)) {
+          return { gate: 'G17 corpus integrity', passed: false, hard: true, details: `unresolved relationship ${h.id} → ${rel}` };
+        }
+      }
+    }
+
+    // 2. Curriculum corpus: every seeded holon must lint without errors and
+    //    every prerequisite must resolve within the registry.
+    seedCurriculumRegistry();
+    const registry = getCurriculumRegistry();
+    const lint = getCachedLintResult() ?? lintRegistry(registry);
+    if (lint.totalErrors > 0) {
+      return { gate: 'G17 corpus integrity', passed: false, hard: true, details: `curriculum lint: ${lint.totalErrors} errors` };
+    }
+
+    // 3. Concept-draft index: the 64-module authored corpus must be complete.
+    const drafts = conceptDraftsJson as unknown as ConceptDraftIndex;
+    if (drafts.modules && Object.keys(drafts.modules).length !== 64) {
+      return { gate: 'G17 corpus integrity', passed: false, hard: true, details: `concept-draft index covers ${Object.keys(drafts.modules).length}/64 modules` };
+    }
+
+    return { gate: 'G17 corpus integrity', passed: true, hard: true, details: `64/64 cells, ${holons.length} holons, ${registry.count()} curriculum holons lint-clean, 64/64 concept modules` };
+  } catch (e) {
+    return { gate: 'G17 corpus integrity', passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}
+
 export interface ValidationReport {
   tier: Tier;
   results: GateResult[];
@@ -569,6 +626,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validateDelegationDeterminism());
   results.push(validateDelegationToolsetFirewall());
   results.push(validatePracticeLoop());
+  results.push(validateCorpusIntegrity());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
