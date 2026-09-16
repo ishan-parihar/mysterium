@@ -42,6 +42,6 @@ describe('Validation benchmark (CI tier)', () => {
     for (const r of suite.results) {
       expect(r.details.length).toBeGreaterThan(0);
     }
-    expect(suite.results.length).toBe(20);
+    expect(suite.results.length).toBe(21);
   });
 });

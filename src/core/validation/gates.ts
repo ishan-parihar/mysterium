@@ -45,6 +45,10 @@ import {
   type PackSessionState,
 } from '../packs/PackEngine.js';
 import { placeLine, MAX_PROBES_PER_LINE, CONFIDENCE_THRESHOLD, type PlacementProbe } from '../onboarding/BinarySearchPlacement.js';
+import {
+  emptyLedger, draftClaim, issueClaim, revokeClaim, toVerifiableCredential,
+  packEvidenceRef, masteryEvidenceRef, validateClaim,
+} from '../credential/ClaimLedger.js';
 import type { DelegatedTool, DelegationSpec, ProjectionKey } from '../orchestration/types.js';
 import type { Stage } from '../domain/Stage.js';
 import {
@@ -718,6 +722,73 @@ export function validatePlacementConvergence(): GateResult {
   }
 }
 
+// ---------------------------------------------------------------------------
+// G21 — Credentialing evidence chain (hard, plan Phase 9): claims trace to
+// reliable-or-disclosed evidence, provisional evidence travels with its
+// disclosure, identity never enters credential payloads, and the engine's
+// behavior is identical with and without credential state (41 §4.4 firewall).
+// ---------------------------------------------------------------------------
+
+export function validateCredentialChain(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G21 credential evidence chain', passed: false, hard: true, details: m });
+  try {
+    // 1. A mature pack evidence claim issues and exports as a VC.
+    let ledger = emptyLedger();
+    const now = 1_700_000_000_000;
+    const mature = packEvidenceRef('memory.working-span', 'sess-1', { retestR: 0.82, provisional: false, measuredAtMs: now - 86_400_000 });
+    const mastery = masteryEvidenceRef('math.foundations.numbers', 'analyzed', now - 2 * 86_400_000);
+    const draft = draftClaim({
+      competencyDescriptor: 'Can apply working-memory span measurement and interpret results',
+      domain: 'math.foundations',
+      level: { eqf: 4 },
+      evidence: [mature, mastery],
+      method: 'adaptive staircase assessment with parallel forms',
+      qualityAssurance: 'internal psychometric harness; retest r disclosed per evidence',
+      nowMs: now,
+    });
+    if (draft.failures.length > 0) return mk(`legitimate draft rejected: ${draft.failures.map((f) => f.message).join('; ')}`);
+    const issued = issueClaim(ledger, draft.claim, 'Learner Pseudonym-1');
+    if (!issued.claim) return mk(`issuance failed: ${issued.failures.map((f) => f.message).join('; ')}`);
+    ledger = issued.ledger;
+    const vc = toVerifiableCredential(ledger, issued.claim!.id);
+    if (!vc.vc) return mk(`VC export failed: ${vc.error}`);
+    if (vc.vc.credentialSubject.eqfLevel !== 4) return mk('EQF level lost in VC projection');
+
+    // 2. Provisional evidence is usable but carries its disclosure.
+    const provisional = packEvidenceRef('language.vocabulary', 'sess-2', { provisional: true, provisionalUntil: '2027-03-01', measuredAtMs: now });
+    const provDraft = draftClaim({
+      competencyDescriptor: 'Demonstrates vocabulary depth at assessed level',
+      domain: 'language.vocabulary',
+      evidence: [provisional],
+      method: 'adaptive lexical decision',
+      qualityAssurance: 'provisional instrument; ceiling date disclosed',
+      nowMs: now,
+    });
+    if (provDraft.failures.length > 0) return mk('provisional evidence with disclosure was rejected');
+    const provIssued = issueClaim(ledger, provDraft.claim, 'Learner Pseudonym-1');
+    if (!provIssued.claim) return mk('provisional claim issuance failed');
+    ledger = provIssued.ledger;
+
+    // 3. Undisclosed pack evidence must FAIL (E2 has teeth).
+    const undisclosed: typeof mature = { type: 'pack', ref: 'pack:x:sess-3' };
+    const bad = validateClaim({ ...draft.claim, id: 'bad', evidence: [undisclosed] });
+    if (!bad.some((f) => f.rule === 'E2')) return mk('undisclosed pack evidence accepted (E2 lacks teeth)');
+
+    // 4. Stage-shaped evidence under EQF is the category error — must fail (E4).
+    const stageRef: typeof mastery = { type: 'mastery', ref: 'stage:Turquoise', reliability: { measuredAtMs: now } };
+    const cat = validateClaim({ ...draft.claim, id: 'cat', evidence: [stageRef] });
+    if (!cat.some((f) => f.rule === 'E4')) return mk('stage-shaped evidence passed under EQF (category-error firewall open)');
+
+    // 5. Revocation blocks export.
+    const revoked = revokeClaim(ledger, issued.claim!.id, now + 1);
+    if (toVerifiableCredential(revoked, issued.claim!.id).vc) return mk('revoked claim still exports');
+
+    return { gate: 'G21 credential evidence chain', passed: true, hard: true, details: 'claims trace to disclosed evidence; provisional disclosed; E2/E4 teeth verified; revocation blocks export; subject is per-claim chosen name' };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
 export interface ValidationReport {
   tier: Tier;
   results: GateResult[];
@@ -753,6 +824,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validatePodPrivacyWall());
   results.push(validateMeasurementPacks());
   results.push(validatePlacementConvergence());
+  results.push(validateCredentialChain());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

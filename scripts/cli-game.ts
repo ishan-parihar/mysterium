@@ -192,6 +192,10 @@ program
   .command('pod [action] [rest...]')
   .allowUnknownOption()
   .description('Cohort pods (doc 38 M0): status, form <id>, join <id>, ritual [--collaborative|--assistive], advance, recognize <member> [--kind=...]')
+program
+  .command('credential [action] [rest...]')
+  .allowUnknownOption()
+  .description('Claim-based credentials (doc 41): list, draft <domain> <descriptor...>, issue <claimId> <subject>, revoke <claimId>, export <claimId>')
 
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
@@ -5301,6 +5305,82 @@ async function runPodCommand(argv: string[]): Promise<void> {
   console.log('');
 }
 
+/**
+ * `mysterium credential` — local claim-ledger surface (doc 41 §4.3).
+ * Draft → review → issue flow, consent-first: subject naming is the player's
+ * per-claim act; export produces W3C-VC-shaped JSON for portability.
+ */
+async function runCredentialCommand(argv: string[]): Promise<void> {
+  const action = argv.find((a) => !a.startsWith('--')) ?? 'list';
+  const cred = await import('../src/core/credential/ClaimLedger.js');
+  const p = vowFilePath();
+  const credFile = path.join(path.dirname(p), 'credentials.json');
+  const load = (): import('../src/core/credential/ClaimLedger.js').ClaimLedger => {
+    if (fs.existsSync(credFile)) {
+      try { return JSON.parse(fs.readFileSync(credFile, 'utf8')); } catch { /* fall through */ }
+    }
+    return cred.emptyLedger();
+  };
+  const save = (l: import('../src/core/credential/ClaimLedger.js').ClaimLedger): void => { fs.writeFileSync(credFile, JSON.stringify(l, null, 2)); };
+  let ledger = load();
+
+  if (action === 'draft') {
+    const domain = argv[argv.indexOf('draft') + 1] ?? 'math.foundations';
+    const descriptor = argv.slice(argv.indexOf('draft') + 2).join(' ') || 'Demonstrates assessed competency at measured depth';
+    const mastery = cred.masteryEvidenceRef(domain, 'applied', Date.now());
+    const { claim, failures } = cred.draftClaim({
+      competencyDescriptor: descriptor,
+      domain,
+      evidence: [mastery],
+      method: 'in-game depth assessment (31 dual-depth model)',
+      qualityAssurance: 'mysterium internal assessment machinery; evidence refs disclosed',
+      nowMs: Date.now(),
+    });
+    if (failures.length > 0) { console.error(`Draft rejected: ${failures.map((f) => f.message).join('; ')}`); process.exitCode = 1; return; }
+    // Store drafts by appending with empty subject; issuance completes them.
+    ledger = { ...ledger, claims: [...ledger.claims, claim] };
+    save(ledger);
+    console.log(`\n  ${chalk.green('Claim drafted:')} ${claim.id}`);
+    console.log(chalk.dim(`  Review it, then: mysterium credential issue ${claim.id} <chosen-name>`));
+    return;
+  }
+  if (action === 'issue') {
+    const id = argv[argv.indexOf('issue') + 1];
+    const subject = argv[argv.indexOf('issue') + 2];
+    const claim = ledger.claims.find((c) => c.id === id);
+    if (!claim) { console.error(`Claim '${id ?? ''}' not found.`); process.exitCode = 1; return; }
+    if (claim.subject) { console.error('Claim already issued.'); process.exitCode = 1; return; }
+    const out = cred.issueClaim({ ...ledger, claims: ledger.claims.filter((c) => c.id !== id) }, claim, subject ?? '');
+    if (!out.claim) { console.error(out.failures.map((f) => f.message).join('; ')); process.exitCode = 1; return; }
+    save(out.ledger);
+    console.log(`\n  ${chalk.green('Issued:')} ${out.claim.id} → ${out.claim.subject}`);
+    console.log(chalk.dim(`  Export: mysterium credential export ${out.claim.id}`));
+    return;
+  }
+  if (action === 'revoke') {
+    const id = argv[argv.indexOf('revoke') + 1];
+    const out = cred.revokeClaim(ledger, id ?? '', Date.now());
+    save(out);
+    console.log(`\n  ${chalk.yellow('Revoked (tombstoned):')} ${id}`);
+    return;
+  }
+  if (action === 'export') {
+    const id = argv[argv.indexOf('export') + 1];
+    const { vc, error } = cred.toVerifiableCredential(ledger, id ?? '');
+    if (!vc) { console.error(error); process.exitCode = 1; return; }
+    console.log(JSON.stringify(vc, null, 2));
+    return;
+  }
+  // list
+  console.log(`\n  Credential claims`);
+  if (ledger.claims.length === 0) console.log(chalk.dim('  none — try: mysterium credential draft <domain> <descriptor...>'));
+  for (const c of ledger.claims) {
+    const status = cred.isRevoked(ledger, c.id) ? chalk.yellow('revoked') : c.subject ? chalk.green('issued') : chalk.dim('draft');
+    console.log(`  · [${status}] ${c.id} ${chalk.dim(c.domain)} — ${c.competencyDescriptor.slice(0, 60)}${c.competencyDescriptor.length > 60 ? '…' : ''}`);
+  }
+  console.log('');
+}
+
 async function runVowCommand(argv: string[]): Promise<void> {
   const action = argv.find((a) => !a.startsWith('--')) ?? 'list';
   const get = (name: string): string | undefined => {
@@ -5410,7 +5490,7 @@ async function main(): Promise<void> {
   // treat ALL subcommands as potentially interactive EXCEPT the truly
   // non-interactive ones (`status`, `glossary`). This is safer than
   // enumerating interactive ones — new subcommands default to safe.
-  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod']);
+  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod', 'credential']);
   const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand) && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
     HEADLESS = true;
@@ -5445,6 +5525,7 @@ async function main(): Promise<void> {
   if (subcommand === 'delegate') { await runDelegateCommand(program.args.slice(1)); return; }
   if (subcommand === 'vow') { await runVowCommand(program.args.slice(1)); return; }
   if (subcommand === 'pod') { await runPodCommand(program.args.slice(1)); return; }
+  if (subcommand === 'credential') { await runCredentialCommand(program.args.slice(1)); return; }
   // P0-5 + P0-6: Use deleteAllSaves (clears sig + world + atomic envelope).
   // P0-6: Also clear TDG graph state if the TDG bridge is running, so a new
   // game doesn't inherit the old player's developmental graph.
