@@ -319,6 +319,12 @@ export interface CurriculumHolon {
   /** Which modalities can deliver this content */
   readonly supportedModalities: readonly Modality[];
 
+  /** Optional, NON-authoritative jurisdictional standards tags (doc 37 §4.3),
+   *  e.g. "CCSS.MATH.4.OA.A.1". Exist solely so 41's credential layer can
+   *  align evidence to external competency descriptors when a jurisdiction
+   *  requires it. The engine NEVER branches on these (42's blindness law). */
+  readonly standardsTags?: readonly string[];
+
   /** Version of this holon (for curriculum versioning). */
   readonly version?: string;
 }

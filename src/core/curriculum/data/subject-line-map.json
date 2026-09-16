@@ -1,0 +1,127 @@
+{
+  "$comment": "Subject → line mapping (doc 37 §3.1, the core table) as registry data. Consumed by the curriculum authoring pipeline to seed devMapping for new branches, and by teacher-council mandates (T1/T2) to route K-12 subjects to developmental cells. School-stage/level-band vocabulary is deliberately ABSENT here: placement is by measured altitude (42's blindness law); cohort-based authoring defaults live in the authoring guide only.",
+  "mappings": [
+    {
+      "subject": "mathematics",
+      "branches": ["math"],
+      "primaryLines": ["Cognitive"],
+      "secondaryLines": [],
+      "complex": "Mind",
+      "modalityAffinity": ["Strategic", "Deterministic"],
+      "corpusStatus": "present"
+    },
+    {
+      "subject": "computing",
+      "branches": ["cs"],
+      "primaryLines": ["Cognitive"],
+      "secondaryLines": ["Willpower"],
+      "complex": "Mind",
+      "modalityAffinity": ["Strategic", "ImmersiveRPG"],
+      "corpusStatus": "present",
+      "note": "Willpower secondary: tool-building as sustained will"
+    },
+    {
+      "subject": "physical-sciences",
+      "branches": ["physics", "chem"],
+      "primaryLines": ["Cognitive"],
+      "secondaryLines": [],
+      "complex": "Mind",
+      "modalityAffinity": ["Strategic", "ScenarioChoice"],
+      "corpusStatus": "present",
+      "note": "Empirical mode of cognition"
+    },
+    {
+      "subject": "life-sciences",
+      "branches": ["bio"],
+      "primaryLines": ["Cognitive"],
+      "secondaryLines": ["Somatic"],
+      "complex": "Mind/Body",
+      "modalityAffinity": ["LanguageReflective", "ScenarioChoice"],
+      "corpusStatus": "present"
+    },
+    {
+      "subject": "literacy-l1",
+      "branches": ["language-arts"],
+      "primaryLines": ["Cognitive"],
+      "secondaryLines": ["Emotional"],
+      "complex": "Mind→Spirit",
+      "modalityAffinity": ["LanguageReflective", "ImmersiveRPG"],
+      "corpusStatus": "planned",
+      "note": "Decoding is Cognitive; meaning-making crosses to Emotional"
+    },
+    {
+      "subject": "literature",
+      "branches": ["language-arts"],
+      "primaryLines": ["Emotional"],
+      "secondaryLines": ["Intrapersonal"],
+      "complex": "Spirit",
+      "modalityAffinity": ["LanguageReflective"],
+      "corpusStatus": "planned"
+    },
+    {
+      "subject": "arts-music",
+      "branches": ["arts", "music"],
+      "primaryLines": ["Emotional"],
+      "secondaryLines": ["Somatic", "Spiritual"],
+      "complex": "Spirit/Body",
+      "modalityAffinity": ["ImmersiveRPG", "Embodied"],
+      "corpusStatus": "planned",
+      "note": "Spiritual secondary: resonance"
+    },
+    {
+      "subject": "second-language",
+      "branches": ["second-language"],
+      "primaryLines": ["Cognitive"],
+      "secondaryLines": ["Interpersonal"],
+      "complex": "Mind/Spirit",
+      "modalityAffinity": ["LanguageReflective", "SocialCooperative"],
+      "corpusStatus": "planned"
+    },
+    {
+      "subject": "history",
+      "branches": ["hist"],
+      "primaryLines": ["Moral"],
+      "secondaryLines": ["Interpersonal", "Cognitive"],
+      "complex": "Spirit",
+      "modalityAffinity": ["LanguageReflective", "ScenarioChoice"],
+      "corpusStatus": "present"
+    },
+    {
+      "subject": "civics-ethics",
+      "branches": ["civics"],
+      "primaryLines": ["Moral"],
+      "secondaryLines": ["Interpersonal"],
+      "complex": "Spirit",
+      "modalityAffinity": ["ScenarioChoice", "SocialCooperative"],
+      "corpusStatus": "planned"
+    },
+    {
+      "subject": "geography",
+      "branches": ["geo"],
+      "primaryLines": ["Interpersonal"],
+      "secondaryLines": ["Cognitive", "Moral"],
+      "complex": "Spirit/Mind",
+      "modalityAffinity": ["Strategic", "ScenarioChoice"],
+      "corpusStatus": "present"
+    },
+    {
+      "subject": "health-pe",
+      "branches": ["health"],
+      "primaryLines": ["Somatic"],
+      "secondaryLines": ["Willpower"],
+      "complex": "Body",
+      "modalityAffinity": ["Embodied"],
+      "corpusStatus": "planned"
+    },
+    {
+      "subject": "social-emotional-learning",
+      "branches": ["integral"],
+      "primaryLines": ["Intrapersonal"],
+      "secondaryLines": ["Emotional", "Interpersonal"],
+      "complex": "Spirit",
+      "modalityAffinity": ["LanguageReflective", "SocialCooperative"],
+      "corpusStatus": "partial",
+      "note": "The SEL inversion (37 §3.1): Mysterium's 64-module developmental engine IS this curriculum"
+    }
+  ]
+}
