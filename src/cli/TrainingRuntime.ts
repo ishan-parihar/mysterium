@@ -68,12 +68,25 @@ export async function runCalibrateCommand(args: string[]): Promise<number> {
     // OnboardingCalibrator path — per-line binary-search onboarding
     const { calibrate } = await import('../core/usecases/OnboardingCalibrator.js');
     const { ALL_LINES } = await import('../core/domain/Line.js');
-    // Synthetic probes for demo: 0.55 threshold ~ Amber/Orange boundary
+    // Synthetic probes for demo: per-line task-unit thresholds chosen so each
+    // line's map lands at the same altitude (Amber). ThresholdMaps are in each
+    // line's own units (span-like scales; Somatic in ms, lower = higher) — a
+    // single normalized value like 0.55 is meaningful for none of them.
+    const demoThresholds: Record<Line, number> = {
+      Cognitive: 2.8,
+      Emotional: 3.2,
+      Moral: 3.2,
+      Intrapersonal: 3.2,
+      Spiritual: 3.2,
+      Somatic: 550,
+      Willpower: 5.5,
+      Interpersonal: 3.2,
+    };
     const demoProbes = ALL_LINES.map(line => ({
       line,
       accuracy: 0.62,
       medianReactionMs: 820,
-      threshold: 0.55,
+      threshold: demoThresholds[line],
       trials: [],
     }));
     const out = calibrate(demoProbes);

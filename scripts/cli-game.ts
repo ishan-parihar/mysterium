@@ -5152,10 +5152,12 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
     ...( ['J1','J2','J3','J4','J5'].includes(role) ? { cell: { line, stage } } : {}),
     purpose: `CLI delegation smoke: ${role} mandate`,
     readProjection: new Set(['corpus.moduleSpec'] as const),
+    // P0-FIX (delegate smoke): derive the toolset from ROLE_TOOLSETS so every
+    // role's smoke spec passes validation. The old hardcoded fallback
+    // (['get_module_spec','record_encounter']) rejected T-roles at the gate —
+    // the happy path spec→log→ratify was never reachable for them.
     toolset: new Set(
-      role === 'J1' ? ['get_module_spec', 'get_polarity_texture', 'record_encounter'] as const
-        : role === 'therapist' ? ['get_shadow_ledger_projection', 'note_arc'] as const
-        : ['get_module_spec', 'record_encounter'] as const,
+      (await import('../src/core/orchestration/types.js')).ROLE_TOOLSETS[role] ?? ['get_module_spec', 'record_encounter'] as const,
     ),
     budget: { toolCallsMax: budget, virtualMsMax: 600_000 },
   };
