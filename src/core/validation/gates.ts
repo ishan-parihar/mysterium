@@ -44,6 +44,7 @@ import {
   assignForm, computePsychometrics, integrateSkillTheta, readFreshTheta,
   type PackSessionState,
 } from '../packs/PackEngine.js';
+import { placeLine, MAX_PROBES_PER_LINE, CONFIDENCE_THRESHOLD, type PlacementProbe } from '../onboarding/BinarySearchPlacement.js';
 import type { DelegatedTool, DelegationSpec, ProjectionKey } from '../orchestration/types.js';
 import type { Stage } from '../domain/Stage.js';
 import {
@@ -667,6 +668,56 @@ export function validateMeasurementPacks(): GateResult {
   }
 }
 
+// ---------------------------------------------------------------------------
+// G20 — Placement convergence (hard, plan Phase 7): the binary-search
+// onboarding composite must converge within the 8-probe psychophysics budget
+// (08) and seed altitudes within tolerance of ground truth.
+// ---------------------------------------------------------------------------
+
+export function validatePlacementConvergence(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G20 placement convergence', passed: false, hard: true, details: m });
+  try {
+    // Probe factory: a deterministic synthetic player whose true altitude on
+    // every line is `truth`. Passes with confidence when stage ≤ truth,
+    // fails above, boundary-ambiguous exactly at truth+0.5 cases are avoided
+    // by construction. attempt > 0 resolves the ambiguity (extra trials).
+    const makeProbe = (truth: Stage): PlacementProbe => {
+      const truthIdx = ALL_STAGES.indexOf(truth);
+      return (line, stage, attempt) => {
+        void line;
+        const idx = ALL_STAGES.indexOf(stage);
+        if (idx < truthIdx) return { outcome: 'pass', confidence: 0.9 };
+        if (idx > truthIdx + 1) return { outcome: 'fail', confidence: 0.9 };
+        if (idx === truthIdx) return { outcome: 'pass', confidence: 0.85 };
+        if (idx === truthIdx + 1) return { outcome: 'fail', confidence: 0.85 };
+        return { outcome: attempt === 0 ? 'pass' : 'pass', confidence: attempt === 0 ? 0.5 : 0.9 };
+      };
+    };
+
+    for (const truth of ['Red', 'Amber', 'Orange', 'Turquoise'] as const) {
+      const p = placeLine('Cognitive', makeProbe(truth));
+      if (!p.converged) return mk(`line did not converge for truth ${truth}`);
+      if (p.probesUsed > MAX_PROBES_PER_LINE) return mk(`probe budget exceeded for truth ${truth} (${p.probesUsed})`);
+      if (p.altitude !== truth) return mk(`altitude ${String(p.altitude)} ≠ ground truth ${truth}`);
+    }
+
+    // Boundary case: ambiguous probes that stay ambiguous → boundary, not crash.
+    const ambiguousProbe: PlacementProbe = () => ({ outcome: 'pass', confidence: CONFIDENCE_THRESHOLD - 0.1 });
+    const boundary = placeLine('Somatic', ambiguousProbe);
+    if (boundary.converged || !boundary.boundary) return mk('persistent ambiguity must mark boundary, not fake convergence');
+
+    // Ladder edges: truth at Infrared (fail at start → down-walk) and White.
+    const bottom = placeLine('Moral', makeProbe('Infrared'));
+    if (bottom.altitude !== 'Infrared') return mk('bottom-of-ladder placement failed');
+    const top = placeLine('Spiritual', makeProbe('White'));
+    if (top.altitude !== 'White') return mk('top-of-ladder placement failed');
+
+    return { gate: 'G20 placement convergence', passed: true, hard: true, details: `converges ≤${MAX_PROBES_PER_LINE} probes at all truths tested; edges hold; ambiguity → boundary` };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
 export interface ValidationReport {
   tier: Tier;
   results: GateResult[];
@@ -701,6 +752,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validateCorpusIntegrity());
   results.push(validatePodPrivacyWall());
   results.push(validateMeasurementPacks());
+  results.push(validatePlacementConvergence());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
