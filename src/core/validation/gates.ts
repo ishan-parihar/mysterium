@@ -37,6 +37,7 @@ import redHolonsJson from '../data/red-layer-holons.json';
 import stageHolonsJson from '../data/stage-holons.json';
 import conceptDraftsJson from '../data/concept-drafts.json';
 import type { ConceptDraftIndex } from '../data/ConceptDraftIndex.js';
+import { validatePodPrivacyWall } from '../pods/podStateMachine.js';
 import type { DelegatedTool, DelegationSpec, ProjectionKey } from '../orchestration/types.js';
 import type { Stage } from '../domain/Stage.js';
 import {
@@ -627,6 +628,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validateDelegationToolsetFirewall());
   results.push(validatePracticeLoop());
   results.push(validateCorpusIntegrity());
+  results.push(validatePodPrivacyWall());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

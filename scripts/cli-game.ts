@@ -188,6 +188,10 @@ program
   .description('Practice objectives (doc 39): list, propose <text...>, check-in <text...>, review')
   .option('--kind <kind>', 'practice | exposure | learning | service', 'practice')
   .option('--line <line>', 'primary line for the check-in', 'Intrapersonal')
+program
+  .command('pod [action] [rest...]')
+  .allowUnknownOption()
+  .description('Cohort pods (doc 38 M0): status, form <id>, join <id>, ritual [--collaborative|--assistive], advance, recognize <member> [--kind=...]')
 
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
@@ -5210,6 +5214,93 @@ function emptyVowBookLocal(): import('../src/core/practice/VowService.js').VowBo
   return { vows: [], declineCounts: {} };
 }
 
+/**
+ * `mysterium pod` — local pod surface (doc 38 M0). Single-machine simulation:
+ * the pod state machine runs locally so formation, rituals, and recognition
+ * can be exercised end-to-end before the DO transport lands. Same pure core
+ * the DO adapter will drive (serial event application).
+ */
+async function runPodCommand(argv: string[]): Promise<void> {
+  const action = argv.find((a) => !a.startsWith('--')) ?? 'status';
+  const { emptyPodState, formPod, joinPod, startRitual, advanceRitual, publishAggregate, issueRecognition } = await import('../src/core/pods/podStateMachine.js');
+  const p = vowFilePath();
+  const podFile = path.join(path.dirname(p), 'pods.json');
+  const load = (): { state: ReturnType<typeof emptyPodState>; player: string } => {
+    if (fs.existsSync(podFile)) {
+      try { return JSON.parse(fs.readFileSync(podFile, 'utf8')); } catch { /* fall through */ }
+    }
+    return { state: emptyPodState(), player: 'local-player' };
+  };
+  const save = (data: unknown): void => { fs.writeFileSync(podFile, JSON.stringify(data, null, 2)); };
+  const ctx = load();
+  let state = ctx.state;
+  const now = Date.now();
+
+  if (action === 'form') {
+    const id = argv[argv.indexOf('form') + 1] ?? `pod-${now.toString(36)}`;
+    const formed = formPod(state, { id, covenant: 'we practice together', createdAtMs: now }, ctx.player);
+    save({ state: formed, player: ctx.player });
+    console.log(`\n  ${chalk.green('Pod formed:')} ${id}`);
+    console.log(chalk.dim('  Others join with: mysterium pod join <podId> (same machine)'));
+    return;
+  }
+  if (action === 'join') {
+    const podId = argv[argv.indexOf('join') + 1];
+    if (!podId || state.pod?.id !== podId) { console.error(`Pod '${podId ?? ''}' not found on this machine.`); process.exitCode = 1; return; }
+    const r = joinPod(state, ctx.player, now);
+    if (!r.ok) { console.error(r.reason); process.exitCode = 1; return; }
+    state = r.state;
+    save({ state, player: ctx.player });
+    console.log(`\n  ${chalk.green('Joined.')} ${state.pod?.members.length ?? 0} members.`);
+    return;
+  }
+  if (action === 'ritual') {
+    const mode = (argv.includes('--collaborative') ? 'collaborative' : argv.includes('--assistive') ? 'assistive' : 'mirrored') as 'mirrored' | 'collaborative' | 'assistive';
+    const members = Object.fromEntries((state.pod?.members ?? []).map((m) => [m.playerId, 'participant']));
+    const r = startRitual(state, { encounterTemplateId: 'shared-encounter', mode, roles: members, now });
+    if (!r.ok) { console.error(r.reason); process.exitCode = 1; return; }
+    state = r.state;
+    save({ state, player: ctx.player });
+    console.log(`\n  ${chalk.green('Ritual open')} (${mode}) — ${chalk.dim('gathering')}`);
+    return;
+  }
+  if (action === 'advance') {
+    const r = advanceRitual(state);
+    if (!r.ok) { console.error(r.reason); process.exitCode = 1; return; }
+    state = r.state;
+    save({ state, player: ctx.player });
+    console.log(`\n  Ritual phase: ${chalk.cyan(state.ritual?.state ?? '?')}`);
+    return;
+  }
+  if (action === 'recognize') {
+    const to = argv[argv.indexOf('recognize') + 1];
+    const kindArg = (argv.find((a) => a.startsWith('--kind=')) ?? '--kind=growth').split('=')[1] as 'consistency' | 'growth' | 'service';
+    if (!to) { console.error('Usage: mysterium pod recognize <memberId> [--kind=consistency|growth|service]'); process.exitCode = 1; return; }
+    const evidenceRef = `${to}:${kindArg}:local`;
+    const memberIds = new Set((state.pod?.members ?? []).map((m) => m.playerId));
+    if (!memberIds.has(to)) { console.error(`'${to}' is not a member.`); process.exitCode = 1; return; }
+    const pub = state.publishedAggregates[evidenceRef] === undefined
+      ? publishAggregate(state, evidenceRef, { kind: kindArg, publishedBy: to, at: now }, now)
+      : { state, ok: true as const };
+    if (!pub.ok) { console.error(pub.reason); process.exitCode = 1; return; }
+    const rec = issueRecognition(pub.state, { fromMemberId: ctx.player, toMemberId: to, kind: kindArg, periodId: 'local', evidenceRef }, now);
+    if (!rec.ok) { console.error(rec.reason); process.exitCode = 1; return; }
+    state = rec.state;
+    save({ state, player: ctx.player });
+    console.log(`\n  ${chalk.green('Recognition offered:')} ${kindArg} → ${to}`);
+    return;
+  }
+  // status
+  console.log(`\n  Pod: ${state.pod ? chalk.cyan(state.pod.id) : chalk.dim('none — try: mysterium pod form')}`);
+  if (state.pod) {
+    console.log(`  Covenant: ${chalk.dim(state.pod.covenant)}`);
+    for (const m of state.pod.members) console.log(`  · ${m.playerId} ${chalk.dim(`(${m.roles.join(', ')})`)}`);
+    if (state.ritual) console.log(`  Ritual: ${state.ritual.mode} — ${chalk.cyan(state.ritual.state)}`);
+    console.log(`  Recognitions: ${state.recognitions.length}`);
+  }
+  console.log('');
+}
+
 async function runVowCommand(argv: string[]): Promise<void> {
   const action = argv.find((a) => !a.startsWith('--')) ?? 'list';
   const get = (name: string): string | undefined => {
@@ -5319,7 +5410,7 @@ async function main(): Promise<void> {
   // treat ALL subcommands as potentially interactive EXCEPT the truly
   // non-interactive ones (`status`, `glossary`). This is safer than
   // enumerating interactive ones — new subcommands default to safe.
-  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow']);
+  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod']);
   const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand) && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
     HEADLESS = true;
@@ -5353,6 +5444,7 @@ async function main(): Promise<void> {
   if (subcommand === 'privacy') { await runPrivacyCommand(program.args[1], program.args[2]); return; }
   if (subcommand === 'delegate') { await runDelegateCommand(program.args.slice(1)); return; }
   if (subcommand === 'vow') { await runVowCommand(program.args.slice(1)); return; }
+  if (subcommand === 'pod') { await runPodCommand(program.args.slice(1)); return; }
   // P0-5 + P0-6: Use deleteAllSaves (clears sig + world + atomic envelope).
   // P0-6: Also clear TDG graph state if the TDG bridge is running, so a new
   // game doesn't inherit the old player's developmental graph.
