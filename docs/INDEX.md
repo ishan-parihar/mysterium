@@ -139,6 +139,7 @@
 
 ### Supporting docs
 
+- **`DEVELOPMENT-PLAN.md`** — the binding build plan: 9 gated phases from the code-vs-docs audit (AGENTS.md §4.2 points here)
 - `progression/00-progression-overview.md` — how the player ascends
 - `narrative/00-narrative-architecture.md` — story as scaffolding for development
 - `architecture/11-curriculum-authoring.md` — how to author curriculum holons

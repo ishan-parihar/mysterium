@@ -210,17 +210,19 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current Phase: Orchestration-Layer Implementation (per docs/foundations/43)
+### 4.2 Current Phase: Phase 1 — Delegation Kernel (per docs/DEVELOPMENT-PLAN.md)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules x 8 files).
-Legacy removal is **DONE** (ATB documents archived to `docs/archive/`, ATB code removed;
-see `docs/audits/DOC-SET-AUDIT-2026-09-16.md` for the reconciliation record).
-The current phase implements the agentic orchestration layer per `docs/foundations/43-agentic-orchestration-architecture.md`:
+Legacy removal is **DONE** (record: `docs/audits/DOC-SET-AUDIT-2026-09-16.md`).
 
-1. **Delegation kernel** — `DelegationSpec` / `DelegationResult` / `Proposal` types (43 §6), `delegate_session` on the orchestrator, session-log store (43 §4.4)
-2. **Council toolsets** — purpose-scoped read projections + `propose_*` tools per council (43 §4.3); ratification-only commit path (L4)
-3. **Profile/context agents** — Context Steward (S2) + Data Warden (S4) conducting all profile and consent surfaces agentically (43 §4.2)
-4. **Kernel gates** — extend the validation kernel with delegation determinism + toolset-firewall checks (43 §4.7, §5.3)
+**The binding build plan is `docs/DEVELOPMENT-PLAN.md`** — the authoritative,
+revised-in-place sequencing of all phases (1 Delegation Kernel → 2 Practice Tools →
+3 Corpus → 4 Pods → 5 Packs → 6 WebUI Parity → 7 Onboarding Composite → 8 K-12 →
+9 Credentialing), each with gates. The current phase is **Phase 1**: implement the
+delegation kernel per `docs/foundations/43-agentic-orchestration-architecture.md`
+(DelegationSpec/Result/Proposal types, session-log store, `delegate_session`,
+ratification-only commits, kernel gates G14/G15). The plan owns order and gates;
+foundations own contracts; on conflict the foundations doc wins and the plan is revised.
 
 Standing constraints for ALL phases: workspace-lint → build+test → commit → push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5.
 
