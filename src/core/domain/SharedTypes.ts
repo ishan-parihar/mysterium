@@ -62,3 +62,12 @@ export interface ReflectionRecord {
   readonly depthScore?: 1 | 2 | 3 | 4 | 5;  // rubric result, never surfaced as number
   readonly createdAtMs: number;
 }
+
+/** A measurement-pack skill-theta stream (40 §4.2). Freshness decays with the pack's half-life. */
+export interface SkillThetaStream {
+  readonly theta: number;
+  readonly se: number;
+  readonly lastMeasuredAtMs: number;
+  readonly sessionCount: number;
+  readonly halfLifeMs: number;
+}

@@ -38,6 +38,12 @@ import stageHolonsJson from '../data/stage-holons.json';
 import conceptDraftsJson from '../data/concept-drafts.json';
 import type { ConceptDraftIndex } from '../data/ConceptDraftIndex.js';
 import { validatePodPrivacyWall } from '../pods/podStateMachine.js';
+import { REFERENCE_PACKS } from '../packs/referencePacks.js';
+import {
+  lintPack, startPackSession, nextItem, recordTrial,
+  assignForm, computePsychometrics, integrateSkillTheta, readFreshTheta,
+  type PackSessionState,
+} from '../packs/PackEngine.js';
 import type { DelegatedTool, DelegationSpec, ProjectionKey } from '../orchestration/types.js';
 import type { Stage } from '../domain/Stage.js';
 import {
@@ -596,6 +602,71 @@ export function validateCorpusIntegrity(): GateResult {
   }
 }
 
+// ---------------------------------------------------------------------------
+// G19 — Measurement packs (hard, plan Phase 5): pack scoring determinism,
+// linter teeth, and the reliability-gate firewall — no pack feeds anything
+// downstream until reliability exists or is explicitly provisional.
+// ---------------------------------------------------------------------------
+
+export function validateMeasurementPacks(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G19 measurement packs', passed: false, hard: true, details: m });
+  try {
+    for (const pack of REFERENCE_PACKS) {
+      // Linter must pass every reference pack (PK-1..PK-4, no errors).
+      const issues = lintPack(pack).filter((i) => i.severity === 'error');
+      if (issues.length > 0) return mk(`${pack.id} lint errors: ${issues.map((i) => i.message).join('; ')}`);
+
+      // Determinism: same seed + same responder policy ⇒ identical session.
+      const run = (seed: number): PackSessionState => {
+        let s = startPackSession(pack, assignForm(pack, 0), seed, 4);
+        while (!s.finished) {
+          const item = nextItem(pack, s.formId, s);
+          if (!item) break;
+          s = recordTrial(s, pack, item, item.difficulty <= 6);
+        }
+        return s;
+      };
+      const a = run(777);
+      const b = run(777);
+      if (a.theta !== b.theta || a.administered.join(',') !== b.administered.join(',')) {
+        return mk(`${pack.id} scoring is not deterministic for identical seeds`);
+      }
+      const c = run(778);
+      if (c.theta === a.theta && c.administered.join(',') === a.administered.join(',')) {
+        return mk(`${pack.id} is insensitive to seed — selection is likely degenerate`);
+      }
+
+      // Stream integration: theta folds in, freshness reads decay toward 0.
+      let streams: Record<string, import('../domain/SharedTypes.js').SkillThetaStream> | undefined;
+      streams = integrateSkillTheta(streams, pack, { sessionId: 'g19', formId: a.formId, theta: a.theta, se: a.se, trials: a.trial, correctCount: a.correctCount, itemIds: a.administered, completedAtMs: 1_000_000 });
+      const fresh = readFreshTheta(streams[pack.id], 1_000_000 + 10 * 365 * 86_400_000);
+      if (fresh === null || fresh > a.theta) {
+        return mk(`${pack.id} freshness decay broken (fresh=${fresh})`);
+      }
+    }
+
+    // Linter teeth: a degraded pack (1 form) MUST fail.
+    const degraded = { ...REFERENCE_PACKS[0]!, forms: [REFERENCE_PACKS[0]!.forms[0]!] };
+    const degradedIssues = lintPack(degraded);
+    if (!degradedIssues.some((i) => i.checkId === 'PK-1' && i.severity === 'error')) {
+      return mk('pack linter accepted a single-form pack (no teeth)');
+    }
+
+    // Psychometrics: reports compute and flag provisional honestly.
+    const pack = REFERENCE_PACKS[0]!;
+    const recs = Array.from({ length: 4 }, (_, i) => ({
+      sessionId: `s${i}`, formId: assignForm(pack, i), theta: 5 + i * 0.1, se: 0.3,
+      trials: 12, correctCount: 8, itemIds: ['ws.5.5', 'ws.6.6'], completedAtMs: 1000 * i,
+    }));
+    const report = computePsychometrics(pack, recs);
+    if (!report.provisional || report.sessionCount !== 4) return mk('psychometrics report malformed');
+
+    return { gate: 'G19 measurement packs', passed: true, hard: true, details: `${REFERENCE_PACKS.length} reference packs: deterministic, lint-clean, stream-integrated; linter has teeth; reports provisional` };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
 export interface ValidationReport {
   tier: Tier;
   results: GateResult[];
@@ -629,6 +700,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validatePracticeLoop());
   results.push(validateCorpusIntegrity());
   results.push(validatePodPrivacyWall());
+  results.push(validateMeasurementPacks());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

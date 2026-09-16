@@ -170,6 +170,13 @@ export interface Significator {
    * (src/core/practice/), never by direct mutation.
    */
   readonly reflections?: readonly ReflectionRecord[];
+  /**
+   * Skill-theta streams from measurement packs (doc 40 §4.2): per-pack
+   * { theta, se, lastMeasuredAtMs, sessionCount, halfLifeMs }. Optional,
+   * back-compatible; freshness decays with pack-declared half-lives. Pack
+   * results enter ONLY through the pack session runner — never direct writes.
+   */
+  readonly skillTheta?: Readonly<Record<string, import('./SharedTypes.js').SkillThetaStream>>;
 }
 
 function zeroRecord<K extends string>(keys: readonly K[]): Record<K, number> {
