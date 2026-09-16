@@ -1,0 +1,897 @@
+[
+  {
+    "id": "music.foundations",
+    "name": "Music Foundations",
+    "description": "Sound organized in time: rhythm, pitch, notation, ensemble practice, and the listening vocabulary that turns hearing into perception.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": [
+      "music.rhythm",
+      "music.pitch",
+      "music.notation",
+      "music.ensemble"
+    ],
+    "phases": {
+      "observation": {
+        "question": "What must any account of music foundations explain?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of music foundations and say what each one does"
+      },
+      "principle": {
+        "question": "Why does music foundations work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply music foundations to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does music foundations connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using music foundations.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Sound organized in time: rhythm, pitch, notation, ensemble practice, and the listening vocabulary that turns hearing into perception. The branch organizes its concepts from first contact toward independent, integrated practice.",
+      "examples": [
+        "Rhythm and Pulse: Clapping a 4/4 pulse while speaking a rhythm over it",
+        "Pitch and Melody: Singing a scale's gravity by resolving 7→1",
+        "Notation and Score Reading: Hearing a melody from its notation before playing it",
+        "Ensemble and Listening: Dropping volume to let a solo line through"
+      ],
+      "nonExamples": [
+        "Not rhythm and pulse: Counting aloud without an internal pulse",
+        "Not pitch and melody: Naming intervals without hearing them",
+        "Not notation and score reading: Reading note-by-note without phrase shape",
+        "Not ensemble and listening: Playing accurately but only at yourself"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": []
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of music foundations",
+          "canDo": [
+            "Name the parts of music foundations"
+          ],
+          "cannotDo": [
+            "Use music foundations in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why music foundations works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind music foundations"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use music foundations on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with music foundations and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of music foundations against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend music foundations into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "music.rhythm",
+    "name": "Rhythm and Pulse",
+    "description": "Beat, meter, subdivision, and syncopation — the body-level grid that music moves against.",
+    "level": "concept",
+    "parentId": "music.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why does the body find the beat before the mind finds the notes?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of rhythm and pulse and say what each one does"
+      },
+      "principle": {
+        "question": "Why does rhythm and pulse work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply rhythm and pulse to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does rhythm and pulse connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using rhythm and pulse.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Rhythm is perceived in the body first: pulse predicts, meter groups, subdivision divides, syncopation delights by displacement. Steady pulse is a motor skill before it is a concept — the somatic line carries it. Reading rhythm notation is learning to see what the body already feels.",
+      "examples": [
+        "Clapping a 4/4 pulse while speaking a rhythm over it",
+        "Hearing the backbeat shift in a familiar song"
+      ],
+      "nonExamples": [
+        "Counting aloud without an internal pulse",
+        "Treating notation as the rhythm rather than its map"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "music.rhythm.p1",
+          "problemText": "Describe rhythm and pulse in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "music.rhythm.p2",
+          "problemText": "Find the boundary: give a case that looks like rhythm and pulse but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of rhythm and pulse",
+          "canDo": [
+            "Name the parts of rhythm and pulse"
+          ],
+          "cannotDo": [
+            "Use rhythm and pulse in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why rhythm and pulse works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind rhythm and pulse"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use rhythm and pulse on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with rhythm and pulse and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of rhythm and pulse against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend rhythm and pulse into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "music.pitch",
+    "name": "Pitch and Melody",
+    "description": "Intervals, scales, and melodic shape — how height and distance in pitch become tunes worth remembering.",
+    "level": "concept",
+    "parentId": "music.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What makes a melody a melody and not just a row of notes?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of pitch and melody and say what each one does"
+      },
+      "principle": {
+        "question": "Why does pitch and melody work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply pitch and melody to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does pitch and melody connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using pitch and melody.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "music.rhythm"
+    ],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Pitch relations come in families: intervals, ordered into scales that set a tonal gravity. Melody exploits that gravity — steps feel at home, leaps feel like journeys, resolution feels like arrival. Shape matters as much as content: contour is what listeners carry away.",
+      "examples": [
+        "Singing a scale's gravity by resolving 7→1",
+        "Hearing a melody's contour in a new key as 'the same tune'"
+      ],
+      "nonExamples": [
+        "Naming intervals without hearing them",
+        "Melodies that wander because every note was chosen alone"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "music.pitch.p1",
+          "problemText": "Describe pitch and melody in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "music.pitch.p2",
+          "problemText": "Find the boundary: give a case that looks like pitch and melody but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of pitch and melody",
+          "canDo": [
+            "Name the parts of pitch and melody"
+          ],
+          "cannotDo": [
+            "Use pitch and melody in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why pitch and melody works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind pitch and melody"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use pitch and melody on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with pitch and melody and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of pitch and melody against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend pitch and melody into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "music.notation",
+    "name": "Notation and Score Reading",
+    "description": "The written map of sound: staff, clefs, note values, dynamics, and how a score encodes a performance.",
+    "level": "concept",
+    "parentId": "music.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "How much of a performance lives on the page?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of notation and score reading and say what each one does"
+      },
+      "principle": {
+        "question": "Why does notation and score reading work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply notation and score reading to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does notation and score reading connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using notation and score reading.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "music.pitch",
+      "music.rhythm"
+    ],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Notation encodes pitch by height, time by shape, expression by markings — always lossily. Reading a score is reconstruction: decoding symbols back into imagined sound. The reader who audiates hears the page; the one who merely decodes names it.",
+      "examples": [
+        "Hearing a melody from its notation before playing it",
+        "Marking breaths a score does not write"
+      ],
+      "nonExamples": [
+        "Reading note-by-note without phrase shape",
+        "Believing dynamics markings exhaust expression"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "music.notation.p1",
+          "problemText": "Describe notation and score reading in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "music.notation.p2",
+          "problemText": "Find the boundary: give a case that looks like notation and score reading but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of notation and score reading",
+          "canDo": [
+            "Name the parts of notation and score reading"
+          ],
+          "cannotDo": [
+            "Use notation and score reading in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why notation and score reading works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind notation and score reading"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use notation and score reading on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with notation and score reading and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of notation and score reading against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend notation and score reading into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "music.ensemble",
+    "name": "Ensemble and Listening",
+    "description": "Making music with others: balance, blend, cueing, and the double listening to ensemble and self.",
+    "level": "concept",
+    "parentId": "music.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What must you hear to play with others?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of ensemble and listening and say what each one does"
+      },
+      "principle": {
+        "question": "Why does ensemble and listening work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply ensemble and listening to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does ensemble and listening connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using ensemble and listening.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "music.notation"
+    ],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Ensemble playing splits attention: listen outward to the group's balance and inward to your own line, and keep both alive. Blend means adjusting timbre and volume to the whole; cueing means carrying intention visibly. It is the interpersonal line practiced through sound — a chamber group is a conversation with rules.",
+      "examples": [
+        "Dropping volume to let a solo line through",
+        "Catching a conductor's cue peripherally"
+      ],
+      "nonExamples": [
+        "Playing accurately but only at yourself",
+        "Loud sections drowning the line that carries the tune"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "music.ensemble.p1",
+          "problemText": "Describe ensemble and listening in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "music.ensemble.p2",
+          "problemText": "Find the boundary: give a case that looks like ensemble and listening but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of ensemble and listening",
+          "canDo": [
+            "Name the parts of ensemble and listening"
+          ],
+          "cannotDo": [
+            "Use ensemble and listening in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why ensemble and listening works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind ensemble and listening"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use ensemble and listening on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with ensemble and listening and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of ensemble and listening against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend ensemble and listening into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied",
+      "ImmersiveRPG"
+    ]
+  }
+]

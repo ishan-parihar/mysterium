@@ -132,6 +132,12 @@ void avoidingResponse; // reserved for J4 lapse arcs (39 integration)
  * exposition, S-council ops) produce zero encounters and return proposals
  * directly (their proposals are constructed in ratifiable form by the
  * orchestrator layer above — see delegateAndRatify in delegateOrchestrator.ts).
+ *
+ * P1-LLM (plan §8 item 1): the deterministic policy remains the KERNEL'S TEST
+ * DOUBLE and the OFFLINE FALLBACK. Production callers may pass a
+ * ChoicePolicy (see choicePolicy.ts) that consults an LLM and degrades to
+ * this policy on any failure — G14 determinism is preserved because the
+ * kernel always runs the seeded deterministic path.
  */
 export function roleChoicePolicy(
   role: AgentRole,
@@ -164,6 +170,11 @@ export interface DelegationRunContext {
   readonly world: WorldState;
   readonly session: SessionContext;
   readonly virtualNow: number;
+  /**
+   * P1-LLM: optional LLM-backed choice policy. Omitted (the kernel's default)
+   * ⇒ the deterministic seeded policy — G14's byte-stable path.
+   */
+  readonly choicePolicy?: import('./choicePolicy.js').ChoicePolicy;
 }
 
 export type DelegationCommit =
@@ -175,18 +186,22 @@ export type DelegationCommit =
  * session log, and the result. Encounters executed here advance sig/world via
  * the LIVE loop; the caller decides whether to keep the advanced state or the
  * pre-delegation state (but the session log always records what happened).
+ *
+ * P1-LLM: async to permit LLM-backed choice policies. Without an injected
+ * policy the path is fully synchronous in spirit — no awaits taken — and G14
+ * determinism is untouched (the kernel never injects one).
  */
-export function executeDelegatedSession(
+export async function executeDelegatedSession(
   spec: DelegationSpec,
   ctx: DelegationRunContext,
   seedCfg: DelegationSeed,
-): {
+): Promise<{
   log: SessionLog;
   result: DelegationResult;
   sig: Significator;
   world: WorldState;
   encountersExecuted: number;
-} {
+}> {
   const violation = validateSpec(spec);
   if (violation) {
     throw new Error(`DELEGATION_SPEC_INVALID(${violation.code}): ${violation.detail}`);
@@ -218,7 +233,27 @@ export function executeDelegatedSession(
     }
 
     log = appendToolCall(log, { t: now, tool: 'record_encounter', ok: true });
-    const response = roleChoicePolicy(spec.role, encounter, step++);
+    // P1-LLM: consult the injected policy when present; on ANY failure
+    // (exception, unparseable response, offline) degrade to the deterministic
+    // role policy — delegation never stalls on the network (39 P1 precedent).
+    let response: PlayerResponse;
+    if (ctx.choicePolicy) {
+      try {
+        response = await ctx.choicePolicy.choose({
+          role: spec.role,
+          cell: spec.cell,
+          purpose: spec.purpose,
+          encounter,
+          step,
+          sig,
+        });
+      } catch {
+        response = roleChoicePolicy(spec.role, encounter, step);
+      }
+    } else {
+      response = roleChoicePolicy(spec.role, encounter, step);
+    }
+    step++;
     const record = processOutcome(encounter, response, now);
     const applied = applyConsequences(sig, world, record, encounter);
     // Advance session counters through the live loop's response-only path

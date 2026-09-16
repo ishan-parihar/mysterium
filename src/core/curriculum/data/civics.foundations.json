@@ -1,0 +1,891 @@
+[
+  {
+    "id": "civics.foundations",
+    "name": "Civics and Ethics Foundations",
+    "description": "Living together under rules: how governments work, how collective decisions get made and justified, and how to reason about what should be done.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": [
+      "civics.institutions",
+      "civics.deliberation",
+      "civics.rights",
+      "civics.participation"
+    ],
+    "phases": {
+      "observation": {
+        "question": "What must any account of civics and ethics foundations explain?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of civics and ethics foundations and say what each one does"
+      },
+      "principle": {
+        "question": "Why does civics and ethics foundations work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply civics and ethics foundations to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does civics and ethics foundations connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using civics and ethics foundations.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Moral",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Living together under rules: how governments work, how collective decisions get made and justified, and how to reason about what should be done. The branch organizes its concepts from first contact toward independent, integrated practice.",
+      "examples": [
+        "How Institutions Work: Tracing a bill from committee to law",
+        "Deliberation and Disagreement: Restating an opponent's argument until they accept the restatement",
+        "Rights and Obligations: Weighing a protest's disruption against its expressive core",
+        "Participation and Its Cost: Organizing a petition and counting the hours it took"
+      ],
+      "nonExamples": [
+        "Not how institutions work: Memorizing officeholders as civics",
+        "Not deliberation and disagreement: Debate as performance for one's own side",
+        "Not rights and obligations: Rights as absolutes until inconvenient",
+        "Not participation and its cost: Cynicism as sophistication"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": []
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of civics and ethics foundations",
+          "canDo": [
+            "Name the parts of civics and ethics foundations"
+          ],
+          "cannotDo": [
+            "Use civics and ethics foundations in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why civics and ethics foundations works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind civics and ethics foundations"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use civics and ethics foundations on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with civics and ethics foundations and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of civics and ethics foundations against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend civics and ethics foundations into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ScenarioChoice",
+      "SocialCooperative"
+    ]
+  },
+  {
+    "id": "civics.institutions",
+    "name": "How Institutions Work",
+    "description": "The machinery of self-governance: constitutions, legislatures, courts, elections, and the separation of powers as a design problem.",
+    "level": "concept",
+    "parentId": "civics.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why do societies split power instead of trusting the wise?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of how institutions work and say what each one does"
+      },
+      "principle": {
+        "question": "Why does how institutions work work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply how institutions work to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does how institutions work connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using how institutions work.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Moral",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Institutions are solutions to the problem of power: constitutions constrain, legislatures deliberate, courts interpret, elections legitimize. Separation of powers is a design insight — ambition counteracting ambition — not a ritual. Understanding the machinery means seeing each rule as an answer to a failure mode.",
+      "examples": [
+        "Tracing a bill from committee to law",
+        "Explaining judicial review as a response to majority overreach"
+      ],
+      "nonExamples": [
+        "Memorizing officeholders as civics",
+        "Treating procedures as empty rituals"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "civics.institutions.p1",
+          "problemText": "Describe how institutions work in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "civics.institutions.p2",
+          "problemText": "Find the boundary: give a case that looks like how institutions work but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of how institutions work",
+          "canDo": [
+            "Name the parts of how institutions work"
+          ],
+          "cannotDo": [
+            "Use how institutions work in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why how institutions work works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind how institutions work"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use how institutions work on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with how institutions work and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of how institutions work against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend how institutions work into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ScenarioChoice",
+      "SocialCooperative"
+    ]
+  },
+  {
+    "id": "civics.deliberation",
+    "name": "Deliberation and Disagreement",
+    "description": "Making decisions with people who disagree: argument, evidence, compromise, and the difference between winning and deciding well.",
+    "level": "concept",
+    "parentId": "civics.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "How do you decide with someone who thinks you are wrong?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of deliberation and disagreement and say what each one does"
+      },
+      "principle": {
+        "question": "Why does deliberation and disagreement work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply deliberation and disagreement to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does deliberation and disagreement connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using deliberation and disagreement.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "civics.institutions"
+    ],
+    "devMapping": {
+      "primaryLine": "Moral",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Deliberation is decision-making under permanent disagreement. It requires separating persons from positions, offering reasons the other side could accept, and treating compromise as engineering rather than surrender. The moral line does its daily work here: it is easy to be right alone.",
+      "examples": [
+        "Restating an opponent's argument until they accept the restatement",
+        "Finding the third option both sides prefer to the coin flip"
+      ],
+      "nonExamples": [
+        "Debate as performance for one's own side",
+        "Compromise that abandons principle for quiet"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "civics.deliberation.p1",
+          "problemText": "Describe deliberation and disagreement in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "civics.deliberation.p2",
+          "problemText": "Find the boundary: give a case that looks like deliberation and disagreement but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of deliberation and disagreement",
+          "canDo": [
+            "Name the parts of deliberation and disagreement"
+          ],
+          "cannotDo": [
+            "Use deliberation and disagreement in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why deliberation and disagreement works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind deliberation and disagreement"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use deliberation and disagreement on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with deliberation and disagreement and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of deliberation and disagreement against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend deliberation and disagreement into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ScenarioChoice",
+      "SocialCooperative"
+    ]
+  },
+  {
+    "id": "civics.rights",
+    "name": "Rights and Obligations",
+    "description": "What individuals owe each other and the collective: rights as claims, obligations as their cost, and conflicts between the two.",
+    "level": "concept",
+    "parentId": "civics.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Where does my right end and your claim begin?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of rights and obligations and say what each one does"
+      },
+      "principle": {
+        "question": "Why does rights and obligations work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply rights and obligations to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does rights and obligations connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using rights and obligations.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "civics.deliberation"
+    ],
+    "devMapping": {
+      "primaryLine": "Moral",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Rights are enforceable claims that protect what a society holds essential; obligations are what those claims cost everyone else. Hard cases are conflicts — speech against safety, property against need — where rights must be weighed, not recited. Reasoning about them is the skill; certainty about outcomes is not.",
+      "examples": [
+        "Weighing a protest's disruption against its expressive core",
+        "Explaining why due process protects the unpopular"
+      ],
+      "nonExamples": [
+        "Rights as absolutes until inconvenient",
+        "Obligations owed only to those who agree with us"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "civics.rights.p1",
+          "problemText": "Describe rights and obligations in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "civics.rights.p2",
+          "problemText": "Find the boundary: give a case that looks like rights and obligations but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of rights and obligations",
+          "canDo": [
+            "Name the parts of rights and obligations"
+          ],
+          "cannotDo": [
+            "Use rights and obligations in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why rights and obligations works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind rights and obligations"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use rights and obligations on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with rights and obligations and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of rights and obligations against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend rights and obligations into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ScenarioChoice",
+      "SocialCooperative"
+    ]
+  },
+  {
+    "id": "civics.participation",
+    "name": "Participation and Its Cost",
+    "description": "Citizenship as practice: voting, organizing, service, and the honest accounting of what participation costs and changes.",
+    "level": "concept",
+    "parentId": "civics.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What does citizenship actually ask of a person?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of participation and its cost and say what each one does"
+      },
+      "principle": {
+        "question": "Why does participation and its cost work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply participation and its cost to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does participation and its cost connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using participation and its cost.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "civics.rights"
+    ],
+    "devMapping": {
+      "primaryLine": "Moral",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Participation ranges from voting to organizing to service, and each form has a real cost in time, attention, and conflict. Honest civics teaches the cost side too: participation often changes the participant more than the outcome, which is exactly why it is the developmental practice — the moral line strengthens by carrying weight, not by holding opinions.",
+      "examples": [
+        "Organizing a petition and counting the hours it took",
+        "Attending a council meeting where 'your' issue loses"
+      ],
+      "nonExamples": [
+        "Cynicism as sophistication",
+        "Participation only when victory is certain"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "civics.participation.p1",
+          "problemText": "Describe participation and its cost in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "civics.participation.p2",
+          "problemText": "Find the boundary: give a case that looks like participation and its cost but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of participation and its cost",
+          "canDo": [
+            "Name the parts of participation and its cost"
+          ],
+          "cannotDo": [
+            "Use participation and its cost in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why participation and its cost works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind participation and its cost"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use participation and its cost on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with participation and its cost and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of participation and its cost against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend participation and its cost into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ScenarioChoice",
+      "SocialCooperative"
+    ]
+  }
+]

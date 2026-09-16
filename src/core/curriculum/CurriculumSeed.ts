@@ -32,6 +32,15 @@ import bioFoundations from './data/bio.foundations.json';
 import chemFoundations from './data/chem.foundations.json';
 import histFoundations from './data/hist.foundations.json';
 import geoFoundations from './data/geo.foundations.json';
+// Post-plan completion (plan §8 item 4, doc 37): the planned K-12 branches —
+// language-arts, arts, music, second-language, civics, health — closing the
+// subject→line map's 'planned' rows.
+import languageArtsFoundations from './data/language-arts.foundations.json';
+import artsFoundations from './data/arts.foundations.json';
+import musicFoundations from './data/music.foundations.json';
+import secondLanguageFoundations from './data/second-language.foundations.json';
+import civicsFoundations from './data/civics.foundations.json';
+import healthFoundations from './data/health.foundations.json';
 
 /** All seed data modules. Each entry is an array of CurriculumHolon objects. */
 const SEED_MODULES: readonly { name: string; data: CurriculumHolon[] }[] = [
@@ -45,6 +54,12 @@ const SEED_MODULES: readonly { name: string; data: CurriculumHolon[] }[] = [
   { name: 'chem.foundations', data: chemFoundations as unknown as CurriculumHolon[] },
   { name: 'hist.foundations', data: histFoundations as unknown as CurriculumHolon[] },
   { name: 'geo.foundations', data: geoFoundations as unknown as CurriculumHolon[] },
+  { name: 'language-arts.foundations', data: languageArtsFoundations as unknown as CurriculumHolon[] },
+  { name: 'arts.foundations', data: artsFoundations as unknown as CurriculumHolon[] },
+  { name: 'music.foundations', data: musicFoundations as unknown as CurriculumHolon[] },
+  { name: 'second-language.foundations', data: secondLanguageFoundations as unknown as CurriculumHolon[] },
+  { name: 'civics.foundations', data: civicsFoundations as unknown as CurriculumHolon[] },
+  { name: 'health.foundations', data: healthFoundations as unknown as CurriculumHolon[] },
 ];
 
 /**

@@ -1,0 +1,886 @@
+[
+  {
+    "id": "health.foundations",
+    "name": "Health and Physical Foundations",
+    "description": "The body as lived: movement capacity, physiological literacy, nutrition, sleep, and mental health — knowledge that makes the body readable and keepable.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": [
+      "health.movement",
+      "health.physiology",
+      "health.nutrition_sleep",
+      "health.mental"
+    ],
+    "phases": {
+      "observation": {
+        "question": "What must any account of health and physical foundations explain?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of health and physical foundations and say what each one does"
+      },
+      "principle": {
+        "question": "Why does health and physical foundations work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply health and physical foundations to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does health and physical foundations connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using health and physical foundations.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Somatic",
+      "secondaryLines": [
+        "Willpower"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "The body as lived: movement capacity, physiological literacy, nutrition, sleep, and mental health — knowledge that makes the body readable and keepable. The branch organizes its concepts from first contact toward independent, integrated practice.",
+      "examples": [
+        "Movement Capacity: Tracking a plank hold against your own last month",
+        "Physiological Literacy: Pacing an interval by breathing rhythm, not by the clock alone",
+        "Nutrition and Sleep: Protein across the day rather than one heroic dinner",
+        "Mental Health Literacy: Noticing a mood dip as three nights of short sleep"
+      ],
+      "nonExamples": [
+        "Not movement capacity: Comparing lifts across bodies",
+        "Not physiological literacy: Training to exhaustion daily and calling the fatigue failure",
+        "Not nutrition and sleep: Supplements as a substitute for sleep",
+        "Not mental health literacy: Toughness talk as treatment for depression"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": []
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of health and physical foundations",
+          "canDo": [
+            "Name the parts of health and physical foundations"
+          ],
+          "cannotDo": [
+            "Use health and physical foundations in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why health and physical foundations works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind health and physical foundations"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use health and physical foundations on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with health and physical foundations and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of health and physical foundations against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend health and physical foundations into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied"
+    ]
+  },
+  {
+    "id": "health.movement",
+    "name": "Movement Capacity",
+    "description": "Strength, endurance, mobility, and coordination as trainable capacities with measurable, individual baselines.",
+    "level": "concept",
+    "parentId": "health.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What can your body do today that it could not do a month ago?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of movement capacity and say what each one does"
+      },
+      "principle": {
+        "question": "Why does movement capacity work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply movement capacity to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does movement capacity connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using movement capacity.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Somatic",
+      "secondaryLines": [
+        "Willpower"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Physical capacity is four trainable systems: strength (force), endurance (delivery), mobility (range), coordination (control). Each adapts to progressive overload and detends without it. The honest unit is the personal baseline — capacity is ipsative, never comparative, which is the somatic line's own version of the blindness law.",
+      "examples": [
+        "Tracking a plank hold against your own last month",
+        "Learning a hip hinge before adding load"
+      ],
+      "nonExamples": [
+        "Comparing lifts across bodies",
+        "Chasing soreness as proof of work"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "health.movement.p1",
+          "problemText": "Describe movement capacity in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "health.movement.p2",
+          "problemText": "Find the boundary: give a case that looks like movement capacity but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of movement capacity",
+          "canDo": [
+            "Name the parts of movement capacity"
+          ],
+          "cannotDo": [
+            "Use movement capacity in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why movement capacity works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind movement capacity"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use movement capacity on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with movement capacity and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of movement capacity against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend movement capacity into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied"
+    ]
+  },
+  {
+    "id": "health.physiology",
+    "name": "Physiological Literacy",
+    "description": "How the body actually works: cardiovascular and muscular response to exercise, energy systems, and adaptation.",
+    "level": "concept",
+    "parentId": "health.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What is happening inside when you train?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of physiological literacy and say what each one does"
+      },
+      "principle": {
+        "question": "Why does physiological literacy work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply physiological literacy to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does physiological literacy connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using physiological literacy.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "health.movement"
+    ],
+    "devMapping": {
+      "primaryLine": "Somatic",
+      "secondaryLines": [
+        "Willpower"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Exercise is physiology made visible: heart rate and stroke volume carry oxygen, muscles recruit fibers by demand, energy systems hand off between them on timescales, and adaptation happens in recovery, not in the session. Reading your own body's signals — breath, heart rate, fatigue — turns training from folklore into feedback.",
+      "examples": [
+        "Pacing an interval by breathing rhythm, not by the clock alone",
+        "Explaining why strength gains outpace muscle growth early"
+      ],
+      "nonExamples": [
+        "Training to exhaustion daily and calling the fatigue failure",
+        "Believing sweat volume measures fitness"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "health.physiology.p1",
+          "problemText": "Describe physiological literacy in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "health.physiology.p2",
+          "problemText": "Find the boundary: give a case that looks like physiological literacy but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of physiological literacy",
+          "canDo": [
+            "Name the parts of physiological literacy"
+          ],
+          "cannotDo": [
+            "Use physiological literacy in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why physiological literacy works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind physiological literacy"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use physiological literacy on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with physiological literacy and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of physiological literacy against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend physiological literacy into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied"
+    ]
+  },
+  {
+    "id": "health.nutrition_sleep",
+    "name": "Nutrition and Sleep",
+    "description": "The substrate of capacity: what the body runs on and what repairs it — food quality and quantity, and sleep as non-negotiable maintenance.",
+    "level": "concept",
+    "parentId": "health.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why does the workout build nothing without the kitchen and the bed?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of nutrition and sleep and say what each one does"
+      },
+      "principle": {
+        "question": "Why does nutrition and sleep work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply nutrition and sleep to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does nutrition and sleep connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using nutrition and sleep.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "health.physiology"
+    ],
+    "devMapping": {
+      "primaryLine": "Somatic",
+      "secondaryLines": [
+        "Willpower"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Adaptation consumes substrate: protein rebuilds, carbohydrate refuels, and sleep is when the actual construction happens — hormone pulses, memory consolidation, tissue repair. Under-sleeping negates training. The willpower line appears honestly here: consistency in boring fundamentals outperforms intensity in impressive ones.",
+      "examples": [
+        "Protein across the day rather than one heroic dinner",
+        "Choosing a fixed wake time over a fixed bedtime"
+      ],
+      "nonExamples": [
+        "Supplements as a substitute for sleep",
+        "Diets designed to be broken"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "health.nutrition_sleep.p1",
+          "problemText": "Describe nutrition and sleep in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "health.nutrition_sleep.p2",
+          "problemText": "Find the boundary: give a case that looks like nutrition and sleep but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of nutrition and sleep",
+          "canDo": [
+            "Name the parts of nutrition and sleep"
+          ],
+          "cannotDo": [
+            "Use nutrition and sleep in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why nutrition and sleep works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind nutrition and sleep"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use nutrition and sleep on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with nutrition and sleep and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of nutrition and sleep against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend nutrition and sleep into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied"
+    ]
+  },
+  {
+    "id": "health.mental",
+    "name": "Mental Health Literacy",
+    "description": "Stress, mood, and the mind-body loop: recognizing states, using movement and rest as regulation, and when to seek help.",
+    "level": "concept",
+    "parentId": "health.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "How do you read the body's reports about the mind?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of mental health literacy and say what each one does"
+      },
+      "principle": {
+        "question": "Why does mental health literacy work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply mental health literacy to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does mental health literacy connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using mental health literacy.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "health.nutrition_sleep"
+    ],
+    "devMapping": {
+      "primaryLine": "Somatic",
+      "secondaryLines": [
+        "Willpower"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Mental states have somatic signatures — sleep disruption, appetite shifts, muscle tension — and physical practices move mental states: exercise as antidepressant at moderate effect sizes, breath as a parasympathetic brake. Literacy includes the boundary of self-help: persistent impairment is a signal for professional help, not a willpower failure. This is the intrapersonal line met through the body.",
+      "examples": [
+        "Noticing a mood dip as three nights of short sleep",
+        "Using a walk to move through rumination"
+      ],
+      "nonExamples": [
+        "Toughness talk as treatment for depression",
+        "Self-diagnosis from social media"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "health.mental.p1",
+          "problemText": "Describe mental health literacy in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "health.mental.p2",
+          "problemText": "Find the boundary: give a case that looks like mental health literacy but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of mental health literacy",
+          "canDo": [
+            "Name the parts of mental health literacy"
+          ],
+          "cannotDo": [
+            "Use mental health literacy in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why mental health literacy works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind mental health literacy"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use mental health literacy on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with mental health literacy and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of mental health literacy against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend mental health literacy into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "Embodied"
+    ]
+  }
+]

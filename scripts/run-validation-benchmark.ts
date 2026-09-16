@@ -31,7 +31,7 @@ function reportToText(report: ValidationReport): string {
 }
 
 const { tier, json } = parseArgs();
-const report = runValidationSuite(tier);
+const report = await runValidationSuite(tier);
 console.log(reportToText(report));
 
 if (json) {

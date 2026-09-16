@@ -1,0 +1,891 @@
+[
+  {
+    "id": "second-language.foundations",
+    "name": "Second Language Foundations",
+    "description": "Acquiring another language: comprehensible input, spaced retrieval, and the willingness to communicate badly on the way to communicating well.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": [
+      "second-language.input",
+      "second-language.lexicon",
+      "second-language.interaction",
+      "second-language.structure"
+    ],
+    "phases": {
+      "observation": {
+        "question": "What must any account of second language foundations explain?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of second language foundations and say what each one does"
+      },
+      "principle": {
+        "question": "Why does second language foundations work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply second language foundations to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does second language foundations connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using second language foundations.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Acquiring another language: comprehensible input, spaced retrieval, and the willingness to communicate badly on the way to communicating well. The branch organizes its concepts from first contact toward independent, integrated practice.",
+      "examples": [
+        "Comprehensible Input: Reading graded readers a level below frustration",
+        "Lexicon and Retrieval: Retrieving 'bread' from a picture, not from a first-language prompt",
+        "Interaction and Negotiation: Describing 'kettle' as 'the water-boiling thing' mid-conversation",
+        "Grammar as Pattern: Noticing past-tense endings after a focused lesson, in stories you were already reading"
+      ],
+      "nonExamples": [
+        "Not comprehensible input: Grinding verb tables before understanding a sentence",
+        "Not lexicon and retrieval: Re-reading lists as review",
+        "Not interaction and negotiation: Going silent to avoid errors",
+        "Not grammar as pattern: Conjugating for a test you cannot use in chat"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": []
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of second language foundations",
+          "canDo": [
+            "Name the parts of second language foundations"
+          ],
+          "cannotDo": [
+            "Use second language foundations in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why second language foundations works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind second language foundations"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use second language foundations on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with second language foundations and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of second language foundations against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend second language foundations into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "SocialCooperative"
+    ]
+  },
+  {
+    "id": "second-language.input",
+    "name": "Comprehensible Input",
+    "description": "How acquisition actually happens: understanding messages slightly above one's current level, in quantity.",
+    "level": "concept",
+    "parentId": "second-language.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why do you acquire the language you understand, not the language you study?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of comprehensible input and say what each one does"
+      },
+      "principle": {
+        "question": "Why does comprehensible input work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply comprehensible input to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does comprehensible input connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using comprehensible input.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Acquisition is driven by comprehensible input: messages understood at level i+1. Grammar and vocabulary are acquired from context encounter after encounter, not absorbed from rule tables. Volume matters more than intensity — an hour of easy reading beats ten minutes of dense text, because acquisition is frequency-sensitive.",
+      "examples": [
+        "Reading graded readers a level below frustration",
+        "Watching familiar stories in the target language"
+      ],
+      "nonExamples": [
+        "Grinding verb tables before understanding a sentence",
+        "Choosing materials at frustration level for 'rigor'"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "second-language.input.p1",
+          "problemText": "Describe comprehensible input in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "second-language.input.p2",
+          "problemText": "Find the boundary: give a case that looks like comprehensible input but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of comprehensible input",
+          "canDo": [
+            "Name the parts of comprehensible input"
+          ],
+          "cannotDo": [
+            "Use comprehensible input in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why comprehensible input works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind comprehensible input"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use comprehensible input on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with comprehensible input and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of comprehensible input against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend comprehensible input into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "SocialCooperative"
+    ]
+  },
+  {
+    "id": "second-language.lexicon",
+    "name": "Lexicon and Retrieval",
+    "description": "Building a usable vocabulary: spaced retrieval, context guessing, and the difference between recognition and production.",
+    "level": "concept",
+    "parentId": "second-language.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why do words you 'know' vanish exactly when you need them?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of lexicon and retrieval and say what each one does"
+      },
+      "principle": {
+        "question": "Why does lexicon and retrieval work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply lexicon and retrieval to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does lexicon and retrieval connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using lexicon and retrieval.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "second-language.input"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Vocabulary is two systems: recognition (fast, large) and production (slow, expensive). Spaced retrieval strengthens both by forcing effortful recall just before forgetting; context guessing builds the network that gives words their range. A productive vocabulary of 1,500 words beats a recognized one of 5,000 for actual conversation.",
+      "examples": [
+        "Retrieving 'bread' from a picture, not from a first-language prompt",
+        "Guessing 'library' from context and checking later"
+      ],
+      "nonExamples": [
+        "Re-reading lists as review",
+        "Translating every word back to the first language"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "second-language.lexicon.p1",
+          "problemText": "Describe lexicon and retrieval in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "second-language.lexicon.p2",
+          "problemText": "Find the boundary: give a case that looks like lexicon and retrieval but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of lexicon and retrieval",
+          "canDo": [
+            "Name the parts of lexicon and retrieval"
+          ],
+          "cannotDo": [
+            "Use lexicon and retrieval in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why lexicon and retrieval works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind lexicon and retrieval"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use lexicon and retrieval on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with lexicon and retrieval and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of lexicon and retrieval against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend lexicon and retrieval into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "SocialCooperative"
+    ]
+  },
+  {
+    "id": "second-language.interaction",
+    "name": "Interaction and Negotiation",
+    "description": "Communicating with real people: repair strategies, circumlocution, and tolerating the incompetence phase.",
+    "level": "concept",
+    "parentId": "second-language.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "How do you converse at a level where you cannot say what you mean?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of interaction and negotiation and say what each one does"
+      },
+      "principle": {
+        "question": "Why does interaction and negotiation work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply interaction and negotiation to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does interaction and negotiation connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using interaction and negotiation.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "second-language.lexicon"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Interaction is the interpersonal crucible of acquisition. Repair ('sorry — do you mean...?'), circumlocution ('the thing for opening cans'), and gesture carry meaning before grammar does. The developmental work is emotional: tolerating looking foolish, which is the exact price of becoming competent. Willingness to communicate predicts progress better than aptitude.",
+      "examples": [
+        "Describing 'kettle' as 'the water-boiling thing' mid-conversation",
+        "Asking a partner to slow down without shame"
+      ],
+      "nonExamples": [
+        "Going silent to avoid errors",
+        "Rehearsing monologues instead of negotiating meaning"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "second-language.interaction.p1",
+          "problemText": "Describe interaction and negotiation in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "second-language.interaction.p2",
+          "problemText": "Find the boundary: give a case that looks like interaction and negotiation but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of interaction and negotiation",
+          "canDo": [
+            "Name the parts of interaction and negotiation"
+          ],
+          "cannotDo": [
+            "Use interaction and negotiation in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why interaction and negotiation works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind interaction and negotiation"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use interaction and negotiation on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with interaction and negotiation and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of interaction and negotiation against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend interaction and negotiation into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "SocialCooperative"
+    ]
+  },
+  {
+    "id": "second-language.structure",
+    "name": "Grammar as Pattern",
+    "description": "The target language's structures, learned as patterns noticed in input and refined in output — not as rules memorized in the abstract.",
+    "level": "concept",
+    "parentId": "second-language.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "When does explicit grammar help, and when does it just slow speech?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of grammar as pattern and say what each one does"
+      },
+      "principle": {
+        "question": "Why does grammar as pattern work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply grammar as pattern to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does grammar as pattern connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using grammar as pattern.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "second-language.interaction"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Grammar instruction works when it makes patterns noticeable in input the learner already understands, and when output pushes against the boundary of what they can say. Rules that arrive before the pattern has been met are dead weight; rules that name a felt pattern are handles. Accuracy grows from feedback on meaningful output, not from rule recital.",
+      "examples": [
+        "Noticing past-tense endings after a focused lesson, in stories you were already reading",
+        "Self-correcting word order after a partner's puzzled look"
+      ],
+      "nonExamples": [
+        "Conjugating for a test you cannot use in chat",
+        "Explaining subjunctive to someone who has never heard one"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "second-language.structure.p1",
+          "problemText": "Describe grammar as pattern in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "second-language.structure.p2",
+          "problemText": "Find the boundary: give a case that looks like grammar as pattern but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of grammar as pattern",
+          "canDo": [
+            "Name the parts of grammar as pattern"
+          ],
+          "cannotDo": [
+            "Use grammar as pattern in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why grammar as pattern works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind grammar as pattern"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use grammar as pattern on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with grammar as pattern and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of grammar as pattern against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend grammar as pattern into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "SocialCooperative"
+    ]
+  }
+]

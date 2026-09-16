@@ -195,7 +195,7 @@ program
 program
   .command('credential [action] [rest...]')
   .allowUnknownOption()
-  .description('Claim-based credentials (doc 41): list, draft <domain> <descriptor...>, issue <claimId> <subject>, revoke <claimId>, export <claimId>')
+  .description('Claim-based credentials (doc 41): list, draft <domain> <descriptor...>, issue <claimId> <subject>, revoke <claimId>, export <claimId>, rpl --name <chosen-name> [--claims id1,id2]')
 
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
@@ -5162,7 +5162,9 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
     budget: { toolCallsMax: budget, virtualMsMax: 600_000 },
   };
 
-  const out = delegateSession({ spec, sig, world, session, seed, now: 1_000_000, ledger: emptyLedgerState() });
+  // P1-LLM: delegateSession is async (choice policies may consult an LLM);
+  // the deterministic path is unchanged in outcome, only in await shape.
+  const out = await delegateSession({ spec, sig, world, session, seed, now: 1_000_000, ledger: emptyLedgerState() });
   if (!out.ok) {
     const msg = `DELEGATION REJECTED: ${out.violation?.code} — ${out.violation?.detail}`;
     if (asJson) { process.stdout.write(JSON.stringify({ ok: false, violation: out.violation }) + '\n'); }
@@ -5371,6 +5373,18 @@ async function runCredentialCommand(argv: string[]): Promise<void> {
     const { vc, error } = cred.toVerifiableCredential(ledger, id ?? '');
     if (!vc) { console.error(error); process.exitCode = 1; return; }
     console.log(JSON.stringify(vc, null, 2));
+    return;
+  }
+  if (action === 'rpl') {
+    // RPL portfolio export (doc 41 §4.5 step 3): the evidence package a
+    // partner institution's assessor receives. Subject is chosen at export.
+    const nameIdx = argv.indexOf('--name');
+    const candidateName = nameIdx >= 0 ? argv[nameIdx + 1] ?? '' : '';
+    const onlyIdx = argv.indexOf('--claims');
+    const onlyClaimIds = onlyIdx >= 0 ? (argv[onlyIdx + 1] ?? '').split(',').filter(Boolean) : undefined;
+    const out = cred.exportRPLPortfolio(ledger, candidateName, { onlyClaimIds });
+    if (out.error || !out.portfolio) { console.error(out.error ?? 'RPL export failed'); process.exitCode = 1; return; }
+    console.log(JSON.stringify(out.portfolio, null, 2));
     return;
   }
   // list

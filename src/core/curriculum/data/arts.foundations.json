@@ -1,0 +1,897 @@
+[
+  {
+    "id": "arts.foundations",
+    "name": "Visual Arts Foundations",
+    "description": "Making and reading visual work: elements and principles of design, media and technique, and critique as a disciplined conversation about what work does.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": [
+      "arts.elements",
+      "arts.principles",
+      "arts.media",
+      "arts.critique"
+    ],
+    "phases": {
+      "observation": {
+        "question": "What must any account of visual arts foundations explain?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of visual arts foundations and say what each one does"
+      },
+      "principle": {
+        "question": "Why does visual arts foundations work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply visual arts foundations to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does visual arts foundations connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using visual arts foundations.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Making and reading visual work: elements and principles of design, media and technique, and critique as a disciplined conversation about what work does. The branch organizes its concepts from first contact toward independent, integrated practice.",
+      "examples": [
+        "Elements of Visual Design: Diagonal lines producing urgency in a poster",
+        "Principles of Composition: Isolating one bright figure in a muted field for emphasis",
+        "Media and Technique: Letting watercolor bloom instead of fighting it with control",
+        "Critique and Interpretation: Separating 'I dislike it' from 'the focal point is unclear'"
+      ],
+      "nonExamples": [
+        "Not elements of visual design: Calling any use of blue 'sad' without composition analysis",
+        "Not principles of composition: Filling space evenly to avoid decisions",
+        "Not media and technique: Using a medium to imitate another's look at double the effort",
+        "Not critique and interpretation: Critique that only praises"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": []
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of visual arts foundations",
+          "canDo": [
+            "Name the parts of visual arts foundations"
+          ],
+          "cannotDo": [
+            "Use visual arts foundations in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why visual arts foundations works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind visual arts foundations"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use visual arts foundations on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with visual arts foundations and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of visual arts foundations against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend visual arts foundations into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ImmersiveRPG",
+      "Embodied"
+    ]
+  },
+  {
+    "id": "arts.elements",
+    "name": "Elements of Visual Design",
+    "description": "Line, shape, color, value, texture, and space — the raw vocabulary every visual work is built from.",
+    "level": "concept",
+    "parentId": "arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What is a painting made of, before it is a painting?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of elements of visual design and say what each one does"
+      },
+      "principle": {
+        "question": "Why does elements of visual design work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply elements of visual design to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does elements of visual design connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using elements of visual design.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Every visual work decomposes into elements: line directs the eye, shape organizes, color carries mood and temperature, value models light, texture invites touch, space sets relationships. Skill with elements is skill in controlling what a viewer feels first and understands later — the emotional line works through the hand and eye before the word.",
+      "examples": [
+        "Diagonal lines producing urgency in a poster",
+        "Warm palette pulling a subject forward"
+      ],
+      "nonExamples": [
+        "Calling any use of blue 'sad' without composition analysis",
+        "Listing elements without describing their effect"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "arts.elements.p1",
+          "problemText": "Describe elements of visual design in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "arts.elements.p2",
+          "problemText": "Find the boundary: give a case that looks like elements of visual design but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of elements of visual design",
+          "canDo": [
+            "Name the parts of elements of visual design"
+          ],
+          "cannotDo": [
+            "Use elements of visual design in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why elements of visual design works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind elements of visual design"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use elements of visual design on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with elements of visual design and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of elements of visual design against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend elements of visual design into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ImmersiveRPG",
+      "Embodied"
+    ]
+  },
+  {
+    "id": "arts.principles",
+    "name": "Principles of Composition",
+    "description": "Balance, contrast, emphasis, rhythm, and unity — the principles that arrange elements into works that hold together.",
+    "level": "concept",
+    "parentId": "arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Why does one arrangement hold the eye and another let it go?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of principles of composition and say what each one does"
+      },
+      "principle": {
+        "question": "Why does principles of composition work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply principles of composition to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does principles of composition connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using principles of composition.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "arts.elements"
+    ],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Principles are the verbs to the elements' nouns. Contrast creates emphasis; repetition at intervals creates rhythm; balanced tension creates unity without monotony. Composition is decision-making about attention: what the viewer sees first, second, and what they return to.",
+      "examples": [
+        "Isolating one bright figure in a muted field for emphasis",
+        "Symmetry communicating stability in an architectural drawing"
+      ],
+      "nonExamples": [
+        "Filling space evenly to avoid decisions",
+        "Copying a composition without reading its attention flow"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "arts.principles.p1",
+          "problemText": "Describe principles of composition in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "arts.principles.p2",
+          "problemText": "Find the boundary: give a case that looks like principles of composition but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of principles of composition",
+          "canDo": [
+            "Name the parts of principles of composition"
+          ],
+          "cannotDo": [
+            "Use principles of composition in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why principles of composition works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind principles of composition"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use principles of composition on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with principles of composition and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of principles of composition against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend principles of composition into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ImmersiveRPG",
+      "Embodied"
+    ]
+  },
+  {
+    "id": "arts.media",
+    "name": "Media and Technique",
+    "description": "The material intelligence of art-making: drawing, paint, clay, digital tools — each with its own affordances and constraints.",
+    "level": "concept",
+    "parentId": "arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What does the material want to do?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of media and technique and say what each one does"
+      },
+      "principle": {
+        "question": "Why does media and technique work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply media and technique to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does media and technique connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using media and technique.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "arts.elements"
+    ],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Media are not neutral containers. Watercolor resists opacity; clay insists on mass; vector tools insist on geometry. Technique is a conversation with these affordances — mastery means knowing what a medium does easily, what it resists, and designing within that grain. The somatic line enters here: hands learn materials the way they learn tools.",
+      "examples": [
+        "Letting watercolor bloom instead of fighting it with control",
+        "Choosing charcoal for its smudge-ability when the subject is smoke"
+      ],
+      "nonExamples": [
+        "Using a medium to imitate another's look at double the effort",
+        "Blaming the tool for choices the hand made"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "arts.media.p1",
+          "problemText": "Describe media and technique in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "arts.media.p2",
+          "problemText": "Find the boundary: give a case that looks like media and technique but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of media and technique",
+          "canDo": [
+            "Name the parts of media and technique"
+          ],
+          "cannotDo": [
+            "Use media and technique in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why media and technique works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind media and technique"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use media and technique on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with media and technique and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of media and technique against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend media and technique into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ImmersiveRPG",
+      "Embodied"
+    ]
+  },
+  {
+    "id": "arts.critique",
+    "name": "Critique and Interpretation",
+    "description": "Talking and writing about work: description, analysis, interpretation, judgment — and receiving critique without defensiveness.",
+    "level": "concept",
+    "parentId": "arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "How do you say what a work does — and hear what others say yours does?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of critique and interpretation and say what each one does"
+      },
+      "principle": {
+        "question": "Why does critique and interpretation work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply critique and interpretation to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does critique and interpretation connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using critique and interpretation.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "arts.principles",
+      "arts.media"
+    ],
+    "devMapping": {
+      "primaryLine": "Emotional",
+      "secondaryLines": [
+        "Somatic",
+        "Spiritual"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Critique is a discipline, not an opinion contest. It moves from description (what is literally there) to analysis (how the principles operate) to interpretation (what the work means) to judgment (does it succeed, by what standard). Giving it honestly and receiving it without collapse is its own developmental practice — the golden shadow of the artist lives here.",
+      "examples": [
+        "Separating 'I dislike it' from 'the focal point is unclear'",
+        "Revising after critique because the critique was right"
+      ],
+      "nonExamples": [
+        "Critique that only praises",
+        "Defense that never asks a question"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "arts.critique.p1",
+          "problemText": "Describe critique and interpretation in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "arts.critique.p2",
+          "problemText": "Find the boundary: give a case that looks like critique and interpretation but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of critique and interpretation",
+          "canDo": [
+            "Name the parts of critique and interpretation"
+          ],
+          "cannotDo": [
+            "Use critique and interpretation in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why critique and interpretation works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind critique and interpretation"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use critique and interpretation on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with critique and interpretation and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of critique and interpretation against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend critique and interpretation into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "ImmersiveRPG",
+      "Embodied"
+    ]
+  }
+]

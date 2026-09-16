@@ -276,3 +276,105 @@ export function masteryEvidenceRef(conceptId: string, depth: string, measuredAtM
     reliability: { measuredAtMs },
   };
 }
+
+// ---------------------------------------------------------------------------
+// RPL evidence export (41 §4.5 step 3, plan §8 item 5)
+// ---------------------------------------------------------------------------
+
+/**
+ * The RPL portfolio — the format a partner institution's assessor receives
+ * (41 §4.5 step 3: "the platform provides evidence, the institution awards").
+ * Portfolio-shaped, not VC-shaped: institutions assess portfolios of
+ * evidence claims, not single credentials. Structure mirrors what RPL
+ * assessors expect: candidate-chosen name, competency claims with method +
+ * QA metadata, per-claim reliability disclosures, and the assessment
+ * context statement.
+ *
+ * Privacy: contains ONLY what issued claims already carry. Revoked claims
+ * are excluded; drafts (unconsented) are excluded — the portfolio is the
+ * player's consented public surface, nothing more.
+ */
+export interface RPLPortfolio {
+  readonly format: 'mysterium-rpl-portfolio';
+  readonly version: 1;
+  readonly generatedAtMs: number;
+  /** Player-chosen presentation name (per-claim subjects may differ; the
+   *  portfolio uses the name the player picks at export time). */
+  readonly candidateName: string;
+  /** How the evidence was produced — the assessor's context. */
+  readonly assessmentContext: string;
+  readonly claims: readonly {
+    readonly claimId: string;
+    readonly domain: string;
+    readonly competencyDescriptor: string;
+    readonly standardsTags?: readonly string[];
+    readonly level?: { readonly eqf?: number; readonly ects?: number };
+    readonly method: string;
+    readonly qualityAssurance: string;
+    readonly issuedAt: string;
+    readonly evidence: readonly EvidenceRef[];
+  }[];
+  /** Machine-checkable integrity: claim ids included, for verification against the issuing ledger. */
+  readonly claimIds: readonly string[];
+}
+
+/**
+ * Export the ledger's issued, non-revoked claims as an RPL portfolio.
+ * Returns an error when there is nothing to export (never an empty
+ * portfolio — that would misrepresent the candidate to an institution).
+ */
+export function exportRPLPortfolio(
+  ledger: ClaimLedger,
+  candidateName: string,
+  options: {
+    readonly assessmentContext?: string;
+    readonly now?: number;
+    /** Export only these claim ids (default: all issued, non-revoked). */
+    readonly onlyClaimIds?: readonly string[];
+  } = {},
+): { portfolio?: RPLPortfolio; error?: string } {
+  const now = options.now ?? Date.now();
+  if (candidateName.trim().length === 0) {
+    return { error: 'candidate name is required (the portfolio presents a chosen name, never a profile)' };
+  }
+  const revokedIds = new Set(ledger.revoked.map((r) => r.id));
+  const only = options.onlyClaimIds ? new Set(options.onlyClaimIds) : null;
+  const included = ledger.claims.filter(
+    (c) =>
+      c.subject.length > 0 && // issued (drafts have empty subject)
+      !revokedIds.has(c.id) &&
+      (only === null || only.has(c.id)),
+  );
+  if (included.length === 0) {
+    return { error: 'no issued, non-revoked claims to export' };
+  }
+  // Fail-closed on validation: an invalid claim must never reach an assessor.
+  for (const c of included) {
+    const failures = validateClaim(c);
+    if (failures.length > 0) {
+      return { error: `claim ${c.id} fails validation: ${failures.map((f) => f.message).join('; ')}` };
+    }
+  }
+  return {
+    portfolio: {
+      format: 'mysterium-rpl-portfolio',
+      version: 1,
+      generatedAtMs: now,
+      candidateName: candidateName.trim(),
+      assessmentContext: options.assessmentContext ??
+        'Longitudinal evidence from a contemplative learning environment: adaptive, staircase-based competency assessment with parallel forms; mastery depth recorded per curriculum concept; all instrument reliability disclosures travel with the evidence.',
+      claims: included.map((c) => ({
+        claimId: c.id,
+        domain: c.domain,
+        competencyDescriptor: c.competencyDescriptor,
+        standardsTags: c.standardsTags,
+        level: c.level,
+        method: c.method,
+        qualityAssurance: c.qualityAssurance,
+        issuedAt: new Date(c.issuedAtMs).toISOString(),
+        evidence: c.evidence,
+      })),
+      claimIds: included.map((c) => c.id),
+    },
+  };
+}

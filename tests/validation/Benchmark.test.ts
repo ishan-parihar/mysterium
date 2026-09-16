@@ -19,11 +19,14 @@
  *
  * Hard-gate failures block merge; soft-gate failures are reported, not thrown.
  */
-import { describe, it, expect } from 'vitest';
-import { runValidationSuite } from '../../src/core/validation/gates.js';
+import { describe, it, expect, beforeAll } from 'vitest';
+import { runValidationSuite, type ValidationReport } from '../../src/core/validation/gates.js';
 
 describe('Validation benchmark (CI tier)', () => {
-  const suite = runValidationSuite('ci');
+  let suite: ValidationReport;
+  beforeAll(async () => {
+    suite = await runValidationSuite('ci');
+  });
 
   it('completes within the CI time budget', () => {
     // The full matrix (10 personas × 2–3 sessions, double-run for G1) should

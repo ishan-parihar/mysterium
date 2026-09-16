@@ -51,6 +51,8 @@ export interface DelegateSessionArgs {
   readonly seed: string;
   readonly now: number;
   readonly ledger?: DelegationLedgerState;
+  /** P1-LLM: optional LLM-backed choice policy; omit for the deterministic kernel path. */
+  readonly choicePolicy?: import('./choicePolicy.js').ChoicePolicy;
 }
 
 export interface DelegateSessionOutcome {
@@ -71,8 +73,11 @@ export interface DelegateSessionOutcome {
  * (encounters executed inside the delegation are real state transitions via
  * the live loop — the orchestrator did not hold the foreground while they
  * ran, but the state advanced through the same engine path as any session).
+ *
+ * P1-LLM: async because the underlying session execution may consult an
+ * LLM-backed choice policy; without one, no awaits change the outcome.
  */
-export function delegateSession(args: DelegateSessionArgs): DelegateSessionOutcome {
+export async function delegateSession(args: DelegateSessionArgs): Promise<DelegateSessionOutcome> {
   const violation = validateSpec(args.spec);
   if (violation) {
     return {
@@ -85,11 +90,12 @@ export function delegateSession(args: DelegateSessionArgs): DelegateSessionOutco
 
   const runCtx: DelegationRunContext = {
     sig: args.sig, world: args.world, session: args.session, virtualNow: args.now,
+    ...(args.choicePolicy ? { choicePolicy: args.choicePolicy } : {}),
   };
   const prior = args.ledger ?? emptyLedgerState();
   const seedCfg = { seed: args.seed, now: args.now, sessionIndex: prior.logs.length };
 
-  const run = executeDelegatedSession(args.spec, runCtx, seedCfg);
+  const run = await executeDelegatedSession(args.spec, runCtx, seedCfg);
   const ledger: DelegationLedgerState = { ...prior, logs: persistSessionLog([...prior.logs], run.log) };
 
   return {

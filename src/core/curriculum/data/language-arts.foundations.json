@@ -1,0 +1,1074 @@
+[
+  {
+    "id": "language-arts.foundations",
+    "name": "Language Arts Foundations",
+    "description": "Reading, writing, and meaning-making: from decoding to interpretation, and from sentence craft to sustained written argument. Decoding is cognitive; meaning-making crosses into the emotional line.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": [
+      "language-arts.phonology",
+      "language-arts.vocabulary",
+      "language-arts.comprehension",
+      "language-arts.composition",
+      "language-arts.interpretation"
+    ],
+    "phases": {
+      "observation": {
+        "question": "What must any account of language arts foundations explain?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of language arts foundations and say what each one does"
+      },
+      "principle": {
+        "question": "Why does language arts foundations work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply language arts foundations to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does language arts foundations connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using language arts foundations.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Emotional"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Reading, writing, and meaning-making: from decoding to interpretation, and from sentence craft to sustained written argument. Decoding is cognitive; meaning-making crosses into the emotional line. The branch organizes its concepts from first contact toward independent, integrated practice.",
+      "examples": [
+        "Phonology and Decoding: Sounding out 'th-i-nk' into three phonemes then blending",
+        "Vocabulary and Word Meaning: Using 'port' (carry) to unlock transport, export, portable",
+        "Reading Comprehension: Inferring a character's motive from actions, not statements",
+        "Writing and Composition: Restructuring a paragraph so its claim comes first",
+        "Literary Interpretation: Arguing a poem's imagery carries grief, not nostalgia, from specific word choices"
+      ],
+      "nonExamples": [
+        "Not phonology and decoding: Guessing a word from its first letter alone",
+        "Not vocabulary and word meaning: Memorizing definitions without use",
+        "Not reading comprehension: Summarizing without interpreting",
+        "Not writing and composition: Padding to a length requirement",
+        "Not literary interpretation: Restating plot as analysis"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": []
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of language arts foundations",
+          "canDo": [
+            "Name the parts of language arts foundations"
+          ],
+          "cannotDo": [
+            "Use language arts foundations in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why language arts foundations works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind language arts foundations"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use language arts foundations on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with language arts foundations and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of language arts foundations against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend language arts foundations into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "language-arts.phonology",
+    "name": "Phonology and Decoding",
+    "description": "The sound-to-symbol system: phonemes, graphemes, and the decoding strategies that turn marks on a page into language.",
+    "level": "concept",
+    "parentId": "language-arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "How do marks on a page become sounds in a mind?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of phonology and decoding and say what each one does"
+      },
+      "principle": {
+        "question": "Why does phonology and decoding work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply phonology and decoding to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does phonology and decoding connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using phonology and decoding.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Emotional"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Written English encodes a stream of speech sounds (phonemes) with letter patterns (graphemes). Decoding is the bidirectional skill of mapping one to the other: sounding out unfamiliar words, and recognizing common patterns whole. Fluency frees attention for meaning — a reader who must labor over every word has none left for the sentence.",
+      "examples": [
+        "Sounding out 'th-i-nk' into three phonemes then blending",
+        "Recognizing '-tion' as one pattern with one sound"
+      ],
+      "nonExamples": [
+        "Guessing a word from its first letter alone",
+        "Treating silent letters as decoding failures rather than patterns"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "language-arts.phonology.p1",
+          "problemText": "Describe phonology and decoding in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "language-arts.phonology.p2",
+          "problemText": "Find the boundary: give a case that looks like phonology and decoding but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of phonology and decoding",
+          "canDo": [
+            "Name the parts of phonology and decoding"
+          ],
+          "cannotDo": [
+            "Use phonology and decoding in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why phonology and decoding works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind phonology and decoding"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use phonology and decoding on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with phonology and decoding and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of phonology and decoding against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend phonology and decoding into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "language-arts.vocabulary",
+    "name": "Vocabulary and Word Meaning",
+    "description": "How word meanings are learned, stored, and retrieved: morphology, context, and the networks that link words to each other.",
+    "level": "concept",
+    "parentId": "language-arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "Where does the meaning of a word live?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of vocabulary and word meaning and say what each one does"
+      },
+      "principle": {
+        "question": "Why does vocabulary and word meaning work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply vocabulary and word meaning to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does vocabulary and word meaning connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using vocabulary and word meaning.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "language-arts.phonology"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Emotional"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Word knowledge is a network, not a dictionary. Meanings grow through morphology (roots, prefixes, suffixes), through context that sharpens a fuzzy sense into precision, and through connections to known words. Depth beats breadth: a learner who can use a word in three registers owns it; one who can define it does not.",
+      "examples": [
+        "Using 'port' (carry) to unlock transport, export, portable",
+        "Distinguishing 'slim', 'slender', and 'scrawny' by connotation"
+      ],
+      "nonExamples": [
+        "Memorizing definitions without use",
+        "Assuming a word means the same in every discipline"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "language-arts.vocabulary.p1",
+          "problemText": "Describe vocabulary and word meaning in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "language-arts.vocabulary.p2",
+          "problemText": "Find the boundary: give a case that looks like vocabulary and word meaning but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of vocabulary and word meaning",
+          "canDo": [
+            "Name the parts of vocabulary and word meaning"
+          ],
+          "cannotDo": [
+            "Use vocabulary and word meaning in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why vocabulary and word meaning works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind vocabulary and word meaning"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use vocabulary and word meaning on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with vocabulary and word meaning and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of vocabulary and word meaning against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend vocabulary and word meaning into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "language-arts.comprehension",
+    "name": "Reading Comprehension",
+    "description": "Constructing meaning from texts: literal understanding, inference, and the background knowledge that makes both possible.",
+    "level": "concept",
+    "parentId": "language-arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What does it take to understand what is not written on the page?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of reading comprehension and say what each one does"
+      },
+      "principle": {
+        "question": "Why does reading comprehension work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply reading comprehension to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does reading comprehension connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using reading comprehension.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "language-arts.vocabulary"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Emotional"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Comprehension is active construction. Readers build a situation model by combining literal text with inferences and prior knowledge. Inference is where most meaning lives: motivations, causes, and implications are rarely stated. Teaching comprehension means teaching readers to notice what the text implies and to check their model against it.",
+      "examples": [
+        "Inferring a character's motive from actions, not statements",
+        "Linking a paragraph's claim to the thesis two pages back"
+      ],
+      "nonExamples": [
+        "Summarizing without interpreting",
+        "Treating confusion as the text's fault rather than a signal to re-read"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "language-arts.comprehension.p1",
+          "problemText": "Describe reading comprehension in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "language-arts.comprehension.p2",
+          "problemText": "Find the boundary: give a case that looks like reading comprehension but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of reading comprehension",
+          "canDo": [
+            "Name the parts of reading comprehension"
+          ],
+          "cannotDo": [
+            "Use reading comprehension in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why reading comprehension works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind reading comprehension"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use reading comprehension on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with reading comprehension and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of reading comprehension against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend reading comprehension into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "language-arts.composition",
+    "name": "Writing and Composition",
+    "description": "Producing text: sentence craft, paragraph structure, audience awareness, and revision as rethinking rather than correcting.",
+    "level": "concept",
+    "parentId": "language-arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "How does a thought become a text someone else can enter?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of writing and composition and say what each one does"
+      },
+      "principle": {
+        "question": "Why does writing and composition work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply writing and composition to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does writing and composition connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using writing and composition.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "language-arts.comprehension"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Emotional"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Writing is design under constraint: an idea must survive translation into sentences that carry it to a reader who cannot ask questions. Craft means controlling sentence rhythm, choosing structure that serves the argument, and holding an audience in mind. Revision is the heart of the act — not tidying, but discovering what the writer actually thinks.",
+      "examples": [
+        "Restructuring a paragraph so its claim comes first",
+        "Cutting a beloved sentence that does no work"
+      ],
+      "nonExamples": [
+        "Padding to a length requirement",
+        "Believing a first draft is the honest one"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "language-arts.composition.p1",
+          "problemText": "Describe writing and composition in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "language-arts.composition.p2",
+          "problemText": "Find the boundary: give a case that looks like writing and composition but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of writing and composition",
+          "canDo": [
+            "Name the parts of writing and composition"
+          ],
+          "cannotDo": [
+            "Use writing and composition in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why writing and composition works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind writing and composition"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use writing and composition on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with writing and composition and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of writing and composition against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend writing and composition into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "ImmersiveRPG"
+    ]
+  },
+  {
+    "id": "language-arts.interpretation",
+    "name": "Literary Interpretation",
+    "description": "Reading as meaning-making: theme, voice, and the interpretive claim defended with textual evidence.",
+    "level": "concept",
+    "parentId": "language-arts.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "When readers disagree about a story, what settles it?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can name the core elements of literary interpretation and say what each one does"
+      },
+      "principle": {
+        "question": "Why does literary interpretation work the way it does?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student explains the mechanism in their own words, not by reciting the definition"
+      },
+      "application": {
+        "question": "Apply literary interpretation to a new situation: what would you do and why?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student transfers the concept to an unseen case with justified choices"
+      },
+      "integration": {
+        "question": "How does literary interpretation connect with what was learned before it?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links this concept to its prerequisites in one coherent account"
+      },
+      "creation": {
+        "question": "Design something original using literary interpretation.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student produces an original artifact or proposal and defends its constraints"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [
+      "language-arts.comprehension",
+      "language-arts.composition"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Emotional"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Interpretation turns reading into argument. A theme is not a topic ('war') but a claim about it ('war corrupts language'). Interpretive claims are settled by evidence: passages that support the reading better than alternatives. This is the bridge from literacy to literature — the emotional line enters as readers feel what a text does before they can say it.",
+      "examples": [
+        "Arguing a poem's imagery carries grief, not nostalgia, from specific word choices",
+        "Defending a reading against a rival by citing structure"
+      ],
+      "nonExamples": [
+        "Restating plot as analysis",
+        "Claims no evidence could shake"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "language-arts.interpretation.p1",
+          "problemText": "Describe literary interpretation in your own words, then apply it to a case you have never seen.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "language-arts.interpretation.p2",
+          "problemText": "Find the boundary: give a case that looks like literary interpretation but is not, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "depthRubric": {
+      "levels": {
+        "memorized": {
+          "evidence": "Can state the definitions and elements of literary interpretation",
+          "canDo": [
+            "Name the parts of literary interpretation"
+          ],
+          "cannotDo": [
+            "Use literary interpretation in a new situation"
+          ],
+          "appropriateTasks": [
+            "recall checks",
+            "labeling exercises"
+          ]
+        },
+        "comprehended": {
+          "evidence": "Can explain why literary interpretation works as it does, in own words",
+          "canDo": [
+            "Explain the mechanism behind literary interpretation"
+          ],
+          "cannotDo": [
+            "Transfer to unseen cases reliably"
+          ],
+          "appropriateTasks": [
+            "explain-back prompts",
+            "worked-example comparison"
+          ]
+        },
+        "applied": {
+          "evidence": "Can use literary interpretation on a new case with justified choices",
+          "canDo": [
+            "Solve an unseen problem using the concept"
+          ],
+          "cannotDo": [
+            "Analyze failure cases systematically"
+          ],
+          "appropriateTasks": [
+            "application problems",
+            "short projects"
+          ]
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex cases with literary interpretation and find boundaries",
+          "canDo": [
+            "Distinguish look-alike cases and explain the difference"
+          ],
+          "cannotDo": [
+            "Weigh competing standards fairly"
+          ],
+          "appropriateTasks": [
+            "case analysis",
+            "boundary hunting"
+          ]
+        },
+        "evaluated": {
+          "evidence": "Can judge competing uses of literary interpretation against explicit criteria",
+          "canDo": [
+            "Defend an evaluative claim with reasons"
+          ],
+          "cannotDo": [
+            "Generate new syntheses of the concept with others"
+          ],
+          "appropriateTasks": [
+            "critique essays",
+            "peer review"
+          ]
+        },
+        "transformed": {
+          "evidence": "Can reorganize and extend literary interpretation into original synthesis",
+          "canDo": [
+            "Create original work that changes how others see the concept"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "open projects",
+            "teaching-back"
+          ]
+        }
+      }
+    },
+    "misconceptions": [],
+    "supportedModalities": [
+      "LanguageReflective",
+      "ImmersiveRPG"
+    ]
+  }
+]

@@ -245,19 +245,29 @@ The system qualifies as the "complete education-system replacement" trajectory w
 
 ## 8. Immediate next actions
 
-All 9 phases are IMPLEMENTED (see revision record). The current frontier is the
-post-plan work each phase deferred honestly:
+All 9 phases are IMPLEMENTED (see revision record). The post-plan frontier each phase
+defered honestly is ALSO IMPLEMENTED (2026-09-17 — see revision record):
 
-1. **Delegation (43):** LLM-backed choice policies behind the role interface (the
-   deterministic policies remain the kernel's test doubles and offline fallback).
-2. **Pods (38):** the Durable-Object transport adapter binding `applyEvent` — the pure
-   core, CLI surface, and G18 are done; only the networked coordinator remains.
-3. **Measurement packs (40):** reliability data collection to retire the
-   `provisionalUntil` ceilings; remaining packs from §4.3's table.
-4. **K-12 (37):** author the planned branches (language-arts, arts, second-language,
-   civics, health) per the subject→line map's `corpusStatus: 'planned'` rows.
-5. **Credentialing (41):** partner-institution route (§4.5 step 3) — the ledger and
-   VC export are ready; recognition requires institutions, not code.
+1. **Delegation (43):** ✅ LLM-backed choice policies behind the role interface
+   (`src/core/orchestration/choicePolicy.ts`); the deterministic policies remain the
+   kernel's test doubles and the offline fallback (G14 untouched).
+2. **Pods (38):** ✅ the Durable-Object transport adapter binding `applyEvent`
+   (`src/infra/pods/PodTransport.ts`: InMemoryPodCoordinator + PodDurableObject +
+   remote stub); the pure core, CLI surface, and G18 were already done.
+3. **Measurement packs (40):** ✅ the full §4.3 table (8 packs) + reliability data
+   collection (`ReliabilityCollector`) that retires `provisionalUntil` ceilings —
+   only on a mature report, disclosure traveling with the instrument.
+4. **K-12 (37):** ✅ the planned branches authored (language-arts, arts, music,
+   second-language, civics, health — 31 holons); the subject→line map's only
+   remaining non-present row is SEL, partial *by design* (the 64-module engine IS
+   that curriculum).
+5. **Credentialing (41):** ✅ partner-institution RPL export (§4.5 step 3) —
+   `exportRPLPortfolio` + `mysterium credential rpl`; recognition now requires
+   institutions, not code.
+
+What remains is genuinely external: real reliability data (retire ceilings from
+evidence), a partner institution (assess a portfolio), networked pod hosting
+(deploy the DO), and per-line LLM keys for delegated mandates.
 
 ## 9. Revision record
 
@@ -266,3 +276,4 @@ post-plan work each phase deferred honestly:
 | 2026-09-16 | Initial binding plan from exhaustive code-vs-docs audit (commits `1c432e9`→`a4c9bfd` era tree). Phases 1–9, gates G14–G18 defined. |
 | 2026-09-16 (same day, full implementation) | **All 9 phases implemented and gated.** G14–G16 (delegation determinism/toolset firewall, practice loop) in Phases 1–2; Phase 3 audit-corrected — stage-holon cells were already 64/64 (red-layer file miscounted in the plan), so G17 became the corpus-integrity gate (cells + relationships + lint-clean registry + 64/64 concept modules) and 4 curriculum branches shipped (bio/chem/hist/geo, 21 holons). G18 renumbered to the pod privacy wall (two-persona pod simulation); Phase 4 delivered the pure pod state machine + CLI. G19: measurement-pack determinism/linter teeth/stream integration + 2 reference packs. G20: placement convergence (binary-search onboarding composite, ≤8 probes). G21: credential evidence chain (E2/E3/E4 teeth, revocation, VC export). Phase 6's parity harness proved browser-binding ≡ kernel loop and caught the offer-consumption + entry-config parity hazards. Gate count: 13 → 21. Tests: 949 → 1028. Deferred honestly to post-plan: LLM-backed choice policies, DO transport adapter, reliability data collection, planned-branch authoring, partner institutions. |
 | 2026-09-17 | **Exhaustive operational verification pass.** Full battery green (lint, build, 1037 tests, 21 kernel gates). Three defects found by exercising the surfaces end-to-end and fixed in the same commit: (1) **Training-beat WebUI parity (WIRE-7)** — Phase 6's parity claim covered the narrative loop only; browser sessions never wove training beats and the new `TrainingBeatRunner` dropped its outcome entirely. Fix: the weave decision is now the exported `computeTrainingWeave()` policy in GameLoop (single definition, consumed by both `tickWithStrategy` and the browser `scheduleEncounters`), and `trainingBridge` + the play route give beats the CLI's exact persistence path (trials/index/calibration/staircase) with no narrative consequence. Contract locked by `tests/engine/TrainingBeatParity.test.ts`. (2) **Delegation CLI smoke was role-broken** — the smoke spec hardcoded a toolset that G15 correctly rejects for all T-roles, so the Phase 1 gate `spec→log→ratify→commit` was only reachable for J-roles; the spec now derives its toolset from `ROLE_TOOLSETS` (verified for T1/therapist/J1). (3) **Onboarding calibrator demo unit mismatch** — `calibrate --onboard` fed a 0–1 threshold to per-line task-unit maps, saturating Somatic to a spurious White; demo thresholds are now per-line task units and the ThresholdMaps contract has its first tests. Command-path note: the Phase 1 smoke lives at `mysterium delegate --role <role>` (not `session --delegate`). Tests: 1028 → 1046. |
+| 2026-09-17 (same day) | **Post-plan frontier closed (§8 items 1–5).** (1) Delegation gains LLM-backed choice policies: `ChoicePolicy` seam (`orchestration/choicePolicy.ts`) with mandate-shaped prompts, Veil bidirectional filtering, OA-13 avoidance and TL1 surfacing hygiene preserved; ANY failure degrades to the deterministic role policy — the kernel never injects a policy so G14 stays byte-stable (`executeDelegatedSession`/`delegateSession` are now async; no outcome change without a policy). (2) Pods gain the networked coordinator: `infra/pods/PodTransport.ts` — `InMemoryPodCoordinator` (offline/M0 runtime + test double), `PodDurableObject` (Cloudflare DO class whose runtime serialization IS the L5 single-writer law; JSON RPC + fetch shell + replay log), and a `remotePodTransport` client stub; the privacy wall runs before the state machine for defense in depth. (3) Measurement packs complete the doc-40 §4.3 table (8 packs: +memory.spatial, cognition.speed, cognition.control, language.reading, coding.fluency, math.fluency) and gain `ReliabilityCollector`: interval-respecting session records, windowed retest r + form effect, and `retireProvisional` that flips the honesty flag ONLY on a mature report (r ≥ .70, ≥6 sessions, form effect within bound). (4) K-12: the 6 planned branches authored (language-arts, arts, music, second-language, civics, health — 31 holons, five phases each, full depth rubrics, devMapping per 37 §3.1, zero grade-band vocabulary); subject→line map rows flipped to `present`; corpus now 108 holons, 0 lint errors. (5) Credentialing gains the RPL partner route: `exportRPLPortfolio` (41 §4.5 step 3) — assessor-shaped portfolio, fail-closed on invalid/draft/revoked claims, chosen-name-only identity posture — surfaced as `mysterium credential rpl --name <chosen-name> [--claims id1,id2]`. New tests: `tests/postplan/Frontier.test.ts` (36). Tests: 1046 → 1082. |

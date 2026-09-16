@@ -796,7 +796,7 @@ export interface ValidationReport {
   passed: boolean;
 }
 
-export function runValidationSuite(tier: Tier = 'ci', personas: readonly PersonaSpec[] = PERSONAS): ValidationReport {
+export async function runValidationSuite(tier: Tier = 'ci', personas: readonly PersonaSpec[] = PERSONAS): Promise<ValidationReport> {
   const t0 = Date.now();
   // Full tier: extend the trajectory horizons (spec §8). The temporal/persona
   // dynamics gates (G2 divergence, G4 therapy arc, G8 gating) get 8×8; the
@@ -817,7 +817,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validateVeilCompliance());
   results.push(validateLevellingMechanism());
   results.push(validateIdentityFirewall());
-  results.push(validateDelegationDeterminism());
+  results.push(await validateDelegationDeterminism());
   results.push(validateDelegationToolsetFirewall());
   results.push(validatePracticeLoop());
   results.push(validateCorpusIntegrity());
@@ -835,7 +835,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
 // engine it drives (43 §4.4 LL3, §5.3).
 // ---------------------------------------------------------------------------
 
-export function validateDelegationDeterminism(): GateResult {
+export async function validateDelegationDeterminism(): Promise<GateResult> {
   try {
     const altitudes = Object.fromEntries(ALL_LINES.map((l) => [l, 'Red' as Stage])) as Record<Line, Stage>;
     const sig = createSignificator('g14-probe', altitudes, 'Red');
@@ -859,11 +859,11 @@ export function validateDelegationDeterminism(): GateResult {
       budget: { toolCallsMax: 3, virtualMsMax: 600_000 },
     };
 
-    const run = (seed: string) =>
+    const run = async (seed: string) =>
       delegateSession({ spec, sig, world, session, seed, now: 1_000_000, ledger: emptyLedgerState() });
-    const a = run('gate14-seed');
-    const b = run('gate14-seed');
-    const c = run('gate14-seed-2');
+    const a = await run('gate14-seed');
+    const b = await run('gate14-seed');
+    const c = await run('gate14-seed-2');
 
     const sameLog = JSON.stringify(a.log) === JSON.stringify(b.log);
     const sameState = JSON.stringify(a.sig) === JSON.stringify(b.sig)
