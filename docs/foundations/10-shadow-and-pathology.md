@@ -1,6 +1,8 @@
 # foundations/10 — Shadow, Pathology, and the 256-Shadow Model
 
 > **Cross-references:** [[docs/foundations/13-architecture-of-consciousness|13 — Architecture Of Consciousness]]
+> **Heading-contract map (2026-09-16):** all six sections present under canonical headings except Scientific basis, carried by §1 Purpose (theoretical grounding summary) + §3 (the drive-health determination model). §8 renamed from "Relationship to Combat" — legacy vocabulary purge, see docs/audits/DOC-SET-AUDIT-2026-09-16.md.
+
 ## 1. Purpose
 
 Specify how *unhealthy* development manifests across the full 64-module matrix (8 lines × 8 stages), how each module can produce exactly **4 shadow pathologies** (dark-addiction, dark-allergy, golden-addiction, golden-allergy), how the **4 drives** determine the health or pathology of each capacity, and how the game implements **holonic return** — the requirement that a player must always come back to heal earlier-stage shadows before advancing.
@@ -402,7 +404,7 @@ Resolving a shadow awards:
 
 ---
 
-## 8. Relationship to Combat and Gameplay
+## 8. Relationship to Encounters and Gameplay
 
 ### 8.1 Shadow encounters ARE gameplay
 

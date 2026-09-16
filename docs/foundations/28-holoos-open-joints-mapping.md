@@ -2,7 +2,11 @@
 
 > **Status:** canonical (tracking document).
 >
+> **Cross-references:** [[docs/foundations/06-law-of-one-correspondence|06 — Law Of One Correspondence]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]]
+>
 > **Purpose:** Maps each resolved HoloOS open joint to its Mysterium implementation status. This document is the Mysterium-side mirror of HoloOS `_THEORY/02_Ontology/OPEN_JOINTS.md`.
+>
+> **Heading-contract map (2026-09-16):** Purpose → the Purpose statement above; Scientific basis → the HoloOS joint references throughout both tables; Game-design mapping → the "Mysterium Relevance" column of each table; Architectural contract → the "Resolved Joints" table (what Mysterium commits to); Open questions → the "Open Joints" table (the doc's literal open-question inventory, 50+ tracked); Principles served → definition discipline and codebase honesty (02) — tracking open theory joints explicitly rather than silently assuming them.
 
 ---
 

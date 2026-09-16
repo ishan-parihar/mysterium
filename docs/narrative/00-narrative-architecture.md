@@ -1,5 +1,7 @@
 # narrative/00 — Narrative Architecture
 
+> **Cross-references:** [[docs/foundations/05-drives-and-polarities|05 — Drives And Polarities]]
+
 ## 1. Purpose
 
 Specify the *story-level* design of Mysterium — how narrative serves the

@@ -1,6 +1,7 @@
 # 00 — Vision
 
 > **Cross-references:** [[docs/foundations/06-law-of-one-correspondence|06 — Law Of One Correspondence]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]]
+
 ## 1. Purpose
 
 Mysterium is a contemplative practice that uses game mechanics as its delivery vehicle. Every encounter simultaneously diagnoses AND heals/evolves the player across all dimensions of being. It functions as:

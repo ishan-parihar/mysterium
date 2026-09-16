@@ -1,5 +1,6 @@
 # Scoring Architecture — Master Document
 
+> **Cross-references:** [[docs/foundations/10-shadow-and-pathology|10 — Shadow And Pathology]] · [[docs/foundations/12-drive-assessment-mechanics|12 — Drive Assessment Mechanics]] · [[docs/foundations/14-game-as-developmental-catalyst|14 — Game As Developmental Catalyst]]
 > **Purpose:** Define how the consciousness index is computed from 64 line-stage module health scores, how each module's health score is computed from capacity + drive-health + shadow-state, and what each per-module scoring skeleton must specify.
 >
 > **This document's unique lateral:** The AGGREGATION FORMULA — how individual module scores compose into line scores, and how line scores compose into the single consciousness index. Per-module scoring details live in each module's `scoring.md` file.

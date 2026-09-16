@@ -1,6 +1,7 @@
 # 03 — Research Methodology
 
 > **Cross-references:** [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/08-psychophysics-and-staircase|08 — Psychophysics And Staircase]]
+
 ## 0. Epistemic discipline
 
 Mysterium adopts a rigorous methodology combining Design Science Research (DSR), Objects→Mechanics→Dynamics→Emotions (OMDE), and Interaction Design For the Core Mechanic (INFORM).

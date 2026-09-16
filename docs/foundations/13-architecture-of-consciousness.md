@@ -1,6 +1,13 @@
 # The Architecture of Consciousness: Mapping the Dynamics of the Emergent and Submergent Shadows
 
 > **Cross-references:** [[docs/foundations/03-lines-of-intelligence-overview|03 — Lines Of Intelligence Overview]] · [[docs/foundations/17-transformation-mechanics|17 — Transformation Mechanics]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]]
+> **Heading-contract map (2026-09-16):** Purpose → Introduction; Scientific basis → Introduction (empirical grounding) + Appendix (HoloOS 08.8.25 holonic dynamics); Game-design mapping → "The Bifurcation of the Shadow" + "Addictions and Allergies" (the 4-quadrant mechanics); Architectural contract → "The Structural Topography" + "The Permeable Membrane"; Principles served → carried by foundations/10 (the shadow model this document grounds theoretically).
+>
+> **Open questions (added 2026-09-16 to complete the contract):**
+> - Is contact-boundary permeability per-line or global? Theta decay is per-line, but boundary permeability is currently implicit-global; per-line permeability would let a strong line shield a weak one from its own catalyst.
+> - Do the five topographic layers admit sub-layer dynamics within a single stage (the sub-octave question applied to topography), or is topography stage-invariant?
+> - What is the measurable signature of a *healed* contact boundary (vs. merely a busy one) — integration rate, drive-balance stability, or shadow-resolution latency?
+
 ## Introduction: Redefining the Cartography of the Unconscious and its Evolutionary Trajectory
 
 The systematic study of human consciousness and its evolutionary trajectory has historically been constrained by a retroactive conceptualization of the unconscious mind. Traditional psychoanalytic models, alongside foundational Gestalt frameworks and classical Jungian psychology, have largely focused on the unconscious as a subterranean repository of repressed historical material. Within this classical paradigm, the unconscious is predominantly viewed as an archive of unresolved childhood conflicts, traumatic imprints, and disowned aspects of the self that the waking ego has deemed unacceptable. Consequently, the process of psychological integration has been almost exclusively framed as a descent into the "dark shadow," requiring the painful excavation and metabolization of these lower holons that have been fractured and buried during the individual's past development.

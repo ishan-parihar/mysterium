@@ -1,6 +1,7 @@
 # Architecture Overview
 
 > **Cross-references:** [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/30-holonic-curriculum-architecture|30 — Holonic Curriculum Architecture]]
+
 ## 1. Purpose
 
 The binding architectural contract for Mysterium. This document describes how the 64-module system, curriculum, shadow work, polarity engine, and LLM integration compose into a working contemplative practice.

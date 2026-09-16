@@ -1,6 +1,7 @@
 # 02 — Glossary
 
 > **Cross-references:** [[docs/foundations/10-shadow-and-pathology|10 — Shadow And Pathology]] · [[docs/foundations/23-polarity-ontology|23 — Polarity Ontology]] · [[docs/foundations/25-cumulative-consciousness-index|25 — Cumulative Consciousness Index]] · [[docs/foundations/30-holonic-curriculum-architecture|30 — Holonic Curriculum Architecture]] · [[docs/foundations/31-depth-assessment-model|31 — Depth Assessment Model]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]]
+
 ## 1. Purpose
 
 A single, canonical, alphabetised definition for every domain term used anywhere in `/docs/`. If a term has nuance, the glossary entry says so and points to the document where the nuance is explored.
@@ -120,12 +121,14 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 
 | Term | Slug | Definition |
 |---|---|---|
-| **Depth Level** | `depthLevel` | One of {Foundational, Contextual, Applied, Analytical, Evaluative, Transformative}. The 6-level depth spectrum for curriculum concepts. See `foundations/31-depth-assessment-model.md`. |
+| **Depth Level** | `depthLevel` | One of {absent, memorized, comprehended, applied, analyzed, evaluated, transformed} — 1 unengaged + 6 Bloom-aligned achieved levels. The per-concept depth spectrum. See `foundations/31-depth-assessment-model.md`; the branch-level 8-rung ladder that wraps these is defined in `foundations/42-developmental-levelling-mechanism.md`. |
 | **Forgetting Curve** | `forgettingCurve` | Ebbinghaus exponential decay model applied to curriculum concept retention. Tracks retention probability per concept per player. Drives spaced-repetition scheduling. |
 | **Holonic Curriculum** | `holonicCurriculum` | A 5-level holarchy of knowledge organization: Program → Course → Module → Concept → Atom. Each level is a holon (whole that is part of a larger whole). See `foundations/30-holonic-curriculum-architecture.md`. |
 | **Isomorphism** | `isomorphism` | A structural similarity between concepts in different domains (e.g., feedback loops in ecology ≈ feedback loops in psychology). Cross-domain isomorphisms enable transfer learning. |
 | **Knowledge Graph** | `knowledgeGraph` | The relational graph connecting curriculum concepts via prerequisite, dependency, and isomorphism edges. Drives adaptive learning pathways. |
 | **Spaced Repetition** | `spacedRepetition` | The practice of reviewing concepts at increasing intervals to combat forgetting curves. Mysterium's curriculum engine schedules reviews adaptively based on retention probability. |
+| **Levelling Ladder** | `levellingLadder` | The unified, demographic-blind grading/staging ladder (`syllabus.<branch>`, `line.<line>`) computed from developmental evidence only, with promotion/demotion hysteresis. See `foundations/42-developmental-levelling-mechanism.md`. |
+| **Branch Rung 7 (woven)** | `woven` | The 8th syllabus rung: whole-branch mastery over aggregate depth × retention × prerequisite-closure evidence — a synthesis level beyond any single concept's depth. |
 
 ### Shadow work
 
@@ -147,6 +150,20 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 | **Polarity Texture** | `polarityTexture` | The specific expression of STO/STS tendency for a given (line × stage) cell. 64 unique textures in the catalogue. See `foundations/23-polarity-ontology.md`. |
 | **Polarity Trace** | `polarityTrace` | The per-encounter record of polarity signals: energetic direction, drive directionality, stage orientation, source of nourishment. |
 | **Crystallization** | `crystallization` | The process by which scattered polarity choices coalesce into a consistent STO or STS orientation. Occurs as the player approaches White stage. |
+
+### Agentic orchestration & domain expansion
+
+| Term | Slug | Definition |
+|---|---|---|
+| **Primary Orchestrator** | `primaryOrchestrator` | The supervisor agent that owns session strategy, delegates all player-facing surfaces to the sub-agent council, ratifies proposals, and is the single commit path for state transitions. See `foundations/43-agentic-orchestration-architecture.md`. |
+| **Sub-Agent Council** | `subAgentCouncil` | The specialized agents (Teacher T1–T3, Assessor A1–A4, Journey-Guide J1–J5, Therapist, Specialist S1–S5) that hold the foreground under delegation; proposals-only, never direct commits. |
+| **Delegation** | `delegation` | The orchestrator→sub-agent handoff: a DelegationSpec (role, purpose-scoped read projection, toolset, budget) answered by a DelegationResult (outcome, proposals, signals, log reference). |
+| **Session Log** | `sessionLog` | The append-only, structured record of every sub-agent session (transcript, tool calls, proposals, signals). The orchestrator's sensory organ for background supervision. |
+| **Identity Profile** | `identityProfile` | Optional, per-field-consented identity context (age band, sex, gender, lineage, ethnicity, culture, region, language, life situation) stored on the Significator. Never enters measurement paths. See `foundations/16-significator-architecture.md` §2.1. |
+| **Healing Context** | `healingContext` | The purpose-bound projector that converts consented identity fields into derived presentation hints (voice, metaphor, locale) for healing-path agents only. See `foundations/42-developmental-levelling-mechanism.md` §1.1. |
+| **Cohort Pod** | `cohortPod` | A 3–9 player developmental group with shared rituals and recognition-of-practice — deliberately NOT a social feed or leaderboard. See `foundations/38-cohort-weave-multiplayer.md`. |
+| **Measurement Pack** | `measurementPack` | A swappable add-on module administering explicit competency instruments (coding, language, memory…) with psychometric reliability gates. See `foundations/40-measurement-packs-efficacy-infra.md`. |
+| **Vow** | `vow` | A real-world practice objective (accept/decline, no deadlines) tracked through journal reflection check-ins. See `foundations/39-action-induction-journal-system.md`. |
 
 ### Mechanics
 
@@ -180,6 +197,7 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 - **Naming the lines.** Should `Interpersonal` be promoted to a quadrant rather than a line, since it lives in LL? The current decision (line) is pragmatic — it makes the radial chart symmetric (8 spokes). But it is technically a category-error in pure AQAL.
 - **`Spiritual` vs `Intrapersonal` overlap.** Wilber distinguishes them; Goleman folds them; Fowler fuses them with moral. The canon decision is to keep them separate but document the overlap explicitly in `lines/05`.
 - **Curriculum depth levels.** Are 6 levels sufficient, or does the system need finer granularity at the upper end (e.g., "Research" as a 7th level between Analytical and Evaluative)?
+  > **Resolution note (2026-09-16):** per-concept depth remains the 7-value `DepthLevel` (absent + 6 Bloom-aligned achieved levels, 31). The upper-end synthesis demand is answered at **branch level**, not per-concept: the levelling ladder (42) adds rung 7 (`woven`) = whole-branch mastery over aggregate evidence. No per-concept level was added.
 
 ## 7. Principles served
 

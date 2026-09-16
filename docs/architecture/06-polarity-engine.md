@@ -1,6 +1,7 @@
 # Polarity Engine Architecture
 
 > **Cross-references:** [[docs/foundations/23-polarity-ontology|23 — Polarity Ontology]]
+
 ## 1. Purpose
 
 Describes the 64-cell polarity texture catalogue, STO/STS crystallization, 4-level aggregation, and harvest mechanics. The polarity engine is the "compass" of Mysterium — it tracks the player's evolutionary direction across all dimensions.

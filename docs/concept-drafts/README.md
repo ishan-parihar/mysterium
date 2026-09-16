@@ -1,5 +1,6 @@
 # Concept Drafts — 64 Modules × 7 Game Modalities
 
+> **Cross-references:** [[docs/foundations/11-game-modalities|11 — Game Modalities]] · [[docs/foundations/12-drive-assessment-mechanics|12 — Drive Assessment Mechanics]] · [[docs/foundations/13-architecture-of-consciousness|13 — Architecture Of Consciousness]] · [[docs/foundations/14-game-as-developmental-catalyst|14 — Game As Developmental Catalyst]]
 > **Purpose:** First-principles game designs for every game in the Mysterium assessment ecosystem. Each game is a self-contained developmental catalyst that implicitly diagnoses AND progressively heals/evolves the player across all drives and shadow-polarities for its line×stage module.
 > **Structure:** `{line}/{stage}/` — one directory per module (64 total).
 > **Each module contains:** 1 module-spec file + 7 game concept files (one per modality).

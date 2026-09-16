@@ -1,5 +1,7 @@
 # lines/05 — Spiritual Line
 
+> **Cross-references:** [[docs/foundations/04-states-of-consciousness|04 — States Of Consciousness]] · [[docs/foundations/07-neuroscience-of-development|07 — Neuroscience Of Development]] · [[docs/foundations/03-lines-of-intelligence-overview|03 — Lines Of Intelligence Overview]]
+
 ## 1. Purpose
 
 Specify the Spiritual line — the capacity to discern what is most

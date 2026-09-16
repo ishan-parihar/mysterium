@@ -1,5 +1,7 @@
 # lines/08 — Interpersonal Line
 
+> **Cross-references:** [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/03-lines-of-intelligence-overview|03 — Lines Of Intelligence Overview]]
+
 ## 1. Purpose
 
 Specify the Interpersonal line — the capacity to *attune to and engage

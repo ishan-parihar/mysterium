@@ -1,5 +1,7 @@
 # stages/00 — Eight Stages Overview
 
+> **Cross-references:** [[docs/foundations/02-eight-stages-overview|02 — Eight Stages Overview]] · [[docs/foundations/06-law-of-one-correspondence|06 — Law Of One Correspondence]]
+
 ## 1. Purpose
 
 Establish how the eight stage-of-consciousness documents work. Each

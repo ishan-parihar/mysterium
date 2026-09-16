@@ -6,6 +6,14 @@
 > **Depends on:** 14, 16, 17, 18, 19, 21, 22
 > **Referenced by:** 17 (§6 reconfiguration), 19 (§7 polarity-conditioned selection), 21 (§4 scheduler), 22 (§4 pipeline)
 
+> **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2–§3 (inputs + priority computation, the psychophysics grounding in 08's staircase + 09's flow band); Game-design mapping → §4–§8 (polarity-conditioning, shadow-targeting, transformation windows, session arcs, macro-catalyst engine); Principles served → added below with genuine content.
+>
+> **Open questions (added 2026-09-16):**
+> - What is the scheduler's fallback contract when the strategy engine (27) and the shadow-targeting rule (§5) conflict — which overrides, and is the priority deterministic under tie-break?
+> - Should transformation-window scheduling (§6) be allowed to override theta-urgency ordering, or is the current interleaving the settled design?
+>
+> **Principles served (added 2026-09-16):** principles 3 (adaptive), 5 (multi-dimensional), 7 (codebase honesty) per docs/01-first-principles.md — the scheduler is the point where developmental theory becomes encounter order, and it must stay deterministic, demographic-blind (42), and Veil-compliant (20).
+
 ---
 
 ## 1. Purpose: the world's intelligence

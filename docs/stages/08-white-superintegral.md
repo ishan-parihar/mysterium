@@ -1,5 +1,7 @@
 # stages/08 — White / Super-Integral
 
+> **Cross-references:** [[docs/foundations/06-law-of-one-correspondence|06 — Law Of One Correspondence]] · [[docs/foundations/02-eight-stages-overview|02 — Eight Stages Overview]]
+
 ## 1. Purpose
 
 The world bible for the eighth and final stage — the non-dual, unitive,

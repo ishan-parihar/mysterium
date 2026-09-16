@@ -1,6 +1,12 @@
 # foundations/14 — Game as Developmental Catalyst: The Catalyst→Experience→Integration Mechanics
 
 > **Cross-references:** [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]]
+> **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2 (the catalyst→experience→integration cycle, its cognitive-science grounding); Game-design mapping → §3–§7 (vertical/horizontal catalyst mechanics and the tapestry); Architectural contract → §5 (the internal progression as the module's design contract); Principles served → §9 (integrative transcendence).
+>
+> **Open questions (added 2026-09-16):**
+> - What distinguishes *integrated* catalyst from merely *repeated* catalyst in observable engine terms — is shadow-resolution latency the right proxy, or does it need a spaced-re-integration signal?
+> - The integration step is currently implicit (all-drives-healthy engagement); should there be an explicit consolidation mechanic (sleep/rest cycles in-world) without breaking the Veil?
+
 ## 1. Purpose
 
 Define how each game in the Mysterium ecosystem functions as a **developmental catalyst** — not merely an assessment instrument but a living practice that moves the player through the catalyst→experience→integration cycle mapped directly onto the Law-of-One Archetypal Mind and the 5-layer topography of the unconscious.

@@ -7,6 +7,13 @@
 > **Depends on:** 15 (macro-cycle theory), 13 (lesser-cycle topography), 10 (shadow model), 05 (drives and polarities)
 > **Forward-references:** 17 (Transformation mechanics), 18 (Great Way world-system), 19 (Choice & polarity engine), 20 (Veil of Forgetting), 21 (Incarnation Architecture)
 
+> **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2 (PlayerProfile-as-Significator grounding + §5 spiral-stage architecture); Game-design mapping → §3 (distortion ledger) + §4 (free-will commitment); Architectural contract → §8–§11 (registry integration, transitions, observability, lifecycle); Principles served → §4 + §6 (the covenant with spirit).
+>
+> **Open questions (added 2026-09-16):**
+> - Should the Significator carry per-Complex sub-altitudes as first-class state (13's appendix models computeComplexAltitudes), or remain derived-only to keep the state vessel minimal?
+> - What is the Significator's migration contract when canon decisions revise optional subsystems (identity, cohort links) — schema versioning currently implied but unspecified?
+> - Does §10's layered observability need an explicit projection registry (43's purpose-scoped read projections) so new consumers cannot bypass consent scopes?
+
 ---
 
 ## 1. Purpose and lateral

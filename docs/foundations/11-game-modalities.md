@@ -1,4 +1,10 @@
 # foundations/11 — Game Modalities and the Multi-Game Ecosystem
+> **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2–§4 (each modality row names its measured construct and literature anchor); Game-design mapping → §6–§7; Architectural contract → §10; Principles served → §11.
+>
+> **Open questions (added 2026-09-16 — none previously stated):**
+> - Does the modality × line affinity matrix need per-stage modifiers (a dilemma probes Moral differently at Red than at Green), or is affinity stage-invariant as currently canonised?
+> - What is the minimum encounter count per modality for stable cross-modality triangulation (the doc asserts triangulation but not its sampling floor)?
+> - Should Immersive-RPG free-play override staircase pacing when flow absorption is detected, and how is that reconciled with scheduler authority (24)?
 
 ## 1. Purpose
 

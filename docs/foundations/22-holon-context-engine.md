@@ -1,6 +1,7 @@
 # 22 — The Holon Context Engine
 
 > **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
+> **Heading-contract map (2026-09-16):** Purpose → §1 (the LLM as manifest layer); Scientific basis → §1 (design philosophy: generation conditioned on frequency, not free generation); Game-design mapping → §6 (the modality contract); Architectural contract → §2 (holon data model) + §4 (context aggregation pipeline) + §7 (consequence threading); Open questions → deferred to foundations/43 §7 (orchestration-layer questions) and foundations/27 §7 (session-level edge cases); Principles served → §13 (telemetry and the Veil) + the closing implementation-bridge statement.
 > **Lateral:** Implementation architecture for the LLM-driven world. Specifies how holons deliver context to the LLM, how generation is conditioned on the player's frequency (line×stage altitude), and how consequences propagate through the system.
 >
 > **Status:** Foundation. Implementation specification.

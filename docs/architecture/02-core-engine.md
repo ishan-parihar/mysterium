@@ -1,6 +1,7 @@
 # Core Engine Architecture
 
 > **Cross-references:** [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/foundations/25-cumulative-consciousness-index|25 — Cumulative Consciousness Index]]
+
 ## 1. Purpose
 
 Describes the 10+ core engines in `src/core/engines/` and how they wire into the game loop. The core engine layer is the "brain" of Mysterium — it processes encounters, updates developmental state, and drives the player's evolutionary trajectory.

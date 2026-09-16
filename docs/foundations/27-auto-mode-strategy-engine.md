@@ -8,6 +8,8 @@
 >
 > **Orchestration note (43):** a session strategy names *what* should happen; the orchestration layer decides *which agent* delivers each element (council presence scheduling, 43 §3.3). Strategy generation stays engine-deterministic; agent selection is the orchestrator's ratification surface.
 
+> **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §3 (strategy generation as adaptive-measurement algorithm); Game-design mapping → §2 (session strategy as session arc design); Architectural contract → §4 + §8 (mid-session adaptation + implementation); Open questions → §7 (edge cases and safety); Principles served → §5 (relationship to 24: extends, never replaces — the doc's stated design ethic).
+
 ---
 
 ## 1. Purpose and unique lateral

@@ -176,3 +176,77 @@ docs/
   WebSocket mentions); INDEX mentions all foundations 00–43.
 - Cross-ref blocks: 46 docs, all derived from strict mention patterns (no invented
   relationships; first-pass bare-number matcher rejected and reverted).
+
+---
+
+## 5. Second pass — same day (semantic consistency + full KB coverage)
+
+The first pass covered structure and staleness. The second pass targeted the two
+remaining dilution classes: **semantic contradictions between docs** and **KB-coverage
+gaps** (trees excluded from the first generation). Methods: enum-vs-doc reconciliation
+against `src/core/curriculum/types.ts`, glossary completeness against the new
+subsystems, cross-ref generation extended to the per-domain trees.
+
+### S1 — Depth-level ladder contradiction (RESOLVED — was a near-miss for a wrong fix)
+
+Doc 42 said "8 depth rungs"; the `DepthLevel` enum has 7 values; doc 31 is Bloom-6
+aligned; the glossary's open question asked if 6 levels suffice. Read naively, doc 42
+contradicted the code. **The truth is subtler:** the engine
+(`LevellingEngine.ts` `SYLLABUS_RUNG_BARS`) deliberately builds **8 rungs** — rungs 0–6
+are the 7 DepthLevels, and rung 7 (`woven`) is whole-branch mastery over *aggregate*
+evidence. Doc 42 was correct against code; the defect was **underspecification** — no
+doc stated the 7→8 mapping. An agent "reconciling" this could have deleted the rung or
+mis-mapped the enum. Fixed by: doc 42's ladder table now defines rung 7 explicitly;
+the glossary's open question gained a resolution note; the glossary Depth-Level entry
+itself was corrected (it listed invented names — {Foundational, Contextual, …} —
+matching neither doc 31 nor the enum; now the canonical 7-value list).
+
+### S2 — Glossary coverage gap for post-27 subsystems (FIXED)
+
+The glossary (02) is the definition anchor agents consult first; it had **no entries
+for any subsystem created after doc 27**: levelling ladders, delegation/council,
+identity consent, healing context, pods, packs, vows. Added a new
+"Agentic orchestration & domain expansion" section (10 terms) + 2 curriculum terms
+(Levelling Ladder, Branch Rung 7) + the Depth-Level correction.
+
+### S3 — Heading contract: all 43 foundations docs now settled (CLOSED — F7 residual queue emptied)
+
+The first pass deferred 13 docs. This pass:
+
+- **Checker false positives acknowledged:** docs 06 ("Methodological honesty" carries
+  scientific basis) and 41 ("Scientific / regulatory basis") were compliant all along —
+  the literal-regex checker was too strict. This is a lesson for future audits: heading
+  variance must be adjudicated against content, not pattern-matched.
+- **Maps for the older generation:** 13/15/18/19/21/22/28 carry heading-contract maps.
+  13 and 15 had *no* open-questions content anywhere — genuine open questions were
+  added (per-line permeability, healed-boundary signature; 32-class authorability
+  boundary, role octave-invariance, dimension-weighting).
+- **Genuine additions for missing substance:** 11/12 (no open questions existed), 14,
+  16, 20, 23, 24 (no purpose-less sections; 24 also gained a real Principles-served
+  statement — it had none), 25/26/27 (light maps naming where deferred questions live).
+- **Stale heading renamed:** doc 10 §8 "Relationship to Combat and Gameplay" →
+  "Relationship to Encounters and Gameplay" (the last active-canon Combat heading).
+- **INDEX contract amended:** the six-heading contract now formally accepts a
+  heading-contract map as satisfaction, so future agents don't re-flag settled docs.
+
+### S4 — Full KB coverage for the per-domain trees (DONE this pass)
+
+The pass-1 generator excluded `lines/`, `stages/`, `progression/`, `narrative/`, and
+`concept-drafts/` top-level docs. This pass wired **16 more docs** with two link
+classes, kept distinct by provenance:
+
+1. **Derived mentions** (same strict matcher as pass 1, path pattern loosened to
+   `foundations/NN` + non-digit boundary so citations like `foundations/05)` match) —
+   most of the 9 line docs and 8 stage docs plus progression/narrative overviews.
+2. **Series-membership links** (documented exception to mention-derivation): each
+   `lines/01–08` links to `foundations/03` (the lines overview it expands) and each
+   `stages/01–08` links to `foundations/02` — a factual series relation, not an
+   inferred one.
+
+The 512 concept-draft module files remain untagged by design: they are authored corpus
+items governed by their own README templates; only their top-level navigation docs
+(README, ROADMAP, SCORING-ARCHITECTURE) carry blocks.
+
+**KB totals:** 46 (pass 1) + 16 (pass 2) = **62 docs** with Cross-references blocks,
+plus the 8 curated Depends-on/Referenced-by docs = the agent-facing canon is fully
+linked.

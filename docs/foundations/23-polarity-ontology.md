@@ -5,6 +5,12 @@
 > **Depends on:** 19 (polarity engine), 10 (shadow model), 05 (drives), 06 (Law of One)
 > **Referenced by:** 19 (§5), 22 (frequency conditioning), 24 (scheduler)
 
+> **Heading-contract map (2026-09-16):** Purpose → §1–§2 (usage + how to read the catalogue); Scientific basis → §11 (cross-line patterns, the catalogue's empirical posture); Game-design mapping → §3–§10 (the 64 cells themselves are the game-design content); Architectural contract → §1 (usage contract for generation); Open questions → §12 (what this document does NOT cover, its forward boundary); Principles served → foundations/19's Critical Design Commitment, which this catalogue operationalises.
+>
+> **Open questions (added 2026-09-16):**
+> - The 64 textures are authored priors — what is the update protocol when live telemetry shows a texture reads as stereotyped or fails to elicit its targeted polarity signal?
+> - Should exploratory textures (the third axis) have their own catalogue entries rather than being the residual category?
+
 ---
 
 ## 1. Purpose and Usage

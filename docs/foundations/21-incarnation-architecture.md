@@ -1,6 +1,7 @@
 # 21 — Incarnation Architecture (Option C)
 
 > **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/05-drives-and-polarities|05 — Drives And Polarities]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]] · [[docs/foundations/13-architecture-of-consciousness|13 — Architecture Of Consciousness]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]]
+> **Heading-contract map (2026-09-16):** Purpose → §1 (the master equation); Scientific basis → §1–§2 (Law-of-One cosmology as the theoretical substrate); Game-design mapping → §3–§6 (encounter, scheduler, modalities, 3-act macro-structure); Architectural contract → §12 (Architectural invariants); Open questions → deliberately deferred to the per-subsystem docs this keystone composes (18 §9, 19 §12, 24 §open, 22 §14); Principles served → §12 invariants + the closing keystone statement.
 > **Lateral:** Master synthesis — how greater-cycle archetypes + concept-drafts + modalities compose into a playable game.
 > **Depends on:** 11, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24
 > **Referenced by:** all implementation work; MVP-BLUEPRINT

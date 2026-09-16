@@ -1,6 +1,12 @@
 # 15 — Macro-Scale Architecture of the Archetypal Mind
 
 > **Cross-references:** [[docs/foundations/13-architecture-of-consciousness|13 — Architecture Of Consciousness]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/16-significator-architecture|16 — Significator Architecture]] · [[docs/foundations/17-transformation-mechanics|17 — Transformation Mechanics]] · [[docs/foundations/20-veil-of-forgetting|20 — Veil Of Forgetting]] · [[docs/foundations/21-incarnation-architecture|21 — Incarnation Architecture]] · [[docs/foundations/22-holon-context-engine|22 — Holon Context Engine]]
+> **Heading-contract map (2026-09-16):** Purpose → Preface (R&D framing) + "The Cosmological Prerogative"; Scientific basis → Preface + Appendix (HoloOS 08.8.26 archetypal-class architecture); Game-design mapping → the four archetype sections (Significator / Mechanics of Transformation / Great Way / Choice), each giving the Mysterium analog; Architectural contract → "Synthesis"; Principles served → carried by foundations/21 (the keystone that composes this theory into the playable architecture).
+>
+> **Open questions (added 2026-09-16 to complete the contract):**
+> - Which of the 32 archetypal classes (8 roles × 4 dimensions) are authorable content vs. strictly LLM-generated? This boundary is unsettled and gates corpus planning.
+> - Do the 8 functional roles admit sub-roles at sub-octaves (a Matrix-of-a-Matrix), or is the role set octave-invariant?
+> - How do the 4 dimensions (Mental/Biological/Social/Collective) weight into UserMatrixModel sampling when catalyst is ambiguous across dimensions?
 > **Lateral:** The pure theoretical substrate for the **greater cycle** of consciousness — Significator, Transformation, Great Way, Choice — and the Veil of Forgetting that governs them. This document is to the macro-cycle what `13-architecture-of-consciousness.md` is to the micro-cycle (Matrix/Potentiator/Catalyst/Experience). It contains pure theory; game-design translation lives in `16` through `22`.
 >
 > **Status:** Imported reference document. Treat as canonical theoretical source.

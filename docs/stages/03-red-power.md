@@ -1,5 +1,7 @@
 # stages/03 — Red / Power
 
+> **Cross-references:** [[docs/foundations/05-drives-and-polarities|05 — Drives And Polarities]] · [[docs/foundations/02-eight-stages-overview|02 — Eight Stages Overview]]
+
 ## 1. Purpose
 
 The world bible for the third stage — the egoic, power-driven,

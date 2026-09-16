@@ -89,7 +89,7 @@ Two ladders instantiate it:
 
 | Ladder | Rungs | Evidence source |
 |---|---|---|
-| `syllabus.<branch>` | 8 depth rungs per concept-cluster (absent → transformed), aggregated per branch | conceptStates depth + retention + prereq closure |
+| `syllabus.<branch>` | 8 depth rungs per concept-cluster: rungs 0–6 are the 7 `DepthLevel` values (absent → transformed, 31 §Bloom mapping); **rung 7 (`woven`) is whole-branch mastery** — aggregate branch evidence (depth × retention × prereq closure across the cluster) saturating ≥0.95, a synthesis level beyond any single concept's depth | conceptStates depth + retention + prereq closure |
 | `line.<line>` | 8 stage rungs (Infrared → White) | Significator altitudes + theta freshness + shadow load |
 
 Both ladders share one evaluation law (§3.2), one promotion law (§3.3), one demotion

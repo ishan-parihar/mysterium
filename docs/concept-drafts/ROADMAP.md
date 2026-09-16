@@ -1,5 +1,6 @@
 # R&D Roadmap — Concept-Draft Development
 
+> **Cross-references:** [[docs/foundations/01-aqal-quadrants|01 — Aqal Quadrants]] · [[docs/foundations/14-game-as-developmental-catalyst|14 — Game As Developmental Catalyst]]
 > **Scope:** 512 concept-draft documents (64 modules × 8 files each)
 > **Goal:** First-principles game designs where every game is a self-contained developmental catalyst that implicitly diagnoses AND progressively heals/evolves the player across all drives and shadow-polarities for its line×stage module.
 > **Approach:** Phase-gated, Red-stage-first. Each game is complete in itself — not a "test" but a living developmental practice.

@@ -1,5 +1,7 @@
 # lines/00 — Multi-Line Dynamics (Overview)
 
+> **Cross-references:** [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
+
 ## 1. Purpose
 
 Specify how the eight lines *interact* in Mysterium. The per-line documents

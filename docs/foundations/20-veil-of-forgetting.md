@@ -16,6 +16,12 @@
 > **Depends on:** 15 (macro-scale archetypal mind — the cosmological theory of the Veil)
 > **Forward-references:** 14 (catalyst→experience→integration flow), 16 (Significator architecture), 17 (Transformation mechanics), 19 (polarity engine), 21 (Incarnation Architecture — encounter surfacing), 22 (Holon Context Engine — LLM translation layer)
 
+> **Heading-contract map (2026-09-16):** Purpose → §1–§2 (design principle + the two Veils); Scientific basis → §7 (felt-sense doctrine, its phenomenological grounding); Game-design mapping → §3–§5 (reveals/withholds/translation layer); Architectural contract → §6 (anti-gamification commitments) + §9 (telemetry ethics); Principles served → the whole document is the principle-statement; §8 edge cases carry the boundary conditions.
+>
+> **Open questions (added 2026-09-16):**
+> - Where exactly does the dashboard opt-in (33) sit relative to §4's withholding list — is per-metric opt-in Veil-valid, or does aggregate visibility alone breach the implicit-operation principle?
+> - Do healing-path agents (43 council) require a Veil-specific rubric distinct from the generation rubric of 22, given their privileged access to shadow-ledger projections?
+
 ---
 
 ## 1. The Veil as design principle

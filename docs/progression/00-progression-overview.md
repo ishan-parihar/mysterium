@@ -1,5 +1,7 @@
 # progression/00 — Progression Overview
 
+> **Cross-references:** [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]]
+
 ## 1. Purpose
 
 Specify how the player *grows* in Mysterium — the long-loop architecture

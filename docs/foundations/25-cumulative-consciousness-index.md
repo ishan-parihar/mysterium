@@ -24,6 +24,7 @@
 > **Depends on:** 10, 12, 16, 17, 19
 > **Referenced by:** 26 (unified architecture), 27 (auto-mode strategy engine)
 
+> **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2 (the five input dimensions and their measurement grounding); Game-design mapping → §4 (session signals as player-facing derivatives); Architectural contract → §3 + §5 (composite algorithm + lifecycle); Open questions → carried by foundations/24 §9 and 26 §10 (the CCI's consumers hold its open questions); Principles served → §7 (design decisions).
 ---
 
 ## 1. Purpose and unique lateral

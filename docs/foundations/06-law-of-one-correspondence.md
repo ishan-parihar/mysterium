@@ -7,6 +7,8 @@
 > alongside `Stage`, `Line`, `Quadrant`, `State`, `Drive`. The
 > harvest into 4th density is the canonical post-White endgame.
 
+> **Heading-contract map (2026-09-16):** Scientific basis is carried by §2 "Methodological honesty (the firewall, refined)" + §9 "Codex framing" — the doc's epistemic-status discipline IS its scientific grounding. All six contract sections are present under their canonical names or exact variants.
+
 ## 1. Purpose
 
 Specify how the **seven-ray energy-centre system** (the Law-of-One /

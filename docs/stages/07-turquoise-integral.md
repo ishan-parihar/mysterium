@@ -1,5 +1,7 @@
 # stages/07 — Turquoise / Integral
 
+> **Cross-references:** [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/02-eight-stages-overview|02 — Eight Stages Overview]]
+
 ## 1. Purpose
 
 The world bible for the seventh stage — the integral, vision-logic,

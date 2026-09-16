@@ -1,6 +1,13 @@
 # foundations/12 — Drive Assessment Mechanics: The 64-Module × 4-Drive Matrix
 
 > **Cross-references:** [[docs/foundations/11-game-modalities|11 — Game Modalities]]
+> **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2 (the drive-assessment framework's psychometric grounding); Game-design mapping → §3 (per-line drive mechanics); Architectural contract → §7; Principles served → §8.
+>
+> **Open questions (added 2026-09-16 — none previously stated):**
+> - The dual-domain scoring assumes drives are observable in both narrative and choice channels — what is the reliability floor for inferring a drive from a single-channel signal, and when must the engine refuse to score?
+> - How do drive-probe sensitivities interact with the calibration staircase (08) when a probe is itself the difficulty carrier — is there a confound between measuring drive and measuring capacity?
+> - Should the pathology detection algorithm (§4) publish per-quadrant base rates so the scheduler can correct for detection-frequency bias across the 4 shadow quadrants?
+
 ## 1. Purpose
 
 Define **how each of the four drives (Agency, Communion, Eros, Agape) is implicitly measured** within each of the 64 assessment modules (8 lines × 8 stages). This is the operational specification that tells game designers exactly what to build for each module's drive-health probes.

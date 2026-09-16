@@ -96,6 +96,7 @@
 - `40-measurement-packs-efficacy-infra.md` — swappable psychometric measurement packs, the scoring harness, the honest efficacy evidence chain
 - `41-global-recognition-credentialing.md` — GDPR substrate, claim-based credential ledger, EU pathway (micro-credentials → ECTS → EQF), canon revision of blueprint decision #2
 - `42-developmental-levelling-mechanism.md` — the unified grading/staging mechanism: one evidence-only law for line ladders and syllabus ladders, promotion/demotion hysteresis, demographic-blindness invariants D1–D5 (kernel-gated); §1.1 competence/identity firewall — identity (16 §2.1) tunes healing voicing under consent, never measurement
+- `43-agentic-orchestration-architecture.md` — the primary orchestrator + sub-agent council: taxonomy (Teacher/Assessor/Journey-Guide/Therapist/Specialist), per-council tool systems, session-log protocol, foreground/background handoff, delegation contract, safety/consent boundaries
 
 ### `lines/` (9) — one per line of intelligence
 
@@ -174,6 +175,15 @@ Every document in this tree carries the **six required headings**:
 ```
 
 A document missing any of the six is incomplete and is flagged for review.
+
+**Heading-contract map amendment (2026-09-16):** a document satisfies the contract
+in either of two ways: (a) literal six headings, or (b) a `> **Heading-contract map**`
+blockquote in its header that maps each of the six to where its substance lives
+(possibly another document that owns the section's lateral). Maps are audited, not
+boilerplate — they must name real sections. Docs 13/15/18/19/21/22/28 (older
+generation) and 06/10/11/12/14/16/20/23/24/25/26/27 carry maps; docs 35/36 carry
+working-format stamps; docs 41's "Scientific / regulatory basis" counts as the literal
+section.
 
 ## Canon
 

@@ -1,5 +1,7 @@
 # lines/01 — Cognitive Line
 
+> **Cross-references:** [[docs/foundations/07-neuroscience-of-development|07 — Neuroscience Of Development]] · [[docs/foundations/03-lines-of-intelligence-overview|03 — Lines Of Intelligence Overview]]
+
 ## 1. Purpose
 
 Specify the Cognitive line — the depth-of-perspective-taking,
