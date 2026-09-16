@@ -245,13 +245,23 @@ The system qualifies as the "complete education-system replacement" trajectory w
 
 ## 8. Immediate next actions
 
-1. **Phase 1 kickoff:** `src/core/orchestration/types.ts` + `sessionLog.ts` + `delegate.ts`
-   + 2 kernel gates + CLI smoke.
-2. Parallel: stage-holon gap-fill (Phase 3.1) is independent — can start immediately.
-3. Update `AGENTS.md` §4.2 to point at this plan (done in this commit).
+All 9 phases are IMPLEMENTED (see revision record). The current frontier is the
+post-plan work each phase deferred honestly:
+
+1. **Delegation (43):** LLM-backed choice policies behind the role interface (the
+   deterministic policies remain the kernel's test doubles and offline fallback).
+2. **Pods (38):** the Durable-Object transport adapter binding `applyEvent` — the pure
+   core, CLI surface, and G18 are done; only the networked coordinator remains.
+3. **Measurement packs (40):** reliability data collection to retire the
+   `provisionalUntil` ceilings; remaining packs from §4.3's table.
+4. **K-12 (37):** author the planned branches (language-arts, arts, second-language,
+   civics, health) per the subject→line map's `corpusStatus: 'planned'` rows.
+5. **Credentialing (41):** partner-institution route (§4.5 step 3) — the ledger and
+   VC export are ready; recognition requires institutions, not code.
 
 ## 9. Revision record
 
 | Date | Revision |
 |---|---|
 | 2026-09-16 | Initial binding plan from exhaustive code-vs-docs audit (commits `1c432e9`→`a4c9bfd` era tree). Phases 1–9, gates G14–G18 defined. |
+| 2026-09-16 (same day, full implementation) | **All 9 phases implemented and gated.** G14–G16 (delegation determinism/toolset firewall, practice loop) in Phases 1–2; Phase 3 audit-corrected — stage-holon cells were already 64/64 (red-layer file miscounted in the plan), so G17 became the corpus-integrity gate (cells + relationships + lint-clean registry + 64/64 concept modules) and 4 curriculum branches shipped (bio/chem/hist/geo, 21 holons). G18 renumbered to the pod privacy wall (two-persona pod simulation); Phase 4 delivered the pure pod state machine + CLI. G19: measurement-pack determinism/linter teeth/stream integration + 2 reference packs. G20: placement convergence (binary-search onboarding composite, ≤8 probes). G21: credential evidence chain (E2/E3/E4 teeth, revocation, VC export). Phase 6's parity harness proved browser-binding ≡ kernel loop and caught the offer-consumption + entry-config parity hazards. Gate count: 13 → 21. Tests: 949 → 1028. Deferred honestly to post-plan: LLM-backed choice policies, DO transport adapter, reliability data collection, planned-branch authoring, partner institutions. |
