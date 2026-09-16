@@ -24,6 +24,13 @@ import type { Line } from '../domain/Line.js';
 import type { KnowledgeState } from '../curriculum/types.js';
 import fs from 'node:fs';
 import path from 'node:path';
+import { createSignificator } from '../domain/Significator.js';
+import { createInitialWorldState } from '../engines/CandidateGeneration.js';
+import { ALL_LINES } from '../domain/Line.js';
+import { delegateSession, emptyLedgerState } from '../orchestration/orchestratorTools.js';
+import { validateSpec } from '../orchestration/delegate.js';
+import type { DelegatedTool, DelegationSpec, ProjectionKey } from '../orchestration/types.js';
+import type { Stage } from '../domain/Stage.js';
 import {
   buildLineLadder,
   buildSyllabusLadder,
@@ -558,8 +565,113 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validateVeilCompliance());
   results.push(validateLevellingMechanism());
   results.push(validateIdentityFirewall());
+  results.push(validateDelegationDeterminism());
+  results.push(validateDelegationToolsetFirewall());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
+}
+
+// ---------------------------------------------------------------------------
+// G14 — Delegation determinism (hard): same spec + same seed ⇒ same log, same
+// result, same state transition. Orchestration must be as replayable as the
+// engine it drives (43 §4.4 LL3, §5.3).
+// ---------------------------------------------------------------------------
+
+export function validateDelegationDeterminism(): GateResult {
+  try {
+    const altitudes = Object.fromEntries(ALL_LINES.map((l) => [l, 'Red' as Stage])) as Record<Line, Stage>;
+    const sig = createSignificator('g14-probe', altitudes, 'Red');
+    const world = createInitialWorldState([
+      {
+        id: 'h-Cognitive-Red', name: 'G14 probe contact', kind: 'NPC',
+        line: 'Cognitive', stage: 'Red',
+        drives: { dominant: 'Agency', secondary: 'Eros', shadowQuadrant: null },
+        polarity: 'Sovereign', narrativeRole: 'benchmark', relationships: [], active: true,
+      },
+    ] as never);
+    const session = {
+      targetSessionLength: 5, encountersSoFar: 0, recentLines: [], sessionDurationMs: 0,
+    };
+    const spec: DelegationSpec = {
+      role: 'J1',
+      cell: { line: 'Cognitive', stage: 'Red' },
+      purpose: 'journey-game mandate for determinism probe',
+      readProjection: new Set<ProjectionKey>(['corpus.moduleSpec']),
+      toolset: new Set<DelegatedTool>(['get_module_spec', 'get_polarity_texture', 'record_encounter']),
+      budget: { toolCallsMax: 3, virtualMsMax: 600_000 },
+    };
+
+    const run = (seed: string) =>
+      delegateSession({ spec, sig, world, session, seed, now: 1_000_000, ledger: emptyLedgerState() });
+    const a = run('gate14-seed');
+    const b = run('gate14-seed');
+    const c = run('gate14-seed-2');
+
+    const sameLog = JSON.stringify(a.log) === JSON.stringify(b.log);
+    const sameState = JSON.stringify(a.sig) === JSON.stringify(b.sig)
+      && JSON.stringify(a.world) === JSON.stringify(b.world);
+    const differsOnNewSeed = JSON.stringify(a.log) !== JSON.stringify(c.log);
+
+    const passed = a.ok && b.ok && sameLog && sameState && differsOnNewSeed;
+    const details = `ok=${a.ok && b.ok} sameLog=${sameLog} sameState=${sameState} newSeedDiffers=${differsOnNewSeed} encounters=${a.encountersExecuted}`;
+    return { gate: 'G14 delegation determinism', passed, hard: true, details };
+  } catch (e) {
+    return { gate: 'G14 delegation determinism', passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G15 — Delegation toolset firewall (hard): spec validation must fail closed
+// on role-allowlist violations, cell violations, and firewall violations;
+// valid specs pass. Deterministic, no live loop needed.
+// ---------------------------------------------------------------------------
+
+export function validateDelegationToolsetFirewall(): GateResult {
+  try {
+    const base = {
+      purpose: 'gate probe',
+      readProjection: new Set<ProjectionKey>(['corpus.moduleSpec']),
+      budget: { toolCallsMax: 2, virtualMsMax: 60_000 },
+    };
+
+    const mk = (over: Record<string, unknown>) => ({ ...base, ...over }) as unknown as Parameters<typeof validateSpec>[0];
+
+    // 1. Role toolset violation: examiner (A1) trying a therapy tool.
+    const v1 = validateSpec(mk({
+      role: 'A1',
+      toolset: new Set<DelegatedTool>(['get_staircase_state', 'propose_shadow_work']),
+    }));
+    // 2. Cell required: J1 without a cell.
+    const v2 = validateSpec(mk({
+      role: 'J1', toolset: new Set<DelegatedTool>(['record_encounter']),
+    }));
+    // 3. Cell forbidden: Tutor (T1) carrying a cell.
+    const v3 = validateSpec(mk({
+      role: 'T1', toolset: new Set<DelegatedTool>(['get_concept']),
+      cell: { line: 'Cognitive', stage: 'Red' },
+    }));
+    // 4. Firewall: measurement-path agent with HealingContext.
+    const v4 = validateSpec(mk({
+      role: 'A2', toolset: new Set<DelegatedTool>(['review_practice']),
+      healingContext: { hints: [] },
+    }));
+    // 5. Valid spec passes.
+    const ok = validateSpec(mk({
+      role: 'J1',
+      cell: { line: 'Cognitive', stage: 'Red' },
+      toolset: new Set<DelegatedTool>(['get_module_spec', 'record_encounter']),
+    }));
+
+    const passed = v1?.code === 'role_toolset_violation'
+      && v2?.code === 'cell_required'
+      && v3?.code === 'cell_forbidden'
+      && v4?.code === 'firewall_healing_context'
+      && ok === null;
+    const details = `A1-therapy-tool=${v1?.code ?? 'PASS!'} J1-nocell=${v2?.code ?? 'PASS!'} T1-cell=${v3?.code ?? 'PASS!'} A2-healingctx=${v4?.code ?? 'PASS!'} valid=${ok === null ? 'PASS' : 'REJECTED!'}`;
+    return { gate: 'G15 delegation toolset firewall', passed, hard: true, details };
+  } catch (e) {
+    return { gate: 'G15 delegation toolset firewall', passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
 }
 
 /**

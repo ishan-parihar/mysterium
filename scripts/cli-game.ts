@@ -173,6 +173,15 @@ program
 program
   .command('privacy [action]')
   .description('View or withdraw identity consent (show, withdraw <field>, withdraw-all)');
+program
+  .command('delegate')
+  .description('Run a delegated council session (doc 43) and print its result + ratification (dev tool)')
+  .option('--role <role>', 'council role: J1 J2 J3 J4 J5 T1 T2 T3 A1 A2 A3 A4 therapist S1..S5', 'J1')
+  .option('--line <line>', 'target line for cell-bounded roles', 'Cognitive')
+  .option('--stage <stage>', 'target stage for cell-bounded roles', 'Red')
+  .option('--encounters <n>', 'tool budget for the session', (v) => parseInt(v, 10), 2)
+  .option('--seed <seed>', 'deterministic seed', 'cli-delegate')
+  .option('--json', 'machine-readable output');
 
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
@@ -5065,6 +5074,107 @@ async function runPrivacyCommand(action: string | undefined, fieldArg: string | 
   console.log(`  ${chalk.dim('This data never leaves your device and never affects levels or difficulty.')}`);
 }
 
+// ── Delegation smoke (doc 43 Phase-1 gate) ──────────────────────────
+
+interface DelegateCliOpts {
+  role?: string; line?: string; stage?: string;
+  encounters?: number; seed?: string; json?: boolean;
+}
+
+async function runDelegateCommand(argv: string[]): Promise<void> {
+  const { delegateSession, emptyLedgerState, ratifyProposalsTool, schedulePresence } = await import('../src/core/orchestration/orchestratorTools.js');
+  const { createSignificator } = await import('../src/core/domain/Significator.js');
+  const { createInitialWorldState } = await import('../src/core/engines/CandidateGeneration.js');
+  const { ALL_LINES } = await import('../src/core/domain/Line.js');
+  const { ALL_STAGES } = await import('../src/core/domain/Stage.js');
+  const { seedCurriculumRegistry } = await import('../src/core/curriculum/CurriculumSeed.js');
+  const { buildPersonaWorld } = await import('../src/core/validation/harness.js').catch(() => ({ buildPersonaWorld: null as null | ((lines?: readonly string[], stages?: readonly string[]) => unknown) }));
+
+  // Minimal flag parse (commander stores opts on program; argv slice is the positional tail)
+  const get = (name: string): string | undefined => {
+    const i = argv.indexOf(name);
+    return i >= 0 ? argv[i + 1] : undefined;
+  };
+  const role = (get('--role') ?? 'J1') as import('../src/core/orchestration/types.js').AgentRole;
+  const line = (get('--line') ?? 'Cognitive') as import('../src/core/domain/Line.js').Line;
+  const stage = (get('--stage') ?? 'Red') as import('../src/core/domain/Stage.js').Stage;
+  const budget = parseInt(get('--encounters') ?? '2', 10);
+  const seed = get('--seed') ?? 'cli-delegate';
+  const asJson = argv.includes('--json');
+
+  if (!ALL_LINES.includes(line) || !ALL_STAGES.includes(stage)) {
+    console.error(`Invalid --line/--stage: ${line}/${stage}`);
+    process.exitCode = 1;
+    return;
+  }
+
+  seedCurriculumRegistry();
+  const altitudes = Object.fromEntries(ALL_LINES.map((l) => [l, stage])) as Record<import('../src/core/domain/Line.js').Line, import('../src/core/domain/Stage.js').Stage>;
+  const sig = createSignificator(`cli-${seed}`, altitudes, stage);
+
+  // Encounter pool: the scheduler needs resolvable holons for the target cell.
+  // Reuse the kernel harness's world factory via its exported makeWorld path;
+  // if unavailable, fall back to a minimal one-cell world.
+  let world: import('../src/core/engines/EncounterScheduler.js').WorldState;
+  try {
+    const harness = await import('../src/core/validation/harness.js');
+    const mk = (harness as unknown as { makeWorld?: () => import('../src/core/engines/EncounterScheduler.js').WorldState }).makeWorld;
+    world = mk
+      ? mk.call(harness)
+      : createInitialWorldState([{
+          id: `h-${line}-${stage}`, name: `${line} ${stage} contact`, kind: 'NPC',
+          line, stage,
+          drives: { dominant: 'Agency', secondary: 'Eros', shadowQuadrant: null },
+          polarity: 'Sovereign', narrativeRole: 'delegate-smoke', relationships: [], active: true,
+        } as never]);
+  } catch {
+    world = createInitialWorldState([]);
+  }
+  const session = { targetSessionLength: Math.max(1, budget), encountersSoFar: 0, recentLines: [], sessionDurationMs: 0 };
+
+  const spec: import('../src/core/orchestration/types.js').DelegationSpec = {
+    role,
+    ...( ['J1','J2','J3','J4','J5'].includes(role) ? { cell: { line, stage } } : {}),
+    purpose: `CLI delegation smoke: ${role} mandate`,
+    readProjection: new Set(['corpus.moduleSpec'] as const),
+    toolset: new Set(
+      role === 'J1' ? ['get_module_spec', 'get_polarity_texture', 'record_encounter'] as const
+        : role === 'therapist' ? ['get_shadow_ledger_projection', 'note_arc'] as const
+        : ['get_module_spec', 'record_encounter'] as const,
+    ),
+    budget: { toolCallsMax: budget, virtualMsMax: 600_000 },
+  };
+
+  const out = delegateSession({ spec, sig, world, session, seed, now: 1_000_000, ledger: emptyLedgerState() });
+  if (!out.ok) {
+    const msg = `DELEGATION REJECTED: ${out.violation?.code} — ${out.violation?.detail}`;
+    if (asJson) { process.stdout.write(JSON.stringify({ ok: false, violation: out.violation }) + '\n'); }
+    else console.error(msg);
+    process.exitCode = 1;
+    return;
+  }
+
+  const rat = ratifyProposalsTool({ proposals: out.result?.proposals ?? [], sig: out.sig, world: out.world, now: 1_100_000 });
+  const presence = schedulePresence(seed, ['therapist', 'J1', 'J4', 'T1', 'A2']);
+
+  if (asJson) {
+    process.stdout.write(JSON.stringify({
+      ok: true, role, outcome: out.result?.outcome, encounters: out.encountersExecuted,
+      sessionId: out.log.sessionId, proposals: out.result?.proposals.length ?? 0,
+      ratification: rat.dispositions, presence,
+    }) + '\n');
+  } else {
+    console.log(`\n  Delegated session — role ${chalk.bold(role)}${out.log.cell ? ` (${out.log.cell.line} × ${out.log.cell.stage})` : ''}`);
+    console.log(`  outcome: ${out.result?.outcome}   encounters: ${out.encountersExecuted}   proposals: ${out.result?.proposals.length ?? 0}`);
+    console.log(`  session: ${out.log.sessionId}`);
+    for (const d of rat.dispositions) {
+      console.log(`  ${d.accepted ? chalk.green('✓') : chalk.yellow('·')} ${d.kind}: ${chalk.dim(d.reason)}`);
+    }
+    console.log(`  presence order: ${presence.join(' → ')}`);
+    console.log(`\n  ${chalk.dim('Same --seed reproduces this session exactly (gate G14).')}`);
+  }
+}
+
 async function main(): Promise<void> {
   // ponytail: --version and --help handled by commander automatically
 
@@ -5081,7 +5191,7 @@ async function main(): Promise<void> {
   // treat ALL subcommands as potentially interactive EXCEPT the truly
   // non-interactive ones (`status`, `glossary`). This is safer than
   // enumerating interactive ones — new subcommands default to safe.
-  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy']);
+  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate']);
   const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand) && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
     HEADLESS = true;
@@ -5113,6 +5223,7 @@ async function main(): Promise<void> {
   if (subcommand === 'export') { process.exitCode = await runExportCommand(program.args.slice(1)); return; }
   if (subcommand === 'events') { await runEvents(program.args.slice(1)); return; }
   if (subcommand === 'privacy') { await runPrivacyCommand(program.args[1], program.args[2]); return; }
+  if (subcommand === 'delegate') { await runDelegateCommand(program.args.slice(1)); return; }
   // P0-5 + P0-6: Use deleteAllSaves (clears sig + world + atomic envelope).
   // P0-6: Also clear TDG graph state if the TDG bridge is running, so a new
   // game doesn't inherit the old player's developmental graph.
