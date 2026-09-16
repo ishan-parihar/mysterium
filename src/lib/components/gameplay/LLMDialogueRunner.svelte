@@ -16,15 +16,14 @@
    *   7. We call oncomplete
    */
 
-  import type { Snippet } from 'svelte';
-  import type { ScheduledEncounter } from '$core/domain/EncounterSpecNew.js';
   import type {
     AskUserQuestionParams,
     AskUserQuestionResult,
     MCQQuestion,
     UserAnswer,
   } from '$core/assessments/agentTypes.js';
-  import type { AgenticUIHandler, OrchestratorResult } from '$core/assessments/AgenticOrchestrator.js';
+  import type { AgenticUIHandler } from '$core/assessments/AgenticOrchestrator.js';
+  import type { ScheduledEncounter } from '$core/domain/EncounterSpecNew.js';
   import { runEncounter } from '$lib/engine/gameEngine.js';
   import Card from '$lib/components/Card.svelte';
   import Button from '$lib/components/Button.svelte';
@@ -59,8 +58,10 @@
   let writeInValue: string = $state('');
   let showWriteIn: boolean = $state(false);
 
-  // Pending Promise resolver (the orchestrator is waiting on this)
-  let pendingResolver: ((result: AskUserQuestionResult) => void) | null = null;
+  // Pending Promise resolver (the orchestrator is waiting on this).
+  // Resolves per-question with one UserAnswer; the handler assembles them
+  // into AskUserQuestionResult when all questions are answered.
+  let pendingResolver: ((answer: UserAnswer) => void) | null = null;
 
   // ─── AgenticUIHandler implementation ───────────────────────────────
 
@@ -117,7 +118,7 @@
     try {
       phase = 'starting';
       abortController = new AbortController();
-      const result = await runEncounter(encounter, uiHandler, { signal: abortController.signal });
+      await runEncounter(encounter, uiHandler, { signal: abortController.signal });
       phase = 'complete';
       showToast('Encounter complete', 'success', 3000);
       // Brief delay so the user sees the "complete" state before transition
@@ -249,7 +250,6 @@
                   oninput={(v) => writeInValue = v}
                   placeholder="Speak in your own words..."
                   maxlength={500}
-                  ariaLabel="Write your own response"
                 />
               {:else}
                 <button class="writein-toggle" onclick={toggleWriteIn}>

@@ -23,7 +23,6 @@
   import VeiledStat from '$lib/components/VeiledStat.svelte';
   import Card from '$lib/components/Card.svelte';
   import Stack from '$lib/components/Stack.svelte';
-  import Cluster from '$lib/components/Cluster.svelte';
   import Icon from '$lib/components/Icon.svelte';
   import { gameStore } from '$lib/stores/gameStore.js';
   import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';

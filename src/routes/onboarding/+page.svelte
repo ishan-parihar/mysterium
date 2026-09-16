@@ -31,7 +31,6 @@
    * starting point.
    */
 
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { browser } from '$app/environment';
   import Seo from '$lib/components/Seo.svelte';
@@ -44,11 +43,13 @@
   import Badge from '$lib/components/Badge.svelte';
   import { stageFade, stageFly } from '$lib/transitions/stageMotion.js';
   import { createSignificator } from '$core/domain/Significator.js';
-  import type { Line, Stage } from '$core/domain/Stage.js';
+  import { placeAllLines, altitudesFromPlacement } from '$core/onboarding/BinarySearchPlacement.js';
+  import type { Line } from '$core/domain/Line.js';
+  import type { Stage } from '$core/domain/Stage.js';
+  import { stageOrdinal } from '$core/domain/Stage.js';
   import { ALL_LINES } from '$core/domain/Line.js';
   import { setSignificator } from '$lib/stores/gameStore.js';
   import { showToast } from '$lib/stores/toastStore.js';
-  import { describeStage } from '$core/presentation/veilDescriptors.js';
   import {
     type AgenticProbe,
     type AgenticProbeResponse,
@@ -213,10 +214,17 @@
     }
   }
 
-  function rollupLineFromPolarities(line: Line): Stage {
+  /**
+   * Polarity evidence → stage verdict for one line (doc ONBOARDING-REDESIGN).
+   * Upper-quadrant gravitation (integrative/communion) is treated as a
+   * capacity signal: high ratio passes the probed stage. Confidence scales
+   * with sample size — thin evidence is genuinely ambiguous, which the
+   * binary search handles via its extra-trials and bounds machinery.
+   */
+  function probeOutcomeForLine(line: Line, stage: Stage): { outcome: 'pass' | 'fail'; confidence: number } {
     const forLine = polarityLog.filter((p) => p.line === line);
-    // If this line had a probe, use its own polarity; otherwise fall back
-    // to global distribution so early exit (probeCount <8) still seeds sensibly.
+    // If this line had no probe, fall back to global distribution so early
+    // exit (probeCount < 8) still seeds sensibly.
     const source = forLine.length > 0 ? forLine : polarityLog;
     const ratios = source.reduce((acc, p) => {
       acc[p.polarity] = (acc[p.polarity] ?? 0) + 1;
@@ -225,12 +233,16 @@
     const upper = (ratios['integrative'] ?? 0) + (ratios['communion'] ?? 0);
     const total = source.length || 1;
     const upperRatio = upper / total;
-    // Map upperRatio through 5 stages. Mid stage always plays 0.4–0.6.
-    if (upperRatio >= 0.66) return 'Green';
-    if (upperRatio >= 0.5) return 'Turquoise';
-    if (upperRatio >= 0.34) return 'Amber';
-    if (upperRatio >= 0.17) return 'Red';
-    return 'Red';
+    // Stage gates: the ratio required to pass climbs with the stage.
+    const stageGates: Record<string, number> = {
+      Infrared: 0.05, Magenta: 0.1, Red: 0.2, Amber: 0.34,
+      Orange: 0.5, Green: 0.66, Turquoise: 0.8, White: 0.95,
+    };
+    const gate = stageGates[stage] ?? 0.34;
+    const margin = upperRatio - gate;
+    // Confidence: distance from the gate, damped by sample size.
+    const confidence = Math.min(1, Math.abs(margin) * 2) * (source.length / (source.length + 2));
+    return { outcome: margin >= 0 ? 'pass' : 'fail', confidence };
   }
 
   async function completeOffline() {
@@ -255,12 +267,18 @@
 
   async function completeCalibration() {
     phase = 'creating';
-    const altitudes: Partial<Record<Line, Stage>> = {};
-    for (const line of ALL_LINES) altitudes[line] = rollupLineFromPolarities(line);
+    // Kernel placement: binary-search each line's altitude from the polarity
+    // evidence (doc ONBOARDING-REDESIGN-PLAN — the composite replaces the
+    // single-probe heuristic). Placement is pure and instant — no extra
+    // probes are shown to the player; the MCQ answers ARE the evidence.
+    const placement = placeAllLines((line, stage) => {
+      const { outcome, confidence } = probeOutcomeForLine(line, stage);
+      return { outcome, confidence };
+    });
+    const { altitudes } = altitudesFromPlacement(placement);
 
-    const stageOrder = ['Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'] as const;
     const currentStage = (Object.values(altitudes) as Stage[]).reduce<Stage>(
-      (max, s) => (stageOrder.indexOf(s) > stageOrder.indexOf(max) ? s : max),
+      (max, s) => (stageOrdinal(s) > stageOrdinal(max) ? s : max),
       'Red',
     );
 
@@ -343,7 +361,8 @@
               <Input
                 id="onboarding-free-input"
                 placeholder={currentProbe.freeInputPlaceholder}
-                bind:value={freeText}
+                value={freeText}
+                oninput={(v) => (freeText = v)}
               />
             </Stack>
           </Card>

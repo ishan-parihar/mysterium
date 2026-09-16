@@ -12,7 +12,6 @@
   import Cluster from '$lib/components/Cluster.svelte';
   import Modal from '$lib/components/Modal.svelte';
   import Input from '$lib/components/Input.svelte';
-  import Icon from '$lib/components/Icon.svelte';
   import {
     profilesStore,
     activeProfileStore,
@@ -118,7 +117,7 @@
       value={newName}
       oninput={(v) => (newName = v)}
       placeholder="Profile name (e.g. 'main', 'alt')"
-      ariaLabel="Profile name"
+      label="Profile name"
     />
     <Cluster gap="space-3" justify="end">
       <Button variant="ghost" onclick={() => (showCreate = false)}>Cancel</Button>

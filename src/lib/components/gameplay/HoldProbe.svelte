@@ -4,8 +4,6 @@
    * Parity with CLI hold probe (runQuickCalibration for Somatic/Willpower).
    * ponytail: measures how accurately the player estimates a time interval.
    */
-  import { onMount, onDestroy } from 'svelte';
-  import { browser } from '$app/environment';
   import Card from '$lib/components/Card.svelte';
   import Button from '$lib/components/Button.svelte';
   import Stack from '$lib/components/Stack.svelte';

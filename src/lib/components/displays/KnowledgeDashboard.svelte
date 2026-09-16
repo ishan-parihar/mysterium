@@ -6,10 +6,9 @@
    *
    * Veil-compliant: qualitative bands, no raw metrics exposed.
    */
-  import type { KnowledgeState, ConceptState, DepthLevel } from '$core/curriculum/types.js';
-  import { ALL_DEPTH_LEVELS, depthOrdinal } from '$core/curriculum/types.js';
+  import type { KnowledgeState, DepthLevel } from '$core/curriculum/types.js';
+  import { ALL_DEPTH_LEVELS } from '$core/curriculum/types.js';
   import { computeLearningAnalytics } from '$core/curriculum/LearningAnalytics.js';
-  import type { LearningAnalyticsReport } from '$core/curriculum/LearningAnalytics.js';
 
   interface Props {
     knowledge: KnowledgeState | undefined;

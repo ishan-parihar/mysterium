@@ -83,7 +83,7 @@
   const session = $derived($engineStore.session);
   const sessionPosition = $derived.by(() => {
     if (!session) return null;
-    const total = session.strategy?.targetSessionLength ?? 5;
+    const total = session.strategy?.encounterBudget?.totalTarget ?? 5;
     const done = session.recentOutcomes.length;
     const progress = total > 0 ? done / total : 0;
     const position: 'warmup' | 'peak' | 'cooldown' =
@@ -140,7 +140,6 @@
           {/each}
 
           {#each ALL_LINES as line, lineIdx}
-            {@const p = point(lineIdx, ringCount - 1)}
             {@const angle = (lineIdx / ALL_LINES.length) * 360 - 90}
             {@const labelR = maxRadius + 20}
             {@const lp = {

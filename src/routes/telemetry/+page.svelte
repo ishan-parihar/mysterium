@@ -98,7 +98,7 @@
             {#if settings.telemetryOptIn}
               <Badge variant="success">ON</Badge> — events are sent to the server
             {:else}
-              <Badge variant="muted">OFF</Badge> — no events leave your device
+              <Badge variant="default">OFF</Badge> — no events leave your device
             {/if}
           </span>
         </div>

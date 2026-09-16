@@ -14,7 +14,7 @@
     disabled?: boolean;
     required?: boolean;
     id?: string;
-    autocomplete?: string;
+    autocomplete?: 'on' | 'off' | 'name' | 'email' | 'one-time-code' | 'current-password' | 'new-password';
     ariaInvalid?: boolean;
   }
 

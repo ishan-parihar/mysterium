@@ -7,7 +7,7 @@
    */
   export type IconName =
     | 'arrow-right' | 'play' | 'settings' | 'book' | 'user' | 'recover'
-    | 'chevron-down' | 'info';
+    | 'chevron-down' | 'info' | 'bar-chart';
 
   export const ICON_PATHS: Record<IconName, string> = {
     'arrow-right': 'm12 5 7 7-7 7 M5 12h14',
@@ -18,6 +18,7 @@
     'recover': 'path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8 M3 3v5h5"',
     'chevron-down': 'polyline points="6 9 12 15 18 9"',
     'info': 'circle cx="12" cy="12" r="10 M12 16v-4 M12 8h.01"',
+    'bar-chart': 'line x1="6" y1="20" x2="6" y2="14" line x1="12" y1="20" x2="12" y2="8" line x1="18" y1="20" x2="18" y2="4"',
   };
 </script>
 

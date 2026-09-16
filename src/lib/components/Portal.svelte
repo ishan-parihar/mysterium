@@ -13,7 +13,6 @@
   let { children }: { children: Snippet } = $props();
 
   let host: HTMLDivElement | null = null;
-  let wrapper: HTMLDivElement;
 
   onMount(() => {
     if (!browser) return;
@@ -44,7 +43,7 @@
 </script>
 
 {#if browser && host}
-  <div bind:this={wrapper} use:teleport>
+  <div use:teleport>
     {@render children()}
   </div>
 {/if}

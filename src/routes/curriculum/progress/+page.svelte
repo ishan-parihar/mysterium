@@ -27,7 +27,7 @@
       const loaded = loadSignificatorFromStorage();
       if (loaded) setSignificator(loaded);
     }
-    import('$core/curriculum/CurriculumRegistry.js').then(({ getCurriculumRegistry, seedCurriculumRegistry }) => {
+    import('$core/curriculum/index.js').then(async ({ getCurriculumRegistry, seedCurriculumRegistry }) => {
       seedCurriculumRegistry();
       const registry = getCurriculumRegistry();
       allHolons = [...registry.getAll()];

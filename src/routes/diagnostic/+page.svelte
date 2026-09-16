@@ -31,8 +31,6 @@
   let moduleCount = $state(0);
   let holonBreakdown = $state({ total: 0, npc: 0, faction: 0, location: 0, other: 0 });
   let sigStage = $state('');
-  let cciComposite = $state(0);
-  let theme = $state('');
 
   onMount(async () => {
     if (!browser) return;
