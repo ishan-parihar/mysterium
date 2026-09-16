@@ -45,4 +45,20 @@ export interface Vow {
   readonly text: string;
   readonly createdAtMs: number;
   readonly fulfilled: boolean;
+  // ── 39 extension (optional ⇒ old saves parse unchanged) ──
+  readonly kind?: 'practice' | 'exposure' | 'learning' | 'service';
+  readonly status?: 'active' | 'fulfilled' | 'lapsed' | 'renegotiated';
+  readonly implementationIntention?: { when: string; then: string };
+  readonly horizonMs?: number;              // player-declared, not enforced
+  readonly checkInCount?: number;
+  readonly witnessPodId?: string;           // social-induction (38), optional
+}
+
+/** The journal check-in (39 §3.3). Client-side storage only; never cloud-synced. */
+export interface ReflectionRecord {
+  readonly id: string;
+  readonly vowId?: string;
+  readonly prompts: readonly { question: string; answer: string }[];
+  readonly depthScore?: 1 | 2 | 3 | 4 | 5;  // rubric result, never surfaced as number
+  readonly createdAtMs: number;
 }

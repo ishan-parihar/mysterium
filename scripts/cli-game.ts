@@ -182,6 +182,12 @@ program
   .option('--encounters <n>', 'tool budget for the session', (v) => parseInt(v, 10), 2)
   .option('--seed <seed>', 'deterministic seed', 'cli-delegate')
   .option('--json', 'machine-readable output');
+program
+  .command('vow [action] [rest...]')
+  .allowUnknownOption()
+  .description('Practice objectives (doc 39): list, propose <text...>, check-in <text...>, review')
+  .option('--kind <kind>', 'practice | exposure | learning | service', 'practice')
+  .option('--line <line>', 'primary line for the check-in', 'Intrapersonal')
 
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
@@ -256,6 +262,7 @@ try {
 // (opencode.ai/zen) — the project's primary gateway — but only fires if
 // OPENCODE_API_KEY / OPENCODE_API is set; otherwise the user must configure.
 import { resolveConfig as resolveLLMConfig, isComplete as isLLMConfigComplete, type LLMConfig } from '../src/infra/llm/ProviderRegistry.js';
+import { getMysteriumDirForScope } from '../src/infra/persistence/mysteriumDir.js';
 import { getActiveConfig, invalidateConfigCache, validateModelIfFresh, queryLLM } from '../src/infra/llm/LLMClient.js';
 
 const resolvedLLM: LLMConfig = resolveLLMConfig(
@@ -5175,6 +5182,127 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
   }
 }
 
+// ── Practice objectives (doc 39) CLI ────────────────────────────────
+
+interface VowFileShape {
+  readonly book: import('../src/core/practice/VowService.js').VowBook;
+}
+
+function vowFilePath(): string {
+  const dir = getMysteriumDirForScope('auto');
+  fs.mkdirSync(dir, { recursive: true });
+  return path.join(dir, 'vows.json');
+}
+
+function loadVowFile(): VowFileShape {
+  const p = vowFilePath();
+  if (fs.existsSync(p)) {
+    try { return JSON.parse(fs.readFileSync(p, 'utf8')) as VowFileShape; } catch { /* fall through */ }
+  }
+  return { book: emptyVowBookLocal() };
+}
+
+function saveVowFile(state: VowFileShape): void {
+  fs.writeFileSync(vowFilePath(), JSON.stringify(state, null, 2));
+}
+
+function emptyVowBookLocal(): import('../src/core/practice/VowService.js').VowBook {
+  return { vows: [], declineCounts: {} };
+}
+
+async function runVowCommand(argv: string[]): Promise<void> {
+  const action = argv.find((a) => !a.startsWith('--')) ?? 'list';
+  const get = (name: string): string | undefined => {
+    const i = argv.indexOf(name);
+    return i >= 0 ? argv[i + 1] : undefined;
+  };
+  const kind = (get('--kind') ?? 'practice') as 'practice' | 'exposure' | 'learning' | 'service';
+  const line = (get('--line') ?? 'Intrapersonal') as import('../src/core/domain/Line.js').Line;
+
+  const { proposeObjectives, processCheckIn, reviewPractice, detectCrisis } = await import('../src/core/practice/practiceTools.js');
+  const { acceptVow, discoverLapses } = await import('../src/core/practice/VowService.js');
+  const { createSignificator } = await import('../src/core/domain/Significator.js');
+  const { createInitialWorldState } = await import('../src/core/engines/CandidateGeneration.js');
+  const { ALL_LINES } = await import('../src/core/domain/Line.js');
+
+  const state = loadVowFile();
+  const altitudes = Object.fromEntries(ALL_LINES.map((l) => [l, 'Red'])) as Record<import('../src/core/domain/Line.js').Line, import('../src/core/domain/Stage.js').Stage>;
+  const sig = createSignificator('vow-cli', altitudes, 'Red');
+  const world = createInitialWorldState([]);
+  const now = Date.now();
+
+  // Lapse discovery at every visit (never notifications — 39 §3.2).
+  const lapses = discoverLapses(state.book, now);
+  if (lapses.lapsed.length > 0 && action !== 'list') {
+    console.log(chalk.dim(`  (a practice horizon quietly passed — it waits, without judgment)`));
+  }
+
+  if (action === 'list') {
+    console.log(`\n  Practice objectives`);
+    if (state.book.vows.length === 0) console.log(chalk.dim('  none yet — try: mysterium vow propose'));
+    for (const v of state.book.vows) {
+      const status = v.status ?? 'active';
+      const mark = status === 'fulfilled' ? chalk.green('●') : status === 'lapsed' ? chalk.yellow('○') : chalk.cyan('◐');
+      console.log(`  ${mark} [${status}] ${v.text} ${chalk.dim(`· ${v.checkInCount ?? 0} check-ins`)}`);
+    }
+    return;
+  }
+
+  if (action === 'propose') {
+    const proposals = proposeObjectives({ needs: [], activeShadows: [] });
+    const valueFlags = new Set(['--kind', '--line']);
+    const customParts: string[] = [];
+    for (let i = 0; i < argv.length; i++) {
+      const a = argv[i];
+      if (a === action || a.startsWith('--')) { if (valueFlags.has(a)) i++; continue; }
+      customParts.push(a);
+    }
+    const customText = customParts.join(' ');
+    const chosen = { text: customText || proposals[0]?.text || 'One small honest step.', kind };
+    if (argv.includes('--decline')) {
+      const book = declineVow(lapses.book, { ...chosen, rationale: 'declined in CLI' });
+      saveVowFile({ book });
+      console.log(`\n  ${chalk.dim('Declined — noted as preference signal only. Nothing expected of you.')}`);
+      return;
+    }
+    const { book, vow } = acceptVow(lapses.book, { ...chosen, rationale: 'authored by you' }, now);
+    saveVowFile({ book });
+    console.log(`\n  ${chalk.green('Accepted:')} ${vow.text}`);
+    console.log(chalk.dim('  No deadlines. Check in with: mysterium vow check-in "what happened" ...'));
+    return;
+  }
+
+  if (action === 'check-in' || action === 'checkin') {
+    const answers = argv.filter((a) => !a.startsWith('--') && a !== action);
+    if (answers.length === 0) {
+      console.error('Give your reflection: mysterium vow check-in "what happened" "what you noticed" ...');
+      process.exitCode = 1;
+      return;
+    }
+    if (detectCrisis(answers.join(' '))) {
+      console.log(chalk.bold.red('\n  Some things are too heavy for a journal to hold alone.'));
+      console.log('  Please reach out to someone you trust, or a local crisis line.');
+      console.log(chalk.dim('  (This reflection was not saved or scored.)'));
+      return;
+    }
+    const vow = lapses.book.vows.find((v) => (v.status ?? 'active') === 'active');
+    const out = processCheckIn({ book: lapses.book, sig, world, vow, answers, now, primaryLine: line });
+    saveVowFile({ book: out.book });
+    console.log(`\n  ${chalk.green('Recorded.')} ${chalk.dim('Held privately — nothing to act on, nothing to perform.')}`);
+    if (out.vowFulfilled) console.log(chalk.green('  The objective feels met — it settles into fulfilled.'));
+    return;
+  }
+
+  if (action === 'review') {
+    const review = reviewPractice({ ...sig, reflections: state.book.vows.length > 0 ? [{ id: 'cli', prompts: [], createdAtMs: now }] : [] } as never);
+    console.log(`\n  ${chalk.italic(review.narrative)}`);
+    return;
+  }
+
+  console.error(`Unknown vow action: ${action} (list | propose | check-in | review)`);
+  process.exitCode = 1;
+}
+
 async function main(): Promise<void> {
   // ponytail: --version and --help handled by commander automatically
 
@@ -5191,7 +5319,7 @@ async function main(): Promise<void> {
   // treat ALL subcommands as potentially interactive EXCEPT the truly
   // non-interactive ones (`status`, `glossary`). This is safer than
   // enumerating interactive ones — new subcommands default to safe.
-  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate']);
+  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow']);
   const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand) && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
     HEADLESS = true;
@@ -5224,6 +5352,7 @@ async function main(): Promise<void> {
   if (subcommand === 'events') { await runEvents(program.args.slice(1)); return; }
   if (subcommand === 'privacy') { await runPrivacyCommand(program.args[1], program.args[2]); return; }
   if (subcommand === 'delegate') { await runDelegateCommand(program.args.slice(1)); return; }
+  if (subcommand === 'vow') { await runVowCommand(program.args.slice(1)); return; }
   // P0-5 + P0-6: Use deleteAllSaves (clears sig + world + atomic envelope).
   // P0-6: Also clear TDG graph state if the TDG bridge is running, so a new
   // game doesn't inherit the old player's developmental graph.

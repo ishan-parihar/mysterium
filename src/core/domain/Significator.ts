@@ -5,7 +5,7 @@ import type { Ray } from './Ray.js';
 import type { State } from './State.js';
 import type { PolarityState } from './PolarityCellVector.js';
 import type { ShadowLedger } from './ShadowLedger.js';
-import type { CodexEntry } from './SharedTypes.js';
+import type { CodexEntry, ReflectionRecord } from './SharedTypes.js';
 import type { TransformationPhase } from '../engines/TransformationDetector.js';
 import type { KnowledgeState } from '../curriculum/types.js';
 import type { IdentityProfile } from './IdentityProfile.js';
@@ -163,6 +163,13 @@ export interface Significator {
    * absent on saves without identity, and after full withdrawal.
    */
   readonly identity?: IdentityProfile;
+  /**
+   * Journal reflections (39 §4.1). The most sensitive data in the system:
+   * persistence is client-side only; cloud sync excludes these bodies by
+   * default. Reflection evidence enters the engine via processReflection
+   * (src/core/practice/), never by direct mutation.
+   */
+  readonly reflections?: readonly ReflectionRecord[];
 }
 
 function zeroRecord<K extends string>(keys: readonly K[]): Record<K, number> {

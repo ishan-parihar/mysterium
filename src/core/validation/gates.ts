@@ -29,6 +29,7 @@ import { createInitialWorldState } from '../engines/CandidateGeneration.js';
 import { ALL_LINES } from '../domain/Line.js';
 import { delegateSession, emptyLedgerState } from '../orchestration/orchestratorTools.js';
 import { validateSpec } from '../orchestration/delegate.js';
+import { validatePracticeLoop } from '../practice/practiceTools.js';
 import type { DelegatedTool, DelegationSpec, ProjectionKey } from '../orchestration/types.js';
 import type { Stage } from '../domain/Stage.js';
 import {
@@ -567,6 +568,7 @@ export function runValidationSuite(tier: Tier = 'ci', personas: readonly Persona
   results.push(validateIdentityFirewall());
   results.push(validateDelegationDeterminism());
   results.push(validateDelegationToolsetFirewall());
+  results.push(validatePracticeLoop());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
