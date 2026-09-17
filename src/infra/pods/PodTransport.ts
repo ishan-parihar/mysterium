@@ -66,7 +66,9 @@ export class InMemoryPodCoordinator implements PodTransport {
       return { ok: false, reason: applied.reason, seq: this.log.length };
     }
     this.state = applied.state;
-    this.log.push(event);
+    // Idempotent no-ops (mutated: false) must not enter the replay log —
+    // at-least-once redelivery would otherwise inflate the history.
+    if (applied.mutated !== false) this.log.push(event);
     return { ok: true, seq: this.log.length };
   }
 

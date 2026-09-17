@@ -309,8 +309,12 @@ export function validatePodPrivacyWall(): import('../validation/gates.js').GateR
   }
 }
 
-/** Apply one event in serial order. Transport adapters call ONLY this. */
-export function applyEvent(state: PodState, event: SerializedEvent): { state: PodState; ok: boolean; reason?: string } {
+/** Apply one event in serial order. Transport adapters call ONLY this.
+ *  `mutated: false` marks an idempotent no-op (e.g. a duplicate join): the
+ *  state is unchanged and the transport must NOT append the event to the
+ *  replay log — otherwise at-least-once redelivery inflates the
+ *  authoritative history with no-op entries. */
+export function applyEvent(state: PodState, event: SerializedEvent): { state: PodState; ok: boolean; reason?: string; mutated?: boolean } {
   switch (event.type) {
     case 'form': {
       const formation = event.payload as unknown as PodFormationPayload;
@@ -318,7 +322,12 @@ export function applyEvent(state: PodState, event: SerializedEvent): { state: Po
       return { state: formPod(state, formation, founderId), ok: true };
     }
     case 'join': {
-      return joinPod(state, String(event.payload.playerId), event.occurredAtMs);
+      const before = state.pod?.members.length ?? -1;
+      const r = joinPod(state, String(event.payload.playerId), event.occurredAtMs);
+      if (r.ok && state.pod !== null && (r.state.pod?.members.length ?? -1) === before) {
+        return { ...r, mutated: false };
+      }
+      return r;
     }
     case 'ritual-start': {
       return startRitual(state, {

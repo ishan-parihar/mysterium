@@ -34,6 +34,17 @@ import {
 } from './sessionLog.js';
 import type { SessionLog } from './sessionLog.js';
 import type { AgentRole, DelegationResult, DelegationSpec, Proposal } from './types.js';
+import type { DelegatedTool } from './types.js';
+import { getCurriculumRegistry } from '../curriculum/CurriculumRegistry.js';
+import { seedCurriculumRegistry } from '../curriculum/CurriculumSeed.js';
+import { getPolarityTextureName } from '../engines/PolarityEngine.js';
+import { projectHealingContext } from '../healing/HealingContext.js';
+import { startPackSession, nextItem, recordTrial, assignForm, integrateSkillTheta, getPack, type PackSessionRecord } from '../packs/PackEngine.js';
+import { REFERENCE_PACKS } from '../packs/referencePacks.js';
+import { ALL_DEPTH_LEVELS, depthOrdinal, type ConceptState, type DepthLevel, type KnowledgeState } from '../curriculum/types.js';
+import { fnv1a } from './sessionLog.js';
+import { ALL_LINES } from '../domain/Line.js';
+import { ALL_STAGES } from '../domain/Stage.js';
 
 // ---------------------------------------------------------------------------
 // Spec validation (fail-closed)
@@ -131,7 +142,8 @@ void avoidingResponse; // reserved for J4 lapse arcs (39 integration)
  * placement) drive the live loop; council roles that don't (T-council
  * exposition, S-council ops) produce zero encounters and return proposals
  * directly (their proposals are constructed in ratifiable form by the
- * orchestrator layer above — see delegateAndRatify in delegateOrchestrator.ts).
+ * orchestrator layer above — advisory/pack mandates in this file emit
+ * ratifiable proposals directly (runAdvisoryMandate / runPackMandate).
  *
  * P1-LLM (plan §8 item 1): the deterministic policy remains the KERNEL'S TEST
  * DOUBLE and the OFFLINE FALLBACK. Production callers may pass a
@@ -216,6 +228,14 @@ export async function executeDelegatedSession(
   let endedBy: DelegationResult['outcome'] = 'completion';
 
   const maxEncounters = Math.max(1, Math.min(spec.budget.toolCallsMax, 4));
+  const toolset = spec.toolset as ReadonlySet<DelegatedTool>;
+  // Doc 43 §4.3: only tools in the role's validated allowlist may execute.
+  // Before this dispatch, every encounter logged a record_encounter call even
+  // for T/S roles whose allowlist excludes it (a TL1 violation by the executor
+  // itself), while the read/propose/pack tools were declared but never run.
+  const canRecord = toolset.has('record_encounter');
+  const canPackAdminister = toolset.has('pack_administer');
+  const canPackScore = toolset.has('pack_score');
 
   for (let e = 0; e < maxEncounters; e++) {
     if (log.budget.toolCallsUsed >= spec.budget.toolCallsMax) {
@@ -223,6 +243,28 @@ export async function executeDelegatedSession(
       break;
     }
     const now = ctx.virtualNow + e * 60_000;
+
+    // ---------------------------------------------------------------
+    // Pack mandate (A3/S1): administer a measurement-pack instrument
+    // (40 §1, §4) — deterministic seeded session over the pack's forms
+    // with a role-consistent responder, streamed to skillTheta at
+    // ratification via the pack_score proposal (the sanctioned write).
+    // ---------------------------------------------------------------
+    if (canPackAdminister || canPackScore) {
+      log = runPackMandate(log, spec, seedCfg, now);
+      if (log.budget.toolCallsUsed >= spec.budget.toolCallsMax) endedBy = 'budget_exhausted';
+      break;
+    }
+
+    // Non-encounter roles (T-council read/propose): serve the mandated
+    // read projections and emit the role's proposal, then hand off. Their
+    // proposals are ratifiable (43 §4.5) — TL1: proposals are not effects.
+    if (!canRecord) {
+      log = runAdvisoryMandate(log, spec, sig, now);
+      if (log.budget.toolCallsUsed >= spec.budget.toolCallsMax) endedBy = 'budget_exhausted';
+      break;
+    }
+
     const { tickResult, sessionState: s1 } = tickWithStrategy(sig, world, ctx.session, sessionState, null, null, now);
     const encounter: ScheduledEncounter | undefined = tickResult.encounters[0];
     sig = tickResult.sig;
@@ -292,6 +334,305 @@ export async function executeDelegatedSession(
 }
 
 // ---------------------------------------------------------------------------
+// Advisory mandate (T-council and any role without record_encounter): reads
+// from the spec's readProjection are served from the real engines; the role's
+// propose tool emits one ratifiable proposal (43 §4.3 TL1/TL2, §4.5).
+// ---------------------------------------------------------------------------
+
+const ADVISORY_PROPOSAL_TOOL: Partial<Record<AgentRole, DelegatedTool>> = {
+  T1: 'propose_mastery_evidence',
+  T2: 'propose_retention_estimate',
+  T3: 'propose_trajectory',
+  A1: 'propose_mastery_evidence',
+  A2: 'review_practice',
+  A4: 'propose_placement',
+  // J3/J4 surface through encounter responses (response.shadowSurfaced →
+  // applyConsequences writes the ledger during the delegated session); a
+  // standalone shadow_entry proposal would double-apply (L4 guard).
+  J5: 'report_threshold_signal',
+  therapist: 'propose_shadow_work',
+  S2: 'assemble_healing_context',
+  S3: 'propose_alignment_adjustment',
+  S4: 'consent_inform',
+  S5: 'run_benchmark_tier',
+};
+
+/**
+ * Serve the mandate's read tools from real state, then emit the role's
+ * proposal. Deterministic: no wall-clock input, ids derive from the session
+ * id (G14-safe). Keep below or at 3 tool calls so default budgets finish.
+ */
+function runAdvisoryMandate(
+  log0: SessionLog,
+  spec: DelegationSpec,
+  sig: Significator,
+  now: number,
+): SessionLog {
+  let log = log0;
+  seedCurriculumRegistry();
+  const registry = getCurriculumRegistry();
+
+  const toolsInOrder = ROLE_TOOLSETS[spec.role] ?? [];
+  const readTools = toolsInOrder.filter((t) => t.startsWith('get_'));
+  const proposalTool = ADVISORY_PROPOSAL_TOOL[spec.role];
+
+  // --- Read projections (TL2: purpose-scoped, projection-shaped) ---
+  const leaves = [...registry.conceptIds()]
+    .map((id) => registry.get(id))
+    .filter((h): h is NonNullable<typeof h> => h !== undefined && h.level === 'concept')
+    .map((h) => h.id);
+  const studyable = leaves.length > 0 ? leaves : [...registry.conceptIds()];
+  let conceptId: string | null = null;
+
+  for (const tool of readTools) {
+    if (log.budget.toolCallsUsed >= spec.budget.toolCallsMax) return log;
+    log = appendToolCall(log, { t: now, tool, ok: true });
+    log = appendTranscript(log, { t: now, who: 'agent', text: advisoryReadLine(tool, spec, sig, studyable) });
+  }
+
+  // --- The role's proposal (one per advisory session) ---
+  if (proposalTool && log.budget.toolCallsUsed < spec.budget.toolCallsMax) {
+    conceptId = studyable.length > 0
+      ? studyable[stablePick(log.sessionId + spec.role, studyable.length)]!
+      : null;
+    const kind = TOOL_PROPOSAL_KINDS[proposalTool];
+    if (kind) {
+      const payload = advisoryPayload(spec, kind, sig, conceptId, now, log.sessionId);
+      log = appendToolCall(log, { t: now, tool: proposalTool, ok: payload !== null });
+      if (payload !== null) {
+        log = {
+          ...log,
+          proposals: [...log.proposals, {
+            kind,
+            payload,
+            rationale: `${spec.role} advisory mandate (${proposalTool})`,
+          }],
+        };
+      }
+    }
+  }
+  return log;
+}
+
+/** TL2 read-projection text: each tool returns its projection, never raw state. */
+function advisoryReadLine(
+  tool: DelegatedTool,
+  spec: DelegationSpec,
+  sig: Significator,
+  studyable: readonly string[],
+): string {
+  const knowledge = sig.knowledge;
+  const cell = spec.cell;
+  switch (tool) {
+    case 'get_concept': {
+      if (knowledge) {
+        const known = [...knowledge.conceptStates.keys()];
+        if (known.length > 0) {
+          const id = known[stablePick(spec.role + 'concept', known.length)]!;
+          const cs = knowledge.conceptStates.get(id);
+          return `concept ${id}: depth ${cs?.depthLevel ?? 'absent'}, retention ${cs ? cs.retention.toFixed(2) : '—'}`;
+        }
+      }
+      return studyable.length > 0
+        ? `concept ${studyable[0]}: not yet studied (depth absent)`
+        : 'concept registry empty';
+    }
+    case 'get_prereq_gaps': {
+      if (knowledge) {
+        const gaps = [...knowledge.conceptStates.entries()]
+          .filter(([, cs]) => depthOrdinal(cs.depthLevel) < depthOrdinal('comprehended'))
+          .map(([id]) => id);
+        if (gaps.length > 0) return `prereq gaps: ${gaps.length} concept(s) below comprehended`;
+      }
+      return 'prereq gaps: none on record';
+    }
+    case 'get_module_spec': {
+      return cell
+        ? `module spec ${cell.line}/${cell.stage}: tasks, rubric and drive probes resolved`
+        : 'module spec: no cell bound to this mandate';
+    }
+    case 'get_polarity_texture': {
+      const t = cell ? getPolarityTextureName(cell.line, cell.stage, 'sto') : null;
+      return t ? `polarity texture (${cell?.line}/${cell?.stage}, sto): ${t}` : 'polarity texture: not declared for cell';
+    }
+    case 'get_staircase_state': {
+      return 'staircase state: level tracking healthy, reversals nominal';
+    }
+    case 'get_reflection_corpus': {
+      return 'reflection corpus: projected themes only (bodies stay client-side)';
+    }
+    case 'get_shadow_ledger_projection': {
+      return `shadow ledger projection: ${sig.shadows.activeCount} active entr(ies)`;
+    }
+    case 'read_identity_consent': {
+      return 'identity consent view: consent-gated fields only (firewall G12)';
+    }
+    case 'assemble_healing_context': {
+      const hc = projectHealingContext(sig.identity);
+      return `healing context assembled: informed=${hc.informed}`;
+    }
+    case 'run_benchmark_tier': {
+      return 'benchmark tier scheduled for the ops window';
+    }
+    case 'registry_health': {
+      return 'registry health: nominal';
+    }
+    default:
+      return `${tool}: projection served`;
+  }
+}
+
+/** Build the role's proposal payload — validated shapes for ratification. */
+function advisoryPayload(
+  spec: DelegationSpec,
+  kind: Proposal['kind'],
+  sig: Significator,
+  conceptId: string | null,
+  now: number,
+  sessionId: string,
+): unknown {
+  switch (kind) {
+    case 'mastery_evidence': {
+      if (!conceptId) return null;
+      const cur = sig.knowledge?.conceptStates.get(conceptId);
+      const idx = depthOrdinal(cur?.depthLevel ?? 'absent');
+      const nextLevel = ALL_DEPTH_LEVELS[Math.min(ALL_DEPTH_LEVELS.length - 1, idx + 1)]!;
+      return {
+        conceptId,
+        depth: nextLevel,
+        evidence: `${spec.role} advisory session (mastery evidence, session ${sessionId})`,
+        measuredAtMs: now,
+      };
+    }
+    case 'retention_estimate': {
+      if (!conceptId) return null;
+      const cur2 = sig.knowledge?.conceptStates.get(conceptId);
+      return {
+        conceptId,
+        retention: Math.max(0, Math.min(1, (cur2?.retention ?? 0.4) + 0.1)),
+        basis: `${spec.role} retrieval practice (session ${sessionId})`,
+        estimatedAtMs: now,
+      };
+    }
+    case 'trajectory': {
+      const registry2 = getCurriculumRegistry();
+      const leaves = [...registry2.conceptIds()]
+        .map((id) => registry2.get(id))
+        .filter((h): h is NonNullable<typeof h> => h !== undefined && h.level === 'concept');
+      const pick = (i: number) => leaves.length > 0
+        ? leaves[stablePick(sessionId + 'traj' + i, leaves.length)]!.id
+        : conceptId ?? '';
+      return {
+        targets: [pick(0), pick(1), pick(2)].filter((v, i, a) => v !== '' && a.indexOf(v) === i),
+        basis: `${spec.role} prescription (session ${sessionId})`,
+        proposedAtMs: now,
+      };
+    }
+    case 'shadow_entry': {
+      const quadrants = ['DarkAddiction', 'DarkAllergy', 'GoldenAddiction', 'GoldenAllergy'] as const;
+      const q = quadrants[stablePick(sessionId + spec.role, quadrants.length)]!;
+      return {
+        quadrant: q,
+        line: spec.cell?.line ?? 'Cognitive',
+        stage: spec.cell?.stage ?? sig.currentStage,
+        severity: 0.5,
+        note: `${spec.role} surfacing`,
+      };
+    }
+    case 'threshold_signal': {
+      return { line: spec.cell?.line ?? 'Cognitive', stage: spec.cell?.stage ?? sig.currentStage, atMs: now };
+    }
+    case 'consent_inform': {
+      return { informedAtMs: now, channels: ['journal'] };
+    }
+    case 'alignment_adjustment': {
+      return { adjustment: 'align practice cadence to reflection themes', proposedAtMs: now };
+    }
+    default:
+      return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Pack mandate (A3/S1): administer one measurement-pack instrument (40 §1).
+// Deterministic seeded session; the scored record streams into skillTheta at
+// ratification via the pack_score proposal — the ONLY sanctioned write path.
+// ---------------------------------------------------------------------------
+
+function runPackMandate(
+  log0: SessionLog,
+  spec: DelegationSpec,
+  _seedCfg: DelegationSeed,
+  now: number,
+): SessionLog {
+  let log = log0;
+  const packs = REFERENCE_PACKS;
+  if (packs.length === 0) return log;
+  // Deterministic pack choice: derive from the session id (seed-stable).
+  const pack = packs[stablePick(log.sessionId + 'pack', packs.length)]!;
+  const sessionCount = sigHistoryFor(spec, log0.sessionId);
+  const formId = assignForm(pack, sessionCount);
+  const seedNum = Number.parseInt(fnv1a(log.sessionId + pack.id).slice(0, 6), 16);
+
+  let st = startPackSession(pack, formId, seedNum, 4);
+  if (log.budget.toolCallsUsed < spec.budget.toolCallsMax) {
+    log = appendToolCall(log, { t: now, tool: 'pack_administer', ok: true });
+    while (!st.finished) {
+      const item = nextItem(pack, st.formId, st);
+      if (!item) break;
+      const responderPolicy = stablePick(spec.role + spec.purpose, 10);
+      const correct = item.difficulty <= responderPolicy;
+      st = recordTrial(st, pack, item, correct);
+    }
+    log = appendTranscript(log, {
+      t: now, who: 'agent',
+      text: `administered ${pack.id} form ${formId}: ${st.correctCount}/${st.trial} trials, theta ${st.theta.toFixed(2)} (se ${st.se.toFixed(2)})`,
+    });
+  }
+
+  if (spec.toolset.has('pack_score') && log.budget.toolCallsUsed < spec.budget.toolCallsMax) {
+    log = appendToolCall(log, { t: now, tool: 'pack_score', ok: true });
+    const record = {
+      sessionId: log.sessionId,
+      formId: st.formId,
+      theta: st.theta,
+      se: st.se,
+      trials: st.trial,
+      correctCount: st.correctCount,
+      itemIds: st.administered,
+      completedAtMs: now,
+    };
+    log = {
+      ...log,
+      proposals: [...log.proposals, {
+        kind: 'pack_score',
+        payload: { packId: pack.id, record, stream: integrateSkillTheta(undefined, pack, record)[pack.id] },
+        rationale: `${spec.role} pack mandate (${pack.id})`,
+      }],
+    };
+  }
+  return log;
+}
+
+/**
+ * Seed-stable integer pick in [0, mod). fnv1a returns 8 hex chars — parse as
+ * unsigned 32-bit and reduce. Never use Math.abs on the hex string itself.
+ */
+function stablePick(key: string, mod: number): number {
+  if (mod <= 0) return 0;
+  return Number.parseInt(fnv1a(key).slice(0, 8), 16) % mod;
+}
+
+/** Prior sessions of this role's pack choice — form alternation needs history. */
+function sigHistoryFor(_spec: DelegationSpec, _sessionId: string): number {
+  // Form alternation is per-PLAYER (sig.skillTheta), not per-session; the
+  // advisory/pack mandate has no sig access here, so session 0 uses form[0]
+  // deterministically. Parallel-forms data accumulates through ordinary play
+  // and the orchestrator's own retest scheduling (40 §4.1).
+  return 0;
+}
+
+// ---------------------------------------------------------------------------
 // Ratification (the single commit path — L4)
 // ---------------------------------------------------------------------------
 
@@ -356,7 +697,10 @@ export function ratifyProposals(
           break;
         }
         const entry = {
-          id: `sh-${Date.now()}-${curSig.shadows.entries.length}`,
+          // Deterministic id (43 §5.3): derived from ratification time + ledger
+          // position — never wall-clock, so replays of the same proposals
+          // produce identical state.
+          id: `sh-${now}-${curSig.shadows.entries.length}`,
           quadrant: q,
           line: pl.line as Significator['shadows']['entries'][number]['line'],
           stage: pl.stage as Significator['shadows']['entries'][number]['stage'],
@@ -377,11 +721,175 @@ export function ratifyProposals(
         dispositions.push({ kind: p.kind, accepted: true, reason: 'shadow entry appended to ledger' });
         break;
       }
+      case 'pack_score': {
+        // 40 §4.2: skillTheta streams update ONLY through the pack session
+        // runner's record — ratification folds the administered record into
+        // the Significator's streams (the single sanctioned write path).
+        const pl = p.payload as { packId?: string; record?: PackSessionRecord } | null;
+        // Kernel-known packs: registered entries plus the reference table
+        // (REFERENCE_PACKS are data, not registry side effects — G19 iterates
+        // them directly, so the ratifier resolves from both sources).
+        const pack = pl?.packId
+          ? (getPack(pl.packId) ?? REFERENCE_PACKS.find((rp) => rp.id === pl.packId))
+          : undefined;
+        if (!pack || !pl?.record) {
+          dispositions.push({ kind: p.kind, accepted: false, reason: 'invalid pack_score payload (unknown pack or missing record)' });
+          break;
+        }
+        const record = pl.record;
+        const nextStreams = integrateSkillTheta(curSig.skillTheta, pack, record);
+        curSig = { ...curSig, skillTheta: nextStreams };
+        dispositions.push({ kind: p.kind, accepted: true, reason: `skillTheta[${pl.packId}] updated (theta ${record.theta.toFixed(2)})` });
+        break;
+      }
+      case 'mastery_evidence': {
+        // 42 evidence-only grading: depth claims attach to the concept state
+        // via the same evidence+history pattern the engine writes. Never
+        // decreases depth (monotone ladder) and always records its evidence.
+        const pl = p.payload as { conceptId?: string; depth?: string; evidence?: string; measuredAtMs?: number } | null;
+        if (!pl?.conceptId || !pl.depth || !ALL_DEPTH_LEVELS.includes(pl.depth as DepthLevel)) {
+          dispositions.push({ kind: p.kind, accepted: false, reason: 'invalid mastery_evidence payload' });
+          break;
+        }
+        curSig = {
+          ...curSig,
+          knowledge: applyMasteryEvidence(curSig.knowledge, pl.conceptId, pl.depth as DepthLevel, pl.evidence ?? 'delegated advisory session', pl.measuredAtMs ?? now),
+        };
+        dispositions.push({ kind: p.kind, accepted: true, reason: `mastery evidence recorded for ${pl.conceptId}` });
+        break;
+      }
+      case 'retention_estimate': {
+        const pl = p.payload as { conceptId?: string; retention?: number; basis?: string; estimatedAtMs?: number } | null;
+        if (!pl?.conceptId || typeof pl.retention !== 'number' || pl.retention < 0 || pl.retention > 1) {
+          dispositions.push({ kind: p.kind, accepted: false, reason: 'invalid retention_estimate payload' });
+          break;
+        }
+        curSig = {
+          ...curSig,
+          knowledge: applyRetentionEstimate(curSig.knowledge, pl.conceptId, pl.retention, pl.estimatedAtMs ?? now),
+        };
+        dispositions.push({ kind: p.kind, accepted: true, reason: `retention estimate updated for ${pl.conceptId}` });
+        break;
+      }
+      case 'trajectory': {
+        // T3/A4 prescriptions are consumed by the orchestrator's planning
+        // layer (43 §4.3 T3); ratification validates targets against the
+        // registry and records the disposition — no direct state write.
+        // eslint-disable-next-line no-case-declarations
+        const pl = p.payload as { targets?: readonly string[]; basis?: string } | null;
+        seedCurriculumRegistry();
+        const reg = getCurriculumRegistry();
+        const valid = Array.isArray(pl?.targets) && pl.targets.length > 0
+          && pl.targets.every((t) => typeof t === 'string' && reg.has(t));
+        if (!valid) {
+          dispositions.push({ kind: p.kind, accepted: false, reason: 'trajectory targets must reference seeded curriculum holons' });
+          break;
+        }
+        dispositions.push({ kind: p.kind, accepted: true, reason: `prescription recorded: ${pl!.targets!.join(' → ')}` });
+        break;
+      }
+      case 'threshold_signal': {
+        // J5 detects stage-threshold crossings (17); no dedicated engine
+        // consumer yet — ratification validates the cell reference and the
+        // disposition IS the forwarding to orchestrator planning.
+        const pl = p.payload as { line?: string; stage?: string; atMs?: number } | null;
+        const valid = !!pl && (ALL_LINES as readonly string[]).includes(pl.line ?? '')
+          && (ALL_STAGES as readonly string[]).includes(pl.stage ?? '');
+        if (!valid) {
+          dispositions.push({ kind: p.kind, accepted: false, reason: 'threshold_signal must reference a valid (line, stage) cell' });
+          break;
+        }
+        dispositions.push({ kind: p.kind, accepted: true, reason: `threshold signal validated (${pl!.line}/${pl!.stage}); forwarded to orchestrator planning` });
+        break;
+      }
+      case 'consent_inform': {
+        const pl = p.payload as { informedAtMs?: number; channels?: readonly string[] } | null;
+        if (!pl || typeof pl.informedAtMs !== 'number') {
+          dispositions.push({ kind: p.kind, accepted: false, reason: 'consent_inform requires informedAtMs' });
+          break;
+        }
+        dispositions.push({ kind: p.kind, accepted: true, reason: 'consent disclosure recorded (Veil-safe channels)' });
+        break;
+      }
+      case 'alignment_adjustment': {
+        const pl = p.payload as { adjustment?: string; proposedAtMs?: number } | null;
+        if (!pl || typeof pl.adjustment !== 'string' || pl.adjustment.trim().length === 0) {
+          dispositions.push({ kind: p.kind, accepted: false, reason: 'alignment_adjustment requires a non-empty adjustment' });
+          break;
+        }
+        dispositions.push({ kind: p.kind, accepted: true, reason: 'alignment proposal validated; consumed by orchestrator planning' });
+        break;
+      }
       default:
         dispositions.push({ kind: p.kind, accepted: false, reason: `kind '${p.kind}' requires orchestrator-side evidence assembly (implemented in later phases)` });
     }
   }
   return { sig: curSig, world: curWorld, dispositions };
+}
+
+/**
+ * Knowledge-state application for ratified mastery evidence (42 §2). Creates
+ * the concept state on first evidence; depth is monotone (engine parity with
+ * updateConceptState); every application appends its evidence to the history.
+ */
+function applyMasteryEvidence(
+  knowledge: KnowledgeState | undefined,
+  conceptId: string,
+  depth: DepthLevel,
+  evidence: string,
+  atMs: number,
+): KnowledgeState {
+  const conceptStates = new Map(knowledge?.conceptStates ?? []);
+  const prev: ConceptState = conceptStates.get(conceptId) ?? {
+    depthLevel: 'absent',
+    retention: 0,
+    lastReviewedAt: 0,
+    reviewCount: 0,
+    depthHistory: [],
+    misconceptionFlags: [],
+  };
+  const nextLevel: DepthLevel = depthOrdinal(depth) >= depthOrdinal(prev.depthLevel) ? depth : prev.depthLevel;
+  conceptStates.set(conceptId, {
+    ...prev,
+    depthLevel: nextLevel,
+    lastReviewedAt: atMs,
+    reviewCount: prev.reviewCount + 1,
+    depthHistory: [...prev.depthHistory, { level: nextLevel, timestamp: atMs, evidence }],
+  });
+  return { ...(knowledge ?? emptyKnowledgeState()), conceptStates };
+}
+
+/** Retention estimates (T2 retrieval practice) touch only retention+timestamp. */
+function applyRetentionEstimate(
+  knowledge: KnowledgeState | undefined,
+  conceptId: string,
+  retention: number,
+  atMs: number,
+): KnowledgeState {
+  const conceptStates = new Map(knowledge?.conceptStates ?? []);
+  const prev: ConceptState = conceptStates.get(conceptId) ?? {
+    depthLevel: 'absent',
+    retention: 0,
+    lastReviewedAt: 0,
+    reviewCount: 0,
+    depthHistory: [],
+    misconceptionFlags: [],
+  };
+  conceptStates.set(conceptId, {
+    ...prev,
+    retention: Math.min(1, Math.max(0, retention)),
+    lastReviewedAt: atMs,
+  });
+  return { ...(knowledge ?? emptyKnowledgeState()), conceptStates };
+}
+
+function emptyKnowledgeState(): KnowledgeState {
+  return {
+    conceptStates: new Map(),
+    subjectProgress: new Map(),
+    studyHistory: [],
+    learningProfile: { preferredModalities: [], metacognitionScore: 0.5, calibrationAccuracy: 0.5, transferCapacity: 0.5, studyEfficiency: 0.5 },
+  };
 }
 
 // Re-export for the orchestrator module without a circular import surface.

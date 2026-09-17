@@ -26,6 +26,11 @@ import {
 } from '../../src/core/credential/ClaimLedger.js';
 import { llmChoicePolicy } from '../../src/core/orchestration/choicePolicy.js';
 import { roleChoicePolicy } from '../../src/core/orchestration/delegate.js';
+import {
+  delegateSession, ratifyProposalsTool, emptyLedgerState,
+} from '../../src/core/orchestration/orchestratorTools.js';
+import { ROLE_TOOLSETS, type DelegatedTool, type DelegationSpec } from '../../src/core/orchestration/types.js';
+import { createInitialWorldState } from '../../src/core/engines/CandidateGeneration.js';
 import type { ScheduledEncounter } from '../../src/core/domain/EncounterSpecNew.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
 import { ALL_LINES } from '../../src/core/domain/Line.js';
@@ -92,6 +97,37 @@ describe('P2: PodDurableObject transport (38 M1)', () => {
     const snap = await transport.snapshot();
     expect(snap.pod?.members.length).toBe(2);
     expect((await transport.events()).length).toBe(2);
+  });
+
+  it('duplicate join is an accepted no-op that never enters the replay log', async () => {
+    const pod = new PodDurableObject();
+    await pod.handleRpc({ kind: 'apply', event: form('pod-dup') });
+    await pod.handleRpc({ kind: 'apply', event: join('b', 1001) });
+    const before = await pod.handleRpc({ kind: 'events' });
+    // At-least-once redelivery of the same join (retry path).
+    const again = await pod.handleRpc({ kind: 'apply', event: join('b', 1001) });
+    expect(again.kind).toBe('applied');
+    const after = await pod.handleRpc({ kind: 'events' });
+    expect(after.events?.length).toBe(before.events?.length);
+    // And the state stays coherent: still 2 members, replayed identically.
+    const snap = await pod.handleRpc({ kind: 'snapshot' });
+    expect(snap.state?.pod?.members.length).toBe(2);
+  });
+
+  it('over-cap concurrent joins all reject without corrupting state or log', async () => {
+    const pod = new PodDurableObject();
+    await pod.handleRpc({ kind: 'apply', event: form('pod-cap') });
+    // Pod cap is 9 → 8 joins fit; fire 20, expect exactly 8 applied + 12 rejected.
+    const results = await Promise.all(
+      Array.from({ length: 20 }, (_, i) =>
+        pod.handleRpc({ kind: 'apply', event: join(`c${i}`, 1000 + i) })),
+    );
+    const appliedCount = results.filter((r) => r.kind === 'applied').length;
+    expect(appliedCount).toBe(8);
+    const snap = await pod.handleRpc({ kind: 'snapshot' });
+    expect(snap.state?.pod?.members.length).toBe(9); // founder + 8
+    const hist = await pod.handleRpc({ kind: 'events' });
+    expect(hist.events?.length).toBe(9); // form + 8 joins; rejections leave no trace
   });
 
   it('InMemoryPodCoordinator restore() rehydrates state + log', async () => {
@@ -444,5 +480,100 @@ describe('P5: RPL partner-institution export (plan §8 item 5)', () => {
     for (const banned of ['identityProfile', 'shadow', 'theta.lastEncounter', 'altitudes']) {
       expect(raw.includes(banned), `portfolio contains '${banned}'`).toBe(false);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Dispatch parity (43 §4.3): delegated execution must honor the toolset —
+// record_encounter only for allowlisted roles; advisory read/propose tools
+// actually execute; pack mandates administer + score. Ratification applies
+// the new kinds (L4 single commit path).
+// ---------------------------------------------------------------------------
+
+describe('P6: toolset-driven dispatch (43 §4.3 executor conformance)', () => {
+  seedCurriculumRegistry();
+  const altitudes = Object.fromEntries(ALL_LINES.map((l) => [l, 'Red'])) as never;
+  const sig = createSignificator('dispatch-test', altitudes, 'Red');
+  const world = createInitialWorldState([{
+    id: 'h-Cognitive-Red', name: 'dispatch contact', kind: 'NPC',
+    line: 'Cognitive', stage: 'Red',
+    drives: { dominant: 'Agency', secondary: 'Eros', shadowQuadrant: null },
+    polarity: 'Sovereign', narrativeRole: 'test', relationships: [], active: true,
+  } as never]);
+  const session = { targetSessionLength: 5, encountersSoFar: 0, recentLines: [], sessionDurationMs: 0 };
+
+  const specFor = (role: keyof typeof ROLE_TOOLSETS, cell?: { line: string; stage: string }): DelegationSpec => ({
+    role: role as never,
+    ...(cell ? { cell: cell as never } : {}),
+    purpose: `dispatch test: ${role}`,
+    readProjection: new Set(['corpus.moduleSpec', 'curriculum.state'] as never),
+    toolset: new Set<DelegatedTool>(ROLE_TOOLSETS[role] as readonly DelegatedTool[]),
+    budget: { toolCallsMax: 4, virtualMsMax: 600_000 },
+  });
+
+  it('T1 advisory mandate: no record_encounter, proposal emitted, ratification writes knowledge', async () => {
+    const run = await delegateSession({ spec: specFor('T1'), sig, world, session, seed: 'd1', now: 1_000_000, ledger: emptyLedgerState() });
+    expect(run.ok).toBe(true);
+    expect(run.log.toolCalls.some((t) => t.tool === 'record_encounter')).toBe(false);
+    // Every logged tool is in the allowlist (the executor itself respects TL1).
+    expect(run.log.toolCalls.every((t) => ROLE_TOOLSETS.T1.includes(t.tool))).toBe(true);
+    expect(run.log.proposals.map((p) => p.kind)).toContain('mastery_evidence');
+
+    const rat = ratifyProposalsTool({ proposals: run.result?.proposals ?? [], sig, world, now: 1_100_000 });
+    const d = rat.dispositions.find((x) => x.kind === 'mastery_evidence');
+    expect(d?.accepted).toBe(true);
+    expect(rat.sig.knowledge?.conceptStates.size ?? 0).toBeGreaterThan(0);
+  });
+
+  it('T3 prescription: trajectory targets validate against the seeded registry', async () => {
+    const run = await delegateSession({ spec: specFor('T3'), sig, world, session, seed: 'd2', now: 1_000_000, ledger: emptyLedgerState() });
+    expect(run.log.proposals.map((p) => p.kind)).toContain('trajectory');
+    const rat = ratifyProposalsTool({ proposals: run.result?.proposals ?? [], sig, world, now: 1_100_000 });
+    expect(rat.dispositions.find((x) => x.kind === 'trajectory')?.accepted).toBe(true);
+  });
+
+  it('S1 pack mandate: administers, scores, and ratification folds skillTheta (40 §4.2)', async () => {
+    const run = await delegateSession({ spec: specFor('S1'), sig, world, session, seed: 'd3', now: 1_000_000, ledger: emptyLedgerState() });
+    const tools = run.log.toolCalls.map((t) => t.tool);
+    expect(tools).toContain('pack_administer');
+    expect(tools).toContain('pack_score');
+    expect(run.log.proposals.map((p) => p.kind)).toContain('pack_score');
+
+    const rat = ratifyProposalsTool({ proposals: run.result?.proposals ?? [], sig, world, now: 1_100_000 });
+    const d = rat.dispositions.find((x) => x.kind === 'pack_score');
+    expect(d?.accepted).toBe(true);
+    const streams = Object.keys(rat.sig.skillTheta ?? {});
+    expect(streams.length).toBe(1);
+    expect(rat.sig.skillTheta?.[streams[0]!]?.sessionCount).toBe(1);
+  });
+
+  it('J1 still drives encounters and logs only allowlisted tools (regression guard)', async () => {
+    const run = await delegateSession({
+      spec: specFor('J1', { line: 'Cognitive', stage: 'Red' }),
+      sig, world, session, seed: 'd4', now: 1_000_000, ledger: emptyLedgerState(),
+    });
+    expect(run.ok).toBe(true);
+    expect(run.encountersExecuted).toBe(1);
+    expect(run.log.toolCalls.every((t) => ROLE_TOOLSETS.J1.includes(t.tool))).toBe(true);
+  });
+
+  it('G14 shape holds for advisory mandates: same seed ⇒ byte-identical log', async () => {
+    const a = await delegateSession({ spec: specFor('T2'), sig, world, session, seed: 'det', now: 1_000_000, ledger: emptyLedgerState() });
+    const b = await delegateSession({ spec: specFor('T2'), sig, world, session, seed: 'det', now: 1_000_000, ledger: emptyLedgerState() });
+    expect(JSON.stringify(a.log)).toBe(JSON.stringify(b.log));
+    const c = await delegateSession({ spec: specFor('T2'), sig, world, session, seed: 'det-2', now: 1_000_000, ledger: emptyLedgerState() });
+    expect(JSON.stringify(a.log)).not.toBe(JSON.stringify(c.log));
+  });
+
+  it('ratifier rejects malformed payloads fail-closed (pack_score / mastery / retention / threshold)', () => {
+    const bad = [
+      { kind: 'pack_score' as const, payload: { packId: 'nonexistent.pack' }, rationale: 'x' },
+      { kind: 'mastery_evidence' as const, payload: { conceptId: 'x', depth: 'not-a-level' }, rationale: 'x' },
+      { kind: 'retention_estimate' as const, payload: { conceptId: 'x', retention: 7 }, rationale: 'x' },
+      { kind: 'threshold_signal' as const, payload: { line: 'Nope', stage: 'Red' }, rationale: 'x' },
+      { kind: 'trajectory' as const, payload: { targets: ['not.a.holon'] }, rationale: 'x' },
+    ];
+    const rat = ratifyProposalsTool({ proposals: bad, sig, world, now: 1_100_000 });
+    for (const d of rat.dispositions) expect(d.accepted).toBe(false);
   });
 });

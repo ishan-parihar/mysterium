@@ -96,7 +96,7 @@ export interface Proposal {
   readonly kind:
     | 'mastery_evidence' | 'shadow_entry' | 'trajectory' | 'retention_estimate'
     | 'alignment_adjustment' | 'encounter_record' | 'threshold_signal'
-    | 'consent_inform';
+    | 'consent_inform' | 'pack_score';
   readonly payload: unknown;
   readonly rationale: string;
 }
@@ -159,4 +159,5 @@ export const TOOL_PROPOSAL_KINDS: Readonly<Record<string, Proposal['kind']>> = {
   propose_alignment_adjustment: 'alignment_adjustment',
   consent_inform: 'consent_inform',
   review_practice: 'alignment_adjustment',
+  pack_score: 'pack_score',
 };
