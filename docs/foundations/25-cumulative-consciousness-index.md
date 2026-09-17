@@ -634,7 +634,7 @@ The CCI sits between the Significator (raw state) and the auto-mode engine (sess
 | Existing doc | What it provides | What CCI adds |
 |---|---|---|
 | Foundations/16 | The raw Significator data model | Composite scoring across all data |
-| Foundations/24 section 3.2 | Per-encounter priority formula (7 criteria) | Session-level aggregate (5 dimensions) |
+| Foundations/24 section 3.2 | Per-encounter priority formula (8 criteria — incl. mastery-sequence alignment) | Session-level aggregate (5 dimensions) |
 | Foundations/17 | Binary transformation threshold check | Continuous readiness gradient |
 | Foundations/19 section 4 | 4-level polarity structure | Single normalised polarity clarity score |
 | Foundations/10 | Shadow theory and detection | Quantified shadow pressure classification |

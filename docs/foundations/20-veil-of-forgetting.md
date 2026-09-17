@@ -290,3 +290,4 @@ This document defines the *principle* of the Veil and its design implications. I
 | Polarity tracking — the measurement that must remain hidden | foundations/19 |
 | How encounters surface implicit signals without breaking the Veil | foundations/21 (Incarnation Architecture) |
 | The LLM translation layer that converts measurement into narrative | foundations/22 (Holon Context Engine) |
+| Auditor projections — the consent-brokered, METRIC-BEARING surface for guardians (the Veil binds the player surface only; §10.3 rule 6 of 16) | foundations/16 §2.4 + §10.4 (rendered by 33 §7) |

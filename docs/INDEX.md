@@ -104,7 +104,7 @@
 > auditor render surfaces; no parallel reporting infrastructure exists or may be added.
 > Knowledge-depth mastery sequencing rides the ONE encounter-scheduler formula (24 §3.2.8)
 > fed by depth closure + blind-spot adjacency (31 §3.5a) and the linter's E-class depth
-> compilation gate (32); implicit-assessment rubrics require validation (12 §5.4 RV1–RV6,
+> compilation gate (32); implicit-assessment rubrics require validation (12 §5.4 RV1–RV7,
 > incl. below-stage holonic diagnosis) before their signals can steer. STO/STS
 > long-horizon propagation (19) and human-handoff flows (43) are explicitly deferred.
 

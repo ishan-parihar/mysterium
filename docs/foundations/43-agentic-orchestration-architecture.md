@@ -265,7 +265,7 @@ the existing 13 unified tools; each sub-agent gets only what its role requires.
 
 | Council | Tools |
 |---|---|
-| Teacher | `get_concept` (read-only), `get_prereq_gaps`, `propose_mastery_evidence`, `propose_trajectory` (T3) |
+| Teacher | `get_concept` (read-only), `get_prereq_gaps` (reads the 31 §3.5a depth-closure computation — unsatisfied DEPTH edges, not mere existence), `propose_mastery_evidence`, `propose_trajectory` (T3) |
 | Assessor | `get_staircase_state`, `submit_depth_evidence`, `submit_retention_estimate`, `flag_anomaly` |
 | Journey-Guide | `get_module_spec` (concept-draft, read-only), `get_polarity_texture` (23), `record_encounter`, `propose_shadow_entry`, `report_threshold_signal` |
 | Therapist | `get_shadow_ledger` (read-only projection), `propose_shadow_work`, `route_to_safety`, `note_arc` |
@@ -368,7 +368,21 @@ profiling-diagnostics plus the validated agentic loop (12 §5.4) — take build 
 it simply does not yet dial a human. Ownership stays here; no other document may claim it.
 - **Consent is un-delegatable in the granting direction.** Only the S4 Data Warden may
   *execute* consent changes, and only with the player's direct action; other agents may
-  only *inform* the player about consent.
+  only *inform* the player about consent. Auditor linkage extends this: for adult
+  players, the auditor-grant is the player's own consent action; for young players,
+  the guardian IS the consent-holder-of-record (and the player's own assent is
+  additionally required where applicable). Both routes run through the same consent
+  ledger (16 §2.4) and both are revocable at every render (AP4).
+
+  <br>**DEFERRED to the 38-era (2026-09-17):** minor-guardianship product design —
+  identity attestation, custody-of-consent surfaces, age-assurance mechanics, and
+  supervised-pod integration (38 §4.5). Until the mechanism exists, the auditor layer
+  (16 §2.4/§10.4, 33 §7) serves DOCUMENTED-GUARDIAN consent flows only; this is a
+  product-surface deferral, not an architectural dependency of the consent model.
+- **Auditor requests are un-delegatable in the same direction.** The auditor liaison's
+  `receive_auditor_request` converts guardian proposals into DelegationSpecs (16 AP5);
+  no auditor, and no council member acting for an auditor, may write profile state
+  directly.
 - **The competence/identity firewall holds across agents.** No agent in the measurement
   path (A-council, J2, J3, packs) receives HealingContext inputs; no agent in the
   healing path receives measurement outputs as player-visible content (42 §1.1). The

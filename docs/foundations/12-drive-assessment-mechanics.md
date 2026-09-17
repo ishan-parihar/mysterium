@@ -460,7 +460,18 @@ protocol defines what "validated" means for BOTH the drive/shadow rubrics (this 
 10, 23) and the stage-assessment rubrics (modules' capacity rubrics). A rubric that
 has not passed is **log-only**: its signals may be recorded but receive zero
 scheduling weight, zero altitude influence, and zero ledger writes with resolution
-impact.
+impact (the full gate list: RV1–RV7).
+
+Two validity accounts, stated plainly:
+- **Psychometric validity** (the active-stage account): the instrument must be
+  reliable, cover its construct, resist gaming, and place the subject at the active
+  stage within tolerance — gates RV1, RV3, RV4, RV6.
+- **Shadow validity** (the below-stage, holonic account): the instrument must
+  reproduce the 4-quadrant shadow model (10) with high precision — an allergy must
+  never classify as an addiction, dark never as golden — because every downstream
+  consumer keys on the quadrant (the Distortion Ledger's `quadrant` field, 16 §3.1;
+  the heal/evolve vs evolve/heal vector selection, AGENTS.md §5.3). Gate RV2 makes
+  this a measured property, and RV5+RV6 extend it below and at the active stage.
 
 #### 5.4.1 The validation gates
 
@@ -469,11 +480,12 @@ A rubric is valid for steering when ALL gates pass:
 | # | Gate | Requirement | Method |
 |---|---|---|---|
 | **RV1** | Inter-rater agreement | ≥ 2 independent raters (LLM instances with distinct seeds/configs) score a benchmark response set; Cohen's κ ≥ 0.6 (substantial) for categorical calls (shadow quadrant, stage band), ICC ≥ 0.65 for continuous scores | offline harness over a frozen benchmark set per rubric |
-| **RV2** | Construct coverage | The rubric's benchmark set exercises ALL response classes the rubric distinguishes — no class may be unreachable | benchmark-set audit (linter-checked: every score-band/quadrant has ≥ k exemplars) |
+| **RV2** | Construct coverage & shadow specificity | The rubric's benchmark set exercises ALL response classes the rubric distinguishes — no class may be unreachable; AND the rubric achieves ≥ 95% quadrant precision/recall on the benchmark set (a Dark-Allergy exemplar must never classify as Golden-*, an addiction never as an allergy — the 4-quadrant distinctions of 10 are load-bearing downstream) | benchmark-set audit (linter-checked: every score-band/quadrant has ≥ k exemplars) + quadrant-precision report |
 | **RV3** | Known-answer stability | Seeded synthetic personas with known drive/stage profiles score within tolerance (±0.15 for continuous, exact-band for categorical) across 3 repeat runs | deterministic persona fixtures (same machinery as the benchmark kernel, `src/core/validation/` precedent) |
 | **RV4** | Adversarial resistance | Prompt-injection and sycophancy probes (players flatter/deflect/manipulate) shift scores ≤ 0.1 from baseline on fixture personas | adversarial fixture suite |
 | **RV5** | Below-stage discrimination | On personas with KNOWN multi-stage profiles, the rubric correctly identifies resolved-vs-unresolved status at stages BELOW the active stage (the holonic diagnosis requirement — see §5.4.2) ≥ 75% of the time | staged-persona fixtures |
-| **RV6** | Drift monitoring | Once valid, a rolling κ/ICC on a rotating audit sample must stay above gate; fall below → rubric auto-reverts to log-only | runtime harness, kernel-gated |
+| **RV6** | Active-stage placement accuracy | On fixture personas with KNOWN active stages, the rubric's stage call lands within ±1 stage of ground truth (16 §11.1's onboarding tolerance) ≥ 90% of the time, and EXACTLY in ≥ 70% of cases — the active-stage account of validity | staged-persona fixtures (same run as RV5) |
+| **RV7** | Drift monitoring | Once valid, a rolling κ/ICC (and rolling quadrant precision per RV2) on a rotating audit sample must stay above gate; fall below → rubric auto-reverts to log-only | runtime harness, kernel-gated |
 
 #### 5.4.2 Holonic stage diagnosis (the below-stage requirement)
 
@@ -508,11 +520,11 @@ instruments can be trusted across all 64 cells.
 - **No one-time rubber stamp.** RV6 makes validity a maintained property, not a
   milestone.
 
-Phases: **RV0** — harness + benchmark fixtures for the 8 line × 4-drive core rubrics
-(§3); **RV1** — shadow-quadrant rubrics (10/23) + module capacity rubrics; **RV2** —
-runtime drift monitoring + kernel gate. Acceptance: a deliberately corrupted rubric
-(yawed scorer) fails RV1/RV3 in CI, and its signals demonstrably receive zero
-scheduling weight.
+Phases: **Phase RV-A** — harness + benchmark fixtures for the 8 line × 4-drive core
+rubrics (§3); **Phase RV-B** — shadow-quadrant rubrics (10/23) + module capacity
+rubrics; **Phase RV-C** — runtime drift monitoring + kernel gate. Acceptance: a
+deliberately corrupted rubric (yawed scorer) fails RV1/RV3 in CI, and its signals
+demonstrably receive zero scheduling weight.
 
 > **Relationship to 40 (uniqueness):** doc 40 validates *explicit competency packs*
 > (reliability of pack theta). THIS protocol validates *implicit assessment rubrics*

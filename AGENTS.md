@@ -99,7 +99,7 @@ docs/
 | foundations/25 | Cumulative Consciousness Index (CCI): the composite metric tracking integrated development across all lines and stages |
 | foundations/26 | Unified Core Architecture: the unified core architecture spec replacing ATB with assessment-module execution |
 | foundations/27 | Auto-Mode Strategy Engine: auto-mode session strategy generation for adaptive play |
-| foundations/12 | Drive assessment mechanics — PLUS the rubric-validation protocol (§5.4): what it means for an implicit-assessment rubric to be valid (RV1–RV6), incl. below-stage holonic diagnosis |
+| foundations/12 | Drive assessment mechanics — PLUS the rubric-validation protocol (§5.4): what it means for an implicit-assessment rubric to be valid (RV1–RV7 — reliability, coverage + shadow-quadrant specificity, known-answer stability, adversarial resistance, below-stage discrimination, active-stage placement, drift monitoring) |
 | foundations/16 | Significator architecture — PLUS the Auditor Projection Layer (§2.4, §10.4): the profiling system as the diagnostics dashboard for consented guardians, derived projections only |
 | foundations/33 | Dashboard render contract — learner surfaces (§1–5) AND auditor dashboards (§7): Guardian Mirror / Educator Desk / Therapeutic Pane, rendered from 16 §10.4 projections |
 | **-- Architecture / process docs --** ||

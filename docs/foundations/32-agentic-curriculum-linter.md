@@ -186,6 +186,18 @@ E-checks run FIRST in the Critic's pass (cheap, deterministic, fail-fast) and ga
 expensive judgment-based B/C checks — no module proceeds to pedagogical judgment
 until its depth skeleton compiles.
 
+**Hierarchy-level composition (added in re-audit, 2026-09-17).** E1–E7 are
+concept-level checks; the depth profile is holonic (30 §3.1), so the same validation
+composes upward without a second rule family:
+
+| **E8** | Hierarchy-level depth aggregation | Topic/Subject/Branch holons aggregate their descendants' depth profiles (coverage, prereq-depth edges, blind-spot maps, ceilings); an aggregate is valid only if every descendant passes E1–E7 AND the aggregate's journey envelope (E6) holds at its own altitude | Error (blocks registration at that level) |
+
+This gives the orchestrator-agents and the Teacher/Assessor/developmental/therapeutic
+sub-agents (43 §4.2) a depth-validated framework AT EVERY ALTITUDE of the
+module→course→subject hierarchy — a Branch-level read (e.g., an Educator Desk
+projection, 33 §7) is as trustworthy as a concept-level read because it passed the
+same gate shape one level up.
+
 ### 3.3 The Critic Agent's Analogy Validation
 
 When the Generator proposes an analogical connection between concepts in different domains, the Critic validates structural validity:

@@ -381,6 +381,14 @@ mode"). A concept's depth ladder is simply one more voice in the chorus the sche
 already conducts. The linter (32 E4/E5) guarantees every concept arrives with its
 blind-spot map and prereq depths populated, so this criterion never probes blind.
 
+**Bias compatibility (27):** `masteryAlignment` is a first-class member of
+`PriorityWeightBias` — auto-mode themes may bias it like any criterion (a study
+theme raises it; a restorative theme may lower it toward 0), and the §7.1 session
+arc's curriculum slots remain the per-session ceiling on how much of the arc
+mastery catalyst may occupy. Bias multiplies the weight before renormalisation
+(27 §2.3); it can never produce a curriculum-only session by itself — the
+developmental criteria are always present in the same formula.
+
 ### 3.3 Tie-breaking rules
 
 When multiple candidates score within 0.05 of each other, tie-breaking applies in order:

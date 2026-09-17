@@ -658,7 +658,7 @@ The uncrystallised player does not harvest. They remain in the 3rd-density loop.
 | The Holon Context Engine (LLM narration of consequences) | foundations/22 |
 | The Incarnation Architecture (master synthesis of all systems) | foundations/21 |
 | In-encounter drive-balancing mechanics | foundations/12 |
-| **Long-horizon consequence propagation (deferred 2026-09-17):** cross-session world-memory of choice trails, multi-session consequence arcs, persistent world-state deltas. §8's propagation engine remains defined at session/episode scale; extending it to a persistent world memory is explicitly DEFERRED — stage-development, evolution, and healing (profiling-diagnostics + the validated agentic loop, 12 §5.4) take build priority. Revisit after the rubric-validation phases (12 §5.4 RV0–RV2) are operational | post-MVP (this doc retains ownership — no other doc may claim it) |
+| **Long-horizon consequence propagation (deferred 2026-09-17):** cross-session world-memory of choice trails, multi-session consequence arcs, persistent world-state deltas. §8's propagation engine remains defined at session/episode scale; extending it to a persistent world memory is explicitly DEFERRED — stage-development, evolution, and healing (profiling-diagnostics + the validated agentic loop, 12 §5.4) take build priority. Revisit after the rubric-validation phases (12 §5.4 Phases RV-A–RV-C) are operational | post-MVP (this doc retains ownership — no other doc may claim it) |
 
 ---
 

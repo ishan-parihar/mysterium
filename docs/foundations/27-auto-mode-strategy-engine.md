@@ -21,7 +21,7 @@ Auto-mode answers a different question: **"What kind of session should this be?"
 No existing document covers this:
 
 - Foundations/24 defines the session arc (section 7.1: warmup/peak/cooldown proportions) but uses FIXED proportions based only on time available.
-- Foundations/24 defines the priority formula (section 3.2: 7 criteria with static weights) but does not adapt weights across a session.
+- Foundations/24 defines the priority formula (section 3.2: 8 criteria with static weights — seven developmental plus mastery-sequence alignment, §3.2.8) but does not adapt weights across a session.
 - Foundations/25 computes the CCI composite and session signals but does not ACT on them.
 - Foundations/16 defines the Significator's state but does not prescribe how to use it for session planning.
 
@@ -106,7 +106,7 @@ type WarmupFocus =
 
 ### 2.3 Priority weight biasing
 
-Auto-mode adjusts the scheduler's 7-criterion priority weights for the duration of the session. This is the primary mechanism by which session-level strategy shapes encounter selection.
+Auto-mode adjusts the scheduler's 8-criterion priority weights for the duration of the session. This is the primary mechanism by which session-level strategy shapes encounter selection.
 
 ```ts
 interface PriorityWeightBias {
@@ -120,6 +120,7 @@ interface PriorityWeightBias {
   driveCorrection: number;
   narrativeCoherence: number;
   sessionFit: number;
+  masteryAlignment: number;   // 24 §3.2.8 — knowledge-depth criterion; study themes boost it
 }
 
 // The scheduler applies biases before normalising weights
@@ -559,7 +560,7 @@ function refreshStrategy(
 | Scheduler mechanism | Auto-mode parameterisation |
 |---|---|
 | Session arc proportions (section 7.1) | `ParameterisedSessionArc` -- adjusts warmup/peak/cooldown based on CCI theme |
-| Priority weights (section 3.2) | `PriorityWeightBias` -- multipliers on the 7 default weights |
+| Priority weights (section 3.2) | `PriorityWeightBias` -- multipliers on the 8 default weights |
 | Intensity target per phase (section 7.1) | `intensityRange` per arc phase -- constrains encounter intensity |
 | Energy management (section 7.3) | `intensityBudget` from CCI + mid-session energy adjustment |
 | Encounter count per phase | `EncounterBudget` -- derived from time + theme requirements |
@@ -664,6 +665,7 @@ function generateFirstSessionStrategy(session: SessionContext): SessionStrategy 
       driveCorrection: 0.5,
       narrativeCoherence: 1.5,           // boost narrative for engagement
       sessionFit: 2.0,                   // heavily weight session comfort
+      masteryAlignment: 0.6,             // 24 §3.2.8 — de-emphasised in comfort sessions
     },
     encounterBudget: {
       totalTarget: 5,

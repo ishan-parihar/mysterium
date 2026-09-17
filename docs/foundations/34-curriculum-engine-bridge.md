@@ -141,9 +141,7 @@ The EncounterScheduler gains a new selection dimension:
    c. Find concepts at the right depth level for progression → schedule depth push
    d. Find cross-domain analogical connections → schedule integration
 3. Merge both candidate sets
-4. Apply priority formula (existing 7 criteria + 2 new criteria):
-   - Criterion 8: Knowledge urgency (how far below retention threshold?)
-   - Criterion 9: Depth progression opportunity (is the learner ready to go deeper?)
+4. Apply priority formula (the canonical 8 criteria of 24 §3.2 — incl. mastery-sequence alignment, which subsumes the two curriculum criteria sketched below):
 5. Rank and select top N
 ```
 

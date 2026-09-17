@@ -296,7 +296,7 @@ interaction only.
 | Surface | Audience | Projection | Visual hierarchy (default → drill-down) |
 |---|---|---|---|
 | **Guardian Mirror** | parents, guardians-of-record | `guardian` | wellbeing overview → milestone timeline → engagement pattern → theta-attention lines |
-| **Educator Desk** | teachers, tutors | `educator` | cohort-of-one overview (branch rungs) → depth distribution per subject → prerequisite gaps → mastered-sequence status → pack trajectories |
+| **Educator Desk** | teachers, tutors | `educator` | cohort-of-one overview (branch rungs) → depth distribution per subject → prerequisite gaps → mastery-sequence status (24 §3.2.8) → pack trajectories |
 | **Therapeutic Pane** | therapists, counsellors | `therapeutic` | integration-trend overview → surfacing trends per line×quadrant → integration history → drive-balance trend |
 
 All three share one shell (`AuditorShell.svelte`): identity banner (who is this view
