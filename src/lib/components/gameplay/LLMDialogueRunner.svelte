@@ -349,11 +349,13 @@
     gap: var(--mysterium-space-4);
   }
 
-  .question-meta {
+  /* Rendered inside <Cluster>/<Card>/<Stack> (child components) — scoped styles
+     can't reach them, so these selectors must be global. */
+  :global(.question-meta) {
     min-height: 1.5rem;
   }
 
-  .question-card {
+  :global(.question-card) {
     width: 100%;
   }
 
@@ -365,9 +367,8 @@
     white-space: pre-wrap;
   }
 
-  .options-list {
-    gap: var(--mysterium-space-2);
-  }
+  /* (Former .options-list rule removed: the <Stack gap="space-2"> prop already
+     sets the gap inline; the scoped rule could never reach the child element.) */
 
   .option {
     display: flex;
@@ -476,7 +477,8 @@
     color: var(--mysterium-accent);
   }
 
-  .question-actions {
+  /* Rendered inside <Cluster> (child component) — scoped styles can't reach it. */
+  :global(.question-actions) {
     margin-top: var(--mysterium-space-2);
   }
 </style>

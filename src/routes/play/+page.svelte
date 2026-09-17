@@ -372,7 +372,8 @@
     margin: 0;
   }
 
-  .encounter-card {
+  /* Rendered inside <Card> (child component) — scoped styles can't reach it. */
+  :global(.encounter-card) {
     animation: encounter-enter var(--mysterium-duration-base) var(--mysterium-ease-out) backwards;
   }
 
@@ -465,7 +466,8 @@
     text-align: center;
   }
 
-  .reflection-card {
+  /* Rendered inside <Card> (child component) — scoped styles can't reach it. */
+  :global(.reflection-card) {
     width: 100%;
   }
 

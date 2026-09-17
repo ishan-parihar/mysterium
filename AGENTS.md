@@ -23,15 +23,15 @@ docs/
 ├── foundations/          ← Theoretical substrate (pure theory + game-design translation)
 │   │
 │   ├── 00-integral-theory.md
-│   ├── 01-aqal-framework.md
-│   ├── 02-stages-of-consciousness.md
-│   ├── 03-lines-of-intelligence.md
-│   ├── 04-states-and-state-stages.md
+│   ├── 01-aqal-quadrants.md
+│   ├── 02-eight-stages-overview.md
+│   ├── 03-lines-of-intelligence-overview.md
+│   ├── 04-states-of-consciousness.md
 │   ├── 05-drives-and-polarities.md
 │   ├── 06-law-of-one-correspondence.md
-│   ├── 07-neuroscience-of-assessment.md
-│   ├── 08-psychophysics-and-adaptive-testing.md
-│   ├── 09-flow-and-engagement.md
+│   ├── 07-neuroscience-of-development.md
+│   ├── 08-psychophysics-and-staircase.md
+│   ├── 09-flow-and-engagement-theory.md
 │   │
 │   │  ── Lesser-cycle: Matrix / Potentiator / Catalyst / Experience ──
 │   ├── 10-shadow-and-pathology.md          ← 4-quadrant shadow model, drive-health, holonic return

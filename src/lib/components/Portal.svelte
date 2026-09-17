@@ -12,7 +12,10 @@
 
   let { children }: { children: Snippet } = $props();
 
-  let host: HTMLDivElement | null = null;
+  // $state is REQUIRED: onMount assigns host after initial render, and the
+  // {#if browser && host} block below must re-evaluate when it is set —
+  // without reactivity the portal content never mounts (svelte-check warn).
+  let host: HTMLDivElement | null = $state(null);
 
   onMount(() => {
     if (!browser) return;

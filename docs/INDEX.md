@@ -2,7 +2,7 @@
 
 > **Cross-references:** [[docs/architecture/00-mysterium-identity|Mysterium Identity]] · [[docs/architecture/01-overview|Overview]] · [[docs/architecture/02-core-engine|Core Engine]] · [[docs/architecture/03-encounter-system|Encounter System]] · [[docs/architecture/04-curriculum-system|Curriculum System]] · [[docs/architecture/05-shadow-work|Shadow Work]] · [[docs/architecture/06-polarity-engine|Polarity Engine]] · [[docs/architecture/07-llm-integration|Llm Integration]]
 > The research foundation of Mysterium. The binding build plan lives at
-> `superpowers/plans/`. This tree is the *why* and the
+> `docs/DEVELOPMENT-PLAN.md`. This tree is the *why* and the
 > *what*; the architecture docs are the *how* and the *when*.
 
 ## Reading order for a new contributor

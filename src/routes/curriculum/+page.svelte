@@ -278,7 +278,7 @@
   {@const isExpanded = expandedNodes.has(node.id)}
   {@const isSelected = selectedNode === node.id}
 
-  <div class="tree-node" style="padding-left: {depth * 1.5}rem" role="treeitem" aria-expanded={children.length > 0 ? isExpanded : undefined}>
+  <div class="tree-node" style="padding-left: {depth * 1.5}rem" role="treeitem" aria-selected={isSelected} aria-expanded={children.length > 0 ? isExpanded : undefined}>
     <div
       class="tree-node-btn"
       class:expanded={isExpanded}
