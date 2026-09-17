@@ -159,5 +159,6 @@ export const TOOL_PROPOSAL_KINDS: Readonly<Record<string, Proposal['kind']>> = {
   propose_alignment_adjustment: 'alignment_adjustment',
   consent_inform: 'consent_inform',
   review_practice: 'alignment_adjustment',
+  propose_shadow_work: 'shadow_entry',
   pack_score: 'pack_score',
 };

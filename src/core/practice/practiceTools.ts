@@ -27,15 +27,10 @@ import {
 import { scoreReflectionDepth, classifyReflection, processReflection, REFLECTION_PROMPTS } from './ReflectionEvidence.js';
 import type { ObjectiveProposal, VowBook } from './VowService.js';
 
-// Crisis patterns (deterministic, offline-safe). Bypass everything → safety.
-const CRISIS_PATTERNS: readonly RegExp[] = [
-  /\bsuicid/i, /\bkill (myself|me)\b/i, /\bself[- ]harm/i, /\bwant to die\b/i,
-  /\bhurt (myself|my self)\b/i, /\bend it all\b/i,
-];
-
-export function detectCrisis(text: string): boolean {
-  return CRISIS_PATTERNS.some((r) => r.test(text));
-}
+// Crisis patterns re-exported from the shared safety module — practice and
+// orchestration must detect identically (one definition, 43 §5.1 distressSignal).
+export { detectCrisis } from '../safety/crisis.js';
+import { detectCrisis } from '../safety/crisis.js';
 
 // ---------------------------------------------------------------------------
 // propose_objective

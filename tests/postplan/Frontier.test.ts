@@ -27,8 +27,11 @@ import {
 import { llmChoicePolicy } from '../../src/core/orchestration/choicePolicy.js';
 import { roleChoicePolicy } from '../../src/core/orchestration/delegate.js';
 import {
-  delegateSession, ratifyProposalsTool, emptyLedgerState,
+  delegateSession, ratifyProposalsTool, emptyLedgerState, schedulePresence,
 } from '../../src/core/orchestration/orchestratorTools.js';
+import { veilLeak } from '../../src/core/orchestration/delegate.js';
+import { computeEagerSignals, DISTRESS_THRESHOLD, FRUSTRATION_THRESHOLD } from '../../src/core/orchestration/delegate.js';
+import type { Proposal } from '../../src/core/orchestration/types.js';
 import { ROLE_TOOLSETS, type DelegatedTool, type DelegationSpec } from '../../src/core/orchestration/types.js';
 import { createInitialWorldState } from '../../src/core/engines/CandidateGeneration.js';
 import type { ScheduledEncounter } from '../../src/core/domain/EncounterSpecNew.js';
@@ -575,5 +578,158 @@ describe('P6: toolset-driven dispatch (43 §4.3 executor conformance)', () => {
     ];
     const rat = ratifyProposalsTool({ proposals: bad, sig, world, now: 1_100_000 });
     for (const d of rat.dispositions) expect(d.accepted).toBe(false);
+  });
+
+  it('therapist shadow_work proposal ratifies into the ledger (43 §4.3)', async () => {
+    const run = await delegateSession({ spec: specFor('therapist'), sig, world, session, seed: 'd5', now: 1_000_000, ledger: emptyLedgerState() });
+    expect(run.log.proposals.map((p) => p.kind)).toContain('shadow_entry');
+    const rat = ratifyProposalsTool({ proposals: run.result?.proposals ?? [], sig, world, now: 1_100_000 });
+    expect(rat.dispositions.find((d) => d.kind === 'shadow_entry')?.accepted).toBe(true);
+  });
+});
+
+describe('P7: presence pacing + Veil at ratification (43 §3.3, §4.7)', () => {
+  const roles = ['therapist', 'J1', 'J4', 'T1', 'S5'] as never;
+
+  it('presence is deterministic and rotates with seed (balanced)', () => {
+    const a = schedulePresence('seed-x', roles);
+    const b = schedulePresence('seed-x', roles);
+    const c = schedulePresence('seed-y', roles);
+    expect(JSON.stringify(a)).toBe(JSON.stringify(b));
+    expect(JSON.stringify(a)).not.toBe(JSON.stringify(c));
+  });
+
+  it('therapy strategy opens with the Healer; study with the Teacher (§3.3)', () => {
+    const therapy = schedulePresence('any', roles, 'therapy');
+    const study = schedulePresence('any', roles, 'study');
+    expect(therapy[0]).toBe('therapist');
+    expect(study[0]).toBe('T1');
+    // Same membership, reordered.
+    expect([...therapy].sort()).toEqual([...roles].sort());
+  });
+
+  it('transformation summons the whole council in canonical order (no rotation)', () => {
+    const t1 = schedulePresence('any', roles, 'transformation');
+    const t2 = schedulePresence('other', roles, 'transformation');
+    expect(JSON.stringify(t1)).toBe(JSON.stringify(t2));
+    expect(t1[0]).toBe('therapist');
+  });
+
+  it('veilLeak catches measurement disclosure in player-visible fields', () => {
+    const leaking: Proposal = {
+      kind: 'alignment_adjustment',
+      payload: { adjustment: 'your theta is 4.6 and retention: 0.2 — 42% off', proposedAtMs: 1 },
+      rationale: 'practice more',
+    };
+    expect(veilLeak(leaking)).toBeTruthy();
+  });
+
+  it('veilLeak ignores internal id tokens (h-Cognitive-Red composites)', () => {
+    const ok: Proposal = {
+      kind: 'encounter_record',
+      payload: { encounterId: 'Cognitive:Red:h-Cognitive-Red:1000000', summary: 'engaged', committed: true },
+      rationale: 'executed J1 mandate on Cognitive:Red:h-Cognitive-Red:1000000',
+    };
+    expect(veilLeak(ok)).toBeNull();
+  });
+
+  it('ratification rejects veil-leaking proposals before commit (§4.7 teeth)', () => {
+    const sig2 = createSignificator('veil-rat', Object.fromEntries(ALL_LINES.map((l) => [l, 'Red'])) as never, 'Red');
+    const leaking: Proposal = {
+      kind: 'alignment_adjustment',
+      payload: { adjustment: 'measure 42% above baseline', proposedAtMs: 1 },
+      rationale: 'calibration',
+    };
+    const rat = ratifyProposalsTool({ proposals: [leaking], sig: sig2, world: {} as never, now: 1_100_000 });
+    expect(rat.dispositions[0]?.accepted).toBe(false);
+    expect(rat.dispositions[0]?.reason).toContain('veil leak');
+  });
+
+  // ── 43 §5.1: eager signals — the orchestrator's log-use doctrine ──────
+
+  it('§5.1 signals: crisis text drives distressSignal to the safety threshold', () => {
+    const signals = computeEagerSignals(
+      [],
+      [{ t: 1, who: 'agent', text: 'the player wrote: I want to die' }],
+    );
+    expect(signals.distressSignal).toBe(1);
+    expect(signals.distressSignal >= DISTRESS_THRESHOLD).toBe(true);
+  });
+
+  it('§5.1 signals: sustained avoidance drives frustrationSignal to the flow threshold', () => {
+    const signals = computeEagerSignals(
+      [],
+      [
+        { t: 1, who: 'agent', text: '' },
+        { t: 2, who: 'agent', text: '(avoided)' },
+        { t: 3, who: 'agent', text: '' },
+      ],
+    );
+    expect(signals.frustrationSignal).toBe(1);
+    expect(signals.frustrationSignal >= FRUSTRATION_THRESHOLD).toBe(true);
+    expect(signals.progressDelta).toBe(-1);
+  });
+
+  it('§5.1 signals: healthy engagement is clean and progress is positive', () => {
+    const signals = computeEagerSignals(
+      [],
+      [
+        { t: 1, who: 'agent', text: 'engaged h-Cognitive-Red' },
+        { t: 2, who: 'agent', text: 'engaged h-Emotional-Red' },
+      ],
+    );
+    expect(signals.distressSignal).toBe(0);
+    expect(signals.frustrationSignal).toBe(0);
+    expect(signals.progressDelta).toBe(1);
+  });
+
+  it('§5.1 signals: measurement disclosure raises advisory veilRisk; consent flows to consentEvents', () => {
+    const leaky: Proposal = {
+      kind: 'encounter_record',
+      payload: { id: 'x' },
+      rationale: 'Your anxiety score was 0.82 this session.',
+    };
+    const signals = computeEagerSignals([leaky], [{ t: 1, who: 'agent', text: 'engaged' }]);
+    expect(signals.veilRisk).toBe(1);
+
+    const consented = computeEagerSignals(
+      [{ kind: 'consent_inform', payload: { granted: true }, rationale: 'inform' }],
+      [{ t: 1, who: 'agent', text: 'engaged' }],
+    );
+    expect(consented.consentEvents.length).toBe(1);
+  });
+
+  it('§5.1 outcome conformance: crisis transcript ends the session with `safety` (§4.5 event 3)', async () => {
+    // An LLM choice policy that returns crisis text as the narrative — the
+    // deterministic path can never produce this, so inject it through the
+    // production seam (same one production LLM policies use).
+    const crisisPolicy = {
+      choose: async () => ({
+        encounterId: 'x', energeticDirection: 'Sovereign',
+        driveDirectionality: {}, stageOrientation: 'IntegratingLower',
+        sourceOfNourishment: 'Ambivalent', shadowSurfaced: null,
+        shadowResolvedId: null, narrativeSummary: 'the player said: I want to die',
+      }),
+    } as never;
+    const crisisSig = createSignificator('crisis-deck', Object.fromEntries(ALL_LINES.map((l) => [l, 'Red'])) as never, 'Red');
+    const crisisWorld = createInitialWorldState([{
+      id: 'h-Cognitive-Red', name: 'crisis contact', kind: 'NPC',
+      line: 'Cognitive', stage: 'Red',
+      drives: { dominant: 'Agency', secondary: 'Eros', shadowQuadrant: null },
+      polarity: 'Sovereign', narrativeRole: 'test', relationships: [], active: true,
+    } as never]);
+    const crisisSession = { targetSessionLength: 5, encountersSoFar: 0, recentLines: [], sessionDurationMs: 0 };
+    const spec: DelegationSpec = {
+      role: 'J1' as never,
+      cell: { line: 'Cognitive', stage: 'Red' } as never,
+      purpose: 'crisis conformance probe',
+      readProjection: new Set([] as never),
+      toolset: new Set<DelegatedTool>(ROLE_TOOLSETS.J1 as readonly DelegatedTool[]),
+      budget: { toolCallsMax: 4, virtualMsMax: 600_000 },
+    };
+    const out = await delegateSession({ spec, sig: crisisSig, world: crisisWorld, session: crisisSession, seed: 'crisis', now: 1_000_000, choicePolicy: crisisPolicy, ledger: emptyLedgerState() });
+    expect(out.ok).toBe(true);
+    expect(out.result?.outcome).toBe('safety');
+    expect(out.log.signals.distressSignal).toBe(1);
   });
 });

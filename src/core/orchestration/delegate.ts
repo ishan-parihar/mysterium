@@ -30,11 +30,13 @@ import {
 } from './types.js';
 import {
   appendToolCall, appendTranscript, closeSessionLog, openSessionLog,
-  toResult, emptySignals,
+  toResult,
 } from './sessionLog.js';
 import type { SessionLog } from './sessionLog.js';
+import type { SessionSignals } from './types.js';
 import type { AgentRole, DelegationResult, DelegationSpec, Proposal } from './types.js';
 import type { DelegatedTool } from './types.js';
+import { detectCrisis } from '../safety/crisis.js';
 import { getCurriculumRegistry } from '../curriculum/CurriculumRegistry.js';
 import { seedCurriculumRegistry } from '../curriculum/CurriculumSeed.js';
 import { getPolarityTextureName } from '../engines/PolarityEngine.js';
@@ -329,8 +331,64 @@ export async function executeDelegatedSession(
     endedBy = 'handoff';
   }
 
-  const closed = closeSessionLog(log, seedCfg.now + maxEncounters * 60_000, endedBy, emptySignals());
+  // 43 §5.1 — the eager-reading layer. Signals are computed deterministically
+  // from the session record (crisis detector over the transcript, the OA-13
+  // empty-narrative avoidance marker as the flow proxy, the deterministic Veil
+  // scan as the advisory veilRisk, and consent events from consent-borne
+  // proposals). §4.5 outcome conformance: crisis preempts everything (event 3)
+  // and sustained avoidance hands the foreground back for flow protection.
+  const signals = computeEagerSignals(log.proposals, log.transcript);
+  if (signals.distressSignal >= DISTRESS_THRESHOLD) {
+    endedBy = 'safety';
+  } else if (signals.frustrationSignal >= FRUSTRATION_THRESHOLD && endedBy === 'completion') {
+    endedBy = 'handoff';
+  }
+
+  const closed = closeSessionLog(log, seedCfg.now + maxEncounters * 60_000, endedBy, signals);
   return { log: closed, result: toResult(closed, endedBy), sig, world, encountersExecuted: step };
+}
+
+// ---------------------------------------------------------------------------
+// Eager signals (43 §5.1) — deterministic estimates over the session record.
+// θ thresholds: a single crisis hit routes to safety (the practice loop's rule
+// exactly); ≥ half the encounters avoided signals flow breakdown worth a
+// handoff. veilRisk is advisory (the deterministic Veil gate at ratification
+// remains the enforcement point); progressDelta is a signed engagement share.
+// ---------------------------------------------------------------------------
+
+export const DISTRESS_THRESHOLD = 1;
+export const FRUSTRATION_THRESHOLD = 0.5;
+
+export function computeEagerSignals(
+  proposals: readonly Proposal[],
+  transcript: readonly { t: number; who: string; text: string }[],
+): SessionSignals {
+  // distressSignal: crisis-pattern detector output over player-visible text.
+  const joined = transcript.map((e) => e.text).join('\n');
+  const distressSignal = detectCrisis(joined) ? 1 : 0;
+
+  // frustrationSignal: OA-13 flow proxy — avoidance is the empty-narrative
+  // marker; sustained avoidance = the player can't meet the catalyst.
+  const agentEntries = transcript.filter((e) => e.who === 'agent');
+  const avoided = agentEntries.filter((e) => e.text === '' || e.text === '(avoided)').length;
+  const frustrationSignal = agentEntries.length > 0 ? avoided / agentEntries.length : 0;
+
+  // veilRisk (advisory): the deterministic Veil scan over emitted proposals.
+  const leaks = proposals.map((p) => veilLeak(p)).filter((v): v is string => v !== null);
+  const veilRisk = proposals.length > 0 ? leaks.length / proposals.length : 0;
+
+  // progressDelta: signed engagement share — positive when the player engaged,
+  // negative under avoidance (feeds the strategy engine, 27, as observed outcome).
+  const progressDelta = agentEntries.length > 0
+    ? (agentEntries.length - avoided) / agentEntries.length - avoided / agentEntries.length
+    : 0;
+
+  // consentEvents: consent-borne proposals executed during the session.
+  const consentEvents = proposals
+    .filter((p) => p.kind === 'consent_inform')
+    .map((p) => `consent_inform:${fnv1a(JSON.stringify(p.payload))}`);
+
+  return { veilRisk, distressSignal, frustrationSignal, progressDelta, consentEvents };
 }
 
 // ---------------------------------------------------------------------------
@@ -346,9 +404,10 @@ const ADVISORY_PROPOSAL_TOOL: Partial<Record<AgentRole, DelegatedTool>> = {
   A1: 'propose_mastery_evidence',
   A2: 'review_practice',
   A4: 'propose_placement',
-  // J3/J4 surface through encounter responses (response.shadowSurfaced →
-  // applyConsequences writes the ledger during the delegated session); a
-  // standalone shadow_entry proposal would double-apply (L4 guard).
+  // J3/J4: surfacing IS the mandate (43 §4.3) — they hold no record_encounter,
+  // so the shadow_entry proposal is their only commit path (ratified below).
+  J3: 'propose_shadow_entry',
+  J4: 'propose_shadow_entry',
   J5: 'report_threshold_signal',
   therapist: 'propose_shadow_work',
   S2: 'assemble_healing_context',
@@ -373,8 +432,12 @@ function runAdvisoryMandate(
   const registry = getCurriculumRegistry();
 
   const toolsInOrder = ROLE_TOOLSETS[spec.role] ?? [];
-  const readTools = toolsInOrder.filter((t) => t.startsWith('get_'));
   const proposalTool = ADVISORY_PROPOSAL_TOOL[spec.role];
+  // Read tools = everything that is NOT the role's proposal tool (covers
+  // non-`get_` reads too: read_identity_consent, assemble_healing_context,
+  // note_arc, run_benchmark_tier, registry_health). The advisory mandate
+  // must exercise the whole allowlist (43 §4.3), not just the getters.
+  const readTools = toolsInOrder.filter((t) => t !== proposalTool);
 
   // --- Read projections (TL2: purpose-scoped, projection-shaped) ---
   const leaves = [...registry.conceptIds()]
@@ -477,6 +540,9 @@ function advisoryReadLine(
     case 'registry_health': {
       return 'registry health: nominal';
     }
+    case 'note_arc': {
+      return 'arc noted: therapeutic arc continues on its thread';
+    }
     default:
       return `${tool}: projection served`;
   }
@@ -531,13 +597,13 @@ function advisoryPayload(
     case 'shadow_entry': {
       const quadrants = ['DarkAddiction', 'DarkAllergy', 'GoldenAddiction', 'GoldenAllergy'] as const;
       const q = quadrants[stablePick(sessionId + spec.role, quadrants.length)]!;
-      return {
-        quadrant: q,
-        line: spec.cell?.line ?? 'Cognitive',
-        stage: spec.cell?.stage ?? sig.currentStage,
-        severity: 0.5,
-        note: `${spec.role} surfacing`,
-      };
+      // therapist's propose_shadow_work maps to shadow_entry (43 §4.3): the
+      // proposal names the work; ratification appends it to the ledger.
+      const line = spec.cell?.line ?? 'Cognitive';
+      const stage = spec.cell?.stage ?? sig.currentStage;
+      return spec.role === 'therapist'
+        ? { quadrant: q, line, stage, severity: 0.4, note: `shadow work proposed: ${spec.purpose.slice(0, 60)}` }
+        : { quadrant: q, line, stage, severity: 0.5, note: `${spec.role} surfacing` };
     }
     case 'threshold_signal': {
       return { line: spec.cell?.line ?? 'Cognitive', stage: spec.cell?.stage ?? sig.currentStage, atMs: now };
@@ -645,6 +711,77 @@ const SHADOW_QUADRANTS: readonly ShadowQuadrant[] = ['DarkAddiction', 'DarkAller
  * Returns per-proposal dispositions; never throws on invalid payloads
  * (rejection is a normal, logged outcome).
  */
+/**
+ * Veil at ratification (43 §4.7): proposals must not carry player-visible
+ * MEASUREMENT content (theta values, stage names, percentages, drive scores).
+ * The `veilRisk` SIGNAL is advisory; this check is deterministic — the same
+ * discipline as QualitativeFeedback, inverted: measurement stays private,
+ * felt-sense travels.
+ *
+ * Scope: only the RATIONALE and player-facing string fields (notes, narratives,
+ * evidence text) are scanned. Engine-bound fields (retention values, depth
+ * levels, stage routing, concept ids) are the commit data itself and never
+ * render to the player — scanning them would false-positive on every
+ * legitimate proposal.
+ */
+const VEIL_LEAK_PATTERNS: readonly RegExp[] = [
+  /\btheta\b/i,
+  /\bse\s*[=:]\s*\d/i,
+  /\b\d+(\.\d+)?\s*%/,
+  /\b(Red|Orange|Green|Yellow|Blue|Indigo|Violet|White|Clear|Infrared|Magenta|Ultraviolet)\b/,
+  /\b(Agency|Communion|Eros|Agape)\s*[:=]\s*\d/i,
+  /\bcci\b/i,
+  /\bretention\s*[:=]\s*\d/i,
+  /\bdepth\s*[:=]\s*\d/i,
+  /\bskill[- ]?theta\b/i,
+  // Measurement-shaped disclosure: "<noun> score/index/rating was 0.82".
+  // Scoped to explicit measurement nouns + a number (doc 20: the game never
+  // reveals assessments); plain narrative quantities cannot match.
+  /\b(?:score|index|rating)\s+(?:was|is|of)\s*[:=]?\s*\d/i,
+  /\b\d+(?:\.\d+)?\s+(?:anxiety|depression|stress|distress)\s+(?:score|index|rating)\b/i,
+];
+
+const PLAYER_VISIBLE_KEYS: ReadonlySet<string> = new Set([
+  'note', 'summary', 'narrative', 'narrativeSummary', 'text', 'evidence',
+  'basis', 'adjustment', 'reason', 'feedback', 'hint', 'description',
+]);
+
+function collectPlayerVisibleText(payload: unknown, out: string[]): void {
+  if (payload === null || payload === undefined) return;
+  if (Array.isArray(payload)) {
+    for (const item of payload) collectPlayerVisibleText(item, out);
+    return;
+  }
+  if (typeof payload === 'object') {
+    for (const [key, value] of Object.entries(payload as Record<string, unknown>)) {
+      if (typeof value === 'string' && PLAYER_VISIBLE_KEYS.has(key)) out.push(value);
+      else if (value !== null && typeof value === 'object') collectPlayerVisibleText(value, out);
+    }
+  }
+}
+
+/**
+ * Internal reference tokens — not disclosure. Two shapes:
+ *   colon-composites: 'Cognitive:Red:h-Cognitive-Red:1000000' (each colon
+ *     segment starts with a letter, so numeric assignments like 'se:5' or
+ *     'retention:0.8' stay visible to the leak patterns)
+ *   hyphen ids: 'h-Cognitive-Red', 'enc-123'
+ */
+const ID_TOKEN_PATTERN = /\b(?:[A-Za-z]+(?::[A-Za-z][A-Za-z0-9-]*)+|[a-z]{1,4}-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\b/g;
+
+export function veilLeak(proposal: Proposal): string | null {
+  const texts = [proposal.rationale];
+  collectPlayerVisibleText(proposal.payload, texts);
+  // Id-shaped tokens (h-Cognitive-Red, enc-123) are internal references, not
+  // player-visible measurement — scrub before matching.
+  const text = texts.join(' ').replace(ID_TOKEN_PATTERN, ' ');
+  for (const pattern of VEIL_LEAK_PATTERNS) {
+    const m = pattern.exec(text);
+    if (m) return `veil leak: '${m[0]}' in ${proposal.kind} proposal (43 §4.7)`;
+  }
+  return null;
+}
+
 export function ratifyProposals(
   proposals: readonly Proposal[],
   sig: Significator,
@@ -657,6 +794,13 @@ export function ratifyProposals(
   const dispositions: { kind: Proposal['kind']; accepted: boolean; reason: string }[] = [];
 
   for (const p of proposals) {
+    // Veil at ratification (43 §4.7): deterministic measurement-leakage check
+    // BEFORE any commit path — a leaking proposal is rejected, never committed.
+    const leak = veilLeak(p);
+    if (leak) {
+      dispositions.push({ kind: p.kind, accepted: false, reason: leak });
+      continue;
+    }
     switch (p.kind) {
       case 'encounter_record': {
         const pl = p.payload as { encounterId?: string; summary?: string; committed?: boolean } | null;

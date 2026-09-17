@@ -209,17 +209,43 @@ const PRESENCE_PRIORITY: Readonly<Record<AgentRole, number>> = {
   S2: 13, S4: 14, S3: 15, S1: 16, S5: 17,
 };
 
+/** Session-strategy pacing (43 §3.3): who the session OPENS with. */
+export type PresenceStrategy = 'balanced' | 'therapy' | 'study' | 'transformation';
+
+const STRATEGY_ANCHOR: Readonly<Record<'therapy' | 'study', AgentRole>> = {
+  therapy: 'therapist',
+  study: 'T1',
+};
+
+/** Stable seed rotation of an already-priority-ordered list. */
+function rotate<T>(list: readonly T[], seed: string): readonly T[] {
+  if (list.length <= 1) return list;
+  const offset = Number.parseInt(fnv1a(seed).slice(0, 6), 16) % list.length;
+  return [...list.slice(offset), ...list.slice(0, offset)];
+}
+
 /**
- * Deterministically order council presence for a session. Base order follows
- * the canonical priority (therapy anchor → encounter delivery → teaching →
- * assessment → specialists); the seed applies a stable rotation so different
- * sessions don't always open with the same agent. Same seed ⇒ same schedule.
+ * Deterministically order council presence for a session (43 §3.3: presence
+ * is a PACING instrument — a therapy arc opens with the Healer, a study
+ * session with the Teacher, a transformation threshold summons the whole
+ * council in canonical order). Same (seed, strategy, roles) ⇒ same schedule.
+ *
+ *  - therapy/study: the strategy's anchor role opens; the remainder follows
+ *    canonical priority with a stable seed rotation.
+ *  - transformation: the whole council in canonical priority order (no
+ *    rotation — the threshold is the pacing).
+ *  - balanced (default): canonical priority order with a stable seed
+ *    rotation, so sessions don't always open with the same agent.
  */
-export function schedulePresence(seed: string, roles: readonly AgentRole[]): readonly AgentRole[] {
-  return [...roles].sort((a, b) => {
-    const ha = fnv1a(`${seed}|${a}`);
-    const hb = fnv1a(`${seed}|${b}`);
-    if (ha !== hb) return ha < hb ? -1 : 1;
-    return PRESENCE_PRIORITY[a] - PRESENCE_PRIORITY[b];
-  });
+export function schedulePresence(
+  seed: string,
+  roles: readonly AgentRole[],
+  strategy: PresenceStrategy = 'balanced',
+): readonly AgentRole[] {
+  const byPriority = [...roles].sort((a, b) => PRESENCE_PRIORITY[a] - PRESENCE_PRIORITY[b]);
+  if (strategy === 'transformation') return byPriority;
+  if (strategy === 'balanced') return rotate(byPriority, seed);
+  const anchor = STRATEGY_ANCHOR[strategy];
+  if (!roles.includes(anchor)) return rotate(byPriority, seed);
+  return [anchor, ...rotate(byPriority.filter((r) => r !== anchor), seed)];
 }
