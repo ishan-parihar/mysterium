@@ -410,10 +410,15 @@ const ADVISORY_PROPOSAL_TOOL: Partial<Record<AgentRole, DelegatedTool>> = {
   J4: 'propose_shadow_entry',
   J5: 'report_threshold_signal',
   therapist: 'propose_shadow_work',
-  S2: 'assemble_healing_context',
+  // S2 (Context Steward) and S5 (Ops Agent) carry NO proposal authority —
+  // doc 43 §4.2: S2's output IS the alignment context S3 consumes; S5 reports
+  // ops health. Their tools are pure reads/ops, so they must dispatch as read
+  // tools (below), not be shadowed here as "proposal tools" — the old entries
+  // excluded them from the read dispatch entirely (S2 never ran
+  // assemble_healing_context, S5 never ran run_benchmark_tier), breaking the
+  // whole-allowlist mandate (43 §4.3).
   S3: 'propose_alignment_adjustment',
   S4: 'consent_inform',
-  S5: 'run_benchmark_tier',
 };
 
 /**

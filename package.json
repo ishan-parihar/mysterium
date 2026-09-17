@@ -25,7 +25,7 @@
     "test": "vitest run",
     "bench:validation": "tsx scripts/run-validation-benchmark.ts --tier=full",
     "test:watch": "vitest",
-    "test:cli": "vitest run tests/cli.test.ts",
+    "test:cli": "vitest run tests/cli",
     "cap:sync": "npm run build && cap sync",
     "cap:android": "npm run build && cap sync android && cap open android",
     "cli": "svelte-kit sync && tsx scripts/cli-game.ts",

@@ -179,9 +179,15 @@ program
   .option('--role <role>', 'council role: J1 J2 J3 J4 J5 T1 T2 T3 A1 A2 A3 A4 therapist S1..S5', 'J1')
   .option('--line <line>', 'target line for cell-bounded roles', 'Cognitive')
   .option('--stage <stage>', 'target stage for cell-bounded roles', 'Red')
-  .option('--encounters <n>', 'tool budget for the session', (v) => parseInt(v, 10), 2)
-  .option('--seed <seed>', 'deterministic seed', 'cli-delegate')
-  .option('--json', 'machine-readable output');
+  // BUG-FIX (delegate smoke): the old subcommand `--encounters <n>` collided
+  // with the root `-e, --encounters` flag — commander consumes root-declared
+  // options BEFORE the raw-tail scan in runDelegateCommand, so a user-specified
+  // budget was silently dropped and advisory roles ran at budget 2, starving
+  // every 3-tool mandate (T1/T2/J3/J4/therapist) into budget_exhausted with
+  // zero proposals. `--budget` is collision-free; the default (6) completes the
+  // largest advisory allowlist (T1/T2: 2 reads + 1 propose) with headroom.
+  .option('--budget <n>', 'tool-call budget for the session', (v) => parseInt(v, 10), 6)
+  .option('--seed <seed>', 'deterministic seed', 'cli-delegate');
 program
   .command('vow [action] [rest...]')
   .allowUnknownOption()
@@ -5091,11 +5097,6 @@ async function runPrivacyCommand(action: string | undefined, fieldArg: string | 
 
 // ── Delegation smoke (doc 43 Phase-1 gate) ──────────────────────────
 
-interface DelegateCliOpts {
-  role?: string; line?: string; stage?: string;
-  encounters?: number; seed?: string; json?: boolean;
-}
-
 async function runDelegateCommand(argv: string[]): Promise<void> {
   const { delegateSession, emptyLedgerState, ratifyProposalsTool, schedulePresence } = await import('../src/core/orchestration/orchestratorTools.js');
   const { createSignificator } = await import('../src/core/domain/Significator.js');
@@ -5103,22 +5104,20 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
   const { ALL_LINES } = await import('../src/core/domain/Line.js');
   const { ALL_STAGES } = await import('../src/core/domain/Stage.js');
   const { seedCurriculumRegistry } = await import('../src/core/curriculum/CurriculumSeed.js');
-  const { buildPersonaWorld } = await import('../src/core/validation/harness.js').catch(() => ({ buildPersonaWorld: null as null | ((lines?: readonly string[], stages?: readonly string[]) => unknown) }));
+  const { parseDelegateArgs, DELEGATE_ROLE_PATTERN } = await import('./cli/delegateArgs.js');
 
-  // Minimal flag parse (commander stores opts on program; argv slice is the positional tail)
-  const get = (name: string): string | undefined => {
-    const i = argv.indexOf(name);
-    return i >= 0 ? argv[i + 1] : undefined;
-  };
-  const role = (get('--role') ?? 'J1') as import('../src/core/orchestration/types.js').AgentRole;
-  const line = (get('--line') ?? 'Cognitive') as import('../src/core/domain/Line.js').Line;
-  const stage = (get('--stage') ?? 'Red') as import('../src/core/domain/Stage.js').Stage;
-  const budget = parseInt(get('--encounters') ?? '2', 10);
-  const seed = get('--seed') ?? 'cli-delegate';
-  const asJson = argv.includes('--json');
+  // Flags are read from the raw argv tail via parseDelegateArgs — see that
+  // module for the collision rules this surface must obey (--json comes from
+  // the ROOT opts; the budget flag must not share a root flag's name).
+  const { role, line, stage, budget, seed } = parseDelegateArgs(argv);
+  const asJson = JSON_MODE;
 
-  if (!ALL_LINES.includes(line) || !ALL_STAGES.includes(stage)) {
-    console.error(`Invalid --line/--stage: ${line}/${stage}`);
+  if (!DELEGATE_ROLE_PATTERN.test(role) || !ALL_LINES.includes(line) || !ALL_STAGES.includes(stage)) {
+    if (asJson) {
+      process.stdout.write(JSON.stringify({ ok: false, violation: { code: 'invalid_argument', detail: `role/line/stage: ${role}/${line}/${stage}` } }) + '\n');
+    } else {
+      console.error(`Invalid --role/--line/--stage: ${role}/${line}/${stage}`);
+    }
     process.exitCode = 1;
     return;
   }
@@ -5180,12 +5179,23 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
     process.stdout.write(JSON.stringify({
       ok: true, role, outcome: out.result?.outcome, encounters: out.encountersExecuted,
       sessionId: out.log.sessionId, proposals: out.result?.proposals.length ?? 0,
+      proposalKinds: out.result?.proposals.map((p) => p.kind) ?? [],
+      toolCalls: out.log.toolCalls.map((t) => t.tool),
+      signals: out.result?.signals,
       ratification: rat.dispositions, presence,
     }) + '\n');
   } else {
     console.log(`\n  Delegated session — role ${chalk.bold(role)}${out.log.cell ? ` (${out.log.cell.line} × ${out.log.cell.stage})` : ''}`);
     console.log(`  outcome: ${out.result?.outcome}   encounters: ${out.encountersExecuted}   proposals: ${out.result?.proposals.length ?? 0}`);
     console.log(`  session: ${out.log.sessionId}`);
+    const trace = out.log.toolCalls.map((t) => t.tool).join(' → ');
+    if (trace) console.log(`  tools: ${chalk.dim(trace)}`);
+    for (const p of out.result?.proposals ?? []) {
+      console.log(`  proposal: ${chalk.cyan(p.kind)} ${chalk.dim(p.rationale)}`);
+    }
+    if ((out.result?.proposals.length ?? 0) === 0 && out.result?.outcome === 'budget_exhausted') {
+      console.log(`  ${chalk.yellow('⚠')} no proposals emitted — mandate starved by the tool budget; raise ${chalk.bold('--budget')} (largest allowlist needs 3).`);
+    }
     for (const d of rat.dispositions) {
       console.log(`  ${d.accepted ? chalk.green('✓') : chalk.yellow('·')} ${d.kind}: ${chalk.dim(d.reason)}`);
     }
