@@ -29,6 +29,8 @@ No other document covers this lateral:
 
 This document specifies the **vessel that holds all of the above** — the PlayerProfile as Significator, its persistence model, its relationship to the eight registries, and the design commitments that make it a genuine locus of free will rather than a deterministic state machine.
 
+**Extended lateral (2026-09-17):** this document additionally owns the **Auditor Projection Layer** (§2.4, §10.4) — the profiling system acting as the diagnostics surface for consented guardians (parent / teacher-guardian / therapist). The profiles ARE the dashboards; 33 renders them; nobody duplicates them.
+
 ---
 
 ## 2. The PlayerProfile as Significator
@@ -87,7 +89,35 @@ The PlayerProfile will carry a `polarityVector` field specifying the Significato
 
 The PlayerProfile will carry a `transformations: TransformationEvent[]` field recording every stage-transition the Significator has undergone — the frame-changes where the self-structure reorganised. Full specification deferred to foundations/17 (Transformation mechanics).
 
-### 2.4 What the profile is NOT
+### 2.4 The Auditor Projection Layer (added 2026-09-17)
+
+The profiling system IS the diagnostics dashboard. There is no second data store,
+no parallel report generator, and no separate "reporting profile": every auditor view
+is a **purpose-scoped projection of the Significator** — exactly one source of truth,
+read through one disciplined interface (per 16 §10's layered observability, extended
+from three to four observer layers).
+
+**The fourth observer layer: auditors (guardians).** Parents, teachers/guardians,
+and therapists are *auditors* — observers with legitimate need, whose access is
+consent-brokered and whose views are derived projections, never raw state:
+
+| Concern | Architecture ruling |
+|---|---|
+| **Single source** | Auditor views query the SAME Significator fields the engine writes; they render projections, they never fork or mirror profile state |
+| **Consent brokerage** | Auditor linkage is a Significator-side consent record (extends the IdentityProfile consent ledger, §2.1): the PLAYER (or guardian-of-record for young players) grants/revokes per-auditor scopes; revocation nulls the projection |
+| **Purpose-scoped read projections** | One projection registry (43 TL2 discipline applied to auditors): `guardian` (milestones, engagement, holistic wellbeing), `educator` (syllabus rungs, depth distribution, prereq gaps), `therapeutic` (shadow-surfacing patterns, integration trends — integrative, never diagnostic framing) |
+| **Hierarchical expansion on request** | Views are request-driven drill-downs, not pushed reports: auditor requests scope+granularity → projector re-derives from the live ledger → progressive disclosure (33 §2.4's depth gate, refactored for auditors) governs what each level reveals — coarse → fine only as the auditor drills |
+| **Veil boundary (20 §11)** | The Veil binds the PLAYER surface only. Auditor projections are **explicitly metric-bearing, rubric-named, and stage-labelled** — the abstractions of §5.1–5.2 are the right language for a guardian, not for the player. A guardian seeing "Moral line holding at Amber, unresolved Dark-Allergy pattern" is the system working, not the Veil failing |
+| **Holonic composition** | Every auditor view answers: capacity at the active stage AND health of all stages BELOW (16 §5.4's never-outgrown rule) — an auditor report that shows Orange growth while Red crumbles is a broken projection; the ledger already holds the whole span, so the projector composes it |
+| **Write boundary** | Auditors are READ-ONLY over projections. If action is warranted (adjust voicing, add support), an auditor submits a **request to the orchestrator**, which enters the ordinary delegation lifecycle (43 §4.6) and is bound by the same Veil and firewall rules — auditors never write profile state directly |
+| **Firewall preserved** | The competence/identity firewall (42 §1.1) is NOT relaxed: auditor projections derive from measurement-side state only; HealingContext never flows to them; identity fields surface only through consented healing-texture voicing in the projections' qualitative column |
+
+Contract home: the projection registry lives beside the observability layers of §10
+(`src/core/observability/AuditorProjections.ts`-equivalent surface, schema owned here,
+render contract owned by 33 §7). The four-layer observer matrix (§10.1) gains the
+auditor row; §10.4 specifies the projection schemas.
+
+### 2.5 What the profile is NOT
 
 The PlayerProfile does not contain:
 - Raw telemetry or behavioural logs (those live in infra/persistence as ephemeral session data)
@@ -334,15 +364,16 @@ The Significator is mutated exclusively through well-defined events. No system w
 
 ## 10. State observability: layered access
 
-The Significator's state is sensitive developmental data. Access is stratified into three layers, each with strict boundaries enforced by the architecture.
+The Significator's state is sensitive developmental data. Access is stratified into four layers, each with strict boundaries enforced by the architecture.
 
-### 10.1 The three observer layers
+### 10.1 The four observer layers
 
 | Layer | Observers | Access level | Purpose |
 |---|---|---|---|
 | **Engine-internal** | Encounter scheduler, polarity engine, theta-decay engine, transformation detector, stage synthesiser, drive-health monitor | Full — all fields, all precision | Compute next catalyst, detect thresholds, enforce invariants |
 | **LLM-context** | Holon Context Engine (foundations/22 §4.2) | Filtered — Veil-respecting machine signals only | Condition generation on player state without exposing raw metrics |
 | **Player-visible** | Player (via UI, Codex, narrative, aesthetics) | Bounded — felt-sense only, no measurement language | Preserve the Veil; enable authentic experience |
+| **Auditor-visible** (added 2026-09-17) | Guardians: parent / teacher-guardian / therapist, via §2.4 consent brokerage | Projected — purpose-scoped, metric-bearing, rubric-named (§10.4) | Legitimate oversight without touching player-surface Veil or writing state |
 
 ### 10.2 Per-field access matrix
 
@@ -373,6 +404,81 @@ The Significator's state is sensitive developmental data. Access is stratified i
 3. **The LLM receives machine signals, not player-facing language.** The LLM translates signals into narrative; it never echoes them verbatim.
 4. **Player-authored fields** (vows, primaryValue) are the only Significator data the player sees directly.
 5. **The harvest exception:** At harvest (foundations/20 §8.4), the Veil lifts. The player may optionally view their full developmental trajectory — because the Choice has already been made.
+6. **The auditor exception (added 2026-09-17):** The Veil binds the *player surface only* (20 §11). Auditor projections are the sanctioned metric-bearing surface: rubric names, rung indices, and stage labels appear there in full. The boundary that still binds auditors is CONSENT (§2.4 brokerage), PURPOSE (one scope per projection, 43 TL2), and the firewall (42 §1.1 — measurement-side derivation only).
+
+### 10.4 Auditor projection schemas (added 2026-09-17)
+
+The projection layer is derived on demand from the live Significator — no mirrors, no
+reporting copies. One entry point, three scopes, progressive granularity:
+
+```ts
+/** Request: what an auditor asks to see. Granularity is request-driven, not pushed. */
+interface AuditorViewRequest {
+  readonly auditorId: string;                 // linked via the §2.4 consent record
+  readonly scope: 'guardian' | 'educator' | 'therapeutic';
+  readonly granularity: 'summary' | 'line' | 'line-stage' | 'line-stage-cell';
+  readonly windowMs?: number;                 // trajectory window; default = all time
+}
+
+/** Response: the ONLY sanctioned shape of auditor-visible Significator data. */
+interface AuditorProjection {
+  readonly scope: AuditorViewRequest['scope'];
+  readonly granularity: AuditorViewRequest['granularity'];
+  readonly generatedAtMs: number;
+  /** Holonic composition: health of the active stage AND every stage below (16 §5.4). */
+  readonly holonicSpan: readonly StageHealth[];
+  /** Scope-specific payload — see the three scopes below. */
+  readonly payload: GuardianView | EducatorView | TherapeuticView;
+  /** Qualitative column: consented HealingContext voicing (42 §1.1) — optional. */
+  readonly feltSenseSummary: string | null;
+}
+
+interface StageHealth {
+  readonly stage: Stage;
+  readonly altitudeMap: Record<Line, Stage>;
+  /** Theta freshness per line — stale lines display discounted (42 §3.2). */
+  readonly freshness: Record<Line, number>;
+  /** Unresolved shadow count at this stage, by quadrant (10). */
+  readonly unresolvedShadowLoad: Partial<Record<ShadowQuadrant, number>>;
+}
+
+// guardian — milestones, engagement, holistic wellbeing. NO skill-theta streams,
+// NO staircase parameters, NO rubric item detail. The 'is my young person thriving' view.
+interface GuardianView {
+  readonly milestones: readonly { readonly atMs: number; readonly description: string }[];
+  readonly engagementPattern: { readonly sessionCadence: string; readonly sessionLengthTrend: string };
+  readonly wellbeingSignals: readonly string[];        // machine labels, integrative framing
+  readonly thetaAttentionFlags: readonly Line[];       // lines with active decay nudges
+}
+
+// educator — syllabus rungs, depth distribution, prerequisite gaps, pack trajectories.
+// The full measurement side of 42's syllabus ladder, readable for lesson planning.
+interface EducatorView {
+  readonly syllabusRungs: Record<string, { readonly rung: number; readonly cappedBy: string }>;
+  readonly depthDistribution: Record<string, Record<DepthLevel, number>>;
+  readonly prerequisiteGaps: readonly string[];
+  readonly packThetas: Record<string, { readonly theta: number; readonly se: number }>;
+  readonly masteredSequences: readonly MasterySequenceStatus[];   // 24 §3.2.8 — what's woven, what's next
+}
+
+// therapeutic — shadow-surfacing and integration TRENDS over the window.
+// Integrative framing only: patterns and trajectories, never clinical categories,
+// never crisis content (crisis routing is the deterministic crisis layer's job and
+// is NOT carried in projections — see 43 §4.7's safety boundary).
+interface TherapeuticView {
+  readonly surfacingTrends: readonly { readonly line: Line; readonly quadrant: ShadowQuadrant; readonly trend: 'rising' | 'stable' | 'resolving' }[];
+  readonly integrationHistory: readonly { readonly shadowId: string; readonly status: string; readonly atMs: number }[];
+  readonly driveBalanceTrend: Partial<Record<Drive, number>>;
+}
+```
+
+**Projection laws:**
+
+- **AP1 — Derivation, never storage.** Projections are computed at request time from the live Significator. No persisted mirror of auditor-visible state may exist.
+- **AP2 — Scope is a firewall, not a preference.** Each scope reads a WHITELISTED field set (guardian: the narrowest; educator: syllabus+packs; therapeutic: ledger trends). Crossing scopes in one request is rejected structurally.
+- **AP3 — Granularity descends only.** `line-stage-cell` requests require the same request chain to have passed through coarser levels (progressive disclosure refactored for auditors, 33 §2.4).
+- **AP4 — Consent is checked at every render.** Revocation nulls the projection at any granularity instantly (consent is read, not cached).
+- **AP5 — Auditors propose, never dispose.** Any auditor-initiated change enters the orchestrator as a delegation proposal (43 §4.6) and is ratified under the same laws as council proposals — the Significator's owner-of-record still controls the game.
 
 ---
 
@@ -497,6 +603,7 @@ Specification deferred to post-MVP design phase.
 | The Great Way — the world-system that reconfigures on transformation_completed | foundations/18 |
 | Choice and polarity — how micro-choices crystallise into macro-polarity (polarity tracking) | foundations/19 |
 | The Veil of Forgetting — bounds on player observability of Significator state | foundations/20 |
+| Auditor projections — consented guardian views derived from this Significator | foundations/16 §2.4 + §10.4 (rendered by foundations/33 §7) |
 | The Incarnation Architecture — how all macro-cycle documents synthesise into the master game-structure | foundations/21 |
 | The Holon Context Engine — LLM context layer that reads Veil-filtered Significator state | foundations/22 |
 | The encounter scheduler — observation of Significator state for catalyst selection | foundations/21 §4 |

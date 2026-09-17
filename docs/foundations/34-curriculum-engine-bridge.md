@@ -149,6 +149,14 @@ The EncounterScheduler gains a new selection dimension:
 
 **The scheduler never forces curriculum over development or vice versa.** It presents both as options and lets the learner choose (or lets auto-mode bias the selection based on the CCI).
 
+> **Resolution (2026-09-17):** the "2 new criteria" above are now CANONISED in 24
+> §3.2.8 (mastery-sequence alignment, weight 0.10) with the blind-spot adjacency
+> (31 §3.4/§3.5a) and depth-closure (31 §3.5a) machinery behind them. Where this
+> extension's sketch and 24 §3.2.8 differ, **24 §3.2.8 wins** (the encounter
+> scheduler owns the priority formula; this doc owns the bridge plumbing). The
+> candidate-generation steps 2a–2d here remain valid as the curriculum-side
+> candidate source that 24 §3.2.8 scores.
+
 ### 3.4 Extension 4: The Curriculum-Enhanced Orchestrator
 
 The AgenticOrchestrator gains curriculum-specific tools alongside existing developmental tools:

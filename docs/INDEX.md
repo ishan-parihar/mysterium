@@ -96,7 +96,17 @@
 - `40-measurement-packs-efficacy-infra.md` — swappable psychometric measurement packs, the scoring harness, the honest efficacy evidence chain
 - `41-global-recognition-credentialing.md` — GDPR substrate, claim-based credential ledger, EU pathway (micro-credentials → ECTS → EQF), canon revision of blueprint decision #2
 - `42-developmental-levelling-mechanism.md` — the unified grading/staging mechanism: one evidence-only law for line ladders and syllabus ladders, promotion/demotion hysteresis, demographic-blindness invariants D1–D5 (kernel-gated); §1.1 competence/identity firewall — identity (16 §2.1) tunes healing voicing under consent, never measurement
-- `43-agentic-orchestration-architecture.md` — the primary orchestrator + sub-agent council: taxonomy (Teacher/Assessor/Journey-Guide/Therapist/Specialist), per-council tool systems, session-log protocol, foreground/background handoff, delegation contract, safety/consent boundaries
+- `43-agentic-orchestration-architecture.md` — the primary orchestrator + sub-agent council: taxonomy (Teacher/Assessor/Journey-Guide/Therapist/Specialist), per-council tool systems, session-log protocol, foreground/background handoff, delegation contract, safety/consent boundaries; auditor-liaison entry point (`receive_auditor_request`) + human-handoff deferment (2026-09-17)
+
+> **Diagnostics-as-profiling canon (2026-09-17):** the profiling system IS the diagnostics
+> dashboard for consented guardians — 16 §2.4/§10.4 own the Auditor Projection Layer
+> (guardian / educator / therapeutic scopes, hierarchical drill-down), 33 §7 owns the
+> auditor render surfaces; no parallel reporting infrastructure exists or may be added.
+> Knowledge-depth mastery sequencing rides the ONE encounter-scheduler formula (24 §3.2.8)
+> fed by depth closure + blind-spot adjacency (31 §3.5a) and the linter's E-class depth
+> compilation gate (32); implicit-assessment rubrics require validation (12 §5.4 RV1–RV6,
+> incl. below-stage holonic diagnosis) before their signals can steer. STO/STS
+> long-horizon propagation (19) and human-handoff flows (43) are explicitly deferred.
 
 ### `lines/` (9) — one per line of intelligence
 

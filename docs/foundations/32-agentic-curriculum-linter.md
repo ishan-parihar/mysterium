@@ -163,6 +163,29 @@ The Critic agent checks the generated module against three categories of invaria
 | D3: Frontier distinction | Established knowledge is distinguished from active research | Info |
 | D4: Source attribution | Key claims cite their source (textbook, paper, consensus) | Info |
 
+**Category E: Depth-Validation Invariants (the knowledge-depth engine can actually run on this module)** (added 2026-09-17)
+
+These checks are the COMPILATION VALIDATION for knowledge depth: a module must
+prove — before registration — that its depth profile is genuinely navigable by the
+orchestrator-agents (24 §3.2.8, 27) and the teacher/assessor/developmental/therapeutic
+sub-agents (43 §4.2) over journeys that span months to years. E-checks are
+DETERMINISTIC (structural analysis of the module's depth metadata), unlike the
+judgment-based B/C checks; an E-check failure is always a hard error.
+
+| Check | What it validates | Severity if failed |
+|---|---|---|
+| E1: Depth-profile completeness | Every concept declares evidence for ≥ 4 of the 7 depth levels (ceiling concepts may declare `depthCeiling` per 31 §3.5a and are exempt above it) | Error |
+| E2: Depth monotonicity of tasks | Task sequence within each concept exercises non-decreasing depth levels; the first task sits at the concept's declared entry level | Error |
+| E3: Prerequisite depth closure | Every prerequisite cites a MINIMUM DEPTH (not just existence); the closure computation in 31 §3.5a passes for the module's whole subgraph | Error |
+| E4: Blind-spot adjacency coverage | The concept's blind-spot adjacency map (31 §3.5a) names ≥ 2 adjacent concepts AND ≥ 1 prerequisite of prerequisite; these are the scheduler's probe targets | Error |
+| E5: Blind-spot diagnosis validity | Each declared blind-spot cites its evidence class (31 §3.5a — prereq-failure / sibling-confusion / overgeneralization / principle-absence) | Error |
+| E6: Journey viability | The module's depth span is traversable within a declared evidence-cadence envelope (depth × retention × spacing parameters admit a months-to-years journey without dead ends) | Error |
+| E7: Rubric–agent consumability | Each depth rubric's `llmRubric` is present for levels the orchestrator scores open-endedly, and phrased for the Teacher/Assessor toolsets (43 §4.3) | Warning |
+
+E-checks run FIRST in the Critic's pass (cheap, deterministic, fail-fast) and gate the
+expensive judgment-based B/C checks — no module proceeds to pedagogical judgment
+until its depth skeleton compiles.
+
 ### 3.3 The Critic Agent's Analogy Validation
 
 When the Generator proposes an analogical connection between concepts in different domains, the Critic validates structural validity:

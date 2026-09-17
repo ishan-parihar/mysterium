@@ -154,7 +154,7 @@ function generateCandidates(
 
 ### 3.2 The priority formula
 
-Each candidate receives a weighted priority score. The formula is additive with seven criteria:
+Each candidate receives a weighted priority score. The formula is additive with eight criteria — seven developmental plus mastery-sequence alignment (§3.2.8, added 2026-09-17; the weights below are the renormalized canon):
 
 ```ts
 function computePriority(
@@ -164,13 +164,14 @@ function computePriority(
   session: SessionContext
 ): number {
   const W = {
-    thetaDecay:          0.25,
-    shadowActivation:    0.20,
-    polarityAlignment:   0.15,
-    transformationReady: 0.15,
-    driveCorrection:     0.10,
-    narrativeCoherence:  0.10,
-    sessionFit:          0.05,
+    thetaDecay:          0.21,
+    shadowActivation:    0.19,
+    polarityAlignment:   0.14,
+    transformationReady: 0.14,
+    driveCorrection:     0.09,
+    narrativeCoherence:  0.09,
+    sessionFit:          0.04,
+    masteryAlignment:    0.10,   // §3.2.8 — knowledge depth rides the same formula
   };
 
   return (
@@ -329,6 +330,57 @@ function sessionFitScore(c: CandidateEncounter, session: SessionContext): number
 }
 ```
 
+#### 3.2.8 Mastery-sequence alignment (added 2026-09-17)
+
+The curriculum fabric rides in the SAME formula — mastery sequencing is not a
+parallel engine, queue, or mode. It contributes one criterion alongside the seven
+developmental criteria above, so developmental catalyst and knowledge catalyst
+compete and interleave naturally within each session arc (the session arc of §7.1
+already distributes both kinds of slots — this criterion feeds the knowledge slots):
+
+```ts
+function masteryAlignmentScore(c: CandidateEncounter, sig: SignificatorSnapshot): number {
+  // Curriculum-fabric candidates only; developmental encounters score 0 here.
+  if (!c.moduleRef) return 0.0;
+  const concept = c.moduleRef.split(':')[1];
+  const rubric = getDepthRubric(concept);              // 31 §4.2
+  let score = 0.0;
+
+  // 1. Blind-spot adjacency (31 §3.4): the catalyst-loop behaviour for knowledge —
+  //    probe the declared blind spots (adjacent concepts, prereq-of-prereq,
+  //    sibling confusion, overgeneralization boundaries) at the right depth.
+  if (c.targetBlindSpotClass !== null) score += 0.4;   // gap-directed catalyst
+
+  // 2. Depth-closure urgency (31 §3.5a): unsatisfied prerequisite depth gates
+  //    everything above it — rebuilding the foundation IS the highest-yield catalyst.
+  if (c.resolvesUnsatisfiedClosure) score += 0.3;
+
+  // 3. Spiral position: reward the depth level the learner is CURRENTLY traversing
+  //    (31 §3.2's spiral) — the frontier task, not below it, not artificially above it.
+  const frontier = frontierDepthFor(concept, sig);     // current spiral depth
+  if (c.targetDepthLevel === frontier) score += 0.2;
+
+  // 4. Retention boundary: review at the forgetting boundary (31 §4.4 half-lives)
+  if (c.isRetentionBoundaryReview) score += 0.1;
+
+  return Math.min(score, 1.0);
+}
+```
+
+**Weights:** mastery alignment enters the additive formula as an eighth criterion
+with weight **0.10**, taken proportionally: theta-decay 0.25→0.21, shadow-activation
+0.20→0.19, polarity-mode 0.15→0.14, transformation-readiness 0.15→0.14,
+drive-balance 0.10→0.09, narrative-coherence 0.10→0.09, session-fit 0.05→0.04,
+mastery-alignment **0.10** (sums to exactly 1.00 — developmental scheduling is never
+crowded out beyond its fair share, and the developmental weights remain strictly
+dominant).
+
+**What mastery alignment deliberately does NOT do:** it never gates, never blocks
+the scheduler, and never creates a separate curriculum mode (no "now entering study
+mode"). A concept's depth ladder is simply one more voice in the chorus the scheduler
+already conducts. The linter (32 E4/E5) guarantees every concept arrives with its
+blind-spot map and prereq depths populated, so this criterion never probes blind.
+
 ### 3.3 Tie-breaking rules
 
 When multiple candidates score within 0.05 of each other, tie-breaking applies in order:
@@ -469,6 +521,13 @@ function computeDepthAlignment(
 ## 5. Shadow-targeting logic
 
 The scheduler identifies which shadow to target and selects encounters optimised for surfacing or integrating that shadow.
+
+> **Instrument-intake rule (added 2026-09-17):** the scheduler consumes only signals
+> whose instruments have passed the validation protocol (12 §5.4). Shadow signals from
+> unvalidated rubrics, drive signals below their declared confidence floor, and depth
+> classifications from modules that failed 32's E-class checks are INELIGIBLE for
+> scheduling weight — they may log, but they cannot steer catalyst. This keeps the
+> scheduler honest end-to-end: validated in the scheduler, validated by construction.
 
 ### 5.1 Active shadow detection
 

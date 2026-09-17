@@ -4,6 +4,8 @@
 >
 > **Lateral:** The learner's mirror — the interface through which individuals study, understand, and project their own developmental trajectories across all lines of development and all curriculum subjects. No other document covers this: foundations/29 covers learning science; foundations/30 covers knowledge structure; foundations/31 covers depth measurement; foundations/32 covers validation. This document covers *what the learner sees and how they navigate their own growth*.
 >
+> **Revision (2026-09-17):** this document is REFRAMED from "the dashboard document" to "the RENDER-CONTRACT document for every human-facing developmental surface." The data authority for all dashboard surfaces — including the new auditor dashboards (§7) — is the Significator itself: the profiling system IS the diagnostics system (16 §2.4), and every view is a derived projection of it. This document owns what surfaces LOOK like and how they behave; 16 §10.4 owns what they are ALLOWED to show. No second data store, no parallel report generator, no redundant duplicate of the profiling system.
+>
 > **Depends on:** 29, 30, 31, 16 (Significator), 25 (CCI), 11 (modalities)
 > **Referenced by:** 34 (curriculum-engine bridge)
 
@@ -271,8 +273,84 @@ All views share:
 
 - **The learning pattern engine.** The trajectory view shows "patterns" (e.g., "you learn faster in mornings"). Detecting these patterns requires statistical analysis of the learner's session data. The pattern engine must be robust enough to detect real patterns but not so sensitive that it finds spurious correlations.
 
+- **Auditor authentication in a local-first architecture (added 2026-09-17).** The app has no accounts; identity is device-local. §7's consent brokerage and request logging assume an authenticated, revocable auditor link — how that link is established and verified without compromising the pseudonymous-by-design profile (16 §3.2) is unresolved. Candidate directions: guardian-held pairing codes, platform account anchoring (Capacitor/OS), or credential-ledger attestation (41). Must be resolved BEFORE §7 implementation; the §7 render contract is valid regardless of the mechanism chosen.
+
 ---
 
 ## 6. Principles served
 
 Principles **3** (adaptive — the dashboard adapts what it shows based on the learner's depth level), **4** (earned progression — the Integration Map is only visible at "analyzed" depth or above), **5** (multi-dimensional — the dashboard shows knowledge depth, developmental altitude, and cross-domain connections simultaneously), **7** (codebase — the DashboardState type is a pure data structure testable in isolation).
+
+---
+
+## 7. The auditor dashboards (added 2026-09-17)
+
+The profiling system acts as the diagnostics dashboard for parents, teachers/guardians,
+and therapists. This section is the RENDER CONTRACT for those dashboards; the data
+authority is 16 §2.4 + §10.4 (Auditor Projection Layer). The three scope projections
+arrive pre-filtered and consent-checked — this layer adds visual hierarchy and
+interaction only.
+
+### 7.1 The three auditor surfaces (one per scope)
+
+| Surface | Audience | Projection | Visual hierarchy (default → drill-down) |
+|---|---|---|---|
+| **Guardian Mirror** | parents, guardians-of-record | `guardian` | wellbeing overview → milestone timeline → engagement pattern → theta-attention lines |
+| **Educator Desk** | teachers, tutors | `educator` | cohort-of-one overview (branch rungs) → depth distribution per subject → prerequisite gaps → mastered-sequence status → pack trajectories |
+| **Therapeutic Pane** | therapists, counsellors | `therapeutic` | integration-trend overview → surfacing trends per line×quadrant → integration history → drive-balance trend |
+
+All three share one shell (`AuditorShell.svelte`): identity banner (who is this view
+for, which consent scopes are active), window selector (30d / 90d / all), and the
+granularity stepper (summary → line → line-stage → line-stage-cell) that maps 1:1 to
+the projection granularity ladder.
+
+### 7.2 Hierarchical expansion on request (the drill-down contract)
+
+The defining interaction: **the dashboard expands when the auditor asks, not before.**
+
+1. Every surface renders its coarsest level first (one screen, no scrolling walls).
+2. Any node the auditor selects issues the next `AuditorViewRequest` at one granularity
+   level deeper (AP3 — descent-only; enforced in the UI, not just the projector).
+3. Expansion is AUDITED: each request is logged (who, scope, granularity, when) so
+   consent reviews can see exactly what was seen. No background refresh pushes new
+   detail into an expanded view — re-request is explicit.
+4. Drill-down terminates at `line-stage-cell`: the full evidence context for one
+   line×stage cell (rubric outcomes, drive signatures, integration events). This is
+   the deepest sanctioned reveal; nothing below it exists in any projection.
+
+### 7.3 Rendering rules (binding)
+
+- **Metric-bearing is correct here.** Stage labels, rung indices, rubric names, and
+  theta values render verbatim on auditor surfaces (16 §10.3 rule 6). The Veil register
+  components (felt-sense descriptors) are NOT reused for auditor surfaces.
+- **No clinical language.** The therapeutic pane renders patterns and trends
+  ("Dark-Allergy surfacing rising on Interpersonal, integration events 3 this window") —
+  it never renders diagnostic categories or crisis content. Crisis signals route
+  through the deterministic crisis layer (43 §4.7), never through a projection.
+- **No cross-player comparison.** Surfaces render one Significator per session
+  (multi-auditee for an educator = one auditee selected at a time; batch comparison
+  is out of scope per 38's recognition discipline).
+- **Read-only plus propose.** The only write affordance is "submit request to the
+  orchestrator" (AP5) — a staged proposal form (e.g., adjust voicing, add practice
+  objectives), never a direct state mutation.
+- **Same components, same a11y.** AuditorShell reuses Card/Button/Stack/Cluster,
+  StageTheme palette, A11yApplier — no parallel component family.
+
+### 7.4 Data flow (one direction)
+
+```
+Significator (16)                    consent ledger (16 §2.4)
+      │                                        │
+      ▼                                        ▼
+AuditorProjections projector  ◄── consent check at render (AP4)
+      │            (AP1: derived at request time)
+      ▼
+/api/auditor/view  (server; session-authenticated; request logged)
+      ▼
+AuditorShell.svelte → Guardian Mirror / Educator Desk / Therapeutic Pane
+      └── drill-down → next AuditorViewRequest (AP3) → loop
+      └── propose → orchestrator delegation (43 §4.6) → ratification (AP5)
+```
+
+No mirror tables, no cached reports, no export-to-pdf snapshots of state (an export
+regenerates a projection at export time, so consent applies).

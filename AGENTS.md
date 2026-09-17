@@ -95,10 +95,13 @@ docs/
 | foundations/21 | **MASTER SYNTHESIS** (Option C): how all greater-cycle archetypes + concept-drafts + modalities compose into a playable game |
 | foundations/22 | The Holon Context Engine: LLM-driven world implementation spec (data model, pipeline, generation, consequences) |
 | foundations/23 | Polarity Ontology: the 64-cell polarity texture catalogue — per-line×stage STO/STS/exploratory textures grounded in concept-drafts |
-| foundations/24 | Encounter Scheduler & Macro-Catalyst Engine: the operational algorithm that selects, routes, and conditions encounters |
+| foundations/24 | Encounter Scheduler & Macro-Catalyst Engine: the operational algorithm that selects, routes, and conditions encounters — including mastery-sequence alignment (§3.2.8) as the knowledge-depth criterion in the ONE priority formula |
 | foundations/25 | Cumulative Consciousness Index (CCI): the composite metric tracking integrated development across all lines and stages |
 | foundations/26 | Unified Core Architecture: the unified core architecture spec replacing ATB with assessment-module execution |
 | foundations/27 | Auto-Mode Strategy Engine: auto-mode session strategy generation for adaptive play |
+| foundations/12 | Drive assessment mechanics — PLUS the rubric-validation protocol (§5.4): what it means for an implicit-assessment rubric to be valid (RV1–RV6), incl. below-stage holonic diagnosis |
+| foundations/16 | Significator architecture — PLUS the Auditor Projection Layer (§2.4, §10.4): the profiling system as the diagnostics dashboard for consented guardians, derived projections only |
+| foundations/33 | Dashboard render contract — learner surfaces (§1–5) AND auditor dashboards (§7): Guardian Mirror / Educator Desk / Therapeutic Pane, rendered from 16 §10.4 projections |
 | **-- Architecture / process docs --** ||
 | STAGE-ASSESSMENT-ARCHITECTURE | The MODULE CONTRACT (composition rules, interfaces, 4 execution modes) |
 | ONBOARDING-REDESIGN-PLAN | Binary-search composite assessment for initial Significator seeding |

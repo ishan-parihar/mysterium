@@ -258,7 +258,7 @@ the existing 13 unified tools; each sub-agent gets only what its role requires.
 | State read | `get_full_profile`, `get_knowledge_snapshot`, `get_unified_profile` |
 | Action | `recommend_workout`, `recommend_trajectory`, `study_concept`, `set_difficulty_override` |
 | Detection | `detect_shadow_signals` |
-| Orchestration (NEW) | `delegate_session` (§6), `read_session_log`, `analyze_session_logs`, `ratify_proposal`, `schedule_presence` (§3.3) |
+| Orchestration (NEW) | `delegate_session` (§6), `read_session_log`, `analyze_session_logs`, `ratify_proposal`, `schedule_presence` (§3.3), `receive_auditor_request` (2026-09-17: accepts auditor proposals from the 16 §2.4/§10.4 projection layer surfaced by 33 §7's dashboards, and converts them to ordinary DelegationSpecs — auditors (guardians) propose through the same ratification laws as the council, 16 AP5; they never receive write tools, and TL2 applies with full force: auditor reads are the SAME purpose-scoped AuditorProjections as the dashboards, no new data surface) |
 | Commit | `process_outcome` (the single-writer edge, L4) |
 
 **Sub-loop toolsets (per council):**
@@ -358,6 +358,14 @@ orchestrator: read log → eager signals → (if warranted) analyze_session_logs
 
 - **Safety is un-delegatable.** `route_to_safety` is available to every agent; the
   safety layer is outside the council (existing architecture) and preempts (§4.5.3).
+- **Human-handoff flows are DEFERRED (2026-09-17).** The crisis layer stays
+deterministic and local (offline-safe pattern scan, one definition consumed by the
+practice loop and orchestration distressSignal). What is explicitly deferred: external
+escalation contacts, localized/multilingual crisis patterns, live human handoff
+protocols, and adverse-event surfaces. Stage-development, evolution, and healing —
+profiling-diagnostics plus the validated agentic loop (12 §5.4) — take build priority.
+`route_to_safety`'s contract is unaffected: it halts catalyst and holds a safe state;
+it simply does not yet dial a human. Ownership stays here; no other document may claim it.
 - **Consent is un-delegatable in the granting direction.** Only the S4 Data Warden may
   *execute* consent changes, and only with the player's direct action; other agents may
   only *inform* the player about consent.

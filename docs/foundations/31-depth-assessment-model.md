@@ -151,9 +151,13 @@ The encounter produces:
 - Developmental signal: Healthy agency, moderate erosion, no shadow
 - Metacognition: Calibration error of 0.2 (slightly overconfident)
 
-### 3.4 How depth levels affect scheduling
+### 3.4 How depth levels affect scheduling (mastery sequencing)
 
-The depth level achieved determines what the scheduler selects next:
+The depth level achieved determines what the scheduler selects next. This IS the
+mastery-sequencing rule: mastery sequences are not a separate curriculum queue — they
+are the depth ladder consumed by the SAME scheduler that delivers developmental
+catalyst (24 §3.2.8 wires this into the priority formula as one criterion among
+seven, not a parallel engine).
 
 | Achieved depth | Scheduler behavior |
 |---|---|
@@ -164,6 +168,84 @@ The depth level achieved determines what the scheduler selects next:
 | **Analyzed** | Introduce cross-domain analogies; schedule evaluation task |
 | **Evaluated** | Schedule creation/teaching task |
 | **Transformed** | Mark as "integrated"; reduce review frequency; use as analogical anchor for other concepts |
+
+**Blind-spot catalyst (the catalyst-loop behaviour, added 2026-09-17).** When the
+scheduler targets a concept, it does not present the concept's frontier depth task
+cold — it selects catalysts from the concept's **blind-spot adjacency map** (§3.5a):
+adjacent concepts and prerequisite-of-prerequisite concepts whose evidence profile
+suggests a gap. Concretely, the encounter mix for a developing concept includes:
+
+- **adjacent-concept probes** — tasks in structurally neighbouring concepts that test
+  whether the current concept's pattern transferred (cognitive-flexibility probe);
+- **prerequisite-failure probes** — tasks at the failing prerequisite's depth, when
+  prereq closure (§3.5a) flags it, so the learner rebuilds the foundation in context;
+- **sibling-confusion probes** — contrast tasks between the concept and its declared
+  confusable siblings (the misconception map's structural cousins);
+- **overgeneralization probes** — "when would this NOT apply" tasks targeting the
+  declared boundary conditions.
+
+This is exactly how the developmental catalyst loop works (10–14): probe the edge,
+surface the gap as experience, integrate. The knowledge-depth loop runs the same
+shape at the syllabus ladder. The linter (32 E4/E5) guarantees every concept ships
+with this map populated, so the scheduler never probes blind.
+
+### 3.5a Depth closure, blind-spot adjacency, and the depth ceiling (added 2026-09-17)
+
+Three structural computations the linter (32 Category E) and the scheduler both
+consume. They close the gap between "prerequisite exists" and "prerequisite
+understood deeply enough to build on."
+
+**1. Prerequisite depth closure.** Every prerequisite edge carries a minimum depth.
+Closure is computed over the concept's whole prerequisite subgraph:
+
+```ts
+interface PrereqEdge {
+  readonly prerequisiteId: string;
+  readonly minDepth: DepthLevel;      // NOT mere existence — required depth
+}
+
+/** Depth-closure check: does every prerequisite chain ground at sufficient depth? */
+function depthClosureSatisfied(
+  conceptId: string,
+  edges: readonly PrereqEdge[],
+  state: Record<string, { depth: DepthLevel; retention: number }>,
+): { satisfied: boolean; unsatisfied: readonly { conceptId: string; required: DepthLevel; actual: DepthLevel }[] }
+```
+
+Rules: retention below the concept's retention floor (0.4, aligned with 42's demotion
+bar semantics) demotes the effective depth one level for closure purposes — a decayed
+prerequisite is a shallower prerequisite (forgetting is real developmental
+information, 42 §2). Unsatisfied closure caps the branch rung (42 §3.2's prereq
+closure) and routes the scheduler to prerequisite-failure probes (§3.4).
+
+**2. Blind-spot adjacency map.** Every concept declares its structural neighbours and
+the failure classes each neighbour diagnoses. The linter (32 E4/E5) enforces
+population; the scheduler (§3.4) consumes it:
+
+```ts
+type BlindSpotClass =
+  | 'prereq-failure'          // the foundation is missing or decayed
+  | 'sibling-confusion'       // structurally similar concept is conflated
+  | 'overgeneralization'      // the pattern is applied beyond its boundary
+  | 'principle-absence';      // the underlying mechanism was never grasped
+
+interface BlindSpotEntry {
+  readonly adjacentConceptId: string;
+  readonly relationship: 'prerequisite-of-prerequisite' | 'sibling' | 'application-domain' | 'boundary-case';
+  readonly failureClass: BlindSpotClass;
+  readonly evidenceNote: string;      // why this adjacency diagnoses this failure class
+}
+```
+
+**3. The depth ceiling.** Some concepts legitimately top out (31 §5's depth-ceiling
+problem, resolved): a concept may declare `depthCeiling?: DepthLevel` — the highest
+depth that is epistemically meaningful for it ("the speed of light is 3×10⁸ m/s"
+ceils at `memorized`). Effects: the scheduler stops offering tasks above the ceiling
+(the spiral stops there, honestly — no forced depth for depth's sake); closure
+requirements citing that concept can never demand more than its ceiling; the linter
+(32 E1) exempts ceiling levels from the completeness requirement.
+
+### 3.5 The dual-depth assessment in practice
 
 ---
 
@@ -197,6 +279,12 @@ function depthOrdinal(level: DepthLevel): number {
 interface DepthRubric {
   readonly conceptId: string;
   readonly levels: Record<DepthLevel, DepthLevelRubricEntry>;
+  /** Minimum required depth per prerequisite edge (§3.5a; linter 32 E3). */
+  readonly prereqEdges: readonly PrereqEdge[];
+  /** Structural neighbours that diagnose this concept's failure classes (§3.5a; 32 E4/E5). */
+  readonly blindSpots: readonly BlindSpotEntry[];
+  /** Highest epistemically meaningful depth for this concept (§3.5a; 32 E1). */
+  readonly depthCeiling?: DepthLevel;
 }
 
 interface DepthLevelRubricEntry {
@@ -290,9 +378,9 @@ function computeHalfLife(depth: DepthLevel, baseHalfLife: number): number {
 
 - **The calibration problem.** Learners are notoriously poor at judging their own understanding. The system tracks calibration accuracy, but what happens when a learner is chronically overconfident? Should the system reduce the weight of self-assessment? Or should it explicitly teach calibration as a metacognitive skill?
 
-- **The depth-ceiling problem.** Some concepts may have a natural depth ceiling — "memorized" is all that's needed for certain facts (e.g., "the speed of light is 3×10^8 m/s"). The system must recognize when deeper understanding is not needed and not force unnecessary depth.
+- **The depth-ceiling problem.** Some concepts may have a natural depth ceiling — "memorized" is all that's needed for certain facts (e.g., "the speed of light is 3×10^8 m/s"). The system must recognize when deeper understanding is not needed and not force unnecessary depth. *(Resolved 2026-09-17: §3.5a's `depthCeiling` declaration; 32 E1 exempts ceiling levels; the scheduler stops the spiral at the ceiling.)*
 
-- **Cross-concept depth interaction.** Understanding concept A at "applied" depth may depend on understanding concept B at "comprehended" depth. The depth rubrics must account for prerequisite depth requirements, not just prerequisite existence.
+- **Cross-concept depth interaction.** Understanding concept A at "applied" depth may depend on understanding concept B at "comprehended" depth. The depth rubrics must account for prerequisite depth requirements, not just prerequisite existence. *(Resolved 2026-09-17: §3.5a's `PrereqEdge.minDepth` + depth-closure computation; 32 E3 enforces at the gate; 42 §3.2's prereq closure consumes it.)*
 
 - **The developmental signal reliability.** The drive and shadow signals embedded in curriculum encounters are indirect measures. A learner might show healthy drive scores on curriculum tasks but unhealthy drive patterns in free play. The dual-depth model must be validated against ecological behavior.
 

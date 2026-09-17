@@ -96,8 +96,9 @@ At EVERY level, the holon has the same five-phase internal structure:
 | **Application** | "How does this operate in novel situations?" | Problem-solving in unfamiliar contexts |
 | **Integration** | "How does this connect to other principles?" | Cross-references to related concepts, analogies |
 | **Creation** | "Can the learner generate new instances?" | Original work, synthesis, teaching |
+| **Depth profile** (added 2026-09-17) | "How deeply can this be known, and what does mastery require?" | Per-holon depth metadata: depth-level coverage, per-prerequisite minimum depths (`PrereqEdge`), blind-spot adjacency map, optional depth ceiling (31 §3.5a) — compiled/validated by the linter (32 Category E) before registration |
 
-This is the same structure at the concept level (learning about recursion), the topic level (learning about algorithms), the subject level (learning about computer science), and the entire curriculum level (learning about learning).
+This is the same structure at the concept level (learning about recursion), the topic level (learning about algorithms), the subject level (learning about computer science), and the entire curriculum level (learning about learning). The depth-profile row is what makes the holon **deep-traversable**: every level of the hierarchy — Concept, Topic, Subject, Branch, Curriculum — carries its own depth metadata (a Topic aggregates its concepts' coverage into a topic-level profile; a Branch aggregates topics into a months-to-years journey envelope, validated by 32 E6), so orchestrator-agents can reason about depth at any altitude of the curriculum without leaving the holonic structure.
 
 ### 3.2 The CS/AI/ML holonic self-similarity
 

@@ -452,6 +452,73 @@ For language-based drive probes, the LLM scores against stage-specific rubrics:
 > - 0.4: Changes choice partially or hedges. Shows influence of social information.
 > - 0.1: Completely changes choice to match majority. Cannot articulate independent reasoning."
 
+### 5.4 The rubric-validation protocol (added 2026-09-17)
+
+The LLM rubrics above are instruments, and instruments must be validated before
+their signals are allowed to STEER anything (24's instrument-intake rule). This
+protocol defines what "validated" means for BOTH the drive/shadow rubrics (this doc,
+10, 23) and the stage-assessment rubrics (modules' capacity rubrics). A rubric that
+has not passed is **log-only**: its signals may be recorded but receive zero
+scheduling weight, zero altitude influence, and zero ledger writes with resolution
+impact.
+
+#### 5.4.1 The validation gates
+
+A rubric is valid for steering when ALL gates pass:
+
+| # | Gate | Requirement | Method |
+|---|---|---|---|
+| **RV1** | Inter-rater agreement | ≥ 2 independent raters (LLM instances with distinct seeds/configs) score a benchmark response set; Cohen's κ ≥ 0.6 (substantial) for categorical calls (shadow quadrant, stage band), ICC ≥ 0.65 for continuous scores | offline harness over a frozen benchmark set per rubric |
+| **RV2** | Construct coverage | The rubric's benchmark set exercises ALL response classes the rubric distinguishes — no class may be unreachable | benchmark-set audit (linter-checked: every score-band/quadrant has ≥ k exemplars) |
+| **RV3** | Known-answer stability | Seeded synthetic personas with known drive/stage profiles score within tolerance (±0.15 for continuous, exact-band for categorical) across 3 repeat runs | deterministic persona fixtures (same machinery as the benchmark kernel, `src/core/validation/` precedent) |
+| **RV4** | Adversarial resistance | Prompt-injection and sycophancy probes (players flatter/deflect/manipulate) shift scores ≤ 0.1 from baseline on fixture personas | adversarial fixture suite |
+| **RV5** | Below-stage discrimination | On personas with KNOWN multi-stage profiles, the rubric correctly identifies resolved-vs-unresolved status at stages BELOW the active stage (the holonic diagnosis requirement — see §5.4.2) ≥ 75% of the time | staged-persona fixtures |
+| **RV6** | Drift monitoring | Once valid, a rolling κ/ICC on a rotating audit sample must stay above gate; fall below → rubric auto-reverts to log-only | runtime harness, kernel-gated |
+
+#### 5.4.2 Holonic stage diagnosis (the below-stage requirement)
+
+An active-stage claim alone is assessment; holonic diagnosis requires the rubric to
+see the WHOLE spiral. Per AGENTS.md §5.6 and 16 §5.4, every stage below the active
+centre-of-gravity must remain healthy, so a validated rubric must distinguish, at
+every below-active stage:
+
+- **resolved** — the capacity is present and the drive texture is healthy (the holon
+  holds); no catalyst needed beyond maintenance;
+- **arrested** — the capacity was built but the drive texture is pathological there
+  (dark-shadow material at that stage) → heal/evolve catalyst (bottom-up: Agape +
+  Agency) targets THAT stage, not the growth edge;
+- **bypassed** — the stage was skipped: the capacity is absent but hidden by higher-
+  stage compensation (golden-shadow material) → evolve/heal catalyst (top-down: Eros +
+  Communion) dissolves the compensation first.
+
+This three-way call is what makes the Significator's altitudes honest (16 §11.1's
+"±1 stage accuracy" is only achievable if below-stage state is actually measured) and
+what makes 42's shadow-load gate (§3.2) meaningful — the gate reads rubric verdicts
+that have passed RV5. The `stage-appropriateness` of concept-draft modules already
+probes each cell (line×stage); this protocol is what certifies that the probe
+instruments can be trusted across all 64 cells.
+
+#### 5.4.3 What validation does NOT do
+
+- **No norm-referencing.** Gates are criterion-referenced (agreement, coverage,
+  known-answer tolerance) — never cohort norms (42's demographic-blindness applies
+  to the validation machinery too).
+- **No player-visible change.** Validation status is engine-side metadata; the Veil
+  surface is untouched (20).
+- **No one-time rubber stamp.** RV6 makes validity a maintained property, not a
+  milestone.
+
+Phases: **RV0** — harness + benchmark fixtures for the 8 line × 4-drive core rubrics
+(§3); **RV1** — shadow-quadrant rubrics (10/23) + module capacity rubrics; **RV2** —
+runtime drift monitoring + kernel gate. Acceptance: a deliberately corrupted rubric
+(yawed scorer) fails RV1/RV3 in CI, and its signals demonstrably receive zero
+scheduling weight.
+
+> **Relationship to 40 (uniqueness):** doc 40 validates *explicit competency packs*
+> (reliability of pack theta). THIS protocol validates *implicit assessment rubrics*
+> (the LLM-scored drive/shadow/stage instruments inside the 64 modules). Same rigour,
+> different layer of the three-measurement-systems table (40 §1) — no overlap.
+
 ---
 
 ## 6. The Ecosystem Integration
