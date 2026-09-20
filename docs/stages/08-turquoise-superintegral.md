@@ -148,7 +148,7 @@ witnesses.
 The four phases are:
 
 - **UR phase:** the body settles. No combat. The breath-tracking
-  task of `progression/06`'s state mini-game becomes the gameplay.
+  task of `docs/foundations/04-states-of-consciousness.md`'s state mini-game becomes the gameplay.
 - **UL phase:** all interior content arises and passes — the
   player's full developmental story replays inside, every prior
   achievement and shadow surfacing once. The task is to witness

@@ -166,7 +166,7 @@ const EMOTIONAL_VERBS = {
 ```
 
 Affect-recognition tasks ship with culturally-balanced face stimuli
-(`combat/02` will specify the corpus).
+(`docs/foundations/12-drive-assessment-mechanics.md` will specify the corpus).
 
 ## 7. Open questions
 
@@ -178,7 +178,7 @@ Affect-recognition tasks ship with culturally-balanced face stimuli
   carry both labelling models; default to Ekman in MVP for tractability.
 - **Triggering content.** Trauma-adjacent affect (deep grief, shame) is
   legitimate gameplay material but must be handled with content
-  warnings and skip options. `validation/02`.
+  warnings and skip options. `docs/system/sub-systems/safety/ethics-and-data-privacy.md`.
 
 ## 8. Principles served
 

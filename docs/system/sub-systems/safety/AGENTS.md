@@ -14,7 +14,7 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 
 ### Documents in this organ (auto-discovered — never hand-maintained)
 
-*(none yet — author one with `arch.py doc add --organ safety --title ...`)*
+- [ethics-and-data-privacy.md](./ethics-and-data-privacy.md) — Ethics & Data Privacy
 
 <!-- arch:auto-zone:end -->
 

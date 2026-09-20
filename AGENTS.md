@@ -80,7 +80,7 @@ remembered.
 
 ```
 mysterium/                ← repository root
-├── _org.yaml             ← THE structure declaration: rungs, 13 organs, DG1–DG15 (machine-readable)
+├── _org.yaml             ← THE structure declaration: rungs, 13 organs, DG1–DG17 (machine-readable)
 ├── AGENTS.md             ← process protocol (the root router — this file)
 ├── scripts/arch.py       ← the ONLY write path for AD/RG; validates every rung
 │
@@ -296,21 +296,42 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current Phase: Phase 1 — Delegation Kernel (per docs/DEVELOPMENT-PLAN.md)
+### 4.2 Current state: all nine build phases are IMPLEMENTED
 
-Concept-drafts are **COMPLETE** (all 512 exist across 64 modules x 8 files).
-Legacy removal is **DONE** (record: `docs/audits/DOC-SET-AUDIT-2026-09-16.md`).
+Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
+**DONE**. **All nine build phases** (1 Delegation Kernel → 9 Credentialing) are **implemented and
+gated** — kernel gates G1–G21 green, the post-plan frontier closed. **There is no current phase
+number.** Cite this section, never a phase.
 
-**The binding build plan is `docs/DEVELOPMENT-PLAN.md`** — the authoritative,
-revised-in-place sequencing of all phases (1 Delegation Kernel → 2 Practice Tools →
-3 Corpus → 4 Pods → 5 Packs → 6 WebUI Parity → 7 Onboarding Composite → 8 K-12 →
-9 Credentialing), each with gates. The current phase is **Phase 1**: implement the
-delegation kernel per `docs/foundations/43-agentic-orchestration-architecture.md`
-(DelegationSpec/Result/Proposal types, session-log store, `delegate_session`,
-ratification-only commits, kernel gates G14/G15). The plan owns order and gates;
-foundations own contracts; on conflict the foundations doc wins and the plan is revised.
+> **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
+> Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
+> five post-plan frontier items closed on 2026-09-17 (`G14`/`G15` have been in
+> `src/core/validation/gates.ts` since then). An agent obeying the root protocol — this file — would
+> have rebuilt finished work. The stale half was the plan's §2 gap table; both are corrected, and §2
+> now carries the closure evidence per gap.
 
-Standing constraints for ALL phases: workspace-lint → build+test → commit → push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5.
+**The binding plan is `docs/DEVELOPMENT-PLAN.md`** (order + gates). It is revised in-place; on
+conflict the foundations docs win and the plan is revised.
+
+**What is actually open** — two lists, both owned by the record layer. Do **not** duplicate their
+contents here; read them where they live:
+
+1. **Ratified laws with no consumer.** Decisions the canon has ratified that no code implements yet:
+   `MY-AD-0006` (register classes), `MY-AD-0007` (one articulation ladder, two registers),
+   `MY-AD-0008` (alignment bias — the seam exists, the consumer does not), `MY-AD-0009` (two-fold
+   world memory + per-holon owner worker), `MY-AD-0010` (background workers), `MY-AD-0011`
+   (integrated human intervention), `MY-AD-0018` (the user-dimensionality vector as retrieval key),
+   `MY-AD-0019` (world/NPC/scenario pooling), and `MY-AD-0020` (the ethics and data-privacy classes
+   and projection firewall). Plus the Auditor Projection Layer (`16 §2.4/§10.4`).
+   `python3 scripts/arch.py related <ID>` pulls any record's edges.
+2. **Documentation and knowledge-base integrity.** `_org.yaml → pending` — `CODE-PASS`, the `RT-*`
+   gate/ingest items and the `KB-*` items (orphan-script triage, the undocumented organs, skills
+   provenance, `validate --json`, canon→code ingest).
+
+**A law that is Active with no consumer is the normal shape of pending work here.** When you
+implement one, record the implementation in the same commit and cite the record it closes.
+
+Standing constraints: workspace-lint → `arch.py validate` (DG1–DG17) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
 
 ### 4.3 The Grounding Principle
 
@@ -427,7 +448,9 @@ Every development iteration — no exceptions — must follow this sequence:
 
 1. **Workspace lint** — Run `python3 skills/workspace-lint/scripts/workspace_lint.py --root .` after every change. Violations must be fixed before committing. The linter natively respects `.gitignore` — do NOT manually add ignored paths to `workspace-lint.yaml`.
 
-1b. **Doc-governance gates** — Run `python3 scripts/arch.py validate` after every change to `docs/`, `_org.yaml`, or a record. It must exit 0 (gates DG1–DG15: record schema, status enum, numbering + no-reissue, authority uniqueness, superseded vocabulary, historical quarantine, ownership, reference resolution, ledger integrity, canon↔code, derived-surface freshness, canon link integrity, organ integrity, **relationality** — no authored document may be an orphan — and **Source resolution**).
+1b. **Doc-governance gates** — Run `python3 scripts/arch.py validate` after every change to `docs/`, `_org.yaml`, or a record. It must exit 0 (gates DG1–DG17: record schema, status enum, numbering + no-reissue, authority uniqueness, superseded vocabulary, historical quarantine, ownership, reference resolution, ledger integrity, canon↔code, derived-surface freshness, canon link integrity, organ integrity, **relationality** — no authored document may be an orphan — **Source resolution**, **cited-path resolution** — a backticked citation must point at something real, prose included — and **record-reference resolution** — a cited `MY-AD-*`/`MY-RG-*` ID must exist).
+
+   A gate that cannot fail is decoration (`MY-RG-0010`). When you add or change one, inject the violation it is supposed to catch, confirm it fires, and revert — see `_org.yaml → pending` `RT-GATE-FIXTURES` for why that is still a manual step.
 
    - **Records are written only through the tool.** Never hand-create or hand-edit a `MY-AD-*`/`MY-RG-*` file: `arch.py new` / `arch.py update` / `arch.py seed` write the ledger receipt that DG9 requires.
    - **Documents are written through the tool too.** Use `arch.py doc add --organ <organ> --title "..."` to author an architecture document; it lands in the organ, is **auto-discovered** (reachable from `route`/`context`/`search`/`related` the moment it exists), and needs no registry edit. Authoring a document by hand means hand-editing `_org.yaml` and `44` — which `MY-RG-0015` exists to prevent. Never enumerate an organ's contents anywhere: `_org.yaml` declares the *structure*; the *contents* are discovered.

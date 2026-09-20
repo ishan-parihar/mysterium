@@ -32,7 +32,7 @@ The layering that keeps this unique (three measurement systems, three owners):
 
 | Layer | Measures | Owner | Mode |
 |---|---|---|---|
-| Engine validation | the *system's* correctness | benchmark kernel (`docs/validation/`) | CI |
+| Engine validation | the *system's* correctness | benchmark kernel (`docs/system/sub-systems/validation/`) | CI |
 | Implicit assessment | drives, shadows, stage | the 64 modules (10–12, 31) | always-on, never shown |
 | **Explicit packs (this doc)** | concrete skill competencies | measurement packs | opt-in sessions, results on demand |
 

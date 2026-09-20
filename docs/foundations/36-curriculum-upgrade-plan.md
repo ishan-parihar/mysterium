@@ -69,7 +69,7 @@
      return pCs && depthOrdinal(pCs.depthLevel) >= depthOrdinal(holon.depthMeta.requiredPrerequisiteDepth);
    })
    ```
-2. `tests/core/engines/CandidateGeneration.test.ts` — Add tests for depth gating
+2. `tests/core/engines/CandidateGeneration.test.ts` — **planned** new test file for depth gating
 3. `src/core/curriculum/CurriculumLinter.ts` — Verify D-3 check enforces at scheduling time
 
 **Validation:** typecheck, tests, workspace lint
@@ -167,7 +167,7 @@
 1. **New holon level: `research`:**
    - `src/core/curriculum/types.ts` — Add `ResearchHolon` as a union variant of `CurriculumHolon` (discriminator: `level: 'research'`)
    - Additional fields: `researchQuestion`, `methodology`, `expectedContribution`, `advisorId`, `committeeIds`, `milestones`
-   - Note: `AdvisorNPC` is a new type to create in `src/core/curriculum/ResearchPipeline.ts`, not in the existing `src/core/domain/Holon.ts`
+   - Note: `AdvisorNPC` is a planned new type to create in `src/core/curriculum/ResearchPipeline.ts`, not in the existing `src/core/domain/Holon.ts`
 2. **AdvisorNPC role:**
    - `src/core/domain/Holon.ts` — Add `AdvisorNPC` type
    - Provides feedback, approves milestones, suggests方向

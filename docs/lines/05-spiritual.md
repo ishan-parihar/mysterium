@@ -13,7 +13,7 @@ values around what matters most.
 Mysterium separates *spiritual intelligence* (how we **grow up** spiritually,
 in stages) from *spiritual experience* (how we **wake up** spiritually,
 through states). Stages live here; states live in `foundations/04` and
-`progression/06`.
+`docs/foundations/04-states-of-consciousness.md`.
 
 ## 2. Scientific basis
 

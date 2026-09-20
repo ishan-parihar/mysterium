@@ -133,7 +133,9 @@ Metaphysical ceiling. Not directly interactable. Constrains all holons: free wil
 
 ## 4. The context aggregation pipeline
 
-Seven steps from encounter-spec to assembled LLM prompt.
+Seven steps from encounter-spec to assembled LLM prompt. Step 4.1.5 is the personalization
+join — the pooling step owned by `45`, which supplies the *third* selection key alongside the
+holon query and the developmental state.
 
 ### 4.1 Holon selection
 
@@ -141,6 +143,21 @@ Seven steps from encounter-spec to assembled LLM prompt.
 **Transform:** Query registry for sourcing holon + parents (2 levels) + player relationships.
 **Output:** `{ primary: Holon, contextual: Holon[], playerRelationships: HolonRelationship[] }`
 **Rule:** Max 6 holons (token budget). Priority: primary > relationships > parents > ambient.
+
+### 4.1.5 Personalization pooling
+
+**Input:** `UserDimensionalityVector` (foundations/45 §3), velocity-purposed to the
+`gameplay-personalization` scope; the candidate libraries (world · NPC · scenario).
+**Transform:** Run `45 §5` — build the weighted query, retrieve semantically across the three
+libraries, apply the hard constraint filter (Veil · perceptibility strata · aversion · depth ·
+modality fitness), emit a ranked candidate set. When the target concept needs it, compose the
+three-layer analogical bridge (`45 §5.4`) with its recorded structural map.
+**Output:** `ScenarioContext` (foundations/45 §6) — the pooled references plus the bridge.
+**Rule:** Pooling produces a *candidate set and a rendering vocabulary*; it never selects the
+encounter. Selection stays with `24`'s ONE priority formula, into which relevance enters as a
+multiplicative bias (`MY-AD-0008`) — exactly like every other bias.
+**Boundary:** Purpose-scoped projections only (`16 §2.1`). No raw identity fields enter the prompt
+at any step.
 
 ### 4.2 Significator state injection
 
@@ -196,20 +213,27 @@ Loaded from the relevant `ModalityContract` (§6).
 
 ### 4.7 System prompt assembly
 
-All outputs from 4.1–4.6 composed into a fixed template:
+All outputs from 4.1–4.6 composed into a fixed template. The two blocks marked *(added)* come
+from the pooling step (`45`); everything else is unchanged.
 
 ```
 [ROLE] You are the manifestation layer of Mysterium.
 [COSMOLOGY] Third Density constraints, Veil enforcement.
 [FREQUENCY] {FrequencySpec}
 [HOLONS] {Selected holons — names, signatures, voice anchors}
+[POOLED CONTEXT] {ScenarioContext.pooled — world/NPC/scenario refs surviving 45 §5.2}   (added)
+[VOCABULARY] {vocabularyBand + valueLens + analogicalBridge surface/stake maps}          (added)
 [ENCOUNTER] {What this encounter must accomplish}
 [MODALITY] {LLM responsibilities and constraints}
 [CONTINUITY] {Recent consequences, world-state anchors}
 [PLAYER STATE] {VeilFilteredSignificator — machine signals only}
 [OUTPUT FORMAT] {Expected JSON schema}
-[RULES] {Veil rules, canon rules, forbidden patterns}
+[RULES] {Veil rules, canon rules, forbidden patterns, aversions — fail-closed}
 ```
+
+The `[VOCABULARY]` block is where the player's own domain enters, and the only place it may. Its
+structural map is a *rendering* instruction: the encounter is scored on the target concept, never
+on fluency in the player's preferred domain (`45 §5.4`).
 
 ---
 

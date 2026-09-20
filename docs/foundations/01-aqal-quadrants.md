@@ -73,7 +73,7 @@ the line expresses there.
 
 ### 3.2 Encounter-quadrant balance
 
-A stage advancement gate (`progression/03`) requires the player to have
+A stage advancement gate (`docs/foundations/42-developmental-levelling-mechanism.md`) requires the player to have
 demonstrated capacity at the relevant altitude in **all four quadrants**:
 
 | Demonstration | Mechanic |
@@ -121,7 +121,7 @@ Engine-level invariant (asserted in unit tests): for any encounter where
 `role === 'main'`, `quadrantsTested.length === 4` and the set is
 `{ 'UL', 'UR', 'LL', 'LR' }`.
 
-The cognitive-overlay UI (`ux/01`) chooses overlay placement based on
+The cognitive-overlay UI (`docs/system/sub-systems/presentation/rendering-layer.md`) chooses overlay placement based on
 quadrant: UL overlays bottom-left (introspective), UR overlays right
 (action-side, dominant hand), LL overlays bottom-centre (the shared
 ground), LR overlays top (the bird's-eye/system view).

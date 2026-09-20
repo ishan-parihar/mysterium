@@ -75,17 +75,26 @@ Currently minimal (5 components):
 ## 4. Architectural contract
 
 - `src/routes/` — SvelteKit routes (DOM rendering)
-- `src/game/` — Phaser scenes (canvas rendering)
 - `scripts/cli-game.ts` — CLI (terminal rendering)
+- `src/core/assessments/cli/TaskRenderers.ts` — assessment task rendering, shared by CLI and web
 - `src/styles/` — CSS design tokens
 - `src/lib/components/` — shared Svelte components
+- `src/lib/components/displays/` — the visualisation surfaces (radial chart, arcs, overlays)
+
+**No canvas engine.** The ATB-era Phaser layer (`src/game/`, 53% dead code) was removed when the
+assessment-module spine replaced turn-based combat (`MY-AD-0001`); Phaser is no longer a
+dependency. Rendering is DOM/Svelte plus the shared task renderers above, and any claim of a
+canvas path in an older document is residue.
 
 ## 5. Open questions
 
-- **Phaser migration** — 53% of Phaser code is dead; migration to SvelteKit incomplete
-- **Component library** — missing Button, Card, Modal, Toggle primitives
-- **Responsive design** — only 3 media queries in entire Svelte layer
+- **Component completeness** — primitives exist (`Button`, `Card`, `Modal`, `Toggle`); the gap is
+  the **display** layer's contract with the assessment modules (which renderer owns which task type,
+  and how an overlay stays legible at a glance — foundations/09 §2)
+- **Responsive design** — only 3 media queries in the entire Svelte layer
 - **i18n** — all strings English-only, no localization framework
+- **Performance as a flow condition** — foundations/09 §4 sets the input-to-feedback latency NFR;
+  nothing currently measures it in CI
 
 ## 6. Principles served
 

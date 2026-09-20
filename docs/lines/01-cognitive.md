@@ -6,7 +6,7 @@
 
 Specify the Cognitive line — the depth-of-perspective-taking,
 executive-function, reasoning capacity. Cognitive is the *substrate*
-for several other lines (`lines/00`); Mysterium's combat verbs that target
+for several other lines (`docs/lines/00-overview-multi-line.md`); Mysterium's combat verbs that target
 spellcasting, planning, and combo sequencing all live here.
 
 ## 2. Scientific basis
@@ -45,7 +45,7 @@ Mysterium's working definition:
 | Processing speed | Choice RT, digit-symbol substitution | turquoise-matter integrity, basal-ganglia |
 
 Every Mysterium cognitive combat verb has a 1:1 mapping into one of these
-laboratory tasks (`combat/02-cognitive-task-library.md`).
+laboratory tasks (`docs/foundations/12-drive-assessment-mechanics.md`).
 
 ### 2.3 Brain regions
 
@@ -117,7 +117,7 @@ somatic builds (which are dodge-heavy, present-moment) cognitive builds
 
 ### 4.4 Cognitive task(s) used to evaluate it in real time
 
-Listed in 4.2. The full library is in `combat/02-cognitive-task-library.md`.
+Listed in 4.2. The full library is in `docs/foundations/12-drive-assessment-mechanics.md`.
 
 ### 4.5 Depth progression
 
@@ -134,7 +134,7 @@ in-game pace:
 - Teal → Turquoise: very slow, deliberately
 
 Note the asymptote: cognitive line does *not* pull ahead indefinitely —
-the line-ceiling rules in `lines/00` keep it within +1 of the
+the line-ceiling rules in `docs/lines/00-overview-multi-line.md` keep it within +1 of the
 synthesised stage.
 
 ## 5. Enemy / encounter structure that trains this line
@@ -177,7 +177,7 @@ is a fortress that cannot be entered.
 
 This shadow is unlocked when the player's Cognitive line ≥ Orange and
 the player's Emotional line is ≥ 2 stages behind. The trigger condition
-is in `progression/05-shadow-work-and-regression.md`.
+is in `docs/foundations/10-shadow-and-pathology.md`.
 
 ## 6. Architectural contract
 
@@ -210,7 +210,7 @@ is computed as a weighted aggregate over the staircases.
   backstop must catch this.
 - **Cross-task transfer claims.** Even if the player's in-game n-back
   scores climb, claiming "Gf has improved" requires offline validation.
-  Mysterium's UI must avoid this overreach. `validation/00`.
+  Mysterium's UI must avoid this overreach. `docs/system/sub-systems/validation/benchmark-architecture.md`.
 
 ## 8. Principles served
 

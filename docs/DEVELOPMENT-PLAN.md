@@ -33,33 +33,46 @@ The engine substrate is real and tested. This is the load-bearing inventory:
 | **Corpus** | concept-drafts.json (64 modules indexed), stage-holons (56), red-layer holons (36), curriculum data (6 programs/branches), polarity ontology, RedPESTLE | ⚠️ prototype-scale (see §3.G1) |
 | **Tests** | 93 files / 949 tests / 14.6k LOC, incl. 13-gate validation kernel | ✅ green |
 
-## 2. What is spec'd but absent (the true gap list)
+## 2. Gap closure status — all nine verified against the tree
 
-Verified **zero code anchors** for each of these (grep across `src/`+`scripts/`):
+> **This section was stale from 2026-09-16 to 2026-09-20.** It described G-A…G-F as
+> "spec'd but absent" while §8/§9 recorded them implemented; `AGENTS.md §4.2` inherited the
+> staleness and declared Phase 1 current. An agent reading the root protocol would have rebuilt
+> finished work. Re-verified 2026-09-20 — every row below now cites the code that closed it
+> (recorded as `MY-AD-0017`).
 
-| Gap | Spec | Why it matters now |
-|---|---|---|
-| **G-A: Delegation kernel** (DelegationSpec/Result, `delegate_session`, session-log store, council toolsets, ratification path) | 43 | The current phase per AGENTS.md §4.2; the orchestrator exists but cannot delegate |
-| **G-B: Practice tools** (`propose_objective`, `process_checkin`, `review_practice` on the live loop) | 39 | The `Vow` type exists in the domain but nothing drives it |
-| **G-C: Cohort pods** (pod DO, rituals, witness events) | 38 | Deferred to post-M1 — depends on G-A + G-B |
-| **G-D: Measurement packs** (pack contract, S1 agents, harness integration) | 40 | Depends on G-A; scoring harness pattern already proven by the kernel |
-| **G-E: K-12 corpus** (grade-band-authoring defaults, subject→line mapping data) | 37 | Pure data + registry work; unblocks "education replacement" ambition |
-| **G-F: Credentialing** (claim-based VC ledger, EU pathway surfaces) | 41 | Deliberately last — regulatory surface, canon-revised |
+| Gap | Spec | Closing evidence | State |
+|---|---|---|---|
+| **G-A: Delegation kernel** | 43 | `src/core/orchestration/{types,sessionLog,delegate,orchestratorTools,choicePolicy}.ts`; kernel gates **G14/G15** in `src/core/validation/gates.ts` | ✅ closed |
+| **G-B: Practice tools** | 39 | `src/core/practice/practiceTools.ts` (`validatePracticeLoop`) wired into the kernel | ✅ closed |
+| **G-C: Cohort pods** | 38 | `src/core/pods/podStateMachine.ts` + `src/infra/pods/PodTransport.ts`; **G18** privacy wall | ✅ closed |
+| **G-D: Measurement packs** | 40 | `src/core/packs/{PackEngine,referencePacks,ReliabilityCollector}.ts`; **G19** | ✅ closed |
+| **G-E: K-12 corpus** | 37 | `src/core/curriculum/data/*.foundations.json` (language-arts, arts, music, second-language, civics, health) + `scripts/author-k12-branches.py` | ✅ closed |
+| **G-F: Credentialing** | 41 | `src/core/credential/ClaimLedger.ts` + `exportRPLPortfolio`; **G21** | ✅ closed |
+| **G1 — Corpus depth** | — | 64/64 concept modules; 64/64 stage-holon cells; 108 curriculum holons, 0 lint errors | ✅ closed |
+| **G2 — Play-route thinness** | — | Phase 6 parity harness proved browser binding ≡ kernel loop; `tests/engine/TrainingBeatParity.test.ts` | ✅ closed |
+| **G3 — Onboarding composite** | — | `src/core/onboarding/BinarySearchPlacement.ts`; **G20** placement convergence (≤8 probes) | ✅ closed |
+| **G4 — Orchestration stagnation** | — | 18 roles dispatch their complete allowlists through `delegate`; `scripts/cli/delegateArgs.ts` + `tests/cli/DelegateArgs.test.ts` | ✅ closed |
 
-**Structural gaps (not missing features but missing integrity):**
+### 2.1 The true gap list is now somewhere else — deliberately
 
-- **G1 — Corpus depth.** 64 modules indexed but content is prototype-scale; stage-holons
-  cover 56 of 64 cells; curriculum corpus is 6 branches. Every downstream experience
-  (variety, difficulty curve, LLM grounding) is corpus-limited.
-- **G2 — Play-route thinness.** `src/lib/engine/gameEngine.ts` wraps the core loop, but
-  the play route's encounter surface is thin relative to the CLI — the WebUI is not yet
-  the primary experience surface.
-- **G3 — Onboarding-to-Significator seeding.** No binary-search composite
-  implementation found (`ONBOARDING-REDESIGN-PLAN.md` unimplemented); seeding currently
-  runs through the legacy probe flow.
-- **G4 — Orchestration-tool stagnation.** AgenticOrchestrator's 13 tools are
-  session-bound; without delegation, the council roles (T/A/J/Therapist/S) exist only
-  as personas, not as delegable mandates.
+The remaining work is **not** a set of missing subsystems; it is (a) *ratified laws with no
+consumer*, and (b) *documentation and knowledge-base integrity*. Both are tracked in the
+record layer, which owns them — this plan owns **phase order and gates**, and must not
+restate their contents (uniqueness principle):
+
+- **Ratified laws awaiting implementation** — `AGENTS.md §4.2` §"current work" and the AD/RG
+  ledger: `MY-AD-0006` (register classes), `MY-AD-0007` (one articulation ladder),
+  `MY-AD-0008` (alignment bias — seam present, consumer absent), `MY-AD-0009` (two-fold world
+  memory + per-holon owner worker), `MY-AD-0010` (background workers), `MY-AD-0011`
+  (integrated human intervention), and the Auditor Projection Layer (`16 §2.4/§10.4`).
+- **Documentation + KB integrity** — `_org.yaml → pending`: `CODE-PASS`, `RT-*` (gate
+  fixtures, corpus reconciliation, organ-dir attribution, migration archiving) and `KB-*`
+  (orphan-script triage, the six undocumented organs, skills provenance, `validate --json`,
+  canon→code ingest).
+
+Neither list is duplicated here. Run `python3 scripts/arch.py related <ID>` for any of them;
+run `python3 scripts/arch.py validate` for the gate state.
 
 ## 3. Sequencing logic (why this order)
 
@@ -88,9 +101,12 @@ verifiable.
 
 Every phase: workspace-lint → build → full test suite → invariants → the phase's gates
 → doc updates (concept→foundations feedback loop per AGENTS.md §3) → commit → push to
-BOTH remotes. Kernel gates G1–G13 stay green throughout (regression discipline).
+BOTH remotes. Kernel gates G1–G21 stay green throughout (regression discipline).
 
-### Phase 1 — Delegation Kernel (G-A) — the current phase
+**All nine phases below are implemented and gated** (see §8, §9, and the closure evidence in §2).
+The phases are retained as the record of *order and gates*, not as outstanding work.
+
+### Phase 1 — Delegation Kernel (G-A) — ✅ implemented
 
 **Deliverables** (all spec'd in 43 §4–§6):
 1. `src/core/orchestration/types.ts` — `DelegationSpec`, `DelegationResult`, `Proposal`,
@@ -211,6 +227,12 @@ trajectory renders K-5 → undergraduate on one branch.
 **Gates:** G18 evidence-chain gate extended (claims trace to pack reliability status);
 consent firewall (identity never in credential payloads).
 **Duration:** ~1.5 weeks. **Depends:** Phase 5.
+
+### Current work (post-plan) — not a phase
+
+All nine phases are closed; what remains is listed in §2.1 and owned by the record layer. When
+current work is described to an agent, cite `AGENTS.md §4.2` (which now carries the true state)
+and the ledger — never a phase number.
 
 ## 5. Standing work-streams (not phases — continuous)
 

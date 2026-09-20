@@ -47,7 +47,7 @@ Mysterium's working definition:
 
 Willpower partially overlaps with inhibitory control (cognitive line) but
 *adds* time-extended commitment. Mysterium models this overlap by giving
-willpower a +1 cognitive ceiling slack vs. other lines (`lines/00`).
+willpower a +1 cognitive ceiling slack vs. other lines (`docs/lines/00-overview-multi-line.md`).
 
 ### 2.3 Brain regions
 

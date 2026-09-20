@@ -35,7 +35,7 @@ the substrate; the other lines must develop on top.
 Mysterium honours this asymmetry: cognitive-line altitude is a soft *cap* on
 some other lines (Moral, Spiritual cannot exceed cognitive altitude by
 more than one stage). This is documented in
-`progression/04-line-balancing-and-altitude.md`.
+`docs/foundations/25-cumulative-consciousness-index.md`.
 
 ### 2.2 Altitude vs. stage
 
@@ -150,7 +150,7 @@ Invariants:
   a 5-stage gap).
 
 These caps are conservative defaults; tuneable in
-`progression/04-line-balancing-and-altitude.md`.
+`docs/foundations/25-cumulative-consciousness-index.md`.
 
 ## 5. Open questions
 

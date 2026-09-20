@@ -16,6 +16,11 @@ Historical records are NOT rewritten: they describe where a file lived at a date
 Usage:
     python3 scripts/doc-path-reindex.py            # dry run: report only
     python3 scripts/doc-path-reindex.py --apply    # write changes
+
+The map has TWO tables: `PATH_MAP` (bare whole-path rewrites from the P3 move) and `SHORT_MAP`
+(backtick-anchored rewrites of the short citation forms — `combat/02`, `validation/02`,
+`progression/06` — that the P3 move left behind). Both are idempotent; read `SHORT_MAP`'s comment
+for why its keys are anchored.
 """
 
 from __future__ import annotations
@@ -71,6 +76,50 @@ PATH_MAP: list[tuple[str, str]] = [
     ("`archive/", "`docs/historical/archive/"),
 ]
 
+# Short-form dead references (added 2026-09-20, KB-UTILITIES-AUDIT RT-DEADREFS).
+#
+# Why these are BACKTICK-ANCHORED while PATH_MAP's entries are bare strings: these keys are short
+# suffixes (`lines/00`, `stages/08`) that occur as substrings of their own live targets, so a bare
+# .replace() would rewrite `docs/lines/00-overview-multi-line.md` into garbage. Including the
+# closing backtick makes each key match only the standalone citation form, which also keeps the
+# mapping idempotent: no new target text contains a key (`.../00-overview...` does not end in a
+# backtick right after `00`). Keys WITH a file extension must precede their short forms.
+SHORT_MAP: list[tuple[str, str]] = [
+    # progression/ -> the docs/progression/ survivors and the foundations that inherited each lateral
+    ("`progression/00-progression-overview.md`", "`docs/progression/00-progression-overview.md`"),
+    ("`progression/03`", "`docs/foundations/42-developmental-levelling-mechanism.md`"),
+    ("`progression/04-line-balancing-and-altitude.md`", "`docs/foundations/25-cumulative-consciousness-index.md`"),
+    ("`progression/05-shadow-work-and-regression.md`", "`docs/foundations/10-shadow-and-pathology.md`"),
+    ("`progression/06`", "`docs/foundations/04-states-of-consciousness.md`"),
+    # combat/ -> the assessment-module spine (MY-AD-0001) and the probe/modality owners
+    ("`combat/02-cognitive-task-library.md`", "`docs/foundations/12-drive-assessment-mechanics.md`"),
+    ("`combat/02`", "`docs/foundations/12-drive-assessment-mechanics.md`"),
+    ("`combat/03-skill-tree-architecture.md`", "`docs/system/sub-systems/kernel/stage-assessment-architecture.md`"),
+    ("`combat/06`", "`docs/foundations/11-game-modalities.md`"),
+    ("`combat/`", "`docs/system/sub-systems/kernel/stage-assessment-architecture.md`"),
+    # ux/ -> the presentation organ
+    ("`ux/02-skill-tree-visualisation.md`", "`docs/system/sub-systems/presentation/rendering-layer.md`"),
+    ("`ux/01`", "`docs/system/sub-systems/presentation/rendering-layer.md`"),
+    # validation/ -> the validation organ, and the ethics contract that did not exist
+    ("`validation/02-ethics-and-data-privacy.md`", "`docs/system/sub-systems/safety/ethics-and-data-privacy.md`"),
+    ("`validation/02`", "`docs/system/sub-systems/safety/ethics-and-data-privacy.md`"),
+    ("`validation/00`", "`docs/system/sub-systems/validation/benchmark-architecture.md`"),
+    ("`validation/01`", "`docs/system/sub-systems/validation/benchmark-architecture.md`"),
+    # architecture/ (bare, pre-P3 numbering)
+    ("`architecture/10`", "`docs/system/sub-systems/kernel/stage-assessment-architecture.md`"),
+    # stages/ and lines/ short forms
+    ("`stages/altitude.md`", "`docs/foundations/02-eight-stages-overview.md`"),
+    ("`stages/framework-density.md`", "`docs/foundations/06-law-of-one-correspondence.md`"),
+    ("`stages/08-turquoise-superintegral.md`", "`docs/stages/08-turquoise-superintegral.md`"),
+    ("`stages/01-infrared-archaic.md`", "`docs/stages/01-infrared-archaic.md`"),
+    ("`stages/08`", "`docs/stages/08-turquoise-superintegral.md`"),
+    ("`lines/00`", "`docs/lines/00-overview-multi-line.md`"),
+    ("`lines/05`", "`docs/lines/05-spiritual.md`"),
+    ("`narrative/00-narrative-architecture.md`", "`docs/narrative/00-narrative-architecture.md`"),
+    ("`narrative/00`", "`docs/narrative/00-narrative-architecture.md`"),
+    ("`narrative/03`", "`docs/narrative/00-narrative-architecture.md`"),
+]
+
 INCLUDE_DIRS = ["foundations", "lines", "stages", "narrative", "progression", "concept-drafts", "system"]
 INCLUDE_FILES = [
     "00-vision.md",
@@ -99,9 +148,31 @@ def candidates() -> list[Path]:
     return [p for p in out if not p.relative_to(DOCS).as_posix().startswith(EXCLUDE_PREFIXES)]
 
 
-def transform(text: str) -> str:
+def write_targets(files: list[Path]) -> list[Path]:
+    """Files eligible for ANY rewrite. Records and the move plan are all excluded (see `excluded`)."""
+    return [p for p in files if not excluded(p.relative_to(DOCS).as_posix())]
+
+
+# Files where an old path IS the subject matter, not a citation. `SHORT_MAP` is NOT applied to
+# them: a record that documents "`combat/03-skill-tree-architecture.md` resolves to nothing" is
+# falsified the moment its example is rewritten, and ARCHITECTURE-TRANSMUTATION-PLAN describes
+# where files lived BEFORE the move. PATH_MAP still applies (their live cross-links must be current).
+EXCLUDE_EXACT = (
+    "ARCHITECTURE-TRANSMUTATION-PLAN.md",
+)
+
+
+def excluded(rel: str) -> bool:
+    """True for files whose subject matter IS the old paths (records + the move's own plan)."""
+    return rel in EXCLUDE_EXACT or "/core/" in rel or rel.startswith("system/core/")
+
+
+def transform(text: str, short: bool = True) -> str:
     for old, new in PATH_MAP:
         text = text.replace(old, new)
+    if short:
+        for old, new in SHORT_MAP:
+            text = text.replace(old, new)
     return text
 
 
@@ -119,12 +190,15 @@ def main() -> int:
         )
         return 2
 
-    files = candidates()
+    all_files = candidates()
+    files = write_targets(all_files)
+    print(f"excluded (records + move plan): {len(all_files) - len(files)} files", file=sys.stderr)
     changed: list[tuple[str, int]] = []
     total = 0
     for p in files:
         before = p.read_text(encoding="utf-8")
-        after = transform(before)
+        relp = p.relative_to(DOCS).as_posix()
+        after = transform(before, short=not excluded(relp))
         if after == before:
             continue
         n = sum(1 for a, b in zip(before.splitlines(), after.splitlines()) if a != b)

@@ -68,6 +68,8 @@ GATE_CONFIG_KEY = {
     "DG13": "dg13_organ_integrity",
     "DG14": "dg14_relationality",
     "DG15": "dg15_source_resolves",
+    "DG16": "dg16_cited_paths",
+    "DG17": "dg17_record_refs",
 }
 
 
@@ -330,6 +332,8 @@ class Gate:
             ("DG13", self.dg13_organ_integrity),
             ("DG14", self.dg14_relationality),
             ("DG15", self.dg15_source_resolves),
+            ("DG16", self.dg16_cited_paths),
+            ("DG17", self.dg17_record_refs),
         ]
         for name, fn in gates:
             if only and name != only:
@@ -432,8 +436,13 @@ class Gate:
             r = rel(p)
             if r in allowed or r == "AGENTS.md":
                 continue
-            # Records and the transmutation plan *document* authority violations: exempt.
-            if r.startswith("docs/system/core/") or r == "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md":
+            # Records and the transmutation plan *document* authority claims: exempt. The exemption
+            # covers organ cores too (`docs/system/sub-systems/<organ>/core/`), not just the system
+            # core — a record in either home is the ledger of decisions, and a record whose subject is
+            # a binding obligation must be able to name it. Before this, DG4's phrase tripwire fired on
+            # organ records while system-core records passed, which is an inconsistency no author could
+            # infer from the rule.
+            if "/core/" in r or r == "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md":
                 continue
             n += 1
             text = p.read_text(encoding="utf-8")
@@ -642,6 +651,24 @@ class Gate:
                     self.err(g, f"organ `{organ}`: contract doc `{ref}` does not resolve")
             if not (ROOT / "docs" / "system" / "sub-systems" / organ / "AGENTS.md").exists():
                 self.err(g, f"organ `{organ}`: no router at docs/system/sub-systems/{organ}/AGENTS.md")
+        # A record filed in an organ core must declare that organ. The frontmatter `Organ:` was
+        # free text, so a record could be filed under `kernel/` while declaring `platform` (or
+        # nothing), and every gate passed — the organ attribution `route` and the routers report would
+        # then be wrong, which is worse than absent (red-team RT-ORGAN-DIR).
+        m = re.compile(r"^docs/system/sub-systems/([^/]+)/core/(?:decisions|regressions)/")
+        for r in records(self.cfg):
+            n += 1
+            hit = m.match(r["rel"])
+            if not hit:
+                continue
+            organ = hit.group(1)
+            declared = str(frontmatter(r["text"]).get("Organ") or "").strip()
+            if declared != organ:
+                self.err(
+                    g,
+                    f"{r['rel']}: declares `Organ: {declared or '(empty)'}` but is filed in the "
+                    f"`{organ}` organ core",
+                )
         self.checked[g] = n
 
     # DG14 — relationality ENFORCED. Creating, modifying or managing a document is only sound if the
@@ -685,6 +712,143 @@ class Gate:
                     f"{r['rel']}: `Source:` names no resolvable document (`{src[:70]}`) — "
                     f"use a path such as docs/foundations/44-....md §9",
                 )
+        self.checked[g] = n
+
+    # DG16 — a CITED PATH RESOLVES, in prose as well as in links. DG12 resolves wiki-links and
+    # markdown links but discards nothing that is not a link, and the P3 structural move left a
+    # family of bare backticked citations behind (`combat/02`, `validation/02`, `progression/06`,
+    # `ux/01`, `stages/altitude.md`) pointing at directories that no longer exist. Every gate
+    # reported green over all of them (audit RT-DEADREFS, MY-RG-0016). This gate closes that class
+    # for path-like tokens: a backticked token that names a KNOWN repo top-level directory and does
+    # not carry a wildcard must resolve, relative to the docs root or the repo root.
+    #
+    # Scope is deliberately narrow — the blacklist below is finite and explicit, so prose that
+    # merely contains a slash (`and/or`, `agency/communion`, `line×stage`) is never flagged.
+    CITED_ROOTS = (
+        "foundations",
+        "lines",
+        "stages",
+        "narrative",
+        "progression",
+        "concept-drafts",
+        "system",
+        "historical",
+        "audits",
+        "docs",
+        "src",
+        "tests",
+        "scripts",
+        "skills",
+    )
+
+    def dg16_cited_paths(self, g: str) -> None:
+        n = 0
+        pat = re.compile(r"`((?:\.\.?/)?[A-Za-z0-9_-]+/[A-Za-z0-9_./-]+)`")
+        for p in live_files(self.cfg):
+            here = rel(p)
+            # Records, audits and dated plans QUOTE paths as evidence; a quoted dead path is the
+            # record working, and a plan describing where files lived THEN is not a citation.
+            if (
+                "/core/" in here
+                or here.startswith("docs/audits/")
+                or here.startswith("docs/historical/")
+                or here.endswith("ARCHITECTURE-TRANSMUTATION-PLAN.md")
+            ):
+                continue
+            n += 1
+            text = p.read_text(encoding="utf-8", errors="ignore")
+            for m in pat.finditer(text):
+                tok = m.group(1)
+                head = tok.lstrip("./")
+                if head.split("/", 1)[0] not in self.CITED_ROOTS:
+                    continue
+                if "*" in tok or "<" in tok or "..." in tok:
+                    continue
+                if self.cited_resolves(tok):
+                    continue
+                if self.declared_future(text, m.start(), m.end()):
+                    continue  # an artifact that is explicitly declared not-yet-existing is not a dead link
+                self.err(
+                    g,
+                    f"{here}: cited path `{tok}` does not resolve — fix the citation or the file",
+                )
+        self.checked[g] = n
+
+    # Markers accepted as a declaration that the cited artifact is FUTURE, not current. Without this
+    # the gate cannot tell a citation that outlived its target (a defect) from a plan naming a module
+    # it intends to create (legitimate), and a gate that flags legitimate prose gets switched off.
+    FUTURE_MARKERS = re.compile(
+        r"(?i)\b(planned|deferred|proposed|not yet|to be created|does not exist|non-existent"
+        r"|new module|equivalent|removed|retired|deleted)\b"
+    )
+
+    @classmethod
+    def declared_future(cls, text: str, start: int, end: int) -> bool:
+        """True when a `planned`/`removed`/`non-existent` marker sits beside the citation (either side).
+
+        Two legitimate non-current classes are recognised: an artifact a plan intends to CREATE, and an
+        artifact that was REMOVED (a live doc recording its own history, e.g. a superseded module).
+        Both are honest prose; only an unmarked citation that outlived its target is a defect.
+        """
+        window = text[max(0, start - 60) : min(len(text), end + 60)]
+        return bool(cls.FUTURE_MARKERS.search(window))
+
+    @staticmethod
+    def cited_resolves(tok: str) -> bool:
+        """A cited path resolves if it names a file, a directory, or a legitimate SHORTHAND of one.
+
+        Three shorthands are legal house style and are accepted:
+          * a numbered-doc stem without its slug (`foundations/06` -> `06-law-of-one-correspondence.md`)
+          * a stem without its extension (`lines/02-emotional` -> `02-emotional.md`)
+          * a directory with a trailing slash (`docs/historical/`)
+          * a numeric range of docs (`foundations/00-09`)
+        Anything else is a citation that has outlived its target.
+        """
+        cand = tok.rstrip("/")
+        for base in (ROOT / "docs", ROOT):
+            if (base / cand).exists():
+                return True
+        # shorthand: the token is a strict prefix of at least one real path
+        for base in (ROOT / "docs", ROOT):
+            parent = base / Path(cand).parent
+            stem = Path(cand).name
+            if parent.is_dir() and any(e.name.startswith(stem) for e in parent.iterdir()):
+                return True
+        # a numeric range of docs, e.g. `foundations/00-09`
+        if re.fullmatch(r"\d+-\d+", Path(cand).name):
+            return True
+        return False
+
+    # DG17 — a CITED RECORD ID EXISTS. DG8 checks that a record's `Related:` IDs resolve, and DG15
+    # that its `Source:` names a real document — but nothing checked a record ID cited from a CANON
+    # document. Four documents (45 §7, 44, AGENTS.md §4.2, the safety ethics contract) cited
+    # MY-AD-0017/0018/0019 and MY-RG-0017 while none of those records existed, and every gate
+    # reported green: the exact class of MY-RG-0016, on the record layer instead of the path layer.
+    # A citation of a record is the strongest form of authority claim in this doc set, so a dangling
+    # one is worse than a dangling path — it points the reader at a decision that was never made.
+    #
+    # Dated audits and quarantined history are exempt: they quote IDs as evidence of what was true
+    # then, and rewriting them would falsify the record (`MY-RG-0004`).
+    def dg17_record_refs(self, g: str) -> None:
+        n = 0
+        known = {str(frontmatter(r["text"]).get("ID") or "") for r in records(self.cfg)}
+        known.discard("")
+        pat = re.compile(r"\bMY-(?:AD|RG)-\d{4}\b")
+        for p in live_files(self.cfg):
+            here = rel(p)
+            if here.startswith("docs/historical/") or here.startswith("docs/audits/"):
+                continue
+            if "/core/" in here:
+                continue  # a record quoting another record is already covered by DG8
+            n += 1
+            text = p.read_text(encoding="utf-8", errors="ignore")
+            for m in pat.finditer(text):
+                if m.group(0) not in known:
+                    self.err(
+                        g,
+                        f"{here}: cites record `{m.group(0)}` which does not exist — author it "
+                        f"or correct the citation",
+                    )
         self.checked[g] = n
 
     # DG10 — canon↔code: every code artifact cited by a record exists

@@ -81,7 +81,7 @@ The visualisation immediately reveals:
 - **Repression patterns** — if a spoke has been static while others
   grow, it is being avoided.
 
-See `ux/02-skill-tree-visualisation.md` for the visual grammar.
+See `docs/system/sub-systems/presentation/rendering-layer.md` for the visual grammar.
 
 ### 3.2 Encounter scheduler
 

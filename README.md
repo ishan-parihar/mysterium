@@ -35,7 +35,7 @@ generated    docs/INDEX.md + docs/system/sub-systems/*/AGENTS.md   (never hand-e
 Declared machine-readably in [`_org.yaml`](_org.yaml). Query the knowledge-base with:
 
 ```bash
-python3 scripts/arch.py validate          # the doc-governance gates (DG1-DG15)
+python3 scripts/arch.py validate          # the doc-governance gates (DG1-DG17)
 python3 scripts/arch.py route <path>      # which rung/organ owns this file or code path?
 python3 scripts/arch.py context <path>    # contract docs + organ documents + records
 python3 scripts/arch.py search <keyword>  # BM25 search over the live knowledge-base

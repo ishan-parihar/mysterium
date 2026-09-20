@@ -216,6 +216,13 @@ owners:
   world-consequence-memory: foundations/22-holon-context-engine
   human-intervention: foundations/43-agentic-orchestration-architecture
 
+  # personalization (added 2026-09-20, MY-AD-0018 / MY-AD-0019)
+  personalization-and-context-pooling: foundations/45-personalization-and-context-pooling
+  user-dimensionality-vector: foundations/45-personalization-and-context-pooling
+  three-libraries: foundations/45-personalization-and-context-pooling
+  analogical-bridge: foundations/45-personalization-and-context-pooling
+  engagement-contract-and-endorsement-test: foundations/45-personalization-and-context-pooling
+
   # curriculum detail
   meta-learning: foundations/29-meta-learning-science
   holonic-curriculum: foundations/30-holonic-curriculum-architecture

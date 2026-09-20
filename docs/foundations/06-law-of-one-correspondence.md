@@ -128,21 +128,21 @@ This subsection fixes the vocabulary the table above depends on, and it is load-
 density labels for stage bands had been diluting every downstream doc (18/19/22/24).
 
 **Sources.** HoloOS `_THEORY/02_Ontology/` (densities, octaves, the Veil, the primal
-distortions) and KosmOS `_Ontology/` (`stages/altitude.md`, `stages.md`, `lenses/rays.md`,
-`stages/framework-density.md`). Where they speak, they govern the vocabulary.
+distortions) and KosmOS `_Ontology/` (`docs/foundations/02-eight-stages-overview.md`, `stages.md`, `lenses/rays.md`,
+`docs/foundations/06-law-of-one-correspondence.md`). Where they speak, they govern the vocabulary.
 
 **Three axes, never conflated (KosmOS `framework-density.md`, CONSTITUTION rule 13):**
 
 | Axis | Meaning | Status in Mysterium |
 |---|---|---|
-| **Altitude** — L1…L10 | how high; the one vertical every line climbs | **canonical and neutral** (`stages/altitude.md`: "Neutral framing is canonical; the Law-of-One 7-ray/density/harvest mapping is the optional lens") |
+| **Altitude** — L1…L10 | how high; the one vertical every line climbs | **canonical and neutral** (`docs/foundations/02-eight-stages-overview.md`: "Neutral framing is canonical; the Law-of-One 7-ray/density/harvest mapping is the optional lens") |
 | **Stage number** — MHC 1–17 / Kegan 0–5+ | the *psychological resolution*; how the ascent actually differentiates | **canonical** (`stages.md`); it is the within-altitude detail |
 | **Ray / density** — 1–7 (Blue 5a/5b, Indigo 6a/6b → 9 sub-octave positions) | the LoO overlay | **a lens, never a place** (`lenses/rays.md`: "available on request… not parsed by diagnose.py") |
 
 **The arc is D3→D4, entirely.** `lenses/rays.md` §1: *"The Integral stages are the sub-octaves
 of 3rd-to-4th-density consciousness — the holographic recapitulation of the whole density octave
 within 3rd density. Super-Integral (Violet) is the harvest into 4th density."* And
-`stages/altitude.md` L10 Violet's threshold marker: *"open frontier (beyond the 3rd-density
+`docs/foundations/02-eight-stages-overview.md` L10 Violet's threshold marker: *"open frontier (beyond the 3rd-density
 sub-octave arc)"*. Densities are the octave's name; the **rays are within-D3 sub-octave
 positions**, not densities one travels through.
 
@@ -179,7 +179,7 @@ positions**, not densities one travels through.
    never "stage = density".
 5. **§6's holographic principle is unaffected** — the same fractal claim the nesting
    architecture makes.
-6. **The knowledge axis is separate** (`stages/framework-density.md`): concept → concrete-op →
+6. **The knowledge axis is separate** (`docs/foundations/06-law-of-one-correspondence.md`): concept → concrete-op →
    formal-op → vision-logic → beyond is the *Subtle*-realm scale and corresponds to 31's
    DepthLevel / 42's depth rungs. It is never averaged with altitude.
 
@@ -188,7 +188,7 @@ positions**, not densities one travels through.
 shadows** — not reaching the harvest. The harvest is an emergent horizon, never a target the
 system optimises toward.
 
-**Implementation note (mechanical re-index, not yet applied):** `docs/stages/07-turquoise.md`
+**Implementation note (mechanical re-index, not yet applied):** `docs/stages/07-teal-integral.md`
 → `07-teal.md` and `08-white.md` → `08-turquoise.md` (harvest passages moving to the closure
 owner, 16 §11.5/§11.6), plus every cross-reference to "White" as a stage. Tracked as the next
 doc pass.
@@ -197,7 +197,7 @@ doc pass.
 owns eligibility vs. event; 16 owns the lifecycle; 02 §4 owns the substrate-layer table.
 Related sources: HoloOS `04_VIBGYOR_Density_Functions.md`, `01.4_Scalar_Metric.md` §2.5,
 `08.8.7_Primal_Distortion_Genesis_Theorem.md` §6.5, `RD_Density_Ray_Dissonance_Audit.md`;
-KosmOS `stages/altitude.md`, `stages.md`, `lenses/rays.md`, `stages/framework-density.md`,
+KosmOS `docs/foundations/02-eight-stages-overview.md`, `stages.md`, `lenses/rays.md`, `docs/foundations/06-law-of-one-correspondence.md`,
 CONSTITUTION rule 13.
 
 ## 6. Holographic principle as world-truth
@@ -421,7 +421,7 @@ canonically committed rather than aesthetically optional.
 
 - **Cultural sensitivity around chakras / Ra material.** Both
   traditions deserve reverent handling. World-building docs in
-  `narrative/03` (deferred) must be reviewed for appropriation risk
+  `docs/narrative/00-narrative-architecture.md` (deferred) must be reviewed for appropriation risk
   during the post-MVP content drops. Cultural consultants
   encouraged.
 - **Service-to-self / negative-polarity path.** The Ra material

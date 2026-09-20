@@ -107,7 +107,7 @@ bestiary covers the space evenly.
 
 ### 3.3 The radial chart
 
-The skill-tree visualisation in `ux/02-skill-tree-visualisation.md` is
+The skill-tree visualisation in `docs/system/sub-systems/presentation/rendering-layer.md` is
 literally a polar plot: angle = line (8 spokes), radius = altitude
 (Infrared at centre, Turquoise at rim), tint = quadrant. The chart IS the
 AQAL psychograph.
@@ -145,7 +145,7 @@ never sets `stage`; it reads it.
   category-pragmatism here.
 - **State training as parallel progression.** Wilber distinguishes "growing
   up" (stages) from "waking up" (states). Most cognitive-training games
-  ignore states entirely. Mysterium's stretch goal in `progression/06` is to
+  ignore states entirely. Mysterium's stretch goal in `docs/foundations/04-states-of-consciousness.md` is to
   include them; whether MVP does is undecided.
 - **How many types matter.** Currently zero. Some character-creation flavour
   could be added without polluting the model — but the temptation to let

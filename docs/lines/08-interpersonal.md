@@ -13,7 +13,7 @@ that lives in the **LL quadrant** (collective interior) — where
 A single-player game can *practice* interpersonal capacity (NPC
 dialogues, ally party management) but only multiplayer can *test* it
 honestly. Mysterium's hardest interpersonal milestones are multiplayer-only
-by design — a deliberate constraint, defended in `lines/00`.
+by design — a deliberate constraint, defended in `docs/lines/00-overview-multi-line.md`.
 
 ## 2. Scientific basis
 
@@ -210,7 +210,7 @@ surfaces gracefully.
 - **Toxicity.** Interpersonal play in multiplayer is *exactly* where
   toxicity lives. Mysterium must build robust pro-social structures
   (party-of-friends emphasis; voice-off default; report flows). See
-  `validation/02`.
+  `docs/system/sub-systems/safety/ethics-and-data-privacy.md`.
 
 ## 8. Principles served
 

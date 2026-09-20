@@ -33,13 +33,13 @@ the design:
 
 | Flow condition | Mysterium design target |
 |---|---|
-| Clear goals | Encounter narrator: "Defeat this enemy / answer the dilemma / open the gate." |
-| Immediate feedback | Damage numbers, parry-perfect tints, screen-shake on miss. |
+| Clear goals | The encounter narrator states what this moment asks: answer the dilemma, hold the position, open the gate, keep the promise. |
+| Immediate feedback | The consequence lands at once — the NPC's response changes, the world state shifts, the overlay's arc moves. |
 | Challenge-skill balance | Staircase. |
-| Action-awareness merge | Object pooling, 60 fps, no GC stutter. (`architecture/07`) |
-| Concentration without effort | UI minimalism; cognitive overlay is *legible at a glance*. (`ux/01`) |
-| Personal control | Stance choice, drive choice, optional shadow encounters. |
-| Time distortion | Pacing — combat encounters tuned to 90 s–3 min; flow research shows this is the typical sustained-flow envelope before a break is needed. |
+| Action-awareness merge | Nothing between intent and response: instant rendering, no stutter, no loading seam. (`docs/system/sub-systems/presentation/rendering-layer.md`) |
+| Concentration without effort | UI minimalism; cognitive overlay is *legible at a glance*. (`docs/system/sub-systems/presentation/rendering-layer.md`) |
+| Personal control | Line choice, drive choice, modality choice, optional shadow encounters. |
+| Time distortion | Pacing — encounters tuned to 90 s–3 min; flow research shows this is the typical sustained-flow envelope before a break is needed. |
 | Autotelic experience | The progression must feel meaningful *without* end-state rewards. The radial chart filling IS the reward. |
 
 ### 2.2 Self-Determination Theory (SDT)
@@ -79,7 +79,7 @@ progression is deterministic on demonstrated skill. Variable rewards
 appear *only* in cosmetic loot drops (no gameplay impact) and in
 narrative beats (which are scripted, not rolled).
 
-The ethics here is non-negotiable. See `validation/02-ethics-and-data-privacy.md`.
+The ethics here is non-negotiable. See `docs/system/sub-systems/safety/ethics-and-data-privacy.md`.
 
 ## 3. Game-design mapping
 
@@ -136,22 +136,24 @@ contract is therefore *non-functional*:
 | Staircase plateau detection | Sessions at same level before context-added | 5 |
 | Failure cluster detection | Failures at same gate before mentor offered | 3 |
 
-These are NFRs; they appear in `architecture/07` and `architecture/10`.
+These are NFRs; the perception-side targets live in
+`docs/system/sub-systems/presentation/rendering-layer.md`, the pacing and measurement side in
+`docs/system/sub-systems/validation/benchmark-architecture.md`.
 
 ## 5. Open questions
 
 - **Cross-cultural flow.** Csikszentmihalyi's flow research is largely
   Western. Cross-cultural data is sparser. Whether the 70.7% is
   universal or culture-conditioned is debated. Mysterium defaults to 70.7%
-  but allows per-locale tuning data in `combat/02`.
+  but allows per-locale tuning data in `docs/foundations/12-drive-assessment-mechanics.md`.
 - **Flow vs. attainment.** Flow is hedonic; stage advancement is
   developmental. They coincide most of the time, but a serious
   Teal practitioner might prefer slow contemplation over a
   fast-pace flow channel. The state-training mini-game
-  (`progression/06`) is the safety valve.
+  (`docs/foundations/04-states-of-consciousness.md`) is the safety valve.
 - **Loot and ethics.** Even cosmetic variable-ratio rewards can be
   habit-forming. A simpler decision is "all rewards are deterministic on
-  performance, with optional preference choice." Tracked in `validation/02`.
+  performance, with optional preference choice." Tracked in `docs/system/sub-systems/safety/ethics-and-data-privacy.md`.
 
 ## 6. Principles served
 

@@ -4,7 +4,7 @@
 
 Specify the *state* axis of AQAL — the temporary, accessible conditions
 of consciousness — and distinguish it sharply from *stage*. Mysterium's
-optional state-training mini-game (in `progression/06`) lives here.
+optional state-training mini-game (in `docs/foundations/04-states-of-consciousness.md`) lives here.
 
 The slogan: **stages are slow vertical growth; states are fast horizontal
 access.** A player at Amber stage can have a Non-Dual peak experience.

@@ -227,6 +227,8 @@ gates:
   dg13_organ_integrity:   {enabled: true}
   dg14_relationality:     {enabled: true}
   dg15_source_resolves:   {enabled: true}
+  dg16_cited_paths:       {enabled: true}
+  dg17_record_refs:       {enabled: true}
 
 # GENERATED SURFACES — derived from `_org.yaml` + the records by `arch.py emit`. Never
 # hand-edited; DG11 fails when one is stale. `route` reports them as generated.
@@ -258,14 +260,14 @@ completed:
   P6: "docs/historical/ quarantine + generated INDEX + README demoted to pointer"
 
 pending:
-  P7: "re-audit + full iteration protocol + dual-remote push"
   CODE-PASS: "rename the 8 stage identifiers (src/core/assessments/*/white.ts, the Stage union, threshold maps, fixtures) atomically with their tests; regenerate src/core/data/concept-drafts.json in the same commit"
-  RT-GATE-FIXTURES: "tests/governance/ — assert every gate (DG1-DG12) FAILS on an injected violation, automating the P7 hand-proof (red-team RT-5c / MY-RG-0010)"
+  RT-GATE-FIXTURES: "tests/governance/ — assert every gate (DG1-DG17) FAILS on an injected violation, automating the hand-proof (red-team RT-5c / MY-RG-0010). Until it exists, adding or changing a gate carries a manual injection step (AGENTS.md 7.5 step 1b)"
   RT-CORPUS-RECONCILE: "reconciliation check between docs/concept-drafts/<line>/<stage>/ and src/core/data/concept-drafts.json so the ingest path cannot silently diverge (red-team RT-2, DG13)"
-  RT-ORGAN-DIR: "gate: a record's `Organ:` must match the organ core it is filed in (red-team RT-7)"
   RT-ARCHIVE-MIGRATIONS: "archive scripts/doc-stage-reindex.py + scripts/doc-path-reindex.py once CODE-PASS lands; they encode one-way migrations whose mappings are otherwise unverifiable from the tree (red-team RT-11)"
+  RT-ORPHAN-LAW: "gate: an Active AD with no code anchor and no declared deferral is invisible pending work; the largest untracked backlog in the repo (red-team 2026-09-20 section 2). Needs a `Deferral:` or `Consumer:` field on the record so a law with no consumer is a violation rather than a note"
+  PLAN-IMPLEMENT: "the architecture ratified in 45 (user-dimensionality vector, three-library pooling, analogical bridge, engagement register) and in the safety ethics contract (data classes, projection firewall) has no code yet — MY-AD-0018, MY-AD-0019, MY-AD-0020, MY-RG-0017, MY-RG-0018"
   KB-ORPHAN-TRIAGE: "mark the 11 orphan scripts as historical / current / one-shot-in-place; 4 of them rewrite the corpus for superseded templates and would be destructive if run (KB audit UT-7). Also fix scripts/run-validation-benchmark.ts, which names the removed docs/validation/ path"
-  KB-ORGAN-DOCS: "author the 6 organs that contain nothing but a generated router: profiling, world, onboarding, safety, credentialing, platform (KB audit UT-6) — use `arch.py doc add`"
+  KB-ORGAN-DOCS: "author the organs that contain nothing but a generated router: profiling, world, onboarding, credentialing, platform (KB audit UT-6) — use `arch.py doc add`. The `safety` organ was the first closed (ethics-and-data-privacy.md, MY-AD-0020)"
   KB-SKILLS-PROVENANCE: "mark which skills/ entries are house governance (workspace-lint, curriculum-linter) vs vendored third-party (134 tracked files: ui-styling, ui-ux-pro-max, design-taste-frontend) (KB audit UT-9)"
   KB-VALIDATE-JSON: "`arch.py validate --json` so CI, dashboards and agents can consume gate results; and an index artifact so validation stops being full-scan-per-gate (KB audit UT-10)"
   KB-FOUNDATIONS-INGEST: "no mechanical link exists between a foundation doc's contract and the code that must satisfy it, beyond contract_docs pointers — the reason RT-9 and MY-RG-0005 can exist (KB audit UT-11)"

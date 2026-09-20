@@ -199,7 +199,7 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 ## 6. Open questions
 
 - **Naming the lines.** Should `Interpersonal` be promoted to a quadrant rather than a line, since it lives in LL? The current decision (line) is pragmatic — it makes the radial chart symmetric (8 spokes). But it is technically a category-error in pure AQAL.
-- **`Spiritual` vs `Intrapersonal` overlap.** Wilber distinguishes them; Goleman folds them; Fowler fuses them with moral. The canon decision is to keep them separate but document the overlap explicitly in `lines/05`.
+- **`Spiritual` vs `Intrapersonal` overlap.** Wilber distinguishes them; Goleman folds them; Fowler fuses them with moral. The canon decision is to keep them separate but document the overlap explicitly in `docs/lines/05-spiritual.md`.
 - **Curriculum depth levels.** Are 6 levels sufficient, or does the system need finer granularity at the upper end (e.g., "Research" as a 7th level between Analytical and Evaluative)?
   > **Resolution note (2026-09-16):** per-concept depth remains the 7-value `DepthLevel` (absent + 6 Bloom-aligned achieved levels, 31). The upper-end synthesis demand is answered at **branch level**, not per-concept: the levelling ladder (42) adds rung 7 (`woven`) = whole-branch mastery over aggregate evidence. No per-concept level was added.
 

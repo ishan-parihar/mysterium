@@ -116,7 +116,7 @@ otherwise.
 
 Per-session somatic time should be capped (~10 minutes of intense
 somatic-mode play before a forced break or shift to other-line content).
-Designed in `progression/00-progression-overview.md`.
+Designed in `docs/progression/00-progression-overview.md`.
 
 ## 5. Enemy / encounter structure
 

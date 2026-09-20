@@ -228,10 +228,13 @@ Story is mechanics; mechanics are story. Mysterium cannot have a
 
 | Deferred doc | One-line intent |
 |---|---|
-| `narrative/01-protagonist-arc.md` | The protagonist's arc across the eight stages, with key beats. |
-| `narrative/02-antagonist-archetypes.md` | Per-stage major antagonists with drive fixation, voice, mechanics. |
-| `narrative/03-world-aesthetic-per-stage.md` | Visual / sonic / tonal world-bibles. (Largely captured in `stages/01–08 §5`.) |
-| `narrative/04-environmental-storytelling.md` | How the level itself communicates the stage without dialogue. |
+| `narrative/01-protagonist-arc.md` *(planned)* | The protagonist's arc across the eight stages, with key beats. |
+| `narrative/02-antagonist-archetypes.md` *(planned)* | Per-stage major antagonists with drive fixation, voice, mechanics. |
+| `narrative/03-world-aesthetic-per-stage.md` *(planned)* | Visual / sonic / tonal world-bibles. (Largely captured in `docs/stages/01-infrared-archaic.md` §5 and its siblings.) |
+| `narrative/04-environmental-storytelling.md` *(planned)* | How the level itself communicates the stage without dialogue. |
+
+*(planned)* = declared but not yet written; the overview above is the current owner of these
+laterals until each file exists.
 
 The *concept* layer for each is in this document and in the per-stage
 world bibles. Implementation can proceed.

@@ -98,7 +98,7 @@ gains (Green → Teal → Turquoise) require sustained practice and
 typically lag cognitive altitude by ~1 stage in MVP players.
 
 The line's velocity is *strongly coupled* to the state-training
-mini-game (`progression/06`). Players who engage state practice
+mini-game (`docs/foundations/04-states-of-consciousness.md`). Players who engage state practice
 advance intrapersonal faster.
 
 ## 5. Enemy / encounter structure

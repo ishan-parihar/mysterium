@@ -114,7 +114,7 @@ Mysterium counters via *gentle pull*, never *hard wall*:
   horizon (lowest) line, but the player can override.
 - The **synergy bonus** rewards multi-line encounters, encouraging
   weaker lines to be exercised in *combination* with stronger ones.
-- The **line ceilings** (`lines/00`) prevent any line from running
+- The **line ceilings** (`docs/lines/00-overview-multi-line.md`) prevent any line from running
   more than +1 or +2 stages ahead of cognitive — keeping the
   development *integrated*.
 
@@ -173,7 +173,7 @@ visited stage*; the gap between them is where shadow work lives.
 ## 9. The "no end-game grind" rule
 
 Mysterium does **not** ship endless-grind end-game content of the
-loot-treadmill kind. The end-game (`stages/08-turquoise-superintegral.md`)
+loot-treadmill kind. The end-game (`docs/stages/08-turquoise-superintegral.md`)
 is *contemplative* — the player returns to mentor others (multiplayer),
 to clear remaining shadow encounters, or to start a new character with
 different drive weights.
@@ -186,12 +186,15 @@ without contradicting Principle 6 (honest engagement).
 
 | Deferred doc | One-line intent |
 |---|---|
-| `progression/01-staircase-dda.md` | Implementation of the 1-up/2-down across tasks. Mostly captured in `foundations/08`. |
-| `progression/02-skill-tree-progression.md` | The data-driven skill tree generator from `(line × stage)`. |
-| `progression/03-stage-advancement-criteria.md` | Concrete thresholds for each stage gate. |
-| `progression/04-line-balancing-and-altitude.md` | Tuning of ceilings and gentle pulls. |
-| `progression/05-shadow-work-and-regression.md` | Shadow detection thresholds, encounter unlock flow. |
-| `progression/06-state-training-meditation.md` | The state mini-game. |
+| `progression/01-staircase-dda.md` *(planned)* | Implementation of the 1-up/2-down across tasks. Mostly captured in `docs/foundations/08-psychophysics-and-staircase.md`. |
+| `progression/02-skill-tree-progression.md` *(planned)* | The data-driven skill tree generator from `(line × stage)`. |
+| `progression/03-stage-advancement-criteria.md` *(planned)* | Concrete thresholds for each stage gate. |
+| `docs/foundations/25-cumulative-consciousness-index.md` | Tuning of ceilings and gentle pulls. |
+| `docs/foundations/10-shadow-and-pathology.md` | Shadow detection thresholds, encounter unlock flow. |
+| `progression/06-state-training-meditation.md` *(planned)* | The state mini-game. |
+
+*(planned)* = declared but not yet written; the overview above is the current owner of these
+laterals until each file exists.
 
 The *intent* for each is established here and in `foundations/*` and
 `lines/*`. Implementation can proceed.

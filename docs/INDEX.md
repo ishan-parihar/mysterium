@@ -36,7 +36,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (32)
+## Records (38)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -63,9 +63,15 @@
 | `MY-RG-0008` | RG | platform | Active | Two documents own one formula |
 | `MY-RG-0009` | RG | kernel | Active | A partial purge leaves the old system's vocabulary in place |
 | `MY-RG-0010` | RG | validation | Active | A gate passes because its fixture cannot fail |
+| `MY-AD-0018` | AD | kernel | Active | The player's dimensionality is a first-class retrieval key |
+| `MY-AD-0019` | AD | kernel | Active | World, NPC and scenario libraries are pooled before selection |
+| `MY-RG-0017` | RG | kernel | Active | Engagement mechanisms drift into manipulation |
+| `MY-AD-0020` | AD | safety | Active | Ethics and data privacy is a binding contract on every organ |
+| `MY-RG-0018` | RG | safety | Active | A stored field has no declared data class |
 | `MY-AD-0014` | AD | platform | Active | The doc set is readable as a map: route resolves code and context emits the bundle |
 | `MY-AD-0015` | AD | platform | Active | The knowledge-base is queried, not only validated |
 | `MY-AD-0016` | AD | platform | Active | Relationality is enforced when creating, modifying and validating the knowledge-base |
+| `MY-AD-0017` | AD | platform | Active | Documentation declares a phase from the tree, never from memory |
 | `MY-RG-0011` | RG | platform | Active | A generated surface drifts and the commit still looks green |
 | `MY-RG-0012` | RG | platform | Active | A declared rung that no gate reads |
 | `MY-RG-0013` | RG | platform | Active | A verification step mutates the artefact it verifies, or a restore discards unrelated work |

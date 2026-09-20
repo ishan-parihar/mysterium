@@ -73,7 +73,7 @@ Three macro-arcs are nested in the eight stages:
   into larger holons.
 
 This 3-arc structure is reflected in Mysterium's narrative architecture
-(`narrative/00`): the protagonist goes through three world-arcs, each
+(`docs/narrative/00-narrative-architecture.md`): the protagonist goes through three world-arcs, each
 covering ~3 stages.
 
 ### Transcend and include
@@ -173,7 +173,7 @@ encounter rooted there. Regression in Mysterium is **a feature**, not a
 penalty: it represents transcend-and-include. The progression UI
 visualises the *current stage* and the *deepest visited stage*; the gap
 between them is where shadow work lives. See
-`progression/05-shadow-work-and-regression.md`.
+`docs/foundations/10-shadow-and-pathology.md`.
 
 ## 4. Architectural contract
 

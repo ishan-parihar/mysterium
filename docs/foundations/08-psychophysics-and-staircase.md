@@ -251,7 +251,7 @@ Required tests in `core/usecases/Staircase.spec.ts`:
 - **Multiplayer staircase.** Two players at different thresholds in the
   same encounter — whose threshold drives the encounter? Default:
   *each player's overlay is staircased to that player*; the encounter
-  geometry is shared. To be specified in `combat/06`.
+  geometry is shared. To be specified in `docs/foundations/11-game-modalities.md`.
 - **Staircase visibility.** Showing the level number is honest but
   immersion-breaking. Hiding it is opaque but immersive. Default: hide
   at first, surface in the post-stage debrief.

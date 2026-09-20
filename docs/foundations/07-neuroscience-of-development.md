@@ -138,7 +138,7 @@ least one `NetworkClaim` row. A task without a claim cannot ship.
 
 - **fMRI validation.** Do we ever validate the network claims with
   imaging? Out of scope for indie release; in scope if a research
-  collaboration emerges. Tracked in `validation/01`.
+  collaboration emerges. Tracked in `docs/system/sub-systems/validation/benchmark-architecture.md`.
 - **Individual variability.** Network maps are population averages.
   Individual brains differ substantially. The dashboard wording must
   reflect this.
