@@ -80,7 +80,7 @@ remembered.
 
 ```
 mysterium/                ← repository root
-├── _org.yaml             ← THE structure declaration: rungs, 13 organs, DG1–DG17 (machine-readable)
+├── _org.yaml             ← THE structure declaration: rungs, 13 organs, DG1–DG18 (machine-readable)
 ├── AGENTS.md             ← process protocol (the root router — this file)
 ├── scripts/arch.py       ← the ONLY write path for AD/RG; validates every rung
 │
@@ -128,7 +128,12 @@ mysterium/                ← repository root
 │   ├── 29–36 ...                           ← Curriculum expansion set (29 meta-learning, 30 holonic curriculum, 31 depth, 32 agentic linter, 33 dashboard, 34 engine bridge, 35 framework complexity, 36 upgrade plan)
 │   ├── 37–41 ...                           ← Domain expansion set (37 K-12, 38 cohort/multiplayer, 39 action-induction/journal, 40 measurement packs, 41 global recognition)
 │   ├── 42-developmental-levelling-mechanism.md ← Unified evidence-only grading/staging (competence/identity firewall)
-│   └── 43-agentic-orchestration-architecture.md ← Primary orchestrator + sub-agent council + tool systems + log protocol
+│   ├── 43-agentic-orchestration-architecture.md ← Primary orchestrator + sub-agent council + tool systems + log protocol
+│   │
+│   │  ── Personalization & generation (ratified 2026-09-20) ──
+│   ├── 45-personalization-and-context-pooling.md ← UDV, three-library pooling, analogical bridge, engagement contract
+│   ├── 46-generative-world-composition.md  ← facets, tag store, derived dialectic, composition pipeline
+│   └── 47-preference-inference-and-scaffolding.md ← evidence tiers, interest record, scaffold library, inference red line
 │
 ├── concept-drafts/      ← RUNG content: 512 game concept documents (64 modules × 8 files)
 │   ├── README.md        ← Templates and requirements for each file
@@ -183,6 +188,9 @@ mysterium/                ← repository root
 | foundations/42 | Developmental Levelling Mechanism — unified evidence-only grading/staging (competence/identity firewall) |
 | foundations/43 | Agentic Orchestration Architecture — primary orchestrator + sub-agent council + tool systems + log protocol |
 | foundations/44 | **THE GRAMMAR** — the three axes + their firewalls, the ratified ladder, the term→owner table (52 owners, machine-readable), the superseded-vocabulary blacklist (DG5 reads it), and external-canon precedence |
+| foundations/45 | Personalization & Context Pooling — the user-dimensionality vector as a **retrieval key**, world/NPC/scenario pooled *before* `24`'s selection (retrieval-then-rank, never a second scheduler), the three-layer analogical bridge, and the engagement contract with its two tests |
+| foundations/46 | Generative World Composition — entities are **composed from facets**, not stored whole: the `[line × stage × characteristic]` facet key, the tag store whose dialectic opposites are **derived** by reflection, the composition pipeline, and the 512 concept-drafts as facet modules |
+| foundations/47 | Preference Inference & the Scaffold Library — interest categorised by **domain × mode × depth × salience × load-bearing × aim × provenance**, the meta-program catalogue under an **evidence tier** (T1/T2/T3), the ten scaffolds with fading, and the structural red line (the inference module's only write path is the UDV) |
 | **-- Architecture / process docs --** ||
 | docs/system/sub-systems/kernel/stage-assessment-architecture | The MODULE CONTRACT (composition rules, interfaces, 4 execution modes) — now the `kernel` organ's contract doc |
 | ONBOARDING-REDESIGN-PLAN | Binary-search composite assessment for initial Significator seeding — owned by the `onboarding` organ |
@@ -337,7 +345,7 @@ contents here; read them where they live:
 **A law that is Active with no consumer is the normal shape of pending work here.** When you
 implement one, record the implementation in the same commit and cite the record it closes.
 
-Standing constraints: workspace-lint → `arch.py validate` (DG1–DG17) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
+Standing constraints: workspace-lint → `arch.py validate` (DG1–DG18) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
 
 ### 4.3 The Grounding Principle
 
@@ -454,7 +462,7 @@ Every development iteration — no exceptions — must follow this sequence:
 
 1. **Workspace lint** — Run `python3 skills/workspace-lint/scripts/workspace_lint.py --root .` after every change. Violations must be fixed before committing. The linter natively respects `.gitignore` — do NOT manually add ignored paths to `workspace-lint.yaml`.
 
-1b. **Doc-governance gates** — Run `python3 scripts/arch.py validate` after every change to `docs/`, `_org.yaml`, or a record. It must exit 0 (gates DG1–DG17: record schema, status enum, numbering + no-reissue, authority uniqueness, superseded vocabulary, historical quarantine, ownership, reference resolution, ledger integrity, canon↔code, derived-surface freshness, canon link integrity, organ integrity, **relationality** — no authored document may be an orphan — **Source resolution**, **cited-path resolution** — a backticked citation must point at something real, prose included — and **record-reference resolution** — a cited `MY-AD-*`/`MY-RG-*` ID must exist).
+1b. **Doc-governance gates** — Run `python3 scripts/arch.py validate` after every change to `docs/`, `_org.yaml`, or a record. It must exit 0 (gates DG1–DG17: record schema, status enum, numbering + no-reissue, authority uniqueness, superseded vocabulary, historical quarantine, ownership, reference resolution, ledger integrity, canon↔code, derived-surface freshness, canon link integrity, organ integrity, **relationality** — no authored document may be an orphan — **Source resolution**, **cited-path resolution** — a backticked citation must point at something real, prose included — **record-reference resolution** — a cited `MY-AD-*`/`MY-RG-*` ID must exist — and **router coverage** — every document in a rung must be named by that rung's router, so a document cannot be ratified into invisibility).
 
    A gate that cannot fail is decoration (`MY-RG-0010`). When you add or change one, inject the violation it is supposed to catch, confirm it fires, and revert — see `_org.yaml → pending` `RT-GATE-FIXTURES` for why that is still a manual step.
 

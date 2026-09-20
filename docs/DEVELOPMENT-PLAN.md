@@ -35,24 +35,28 @@ The engine substrate is real and tested. This is the load-bearing inventory:
 
 ## 2. Gap closure status — all nine verified against the tree
 
-> **This section was stale from 2026-09-16 to 2026-09-20.** It described G-A…G-F as
+> **This section was stale from 2026-09-16 to 2026-09-20.** It described PG-A…PG-F as
 > "spec'd but absent" while §8/§9 recorded them implemented; `AGENTS.md §4.2` inherited the
 > staleness and declared Phase 1 current. An agent reading the root protocol would have rebuilt
 > finished work. Re-verified 2026-09-20 — every row below now cites the code that closed it
 > (recorded as `MY-AD-0017`).
+>
+> **Gap IDs are `PG-n` (Plan Gap), never bare `Gn`** — `Gn` is the *kernel gate* namespace
+> (`G1`–`G25`), and the two collided here until 2026-09-20 (`MY-AD-0024`). When this document
+> says `G17`, it means the kernel gate; when it says `PG-1`, it means a gap row.
 
 | Gap | Spec | Closing evidence | State |
 |---|---|---|---|
-| **G-A: Delegation kernel** | 43 | `src/core/orchestration/{types,sessionLog,delegate,orchestratorTools,choicePolicy}.ts`; kernel gates **G14/G15** in `src/core/validation/gates.ts` | ✅ closed |
-| **G-B: Practice tools** | 39 | `src/core/practice/practiceTools.ts` (`validatePracticeLoop`) wired into the kernel | ✅ closed |
-| **G-C: Cohort pods** | 38 | `src/core/pods/podStateMachine.ts` + `src/infra/pods/PodTransport.ts`; **G18** privacy wall | ✅ closed |
-| **G-D: Measurement packs** | 40 | `src/core/packs/{PackEngine,referencePacks,ReliabilityCollector}.ts`; **G19** | ✅ closed |
-| **G-E: K-12 corpus** | 37 | `src/core/curriculum/data/*.foundations.json` (language-arts, arts, music, second-language, civics, health) + `scripts/author-k12-branches.py` | ✅ closed |
-| **G-F: Credentialing** | 41 | `src/core/credential/ClaimLedger.ts` + `exportRPLPortfolio`; **G21** | ✅ closed |
-| **G1 — Corpus depth** | — | 64/64 concept modules; 64/64 stage-holon cells; 108 curriculum holons, 0 lint errors | ✅ closed |
-| **G2 — Play-route thinness** | — | Phase 6 parity harness proved browser binding ≡ kernel loop; `tests/engine/TrainingBeatParity.test.ts` | ✅ closed |
-| **G3 — Onboarding composite** | — | `src/core/onboarding/BinarySearchPlacement.ts`; **G20** placement convergence (≤8 probes) | ✅ closed |
-| **G4 — Orchestration stagnation** | — | 18 roles dispatch their complete allowlists through `delegate`; `scripts/cli/delegateArgs.ts` + `tests/cli/DelegateArgs.test.ts` | ✅ closed |
+| **PG-A: Delegation kernel** | 43 | `src/core/orchestration/{types,sessionLog,delegate,orchestratorTools,choicePolicy}.ts`; kernel gates **G14/G15** in `src/core/validation/gates.ts` | ✅ closed |
+| **PG-B: Practice tools** | 39 | `src/core/practice/practiceTools.ts` (`validatePracticeLoop`) wired into the kernel | ✅ closed |
+| **PG-C: Cohort pods** | 38 | `src/core/pods/podStateMachine.ts` + `src/infra/pods/PodTransport.ts`; **G18** privacy wall | ✅ closed |
+| **PG-D: Measurement packs** | 40 | `src/core/packs/{PackEngine,referencePacks,ReliabilityCollector}.ts`; **G19** | ✅ closed |
+| **PG-E: K-12 corpus** | 37 | `src/core/curriculum/data/*.foundations.json` (language-arts, arts, music, second-language, civics, health) + `scripts/author-k12-branches.py` | ✅ closed |
+| **PG-F: Credentialing** | 41 | `src/core/credential/ClaimLedger.ts` + `exportRPLPortfolio`; **G21** | ✅ closed |
+| **PG-1 — Corpus depth** | — | 64/64 concept modules; 64/64 stage-holon cells; 108 curriculum holons, 0 lint errors | ✅ closed |
+| **PG-2 — Play-route thinness** | — | Phase 6 parity harness proved browser binding ≡ kernel loop; `tests/engine/TrainingBeatParity.test.ts` | ✅ closed |
+| **PG-3 — Onboarding composite** | — | `src/core/onboarding/BinarySearchPlacement.ts`; **G20** placement convergence (≤8 probes) | ✅ closed |
+| **PG-4 — Orchestration stagnation** | — | 18 roles dispatch their complete allowlists through `delegate`; `scripts/cli/delegateArgs.ts` + `tests/cli/DelegateArgs.test.ts` | ✅ closed |
 
 ### 2.1 The true gap list is now somewhere else — deliberately
 
@@ -65,11 +69,20 @@ restate their contents (uniqueness principle):
   ledger: `MY-AD-0006` (register classes), `MY-AD-0007` (one articulation ladder),
   `MY-AD-0008` (alignment bias — seam present, consumer absent), `MY-AD-0009` (two-fold world
   memory + per-holon owner worker), `MY-AD-0010` (background workers), `MY-AD-0011`
-  (integrated human intervention), and the Auditor Projection Layer (`16 §2.4/§10.4`).
+  (integrated human intervention), `MY-AD-0018` (the UDV as a retrieval key), `MY-AD-0019`
+  (pool before selection), `MY-AD-0020` (the ethics contract), `MY-AD-0021` (facets, not stored
+  entities), `MY-AD-0022` (evidence tiers), `MY-AD-0023` (scaffold library), and the Auditor
+  Projection Layer (`16 §2.4/§10.4`). All of these are Phase 10 scope except the auditor layer.
 - **Documentation + KB integrity** — `_org.yaml → pending`: `CODE-PASS`, `RT-*` (gate
   fixtures, corpus reconciliation, organ-dir attribution, migration archiving) and `KB-*`
   (orphan-script triage, the six undocumented organs, skills provenance, `validate --json`,
   canon→code ingest).
+- **Canon↔code conformance on a load-bearing equation** — `SCHEDULER-FORMULA`: the
+  implementation of `24 §3.2`'s priority formula carries a substituted eighth weight plus six
+  unweighted additive terms worth up to +0.72 on a 1.00 base score, so the ratified weights do
+  not presently decide selection (`MY-AD-0025`, `MY-RG-0023`, gate `G26`). This is the one entry
+  in the pending ledger that changes *player-visible* behaviour when closed, and it moves
+  selection, so it must be verified against the personas and the full kernel battery.
 
 Neither list is duplicated here. Run `python3 scripts/arch.py related <ID>` for any of them;
 run `python3 scripts/arch.py validate` for the gate state.
@@ -83,14 +96,14 @@ agents + practice tools. K-12 corpus (37) is orthogonal (data work) and feeds th
 Teacher council once it exists. Credentialing (41) needs packs for claim evidence.
 
 ```
-Phase 1  G-A delegation kernel ──────────────┐
-Phase 2  G-B practice tools ─────────────────┤
-Phase 3  G1 corpus expansion (parallel) ─────┼──► Phase 4 G-C pods
-Phase 5  G-D packs ──────────────────────────┤
-Phase 6  G2 WebUI play parity ───────────────┤
-Phase 7  G3 onboarding composite ────────────┤
-Phase 8  G-E K-12 corpus ────────────────────┤
-                                             └──► Phase 9 G-F credentialing
+Phase 1  PG-A delegation kernel ────────────┐
+Phase 2  PG-B practice tools ───────────────┤
+Phase 3  PG-1 corpus expansion (parallel) ──┼──► Phase 4 PG-C pods
+Phase 5  PG-D packs ────────────────────────┤
+Phase 6  PG-2 WebUI play parity ────────────┤
+Phase 7  PG-3 onboarding composite ─────────┤
+Phase 8  PG-E K-12 corpus ──────────────────┤
+                                            └──► Phase 9 PG-F credentialing
 ```
 
 Phases 3/8 are corpus work runnable in parallel; 6/7 are UX-integrity work that can
@@ -107,7 +120,7 @@ BOTH remotes. Kernel gates G1–G21 stay green throughout (regression discipline
 are retained as the record of *order and gates*. **Phase 10 is the first phase ratified after this
 plan** and is the only outstanding build work — it is spec'd and not yet built.
 
-### Phase 1 — Delegation Kernel (G-A) — ✅ implemented
+### Phase 1 — Delegation Kernel (PG-A) — ✅ implemented
 
 **Deliverables** (all spec'd in 43 §4–§6):
 1. `src/core/orchestration/types.ts` — `DelegationSpec`, `DelegationResult`, `Proposal`,
@@ -126,12 +139,12 @@ plan** and is the only outstanding build work — it is spec'd and not yet built
    **G15** toolset firewall (role toolset violations fail closed), extending the G12
    firewall scan to orchestration imports.
 
-**Gates:** G14/G15 green; G1–G13 unregressed; a headless CLI delegation smoke
+**Gates:** G14/G15 green; every previously-shipped kernel gate unregressed; a headless CLI delegation smoke
 (`mysterium session --delegate T1` proving spec→log→ratify→commit).
 **Duration:** ~1 week. **Risk:** AgenticOrchestrator's in-process loop must not fork —
 delegation wraps it, never bypasses the GameLoop.
 
-### Phase 2 — Practice Tools on the Live Loop (G-B)
+### Phase 2 — Practice Tools on the Live Loop (PG-B)
 
 1. `VowService` in core: accept/decline/lapse state machine over the existing `Vow`
    domain type; no deadlines (39's design commitment).
@@ -147,44 +160,45 @@ delegation wraps it, never bypasses the GameLoop.
 **Gates:** G16 green; journal route e2e; CLI `mysterium vow` surface.
 **Duration:** ~1 week. **Depends:** Phase 1 (mandates ride delegation).
 
-### Phase 3 — Corpus Expansion (G1) — parallel track
+### Phase 3 — Corpus Expansion (PG-1) — parallel track
 
 1. Stage-holons 56 → 64 (the 8 missing cells; red-layer pattern reused).
 2. Encounter-content depth: each cell ≥3 modality variants (from the 64 modules'
    concept-draft templates, LLM-assisted authoring with the 32 linter as QA).
 3. Curriculum corpus: +4 branches (bio, chem, history, geography) with prereq graphs.
-4. Corpus-integrity gate in the kernel: every (line, stage, modality) triple
-   resolvable; no orphaned concept IDs.
+4. Kernel gate **G17**: corpus integrity — every (line, stage, modality) triple
+   resolvable; no orphaned concept IDs; the registry lint-clean.
 
-**Gates:** coverage report 64/64 cells × 7 modalities; corpus-integrity gate green.
+**Gates:** G17; coverage report 64/64 cells × 7 modalities.
 **Duration:** ~2 weeks (content-heavy). **Parallelizable** with Phases 2–5.
 
-### Phase 4 — Cohort Pods (G-C)
+### Phase 4 — Cohort Pods (PG-C)
 
 1. `PodDO` Durable Object (38): membership, shared ritual state, event log.
 2. Witness pipeline: `witness_objective` → pod event → recognition evidence (38 M2),
    journal-consent-gated.
 3. CLI + WebUI pod surfaces (roster, ritual calendar, recognition view).
-4. Kernel gate **G17**: two-persona pod simulation — witnessed objective produces
-   recognition evidence without journal text crossing the client boundary.
+4. Kernel gate **G18**: pod privacy wall — two-persona pod simulation; witnessed
+   objective produces recognition evidence without journal text crossing the client
+   boundary.
 
-**Gates:** G17; DO local dev (wrangler) verified; scope-fence assertions (38's NOT-list)
+**Gates:** G18; DO local dev (wrangler) verified; scope-fence assertions (38's NOT-list)
 as kernel assertions. **Duration:** ~1.5 weeks. **Depends:** Phases 1–2.
 
-### Phase 5 — Measurement Packs (G-D)
+### Phase 5 — Measurement Packs (PG-D)
 
 1. Pack contract types + loader (40 §contract): manifest, instruments, scoring harness,
    reliability metadata.
 2. Two reference packs (cognition: the canonical task set; language: vocabulary/
    comprehension) with test–retest and parallel-forms data collection in-app.
 3. S1 Pack Agents as delegable roles; pack results stream into skill-theta (40).
-4. Kernel gate **G18**: pack scoring determinism + the reliability-gate firewall (no
+4. Kernel gate **G19**: pack scoring determinism + the reliability-gate firewall (no
    pack feeds growth narrative until reliability passes).
 
-**Gates:** G18; both reference packs pass reliability collection scaffolding.
+**Gates:** G19; both reference packs pass reliability collection scaffolding.
 **Duration:** ~1.5 weeks. **Depends:** Phase 1.
 
-### Phase 6 — WebUI Play Parity (G2)
+### Phase 6 — WebUI Play Parity (PG-2)
 
 1. Play route: full encounter rendering across the 7 modalities (TaskRenderers parity
    with CLI), checkpoint save/resume, Veil-compliant feedback presentation.
@@ -196,7 +210,7 @@ as kernel assertions. **Duration:** ~1.5 weeks. **Depends:** Phases 1–2.
 **Gates:** persona parity CLI↔WebUI (same evidence → same observable projection);
 a11y pass; mobile viewport. **Duration:** ~1.5 weeks. **Depends:** Phase 1 (presence).
 
-### Phase 7 — Onboarding Composite (G3)
+### Phase 7 — Onboarding Composite (PG-3)
 
 1. Implement `ONBOARDING-REDESIGN-PLAN.md`: binary-search composite over the 8 lines →
    Significator seeding; placement via A4 Calibrator delegation.
@@ -207,7 +221,7 @@ a11y pass; mobile viewport. **Duration:** ~1.5 weeks. **Depends:** Phase 1 (pres
 Significator seeded within tolerance of the calibration ground truth.
 **Duration:** ~1 week. **Depends:** Phase 1.
 
-### Phase 8 — K-12 Corpus (G-E)
+### Phase 8 — K-12 Corpus (PG-E)
 
 1. Subject→line mapping data (37's table) as registry data; grade bands as authoring
    metadata only (42's blindness law — enforced by G11 already).
@@ -215,17 +229,17 @@ Significator seeded within tolerance of the calibration ground truth.
    conformance (37's rejection list applied).
 3. Teacher-council readiness: T1/T2 mandates resolve against the expanded graph.
 
-**Gates:** G11 green against the expanded corpus; corpus-integrity gate; sample
+**Gates:** G11 green against the expanded corpus; G17 corpus integrity; sample
 trajectory renders K-5 → undergraduate on one branch.
 **Duration:** ~2 weeks. **Depends:** Phase 3 (corpus infrastructure).
 
-### Phase 9 — Credentialing Surfaces (G-F)
+### Phase 9 — Credentialing Surfaces (PG-F)
 
 1. Claim-based credential ledger (41 §contract) — local-first, export as VCs.
 2. Pack-evidence → claim → VC pipeline (41's evidence chain), consent-gated.
 3. RPL evidence export format for partner institutions (41 P3).
 
-**Gates:** G18 evidence-chain gate extended (claims trace to pack reliability status);
+**Gates:** G21 credential evidence chain (claims trace to pack reliability status);
 consent firewall (identity never in credential payloads).
 **Duration:** ~1.5 weeks. **Depends:** Phase 5.
 
@@ -283,8 +297,9 @@ deliverables were ratified after this plan, and it is the only outstanding build
 
 ## 5. Standing work-streams (not phases — continuous)
 
-- **Validation-kernel growth:** every phase adds its gates (G14–G18); personas grow
-  with features. The kernel is the project's regression conscience.
+- **Validation-kernel growth:** every phase adds its gates (G14–G21 shipped; G22–G25
+  defined by Phase 10); personas grow with features. The kernel is the project's
+  regression conscience.
 - **Doc⇄code feedback loop:** implementation feedback updates foundations docs in the
   same commit (AGENTS.md §3.2); no doc drift allowed to re-accumulate.
 - **Cross-reference regeneration:** re-run the xref generator after adding numbered

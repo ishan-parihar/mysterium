@@ -70,6 +70,7 @@ GATE_CONFIG_KEY = {
     "DG15": "dg15_source_resolves",
     "DG16": "dg16_cited_paths",
     "DG17": "dg17_record_refs",
+    "DG18": "dg18_router_coverage",
 }
 
 
@@ -334,6 +335,7 @@ class Gate:
             ("DG15", self.dg15_source_resolves),
             ("DG16", self.dg16_cited_paths),
             ("DG17", self.dg17_record_refs),
+            ("DG18", self.dg18_router_coverage),
         ]
         for name, fn in gates:
             if only and name != only:
@@ -848,6 +850,52 @@ class Gate:
                         g,
                         f"{here}: cites record `{m.group(0)}` which does not exist — author it "
                         f"or correct the citation",
+                    )
+        self.checked[g] = n
+
+    # DG18 — router coverage. A rung's router (`rungs.<name>.router`) is the only door into that
+    # rung as far as an agent is concerned; a document it never names is unreachable from the map
+    # that is actually read, while every other gate reports green (MY-RG-0022 — 45/46/47 sat in
+    # the canon rung unnamed by `docs/foundations/AGENTS.md` for a full day). Naming = the
+    # document's two-digit id appears as a token, or inside a `NN–MM` range the router expands.
+    def dg18_router_coverage(self, g: str) -> None:
+        n = 0
+        for rung_name, rung in self.cfg["rungs"].items():
+            router_rel = rung.get("router")
+            if not router_rel:
+                continue  # opt-in: only rungs that declare a router are checked
+            n += 1
+            router = ROOT / router_rel
+            if not router.exists():
+                self.err(g, f"rungs.{rung_name}.router `{router_rel}` does not exist")
+                continue
+            text = router.read_text(encoding="utf-8", errors="ignore")
+            named = set(re.findall(r"\b(\d{2})\b", text))
+            # Ranges are written `` `23`–`36` `` — backticks sit between the endpoints.
+            for a, b in re.findall(r"\b(\d{2})[`*]*\s*[–—-]\s*[`*]*(\d{2})\b", text):
+                lo, hi = int(a), int(b)
+                if 0 <= lo <= hi <= 99:
+                    named.update(f"{i:02d}" for i in range(lo, hi + 1))
+            members: list[Path] = []
+            for d in rung.get("dirs", []):
+                p = ROOT / d["path"]
+                if p.is_dir():
+                    members.extend(sorted(p.rglob("*.md")))
+            for f in rung.get("files", []):
+                fp = ROOT / f
+                if fp.is_file():
+                    members.append(fp)
+            for p in members:
+                if rel(p) == router_rel:
+                    continue
+                m = re.match(r"(\d{2})-", p.name)
+                if not m:
+                    continue
+                if m.group(1) not in named:
+                    self.err(
+                        g,
+                        f"{rel(p)} is in rung `{rung_name}` but its router ({router_rel}) never "
+                        f"names it — add it there, or the document is unreachable from the rung map",
                     )
         self.checked[g] = n
 

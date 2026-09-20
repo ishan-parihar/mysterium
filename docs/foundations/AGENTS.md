@@ -19,7 +19,7 @@
 If a document below appears to define a term that `44` owns, **`44` wins** and that document is a
 defect to fix (`AGENTS.md §3.2`).
 
-## 2. The clusters (43 documents + 44)
+## 2. The clusters (47 documents)
 
 | Cluster | Documents | What it answers |
 |---|---|---|
@@ -30,6 +30,7 @@ defect to fix (`AGENTS.md §3.2`).
 | **Curriculum & mechanisms** | `23`–`36` | the 64-cell polarity catalogue, the encounter scheduler, the composite index, the core module contract, objective alignment, curriculum architecture, depth, linter, dashboard, bridges |
 | **Domains** | `37`–`41` | K-12, cohort/multiplayer, action-induction journal, measurement packs, credentialing |
 | **Mechanisms (late)** | `42`–`43` | evidence-only levelling (competence/identity firewall), agentic orchestration (delegation kernel, workers, human intervention) |
+| **Personalization & generation** | `45`–`47` | what the player *prefers* and how it is inferred (`47`), how world entities are *composed* rather than authored (`46`), and how a scenario is *assembled* for one player (`45`) |
 
 `06 §5.1` is the keystone of the substrate: it fixes the three axes, the ladder and the closure.
 `21` is the keystone of the greater cycle: it composes everything into a playable game.
@@ -52,6 +53,9 @@ defect to fix (`AGENTS.md §3.2`).
 | The composite metric | `25` |
 | Grading and staging | `42` |
 | The delegation kernel | `43` |
+| What the player prefers, and how it is inferred | `47` |
+| How a world entity is composed | `46` |
+| How a scenario is assembled for one player | `45` |
 
 ## 4. Document status conventions
 

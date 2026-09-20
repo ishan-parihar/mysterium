@@ -183,12 +183,13 @@ function computePriority(
     W.transformationReady * transformationScore(candidate, sig) +
     W.driveCorrection     * driveBalanceScore(candidate, sig) +
     W.narrativeCoherence  * narrativeScore(candidate, world) +
-    W.sessionFit          * sessionFitScore(candidate, session)
+    W.sessionFit          * sessionFitScore(candidate, session) +
+    W.masteryAlignment    * masteryAlignmentScore(candidate, sig)
   );
 }
 ```
 
-#### 3.2.1 Theta-decay urgency (weight: 0.25)
+#### 3.2.1 Theta-decay urgency (weight: 0.21)
 
 ```ts
 function thetaDecayScore(c: CandidateEncounter, sig: SignificatorSnapshot): number {
@@ -200,7 +201,7 @@ function thetaDecayScore(c: CandidateEncounter, sig: SignificatorSnapshot): numb
 }
 ```
 
-#### 3.2.2 Shadow-activation signal (weight: 0.20)
+#### 3.2.2 Shadow-activation signal (weight: 0.19)
 
 ```ts
 function shadowActivationScore(c: CandidateEncounter, sig: SignificatorSnapshot): number {
@@ -222,7 +223,7 @@ function shadowActivationScore(c: CandidateEncounter, sig: SignificatorSnapshot)
 }
 ```
 
-#### 3.2.3 Polarity-mode alignment (weight: 0.15)
+#### 3.2.3 Polarity-mode alignment (weight: 0.14)
 
 ```ts
 function polarityAlignmentScore(c: CandidateEncounter, sig: SignificatorSnapshot): number {
@@ -242,7 +243,7 @@ function polarityAlignmentScore(c: CandidateEncounter, sig: SignificatorSnapshot
 }
 ```
 
-#### 3.2.4 Transformation-readiness (weight: 0.15)
+#### 3.2.4 Transformation-readiness (weight: 0.14)
 
 ```ts
 function transformationScore(c: CandidateEncounter, sig: SignificatorSnapshot): number {
@@ -266,7 +267,7 @@ function transformationScore(c: CandidateEncounter, sig: SignificatorSnapshot): 
 }
 ```
 
-#### 3.2.5 Drive-balance correction (weight: 0.10)
+#### 3.2.5 Drive-balance correction (weight: 0.09)
 
 ```ts
 function driveBalanceScore(c: CandidateEncounter, sig: SignificatorSnapshot): number {
@@ -293,7 +294,7 @@ function getComplementaryDrive(drive: Drive): Drive {
 }
 ```
 
-#### 3.2.6 Narrative coherence (weight: 0.10)
+#### 3.2.6 Narrative coherence (weight: 0.09)
 
 ```ts
 function narrativeScore(c: CandidateEncounter, world: WorldSnapshot): number {
@@ -311,7 +312,7 @@ function narrativeScore(c: CandidateEncounter, world: WorldSnapshot): number {
 }
 ```
 
-#### 3.2.7 Session-fit (weight: 0.05)
+#### 3.2.7 Session-fit (weight: 0.04)
 
 ```ts
 function sessionFitScore(c: CandidateEncounter, session: SessionContext): number {
@@ -390,6 +391,48 @@ arc's curriculum slots remain the per-session ceiling on how much of the arc
 mastery catalyst may occupy. Bias multiplies the weight before renormalisation
 (27 §2.3); it can never produce a curriculum-only session by itself — the
 developmental criteria are always present in the same formula.
+
+#### 3.2.9 The formula is closed — everything else is a bias (added 2026-09-20)
+
+The eight criteria above are the **only additive terms** in the scheduler. Any further
+consideration — relevance to the player's dimensionality (`45 §5.3`), user-Matrix/Potentiator
+targeting (`15 §230`, `28`), a session theme's emphasis, an exploration bonus — enters as a
+**multiplicative bias on those eight weights** under `27`'s parameterisation, and the bias is
+renormalised back to 1.00 before scoring. It never becomes a ninth weight and never becomes an
+additive bonus.
+
+**Why this is a contract and not a style preference.** An additive term outside the eight is
+*unnormalized*: it is not comparable to a criterion on the 0–1 scale, it cannot be parameterised
+by `27`, and it can silently reorder the criteria. A scheduler whose behaviour cannot be
+predicted from its published weights is not auditable — the player's observed catalyst sequence
+stops being explainable from the documented state, which is the same failure class `16 §10`
+forbids on the diagnostic side (a projection must be derivable from the record). Bias is
+multiplicative and total-order-preserving; a bonus is neither.
+
+**Two named non-criteria inputs.**
+
+| Input | Owner | How it enters |
+|---|---|---|
+| **Relevance to the UDV** (will this land in the player's vocabulary?) | `45 §5.3` | a multiplicative bias — relevance chooses *among* candidates that the developmental criteria have already ranked; `45 §4` holds the developmental agenda dominant, so the bias may never invert the order of two candidates with materially different developmental scores |
+| **User-Matrix / Potentiator targeting** (random probing → targeted intervention as the user's own unprocessed material crystallises) | `15 §230`, `28` | a multiplicative bias whose magnitude is a function of the `ProfilePhase` (`unmapped` → `crystallized`); in the unmapped phase it *raises diversity*, in the crystallized phase it *narrows* to the mapped pattern |
+
+Neither is a developmental criterion: they say **where to look**, never **what is needed**. The
+eight criteria answer the second question and nothing else may.
+
+> **Recorded deviation (2026-09-20).** `src/core/engines/PriorityComputation.ts` does not
+> implement this contract. It (a) carries `userMatrixTargeting: 0.12` as an eighth additive
+> **weight** where the canon's eighth criterion is `masteryAlignment` (which has no
+> implementation at all — `grep masteryAlignment src/` returns nothing), and (b) adds up to six
+> further unweighted additive terms after the weighted sum — `noveltyBonus` (≤ 0.25),
+> `weaknessBonus` (≤ 0.15), `diversityBonus` (± 0.10), `bleedBoost` (≤ 0.15), `rayBoost`
+> (≤ 0.05) and `tieBreaker` (≤ 0.02). Against a base score bounded by 1.00, that envelope is
+> **up to +0.72**: today the bonuses govern selection and the ratified weights largely do not.
+> The code's own header comment still lists the *pre-2026-09-17 seven-criterion* formula, so the
+> drift is invisible from the file. Reconciling this is tracked as `_org.yaml → pending →
+> SCHEDULER-FORMULA`, and the gate that closes it is **G26** (`§3.2.9` conformance: the weights
+> sum to exactly 1.00, and no additive term exists outside the eight criteria). Until G26 is
+> green, the weights in this document are the *contract* and the code is the *deviation* — do not
+> read the code as canon.
 
 ### 3.3 Tie-breaking rules
 
