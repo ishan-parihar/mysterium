@@ -4,7 +4,7 @@
 |---|---|
 | Line | Interpersonal |
 | Stage | 8 — Turquoise / Super-Integral |
-| Energy Ray | Violet |
+| Energy Ray | Indigo (6b) — Violet belongs to the closure event, not to L8 (`foundations/06` §5.1) |
 | Core Capacity | Non-dual others — transparent relational field, communion without fusion |
 | Prerequisite | Interpersonal/Teal shadow-health ≥ 0.7 |
 | Availability | Multiplayer or advanced NPC simulation only |

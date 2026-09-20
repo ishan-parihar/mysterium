@@ -4,7 +4,7 @@
 
 - **Line:** Willpower
 - **Stage:** Teal (Integral / Vision-Logic)
-- **Energy Ray:** Indigo
+- **Energy Ray:** Indigo (6a)
 - **Core Capacity:** Integral will — vision-logic alignment of all goals into holonic architecture serving evolutionary purpose while maintaining sovereign agency
 - **Below (Green):** Pluralistic will — multiple legitimate goals held in tension, collaborative commitment
 - **Above (Turquoise):** Effortless will — alignment with the cosmos, goal arises spontaneously

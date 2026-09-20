@@ -6,7 +6,7 @@
 |---|---|
 | Line | Somatic |
 | Stage | 07 — Teal (Integral / Vision-Logic) |
-| Ray | Indigo |
+| Ray | Indigo (6a) |
 | Core capacity | Integrated body — body-mind-emotion as unified holonic field |
 | Below (Green) | Listening body — somatic empathy, co-presence, body-as-relational |
 | Above (Turquoise) | Luminous body — body as energy, non-grasping movement, effortless action |

@@ -4,7 +4,7 @@
 
 - **Line:** Intrapersonal (self-relation, self-concept, identity structure)
 - **Stage:** Teal / Integral (vision-logic, second-tier)
-- **Ray:** Indigo
+- **Ray:** Indigo (6a)
 - **Core capacity:** Vision-logic self — the meta-self that sees its own developmental process, integrates all previous selves into a unified identity that includes multiplicity
 - **Below:** Green intrapersonal (pluralistic self, multiple contextual selves, paradox tolerance)
 - **Above:** Turquoise intrapersonal (non-dual self, identity transparent to awareness)

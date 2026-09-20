@@ -4,7 +4,7 @@
 
 - **Line:** Spiritual
 - **Stage:** Teal (7 — Integral / Vision-Logic)
-- **Ray:** Indigo
+- **Ray:** Indigo (6a)
 - **Core capacity:** Integral spirituality — all paths as facets of one architecture; cross-tradition synthesis; the sacred IS the whole pattern
 - **Below (Green):** Pluralistic faith — multiple paths held as equally valid, interfaith appreciation without hierarchy
 - **Above (Turquoise):** Non-dual — surrender of grasping, pathless path, full mana, no doctrine remains

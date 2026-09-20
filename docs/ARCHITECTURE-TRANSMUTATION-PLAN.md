@@ -352,14 +352,15 @@ nature in its first paragraph. Recorded as **RG-0001** in the seed ledger (§5).
 | Concept-draft corpus | fully re-indexed: `07 — Teal (Integral / Vision-Logic)` ↔ `08 — Turquoise (Super-Integral)` |
 | Idempotence | **one-way**; receipt-guarded (Incident 1) |
 
-**Deviation D6 (discovered, NOT fixed — needs a ruling).** The 7 stage-8 `module-spec.md` files declare
-`Energy Ray: Violet` (`emotional`, `interpersonal`, `intrapersonal`, `moral`, `somatic`, `spiritual`,
-`willpower`). Under the ratified ladder (`06 §5.1`) **L8 Turquoise hosts Indigo (6b)** and the
-**Violet ray belongs to the closure event** — so those fields are stale by the same rule that retired
-`White`. The competing reading is `06 §5.4`'s 8-stage↔7-ray table, which §5.1 rule 4 *retains* as a
-"sub-octave decoration" (stage 8 ↔ Violet). **The two readings disagree, and this is the one place
-where the ratification left them disagreeing** — so it is not being decided mechanically. It touches
-the metadata of 8 modules and the ray vocabulary of the corpus.
+**Deviation D6 — FIXED (ruled 2026-09-20: the ladder wins).** The 7 stage-8 `module-spec.md` files
+declared `Energy Ray: Violet` (`emotional`, `interpersonal`, `intrapersonal`, `moral`, `somatic`,
+`spiritual`, `willpower`) — stale by the same rule that retired `White`, since `06 §5.1` gives
+**L8 Turquoise = Indigo (6b)** and attaches the **Violet ray to the closure event**. `06 §5.4`'s
+8-stage↔7-ray bridge is retained but explicitly demoted to **cosmetic sub-octave decoration**
+(banner added at the bridge), and where the two disagree **§5.1 wins**. All 8 stage-7 specs now read
+`Indigo (6a)` and all 7 stage-8 specs `Indigo (6b)`, so the 6a/6b split actually distinguishes the
+two stages. `kosmocentric` vocabulary in `moral/08` (L9 territory, out of scope) was corrected in
+the same pass.
 
 **Also found (code-pass scope).** The stage tokens are live code identifiers — `src/core/assessments/*/white.ts`
 (8 modules), `type Stage = '…|Turquoise'|'White'`, `altitudeMin: 'White'` threshold maps,

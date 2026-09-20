@@ -4,7 +4,7 @@
 |---|---|
 | Line | Intrapersonal |
 | Stage | 8 — Turquoise / Super-Integral |
-| Ray | Violet |
+| Ray | Indigo (6b) — Violet belongs to the closure event, not to L8 (`foundations/06` §5.1) |
 | Core capacity | Non-dual self — self transparent to awareness |
 | Below | Teal intrapersonal (vision-logic meta-self, witness of stages) |
 | Above | None (final stage) |

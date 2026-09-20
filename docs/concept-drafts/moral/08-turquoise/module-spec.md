@@ -2,7 +2,7 @@
 
 - **Line:** Moral
 - **Stage:** 8 — Turquoise / Super-Integral
-- **Energy Ray:** Violet
+- **Energy Ray:** Indigo (6b) — the Violet ray belongs to the closure event, not to L8 (`foundations/06` §5.1)
 - **Defining Capacity:** Kosmocentric ethics — all-sentient compassion arising spontaneously from non-grasping presence. Right action without deliberation.
 - **Below (Teal):** Holonic ethics — depth-span trade-offs, developmental ethics, multi-level harm assessment
 - **Above:** None (final stage)
@@ -39,7 +39,7 @@ At Turquoise, all four drives express equanimously. The game detects residual im
 
 ## 5. Catalyst Architecture
 
-Every modality delivers catalyst at the Violet-ray frequency of kosmocentric ethics. The catalyst→experience→integration cycle at Turquoise:
+Every modality delivers catalyst at the Indigo (6b) frequency — worldcentric-to-integral ethics, where moral reasoning includes its own development (kosmocentric ethics is L9, out of scope: 06 §5.1 rule 2). The catalyst→experience→integration cycle at Turquoise:
 
 - **Catalyst:** Situations that reveal residual grasping in moral action
 - **Experience:** The felt-sense of subtle attachment dissolving — ethics becoming transparent

@@ -4,7 +4,7 @@
 |---|---|
 | Line | Spiritual |
 | Stage | 8 — Turquoise / Super-Integral |
-| Ray | Violet |
+| Ray | Indigo (6b) — Violet belongs to the closure event, not to L8 (`foundations/06` §5.1) |
 | Core capacity | Non-dual presence — the sacred as ordinary, pathless path |
 | Below | Teal: integral spirituality, cross-tradition synthesis |
 | Above | None (final stage) |

@@ -2,7 +2,7 @@
 
 - **Line:** Emotional
 - **Stage:** Turquoise (Super-Integral / Non-Dual)
-- **Ray:** Violet
+- **Ray:** Indigo (6b) — the Violet ray belongs to the closure event, not to L8 (`foundations/06` §5.1)
 - **Core Capacity:** Equanimity — affect is luminous, not gripping. Compassion without effort. The emotional field is felt as energy, not as crisis. Feelings arise and dissolve without grasping. The heart is transparent.
 - **Below:** Teal emotional (vision-logic affect, group-level emotional patterns, equanimity emerging)
 - **Above:** None (final stage)

@@ -4,7 +4,7 @@
 
 - **Line:** Somatic (body-intelligence, movement, rhythm, breath)
 - **Stage:** Turquoise (super-integral / non-dual / harvest)
-- **Ray:** Violet
+- **Ray:** Indigo (6b) — the Violet ray belongs to the closure event, not to L8 (`foundations/06` §5.1)
 - **Core capacity:** Luminous body — effortless action; body as transparent energy rather than grasped form
 - **Below (Teal):** Integrated body — body-mind-emotion unity, compound stances, effort-rest cycling
 - **Above:** None (final stage)

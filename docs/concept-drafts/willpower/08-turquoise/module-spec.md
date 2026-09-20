@@ -4,7 +4,7 @@
 |---|---|
 | Line | Willpower |
 | Stage | 8 — Turquoise / Super-Integral |
-| Energy Ray | Violet |
+| Energy Ray | Indigo (6b) — Violet belongs to the closure event, not to L8 (`foundations/06` §5.1) |
 | Core Capacity | Effortless will — action without a doer grasping at outcomes |
 | Below | Teal willpower (integral will, holonic goal architecture) |
 | Above | None (final stage) |

@@ -78,6 +78,14 @@ The codex makes this distinction explicit (see §7).
 
 ## 4. The eight-stages-over-seven-rays bridge
 
+> **Status: cosmetic sub-octave decoration (§5.1 rule 4) — NOT a stage↔ray map.**
+> This bridge is the 19-level colour decoration (2+3+5+3+3+2+1) that gives the stages their
+> aesthetic texture. It is **not** the authoritative ray attachment: §5.1's ratified ladder is,
+> and it fixes **7 Teal = Indigo (6a)**, **8 Turquoise = Indigo (6b)**, with the **Violet ray
+> belonging to the closure event, never to a stage** (ruling 2026-09-20, deviation D6). Where this
+> bridge and §5.1 disagree about a stage's ray, **§5.1 wins**; the bridge may use "Violet" only as
+> landscape/light vocabulary (e.g. "a violet hour"), never as a module's `Energy Ray` field.
+
 Per the user's `Integrated_Stage_Theory.md`:
 
 - **Blue-Ray bidirectional:** Blue-Ray is the first ray with

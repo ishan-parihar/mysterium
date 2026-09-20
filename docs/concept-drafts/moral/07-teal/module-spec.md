@@ -6,7 +6,7 @@
 |---|---|
 | Line | Moral |
 | Stage | 7 — Teal / Integral |
-| Ray | Indigo |
+| Ray | Indigo (6a) |
 | Core capacity | Holonic ethics — protecting the most depth for the most span |
 | Below | Green moral: contextual ethics, care-justice integration, moral pluralism |
 | Above | Turquoise moral: kosmocentric all-sentient ethics, compassion without object |

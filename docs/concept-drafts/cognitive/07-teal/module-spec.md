@@ -6,7 +6,7 @@
 |---|---|
 | Line | Cognitive |
 | Stage | 07 — Teal (Integral / Vision-Logic) |
-| Ray | Indigo |
+| Ray | Indigo (6a) |
 | Core capacity | Post-formal integrative thinking — holding all prior cognitive stages as partial truths within a unified field |
 | Defining tasks | Meta-WCST (rules-about-rules), n=4 holonic working memory, recursive Tower of London, dialectical reasoning, pattern-of-patterns detection, cross-domain integration |
 | Below | Green — multi-perspectival reasoning, contradiction tolerance, systems thinking |

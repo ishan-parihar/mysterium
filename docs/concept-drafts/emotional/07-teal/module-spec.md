@@ -4,7 +4,7 @@
 
 - **Line:** Emotional
 - **Stage:** Teal (Integral / Vision-Logic)
-- **Energy Ray:** Indigo
+- **Energy Ray:** Indigo (6a)
 - **Core Capacity:** Vision-logic affect — seeing emotional patterns across systems, reading group-level emotional waves, equanimity as emerging baseline, holding all emotional stages as valid while maintaining sovereign emotional centre.
 - **Below (Green):** Pluralistic empathy — multi-perspective affect, co-regulation, empathy to out-groups.
 - **Above (Turquoise):** Equanimity — affect is luminous, not gripping. Compassion without effort.

@@ -4,7 +4,7 @@
 
 - **Line:** Interpersonal
 - **Stage:** Teal (Integral / Vision-Logic)
-- **Energy Ray:** Indigo
+- **Energy Ray:** Indigo (6a)
 - **Core Capacity:** Integral others — multiple selves attuned at multiple levels. Holonic teams; cross-stage attunement; mentorship across altitude differences. The capacity to relate to others AT THEIR LEVEL while maintaining one's own integral centre.
 - **Below (Green):** Authentic relating — mutual vulnerability, deep listening, dialogue-as-practice
 - **Above (Turquoise):** Non-dual others — no fixed boundary self/other, communion, merged action
