@@ -5,7 +5,7 @@
 > metaphysics** of Mysterium's world. It is not aesthetic, not optional,
 > not firewalled. The seven energy rays are first-class types
 > alongside `Stage`, `Line`, `Quadrant`, `State`, `Drive`. The
-> harvest into 4th density is the canonical post-White endgame.
+> harvest into 4th density is the canonical post-Turquoise horizon event (the Violet closure).
 
 > **Heading-contract map (2026-09-16):** Scientific basis is carried by §2 "Methodological honesty (the firewall, refined)" + §9 "Codex framing" — the doc's epistemic-status discipline IS its scientific grounding. All six contract sections are present under their canonical names or exact variants.
 
@@ -220,7 +220,7 @@ holographic pattern showing up*.
 | Orange | Cobalt blue (Blue-in) | Cream | Steel |
 | Green | Cerulean (Blue-out) | Coral | Sage |
 | Turquoise | Indigo / midnight (Indigo) | Turquoise | Silver |
-| White | Pearl / opalescent (Violet) | Violet | Gold |
+| Turquoise | Pearl / opalescent (Violet) | Violet | Gold |
 
 The *stage name* (warm word) and *ray colour* (cool word) deliberately
 diverge. Stage "Red" is yellow-rayed. Stage "Orange" is blue-rayed.
@@ -241,7 +241,7 @@ reality at different resolutions.
 | Orange | Major (lifting) | Strings, piano |
 | Green | Dorian / modal mixtures | World ensembles, ambient |
 | Turquoise | Harmonic minor / spectralism | Synth pads, bowed metals |
-| White | Open intervals / silence | Crystal bowls, breath |
+| Turquoise | Open intervals / silence | Crystal bowls, breath |
 
 ### 7.3 Per-stage architectural / world motifs (canonical)
 
@@ -254,7 +254,7 @@ reality at different resolutions.
 | Orange | Glass labs, libraries, factories |
 | Green | Forums, gardens, intentional communities |
 | Turquoise | Observatories, holonic architecture |
-| White | Light-only; landscapes of awareness |
+| Turquoise | Light-only; landscapes of awareness |
 
 ### 7.4 The harvest endgame (canonical)
 
@@ -265,7 +265,7 @@ consciousness and social-memory complex.
 
 The harvest endgame is **scripted**, not procedural. It consists of:
 
-- A series of contemplative rites (extension of the White world's
+- A series of contemplative rites (extension of the Turquoise world's
   Last Threshold encounter)
 - The player's authored *closing reflection*
 - A "graduation cutscene" rendered in the violet-ray palette
@@ -336,7 +336,7 @@ default is no.
 
 The codex elaborates this cosmology over the course of play. By
 mid-game, the player has the framework to understand what they are
-ascending through and toward. By White, the framework is felt rather
+ascending through and toward. By Turquoise, the framework is felt rather
 than read.
 
 ## 8. Architectural contract (canonical types)
@@ -367,7 +367,7 @@ export const STAGE_TO_RAY: Record<Stage, RayBinding> = {
   Orange:    { ray: 'Blue', blueFlow: 'in' },
   Green:     { ray: 'Blue', blueFlow: 'out' },
   Turquoise: { ray: 'Indigo' },
-  White:     { ray: 'Violet' },
+  Turquoise: { ray: 'Violet' },
 };
 ```
 
