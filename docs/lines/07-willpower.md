@@ -206,3 +206,10 @@ under-reaching]; suggested goal scaling: …"
 Principles **1, 3, 6** — willpower as a first-class developmental
 line, ground for the staircase's "you came back tomorrow" loop,
 non-exploitative design.
+
+## 9. Relations
+
+- **Horizontal axis:** [[docs/foundations/03-lines-of-intelligence-overview|foundations/03 — Lines of Intelligence Overview]] (the eight lines tabulated)
+- **Adjacent lines:** [[docs/lines/06-somatic|lines/06 — Somatic Line]] · [[docs/lines/08-interpersonal|lines/08 — Interpersonal Line]]
+- **Multi-line matrix:** [[docs/lines/00-overview-multi-line|lines/00 — Multi-Line Overview]]
+- **Corpus for this line** (one module per stage, 8 total): [[docs/concept-drafts/willpower/03-red/immersive-rpg|Willpower / Red — immersive-RPG]] · and the other seven under `docs/concept-drafts/willpower/<stage>/`

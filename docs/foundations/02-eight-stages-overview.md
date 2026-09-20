@@ -16,8 +16,8 @@
 
 Establish the eight-stage macro-progression as Mysterium's vertical axis. The
 stages are **canonical** — the names, ordering, and core capacities are
-fixed across all docs. Per-stage detail is in `stages/01-…08-…`; this
-document gives the *whole arc* in one read.
+fixed across all docs. Per-stage detail is in the eight per-stage documents tabulated in §3.1;
+this document gives the *whole arc* in one read.
 
 Every level / world / dungeon in Mysterium corresponds to a stage. The player
 ascends through them in sequence (with optional regression for shadow
@@ -125,7 +125,20 @@ Each stage is a major *world* in the game:
 - Narrative arc within the world
 - Stage advancement gate (synthesis exam)
 
-Detailed in each `stages/0X-*.md`.
+Detailed in the per-stage documents:
+
+| Stage | Document |
+|---|---|
+| 1 Infrared / Archaic | [[docs/stages/01-infrared-archaic|stages/01 — Infrared / Archaic]] |
+| 2 Magenta / Magic | [[docs/stages/02-magenta-magic|stages/02 — Magenta / Magic]] |
+| 3 Red / Power | [[docs/stages/03-red-power|stages/03 — Red / Power]] |
+| 4 Amber / Mythic | [[docs/stages/04-amber-mythic|stages/04 — Amber / Mythic]] |
+| 5 Orange / Rational | [[docs/stages/05-orange-rational|stages/05 — Orange / Rational]] |
+| 6 Green / Pluralistic | [[docs/stages/06-green-pluralistic|stages/06 — Green / Pluralistic]] |
+| 7 Teal / Integral | [[docs/stages/07-teal-integral|stages/07 — Teal / Integral]] |
+| 8 Turquoise / Super-Integral | [[docs/stages/08-turquoise-superintegral|stages/08 — Turquoise / Super-Integral]] |
+
+The arc in one document: [[docs/stages/00-overview-eight-stages|stages/00 — Eight Stages Overview]].
 
 ### 3.2 Stage advancement is multi-line
 

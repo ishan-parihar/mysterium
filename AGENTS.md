@@ -66,9 +66,10 @@ bundle you need before editing:
 python3 scripts/arch.py route docs/foundations/19-choice-and-polarity-engine.md
 python3 scripts/arch.py route src/core/orchestration        # code -> organ + contract docs
 python3 scripts/arch.py context src/core/assessments       # contract docs + organ docs + records
-python3 scripts/arch.py search "alignment adjustment"      # keyword search over the live KB
-python3 scripts/arch.py related docs/foundations/19-choice-and-polarity-engine.md   # + backlinks
-python3 scripts/arch.py doc add --organ safety --title "..."   # author an organ document
+python3 scripts/arch.py search "alignment adjustment"      # BM25 search over the live KB
+python3 scripts/arch.py search --relations --rung canon "polarity"   # + edges + missing-link suggestions
+python3 scripts/arch.py related docs/foundations/19-choice-and-polarity-engine.md   # backlinks + suggestions
+python3 scripts/arch.py doc add --organ safety --title "..."   # author an organ document (refuses orphans)
 ```
 
 **Start work on any code path with `context`.** It answers *which foundation docs govern this, what
@@ -79,7 +80,7 @@ remembered.
 
 ```
 mysterium/                ← repository root
-├── _org.yaml             ← THE structure declaration: rungs, 13 organs, DG1–DG12 (machine-readable)
+├── _org.yaml             ← THE structure declaration: rungs, 13 organs, DG1–DG15 (machine-readable)
 ├── AGENTS.md             ← process protocol (the root router — this file)
 ├── scripts/arch.py       ← the ONLY write path for AD/RG; validates every rung
 │
@@ -426,7 +427,7 @@ Every development iteration — no exceptions — must follow this sequence:
 
 1. **Workspace lint** — Run `python3 skills/workspace-lint/scripts/workspace_lint.py --root .` after every change. Violations must be fixed before committing. The linter natively respects `.gitignore` — do NOT manually add ignored paths to `workspace-lint.yaml`.
 
-1b. **Doc-governance gates** — Run `python3 scripts/arch.py validate` after every change to `docs/`, `_org.yaml`, or a record. It must exit 0 (gates DG1–DG12: record schema, status enum, numbering + no-reissue, authority uniqueness, superseded vocabulary, historical quarantine, ownership, reference resolution, ledger integrity, canon↔code, **derived-surface freshness**, **canon link integrity**).
+1b. **Doc-governance gates** — Run `python3 scripts/arch.py validate` after every change to `docs/`, `_org.yaml`, or a record. It must exit 0 (gates DG1–DG15: record schema, status enum, numbering + no-reissue, authority uniqueness, superseded vocabulary, historical quarantine, ownership, reference resolution, ledger integrity, canon↔code, derived-surface freshness, canon link integrity, organ integrity, **relationality** — no authored document may be an orphan — and **Source resolution**).
 
    - **Records are written only through the tool.** Never hand-create or hand-edit a `MY-AD-*`/`MY-RG-*` file: `arch.py new` / `arch.py update` / `arch.py seed` write the ledger receipt that DG9 requires.
    - **Documents are written through the tool too.** Use `arch.py doc add --organ <organ> --title "..."` to author an architecture document; it lands in the organ, is **auto-discovered** (reachable from `route`/`context`/`search`/`related` the moment it exists), and needs no registry edit. Authoring a document by hand means hand-editing `_org.yaml` and `44` — which `MY-RG-0015` exists to prevent. Never enumerate an organ's contents anywhere: `_org.yaml` declares the *structure*; the *contents* are discovered.

@@ -178,3 +178,12 @@ To pass Magenta and unlock Red, the player must:
 
 Principles **1, 5, 6** — establishes the symbolic-life layer the
 rest of the game runs on, with UX richness and ethical care.
+
+## 10. Relations
+
+This document is the stage's world bible. Its neighbours in the hierarchy:
+
+- **Vertical axis:** [[docs/foundations/02-eight-stages-overview|foundations/02 — Eight Stages Overview]] (the eight stages tabulated)
+- **Previous stage:** [[docs/stages/01-infrared-archaic|stages/01 — Infrared / Archaic]] · **Next stage:** [[docs/stages/03-red-power|stages/03 — Red / Power]]
+- **Stage overview:** [[docs/stages/00-overview-eight-stages|stages/00 — Eight Stages Overview]]
+- **Corpus for this stage** (one module per line, 8 total): [[docs/concept-drafts/cognitive/02-magenta/module-spec|Cognitive / Magenta]] · [[docs/concept-drafts/intrapersonal/02-magenta/module-spec|Intrapersonal / Magenta]] · and the other six under `docs/concept-drafts/<line>/02-magenta/`

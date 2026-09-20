@@ -204,3 +204,10 @@ To pass Amber and unlock Orange:
 Principles **1, 4, 5, 6** — Amber as the heart-opening *and* the
 binding; earned through consistent ritual practice, rendered with
 respect, exited with integrity rather than scorn.
+
+## 10. Relations
+
+- **Vertical axis:** [[docs/foundations/02-eight-stages-overview|foundations/02 — Eight Stages Overview]]
+- **Previous stage:** [[docs/stages/03-red-power|stages/03 — Red / Power]] · **Next stage:** [[docs/stages/05-orange-rational|stages/05 — Orange / Rational]]
+- **Stage overview:** [[docs/stages/00-overview-eight-stages|stages/00 — Eight Stages Overview]]
+- **Corpus for this stage:** [[docs/concept-drafts/spiritual/04-amber/module-spec|Spiritual / Amber]] · [[docs/concept-drafts/spiritual/04-amber/immersive-rpg|Spiritual / Amber — immersive-RPG]] · and the other six lines under `docs/concept-drafts/<line>/04-amber/`

@@ -187,3 +187,10 @@ Principles **1, 4, 6** — completes the developmental picture by giving
 the meta-line proper weight, ensures progression is honest about what
 is felt, and protects the player from being weaponised against
 themselves.
+
+## 9. Relations
+
+- **Horizontal axis:** [[docs/foundations/03-lines-of-intelligence-overview|foundations/03 — Lines of Intelligence Overview]] (the eight lines tabulated)
+- **Adjacent lines:** [[docs/lines/03-moral|lines/03 — Moral Line]] · [[docs/lines/05-spiritual|lines/05 — Spiritual Line]] (the UL triad this line underwrites)
+- **Multi-line matrix:** [[docs/lines/00-overview-multi-line|lines/00 — Multi-Line Overview]]
+- **Corpus for this line** (one module per stage, 8 total): [[docs/concept-drafts/intrapersonal/03-red/module-spec|Intrapersonal / Red]] · and the other seven under `docs/concept-drafts/intrapersonal/<stage>/`

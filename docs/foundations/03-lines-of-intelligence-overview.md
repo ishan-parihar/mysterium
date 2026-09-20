@@ -3,8 +3,8 @@
 ## 1. Purpose
 
 Define what a *line* is, distinguish *altitude* from *stage*, and specify
-the eight canonical lines Mysterium trains. Per-line detail is in
-`lines/01-…08-…`; this is the unifier.
+the eight canonical lines Mysterium trains. Per-line detail is in the eight per-line
+documents tabulated in §7; this is the unifier.
 
 ## 2. Scientific basis
 
@@ -84,8 +84,10 @@ is a (line, stage) pair with:
 - A side-character archetype
 - A skill-tree node
 
-This matrix IS the skill tree. It is generated from data in
-`combat/03-skill-tree-architecture.md`, not hand-authored.
+This matrix IS the skill tree. It is generated from the corpus
+([[docs/concept-drafts/README|concept-drafts/README]]) and the curriculum data
+(`src/core/curriculum/data/`), not hand-authored. The former skill-tree document was retired with
+the combat spine ([[docs/system/core/decisions/MY-AD-0001-assessment-module-execution-replaces-the-atb-combat-spine|MY-AD-0001]]).
 
 ### 3.2 Line-specific combat verbs
 
@@ -156,7 +158,7 @@ These caps are conservative defaults; tuneable in
   is readable; with twelve it is not. Eight feels like the limit.
 - **Are eight enough?** Aesthetic intelligence, financial intelligence,
   ecological intelligence are each defensible additional lines. Mysterium's
-  decision: hold to eight in MVP; revisit in `roadmap/02`.
+  decision: hold to eight in MVP; revisit in [[docs/concept-drafts/ROADMAP|concept-drafts/ROADMAP]].
 - **The cognitive-substrate cap.** Is +1 the right slack? +2 would let
   emotional / moral / spiritual genuinely outpace cognition, which is
   closer to the empirical reality but creates strange in-game dynamics.
@@ -165,3 +167,20 @@ These caps are conservative defaults; tuneable in
 
 Principles **1** (granular spec of *what* is being trained) and **4**
 (prevents the single-bar fallacy).
+
+## 7. The eight lines, in full
+
+Each line has its own document; §2–§5 here are the unifier across them.
+
+| Line | Document | Corpus |
+|---|---|---|
+| 1 Cognitive | [[docs/lines/01-cognitive|lines/01 — Cognitive Line]] | [[docs/concept-drafts/cognitive/01-infrared/module-spec|Cognitive / Infrared module]] |
+| 2 Emotional | [[docs/lines/02-emotional|lines/02 — Emotional Line]] | [[docs/concept-drafts/emotional/01-infrared/module-spec|Emotional / Infrared module]] |
+| 3 Moral | [[docs/lines/03-moral|lines/03 — Moral Line]] | [[docs/concept-drafts/moral/01-infrared/module-spec|Moral / Infrared module]] |
+| 4 Intrapersonal | [[docs/lines/04-intrapersonal|lines/04 — Intrapersonal Line]] | [[docs/concept-drafts/intrapersonal/01-infrared/module-spec|Intrapersonal / Infrared module]] |
+| 5 Spiritual | [[docs/lines/05-spiritual|lines/05 — Spiritual Line]] | [[docs/concept-drafts/spiritual/01-infrared/module-spec|Spiritual / Infrared module]] |
+| 6 Somatic | [[docs/lines/06-somatic|lines/06 — Somatic Line]] | [[docs/concept-drafts/somatic/01-infrared/module-spec|Somatic / Infrared module]] |
+| 7 Willpower | [[docs/lines/07-willpower|lines/07 — Willpower Line]] | [[docs/concept-drafts/willpower/01-infrared/module-spec|Willpower / Infrared module]] |
+| 8 Interpersonal | [[docs/lines/08-interpersonal|lines/08 — Interpersonal Line]] | [[docs/concept-drafts/interpersonal/01-infrared/module-spec|Interpersonal / Infrared module]] |
+
+The multi-line matrix in one document: [[docs/lines/00-overview-multi-line|lines/00 — Multi-Line Overview]].

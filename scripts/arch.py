@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 import sys
 from datetime import datetime, timezone
@@ -65,6 +66,8 @@ GATE_CONFIG_KEY = {
     "DG11": "dg11_derived_surfaces",
     "DG12": "dg12_canon_links",
     "DG13": "dg13_organ_integrity",
+    "DG14": "dg14_relationality",
+    "DG15": "dg15_source_resolves",
 }
 
 
@@ -280,10 +283,32 @@ def render_index(cfg: dict) -> str:
 # Gates (DG1–DG12)
 # ─────────────────────────────────────────────────────────────────────────────
 class Gate:
+    # Rungs whose documents must be interconnected. `content` (the 512-file corpus) is exempt on
+    # purpose: its relationality is structural (line x stage directories + the corpus index), and 510
+    # of its 515 files carry no citations at all.
+    RELATIONAL_RUNGS = ("canon", "canon-root", "canon-domain", "system", "plans")
+
     def __init__(self, cfg: dict):
         self.cfg = cfg
         self.problems: list[str] = []
         self.checked: dict[str, int] = {}
+        self._edges: dict[str, list[Path]] | None = None
+
+    def edge_index(self) -> dict[str, list[Path]]:
+        """Outbound citation edges for every live document, computed once per validate pass."""
+        if self._edges is None:
+            idx: dict[str, list[Path]] = {}
+            for p in live_files(self.cfg):
+                idx[rel(p)] = outbound_refs(p.read_text(encoding="utf-8", errors="ignore"), p.parent)
+            self._edges = idx
+        return self._edges
+
+    def inbound_index(self) -> dict[str, int]:
+        inbound: dict[str, int] = {}
+        for refs in self.edge_index().values():
+            for t in refs:
+                inbound[rel(t)] = inbound.get(rel(t), 0) + 1
+        return inbound
 
     def err(self, gate: str, msg: str) -> None:
         self.problems.append(f"{gate}: {msg}")
@@ -303,6 +328,8 @@ class Gate:
             ("DG11", self.dg11_derived_surfaces),
             ("DG12", self.dg12_canon_links),
             ("DG13", self.dg13_organ_integrity),
+            ("DG14", self.dg14_relationality),
+            ("DG15", self.dg15_source_resolves),
         ]
         for name, fn in gates:
             if only and name != only:
@@ -617,6 +644,49 @@ class Gate:
                 self.err(g, f"organ `{organ}`: no router at docs/system/sub-systems/{organ}/AGENTS.md")
         self.checked[g] = n
 
+    # DG14 — relationality ENFORCED. Creating, modifying or managing a document is only sound if the
+    # document is connected: an authored doc with no inbound and no outbound reference is an orphan,
+    # and eight of them sat in the tree at zero inbound links while every gate reported green (audit
+    # UT-1). Reporting relationships is not enforcing them; this gate is the enforcement.
+    def dg14_relationality(self, g: str) -> None:
+        idx = self.edge_index()
+        inbound = self.inbound_index()
+        n = 0
+        for r, refs in idx.items():
+            rung, _organ = where_is(self.cfg, r)
+            if rung not in self.RELATIONAL_RUNGS:
+                continue
+            if r.startswith("docs/system/sub-systems/") and r.endswith("/AGENTS.md"):
+                continue  # a generated router's edges are produced by `emit` (DG11 owns it)
+            n += 1
+            if not refs and inbound.get(r, 0) == 0:
+                self.err(
+                    g,
+                    f"{r}: orphan — no inbound and no outbound reference. Connect it ("
+                    f"`python3 scripts/arch.py related {r}` suggests candidates)",
+                )
+        self.checked[g] = n
+
+    # DG15 — a record's `Source:` is an edge, so it must name a document that resolves. The record
+    # layer was the only one whose relationality was enforced at all (DG8 checks `Related:` IDs);
+    # `Source:` was unenforced prose, so a record could cite canon that does not exist.
+    def dg15_source_resolves(self, g: str) -> None:
+        n = 0
+        for r in records(self.cfg):
+            n += 1
+            src = str(frontmatter(r["text"]).get("Source") or "").strip()
+            if not src:
+                self.err(g, f"{r['rel']}: `Source:` is empty — name the canon section it transcribes")
+                continue
+            tokens = re.findall(r"[A-Za-z0-9_][A-Za-z0-9_./-]*", src)
+            if not any(resolve_ref(t) for t in tokens):
+                self.err(
+                    g,
+                    f"{r['rel']}: `Source:` names no resolvable document (`{src[:70]}`) — "
+                    f"use a path such as docs/foundations/44-....md §9",
+                )
+        self.checked[g] = n
+
     # DG10 — canon↔code: every code artifact cited by a record exists
     def dg10_canon_code(self, g: str) -> None:
         n = 0
@@ -696,7 +766,8 @@ def outbound_refs(text: str, base: Path) -> list[Path]:
     # 5. rung-relative paths with a section suffix and no extension — how a record's `Source:`
     # field cites the canon section it transcribes: `foundations/19-choice-and-polarity-engine §9.6`
     raws += re.findall(
-        r"(?<![\w/`])((?:docs/)?(?:foundations|system|stages|lines|progression|narrative|concept-drafts)/[A-Za-z0-9_./-]+)",
+        r"(?<![\w/`])((?:docs/)?(?:foundations|system|stages|lines|progression|narrative|"
+        r"concept-drafts|audits|historical|archive)/[A-Za-z0-9_./-]+)",
         text,
     )
     out: list[Path] = []
@@ -843,64 +914,220 @@ def cmd_recon(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_search(args: argparse.Namespace) -> int:
-    """Keyword search over the LIVE knowledge-base: canon, organs, records, corpus.
+# ─────────────────────────────────────────────────────────────────────────────
+# BM25 retrieval — the knowledge-base index
+# ─────────────────────────────────────────────────────────────────────────────
+STOPWORDS = frozenset(
+    "a an and are as at be been but by can could do does for from had has have how in into is it its"
+    " may might must not of on or other should than that the their them then there these this those to"
+    " under up was were what when where whether which while who why will with within would you your"
+    " some such only also very more most much many any all both no nor own same so too".split()
+)
 
-    The specification's *keyword -> docs + references* step (audit UT-2). AND across terms, ranked by
-    body frequency, title match, then heading match; every hit reports where it lives and what it
-    references, so a hit is a starting point rather than a dead end.
+
+def tokenize(text: str) -> list[str]:
+    """Lowercase word tokens, stopwords and 1-char noise dropped.
+
+    Deliberately un-stemmed: this corpus is technical and its terms are compound (`contract_docs`,
+    `stage-holons`, `polarity-engine`), so aggressive stemming merges distinct concepts and costs more
+    precision than it recovers in recall at this size.
     """
-    cfg = org()
-    terms = [t for t in re.split(r"\s+", (args.keyword or "").strip().lower()) if t]
-    if not terms:
-        fail("search needs at least one term")
-    hits: list[dict] = []
-    for p in live_files(cfg):
-        text = p.read_text(encoding="utf-8", errors="ignore")
-        low = text.lower()
-        if not all(t in low for t in terms):
-            continue
-        fm = frontmatter(text) if text.startswith("---") else {}
-        title = str(fm.get("Title") or doc_title(p))
-        headings = re.findall(r"^#{1,6} (.+)$", text, re.M)
-        score = sum(low.count(t) for t in terms)
-        score += 8 * sum(1 for t in terms if t in title.lower())
-        score += 4 * sum(1 for t in terms if any(t in h.lower() for h in headings))
-        lines: list[tuple[int, str]] = []
-        for i, line in enumerate(text.splitlines(), 1):
-            if any(t in line.lower() for t in terms):
-                lines.append((i, " ".join(line.split())[:140]))
-                if len(lines) >= args.lines:
-                    break
-        rung, organ = where_is(cfg, rel(p))
-        hits.append(
-            {
-                "score": score,
-                "path": rel(p),
+    return [t for t in re.findall(r"[a-z0-9]+", text.lower()) if t not in STOPWORDS and len(t) > 1]
+
+
+class Corpus:
+    """A BM25 index over every live document, plus the citation graph between them.
+
+    Replaces the term-count ranking of the first implementation (audit UT-2), whose three faults BM25
+    fixes: a long document out-ranked a precise one, a common word weighed as much as a rare one, and
+    "relevance" was a raw mention count so scores were incomparable across rungs.
+
+    Field weighting: title x3, headings x2, body x1; BM25's length normalisation then runs on the
+    weighted length.
+    """
+
+    K1 = 1.2
+    B = 0.75
+
+    def __init__(self, cfg: dict):
+        self.cfg = cfg
+        self.docs: list[dict] = []
+        self.by_path: dict[str, dict] = {}
+        self.df: dict[str, int] = {}
+        self.records = records(cfg)
+        for p in live_files(cfg):
+            text = p.read_text(encoding="utf-8", errors="ignore")
+            fm = frontmatter(text) if text.startswith("---") else {}
+            title = str(fm.get("Title") or doc_title(p))
+            headings = " ".join(re.findall(r"^#{1,6} (.+)$", text, re.M))
+            body = re.sub(r"^#{1,6} .+$", "", text, flags=re.M)
+            tf: dict[str, int] = {}
+            for tok in tokenize(title):
+                tf[tok] = tf.get(tok, 0) + 3
+            for tok in tokenize(headings):
+                tf[tok] = tf.get(tok, 0) + 2
+            for tok in tokenize(body):
+                tf[tok] = tf.get(tok, 0) + 1
+            rung, organ = where_is(cfg, rel(p))
+            doc = {
+                "path": p,
+                "rel": rel(p),
+                "text": text,
+                "title": title,
+                "fm": fm,
+                "tf": tf,
+                "len": sum(tf.values()) or 1,
                 "rung": rung,
                 "organ": organ,
-                "title": title,
-                "lines": [{"n": i, "text": s} for i, s in lines],
-                "refs": [rel(q) for q in outbound_refs(text, p.parent)],
+                "refs": outbound_refs(text, p.parent),
             }
-        )
-    hits.sort(key=lambda h: (-h["score"], h["path"]))
+            self.docs.append(doc)
+            self.by_path[doc["rel"]] = doc
+            for tok in tf:
+                self.df[tok] = self.df.get(tok, 0) + 1
+        self.n = len(self.docs)
+        self.avg = (sum(d["len"] for d in self.docs) / self.n) if self.n else 1.0
+        self.inbound: dict[str, int] = {}
+        for d in self.docs:
+            for r in d["refs"]:
+                self.inbound[rel(r)] = self.inbound.get(rel(r), 0) + 1
+
+    def idf(self, term: str) -> float:
+        df = self.df.get(term, 0)
+        return math.log(1 + (self.n - df + 0.5) / (df + 0.5)) if self.n else 0.0
+
+    def rank(
+        self, terms: list[str], rung: str | None = None, organ: str | None = None
+    ) -> list[tuple[float, dict]]:
+        uniq = [t for t in dict.fromkeys(terms) if t in self.df]
+        if not uniq:
+            return []
+        scored: list[tuple[float, dict]] = []
+        for d in self.docs:
+            if (rung and d["rung"] != rung) or (organ and d["organ"] != organ):
+                continue
+            s = 0.0
+            for t in uniq:
+                tf = d["tf"].get(t)
+                if not tf:
+                    continue
+                s += self.idf(t) * (tf * (self.K1 + 1)) / (
+                    tf + self.K1 * (1 - self.B + self.B * d["len"] / self.avg)
+                )
+            if s > 0:
+                scored.append((s, d))
+        scored.sort(key=lambda x: (-x[0], x[1]["rel"]))
+        return scored
+
+    def search(
+        self, query: str, rung: str | None = None, organ: str | None = None
+    ) -> list[tuple[float, dict]]:
+        return self.rank(tokenize(query), rung, organ)
+
+    def similar(self, doc: dict, k: int = 8) -> list[tuple[float, dict]]:
+        """BM25 similarity: query with this document's own most distinctive terms (tf x idf)."""
+        terms = sorted(doc["tf"], key=lambda t: -(doc["tf"][t] * self.idf(t)))[:16]
+        return [(s, d) for s, d in self.rank(terms) if d["path"] != doc["path"]][:k]
+
+    def relations(self, doc: dict, k: int = 5) -> dict:
+        """Every relationship this document should have, split by whether it already exists.
+
+        `structural` edges come from the declarations (organ contract docs, organ code, the 44 owners
+        table, governing records); `suggested` are the BM25-similar documents **not yet linked in
+        either direction**. The suggestions are the actionable half: audit UT-3 found relationality was
+        checked by DG12 and then discarded, so nothing could ever suggest a missing link.
+        """
+        cfg = self.cfg
+        out_refs = {rel(p) for p in doc["refs"]}
+        in_refs = {o["rel"] for o in self.docs if doc["path"] in o["refs"]}
+        linked = out_refs | in_refs
+        structural: list[tuple[str, str]] = []
+        o = cfg["organs"].get(doc["organ"]) if doc["organ"] else None
+        if o:
+            for ref in o.get("contract_docs") or []:
+                p = contract_path(str(ref))
+                if p:
+                    structural.append((rel(p), "contract doc (canon)"))
+            for c in o.get("code") or []:
+                structural.append((c, "code this organ implements"))
+        owners = (fenced_block(VOCAB_FILE, "# owners-table") or {}).get("owners", {}) or {}
+        for term, ref in owners.items():
+            if resolve_ref(str(ref)) == doc["path"]:
+                structural.append((f"term `{term}`", "this document owns the term"))
+        for rec in self.records:
+            if doc["organ"] and str(frontmatter(rec["text"]).get("Organ")) == doc["organ"]:
+                structural.append((rec["rel"], "record governing this organ"))
+        suggested = [
+            {"path": d["rel"], "score": round(s, 2), "title": d["title"]}
+            for s, d in self.similar(doc, k + 8)
+            if d["rel"] not in linked
+        ][:k]
+        return {
+            "existing": {"outbound": sorted(out_refs), "inbound": sorted(in_refs)},
+            "structural": structural,
+            "suggested": suggested,
+        }
+
+    def orphans(self) -> list[dict]:
+        """Live documents with no edge in either direction."""
+        return [d for d in self.docs if not d["refs"] and self.inbound.get(d["rel"], 0) == 0]
+
+
+def cmd_search(args: argparse.Namespace) -> int:
+    """BM25 search over the LIVE knowledge-base, with relationship suggestions.
+
+    Answers both halves of the specification's retrieval step: *where is this documented* (ranked
+    BM25, not term counts) and *what should it be connected to* (`--relations` adds the declared
+    structural edges plus the BM25-similar documents not yet linked in either direction).
+    """
+    cfg = org()
+    if not (args.keyword or "").strip():
+        fail("search needs at least one term")
+    terms = tokenize(args.keyword)
+    if not terms:
+        fail(f"`{args.keyword}` is entirely stopwords — nothing to match")
+    corpus = Corpus(cfg)
+    hits = corpus.search(args.keyword, rung=args.rung, organ=args.organ)
+    payload: list[dict] = []
+    for score, d in hits[: args.limit]:
+        lines = []
+        for i, line in enumerate(d["text"].splitlines(), 1):
+            if any(t in line.lower() for t in terms):
+                lines.append({"n": i, "text": " ".join(line.split())[:140]})
+                if len(lines) >= args.lines:
+                    break
+        entry = {
+            "score": round(score, 3),
+            "path": d["rel"],
+            "rung": d["rung"],
+            "organ": d["organ"],
+            "title": d["title"],
+            "lines": lines,
+            "outbound": [rel(p) for p in d["refs"]],
+            "inbound": corpus.inbound.get(d["rel"], 0),
+        }
+        if args.relations:
+            entry["relations"] = corpus.relations(d)
+        payload.append(entry)
     if args.json:
-        print(json.dumps({"keyword": args.keyword, "count": len(hits), "hits": hits[: args.limit]}, indent=2))
-        return 0 if hits else 1
-    if not hits:
-        print(f"no live document matches {terms}")
+        print(json.dumps({"query": args.keyword, "searched": corpus.n, "hits": payload}, indent=2))
+        return 0 if payload else 1
+    if not payload:
+        print(f"no live document matches `{args.keyword}` (searched {corpus.n} live documents)")
         return 1
-    print(f"search {terms} — {len(hits)} hit(s)\n")
-    for h in hits[: args.limit]:
-        where = f"  [{h['organ']}]" if h["organ"] else ""
-        print(f"{h['path']}{where}  (score {h['score']})")
+    print(f"BM25 `{args.keyword}` — {len(payload)} hit(s) of {corpus.n} live documents\n")
+    for h in payload:
+        where = "  ".join(x for x in (h["rung"], h["organ"]) if x)
+        print(f"{h['path']}   [{where}]  bm25={h['score']}")
         print(f"  {h['title']}")
         for line in h["lines"]:
             print(f"  {line['n']}: {line['text']}")
-        if h["refs"]:
-            tail = " …" if len(h["refs"]) > 6 else ""
-            print(f"  -> refs: {', '.join(h['refs'][:6])}{tail}")
+        print(f"  edges: {len(h['outbound'])} out, {h['inbound']} in")
+        if "relations" in h:
+            for path, why in h["relations"]["structural"][:8]:
+                print(f"    structural: {path}  ({why})")
+            for s in h["relations"]["suggested"]:
+                print(f"    suggested:  {s['path']}  (bm25 {s['score']})")
         print()
     return 0
 
@@ -976,6 +1203,17 @@ def cmd_related(args: argparse.Namespace) -> int:
                 n += 1
     if not n:
         print("  (none — nothing in the live tree references this)")
+
+    corpus = Corpus(cfg)
+    node = corpus.by_path.get(r)
+    print("\n=== suggested (BM25 — not yet linked in either direction) ===")
+    if node is None:
+        print("  (not a live document — no index entry)")
+        return 0
+    for s in corpus.relations(node, k=6)["suggested"]:
+        print(f"  + {s['path']}  (bm25 {s['score']})  {s['title'][:64]}")
+    if not corpus.relations(node, k=6)["suggested"]:
+        print("  (already connected to everything BM25 considers relevant)")
     return 0
 
 
@@ -1058,6 +1296,17 @@ def cmd_doc_add(args: argparse.Namespace) -> int:
             .replace("{{CONTRACTS}}", ", ".join(refs) or "*(none declared)*")
             .replace("{{SAMPLE_CODE}}", code)
         )
+    # Relationality is enforced at CREATION time, not only at validate time (audit UT-4): a document
+    # that arrives with no reference in either direction is an orphan from birth, and DG14 would fail
+    # on the next validate with a message about a file the author has already moved on from.
+    if not outbound_refs(body, d) and not args.allow_orphan:
+        corpus = Corpus(cfg)
+        print(f"\n`{rel(out)}` would be an ORPHAN: it references nothing and nothing references it.")
+        print("Candidates by BM25 over the knowledge-base (add at least one reference, then re-run):\n")
+        for s, doc in corpus.search(title)[:6]:
+            print(f"  + {doc['rel']}  (bm25 {round(s, 2)})")
+        print("\nUse `--allow-orphan` only if it genuinely stands alone (nothing is exempt by default).")
+        return 2
     out.write_text(body if body.startswith("---") else body.rstrip() + "\n", encoding="utf-8")
     append_ledger(
         cfg,
@@ -1374,6 +1623,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("keyword")
     p.add_argument("--limit", type=int, default=10, help="max hits to print")
     p.add_argument("--lines", type=int, default=3, help="matching lines per hit")
+    p.add_argument("--rung", help="restrict to one rung (canon, system, content, ...)")
+    p.add_argument("--organ", help="restrict to one organ")
+    p.add_argument(
+        "--relations",
+        action="store_true",
+        help="also emit the declared structural edges and BM25-similar documents not yet linked",
+    )
     p.add_argument("--json", action="store_true", help="machine-readable output")
     p.set_defaults(fn=cmd_search)
 
@@ -1389,6 +1645,11 @@ def main(argv: list[str] | None = None) -> int:
     pd.add_argument("--file", help="markdown body to use instead of the house template")
     pd.add_argument("--source", default="", help="canon section this documents")
     pd.add_argument("--reason", default="")
+    pd.add_argument(
+        "--allow-orphan",
+        action="store_true",
+        help="permit a document with no reference in either direction (DG14 will still flag it)",
+    )
     pd.set_defaults(fn=cmd_doc_add)
 
     p = sub.add_parser("new", help="create an AD or RG record")

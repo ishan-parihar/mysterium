@@ -225,6 +225,8 @@ gates:
   dg11_derived_surfaces:  {enabled: true}
   dg12_canon_links:       {enabled: true}
   dg13_organ_integrity:   {enabled: true}
+  dg14_relationality:     {enabled: true}
+  dg15_source_resolves:   {enabled: true}
 
 # GENERATED SURFACES — derived from `_org.yaml` + the records by `arch.py emit`. Never
 # hand-edited; DG11 fails when one is stale. `route` reports them as generated.

@@ -213,3 +213,10 @@ To pass Green and unlock Teal:
 Principles **1, 4, 5, 6** — Green's gifts properly honoured, its
 shadows visible, its exit (toward Teal) demanding *commitment
 within pluralism*, not despite it.
+
+## 10. Relations
+
+- **Vertical axis:** [[docs/foundations/02-eight-stages-overview|foundations/02 — Eight Stages Overview]]
+- **Previous stage:** [[docs/stages/05-orange-rational|stages/05 — Orange / Rational]] · **Next stage:** [[docs/stages/07-teal-integral|stages/07 — Teal / Integral]]
+- **Stage overview:** [[docs/stages/00-overview-eight-stages|stages/00 — Eight Stages Overview]]
+- **Corpus for this stage:** [[docs/concept-drafts/cognitive/06-green/module-spec|Cognitive / Green]] · [[docs/concept-drafts/moral/06-green/module-spec|Moral / Green]] · and the other six lines under `docs/concept-drafts/<line>/06-green/`
