@@ -161,10 +161,11 @@ organs:
     status: active
 
   world:
-    contract_docs: [foundations/18-great-way-world-architecture, foundations/22-holon-context-engine]
+    contract_docs: [foundations/18-great-way-world-architecture, foundations/21-incarnation-architecture, foundations/22-holon-context-engine, foundations/45-personalization-and-context-pooling, foundations/46-generative-world-composition]
     code: [src/core/pods, src/infra/pods]
     status: active
     note: "No architecture doc existed before this plan (audit gap G6)."
+    warning: "MISASSIGNED: `code` is cohort multiplayer (38), not world-building. The world's actual content lives in src/core/data (HolonRegistry, RedPESTLE, stage-holons.json, red-layer-holons.json, encounters/) held by platform, and its types in src/core/domain held by kernel. Recommended home is a new src/core/world/ per 46 section 10 — tracked as pending WORLD-STORE-MOVE."
 
   onboarding:
     contract_docs: [foundations/21-incarnation-architecture, foundations/16-significator-architecture]
@@ -266,6 +267,9 @@ pending:
   RT-ARCHIVE-MIGRATIONS: "archive scripts/doc-stage-reindex.py + scripts/doc-path-reindex.py once CODE-PASS lands; they encode one-way migrations whose mappings are otherwise unverifiable from the tree (red-team RT-11)"
   RT-ORPHAN-LAW: "gate: an Active AD with no code anchor and no declared deferral is invisible pending work; the largest untracked backlog in the repo (red-team 2026-09-20 section 2). Needs a `Deferral:` or `Consumer:` field on the record so a law with no consumer is a violation rather than a note"
   PLAN-IMPLEMENT: "the architecture ratified in 45 (user-dimensionality vector, three-library pooling, analogical bridge, engagement register) and in the safety ethics contract (data classes, projection firewall) has no code yet — MY-AD-0018, MY-AD-0019, MY-AD-0020, MY-RG-0017, MY-RG-0018"
+  WORLD-STORE-MOVE: "create src/core/world/ (store, facets, tags, compose, libraries) and move the world content into it: domain/Holon.ts, data/HolonRegistry.ts, data/{stage-holons,red-layer-holons}.json, data/RedPESTLE.ts, data/encounters/ (46 section 10). Correct organs.world.code (currently cohort pods) and remove src/core/data from platform. This is what makes 18/21/22/45/46 reachable from the code they govern (KB-FOUNDATIONS-INGEST)"
+  FACET-COMPILER: "compile the 512 concept-drafts into the facet store (46 section 8) so the corpus stays prose-for-humans and the store stays data-for-the-engine; the compiler is the only path, which is what keeps them from diverging (RT-CORPUS-RECONCILE)"
+  TAG-ONTOLOGY: "author the initial tag set with axis positions and the curated dialectic pairs (46 section 4); a tag without a resolvable opposite is a compile error"
   KB-ORPHAN-TRIAGE: "mark the 11 orphan scripts as historical / current / one-shot-in-place; 4 of them rewrite the corpus for superseded templates and would be destructive if run (KB audit UT-7). Also fix scripts/run-validation-benchmark.ts, which names the removed docs/validation/ path"
   KB-ORGAN-DOCS: "author the organs that contain nothing but a generated router: profiling, world, onboarding, credentialing, platform (KB audit UT-6) — use `arch.py doc add`. The `safety` organ was the first closed (ethics-and-data-privacy.md, MY-AD-0020)"
   KB-SKILLS-PROVENANCE: "mark which skills/ entries are house governance (workspace-lint, curriculum-linter) vs vendored third-party (134 tracked files: ui-styling, ui-ux-pro-max, design-taste-frontend) (KB audit UT-9)"

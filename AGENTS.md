@@ -321,8 +321,9 @@ contents here; read them where they live:
    `MY-AD-0008` (alignment bias — the seam exists, the consumer does not), `MY-AD-0009` (two-fold
    world memory + per-holon owner worker), `MY-AD-0010` (background workers), `MY-AD-0011`
    (integrated human intervention), `MY-AD-0018` (the user-dimensionality vector as retrieval key),
-   `MY-AD-0019` (world/NPC/scenario pooling), and `MY-AD-0020` (the ethics and data-privacy classes
-   and projection firewall). Plus the Auditor Projection Layer (`16 §2.4/§10.4`).
+   `MY-AD-0019` (world/NPC/scenario pooling), `MY-AD-0020` (the ethics and data-privacy classes and
+   projection firewall), and `MY-AD-0021` (entities are composed from facets, not stored whole — with
+   the tag/dialectic store). Plus the Auditor Projection Layer (`16 §2.4/§10.4`).
    `python3 scripts/arch.py related <ID>` pulls any record's edges.
 2. **Documentation and knowledge-base integrity.** `_org.yaml → pending` — `CODE-PASS`, the `RT-*`
    gate/ingest items and the `KB-*` items (orphan-script triage, the undocumented organs, skills

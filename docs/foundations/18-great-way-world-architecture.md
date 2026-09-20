@@ -386,6 +386,8 @@ This document specifies the **world structure** — the architectural commitment
 | Polarity-driven world-bifurcation (positive vs. negative path worlds) | foundations/19 (Choice & Polarity Engine) |
 | The full synthesis of world + Significator + Transformation + Choice | foundations/21 (Incarnation Architecture) |
 | How the LLM generates holon content and threads consequences | foundations/22 (Holon Context Engine) |
+| How holons are **composed** from facets instead of authored whole, and the tag/dialectic store that selects them | foundations/46 (Generative World Composition) |
+| The player's dimensionality as a retrieval key, and the pooling of the three libraries | foundations/45 (Personalization & Context Pooling) |
 | Per-stage world aesthetics, palette, and sonic design | foundations/06 §7; stages/01–08 world bibles |
 | Narrative architecture and NPC design principles | narrative/00 (Narrative Architecture) |
 | The 4-quadrant shadow model and drive-health formulas | foundations/10 (Shadow & Pathology) |

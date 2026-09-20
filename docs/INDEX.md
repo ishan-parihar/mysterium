@@ -36,7 +36,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (38)
+## Records (40)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -66,6 +66,8 @@
 | `MY-AD-0018` | AD | kernel | Active | The player's dimensionality is a first-class retrieval key |
 | `MY-AD-0019` | AD | kernel | Active | World, NPC and scenario libraries are pooled before selection |
 | `MY-RG-0017` | RG | kernel | Active | Engagement mechanisms drift into manipulation |
+| `MY-AD-0021` | AD | world | Active | World entities are composed from facets, not stored whole |
+| `MY-RG-0019` | RG | world | Active | A static store reasserts itself beside the generated one |
 | `MY-AD-0020` | AD | safety | Active | Ethics and data privacy is a binding contract on every organ |
 | `MY-RG-0018` | RG | safety | Active | A stored field has no declared data class |
 | `MY-AD-0014` | AD | platform | Active | The doc set is readable as a map: route resolves code and context emits the bundle |

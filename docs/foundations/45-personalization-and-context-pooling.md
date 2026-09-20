@@ -10,7 +10,10 @@
 > **Does not own:** the world's holon taxonomy (`18`), the LLM pipeline's step order and prompt
 > assembly (`22`), encounter *selection* and its ONE priority formula (`24`), the objective/Vow
 > system (`39`), flow and reward-schedule theory (`09`), modality contracts (`11`), the sub-agent
-> roster and toolset firewall (`43`), the profile's consent mechanics (`16 §2.1`).
+> roster and toolset firewall (`43`), the profile's consent mechanics (`16 §2.1`), and — since
+> 2026-09-20 — the **composition of the entities that are pooled**: this document assumes libraries
+> exist and pools over them; `46` specifies that they are composed from facets and adds the tag
+> store and the dialectic engine.
 > **Cross-references:** all of the above; this document is the join between them.
 
 ---
@@ -166,6 +169,12 @@ the player's fluent domain `D` in three layers, all three required:
 | **Structural** | map `C`'s internal structure (its parts, relations, invariants) onto a structure already present in `D` | the analogy is decorative and teaches nothing |
 | **Surface** | express `C` in `D`'s vocabulary, register, and imagery (`22 §4.4`'s `vocabularyBand` + `valueLens`) | the content lands as foreign and is rejected |
 | **Stakes** | connect `C` to an aim in the player's purpose set (`39`) | the content is understood and still feels pointless |
+
+**Refinement (2026-09-20, `46 §5.1`):** the *structural* layer maps onto the **dialectical opposite**
+of the player's fluent domain — surface in `D`, structure in `D'`. Rendering in `D` alone produces a
+filter bubble: everything is learned in a vocabulary the player already owns, and the dimension they
+lack is never trained. Fluency is the carrier; the opposite pole is the payload. The two guards below
+are unchanged and now have a sharper job.
 
 **Two guards, both mandatory:**
 

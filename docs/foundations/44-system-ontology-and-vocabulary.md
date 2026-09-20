@@ -223,6 +223,14 @@ owners:
   analogical-bridge: foundations/45-personalization-and-context-pooling
   engagement-contract-and-endorsement-test: foundations/45-personalization-and-context-pooling
 
+  # generative world composition (added 2026-09-20, MY-AD-0021)
+  facet-and-characteristic-axis: foundations/46-generative-world-composition
+  tag-ontology-and-dialectic-relation: foundations/46-generative-world-composition
+  dialectic-engine: foundations/46-generative-world-composition
+  composition-pipeline: foundations/46-generative-world-composition
+  situation-as-holon: foundations/46-generative-world-composition
+  world-store-layout: foundations/46-generative-world-composition
+
   # curriculum detail
   meta-learning: foundations/29-meta-learning-science
   holonic-curriculum: foundations/30-holonic-curriculum-architecture

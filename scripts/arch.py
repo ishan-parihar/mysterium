@@ -778,8 +778,8 @@ class Gate:
     # the gate cannot tell a citation that outlived its target (a defect) from a plan naming a module
     # it intends to create (legitimate), and a gate that flags legitimate prose gets switched off.
     FUTURE_MARKERS = re.compile(
-        r"(?i)\b(planned|deferred|proposed|not yet|to be created|does not exist|non-existent"
-        r"|new module|equivalent|removed|retired|deleted)\b"
+        r"(?i)\b(planned|deferred|proposed|recommend\w*|not yet|to be created|does not exist"
+        r"|non-existent|new module|equivalent|removed|retired|deleted)\b"
     )
 
     @classmethod
@@ -856,9 +856,16 @@ class Gate:
         n = 0
         for r in records(self.cfg):
             n += 1
-            for path in re.findall(r"`((?:src|tests|scripts)/[A-Za-z0-9_./-]+)`", r["text"]):
-                if not (ROOT / path).exists():
-                    self.err(g, f"{r['rel']}: cited code artifact `{path}` does not exist")
+            text = r["text"]
+            for m in re.finditer(r"`((?:src|tests|scripts)/[A-Za-z0-9_./-]+)`", text):
+                if (ROOT / m.group(1)).exists():
+                    continue
+                # A record whose subject is a RECOMMENDED layout must be able to name the paths it
+                # proposes — otherwise the gate forces the record to describe a plan without its
+                # target, which is how a plan becomes unreviewable. Same declared-future rule as DG16.
+                if self.declared_future(text, m.start(), m.end()):
+                    continue
+                self.err(g, f"{r['rel']}: cited code artifact `{m.group(1)}` does not exist")
         self.checked[g] = n
 
 

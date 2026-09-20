@@ -631,6 +631,8 @@ The Veil is maintained: the player experiences story, not assessment.
 | Macro-scale archetypal theory | foundations/15 | This doc implements the theory; 15 IS the theory |
 | Significator state schema | foundations/16 | This doc reads from Significator; 16 defines its structure |
 | Great Way world structure | foundations/18 | This doc implements holons as data; 18 defines them as design |
+| Composition of holons from facets, the tag ontology and the dialectic engine | foundations/46 | §2.1's canonical interface is extended there (library discriminator, `composedOf`, sparse altitude overrides); this doc keeps the prompt pipeline |
+| The player's dimensionality vector and the pooling step | foundations/45 | §4.2 injects the VeilFilteredSignificator; 45 adds the personalization block and the ScenarioContext envelope |
 | Consequence propagation logic | foundations/19 | This doc produces ConsequenceRecords; 19 propagates them (§8); the long-horizon tiers and owner-worker are HERE (§7.4–§7.5), un-deferring 19 §13 |
 | Background worker doctrine and job list | foundations/43 | §5.4 owns the doctrine/budget/cadence; this doc owns the memory contract workers commit against |
 | Veil constraints | foundations/20 | This doc enforces Veil in generation; 20 defines why |
