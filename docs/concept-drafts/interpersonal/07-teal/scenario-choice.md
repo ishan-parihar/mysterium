@@ -1,4 +1,4 @@
-# Interpersonal × Turquoise — Scenario-Choice
+# Interpersonal × Teal — Scenario-Choice
 
 ## 1. Core Mechanic
 

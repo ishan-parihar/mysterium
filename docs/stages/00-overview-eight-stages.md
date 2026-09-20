@@ -58,7 +58,7 @@ The eight stages form three nested arcs:
 |---|---|---|
 | **Pre-personal** | Infrared, Magenta | Sub-egoic; before stable separate self. The world is fused, magical, undifferentiated. |
 | **Personal** | Red, Amber, Orange, Green | Egoic; stable separate self navigating power, belonging, reason, plurality. |
-| **Trans-personal** | Turquoise, White | Post-egoic; egoic self transcended-and-included into larger holons. |
+| **Trans-personal** | Teal, Turquoise | Post-egoic; egoic self transcended-and-included into larger holons. |
 
 The narrative architecture (`narrative/00-narrative-architecture.md`)
 treats each arc as a *world-region* — three macro-acts in the
@@ -122,7 +122,7 @@ For a designer / contributor entering the stages layer:
 1. Read this overview.
 2. Read the **first** stage doc (`stages/01-infrared-archaic.md`) in
    full to internalise the world-bible template.
-3. Skim the **last** stage doc (`stages/08-white-superintegral.md`)
+3. Skim the **last** stage doc (`stages/08-turquoise-superintegral.md`)
    to feel the arc's destination.
 4. Then read 02 → 07 in order, looking for the developmental
    *gradients* (how the eight lines transform stage-to-stage; how

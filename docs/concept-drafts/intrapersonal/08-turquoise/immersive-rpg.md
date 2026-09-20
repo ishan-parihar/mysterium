@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Intrapersonal / White |
+| Module | Intrapersonal / Turquoise |
 | Modality | Immersive-RPG |
 | Unique lateral | Ecological non-dual self — whether self-transparency appears spontaneously in free-play |
 

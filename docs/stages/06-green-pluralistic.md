@@ -181,17 +181,17 @@ suffers. Lesson: pluralism without action is just inaction.
 
 ## 7. Stage advancement criteria
 
-To pass Green and unlock Turquoise:
+To pass Green and unlock Teal:
 
 1. All 8 lines ≥ Green (floor)
-2. ≥ 2 lines ≥ Turquoise — typically Cognitive (vision-logic emerging)
+2. ≥ 2 lines ≥ Teal — typically Cognitive (vision-logic emerging)
    and Intrapersonal (process-view emerging)
 3. All 4 quadrants demonstrated at Green
 4. Defeat The Equivocator (or have spared them by committing)
 5. Have *changed your mind* meaningfully on at least one held value,
    based on a Green-stage encounter (legitimacy of pluralism)
 6. Have *defended* a held value against Green's relativising pressure
-   (the seam to Turquoise — committed pluralism, not paralysed)
+   (the seam to Teal — committed pluralism, not paralysed)
 
 ## 8. Open questions
 
@@ -211,5 +211,5 @@ To pass Green and unlock Turquoise:
 ## 9. Principles served
 
 Principles **1, 4, 5, 6** — Green's gifts properly honoured, its
-shadows visible, its exit (toward Turquoise) demanding *commitment
+shadows visible, its exit (toward Teal) demanding *commitment
 within pluralism*, not despite it.

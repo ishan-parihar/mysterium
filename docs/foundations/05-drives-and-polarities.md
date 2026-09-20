@@ -50,8 +50,8 @@ complement. Wilber: "The disease is dissociation; the cure is integration."
 | Amber | Conformist communion; rule-bounded agency | Rigid agency-suppression; us-vs-them |
 | Orange | Achievement agency; contractual communion | Workaholism; treating others as means |
 | Green | Pluralistic communion; sensitive agency | Mean-green-meme (suppressing agency under egalitarian pressure) |
-| Turquoise | Integral dance of all four | Integral elitism; subtle agency-pride |
-| White | Non-dual unity of all four | (No common pathology at this stage; rare population) |
+| Teal | Integral dance of all four | Integral elitism; subtle agency-pride |
+| Turquoise | Non-dual unity of all four | (No common pathology at this stage; rare population) |
 
 ### 2.4 Lines × drives
 

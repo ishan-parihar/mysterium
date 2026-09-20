@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Moral / White
+- **Module:** Moral / Turquoise
 - **Modality:** Immersive-RPG
 - **Unique Axis:** Ecological kosmocentric ethics — whether spontaneous compassion appears in free-play without prompting
 - **Core Mechanic:** Open-world narrative encounters where moral situations arise organically and the player's unprompted responses reveal transparency or residual grasping

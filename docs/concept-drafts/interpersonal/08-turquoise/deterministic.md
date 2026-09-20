@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Interpersonal / White |
+| Module | Interpersonal / Turquoise |
 | Modality | Deterministic |
 | Unique Lateral | Objective non-dual relating measurement — boundary-transparency metrics, communion accuracy |
 | Core Mechanic | Timed relational-field tasks with measurable accuracy and latency |

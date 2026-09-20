@@ -1,13 +1,13 @@
-# Emotional / Turquoise — Module Specification
+# Emotional / Teal — Module Specification
 
 ## 1. Module Identity
 
 - **Line:** Emotional
-- **Stage:** Turquoise (Integral / Vision-Logic)
+- **Stage:** Teal (Integral / Vision-Logic)
 - **Energy Ray:** Indigo
 - **Core Capacity:** Vision-logic affect — seeing emotional patterns across systems, reading group-level emotional waves, equanimity as emerging baseline, holding all emotional stages as valid while maintaining sovereign emotional centre.
 - **Below (Green):** Pluralistic empathy — multi-perspective affect, co-regulation, empathy to out-groups.
-- **Above (White):** Equanimity — affect is luminous, not gripping. Compassion without effort.
+- **Above (Turquoise):** Equanimity — affect is luminous, not gripping. Compassion without effort.
 
 ## 2. Shadow Taxonomy
 
@@ -15,7 +15,7 @@
 |----------|------|---------|
 | Dark-Addiction | The Emotional Cartographer | Addicted to mapping emotional patterns; cannot stop analysing group affect; uses emotional meta-awareness to avoid direct feeling |
 | Dark-Allergy | The Empathic Pluralist | Refuses integral affect; stays in Green empathic overwhelm/sensitivity; "all feelings are equal" as defence against hierarchy |
-| Golden-Addiction | The Premature Equanimist | Performs White equanimity without genuine integral emotional mastery; claims "I am beyond emotion" while unable to read group-level affect |
+| Golden-Addiction | The Premature Equanimist | Performs Turquoise equanimity without genuine integral emotional mastery; claims "I am beyond emotion" while unable to read group-level affect |
 | Golden-Allergy | The Integral Affect Fortress | Integral emotional capacity present but refuses equanimous opening; terrified of "losing feeling"; maps all emotions but will not transcend them |
 
 ## 3. Compound Shadows
@@ -31,7 +31,7 @@
 
 | Drive | Healthy Expression | Pathological Expression |
 |-------|-------------------|----------------------|
-| Eros | Reaches toward equanimous opening; vertical pull toward White-level luminous affect | Bypasses integral mastery; premature transcendence (GA) |
+| Eros | Reaches toward equanimous opening; vertical pull toward Turquoise-level luminous affect | Bypasses integral mastery; premature transcendence (GA) |
 | Agape | Returns to hold Green-level sensitivity with compassion; integrates lower emotional stages | Collapses back into Green overwhelm; refuses hierarchy (DAll) |
 | Agency | Maintains sovereign emotional centre amid group-level waves; acts from integral affect | Fortifies integral position; refuses release (GAll) |
 | Communion | Reads and attunes to group-level emotional fields; cross-system affect resonance | Dissolves into mapping; loses self in analysis (DA) |

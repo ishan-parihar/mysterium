@@ -44,7 +44,7 @@
 | Item ID | Type | Parameters | Shadow Probed |
 |---|---|---|---|
 | F-01 | Clear warm | Round, orange, slow pulse | Baseline approach |
-| F-02 | Clear sharp | Jagged, blue-white, fast flash | Baseline avoid |
+| F-02 | Clear sharp | Jagged, blue-turquoise, fast flash | Baseline avoid |
 | F-03 | Rapid sequence | 5 stimuli, 0.8s each | DA (urgency) |
 | F-04 | Gentle slow | Dim, 3s display, soft | DAll (withdrawal) |
 | F-05 | Ambiguous | Mixed warm/sharp cues | GA (over-interpretation) |

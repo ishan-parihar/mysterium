@@ -1,20 +1,20 @@
-# Cognitive / White — Module Specification
+# Cognitive / Turquoise — Module Specification
 
-> **Line:** Cognitive  **Stage:** White / Super-Integral  **Vibration:** Trans-rational direct knowing — the mind transparent to itself, cognition serving being without grasping.
+> **Line:** Cognitive  **Stage:** Turquoise / Super-Integral  **Vibration:** Trans-rational direct knowing — the mind transparent to itself, cognition serving being without grasping.
 
 ---
 
 ## 1. Capacity Definition
 
-Trans-rational cognition: direct knowing that does not require conceptual mediation. The cognitive apparatus operates at full complexity (n=5 occasional working-memory, effortless task-switching, spontaneous pattern recognition) while remaining transparent — thought arises and dissolves without the knower grasping at it. Cognitive load coexists with spaciousness. The mind is no longer an instrument wielded by a self; it is a clear window through which knowing flows. Below this (Turquoise) the mind integrates all perspectives via vision-logic; here the mind releases the need to integrate and simply knows.
+Trans-rational cognition: direct knowing that does not require conceptual mediation. The cognitive apparatus operates at full complexity (n=5 occasional working-memory, effortless task-switching, spontaneous pattern recognition) while remaining transparent — thought arises and dissolves without the knower grasping at it. Cognitive load coexists with spaciousness. The mind is no longer an instrument wielded by a self; it is a clear window through which knowing flows. Below this (Teal) the mind integrates all perspectives via vision-logic; here the mind releases the need to integrate and simply knows.
 
 ## 2. Shadow Archetypes
 
-White shadows are not emergent/submergent in the standard sense — there is no stage above. Instead they are **residual grasping patterns** carried forward from all prior stages.
+Turquoise shadows are not emergent/submergent in the standard sense — there is no stage above. Instead they are **residual grasping patterns** carried forward from all prior stages.
 
 ### 2.1 Residual Grasping-as-Knowing
 
-The mind still reaches for concepts, still needs to "understand" rather than directly know. Residue of Orange analytical addiction and Turquoise meta-systematic compulsion. Manifests as subtle preference for complexity over simplicity, for mapping over being.
+The mind still reaches for concepts, still needs to "understand" rather than directly know. Residue of Orange analytical addiction and Teal meta-systematic compulsion. Manifests as subtle preference for complexity over simplicity, for mapping over being.
 
 ### 2.2 Residual Aversion-to-Knowing
 
@@ -22,7 +22,7 @@ Certain knowings remain avoided — blind spots the awareness refuses to illumin
 
 ### 2.3 Residual Spiritual Bypassing
 
-Claims trans-rational knowing while still operating from conceptual frameworks. "I am beyond thought" as itself a thought. The subtlest golden-addiction — using non-dual language to avoid the rawness of direct contact. Residue of Green/Turquoise spiritual inflation.
+Claims trans-rational knowing while still operating from conceptual frameworks. "I am beyond thought" as itself a thought. The subtlest golden-addiction — using non-dual language to avoid the rawness of direct contact. Residue of Green/Teal spiritual inflation.
 
 ### 2.4 Residual Identity-with-Knowing
 
@@ -30,11 +30,11 @@ Still identifies AS the knower rather than being transparent to knowing. The fin
 
 ## 3. Drive-Health Landscape
 
-At White, all four drives express in **dynamic equanimity**. The game does not measure drive strength but detects residual imbalance:
+At Turquoise, all four drives express in **dynamic equanimity**. The game does not measure drive strength but detects residual imbalance:
 
 - **Eros / Agape (vertical):** Neither compulsive reaching toward transcendence nor compulsive returning to ground. Both arise spontaneously as context requires.
 - **Agency / Communion (horizontal):** Sovereign and joined simultaneously. No oscillation — both present in each moment.
-- **Health indicator:** The ratio of spontaneous-to-effortful drive expression. Healthy White shows >90% spontaneous. Residual grasping manifests as micro-efforts detectable in response latency and pattern.
+- **Health indicator:** The ratio of spontaneous-to-effortful drive expression. Healthy Turquoise shows >90% spontaneous. Residual grasping manifests as micro-efforts detectable in response latency and pattern.
 
 ## 4. Healing Vectors
 
@@ -48,7 +48,7 @@ Catalyst presents the specific knowings the player's awareness avoids. Healing o
 
 ### 4.3 Integration Criteria
 
-White integration is confirmed when: (a) cognitive performance remains high without detectable effort signatures, (b) no systematic blind spots persist across sessions, (c) language about knowing is transparent rather than self-referential, (d) drive expression shows no residual oscillation pattern.
+Turquoise integration is confirmed when: (a) cognitive performance remains high without detectable effort signatures, (b) no systematic blind spots persist across sessions, (c) language about knowing is transparent rather than self-referential, (d) drive expression shows no residual oscillation pattern.
 
 ## 5. Scoring Parameters
 

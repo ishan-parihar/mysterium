@@ -1,4 +1,4 @@
-# Intrapersonal × Turquoise — Language-Reflective
+# Intrapersonal × Teal — Language-Reflective
 
 ## 1. Game Identity
 

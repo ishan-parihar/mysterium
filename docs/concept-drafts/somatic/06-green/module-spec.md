@@ -9,7 +9,7 @@
 The Green somatic capacity is **relational embodiment** — the body that can feel others. Interoceptive sensitivity extends beyond personal boundaries into the interpersonal field. The body becomes a bridge rather than an instrument. Core tasks: somatic empathy (detecting another's body-state through own body), interoceptive discrimination (subtle signal detection), co-regulation (synchronising with another's nervous system), boundary awareness (distinguishing own from other's somatic signals), relational movement (moving WITH rather than performing FOR), and somatic listening (receiving body-information without acting on it).
 
 Below (Orange): the skilled body — multi-domain mastery, rational training, body-as-instrument, performance metrics.
-Above (Turquoise): the integral body — body as holonic field, somatic vision-logic, the body that holds all bodies.
+Above (Teal): the integral body — body as holonic field, somatic vision-logic, the body that holds all bodies.
 
 ## 2. Shadow Archetypes
 
@@ -23,7 +23,7 @@ Refuses somatic sensitivity. Stays locked in Orange body-as-instrument. "Feeling
 
 ### 2.3 Golden-Addiction: The Premature Energy Worker
 
-Performs Turquoise somatic holism without genuine Green somatic empathy. Claims to "feel the field" while unable to genuinely attune to one other person's body-state. Bypasses the relational body for the cosmic body.
+Performs Teal somatic holism without genuine Green somatic empathy. Claims to "feel the field" while unable to genuinely attune to one other person's body-state. Bypasses the relational body for the cosmic body.
 
 ### 2.4 Golden-Allergy: The Sensitive Fortress
 

@@ -1,4 +1,4 @@
-# Moral / Turquoise — Embodied-Somatic
+# Moral / Teal — Embodied-Somatic
 
 ## 1. Game Identity
 

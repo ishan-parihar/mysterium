@@ -1,4 +1,4 @@
-# Willpower × Turquoise — Scenario-Choice
+# Willpower × Teal — Scenario-Choice
 
 ## 1. Core Mechanic
 

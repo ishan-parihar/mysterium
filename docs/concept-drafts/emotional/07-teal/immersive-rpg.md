@@ -1,4 +1,4 @@
-# Emotional / Turquoise — Immersive-RPG
+# Emotional / Teal — Immersive-RPG
 
 ## 1. Core Mechanic
 
@@ -7,7 +7,7 @@ Ecological integral affect — whether vision-logic emotion appears spontaneousl
 ### 1.1 World Design
 
 - **Emotional Weather:** The game world has ambient group-level emotional states that shift dynamically — collective grief after a loss, rising tension before conflict, shared joy during celebration. These are not background flavour; they are the primary gameplay terrain.
-- **Altitude-Diverse NPCs:** Characters operate at different emotional-developmental altitudes. Some are Red-reactive, some Green-empathic, some performing Turquoise. The player's interactions with each reveal their own altitude.
+- **Altitude-Diverse NPCs:** Characters operate at different emotional-developmental altitudes. Some are Red-reactive, some Green-empathic, some performing Teal. The player's interactions with each reveal their own altitude.
 - **Emergent Crises:** Unscripted emotional events arise from NPC interactions — a conflict escalates, a community grieves, a leader bypasses. The player can intervene, observe, or participate. All responses are scored.
 - **The Sovereign Centre Mechanic:** The player-character has an internal "centre" indicator that responds to the emotional ecology. Maintaining centre while remaining engaged is the core gameplay loop.
 
@@ -32,7 +32,7 @@ All scoring is invisible to the player. The system tracks:
 ## 3. Catalyst → Experience → Integration
 
 - **Catalyst:** The open ecology removes all scaffolding. There is no "correct" path, no explicit task, no feedback loop telling the player they're doing well. Integral affect must arise from genuine capacity, not compliance.
-- **Experience:** The felt-sense of being an emotionally sovereign presence in a complex living world — reading the field, holding centre, acting when called, resting when not. This is what Turquoise emotional life actually feels like.
+- **Experience:** The felt-sense of being an emotionally sovereign presence in a complex living world — reading the field, holding centre, acting when called, resting when not. This is what Teal emotional life actually feels like.
 - **Integration:** Extended free-play builds the habit of integral affect — it becomes the player's default mode rather than a performance they activate when tested. The ecological context makes vision-logic emotion a way of being, not a skill to deploy.
 
 ## 4. Drive Probes

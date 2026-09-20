@@ -100,8 +100,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Follows rules independently | Rigidly applies rules even when they don't fit | Adapts to group problem-solving norms | Cannot deviate from group consensus |
 | **Orange** | Generates novel strategies | Over-analyses; cannot act without complete plan | Shares insights; builds on others' ideas | Cannot think independently; copies others |
 | **Green** | Holds multiple perspectives independently | Paralysed by too many perspectives | Integrates others' viewpoints into own | Loses own perspective in others' |
-| **Turquoise** | Sees system patterns without guidance | Imposes system-views on everything | Communicates systems insights accessibly | Cannot simplify for others |
-| **White** | Acts from effortless knowing | N/A (non-dual transcends agency/communion) | Responds to what's needed without self-reference | N/A |
+| **Teal** | Sees system patterns without guidance | Imposes system-views on everything | Communicates systems insights accessibly | Cannot simplify for others |
+| **Turquoise** | Acts from effortless knowing | N/A (non-dual transcends agency/communion) | Responds to what's needed without self-reference | N/A |
 
 | Stage | Eros (healthy) | Eros (pathological) | Agape (healthy) | Agape (pathological) |
 |---|---|---|---|---|
@@ -111,8 +111,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Seeks rule-conflict challenges | Seeks chaos; destabilises for stimulation | Returns to simple rule-following with respect | Uses simple tasks to avoid harder ones |
 | **Orange** | Pursues abstract reasoning challenges | Intellectualises to avoid embodiment | Returns to concrete reasoning with appreciation | Regresses to concrete to avoid abstract |
 | **Green** | Attempts paradox/dialectic tasks | Bypasses concrete for "higher" thinking | Returns to formal logic with integration | Uses "both/and" to avoid commitment |
-| **Turquoise** | Seeks novel system-level challenges | Seeks complexity for its own sake | Returns to single-perspective with wisdom | Uses simplicity to avoid complexity |
-| **White** | Effortless reaching | N/A | Effortless returning | N/A |
+| **Teal** | Seeks novel system-level challenges | Seeks complexity for its own sake | Returns to single-perspective with wisdom | Uses simplicity to avoid complexity |
+| **Turquoise** | Effortless reaching | N/A | Effortless returning | N/A |
 
 **Measurement mechanics for Cognitive line:**
 - **Agency probe:** Present a challenging task with an optional "hint" button. Healthy agency = attempts first, uses hint if genuinely stuck. Addiction = never uses hint even after 3 failures. Allergy = uses hint immediately without trying.
@@ -130,8 +130,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Can they feel differently from the group? | Can they attune to group emotional norms? | Do they attempt emotions outside their comfort zone? | Can they return to in-group emotions without rigidity? |
 | **Orange** | Can they regulate without suppressing? | Can they help another regulate? | Do they attempt contradictory emotions? | Can they return to simple regulation with appreciation? |
 | **Green** | Can they hold contradictory emotions alone? | Can they hold space for another's contradictions? | Do they attempt emotions of unlike-self? | Can they return to familiar emotions without dismissal? |
-| **Turquoise** | Can they observe emotions without identification? | Can they be with another's emotion without fixing? | Do they approach emotional edges voluntarily? | Can they return to full emotional engagement from witness? |
-| **White** | Equanimity without suppression | Resonance without absorption | N/A | N/A |
+| **Teal** | Can they observe emotions without identification? | Can they be with another's emotion without fixing? | Do they approach emotional edges voluntarily? | Can they return to full emotional engagement from witness? |
+| **Turquoise** | Equanimity without suppression | Resonance without absorption | N/A | N/A |
 
 **Measurement mechanics for Emotional line:**
 - **Agency:** Present an emotional scenario and measure whether the player's response is self-authored (not matching social desirability). Compare their private response to their "what should you feel?" response — divergence = healthy agency.
@@ -148,8 +148,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Can follow rules even when group disagrees | Can adapt to group moral norms | Attempts universal-principle dilemmas | Returns to rule-following with respect |
 | **Orange** | Can hold a principle against social pressure | Can explain principles to others | Attempts contextual/relativistic dilemmas | Returns to simple principles with appreciation |
 | **Green** | Can make a decision despite seeing all perspectives | Can hold space for others' moral frameworks | Attempts systemic/ecological dilemmas | Returns to principled reasoning without dismissal |
-| **Turquoise** | Can act from systemic understanding alone | Can communicate systemic ethics accessibly | Attempts non-dual moral paradoxes | Returns to contextual ethics with integration |
-| **White** | Spontaneous right action | Spontaneous service | N/A | N/A |
+| **Teal** | Can act from systemic understanding alone | Can communicate systemic ethics accessibly | Attempts non-dual moral paradoxes | Returns to contextual ethics with integration |
+| **Turquoise** | Spontaneous right action | Spontaneous service | N/A | N/A |
 
 **Measurement mechanics for Moral line:**
 - **Agency:** Present a dilemma where the "right" answer is unpopular. Measure whether player chooses based on their own reasoning or social cues. (Show "most players chose X" — does it change their answer?)
@@ -166,8 +166,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Can identify own roles without external definition | Can describe self in relational terms | Attempts "who am I beyond my roles?" | Returns to role-identity with respect |
 | **Orange** | Can predict own performance accurately | Can share metacognitive insights | Attempts "what are my blind spots?" | Returns to simple self-assessment with humility |
 | **Green** | Can hold internal contradictions without resolution | Can articulate parts to others | Attempts witness-perspective | Returns to parts-work with compassion |
-| **Turquoise** | Can observe self without identification | Can communicate witness-perspective | Attempts "who is the observer?" | Returns to identified-self with love |
-| **White** | "I am" without predicate | Spontaneous self-sharing | N/A | N/A |
+| **Teal** | Can observe self without identification | Can communicate witness-perspective | Attempts "who is the observer?" | Returns to identified-self with love |
+| **Turquoise** | "I am" without predicate | Spontaneous self-sharing | N/A | N/A |
 
 **Measurement mechanics for Intrapersonal line:**
 - **Agency:** Measure prediction accuracy (predict own score, compare to actual). High agency = accurate self-model. Addiction = over-confident predictions. Allergy = "I don't know" (refuses self-assessment).
@@ -184,8 +184,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Can hold faith under social pressure | Can participate in shared meaning-making | Attempts "what if my faith is wrong?" | Returns to simple faith without rigidity |
 | **Orange** | Can articulate why values matter (rational basis) | Can respect others' different values | Attempts "what if there's no rational basis?" | Returns to rational values with appreciation |
 | **Green** | Can hold multiple value-systems simultaneously | Can find common ground across value-systems | Attempts "what's beyond all value-systems?" | Returns to single value-system with integration |
-| **Turquoise** | Can hold paradox of value and valuelessness | Can communicate integral spirituality | Attempts non-dual awareness | Returns to conventional spirituality with love |
-| **White** | Spontaneous value-expression | Spontaneous communion | N/A | N/A |
+| **Teal** | Can hold paradox of value and valuelessness | Can communicate integral spirituality | Attempts non-dual awareness | Returns to conventional spirituality with love |
+| **Turquoise** | Spontaneous value-expression | Spontaneous communion | N/A | N/A |
 
 **Measurement mechanics for Spiritual line:**
 - **Agency:** Value-ranking task. Then show "most people rank X first" — does it change their ranking? Healthy agency = stable ranking regardless of social information.
@@ -203,8 +203,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Can sustain posture/effort independently | Can maintain group rhythm | Attempts complex coordination | Returns to simple endurance with respect |
 | **Orange** | Can perform complex sequences alone | Can teach movement to others | Attempts polyrhythm/multi-limb | Returns to simple sequences with appreciation |
 | **Green** | Can express through movement freely | Can co-create movement with others | Attempts unfamiliar movement styles | Returns to familiar movement with new awareness |
-| **Turquoise** | Can anticipate without conscious planning | Can move in spontaneous sync with others | Attempts stillness-in-movement | Returns to deliberate movement with integration |
-| **White** | Effortless action | Effortless coordination | N/A | N/A |
+| **Teal** | Can anticipate without conscious planning | Can move in spontaneous sync with others | Attempts stillness-in-movement | Returns to deliberate movement with integration |
+| **Turquoise** | Effortless action | Effortless coordination | N/A | N/A |
 
 **Measurement mechanics for Somatic line:**
 - **Agency:** Measure performance with vs. without a metronome/guide. Healthy agency = performs well both ways. Addiction = cannot follow external rhythm. Allergy = cannot maintain rhythm without external guide.
@@ -221,8 +221,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Can sustain effort across multiple trials | Can maintain group commitment | Attempts strategic effort allocation | Returns to simple sustained effort with respect |
 | **Orange** | Can allocate effort strategically | Can coordinate effort with others | Attempts flexible hold-and-release | Returns to rigid holding with appreciation |
 | **Green** | Can hold AND release appropriately | Can support others' release | Attempts effortful effortlessness | Returns to effortful holding with compassion |
-| **Turquoise** | Can sustain without strain (smooth consistency) | Can be with others' struggle without fixing | Attempts self-determined timing | Returns to externally-timed tasks with integration |
-| **White** | Wu-wei — action without actor | Spontaneous support | N/A | N/A |
+| **Teal** | Can sustain without strain (smooth consistency) | Can be with others' struggle without fixing | Attempts self-determined timing | Returns to externally-timed tasks with integration |
+| **Turquoise** | Wu-wei — action without actor | Spontaneous support | N/A | N/A |
 
 **Measurement mechanics for Willpower line:**
 - **Agency:** Hold task without encouragement or countdown. Healthy agency = holds based on internal timing. Addiction = holds far beyond target (cannot release). Allergy = releases immediately without external support.
@@ -239,8 +239,8 @@ Where `agencyPathology` is distinguished from healthy agency:
 | **Amber** | Can predict role-based NPC behaviour | Can adapt to NPC's role expectations | Attempts false-belief tasks | Returns to role-prediction with respect |
 | **Orange** | Can model NPC's mental state (ToM) | Can negotiate with NPC | Attempts recursive ToM (NPC models you) | Returns to simple ToM with appreciation |
 | **Green** | Can hold multiple NPC perspectives | Can facilitate NPC conflict resolution | Attempts emergent coordination (no rules) | Returns to rule-based coordination with care |
-| **Turquoise** | Can predict NPC adapting to player | Can co-create with NPC spontaneously | Attempts "act together without communication" | Returns to explicit communication with integration |
-| **White** | Spontaneous attunement | Spontaneous unity | N/A | N/A |
+| **Teal** | Can predict NPC adapting to player | Can co-create with NPC spontaneously | Attempts "act together without communication" | Returns to explicit communication with integration |
+| **Turquoise** | Spontaneous attunement | Spontaneous unity | N/A | N/A |
 
 **Measurement mechanics for Interpersonal line:**
 - **Agency:** Measure whether player can form independent predictions (not just copying NPC's last move). Addiction = ignores NPC entirely. Allergy = cannot act without NPC's lead.

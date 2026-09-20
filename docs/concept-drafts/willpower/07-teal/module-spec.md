@@ -1,19 +1,19 @@
-# Willpower × Turquoise — Module Specification
+# Willpower × Teal — Module Specification
 
 ## 1. Module Identity
 
 - **Line:** Willpower
-- **Stage:** Turquoise (Integral / Vision-Logic)
+- **Stage:** Teal (Integral / Vision-Logic)
 - **Energy Ray:** Indigo
 - **Core Capacity:** Integral will — vision-logic alignment of all goals into holonic architecture serving evolutionary purpose while maintaining sovereign agency
 - **Below (Green):** Pluralistic will — multiple legitimate goals held in tension, collaborative commitment
-- **Above (White):** Effortless will — alignment with the cosmos, goal arises spontaneously
+- **Above (Turquoise):** Effortless will — alignment with the cosmos, goal arises spontaneously
 
 ## 2. Drive Model
 
 | Drive | Healthy Expression | Domain |
 |---|---|---|
-| **Eros** | Reaches toward White effortless will; yearns for cosmic alignment | Vertical-emergent |
+| **Eros** | Reaches toward Turquoise effortless will; yearns for cosmic alignment | Vertical-emergent |
 | **Agape** | Integrates Green collaborative will; honours all prior commitments | Vertical-submergent |
 | **Agency** | Sovereign holonic will; executes evolutionary purpose with precision | Horizontal-self |
 | **Communion** | Will that serves the whole; goal-architecture includes all beings | Horizontal-other |
@@ -24,7 +24,7 @@
 |---|---|---|
 | **Dark-Addiction (DA)** | The Will-Architect | Addicted to holonic goal-structuring; optimises hierarchy endlessly; uses integral will to avoid direct action |
 | **Dark-Allergy (DAll)** | The Collaborative Pluralist | Refuses integral will; stays in Green collaborative commitment; "no goal is more important than another" |
-| **Golden-Addiction (GA)** | The Premature Surrenderer | Performs White effortless will without integral mastery; claims cosmic surrender while unable to execute holonic planning |
+| **Golden-Addiction (GA)** | The Premature Surrenderer | Performs Turquoise effortless will without integral mastery; claims cosmic surrender while unable to execute holonic planning |
 | **Golden-Allergy (GAll)** | The Integral Will Fortress | Holonic will present but refuses effortless opening; terrified of letting go; "I must maintain the architecture" |
 
 ## 4. Compound Shadows

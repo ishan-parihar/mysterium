@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Emotional / White
+- **Module:** Emotional / Turquoise
 - **Modality:** Immersive-RPG
 - **Unique Lateral:** Ecological equanimity — whether luminous affect appears spontaneously in free-play
 - **What this measures that no other modality measures:** Whether equanimity is the player's natural mode in unstructured emotional territory — not prompted, not tested, but spontaneously arising in open-world engagement

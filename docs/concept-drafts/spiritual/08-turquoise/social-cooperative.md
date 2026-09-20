@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Spiritual / White |
+| Module | Spiritual / Turquoise |
 | Modality | Social-Cooperative |
 | Probe axis | Communion in presence — non-grasping spiritual attunement with others |
 | Core mechanic | Cooperative tasks measuring whether shared sacred space is grasped at or transparently inhabited |

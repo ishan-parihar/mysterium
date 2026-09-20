@@ -1,13 +1,13 @@
 ## 1. Modality Identity
 
-- **Module:** Moral / White
+- **Module:** Moral / Turquoise
 - **Modality:** Scenario-Choice
 - **Unique Axis:** Non-dual moral dilemmas — situations requiring compassion without deliberation
 - **Core Mechanic:** Branching scenarios where no option is 'right' and the quality of presence in choosing reveals residual grasping
 
 ## 2. What This Measures
 
-At White, moral dilemmas are not solved — they are held. This modality presents scenarios where all options involve some form of suffering, and the assessment is not WHAT the player chooses but HOW they choose: with grasping or with transparency, with residual identity or with open presence.
+At Turquoise, moral dilemmas are not solved — they are held. This modality presents scenarios where all options involve some form of suffering, and the assessment is not WHAT the player chooses but HOW they choose: with grasping or with transparency, with residual identity or with open presence.
 
 ## 3. Shadow Detection
 

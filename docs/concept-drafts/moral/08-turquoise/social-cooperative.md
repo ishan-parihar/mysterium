@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Moral / White
+- **Module:** Moral / Turquoise
 - **Modality:** Social-Cooperative
 - **Unique Axis:** Shared kosmocentric ethics — communion in compassion, non-grasping moral attunement with others
 - **Core Mechanic:** Cooperative moral tasks where players must attune to shared ethical reality without imposing, performing, or withdrawing

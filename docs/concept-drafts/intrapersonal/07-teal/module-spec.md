@@ -1,13 +1,13 @@
-# Intrapersonal × Turquoise — Module Spec
+# Intrapersonal × Teal — Module Spec
 
 ## 1. Module Identity
 
 - **Line:** Intrapersonal (self-relation, self-concept, identity structure)
-- **Stage:** Turquoise / Integral (vision-logic, second-tier)
+- **Stage:** Teal / Integral (vision-logic, second-tier)
 - **Ray:** Indigo
 - **Core capacity:** Vision-logic self — the meta-self that sees its own developmental process, integrates all previous selves into a unified identity that includes multiplicity
 - **Below:** Green intrapersonal (pluralistic self, multiple contextual selves, paradox tolerance)
-- **Above:** White intrapersonal (non-dual self, identity transparent to awareness)
+- **Above:** Turquoise intrapersonal (non-dual self, identity transparent to awareness)
 
 ## 2. Drive Dynamics
 
@@ -20,7 +20,7 @@
 
 - **Dark-Addiction (DA):** The Self-Witness Addict — addicted to witnessing own process, uses self-awareness to avoid direct being, infinite meta-regress of 'I see myself seeing myself'
 - **Dark-Allergy (DAll):** The Pluralistic Self — refuses integral self-concept, remains in Green multiplicity, 'I am many selves and that's enough'
-- **Golden-Addiction (GA):** The Premature No-Self — performs White non-dual identity without genuine integral mastery, claims 'there is no self' while unable to integrate developmental history
+- **Golden-Addiction (GA):** The Premature No-Self — performs Turquoise non-dual identity without genuine integral mastery, claims 'there is no self' while unable to integrate developmental history
 - **Golden-Allergy (GAll):** The Integral Self Fortress — vision-logic self present but refuses non-dual opening, terrified of ego-dissolution, 'I will witness but never dissolve the witness'
 
 ## 4. Compound Shadows

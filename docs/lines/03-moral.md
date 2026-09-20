@@ -59,8 +59,8 @@ default-mode, and cognitive control regions.
 | Amber | Stage 3–4 — conformist, law-and-order | Group-loyalty dilemmas; "betray / uphold the order" |
 | Orange | Stage 5 — social-contract, universal rights | Universal-rights dilemmas; ends/means tension |
 | Green | Stage 6 — universal ethical, contextual | Pluralistic, context-bound dilemmas; cultural relativism risk |
-| Turquoise | Stage 7 — universal-systemic, depth-and-span | Holonic ethics — "what protects the most depth for the most span" |
-| White | Stage 8 — kosmocentric | All-sentient ethics; non-dual compassion |
+| Teal | Stage 7 — universal-systemic, depth-and-span | Holonic ethics — "what protects the most depth for the most span" |
+| Turquoise | Stage 8 — kosmocentric | All-sentient ethics; non-dual compassion |
 
 ## 4. Game-design mapping
 
@@ -79,8 +79,8 @@ The combat is not faster or harder-hitting; it is *bound*.
 | Pledge to Ally | Reciprocal vow with NPC / co-op partner | Buffs both; failure to honour pledge inflicts dishonour status | Amber+ |
 | Just Strike | Damage scales with how morally legible the action is | Striking a fleeing enemy halves; striking a fixated boss × 1.5 | Orange+ |
 | Restorative Mercy | Convert defeat into redemption | If player has held vow, slain enemies "return"; cosmetic NPCs in town | Green+ |
-| Holonic Calculus | Boss damage scales with depth-and-span analysis | Dilemma during fight: protect breadth (many allies) vs. depth (one critical) | Turquoise+ |
-| Compassion Without Object | Damage modifier scales inversely with player's identification with cause | The less ego-attached, the more clean-cutting | White |
+| Holonic Calculus | Boss damage scales with depth-and-span analysis | Dilemma during fight: protect breadth (many allies) vs. depth (one critical) | Teal+ |
+| Compassion Without Object | Damage modifier scales inversely with player's identification with cause | The less ego-attached, the more clean-cutting | Turquoise |
 
 ### 4.3 Module parameters(s) backed
 
@@ -122,8 +122,8 @@ the slowest of the lines.
 | Amber | "Ledger-Keeper" — strict-rule enforcer | Rule-bound dilemma; punish or pardon |
 | Orange | "Contractor" — utility-maximiser | Trolley-problem variant |
 | Green | "Moralist" — weaponises pluralism | Contextual nuance trap |
-| Turquoise | "Holonic Judge" — depth-and-span trade-off | Multi-level harm trade-off |
-| White | "Boundless Witness" — non-dual; choice as energy not action | Choice without grasping |
+| Teal | "Holonic Judge" — depth-and-span trade-off | Multi-level harm trade-off |
+| Turquoise | "Boundless Witness" — non-dual; choice as energy not action | Choice without grasping |
 
 ### 5.2 Cross-line encounterses
 
@@ -153,7 +153,7 @@ Orange becomes possible.
 **"The Equivocator"** — at Green stage. The shadow of pluralism without
 spine. The fight refuses to be won; every choice is "valid." The win
 condition is to *commit* — to declare a value as load-bearing despite
-ambiguity. Moral altitude can advance to Turquoise.
+ambiguity. Moral altitude can advance to Teal.
 
 ## 6. Architectural contract
 

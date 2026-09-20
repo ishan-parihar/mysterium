@@ -72,6 +72,9 @@ interface AltitudeInput {
 
 ```ts
 function normaliseAltitude(input: AltitudeInput): number {
+  // CODE-PASS PENDING (ratified ladder 2026-09-20, 06 §5.1): the lower-case keys mirror the
+  // runtime `Stage` identifiers, which still read `turquoise`/`white`. They become
+  // `teal`/`turquoise` in the code pass with its tests — docs never rename them alone.
   const stageValues: Record<Stage, number> = {
     infrared: 0.0, magenta: 0.143, red: 0.286, amber: 0.429,
     orange: 0.571, green: 0.714, turquoise: 0.857, white: 1.0
@@ -242,7 +245,7 @@ interface TransformationReadinessInput {
 ```ts
 function normaliseTransformationReadiness(input: TransformationReadinessInput): number {
   if (input.pendingTransformation) return 1.0;  // actively transforming
-  if (!input.targetStage) return 0.0;           // no target (at White, or insufficient data)
+  if (!input.targetStage) return 0.0;           // no target (at Turquoise, or insufficient data)
 
   const edgeProgress = Math.min(input.linesAtEdge / 6, 1.0);  // 6 lines = threshold
   const clearanceFactor = input.shadowClearance ? 1.0 : 0.6;

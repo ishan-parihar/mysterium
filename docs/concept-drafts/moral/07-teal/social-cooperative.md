@@ -1,4 +1,4 @@
-# Moral / Turquoise — Social-Cooperative
+# Moral / Teal — Social-Cooperative
 
 ## 1. Game Identity
 
@@ -15,7 +15,7 @@
 
 - **Cross-Altitude Mentorship:** Player must translate integral moral reasoning into language accessible to participants at earlier stages — without condescension, without dilution. Scored on whether lower-altitude participants genuinely shift vs. merely comply.
 - **Holonic Consensus Building:** Group faces dilemmas where each participant's moral logic is valid at their stage. The integral player must facilitate resolution that transcends-and-includes all perspectives — not override them.
-- **Developmental Honour in Disagreement:** When participants refuse integral reasoning (as they validly might from their stage), the player must honour that refusal while maintaining holonic clarity. Neither capitulating to Green pluralism nor imposing Turquoise hierarchy.
+- **Developmental Honour in Disagreement:** When participants refuse integral reasoning (as they validly might from their stage), the player must honour that refusal while maintaining holonic clarity. Neither capitulating to Green pluralism nor imposing Teal hierarchy.
 - **Kosmocentric Group Moments:** Late-game scenarios where the group reaches a point beyond deliberation — where shared presence transcends moral architecture. The player must recognise and allow these moments rather than forcing continued structure.
 
 **Social scoring:** Evaluates both the quality of group outcomes AND the quality of the player's facilitation process. Integral ethics is not just correct conclusions but correct relating.

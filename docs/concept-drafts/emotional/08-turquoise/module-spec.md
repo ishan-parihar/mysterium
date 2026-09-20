@@ -1,15 +1,15 @@
 ## 1. Module Identity
 
 - **Line:** Emotional
-- **Stage:** White (Super-Integral / Non-Dual)
+- **Stage:** Turquoise (Super-Integral / Non-Dual)
 - **Ray:** Violet
 - **Core Capacity:** Equanimity — affect is luminous, not gripping. Compassion without effort. The emotional field is felt as energy, not as crisis. Feelings arise and dissolve without grasping. The heart is transparent.
-- **Below:** Turquoise emotional (vision-logic affect, group-level emotional patterns, equanimity emerging)
+- **Below:** Teal emotional (vision-logic affect, group-level emotional patterns, equanimity emerging)
 - **Above:** None (final stage)
 
 ## 2. Shadow Model — Residual Grasping Patterns
 
-At White, shadows are not gross distortions but residual grasping patterns — the last subtle contractions preventing full luminous transparency.
+At Turquoise, shadows are not gross distortions but residual grasping patterns — the last subtle contractions preventing full luminous transparency.
 
 ### 2.1 Residual Grasping-at-Feeling
 Still attached to certain emotional states (even equanimity itself). Cannot let feelings be fully transparent. Subtle preference for certain affective textures.
@@ -25,7 +25,7 @@ Still identifies AS the one who feels rather than being transparent to feeling. 
 
 ## 3. Drive Model
 
-At White, all four drives express equanimously. The game detects residual imbalance rather than gross pathology.
+At Turquoise, all four drives express equanimously. The game detects residual imbalance rather than gross pathology.
 
 - **Eros:** Residual pull toward emotional intensity or depth
 - **Agape:** Residual compulsion to give emotional care
@@ -65,7 +65,7 @@ At White, all four drives express equanimously. The game detects residual imbala
 
 ## 7. Developmental Trajectory
 
-- **Entry:** Player demonstrates stable Turquoise emotional capacity (vision-logic affect, group equanimity)
+- **Entry:** Player demonstrates stable Teal emotional capacity (vision-logic affect, group equanimity)
 - **Catalyst:** Encounters that reveal residual grasping patterns beneath apparent equanimity
 - **Integration:** Affect becomes fully transparent — feelings arise and dissolve without any contraction
 - **Harvest marker:** No residual preference, aversion, bypass, or identity-with-feeler detectable across all modalities

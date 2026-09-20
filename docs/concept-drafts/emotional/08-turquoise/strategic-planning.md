@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Emotional / White
+- **Module:** Emotional / Turquoise
 - **Modality:** Strategic-Planning
 - **Unique Lateral:** Planning within equanimity — the paradox of structuring emotional life without grasping
 - **What this measures that no other modality measures:** Whether the player can hold future-oriented emotional intentions without those intentions becoming attachments — can you plan compassion without grasping at outcomes?
@@ -8,7 +8,7 @@
 ## 2. Core Mechanic — Equanimous Emotional Planning
 
 ### 2.1 The Planning Paradox
-At White, the player must navigate: How do you structure emotional engagement with life without that structure becoming a new form of grasping? The game presents planning tasks where:
+At Turquoise, the player must navigate: How do you structure emotional engagement with life without that structure becoming a new form of grasping? The game presents planning tasks where:
 - Plans must be held lightly — rigid plans reveal grasping
 - Plans must be genuine — no-plan reveals bypassing
 - Plans must serve others — self-serving plans reveal identity-with-feeler

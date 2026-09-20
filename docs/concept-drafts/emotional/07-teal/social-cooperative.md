@@ -1,4 +1,4 @@
-# Emotional / Turquoise — Social-Cooperative
+# Emotional / Teal — Social-Cooperative
 
 ## 1. Core Mechanic
 
@@ -7,7 +7,7 @@ Shared integral affect — the capacity to attune to group-level emotional field
 ### 1.1 Task Structure
 
 - **Phase A — Group Attunement:** Multiple players simultaneously engage with a shared emotional field (a collective narrative, a group challenge, a shared loss or celebration). The task: synchronise emotional reading of the field without losing individual sovereignty. Scored on convergence of pattern-detection AND maintenance of individual centre.
-- **Phase B — Cross-Altitude Mentorship:** Players at different emotional-developmental altitudes are paired. The Turquoise-level player must attune to the other's emotional reality, offer support that meets them where they are, and gently catalyse growth — without imposing, rescuing, or withdrawing.
+- **Phase B — Cross-Altitude Mentorship:** Players at different emotional-developmental altitudes are paired. The Teal-level player must attune to the other's emotional reality, offer support that meets them where they are, and gently catalyse growth — without imposing, rescuing, or withdrawing.
 - **Phase C — Collective Equanimity:** The group faces an emotionally intense shared challenge. The task: maintain collective equanimity — not by suppressing individual affect but by each player holding their sovereign centre while remaining permeable to the group field. The group succeeds only if all members achieve this simultaneously.
 
 ### 1.2 Cooperative Scoring

@@ -306,7 +306,7 @@ The STO texture names the pattern where the player uses the cell's capacity in s
 |---|---|---|---|
 | **Cognitive / Red** | *Tactical Service* — strategic cognition deployed to protect, plan for others, outthink threats to the group | *Cognitive Dominion* — strategic cognition deployed to subjugate, outmanoeuvre rivals, hoard information advantage | From concept-draft: Agency healthy (sovereign thinking for others) vs Agency dark-addicted (intelligence as weapon) |
 | **Moral / Green** | *Contextual Compassion* — holds multiple ethical frameworks in service of genuine care; commits to action despite uncertainty | *Manipulative Pluralism* — weaponises contextual awareness to avoid commitment; uses "all perspectives valid" to control narratives | From concept-draft: Communion healthy (genuine moral dialogue) vs Communion dark-addicted (dissolves into relativism for control) |
-| **Spiritual / White** | *Transparent Vessel* — non-dual presence that radiates without agenda; sacred-as-ordinary overflows naturally | *Absolute Sovereign* — non-dual awareness concentrated into total self-sufficiency; absorbs all experience into the self without remainder | From concept-draft: all drives equanimous (STO) vs residual grasping-at-sacred concentrated into self-identity (STS) |
+| **Spiritual / Turquoise** | *Transparent Vessel* — non-dual presence that radiates without agenda; sacred-as-ordinary overflows naturally | *Absolute Sovereign* — non-dual awareness concentrated into total self-sufficiency; absorbs all experience into the self without remainder | From concept-draft: all drives equanimous (STO) vs residual grasping-at-sacred concentrated into self-identity (STS) |
 | **Emotional / Amber** | *Empathic Guardian* — emotional attunement to group norms used to nurture belonging and protect vulnerable members | *Emotional Enforcer* — emotional attunement weaponised to enforce conformity, shame deviants, control through guilt | From shadow model: Communion healthy (shares feeling) vs Communion dark-addicted (fusion used as control) |
 
 ### 5.4 The texture assignment mechanic
@@ -553,16 +553,22 @@ harvestable_sts =
 
 The 95% threshold is *demanding* — near-total absorption across nearly all lines. This reflects the cosmological asymmetry: separation requires extraordinary sustained effort because unity is the default state.
 
-### 9.4 The White-stage gate
+### 9.4 The closure gate
 
-Harvestability is checked only at White stage (the final stage). A player who meets the structural requirements at earlier stages is *on track* but not yet harvestable — the full octave must be traversed. The White-stage gate requires:
-1. Arrival at White (all prior stages healthy — holonic integrity)
-2. Structural harvestability per §9.2 or §9.3
+The closure opens only at the **sub-octave closure** — L8 Teal completed, the **Violet event**
+(06 §5.1; 16 §11.5). A player who meets the structural requirements at earlier stages is *on track*
+but not yet at the gate — the full sub-octave must be traversed. The closure gate requires:
+1. Arrival at the closure (all prior stages healthy and L8 Teal integrated — holonic integrity)
+2. Choice-eligibility per §9.2 or §9.3
 3. Violet-ray integration quality (foundations/06 §7.5)
 
 ### 9.5 The Samsara loop
 
-A player who reaches White but is uncrystallised (master.mode != 'crystallized' OR thresholds unmet) enters the **Samsara ending**: the game does not end. The player continues in a post-White loop receiving increasingly intense catalysts designed to force crystallization. There is no "game over" for the uncrystallised — only "not yet."
+A player who arrives at the closure but is not choice-eligible (master.mode != 'crystallized' OR
+thresholds unmet) enters the **Samsara ending**: the game does not end. The player continues in a
+post-apex practice loop receiving increasingly intense catalysts. Per the ratified teleology
+(06 §7.4), Samsara is **not a failure state** — it is the normal condition of a healthy continuing
+practice. There is no "game over" for the not-yet-eligible — only "not yet."
 
 ### 9.6 Eligibility vs event, and the density vocabulary (added 2026-09-20)
 
@@ -572,14 +578,14 @@ invisible. They are separated here:
 | Concept | What it is | Criterion | Where it fires |
 |---|---|---|---|
 | **Choice-eligibility** | a *condition* — is this entity's Choice structurally authentic at all? | §9.2 or §9.3's structural set (crystallized mode, coherent lines, choice-readiness, violet-ray integration ≥ 0.80, 51%/95%) | evaluated continuously; produces a *state*, never an event |
-| **The Harvest** | the *event* — polarity locks, archive, retirement | eligibility **∧** arrival at the sub-octave closure (White) | once, at the apex (16 §11.5, 06 §7.4) |
+| **The Harvest** | the *event* — polarity locks, archive, retirement | eligibility **∧** arrival at the sub-octave closure (**the Violet event**; L8 Teal completed, 06 §5.1) | once, at the apex (16 §11.5, 06 §7.4) |
 
 The runtime function currently named `checkHarvest` computes **eligibility**, not the harvest;
 it is renamed `checkChoiceEligibility` in the owning code, and its verdict is never itself an
 endgame trigger.
 
 **Density vocabulary correction (per HoloOS `_THEORY/02_Ontology/`, ruling 2026-09-20).**
-Mysterium's eight stage names (Infrared … White) are **Spiral-Dynamics colour names**, not
+Mysterium's eight stage names (Infrared … Teal) are **Spiral-Dynamics colour names**, not
 densities. HoloOS densities are VIBGYOR: D1 Red (awareness), D2 Orange (growth),
 **D3 Yellow (self-awareness + the Choice + the Veil)**, D4 Green (love / social-memory
 complex), D5 Blue (wisdom), D6 Indigo (unity), D7 Violet (completion/gateway); the 8th is the
@@ -588,8 +594,9 @@ document:
 
 - The world is **D3 / Yellow** — correct (06 §1). The eight stages are the **D3 sub-octave**
   traversal (fractal nesting: "D8 of the 3rd-density sub-octave = D1 of the 4th-density
-  sub-octave, yellow→green transition"), so **White = the sub-octave closure = the
-  Yellow→Green harvest into D4 (Love/SMC)** — exactly matching 06 §7.4's description
+  sub-octave, yellow→green transition"), so **the sub-octave closure = the Yellow→Green harvest
+  into D4 (Love/SMC)** — the **Violet event**, for which **L8 Teal** is the final stage of
+  readiness (06 §5.1) — exactly matching 06 §7.4's description
   ("unity consciousness and social-memory complex").
 - The `altitude_floor ≥ Orange` criterion in §9.2/§9.3 is re-expressed as **choice-readiness**
   (Ra's requirement that the Choice is only possible once self-conscious choice is available —
@@ -645,7 +652,7 @@ Per the Veil of Forgetting (foundations/20): The Choice carries ontological weig
 ### 11.2 Design commitments
 
 1. **No polarity UI.** The four-level polarity structure is NEVER displayed. No meter, bar, percentage, alignment indicator, or texture name is surfaced.
-2. **No STO/STS language.** These terms never appear in gameplay UI, quest descriptions, or choice prompts. They may appear in the deep codex (post-Turquoise) as cosmological theory — never as gameplay feedback.
+2. **No STO/STS language.** These terms never appear in gameplay UI, quest descriptions, or choice prompts. They may appear in the deep codex (post-Teal) as cosmological theory — never as gameplay feedback.
 3. **No moral labelling.** Choice prompts never say "good," "evil," "light," "dark," "selfless," "selfish." They present *actions* with *consequences*.
 4. **Consequences, not judgements.** The game responds with narrative consequences (NPCs react, the world shifts) — never with moral evaluation.
 5. **No post-hoc reveal.** The game never tells the player their polarity state. Even at harvest, the experience is *felt* (the world responds to who you have become) rather than *scored*.
@@ -659,9 +666,12 @@ This document specifies the polarity engine in full technical detail — for dev
 
 ## 12. The 9th-stage opening
 
-### 12.1 Beyond White
+### 12.1 Beyond the closure
 
-After White, the harvest opens into **4th-density experience** — the density of love/understanding, where entities form social-memory complexes (foundations/06 §7.4).
+After the closure event (the Violet event — L8 Teal completed), the harvest opens into
+**4th-density experience** — the density of love/understanding, where entities form
+social-memory complexes (foundations/06 §7.4). This is **scripted epilogue**, never simulated
+D4 play (06 §5.1 rule 3), and it is reserved territory (16 §11.6 Stage F) — not a design target.
 
 ### 12.2 STO harvest experience
 

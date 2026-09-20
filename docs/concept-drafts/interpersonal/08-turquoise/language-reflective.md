@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Interpersonal / White |
+| Module | Interpersonal / Turquoise |
 | Modality | Language-Reflective |
 | Unique Lateral | Verbal articulation of non-dual relating — how player talks about others reveals residual grasping |
 | Core Mechanic | Open-ended relational narration scored by LLM rubric for residual self/other reification |

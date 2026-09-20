@@ -1,0 +1,5 @@
+# doc-stage-reindex receipt — ONE-WAY migration, do not re-run
+applied_at: 2026-09-20T13:54:31
+base_rev: 5eea5f0
+files_changed: 193
+lines_changed: 543

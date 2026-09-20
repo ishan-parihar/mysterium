@@ -22,7 +22,7 @@
 **Mechanic 1 — Multi-Faceted Protagonist:** The player character has 4–6 established identity facets (warrior/scholar/lover/trickster/healer/leader). Different quests and NPCs respond to different facets. Player chooses which to express in each encounter.  
 **Mechanic 2 — Reputation Ecology:** Each NPC community knows the protagonist through a particular facet. Showing a new facet to a community creates narrative tension (surprise, distrust, deepened respect — depending on authenticity). The world tracks coherence across facets.  
 **Mechanic 3 — Identity Crucible:** Narrative climaxes force the protagonist to act from multiple facets simultaneously or choose between them under pressure. How the player navigates these moments reveals ecological multiplicity capacity.  
-**Progression:** Early game establishes facets individually. Mid-game creates cross-facet encounters. Late game demands integrated multiplicity. Endgame probes the Green→Turquoise edge (can the protagonist witness their own multiplicity?).
+**Progression:** Early game establishes facets individually. Mid-game creates cross-facet encounters. Late game demands integrated multiplicity. Endgame probes the Green→Teal edge (can the protagonist witness their own multiplicity?).
 
 ## 4. Item Pool
 

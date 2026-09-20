@@ -1,4 +1,4 @@
-# Moral / Turquoise — Deterministic
+# Moral / Teal — Deterministic
 
 ## 1. Game Identity
 

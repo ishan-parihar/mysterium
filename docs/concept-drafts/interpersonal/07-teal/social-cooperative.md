@@ -1,4 +1,4 @@
-# Interpersonal × Turquoise — Social-Cooperative
+# Interpersonal × Teal — Social-Cooperative
 
 ## 1. Core Mechanic
 

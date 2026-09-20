@@ -54,8 +54,8 @@ Default-mode network (medial PFC, posterior cingulate, precuneus); insula
 | Amber | Conformist self — identity = role | Player labels "I am a soldier / priest / etc." |
 | Orange | Reflective self — capacity for "what if I…" | Hypothetical self; prediction & reflection |
 | Green | Pluralistic self — multiple selves, contextual | Multi-self awareness; able to say "part of me wants X, part Y" |
-| Turquoise | Vision-logic self — meta-self; sees the developmental process | Witness of own stages; integrates pluralism |
-| White | Non-dual — self transparent to awareness | Self as luminosity; no fixed identity |
+| Teal | Vision-logic self — meta-self; sees the developmental process | Witness of own stages; integrates pluralism |
+| Turquoise | Non-dual — self transparent to awareness | Self as luminosity; no fixed identity |
 
 ## 4. Game-design mapping
 
@@ -75,7 +75,7 @@ sunk-cost mistakes. They are weak in fast reflexive combat. They are
 | Integrate | Hold an aspect "as object" rather than "as subject" | Brief mini-game of describing a felt aspect *as if* from outside | Orange+ |
 | Reflection Strike | Damage scales with accuracy of post-fight self-report | Post-fight quiz: "What did you do well? Where did you slip?" | Orange+ |
 | Multi-Self Map | Visualise current motive composition | Pie-chart mini-game; correct allocation buffs subsequent attacks | Green+ |
-| Process View | See the line's own development arc; gain insight buffs | Periodic glimpse of the radial chart with developmental commentary | Turquoise+ |
+| Process View | See the line's own development arc; gain insight buffs | Periodic glimpse of the radial chart with developmental commentary | Teal+ |
 
 ### 4.3 Module parameters(s) backed
 
@@ -94,7 +94,7 @@ sunk-cost mistakes. They are weak in fast reflexive combat. They are
 
 The intrapersonal line is **fast at first, then slow**. Early gains
 (Red → Amber → Orange) come from simple labelling exercises. Late
-gains (Green → Turquoise → White) require sustained practice and
+gains (Green → Teal → Turquoise) require sustained practice and
 typically lag cognitive altitude by ~1 stage in MVP players.
 
 The line's velocity is *strongly coupled* to the state-training
@@ -113,8 +113,8 @@ advance intrapersonal faster.
 | Amber | "Role-Master" — accuses the player of identity violations | Hold or release a role |
 | Orange | "Doubt-Whisperer" — projects hypothetical self-criticisms | Reflection accuracy under criticism |
 | Green | "Council of Selves" — five aspects of the player; one is lying | Multi-self detection |
-| Turquoise | "Process-Witness" — narrates the player's developmental arc; misnames triggers | Catch the misnaming |
-| White | "Luminous Other" — the player's witness *as another being* | Recognition without grasping |
+| Teal | "Process-Witness" — narrates the player's developmental arc; misnames triggers | Catch the misnaming |
+| Turquoise | "Luminous Other" — the player's witness *as another being* | Recognition without grasping |
 
 ### 5.2 Cross-line encounterses
 

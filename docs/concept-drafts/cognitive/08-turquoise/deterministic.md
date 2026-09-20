@@ -1,4 +1,4 @@
-# Cognitive / White — Deterministic Game
+# Cognitive / Turquoise — Deterministic Game
 
 > **Modality:** Deterministic (objective measurement)  
 > **Unique lateral:** Trans-rational metrics — direct-knowing accuracy, still-mind duration, effortless-complexity indices. Pure psychophysics of non-dual cognition.
@@ -7,7 +7,7 @@
 
 ## 1. Core Mechanic
 
-**Still-Mind Complexity Engine.** The player faces high-dimensional cognitive tasks (n=5 working memory, multi-rule switching, rapid pattern streams) while the system measures effort-signatures: response-time variance, micro-hesitations, accuracy-under-load curves. The diagnostic target is not whether the player CAN solve — at White, capacity is assumed — but whether solving occurs with or without grasping.
+**Still-Mind Complexity Engine.** The player faces high-dimensional cognitive tasks (n=5 working memory, multi-rule switching, rapid pattern streams) while the system measures effort-signatures: response-time variance, micro-hesitations, accuracy-under-load curves. The diagnostic target is not whether the player CAN solve — at Turquoise, capacity is assumed — but whether solving occurs with or without grasping.
 
 Key task types:
 - **Direct-knowing probes:** Patterns solvable by deliberation OR immediate recognition. Latency distinguishes the two.
@@ -40,7 +40,7 @@ Detected when: performance degrades on tasks requiring self-referential dissolut
 - **Agency residue:** Performance improvement when tasks are framed as individual achievement vs. neutral framing.
 - **Communion residue:** Performance improvement when tasks are framed as collective benefit vs. neutral framing.
 
-Healthy White: no framing effect. Performance is context-independent.
+Healthy Turquoise: no framing effect. Performance is context-independent.
 
 ## 4. Progression Arc
 

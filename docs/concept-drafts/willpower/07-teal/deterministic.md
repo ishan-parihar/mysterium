@@ -1,4 +1,4 @@
-# Willpower × Turquoise — Deterministic
+# Willpower × Teal — Deterministic
 
 ## 1. Core Mechanic
 

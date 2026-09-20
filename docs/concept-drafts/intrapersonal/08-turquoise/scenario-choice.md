@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Intrapersonal / White |
+| Module | Intrapersonal / Turquoise |
 | Modality | Scenario-Choice |
 | Unique lateral | Non-dual identity dilemmas — situations requiring action without a fixed self |
 

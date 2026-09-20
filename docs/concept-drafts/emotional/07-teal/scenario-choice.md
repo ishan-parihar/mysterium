@@ -1,4 +1,4 @@
-# Emotional / Turquoise — Scenario-Choice
+# Emotional / Teal — Scenario-Choice
 
 ## 1. Core Mechanic
 
@@ -16,7 +16,7 @@ The player faces integral emotional dilemmas — situations where multiple devel
 - Every option has genuine emotional cost
 - Inaction is itself a choice with consequences
 - The scenario cannot be solved by empathy alone (Green ceiling)
-- The scenario cannot be solved by detachment alone (premature White)
+- The scenario cannot be solved by detachment alone (premature Turquoise)
 
 ## 2. Shadow Diagnostics
 
@@ -30,7 +30,7 @@ The player faces integral emotional dilemmas — situations where multiple devel
 ## 3. Catalyst → Experience → Integration
 
 - **Catalyst:** The dilemma structure makes it impossible to remain in comfortable integral observation. Action is demanded. Every action has emotional weight. The player cannot hide in any single altitude.
-- **Experience:** The felt-sense of integral emotional commitment — holding the full field, choosing anyway, bearing the cost, remaining present to consequence. This IS Turquoise emotional maturity.
+- **Experience:** The felt-sense of integral emotional commitment — holding the full field, choosing anyway, bearing the cost, remaining present to consequence. This IS Teal emotional maturity.
 - **Integration:** Repeated exposure builds the capacity to act from integral affect rather than from any single emotional altitude. The player develops "committed equanimity" — peace that acts.
 
 ## 4. Drive Probes

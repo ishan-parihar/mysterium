@@ -3,15 +3,15 @@
 | Field | Value |
 |---|---|
 | Line | Willpower |
-| Stage | 8 — White / Super-Integral |
+| Stage | 8 — Turquoise / Super-Integral |
 | Energy Ray | Violet |
 | Core Capacity | Effortless will — action without a doer grasping at outcomes |
-| Below | Turquoise willpower (integral will, holonic goal architecture) |
+| Below | Teal willpower (integral will, holonic goal architecture) |
 | Above | None (final stage) |
 
 ## 2. Shadow Model — Residual Grasping Patterns
 
-At White, classical shadows dissolve. What remains are residual grasping patterns — subtle contractions where the will has not yet become fully transparent.
+At Turquoise, classical shadows dissolve. What remains are residual grasping patterns — subtle contractions where the will has not yet become fully transparent.
 
 ### 2.1 Residual Grasping-at-Outcome
 Still attached to results. Still needs goals to 'succeed.' Cannot let action be its own reward. The will still reaches forward into time.
@@ -27,7 +27,7 @@ Still identifies AS the one who acts rather than being transparent to action. Su
 
 ## 3. Drive Model
 
-At White, all four drives exist in equanimous expression. The game detects residual imbalance rather than measuring drive strength.
+At Turquoise, all four drives exist in equanimous expression. The game detects residual imbalance rather than measuring drive strength.
 
 | Parameter | Value |
 |---|---|
@@ -48,7 +48,7 @@ At White, all four drives exist in equanimous expression. The game detects resid
 
 ## 5. Catalyst Architecture
 
-All 7 modalities probe the same frequency (Willpower × White) through different axes:
+All 7 modalities probe the same frequency (Willpower × Turquoise) through different axes:
 - **Deterministic:** objective effortless-will metrics, outcome-attachment detection
 - **Language-Reflective:** verbal articulation reveals residual grasping patterns
 - **Scenario-Choice:** non-dual will dilemmas requiring action without attachment
@@ -59,7 +59,7 @@ All 7 modalities probe the same frequency (Willpower × White) through different
 
 ## 6. Integration Criterion
 
-Module health requires all four residual grasping patterns below threshold simultaneously. A single residual pattern above threshold drags the entire module score via shadow-drag coefficient. The consciousness index requires Turquoise willpower health ≥ 0.7 before White willpower unlocks.
+Module health requires all four residual grasping patterns below threshold simultaneously. A single residual pattern above threshold drags the entire module score via shadow-drag coefficient. The consciousness index requires Teal willpower health ≥ 0.7 before Turquoise willpower unlocks.
 
 ## 7. Infinite Checkpoint Model
 

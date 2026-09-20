@@ -21,8 +21,8 @@
 - Mythic-membership faith ("Our tradition is the true way") — requires Amber group-belonging
 - Rational questioning of faith ("Is my value justified?") — requires Orange
 - Pluralistic acceptance ("All paths are valid") — requires Green
-- Integral synthesis ("Paths are facets of one architecture") — requires Turquoise
-- Surrender/non-grasping — requires Turquoise+
+- Integral synthesis ("Paths are facets of one architecture") — requires Teal
+- Surrender/non-grasping — requires Teal+
 - Value-hierarchy REVISION based on depth — requires Orange+
 
 ### The Spiritual/Red character
@@ -69,7 +69,7 @@ The sacred at Red is PERSONAL and POWER-GRANTING. It's not institutional religio
 
 ### 2.2 Dark-Allergy: "The Nihilist"
 
-**Core pattern:** Refuses all value-hierarchy. "Nothing matters. It's all meaningless." The spiritual line is EMPTY — not because they've transcended values (that's Turquoise+) but because they refuse to commit to any. Spiritual emptiness as defence against the vulnerability of caring.
+**Core pattern:** Refuses all value-hierarchy. "Nothing matters. It's all meaningless." The spiritual line is EMPTY — not because they've transcended values (that's Teal+) but because they refuse to commit to any. Spiritual emptiness as defence against the vulnerability of caring.
 
 **Drive pathology:**
 - Agency: Cannot name what matters; "I don't have values"
@@ -106,7 +106,7 @@ The sacred at Red is PERSONAL and POWER-GRANTING. It's not institutional religio
 **Drive pathology:**
 - Agency: Cannot commit to a sovereign value; "I'm beyond choosing"
 - Communion: Joins "spiritual" communities without personal sacred commitment
-- Eros: Reaches for Turquoise/White without Red/Amber/Orange foundation
+- Eros: Reaches for Teal/Turquoise without Red/Amber/Orange foundation
 - Agape: Cannot return to simple value-identification; "That's too basic for me"
 
 **Behavioural signatures:**

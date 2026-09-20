@@ -65,8 +65,8 @@ fatigue signals appear in dACC.
 | Amber | Duty-will — group goal commitment | Long-form vows tied to group |
 | Orange | Achievement-will — rational long-arc pursuit | Multi-session goals; planning + execution |
 | Green | Pluralistic-will — multiple legitimate goals held in tension | Goal-portfolio management; reflective revision |
-| Turquoise | Integral-will — vision-logic alignment of all goals | Holonic goal architecture |
-| White | Effortless will — alignment with the cosmos; "thy will be done" | Goal arises spontaneously, executes itself |
+| Teal | Integral-will — vision-logic alignment of all goals | Holonic goal architecture |
+| Turquoise | Effortless will — alignment with the cosmos; "thy will be done" | Goal arises spontaneously, executes itself |
 
 ## 4. Game-design mapping
 
@@ -87,8 +87,8 @@ would*.
 | Finish | Damage scaling at end of long fights | Last-30%-HP damage × 1.25 if goal still locked | Amber+ |
 | Vow-Strike | Locked-vow attack | Action restricted by vow gains huge bonus on the constraint-respecting strike | Amber+ |
 | Multi-Goal Hold | Two simultaneous locked goals | Only at Green+; cost is heavy if either breaks | Green+ |
-| Holonic Goal Tree | Sub-goals nested under super-goal | Vision-logic: completing sub-goals buffs super-goal | Turquoise+ |
-| Effortless Pursuit | Goal completes itself once initiated | Highest tier; rare scripted moments | White |
+| Holonic Goal Tree | Sub-goals nested under super-goal | Vision-logic: completing sub-goals buffs super-goal | Teal+ |
+| Effortless Pursuit | Goal completes itself once initiated | Highest tier; rare scripted moments | Turquoise |
 
 ### 4.3 Module parameters(s) backed
 
@@ -130,8 +130,8 @@ Mirrors the cognitive staircase.
 | Amber | "Oath-Watcher" — penalises broken vows | Vow keeping |
 | Orange | "Long-Path" — multi-stage objective | Sustained pursuit |
 | Green | "Conflict-Goal" — two valid goals demanding incompatible action | Multi-goal arbitration |
-| Turquoise | "Holonic-Path" — nested sub-goals; misordering costs | Nested commitment |
-| White | "Spontaneous Other" — appears when not pursued, vanishes when chased | Effortless will |
+| Teal | "Holonic-Path" — nested sub-goals; misordering costs | Nested commitment |
+| Turquoise | "Spontaneous Other" — appears when not pursued, vanishes when chased | Effortless will |
 
 ### 5.2 Cross-line encounterses
 

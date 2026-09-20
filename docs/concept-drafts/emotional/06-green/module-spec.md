@@ -20,11 +20,11 @@ Refuses empathic opening entirely. Remains in Orange self-regulation: "I manage 
 
 ### 2.3 Golden-Addiction: The Premature Transpersonal Feeler
 
-Performs Turquoise integral affect — claims to "feel the collective," speaks of "the field" — without genuine Green empathic mastery. Cannot actually co-regulate with one person. Bypasses the messy, particular, contradictory work of pluralistic empathy for a clean transpersonal narrative.
+Performs Teal integral affect — claims to "feel the collective," speaks of "the field" — without genuine Green empathic mastery. Cannot actually co-regulate with one person. Bypasses the messy, particular, contradictory work of pluralistic empathy for a clean transpersonal narrative.
 
 ### 2.4 Golden-Allergy: The Empathic Fortress
 
-Pluralistic empathy genuinely present but refuses integral deepening. Terrified of transpersonal affect — "I can hold many feelings but I won't dissolve into them." Emergent aversion: Green capacity intact but the call toward Turquoise is actively resisted.
+Pluralistic empathy genuinely present but refuses integral deepening. Terrified of transpersonal affect — "I can hold many feelings but I won't dissolve into them." Emergent aversion: Green capacity intact but the call toward Teal is actively resisted.
 
 ## 3. Drive-Health Landscape
 

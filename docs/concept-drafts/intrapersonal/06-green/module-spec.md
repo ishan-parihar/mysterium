@@ -20,7 +20,7 @@ Refuses multiplicity entirely. Remains in Orange self-authorship: "I know exactl
 
 ### 2.3 Golden-Addiction: The Premature Witness
 
-Performs Turquoise witness-awareness without having genuinely inhabited Green multiplicity. Claims "I am the awareness behind all selves" while unable to actually hold paradox in lived experience. Spiritual bypass of the messy work of plural selfhood. Transcendence without inclusion.
+Performs Teal witness-awareness without having genuinely inhabited Green multiplicity. Claims "I am the awareness behind all selves" while unable to actually hold paradox in lived experience. Spiritual bypass of the messy work of plural selfhood. Transcendence without inclusion.
 
 ### 2.4 Golden-Allergy: The Multiplicity Fortress
 

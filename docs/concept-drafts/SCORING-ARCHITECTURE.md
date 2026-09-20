@@ -131,8 +131,8 @@ The holonic principle: a cracked foundation matters more than a missing penthous
 | 4 (Amber) | 0.85 | Belonging substrate — important |
 | 5 (Orange) | 0.75 | Rational substrate — significant |
 | 6 (Green) | 0.65 | Pluralistic — contributes |
-| 7 (Turquoise) | 0.50 | Integral — bonus |
-| 8 (White) | 0.35 | Non-dual — aspirational |
+| 7 (Teal) | 0.50 | Integral — bonus |
+| 8 (Turquoise) | 0.35 | Non-dual — aspirational |
 
 **Normalised:** Weights are normalised to the player's CURRENT ALTITUDE on that line. A player at Red only has stages 1-3 contributing; stages 4-8 are zero (not penalised for not having reached them yet).
 
@@ -212,8 +212,8 @@ where:
 | 4 (Amber) | 0.30 | 0.5 |
 | 5 (Orange) | 0.45 | 0.6 |
 | 6 (Green) | 0.55 | 0.65 |
-| 7 (Turquoise) | 0.65 | 0.7 |
-| 8 (White) | 0.75 | 0.8 |
+| 7 (Teal) | 0.65 | 0.7 |
+| 8 (Turquoise) | 0.75 | 0.8 |
 
 These are initial values — tuning requires playtesting.
 
@@ -333,7 +333,7 @@ The scoring skeletons are developed BEFORE the game concepts, because they defin
 | **Phase 1** | Red × 8 lines | 8 files | Concrete-operational, egocentric, power-driven. Well-researched (Piaget, Kohlberg Stage 1-2, Loevinger Impulsive/Self-Protective) |
 | **Phase 2** | Amber + Magenta × 8 lines | 16 files | Conformist + pre-operational. Well-researched (Kohlberg 3-4, Fowler Stage 2-3, Kegan Order 2-3) |
 | **Phase 3** | Orange + Green × 8 lines | 16 files | Formal-operational + post-formal. Well-researched but more complex (Kohlberg 5-6, Cook-Greuter Achiever/Pluralist) |
-| **Phase 4** | Infrared + Turquoise + White × 8 lines | 24 files | Pre-developmental + transpersonal. Less researched, more contemplative grounding needed |
+| **Phase 4** | Infrared + Teal + Turquoise × 8 lines | 24 files | Pre-developmental + transpersonal. Less researched, more contemplative grounding needed |
 
 ### 9.3 Per-line grounding requirements
 
@@ -362,8 +362,8 @@ Each stage has its own developmental structure that must ground the scoring:
 | **Amber** | Concrete-operational (full), conformist, rule-bound | Scoring includes rule-following, group-belonging, role-taking. Conventional morality. |
 | **Orange** | Formal-operational, achievement, rational | Scoring includes abstract reasoning, hypothesis testing, self-authorship. Post-conventional begins. |
 | **Green** | Post-formal (early), pluralistic, contextual | Scoring includes perspective-taking, contextual reasoning, systems sensitivity. Relativism. |
-| **Turquoise** | Post-formal (mature), integral, vision-logic | Scoring includes meta-systematic reasoning, paradox tolerance, holistic integration. |
-| **White** | Trans-rational, non-dual, unity | Scoring includes non-dual awareness, effortless presence, kosmocentric identity. Hardest to operationalise. |
+| **Teal** | Post-formal (mature), integral, vision-logic | Scoring includes meta-systematic reasoning, paradox tolerance, holistic integration. |
+| **Turquoise** | Trans-rational, non-dual, unity | Scoring includes non-dual awareness, effortless presence, kosmocentric identity. Hardest to operationalise. |
 
 ### 9.5 The development process for each scoring skeleton
 

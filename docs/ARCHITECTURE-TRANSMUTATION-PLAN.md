@@ -305,11 +305,67 @@ Removed from the live architecture (not deleted — stamped and moved):
 
 ---
 
-## 11. Decisions needed before P0 executes
+## 11. Decisions — RATIFIED 2026-09-20
 
-| # | Decision | Recommendation |
+| # | Decision | Ruling |
 |---|---|---|
-| **Q1** | Record prefixes: one global `MY-AD-/MY-RG-` sequence with an `Organ:` attribution field | **yes** — one ledger, one sequence, no per-organ numbering overhead |
-| **Q2** | Scope of the physical move: restructure only `docs/architecture/` → `docs/system/` and move dormant dirs to `docs/historical/` | **yes** — keeps 512 concept-drafts + all canon paths stable |
-| **Q3** | Build `scripts/arch.py` (lifecycle + 10 DG gates, stdlib only) | **yes** — without a linter the ledger drifts within a week |
-| **Q4** | Where the AD/RG records physically live: `docs/system/core/{decisions,regressions}/` + per-organ cores | **yes** — mirrors the skill's holoarchic root-core/organ-core pattern |
+| **Q1** | Record numbering/attribution | **Global sequence + `Organ:` field** — one `MY-AD-/MY-RG-` sequence project-wide; organ attribution is a frontmatter field doing the routing. One ledger, one sequence. |
+| **Q2** | Scope of the physical move | **Surgical** — only `docs/architecture/` → `docs/system/` (12 files) and dormant dirs → `docs/historical/`. `foundations/`, `concept-drafts/` (512), `lines/`, `stages/`, `narrative/`, `progression/` keep their paths. |
+| **Q3** | Project-local tooling | **Build `scripts/arch.py`** — lifecycle verbs + DG1–DG10, stdlib only, wired into `AGENTS.md §7.5` as step 2b. |
+| **Q4** | Record homes | **Holoarchic** — `docs/system/core/{decisions,regressions}/` (system-wide) + each organ's `core/{decisions,regressions}/` (organ-scoped). System-wide verdicts never live in an organ core. |
+
+**P0 may begin.** Structural plan = `docs/system/`; record dirs as above; `docs/historical/` created in P6.
+
+---
+
+## 12. Incident 1 — the non-idempotent migration (2026-09-20, P1)
+
+**What happened.** `scripts/doc-stage-reindex.py` was run with `--apply` **twice in one command**
+(once to print the head of the report, once for the HELD section). The first pass was correct; the
+second pass took the *correctly migrated* stage-8 name `Turquoise` and mapped it to `Teal`
+(stage 7's new name is the same token family). 194 files were corrupted; the stage-8 concept-draft
+modules read "Stage: Teal (super-integral / non-dual / harvest)".
+
+**Recovery.** `git checkout -- docs/` (the hand-edits were re-applied deterministically), then a
+single `--apply`.
+
+**Root cause (the part that becomes a guard).** The migration is **one-way**, but nothing enforced
+it. `--apply` looked like an ordinary idempotent command, so re-running it seemed safe — and because
+the *output* of the first pass was piped into `sed`, the second invocation was live in the same
+pipeline. This is the failure class AD/RG exist for: a transformation whose correctness depends on
+how many times it has run, with no receipt.
+
+**Guard (implemented).** `--apply` writes `docs/.doc-stage-reindex.applied` (base rev, counts,
+timestamp). A re-run **refuses** with exit 2 unless `--force`. The docstring now states the one-way
+nature in its first paragraph. Recorded as **RG-0001** in the seed ledger (§5).
+
+---
+
+## 13. P1 outcome (vocabulary sweep, 2026-09-20)
+
+| Metric | Value |
+|---|---|
+| Files swept | **193** (598 scanned) |
+| Lines changed | **543** |
+| Remaining stale lines in active canon | **39**, in 19 files — **all** code identifiers, paths, or `CODE-PASS PENDING` annotations |
+| Held spans (not auto-renamed) | 48 — 30 code-bearing, 18 path fragments |
+| Concept-draft corpus | fully re-indexed: `07 — Teal (Integral / Vision-Logic)` ↔ `08 — Turquoise (Super-Integral)` |
+| Idempotence | **one-way**; receipt-guarded (Incident 1) |
+
+**Deviation D6 (discovered, NOT fixed — needs a ruling).** The 7 stage-8 `module-spec.md` files declare
+`Energy Ray: Violet` (`emotional`, `interpersonal`, `intrapersonal`, `moral`, `somatic`, `spiritual`,
+`willpower`). Under the ratified ladder (`06 §5.1`) **L8 Turquoise hosts Indigo (6b)** and the
+**Violet ray belongs to the closure event** — so those fields are stale by the same rule that retired
+`White`. The competing reading is `06 §5.4`'s 8-stage↔7-ray table, which §5.1 rule 4 *retains* as a
+"sub-octave decoration" (stage 8 ↔ Violet). **The two readings disagree, and this is the one place
+where the ratification left them disagreeing** — so it is not being decided mechanically. It touches
+the metadata of 8 modules and the ray vocabulary of the corpus.
+
+**Also found (code-pass scope).** The stage tokens are live code identifiers — `src/core/assessments/*/white.ts`
+(8 modules), `type Stage = '…|Turquoise'|'White'`, `altitudeMin: 'White'` threshold maps,
+`TaskRenderers` keys, glossary data — across **67 files in `src/` + `tests/`**. The doc pass therefore
+**held** those spans (58) rather than renaming them alone; each is annotated `CODE-PASS PENDING` in
+place. The code pass is a new, sized work item: it renames the 8 modules + the `Stage` union + the
+test fixtures + `src/core/curriculum/data/*` keys **atomically**, and it owns the ~39 remaining
+stale doc lines. Until it lands, docs read Teal/Turquoise (ratified) and code reads
+Turquoise/White (pre-re-index) — a **tracked, annotated divergence**, not a silent one.

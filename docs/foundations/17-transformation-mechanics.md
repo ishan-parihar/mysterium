@@ -444,11 +444,11 @@ The self breaks from conformity through reason. The Crucible presents situations
 
 The rational ego discovers its own limitations. The Crucible presents situations where rational analysis alone fails; only by feeling into others' perspectives — empathising, including, honouring difference — can the player proceed. The terror: if all perspectives are valid, where is solid ground?
 
-### 8.6 Green → Turquoise: Vision-Logic Integration
+### 8.6 Green → Teal: Vision-Logic Integration
 
 The pluralistic self discovers that honouring all perspectives requires a *meta-perspective*. The Crucible presents situations where flat pluralism fails; only by seeing the pattern that connects — integrating first-tier stages into a coherent whole — can the player proceed. The terror: hierarchy feels like betrayal of inclusion.
 
-### 8.7 Turquoise → White: Non-Dual Surrender
+### 8.7 Teal → Turquoise: Non-Dual Surrender
 
 The integral self surrenders its own integration. The Crucible presents situations where even integral cognition fails; only by releasing the need to *understand* — surrendering the knower into the known — can the player proceed. The terror: if the self dissolves entirely, what remains? This is the deepest ego-death in the game.
 
@@ -456,15 +456,15 @@ The integral self surrenders its own integration. The Crucible presents situatio
 
 ## 9. The 9th transition: opening to The Choice
 
-### 9.1 Beyond White
+### 9.1 Beyond Teal: the closure horizon
 
-White (Super-Integral / Non-Dual) is not the terminus. It is the stage from which the ultimate macro-polarity crystallises. The 9th transition is not a Transformation in the same sense — it is the opening onto **The Choice** (foundations/19).
+L8 Teal (Super-Integral / Non-Dual) is not the terminus. It is the final developable stage and the stage from which the ultimate macro-polarity crystallises; what follows it is the **closure event** (the Violet event, 06 §5.1), which is not a stage. This transition is not a Transformation in the same sense — it is the opening onto **The Choice** (foundations/19).
 
 At this horizon, the player's accumulated polarity — the aggregate of every micro-choice across every lesser-cycle, every Transformation navigated, every shadow integrated or refused — reaches its final crystallisation. The game does not *make* this choice; it reveals the choice the player has *already been making* all along.
 
 ### 9.2 Scope
 
-The mechanics of The Choice are specified in foundations/19 (Choice & Polarity Engine). This document notes only that the 7th Transformation (Turquoise→White) opens the gateway to The Choice, and that The Choice is the teleological horizon toward which all seven prior Transformations have been oriented.
+The mechanics of The Choice are specified in foundations/19 (Choice & Polarity Engine). This document notes only that the final Transformation (Teal→Teal) completes the sub-octave and opens the gateway to The Choice, and that The Choice is the horizon toward which all prior Transformations have been oriented — **a horizon, never the system's objective** (06 §7.4).
 
 ---
 

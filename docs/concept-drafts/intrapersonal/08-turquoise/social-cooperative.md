@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Intrapersonal / White |
+| Module | Intrapersonal / Turquoise |
 | Modality | Social-Cooperative |
 | Unique lateral | Non-dual self in relation — relating without a fixed relater, transparent self-presentation |
 

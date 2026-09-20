@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Spiritual / White |
+| Module | Spiritual / Turquoise |
 | Modality | Deterministic |
 | Probe axis | Sacred-ordinary discrimination (target: ZERO), state-attachment detection |
 | Core mechanic | Objective measurement of whether player treats any stimulus as more/less sacred |

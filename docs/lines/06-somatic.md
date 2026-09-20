@@ -8,7 +8,7 @@ Specify the Somatic line — the capacity to *inhabit and skilfully use the
 body*. Mysterium's dodge, posture, breath-gate, and rhythm verbs live here.
 Somatic is one of the two lines (with Willpower) that develops
 *relatively independently* of cognitive altitude — a skilled dancer or
-martial artist may sit at Amber cognitive but Turquoise somatic.
+martial artist may sit at Amber cognitive but Teal somatic.
 
 The somatic line is the line that prevents Mysterium from collapsing into a
 *head game*. Every cognitive task is grounded in a body that breathes,
@@ -63,8 +63,8 @@ Cerebellum, premotor / SMA, primary motor, posterior insula
 | Amber | Disciplined-body — coordinated forms; group rhythm | Stance forms; martial arts kata; coordinated rituals |
 | Orange | Skilled-body — multi-domain mastery; rational training | Per-skill drills; technique trees |
 | Green | Listening-body — attuned to subtle signals; somatic empathy | Body-scan reads; co-presence with others |
-| Turquoise | Integrated-body — body-mind-emotion as one | Compound stances; effort-rest-effort cycling at will |
-| White | Luminous-body — body as energy; non-grasping movement | Effortless moves; presence over technique |
+| Teal | Integrated-body — body-mind-emotion as one | Compound stances; effort-rest-effort cycling at will |
+| Turquoise | Luminous-body — body as energy; non-grasping movement | Effortless moves; presence over technique |
 
 ## 4. Game-design mapping
 
@@ -89,8 +89,8 @@ gravitate to.
 | Rhythmic Combo | Sensorimotor synchronisation | Inputs in time with a beat; off-beat = no damage | Amber+ |
 | Body-Scan Read | Interoception | Tap which of own body-zones is currently tense; correct = buff | Orange+ |
 | Subtle-Signal Attune | Anticipatory dodge | Dodge before the visual cue, on the *intention* signal | Green+ |
-| Effortless Strike | Compound posture + breath + intention | All three locks held → free heavy attack | Turquoise+ |
-| Presence | Non-action "stance" | Take no action for a beat; full HP / stamina regen; only available at White | White |
+| Effortless Strike | Compound posture + breath + intention | All three locks held → free heavy attack | Teal+ |
+| Presence | Non-action "stance" | Take no action for a beat; full HP / stamina regen; only available at Turquoise | Turquoise |
 
 ### 4.3 Module parameters(s) backed
 
@@ -130,8 +130,8 @@ Designed in `progression/00-progression-overview.md`.
 | Amber | "Form-Master" — punishes broken stance | Sustained posture |
 | Orange | "Drill-Sergeant" — multi-skill rapid-fire | Skill switching with motor focus |
 | Green | "Mirror-Dancer" — moves the player must mirror | Sensorimotor sync |
-| Turquoise | "Breath-Wraith" — synchronised to player's breath; out-of-sync hurts | Breath-paced inputs |
-| White | "Still One" — only damaged when player takes no action | Presence |
+| Teal | "Breath-Wraith" — synchronised to player's breath; out-of-sync hurts | Breath-paced inputs |
+| Turquoise | "Still One" — only damaged when player takes no action | Presence |
 
 ### 5.2 Cross-line encounterses
 
@@ -147,7 +147,7 @@ Designed in `progression/00-progression-overview.md`.
 Somatic phases of synthesis exams typically appear as the *opening
 phase* — establish rhythm, posture, breath. Failure here costs ATB for
 the rest of the fight. Late-game synthesis exams add somatic phases at
-the climax (Turquoise / White) to test integration under exhaustion.
+the climax (Teal / Turquoise) to test integration under exhaustion.
 
 ### 5.4 Shadow encounters
 

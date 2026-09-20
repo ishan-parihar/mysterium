@@ -219,8 +219,8 @@ As the Significator evolves through the 8 stages, it does not merely *add* new c
 | Amber | Conformist; rule-and-role identity | Communion (institutional) | Rigid agency-suppression | Selectively permeable (in-group only) |
 | Orange | Rational-achiever; autonomous self | Agency (achievement) | Instrumentalising others | Controlled, strategic |
 | Green | Pluralistic; sensitive-relational | Communion (egalitarian) | Mean-green suppression of hierarchy | Hyper-permeable |
-| Turquoise | Integral; vision-logic | All four in dynamic dance | Subtle integral elitism | Calibrated, context-sensitive |
-| White | Non-dual; transparent self | Unity beyond drives | (Rare; no common pathology) | Fully permeable, fully coherent |
+| Teal | Integral; vision-logic | All four in dynamic dance | Subtle integral elitism | Calibrated, context-sensitive |
+| Turquoise | Non-dual; transparent self | Unity beyond drives | (Rare; no common pathology) | Fully permeable, fully coherent |
 
 ### 5.3 Implementation: the `stage` field as synthesised centre-of-gravity
 
@@ -351,7 +351,7 @@ The Significator is mutated exclusively through well-defined events. No system w
 | **session_resume** | `SessionContext` (timestamp, profileVersion) | Theta-decay computed for elapsed time; `lastActiveAt` updated | Encounter scheduler recalculates pool based on elapsed decay; nudge encounters queued if decay significant | Profile version matches saved version (integrity check) |
 | **save_event** | `SaveTrigger` (reason: 'checkpoint' \| 'pause' \| 'manual') | None (read-only serialisation) | Serialised profile emitted with `stateVersion` counter incremented; written to encrypted local storage | Serialised state passes schema validation; stateVersion monotonically increases |
 | **load_event** | `LoadRequest` (profileId, expectedVersion) | Full profile deserialised into memory | Integrity hash verified; if mismatch → recovery from last valid checkpoint | Schema version compatible; no field corruption; stateVersion ≥ expected |
-| **harvest_event** | `HarvestTrigger` (crystallisationIndex, rayIntegration, allStagesHealthy) | `harvestState` set to 'crystallised'; `polarityVector` locked (immutable); Veil partially lifted flag set | Archive copy created; post-harvest mode unlocked; player-visible developmental summary generated (per foundations/20 §8.4) | crystallisationIndex ≥ threshold (STO: 0.51×0.85; STS: 0.95×0.85); all 8 line altitudes ≥ White |
+| **harvest_event** | `HarvestTrigger` (crystallisationIndex, rayIntegration, allStagesHealthy) | `harvestState` set to 'crystallised'; `polarityVector` locked (immutable); Veil partially lifted flag set | Archive copy created; post-harvest mode unlocked; player-visible developmental summary generated (per foundations/20 §8.4) | crystallisationIndex ≥ threshold (STO: 0.51×0.85; STS: 0.95×0.85); all 8 line altitudes ≥ Turquoise |
 
 ### 9.2 Event ordering guarantees
 
@@ -507,7 +507,7 @@ consented auditor (stance diagnostics) — and the ladder's levels are the same 
   **auditor register** (both classes, scope-whitelisted per §10.4 AP2).
 - **AL3 — Presentation, not availability, is stage-articulated.** Availability does not
   change with altitude (open class is readable at any stage, ruling 2026-09-20);
-  *presentation* adapts — an Infrared-stage player is shown concrete markers, a Turquoise
+  *presentation* adapts — an Infrared-stage player is shown concrete markers, a Teal
   player the full multi-line structure (22 §5 voice specs, 33 theming). "Understand yourself
   at any stage" is a voicing guarantee, not a data restriction.
 - **AL4 — Descent only for auditors** (progressive disclosure, §10.4 AP3); the self may
@@ -575,31 +575,31 @@ The Significator evolves through distinct lifecycle stages, each with characteri
 
 **Characteristic events:** All event types active; `transformation_completed` events every 5–10 hours; `regression_detected` possible if player neglects lines; `shadow_integrated` events mark breakthroughs.
 
-**Exit criteria:** Centre-of-gravity reaches Turquoise; OR all lines ≥ Green with polarity magnitude ≥ 0.5.
+**Exit criteria:** Centre-of-gravity reaches Teal; OR all lines ≥ Green with polarity magnitude ≥ 0.5.
 
-### 11.4 Stage D: Late-game (Act III — Turquoise/White, ~10–30 hours)
+### 11.4 Stage D: Late-game (Act III — Teal/Turquoise, ~10–30 hours)
 
 **Purpose:** Polarity crystallisation. The Significator becomes highly coherent — per-line divergence narrows, drive-balance stabilises, shadow material integrates deeply.
 
 | Aspect | Thresholds |
 |---|---|
-| `altitudes` | All lines ≥ Turquoise; growth-edge lines pushing White; max divergence ≤ 2 stages between any two lines |
+| `altitudes` | All lines ≥ Teal; growth-edge lines pushing Turquoise; max divergence ≤ 2 stages between any two lines |
 | `drives.weights` | Stable dynamic equilibrium; fixationRisk near zero across all drives |
 | `shadows[]` | Mostly integrated; remaining unresolved shadows are deep/subtle; new surfacings rare |
 | `polarityVector` | direction ≥ |0.51| (STO) or ≤ -0.95 (STS); magnitude ≥ 0.7 (crystallisation phase); per-line polarity coherent |
 | `transformations[]` | 8–12+ entries; late transformations are subtle frame-shifts, not dramatic upheavals |
-| `stage` | Turquoise → White |
+| `stage` | Teal → Turquoise |
 
-**Characteristic events:** `transformation_completed` (Turquoise → White); deep `shadow_integrated` events; polarity-locking choices; theta-decay vigilance (all lower stages must remain healthy).
+**Characteristic events:** `transformation_completed` (Teal → Turquoise; the runtime stage identifier still reads `Turquoise` until the code re-index pass); deep `shadow_integrated` events; polarity-locking choices; theta-decay vigilance (all lower stages must remain healthy).
 
-**Exit criteria:** All lines at White; crystallisationIndex ≥ harvest threshold; all ray integrations complete.
+**Exit criteria:** All lines at Teal (L8); crystallisationIndex ≥ closure threshold; all ray integrations complete.
 
 ### 11.5 Stage E: Harvest (the closure — a horizon event, not a stage)
 
 **Purpose:** The Veil lifts. Final polarity crystallises. The Significator is archived.
 
 **Ruling 2026-09-20 — the harvest is a horizon, never the objective.** The ladder's last
-*developable* stage is **L8 Turquoise** ("total integration; harvest readiness", 06 §5.1);
+*developable* stage is **L8 Teal** ("total integration; harvest readiness", 06 §5.1);
 the harvest itself is the **Violet closure position** (KosmOS `lenses/rays.md`: "the
 sub-octaves of 3rd-to-4th-density consciousness… Violet is the harvest into 4th density").
 The system's objective is **continuing developmental progression across all dimensions without

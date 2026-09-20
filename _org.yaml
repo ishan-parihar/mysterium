@@ -1,0 +1,237 @@
+# _org.yaml — Mysterium structure declaration
+#
+# The single machine-readable map of the repository's architecture and its
+# documentation rungs. It is the source of truth for `scripts/arch.py route`,
+# `validate`, and `emit` (generated INDEX.md + AGENTS.md auto-zones).
+#
+# This file is LOCAL to the Mysterium repository: no external governance system
+# (no ~/.hermes, no external `arch` CLI) governs anything described here.
+# Rationale + phases: docs/ARCHITECTURE-TRANSMUTATION-PLAN.md
+#
+# Update discipline: this file is hand-edited (it IS the declaration), then
+# `python3 scripts/arch.py validate` must exit 0 and `... emit` regenerates the
+# derived surfaces. Never let a declared path go stale: `validate` fails closed
+# on a declared path that does not exist on disk.
+
+project:
+  name: mysterium
+  prefix: MY
+  language: typescript
+  stack: [svelte, vite, tsup, vitest]
+  build: "npm run build"
+  test: "npm test"
+  lint: "python3 skills/workspace-lint/scripts/workspace_lint.py --root ."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RUNGS — the four firewalled layers of the documentation architecture.
+# Rungs never restate each other: SYSTEM references CANON, RECORDS record
+# changes to SYSTEM, CONTENT is consumed as templates.
+# ─────────────────────────────────────────────────────────────────────────────
+rungs:
+  canon:
+    purpose: "Theory + design substrate. Owns 'what is true'."
+    dirs:
+      - path: docs/foundations
+        format: {pattern: "*.md"}
+    authority: docs/foundations/AGENTS.md
+    pending_phase: P2
+    live: true
+
+  canon-domain:
+    purpose: "Per-domain detail consumed by both cycles (lines, stages, narrative, progression)."
+    dirs:
+      - path: docs/lines
+        format: {pattern: "*.md"}
+      - path: docs/stages
+        format: {pattern: "*.md"}
+      - path: docs/narrative
+        format: {pattern: "*.md"}
+      - path: docs/progression
+        format: {pattern: "*.md"}
+    authority: docs/foundations/02-eight-stages-overview.md
+    live: true
+
+  system:
+    purpose: "The built system's contracts, organised as ORGANS. Owns 'how it is built'."
+    dirs:
+      - path: docs/system
+        format: {pattern: "**/*.md"}
+        pending_phase: P3          # created by the structural move in P3
+    authority: docs/system/AGENTS.md
+    live: true
+
+  content:
+    purpose: "The 512-file concept-draft corpus. Owns 'what each module plays as'."
+    dirs:
+      - path: docs/concept-drafts
+        format: {pattern: "**/*.md"}
+    authority: docs/concept-drafts/README.md
+    live: true
+
+  records:
+    purpose: "AD / RG / Log. Owns 'what was decided / what broke / what changed'."
+    # Holoarchic (Q4 ratified): system-wide verdicts live in the system core;
+    # organ-scoped records live in each organ's own core. System-wide verdicts
+    # MUST NOT be filed in an organ core.
+    pending_phase: P3             # record dirs are created with the system rung
+    decisions:
+      system: docs/system/core/decisions
+      organ_pattern: docs/system/sub-systems/{organ}/core/decisions
+    regressions:
+      system: docs/system/core/regressions
+      organ_pattern: docs/system/sub-systems/{organ}/core/regressions
+    worklog:
+      dir: docs/system/core/worklog
+      format: {pattern: "NNNN-*.md"}
+    ledger:
+      path: docs/system/logs/mutations.jsonl
+      format: {suffix: [".jsonl"]}
+    numbering: global            # Q1 ratified: one MY-AD-/MY-RG- sequence project-wide
+    attribution_field: Organ     # routing lives in frontmatter, not in the number
+    filename_pattern: "{prefix}-{record}-{nnnn}-{kebab}.md"
+    status_enum: [Active, Accepted, Proposed, Draft, Superseded, Resolved, Open]
+    live: true
+
+  plans:
+    purpose: "In-flight process documents. Own sequencing, not contracts or theory."
+    files:
+      - docs/DEVELOPMENT-PLAN.md          # owns build-phase order and gates
+      - docs/ONBOARDING-REDESIGN-PLAN.md
+      - docs/ARCHITECTURE-TRANSMUTATION-PLAN.md
+      - docs/REQUIREMENTS.md
+    authority: docs/DEVELOPMENT-PLAN.md
+    live: true
+
+  historical:
+    purpose: "Dated records. Never an authority, never rewritten, never cited by live docs."
+    dirs:
+      - path: docs/historical
+        format: {pattern: "**/*.md"}
+        pending_phase: P6
+    live: false
+
+  audits:
+    purpose: "Audit evidence behind the RG ledger. Dated snapshots, not authorities."
+    dirs:
+      - path: docs/audits
+        format: {pattern: "*.md"}
+    live: false
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ORGANS — RUNG 2. Each organ is a sub-pool of docs/system that mirrors a real
+# code domain. `code` paths MUST resolve on disk (`arch.py validate` enforces).
+# Organ names are stable identifiers; the docs and the code must agree on them.
+# ─────────────────────────────────────────────────────────────────────────────
+organs:
+  kernel:
+    contract_docs: [foundations/26-unified-core-architecture, foundations/42-developmental-levelling-mechanism]
+    code: [src/core/engines, src/core/assessments, src/core/registries, src/core/domain, src/core/logic, src/core/usecases]
+    status: active
+
+  catalyst:
+    contract_docs: [foundations/10-shadow-and-pathology, foundations/11-game-modalities, foundations/14-game-as-developmental-catalyst, foundations/19-choice-and-polarity-engine, foundations/23-polarity-ontology, foundations/24-encounter-scheduler, foundations/27-auto-mode-strategy-engine]
+    code: [src/core/practice, src/core/healing, src/core/braingame, src/core/GameLoop.ts]
+    status: active
+
+  curriculum:
+    contract_docs: [foundations/29-meta-learning-science, foundations/30-holonic-curriculum-architecture, foundations/31-depth-assessment-model, foundations/32-agentic-curriculum-linter, foundations/33-self-directed-dashboard, foundations/34-curriculum-engine-bridge, foundations/37-k12-curriculum-expansion]
+    code: [src/core/curriculum, src/core/packs, src/core/training]
+    status: active
+
+  profiling:
+    contract_docs: [foundations/12-drive-assessment-mechanics, foundations/16-significator-architecture, foundations/25-cumulative-consciousness-index, foundations/40-measurement-packs-efficacy-infra]
+    code: [src/core/domain, src/infra/profiles]
+    status: active
+    note: "No architecture doc existed before this plan (audit gap G5)."
+
+  orchestration:
+    contract_docs: [foundations/43-agentic-orchestration-architecture]
+    code: [src/core/orchestration, src/core/agent, src/core/fallback, src/infra/llm]
+    status: active
+
+  world:
+    contract_docs: [foundations/18-great-way-world-architecture, foundations/22-holon-context-engine]
+    code: [src/core/pods, src/infra/pods]
+    status: active
+    note: "No architecture doc existed before this plan (audit gap G6)."
+
+  onboarding:
+    contract_docs: [foundations/21-incarnation-architecture, foundations/16-significator-architecture]
+    code: [src/core/onboarding, src/core/adaptive]
+    status: active
+
+  persistence:
+    contract_docs: [foundations/43-agentic-orchestration-architecture]
+    code: [src/infra/persistence, src/infra/native, src/infra/crypto, src/infra/profiles]
+    status: active
+
+  presentation:
+    contract_docs: [foundations/33-self-directed-dashboard, foundations/20-veil-of-forgetting]
+    code: [src/core/presentation, src/routes, src/lib, src/styles]
+    status: active
+
+  safety:
+    contract_docs: [foundations/43-agentic-orchestration-architecture]
+    code: [src/core/safety, src/core/accessibility]
+    status: active
+    note: "No architecture doc existed before this plan (audit gap G7)."
+
+  credentialing:
+    contract_docs: [foundations/41-global-recognition-credentialing, foundations/38-cohort-weave-multiplayer]
+    code: [src/core/credential]
+    status: active
+    note: "No architecture doc existed before this plan (audit gap G8)."
+
+  validation:
+    contract_docs: [foundations/40-measurement-packs-efficacy-infra, foundations/12-drive-assessment-mechanics]
+    code: [src/core/validation, scripts/run-validation-benchmark.ts, src/core/braingame]
+    status: active
+
+  platform:
+    contract_docs: []
+    code: [src/core/config, src/core/data, src/core/events, src/core/telemetry, src/infra/i18n, src/infra/telemetry, src/cli, src/shared]
+    status: active
+    note: "System substrate: no theory of its own; exists so no code domain is unowned."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GATES — doc-governance (DG), distinct from the runtime kernel gates G1–G21
+# (src/core/validation/gates.ts). `arch.py validate` runs DG1–DG10 and exits
+# non-zero on any violation. Run as step 2b of the iteration protocol.
+# ─────────────────────────────────────────────────────────────────────────────
+gates:
+  dg1_frontmatter:        {enabled: true}
+  dg2_status_enum:        {enabled: true}
+  dg3_numbering:          {enabled: true}
+  dg4_authority:          {enabled: true}
+  dg5_vocabulary:         {enabled: true, blacklist_source: docs/foundations/44-system-ontology-and-vocabulary.md}
+  # ^ blacklist_source is authored in P2; until then DG5 runs against the
+  #   subset blacklist embedded in the audit appendix.
+  dg6_historical_quarantine: {enabled: true}
+  dg7_ownership:          {enabled: true, owners_table: docs/foundations/44-system-ontology-and-vocabulary.md}
+  dg8_references:         {enabled: true}
+  dg9_ledger:             {enabled: true}
+  dg10_canon_code:        {enabled: true}
+
+# Authority claims are restricted: only these documents may self-describe as
+# binding (DG4). Any other doc claiming authority is a violation.
+authority_map:
+  build_order_and_gates: docs/DEVELOPMENT-PLAN.md
+  theory_and_contracts: docs/foundations/AGENTS.md
+  system_architecture: docs/system/AGENTS.md
+  vocabulary_and_ownership: docs/foundations/44-system-ontology-and-vocabulary.md
+  root_router: AGENTS.md
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TRANSITION LEDGER — what still has to land for this file to be fully strict.
+# `arch.py validate` reports `pending_phase` paths as INFO (not ERROR) until the
+# phase completes; on completion the `pending_phase` key is removed and the path
+# becomes mandatory. Never leave a completed phase's key in place.
+# ─────────────────────────────────────────────────────────────────────────────
+pending:
+  P1: "vocabulary sweep (D1/D2) + architecture/10 combat purge (D4)"
+  P2: "foundations/44 created; 02 MHC extend; objective propagated; AGENTS.md external canon"
+  P3: "docs/architecture -> docs/system + 12 organ routers + R1-R9 consolidations"
+  P4: "scripts/arch.py + DG1-DG10 wired into AGENTS.md 7.5"
+  P5: "seed ledger: AD/RG records transcribed from ratified prose"
+  P6: "docs/historical/ quarantine + root hygiene"
+  P7: "re-audit + full iteration protocol + dual-remote push"

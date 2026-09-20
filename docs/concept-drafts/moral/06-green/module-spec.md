@@ -20,7 +20,7 @@ Refuses contextual ethics entirely. Clings to Orange universal principles — "t
 
 ### 2.3 Golden-Addiction: The Premature Integral Ethicist
 
-Performs Turquoise developmental ethics without genuine Green mastery. Claims to "see all moral stages" while unable to genuinely hold care AND justice simultaneously in lived practice. Bypasses the hard work of contextual sensitivity by leaping to meta-ethical frameworks.
+Performs Teal developmental ethics without genuine Green mastery. Claims to "see all moral stages" while unable to genuinely hold care AND justice simultaneously in lived practice. Bypasses the hard work of contextual sensitivity by leaping to meta-ethical frameworks.
 
 ### 2.4 Golden-Allergy: The Contextual Fortress
 

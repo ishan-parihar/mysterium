@@ -1,4 +1,4 @@
-# Cognitive / Turquoise — Embodied-Somatic
+# Cognitive / Teal — Embodied-Somatic
 
 ## 1. Game Identity
 

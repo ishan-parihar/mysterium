@@ -1,13 +1,13 @@
 ## 1. Modality Identity
 
-- **Module:** Moral / White
+- **Module:** Moral / Turquoise
 - **Modality:** Deterministic
 - **Unique Axis:** Objective kosmocentric measurement — spontaneous-ethics accuracy, non-deliberative moral response latency
 - **Core Mechanic:** Timed moral-response tasks that measure whether ethical action arises without deliberation
 
 ## 2. What This Measures
 
-The deterministic modality captures the objective signature of kosmocentric ethics: moral responses that are both accurate AND non-deliberative. At White, right action should arise faster than deliberation allows — the game measures this latency gap as the primary transparency indicator.
+The deterministic modality captures the objective signature of kosmocentric ethics: moral responses that are both accurate AND non-deliberative. At Turquoise, right action should arise faster than deliberation allows — the game measures this latency gap as the primary transparency indicator.
 
 ## 3. Shadow Detection
 

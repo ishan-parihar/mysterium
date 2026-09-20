@@ -1,4 +1,4 @@
-# Somatic / White — Deterministic Game
+# Somatic / Turquoise — Deterministic Game
 
 ## 1. Core Mechanic
 

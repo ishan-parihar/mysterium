@@ -1,4 +1,4 @@
-# Cognitive / White — Strategic-Planning Game
+# Cognitive / Turquoise — Strategic-Planning Game
 
 > **Modality:** Strategic-Planning (sequencing and foresight)  
 > **Unique lateral:** Planning within non-dual cognition — action arising spontaneously, effortless sequencing. Strategy without a strategist.
@@ -7,7 +7,7 @@
 
 ## 1. Core Mechanic
 
-**Spontaneous Sequencing.** The player faces complex multi-step challenges (resource allocation, path optimization, temporal coordination) where the system measures whether plans emerge spontaneously or through deliberate construction. At White, correct sequences arise whole — not assembled piece by piece.
+**Spontaneous Sequencing.** The player faces complex multi-step challenges (resource allocation, path optimization, temporal coordination) where the system measures whether plans emerge spontaneously or through deliberate construction. At Turquoise, correct sequences arise whole — not assembled piece by piece.
 
 Key task types:
 - **Immediate-whole planning:** Complex scenarios presented briefly. The player must respond with a complete plan before deliberation is possible. Direct knowing produces coherent wholes; grasping produces fragments.
@@ -40,7 +40,7 @@ Detected when: plans consistently center a protagonist/agent. The player cannot 
 - **Agency residue:** Plans center individual action. Strategies requiring receptivity, patience, or yielding are systematically underused.
 - **Communion residue:** Plans dissolve into collective process. Strategies requiring decisive individual action are systematically avoided.
 
-Healthy White: planning style matches situation. No systematic bias toward any strategy type.
+Healthy Turquoise: planning style matches situation. No systematic bias toward any strategy type.
 
 ## 4. Progression Arc
 

@@ -1,4 +1,4 @@
-# Interpersonal × Turquoise — Immersive-RPG
+# Interpersonal × Teal — Immersive-RPG
 
 ## 1. Core Mechanic
 
@@ -12,7 +12,7 @@ Three observation axes:
 ## 2. Shadow Surfacing
 
 - **DA (Relational Architect):** In free-play, the player gravitates toward observation and mapping — watching NPC interactions, analysing group dynamics, but rarely entering the relational field directly. The world becomes a system to understand rather than a community to join.
-- **DAll (Authentic Pluralist):** The player relates to all NPCs identically — deep, warm, Green-level connection regardless of altitude. Works beautifully with Green NPCs but creates friction with Red, Amber, or Turquoise NPCs who need different relational modes.
+- **DAll (Authentic Pluralist):** The player relates to all NPCs identically — deep, warm, Green-level connection regardless of altitude. Works beautifully with Green NPCs but creates friction with Red, Amber, or Teal NPCs who need different relational modes.
 - **GA (Premature Merger):** The player attempts deep communion with every NPC immediately — no relational pacing, no altitude-detection, just instant intimacy. Some NPCs respond well; others withdraw or become confused.
 - **GAll (Integral Relational Fortress):** The player navigates the world with perfect relational competence — attuning to each NPC appropriately — but never allows any relationship to deepen beyond attunement into genuine vulnerability or boundary-dissolution.
 

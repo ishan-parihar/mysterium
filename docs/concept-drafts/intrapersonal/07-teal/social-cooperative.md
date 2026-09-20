@@ -1,4 +1,4 @@
-# Intrapersonal × Turquoise — Social-Cooperative
+# Intrapersonal × Teal — Social-Cooperative
 
 ## 1. Game Identity
 

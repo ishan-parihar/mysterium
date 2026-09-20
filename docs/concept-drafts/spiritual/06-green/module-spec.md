@@ -6,7 +6,7 @@
 
 ## 1. Capacity Definition
 
-The capacity to hold multiple spiritual traditions as genuinely valid paths to the sacred without collapsing them into sameness or ranking them hierarchically. This is NOT relativism — it is the developmental achievement of appreciating the PARTICULAR beauty of each tradition while recognizing that no single tradition holds exclusive truth. The player demonstrates: cross-tradition literacy, sustained multi-path practice, interfaith empathy, and sacred-in-diversity perception. Distinguished from Orange (which examines traditions rationally) by felt reverence for plurality itself, and from Turquoise (which integrates traditions into one meta-framework) by honoring irreducible difference.
+The capacity to hold multiple spiritual traditions as genuinely valid paths to the sacred without collapsing them into sameness or ranking them hierarchically. This is NOT relativism — it is the developmental achievement of appreciating the PARTICULAR beauty of each tradition while recognizing that no single tradition holds exclusive truth. The player demonstrates: cross-tradition literacy, sustained multi-path practice, interfaith empathy, and sacred-in-diversity perception. Distinguished from Orange (which examines traditions rationally) by felt reverence for plurality itself, and from Teal (which integrates traditions into one meta-framework) by honoring irreducible difference.
 
 ## 2. Shadow Archetypes
 
@@ -20,7 +20,7 @@ Refuses pluralistic faith entirely, remaining in Orange rational examination. "S
 
 ### 2.3 Golden-Addiction: The Premature Non-Dualist
 
-Performs Turquoise integral spirituality without genuine Green interfaith appreciation. Claims "all is one" while unable to genuinely appreciate the PARTICULAR beauty of any single tradition. Leaps to meta-framework without having dwelt in the diversity. Uses non-dual language to bypass the hard work of cross-tradition immersion.
+Performs Teal integral spirituality without genuine Green interfaith appreciation. Claims "all is one" while unable to genuinely appreciate the PARTICULAR beauty of any single tradition. Leaps to meta-framework without having dwelt in the diversity. Uses non-dual language to bypass the hard work of cross-tradition immersion.
 
 ### 2.4 Golden-Allergy: The Interfaith Fortress
 

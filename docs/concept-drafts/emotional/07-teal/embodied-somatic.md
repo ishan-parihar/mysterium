@@ -1,4 +1,4 @@
-# Emotional / Turquoise — Embodied-Somatic
+# Emotional / Teal — Embodied-Somatic
 
 ## 1. Core Mechanic
 
@@ -7,7 +7,7 @@ The body as site of integral affect. This modality probes whether vision-logic e
 ### 1.1 Task Structure
 
 - **Phase A — Somatic Field Holding:** The player is exposed to emotionally intense group-level stimuli (audio landscapes of collective grief, joy, rage, fear layered simultaneously). The task: maintain a specific somatic rhythm (breath pattern, tap cadence, postural stability) while the emotional field intensifies. Deviation from rhythm = body losing equanimity.
-- **Phase B — Embodied Altitude Discrimination:** Different somatic signatures correspond to different emotional altitudes. The player must identify which altitude is activating their body — distinguishing between Red-rage tension, Green-empathy heart-opening, and Turquoise-equanimity stillness as felt bodily states.
+- **Phase B — Embodied Altitude Discrimination:** Different somatic signatures correspond to different emotional altitudes. The player must identify which altitude is activating their body — distinguishing between Red-rage tension, Green-empathy heart-opening, and Teal-equanimity stillness as felt bodily states.
 - **Phase C — Somatic Release:** After sustained holding, the player is guided through intentional somatic release — the body letting go of held affect. The probe: can the player release without collapsing? Can equanimity survive the transition from holding to flowing?
 
 ### 1.2 Input Modalities

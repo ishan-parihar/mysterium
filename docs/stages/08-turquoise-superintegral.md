@@ -1,4 +1,4 @@
-# stages/08 — White / Super-Integral
+# stages/08 — Turquoise / Super-Integral
 
 > **Cross-references:** [[docs/foundations/06-law-of-one-correspondence|06 — Law Of One Correspondence]] · [[docs/foundations/02-eight-stages-overview|02 — Eight Stages Overview]]
 
@@ -9,13 +9,13 @@ trans-rational world. Not a *new* stage in the way the others are new,
 but the *integration* of all prior stages into a unified expression of
 being. The "harvest." The endgame.
 
-Approximate playtime: open. White is not gated by sessions; it is
+Approximate playtime: open. Turquoise is not gated by sessions; it is
 gated by *demonstrated integration*. Some players never reach it; that
 is honest.
 
 ## 2. Stage definition
 
-White / Super-Integral is the **trans-rational** structure of
+Turquoise / Super-Integral is the **trans-rational** structure of
 consciousness. The egoic self has been *transcended-and-included* into
 larger holons of identification — all sentient beings, the cosmos
 itself. *Subject-object dualism* relaxes; the player is no longer
@@ -26,7 +26,7 @@ yet inclusive of all conceptual capacity.
 In real human development this stage is *very* rare — Wilber estimates
 <1% of the adult population has stable access. State experiences of
 non-dual consciousness occur far more commonly (a meditation
-breakthrough, a mystical-experience peak), but **state ≠ stage**. White
+breakthrough, a mystical-experience peak), but **state ≠ stage**. Turquoise
 as a stage is the *trait-level installation* of what others have
 accessed only as states.
 
@@ -36,18 +36,18 @@ worked on directly; it is the *result* of all other work. *"Manifested
 by a sense of the consecrate or hallowed nature of everyday creations
 and activities."*
 
-The White world is **light, breath, the transparent everyday, the
+The Turquoise world is **light, breath, the transparent everyday, the
 vast and the intimate at once**. There is no architecture distinct
 from landscape; landscape is recognised as architecture for
 consciousness.
 
-## 3. The eight lines AT White
+## 3. The eight lines AT Turquoise
 
-At White, every line is in *non-dual expression*. The eight-line
+At Turquoise, every line is in *non-dual expression*. The eight-line
 architecture remains valid (a useful map of the integration), but the
 felt sense is of *one capacity* expressing through eight facets.
 
-| Line | What it looks like at White |
+| Line | What it looks like at Turquoise |
 |---|---|
 | Cognitive | Trans-rational — direct knowing that doesn't require conceptual mediation. n=5 occasional; "still mind" combat states; cognitive load *with* spaciousness. The mind is *transparent*. |
 | Emotional | Equanimity — affect is luminous, not gripping. Compassion without effort. The emotional field is felt as energy, not as crisis. |
@@ -58,12 +58,12 @@ felt sense is of *one capacity* expressing through eight facets.
 | Willpower | Effortless will — alignment with the cosmos. Goal arises spontaneously and executes itself; *thy will be done*. |
 | Interpersonal | Non-dual others — no fixed boundary self/other. *Communion*; merged action. Available only in multiplayer. |
 
-The line that *carries the player* through White: all of them, equally
-and indistinguishably. The radial chart at White is full and *quiet*.
+The line that *carries the player* through Turquoise: all of them, equally
+and indistinguishably. The radial chart at Turquoise is full and *quiet*.
 
 ## 4. AQAL quadrant snapshots
 
-| Quadrant | At White |
+| Quadrant | At Turquoise |
 |---|---|
 | **UL** Individual Interior | Awareness aware of itself; the felt-sense of *being* without object; clear-light awareness. |
 | **UR** Individual Exterior | Effortless action — what is done is done in time, but not from grasping. |
@@ -75,7 +75,7 @@ and indistinguishably. The radial chart at White is full and *quiet*.
 ### 5.1 Visual language
 
 - **Palette anchor:** pearl / opalescent (Violet-Ray); secondary
-  violet, gold, white, all colours present in muted harmony.
+  violet, gold, turquoise, all colours present in muted harmony.
 - **Motifs:** light itself, breath, water, sky, the open horizon, the
   unmade — minimal architectural intervention.
 - **Lighting:** soft, omnipresent, *sourceless*. The world appears
@@ -108,9 +108,9 @@ and indistinguishably. The radial chart at White is full and *quiet*.
 - **Ally:** anyone, including the formerly-defeated bosses, who
   *return* in this world transformed; communion with all.
 
-## 6. Encounter archetypes at White
+## 6. Encounter archetypes at Turquoise
 
-The Bestiary at White is *minimal*. White content is mostly
+The Bestiary at Turquoise is *minimal*. Turquoise content is mostly
 contemplative, ceremonial, and structurally un-confrontational. There
 are very few "enemies" — instead there are *teachers*, *mirrors*, and
 *moments*.
@@ -130,8 +130,8 @@ are very few "enemies" — instead there are *teachers*, *mirrors*, and
 
 ### 6.2 Cross-line encounters concepts
 
-White has effectively no mini-bosses; the dual-task structure of
-mini-bosses presupposes interference between lines, which at White is
+Turquoise has effectively no mini-bosses; the dual-task structure of
+mini-bosses presupposes interference between lines, which at Turquoise is
 no longer the operating mode. Where mini-boss-style content appears,
 it is in the form of **teaching encounters** — moments that *test
 integration* by removing supports the player relies on, and watching
@@ -168,25 +168,25 @@ the game's primary arc completes.
 
 ### 6.4 Shadow concept
 
-White has no traditional shadow. What appears as shadow at White is
+Turquoise has no traditional shadow. What appears as shadow at Turquoise is
 **the residue of grasping** — small persistent contractions in any
 of the eight lines. The encounters that surface them are not boss
 fights but *brief crystalline moments* — the player feels the
 contraction, names it, and lets it pass. Each contraction released
 brightens a spoke of the chart by a perceptible amount.
 
-If a player tries to *grind* White content, the contractions
-*increase*. White is the only stage where grinding is
+If a player tries to *grind* Turquoise content, the contractions
+*increase*. Turquoise is the only stage where grinding is
 counter-productive *by design* and *visibly so*.
 
 ## 7. Stage advancement criteria
 
-White does not advance to a further stage in the eight-stage canon.
+Turquoise does not advance to a further stage in the eight-stage canon.
 Optional fourth-density / harvest content (per the Law-of-One
 correspondence in `foundations/06`) sits past it — purely as
 *scripted endings*, not as further mechanical stages.
 
-What the player does at White:
+What the player does at Turquoise:
 
 1. Returns to earlier stages as **mentor figures** — NPC roles in
    other players' worlds (multiplayer); shadow-encounter teachers in
@@ -207,18 +207,18 @@ The game ends with the player's own words.
   representation; trust silence and absence; let the player project
   their own meaning.
 - **End-game retention.** Most games keep players engaged with
-  loops. Mysterium's White stage has *no loop*. This is honest but
+  loops. Mysterium's Teal stage (L8) has *no loop*. This is honest but
   commercially unusual. The implicit return path is to mentor others
   (multiplayer) or to start a new character with different drive
   weights.
 - **Optional harvest content.** If the user promotes the Law-of-One
   layer to canon, fourth-density harvest content adds an open-ended
-  post-White expansion — players become *teachers in the world*. Open
-  decision; not in MVP.
+  post-closure expansion (the Violet event, 16 §11.6) — players become
+  *teachers in the world*. Reserved territory; not in MVP.
 
 ## 9. Principles served
 
 Principles **1, 4, 5, 6** — the developmental arc rounded into
 non-dual completion, earned through a long road, rendered with
-ascetic minimalism, with explicit honesty that "in-game White" is a
+ascetic minimalism, with explicit honesty that "in-game Turquoise" is a
 *finger pointing*, not the moon.

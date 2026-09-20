@@ -66,7 +66,7 @@ Guilds, orders, institutions, factions, academies, temples, corporations. Organi
 
 ### 2.5 Cultural holons
 
-Traditions, religions, languages, art movements, philosophical schools. Cultural holons are the **intersubjective fabric** — the shared meaning-systems that shape how individuals interpret experience. They are LL-quadrant at scale. A cultural holon at Amber altitude produces dogmatic certainty; at Green altitude, pluralistic tolerance; at Turquoise, integral embrace.
+Traditions, religions, languages, art movements, philosophical schools. Cultural holons are the **intersubjective fabric** — the shared meaning-systems that shape how individuals interpret experience. They are LL-quadrant at scale. A cultural holon at Amber altitude produces dogmatic certainty; at Green altitude, pluralistic tolerance; at Teal, integral embrace.
 
 ### 2.6 Geopolitical holons
 
@@ -108,8 +108,8 @@ The Great Way is structured along six collective dimensions drawn from the PESTL
 | Amber | Theocratic monarchy; divine-right rule; codified hierarchy |
 | Orange | Democratic republics; meritocratic bureaucracy; separation of powers |
 | Green | Participatory democracy; consensus governance; distributed authority |
-| Turquoise | Holarchic governance; nested sovereignty; integral politics |
-| White | Governance dissolves into spontaneous coordination |
+| Teal | Holarchic governance; nested sovereignty; integral politics |
+| Turquoise | Governance dissolves into spontaneous coordination |
 
 ### 3.2 Economic dimension
 
@@ -125,8 +125,8 @@ The Great Way is structured along six collective dimensions drawn from the PESTL
 | Amber | Feudal economy; tithing; guild monopolies; fixed roles |
 | Orange | Free markets; rational investment; meritocratic wealth |
 | Green | Cooperative economics; fair trade; commons stewardship |
-| Turquoise | Integral economics; regenerative systems; holonic value |
-| White | Post-scarcity; economy as art |
+| Teal | Integral economics; regenerative systems; holonic value |
+| Turquoise | Post-scarcity; economy as art |
 
 ### 3.3 Social dimension
 
@@ -142,8 +142,8 @@ The Great Way is structured along six collective dimensions drawn from the PESTL
 | Amber | Caste/class; religious community; conformity; shame/honour |
 | Orange | Individual achievement; social mobility; networking |
 | Green | Inclusive community; identity politics; sensitivity norms |
-| Turquoise | Integral community; developmental diversity honoured |
-| White | Universal kinship; no in-group/out-group |
+| Teal | Integral community; developmental diversity honoured |
+| Turquoise | Universal kinship; no in-group/out-group |
 
 ### 3.4 Technological dimension
 
@@ -159,8 +159,8 @@ The Great Way is structured along six collective dimensions drawn from the PESTL
 | Amber | Architecture; writing; irrigation; roads |
 | Orange | Machinery; printing; computation; empirical method |
 | Green | Networks; renewable energy; communication platforms |
-| Turquoise | Integral technology; consciousness-tech; AI as partner |
-| White | Technology indistinguishable from awareness |
+| Teal | Integral technology; consciousness-tech; AI as partner |
+| Turquoise | Technology indistinguishable from awareness |
 
 ### 3.5 Legal dimension
 
@@ -176,8 +176,8 @@ The Great Way is structured along six collective dimensions drawn from the PESTL
 | Amber | Divine law; scripture-as-code; inquisition; rigid justice |
 | Orange | Constitutional law; rights-based; due process; contract |
 | Green | Restorative justice; rights expansion; consent-based |
-| Turquoise | Integral jurisprudence; developmental-stage-sensitive law |
-| White | Law dissolves into spontaneous ethics |
+| Teal | Integral jurisprudence; developmental-stage-sensitive law |
+| Turquoise | Law dissolves into spontaneous ethics |
 
 ### 3.6 Environmental dimension
 
@@ -193,8 +193,8 @@ The Great Way is structured along six collective dimensions drawn from the PESTL
 | Amber | Cultivated land; sacred groves; walled gardens |
 | Orange | Industrialised landscape; nature as raw material |
 | Green | Restored ecology; nature as partner; permaculture |
-| Turquoise | Integral ecology; Gaia-as-holon; regenerative design |
-| White | Landscape of pure awareness; nature as self |
+| Teal | Integral ecology; Gaia-as-holon; regenerative design |
+| Turquoise | Landscape of pure awareness; nature as self |
 
 ### 3.7 PESTLE as encounter-generation substrate
 
@@ -218,7 +218,7 @@ The world's macro-state is the aggregate of all Significators within it. In sing
 
 ### 4.3 The mirror is not instant
 
-The world does not snap to match the player's current altitude. It has **inertia**. Organisations resist change. Cultural holons shift slowly. Geopolitical holons shift glacially. This inertia is itself catalyst — the frustration of living in a world that has not yet caught up to one's own development is a core developmental experience (the Green individual in an Amber institution; the Turquoise thinker in an Orange society).
+The world does not snap to match the player's current altitude. It has **inertia**. Organisations resist change. Cultural holons shift slowly. Geopolitical holons shift glacially. This inertia is itself catalyst — the frustration of living in a world that has not yet caught up to one's own development is a core developmental experience (the Green individual in an Amber institution; the Teal thinker in an Orange society).
 
 ### 4.4 The mirror is not perfect
 
@@ -237,9 +237,9 @@ The eight stage-layers of the Great Way are **not** separate universes, parallel
 As the Significator develops through stages, new strata become perceptible. Mechanically, this means:
 
 - **Encounter eligibility:** The player can only encounter content coded at or below their current developmental ceiling. A player at Amber altitude cannot trigger Orange-coded encounters — they literally cannot perceive the conditions that would generate them.
-- **NPC visibility shifts:** NPCs operating at higher altitudes than the player appear as **mysterious**, **incomprehensible**, or **invisible** (depending on the altitude gap). A Turquoise-altitude sage appears to a Red-altitude player as a madman or a nobody. The same sage appears to a Green-altitude player as a profound teacher.
-- **Environmental rendering:** The world's aesthetic shifts as perception deepens. The same physical location renders differently at different altitudes — a forest is threatening at Infrared, enchanted at Magenta, a resource at Red, sacred at Amber, an ecosystem at Orange, a community at Green, a holon at Turquoise, awareness itself at White.
-- **PESTLE legibility:** Higher-altitude players perceive more PESTLE dimensions simultaneously. A Red-altitude player sees only power dynamics (Political) and resources (Economic). An Orange-altitude player additionally perceives systemic structures (Legal, Technological). A Turquoise-altitude player perceives all six dimensions as an integrated holonic field.
+- **NPC visibility shifts:** NPCs operating at higher altitudes than the player appear as **mysterious**, **incomprehensible**, or **invisible** (depending on the altitude gap). A Teal-altitude sage appears to a Red-altitude player as a madman or a nobody. The same sage appears to a Green-altitude player as a profound teacher.
+- **Environmental rendering:** The world's aesthetic shifts as perception deepens. The same physical location renders differently at different altitudes — a forest is threatening at Infrared, enchanted at Magenta, a resource at Red, sacred at Amber, an ecosystem at Orange, a community at Green, a holon at Teal, awareness itself at Turquoise.
+- **PESTLE legibility:** Higher-altitude players perceive more PESTLE dimensions simultaneously. A Red-altitude player sees only power dynamics (Political) and resources (Economic). An Orange-altitude player additionally perceives systemic structures (Legal, Technological). A Teal-altitude player perceives all six dimensions as an integrated holonic field.
 
 ### 5.3 The strata are not gated — they are earned
 
@@ -334,7 +334,7 @@ Player choices propagate through the holonic hierarchy:
 The player's ripple effect is **proportional to their demonstrated altitude and the scope of their action**:
 
 - A Red-altitude player can shift individual and dyadic holons but has minimal impact on organisational or geopolitical holons
-- A Turquoise-altitude player's choices ripple through all holon levels
+- A Teal-altitude player's choices ripple through all holon levels
 - No single choice produces instant macro-transformation — the world has inertia (§4.3)
 - Choices have **unintended consequences** — the world is complex, and ripples interact with other holons' trajectories in non-linear ways
 

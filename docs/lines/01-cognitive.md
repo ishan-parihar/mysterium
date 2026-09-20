@@ -42,7 +42,7 @@ Mysterium's working definition:
 | Planning | Tower of London / Hanoi | rostral PFC (BA 10) |
 | Reasoning | Raven's Advanced Progressive Matrices | FPCN as a whole |
 | Sustained attention | Continuous Performance Test | DAN + cingulo-opercular |
-| Processing speed | Choice RT, digit-symbol substitution | white-matter integrity, basal-ganglia |
+| Processing speed | Choice RT, digit-symbol substitution | turquoise-matter integrity, basal-ganglia |
 
 Every Mysterium cognitive combat verb has a 1:1 mapping into one of these
 laboratory tasks (`combat/02-cognitive-task-library.md`).
@@ -64,8 +64,8 @@ for interference detection; basal ganglia for set-switching. See
 | **Amber** | Concrete operational; rule-following | n=2 stable; combo length 3; WCST present but rare; sigil-tracing (Corsi) length 3 |
 | **Orange** | Formal operational; hypothetical-deductive | n=3; combo length 4–5; ToL state-spaces of 4 disks; first dual-task |
 | **Green** | Late formal / early post-formal; multi-perspective | n=3–4; complex span; rapid task-switching; 4-perspective dilemmas |
-| **Turquoise** | Post-formal vision-logic | n=4; meta-WCST (rules-about-rules); recursive ToL |
-| **White** | Trans-rational | n=5 rare; "still mind" combat states; cognitive load with spaciousness |
+| **Teal** | Post-formal vision-logic | n=4; meta-WCST (rules-about-rules); recursive ToL |
+| **Turquoise** | Trans-rational | n=5 rare; "still mind" combat states; cognitive load with spaciousness |
 
 ### 3.1 Per-stage cognitive task profile (defaults)
 
@@ -80,8 +80,8 @@ self-contained:
 | Amber | n=2 | 800 | low | 3 |
 | Orange | n=3 | 700 | moderate | 4 |
 | Green | n=3–4 | 600 | high | 4–5 |
-| Turquoise | n=4 | 500 | very high | 5 |
-| White | n=5 | 400 | continuous | 5+ |
+| Teal | n=4 | 500 | very high | 5 |
+| Turquoise | n=5 | 400 | continuous | 5+ |
 
 ## 4. Game-design mapping
 
@@ -128,10 +128,10 @@ in-game pace:
 - Magenta n=1 → Red n=2: ~3 hours of focused play
 - Red n=2 → Orange n=3: ~10 hours
 - Orange n=3 → Green n=3.5: ~25 hours (the first plateau)
-- Green → Turquoise n=4: requires accompanying intrapersonal /
+- Green → Teal n=4: requires accompanying intrapersonal /
   meta-cognitive growth; usually a *waiting* stage for the cognitive
   line as other lines catch up
-- Turquoise → White: very slow, deliberately
+- Teal → Turquoise: very slow, deliberately
 
 Note the asymptote: cognitive line does *not* pull ahead indefinitely —
 the line-ceiling rules in `lines/00` keep it within +1 of the
@@ -149,8 +149,8 @@ synthesised stage.
 | Amber | "Ledger-Sergeant" — sigil-locked, breaks only on Corsi sequence | Corsi length-3 |
 | Orange | "Loom-Weaver" — projects rule-trees the player must complete | ToL 4-disk |
 | Green | "Mirror-Sophist" — multiple aspects, switching tasks | Task-switching |
-| Turquoise | "Recursion-Wraith" — meta-rule changes mid-encounter | meta-WCST |
-| White | "Witness-Echo" — task is to *not* react (paradox) | Sustained inhibition + meta |
+| Teal | "Recursion-Wraith" — meta-rule changes mid-encounter | meta-WCST |
+| Turquoise | "Witness-Echo" — task is to *not* react (paradox) | Sustained inhibition + meta |
 
 ### 5.2 Cross-line encounters archetypes (cognitive-line dual-task pairs)
 
@@ -204,7 +204,7 @@ is computed as a weighted aggregate over the staircases.
   (crystallised — vocabulary, world knowledge) is unaddressed. Should
   there be a "lore mastery" sub-line? It would let older players show
   developmental gains the FPCN tasks miss.
-- **n-back ceiling at White.** n=5 is rare; even highly-trained subjects
+- **n-back ceiling at Turquoise.** n=5 is rare; even highly-trained subjects
   rarely sustain it. We should be cautious about staircase pressure
   pushing players into uncomfortable territory; the anti-frustration
   backstop must catch this.

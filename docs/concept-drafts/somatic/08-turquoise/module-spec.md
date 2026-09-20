@@ -1,17 +1,17 @@
-# Somatic / White — Module Specification
+# Somatic / Turquoise — Module Specification
 
 ## 1. Module Identity
 
 - **Line:** Somatic (body-intelligence, movement, rhythm, breath)
-- **Stage:** White (super-integral / non-dual / harvest)
+- **Stage:** Turquoise (super-integral / non-dual / harvest)
 - **Ray:** Violet
 - **Core capacity:** Luminous body — effortless action; body as transparent energy rather than grasped form
-- **Below (Turquoise):** Integrated body — body-mind-emotion unity, compound stances, effort-rest cycling
+- **Below (Teal):** Integrated body — body-mind-emotion unity, compound stances, effort-rest cycling
 - **Above:** None (final stage)
 
 ## 2. Shadow Model — Residual Grasping Patterns
 
-White does NOT use the standard 4-quadrant shadow model. Shadows at White are residual grasping patterns — subtle remnants of identification that prevent full transparency.
+Turquoise does NOT use the standard 4-quadrant shadow model. Shadows at Turquoise are residual grasping patterns — subtle remnants of identification that prevent full transparency.
 
 - **2.1 Residual Grasping-at-Body:** Still identifies with physical form; grasps at somatic experience; cannot let the body be transparent to awareness
 - **2.2 Residual Aversion-to-Body:** Still avoids certain body-states; somatic blind spots persist; residual dissociation from embodiment
@@ -20,7 +20,7 @@ White does NOT use the standard 4-quadrant shadow model. Shadows at White are re
 
 ## 3. Drive Model — Equanimous Expression
 
-At White, drives (Eros, Agape, Agency, Communion) are in equanimous expression. The game does not measure drive strength but detects residual imbalance:
+At Turquoise, drives (Eros, Agape, Agency, Communion) are in equanimous expression. The game does not measure drive strength but detects residual imbalance:
 
 - **Residual Eros-bias:** Subtle striving toward higher somatic states
 - **Residual Agape-bias:** Subtle clinging to lower somatic comfort
@@ -36,7 +36,7 @@ At White, drives (Eros, Agape, Agency, Communion) are in equanimous expression. 
 | 3 | The Effortless Performer | Somatic × Intrapersonal | Residual somatic bypassing + self-grasping = performs non-grasping |
 | 4 | The Body-Identified | Somatic × Interpersonal | Residual body-identity + relational-grasping = subtle separation through body |
 
-## 5. Somatic Tasks at White
+## 5. Somatic Tasks at Turquoise
 
 - **Effortless action:** Complex movement without strain or deliberation
 - **Non-grasping movement:** Movement arising and dissolving without holding

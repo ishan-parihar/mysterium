@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Willpower × White |
+| Module | Willpower × Turquoise |
 | Modality | Embodied-Somatic |
 | Unique Lateral | Body as site of effortless will — physical action without strain, embodied surrender |
 | Core Mechanic | Movement sequences where the body reveals whether will is transparent or still grasping |

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Intrapersonal / White |
+| Module | Intrapersonal / Turquoise |
 | Modality | Language-Reflective |
 | Unique lateral | Verbal articulation of non-dual self — how the player talks about self reveals residual grasping |
 

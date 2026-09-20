@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Spiritual / White |
+| Module | Spiritual / Turquoise |
 | Modality | Strategic-Planning |
 | Probe axis | The paradox of structuring spiritual life when being IS practice |
 | Core mechanic | Planning tasks that reveal whether player can hold structure without grasping or anti-structure without aversion |

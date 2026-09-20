@@ -21,7 +21,7 @@
 - Self-examination ("Why do I do this?") — requires Orange reflective capacity
 - Multi-self awareness ("Part of me wants X") — requires Green
 - Identity flexibility ("I could be different") — requires Orange+
-- Developmental self-awareness ("I'm growing") — requires Turquoise
+- Developmental self-awareness ("I'm growing") — requires Teal
 - Honest self-report on uncomfortable truths — requires Amber+ (conformist honesty) or Orange (reflective honesty)
 
 ### The Intrapersonal/Red paradox

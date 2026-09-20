@@ -1,4 +1,4 @@
-# Spiritual / Turquoise — Social-Cooperative
+# Spiritual / Teal — Social-Cooperative
 
 ## 1. Core Mechanic
 

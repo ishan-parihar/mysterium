@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Spiritual / White |
+| Module | Spiritual / Turquoise |
 | Modality | Language-Reflective |
 | Probe axis | How player talks about the sacred reveals residual grasping |
 | Core mechanic | LLM-scored verbal/written expression analyzed for non-dual markers |

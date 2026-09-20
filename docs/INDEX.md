@@ -129,8 +129,8 @@
 - `04-amber-mythic.md`
 - `05-orange-rational.md`
 - `06-green-pluralistic.md`
-- `07-turquoise-integral.md`
-- `08-white-superintegral.md`
+- `07-teal-integral.md`
+- `08-turquoise-superintegral.md`
 
 ### Architecture (9)
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Interpersonal / White |
+| Module | Interpersonal / Turquoise |
 | Modality | Strategic-Planning |
 | Unique Lateral | Planning within non-dual relating — the paradox of structuring relationships without grasping |
 | Core Mechanic | Relational-field coordination tasks requiring foresight without fixation |

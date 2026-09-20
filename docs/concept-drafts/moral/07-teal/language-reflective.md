@@ -1,4 +1,4 @@
-# Moral / Turquoise — Language-Reflective
+# Moral / Teal — Language-Reflective
 
 ## 1. Game Identity
 
@@ -14,7 +14,7 @@
 **The Integral Ethics Dialogue:** Player engages in written moral reasoning about holonic dilemmas. The LLM evaluates not WHAT position is taken but HOW the reasoning is structured.
 
 - **Holonic Articulation Prompts:** "Explain why you would prioritise X over Y in this scenario." Rubric scores for: genuine depth-span reasoning vs. memorised integral jargon, acknowledgement of partial truths in lower stages, willingness to name developmental hierarchy without condescension.
-- **Framework Translation:** Player must articulate the same moral position from multiple developmental perspectives (Red, Amber, Orange, Green, Turquoise) — demonstrating genuine understanding of each stage's moral logic, not caricature.
+- **Framework Translation:** Player must articulate the same moral position from multiple developmental perspectives (Red, Amber, Orange, Green, Teal) — demonstrating genuine understanding of each stage's moral logic, not caricature.
 - **Moral Autobiography:** Player narrates their own ethical development — where they've been, what they've integrated, what remains partial. Scored for honesty, developmental accuracy, and absence of spiritual bypassing.
 - **Kosmocentric Edge Prompts:** "When would you release holonic ranking?" — responses reveal whether player can articulate the limit of integral ethics without collapsing into pre-rational relativism.
 

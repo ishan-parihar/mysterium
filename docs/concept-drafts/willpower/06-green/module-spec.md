@@ -20,7 +20,7 @@ Refuses collaborative will entirely. Remains in Orange individual achievement mo
 
 ### 2.3 Golden-Addiction: The Premature Surrenderer
 
-Performs Turquoise "surrender to the whole" without having genuinely developed Green collaborative will. Claims "I serve the universe" while unable to commit authentically to one community. Bypasses the hard work of pluralistic negotiation by leaping to transpersonal abstraction.
+Performs Teal "surrender to the whole" without having genuinely developed Green collaborative will. Claims "I serve the universe" while unable to commit authentically to one community. Bypasses the hard work of pluralistic negotiation by leaping to transpersonal abstraction.
 
 ### 2.4 Golden-Allergy: The Pluralist Fortress
 

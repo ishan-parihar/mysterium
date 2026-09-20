@@ -285,7 +285,7 @@ When the engine needs to assess a player at (line, stage):
 | Negotiation scenarios (find mutual benefit) | Conflict resolution, communion | Interpersonal, Moral |
 | Teaching tasks (explain to NPC) | Communication, communion | Interpersonal, Cognitive |
 | Trust games (share resources with NPC) | Trust, risk assessment, communion | Interpersonal, Willpower |
-| Recursive prediction (NPC adapts to you) | Meta-cognition, recursive ToM | Interpersonal (Turquoise+) |
+| Recursive prediction (NPC adapts to you) | Meta-cognition, recursive ToM | Interpersonal (Teal+) |
 
 ### 6.7 Immersive RPG Games
 

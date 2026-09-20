@@ -1,4 +1,4 @@
-# Cognitive / White — Language-Reflective Game
+# Cognitive / Turquoise — Language-Reflective Game
 
 > **Modality:** Language-Reflective (LLM-powered verbal assessment)  
 > **Unique lateral:** How the player talks about knowing reveals residual grasping. Language is the fingerprint of the mind's relationship to its own cognition.
@@ -40,7 +40,7 @@ Linguistic markers: persistent first-person ownership ("I saw," "my insight"), i
 - **Agency residue:** Language centers the self as agent — "I grasped it," "I penetrated the pattern."
 - **Communion residue:** Language dissolves self into collective — "we all know this," "it's obvious" — avoiding sovereignty of individual knowing.
 
-Healthy White: language is precise, impersonal, and alive. Neither claiming nor disclaiming.
+Healthy Turquoise: language is precise, impersonal, and alive. Neither claiming nor disclaiming.
 
 ## 4. Progression Arc
 

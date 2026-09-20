@@ -225,8 +225,8 @@ All outputs from 4.1–4.6 composed into a fixed template:
 | Amber | Formal, duty-words | Structured, subordinate | Order, tradition, loyalty | Questioning authority |
 | Orange | Precise, analytical | Complex, logical | Reason, merit, evidence | Dogma, sentiment |
 | Green | Inclusive, feeling-words | Empathic, parenthetical | Sensitivity, equality | Hierarchy, exclusion |
-| Turquoise | Integral, paradox-holding | Multi-layered, both/and | Wholeness, emergence | Reductionism, either/or |
-| White | Minimal, spacious | Sparse, koan-like | Presence, release | Grasping, identity-claims |
+| Teal | Integral, paradox-holding | Multi-layered, both/and | Wholeness, emergence | Reductionism, either/or |
+| Turquoise | Minimal, spacious | Sparse, koan-like | Presence, release | Grasping, identity-claims |
 
 ### 5.2 Line register specifications
 
@@ -253,7 +253,7 @@ All outputs from 4.1–4.6 composed into a fixed template:
 ### 5.4 Example frequency tuples
 
 - **Cognitive × Red × Deterministic:** Sharp, competitive, immediate. "Beat this. Faster. Again."
-- **Spiritual × Turquoise × Language-Reflective:** Spacious, paradox-holding. "What holds together when all frames dissolve?"
+- **Spiritual × Teal × Language-Reflective:** Spacious, paradox-holding. "What holds together when all frames dissolve?"
 - **Moral × Orange × Scenario-Choice:** Precise, principled. Competing rights-claims with consequence-chains.
 
 ---

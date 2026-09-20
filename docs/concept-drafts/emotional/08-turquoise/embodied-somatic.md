@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Emotional / White
+- **Module:** Emotional / Turquoise
 - **Modality:** Embodied-Somatic
 - **Unique Lateral:** Body as site of luminous affect — embodied equanimity, physical non-grasping at feeling
 - **What this measures that no other modality measures:** Whether equanimity is genuinely embodied or only cognitive — does the body grasp, brace, or contract around emotional stimuli, or does it remain open and transparent?

@@ -1,4 +1,4 @@
-# Spiritual / Turquoise — Deterministic
+# Spiritual / Teal — Deterministic
 
 ## 1. Core Mechanic
 

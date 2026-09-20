@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Interpersonal / White |
+| Module | Interpersonal / Turquoise |
 | Modality | Scenario-Choice |
 | Unique Lateral | Non-dual relational dilemmas — situations requiring communion without fusion |
 | Core Mechanic | Branching relational scenarios where no choice preserves a fixed self/other boundary |

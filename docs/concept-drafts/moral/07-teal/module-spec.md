@@ -1,21 +1,21 @@
-# Moral / Turquoise — Module Spec
+# Moral / Teal — Module Spec
 
 ## 1. Module Identity
 
 | Field | Value |
 |---|---|
 | Line | Moral |
-| Stage | 7 — Turquoise / Integral |
+| Stage | 7 — Teal / Integral |
 | Ray | Indigo |
 | Core capacity | Holonic ethics — protecting the most depth for the most span |
 | Below | Green moral: contextual ethics, care-justice integration, moral pluralism |
-| Above | White moral: kosmocentric all-sentient ethics, compassion without object |
+| Above | Turquoise moral: kosmocentric all-sentient ethics, compassion without object |
 
 ## 2. Drive Model
 
 | Drive | Healthy expression | Pathological expression |
 |---|---|---|
-| Eros | Reaches toward kosmocentric ethics; yearns for moral transcendence | Golden-Addiction: performs White compassion without integral mastery |
+| Eros | Reaches toward kosmocentric ethics; yearns for moral transcendence | Golden-Addiction: performs Turquoise compassion without integral mastery |
 | Agape | Integrates Green contextual ethics into holonic framework; honours partial truths | Dark-Addiction: endlessly maps ethical hierarchies, avoids moral action |
 | Agency | Executes holonic harm-trade-offs with precision and courage | Golden-Allergy: refuses kosmocentric opening, clings to integral structure |
 | Communion | Mentors across developmental altitudes; shares integral moral reasoning | Dark-Allergy: refuses integral ethics, remains in Green pluralism |
@@ -26,7 +26,7 @@
 |---|---|---|
 | Dark-Addiction | The Ethical Architect | Addicted to holonic frameworks; maps moral hierarchies compulsively; uses integral ethics to avoid direct moral action |
 | Dark-Allergy | The Contextual Pluralist | Refuses integral ethics; stays in Green contextual morality; 'no framework is better than another' |
-| Golden-Addiction | The Premature Compassionist | Performs White kosmocentric ethics without genuine integral mastery; claims 'all is compassion' while unable to execute holonic trade-offs |
+| Golden-Addiction | The Premature Compassionist | Performs Turquoise kosmocentric ethics without genuine integral mastery; claims 'all is compassion' while unable to execute holonic trade-offs |
 | Golden-Allergy | The Integral Ethics Fortress | Holonic ethics present but refuses kosmocentric opening; terrified of losing moral structure; ranks all ethics but will not transcend ranking |
 
 ## 4. Compound Shadows

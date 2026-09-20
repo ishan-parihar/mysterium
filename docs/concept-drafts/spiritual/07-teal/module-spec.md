@@ -1,13 +1,13 @@
-# Spiritual / Turquoise — Module Specification
+# Spiritual / Teal — Module Specification
 
 ## 1. Module Identity
 
 - **Line:** Spiritual
-- **Stage:** Turquoise (7 — Integral / Vision-Logic)
+- **Stage:** Teal (7 — Integral / Vision-Logic)
 - **Ray:** Indigo
 - **Core capacity:** Integral spirituality — all paths as facets of one architecture; cross-tradition synthesis; the sacred IS the whole pattern
 - **Below (Green):** Pluralistic faith — multiple paths held as equally valid, interfaith appreciation without hierarchy
-- **Above (White):** Non-dual — surrender of grasping, pathless path, full mana, no doctrine remains
+- **Above (Turquoise):** Non-dual — surrender of grasping, pathless path, full mana, no doctrine remains
 
 ## 2. Drive Model at This Module
 
@@ -24,7 +24,7 @@
 |---|---|---|
 | **Dark-Addiction (DA)** | The Spiritual Architect | Addicted to integral frameworks; maps traditions endlessly; uses meta-awareness to avoid direct sacred experience |
 | **Dark-Allergy (DAll)** | The Interfaith Pluralist | Refuses integral hierarchy; stays in Green appreciation; "no tradition is more true than another" |
-| **Golden-Addiction (GA)** | The Premature Non-Dualist | Performs White non-dual spirituality without genuine integral mastery; claims "all is one" without synthesis capacity |
+| **Golden-Addiction (GA)** | The Premature Non-Dualist | Performs Turquoise non-dual spirituality without genuine integral mastery; claims "all is one" without synthesis capacity |
 | **Golden-Allergy (GAll)** | The Integral Spiritual Fortress | Integral spirituality present but refuses non-dual opening; terrified of losing the map |
 
 ## 4. Compound Shadows

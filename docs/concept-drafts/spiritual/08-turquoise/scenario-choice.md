@@ -2,14 +2,14 @@
 
 | Field | Value |
 |---|---|
-| Module | Spiritual / White |
+| Module | Spiritual / Turquoise |
 | Modality | Scenario-Choice |
 | Probe axis | Non-dual dilemmas requiring presence without preference |
 | Core mechanic | Branching scenarios where all options are equally valid; choice pattern reveals residual grasping |
 
 ## 2. Diagnostic Target
 
-At White, the healthy response to a spiritual dilemma is presence without preference — not indifference, but genuine equanimity. This modality presents situations where any choice is valid, and the PATTERN of choices across many scenarios reveals residual grasping.
+At Turquoise, the healthy response to a spiritual dilemma is presence without preference — not indifference, but genuine equanimity. This modality presents situations where any choice is valid, and the PATTERN of choices across many scenarios reveals residual grasping.
 
 ## 3. Scenario Categories
 

@@ -1,4 +1,4 @@
-# Cognitive / White — Scenario-Choice Game
+# Cognitive / Turquoise — Scenario-Choice Game
 
 > **Modality:** Scenario-Choice (branching dilemmas)  
 > **Unique lateral:** Non-dual cognitive dilemmas — situations where deliberation fails and only direct knowing resolves. The choice reveals whether the player operates from transparent cognition or residual grasping.
@@ -40,7 +40,7 @@ Detected when: responses consistently position a knower — "I would..." rather 
 - **Agency residue:** Choices consistently favor individual action over non-action or receptivity.
 - **Communion residue:** Choices consistently favor dissolution into collective over sovereign response.
 
-Healthy White: choices arise from the scenario itself, not from drive-pattern. No systematic bias.
+Healthy Turquoise: choices arise from the scenario itself, not from drive-pattern. No systematic bias.
 
 ## 4. Progression Arc
 

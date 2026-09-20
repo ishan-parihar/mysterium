@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Willpower × White |
+| Module | Willpower × Turquoise |
 | Modality | Social-Cooperative |
 | Unique Lateral | Shared effortless will — communion in action, non-grasping collaboration |
 | Core Mechanic | Cooperative tasks where the system measures whether shared action arises without control or submission |

@@ -1,4 +1,4 @@
-# Interpersonal × Turquoise — Embodied-Somatic
+# Interpersonal × Teal — Embodied-Somatic
 
 ## 1. Core Mechanic
 

@@ -1,10 +1,10 @@
-# Somatic / White — Strategic-Planning Game
+# Somatic / Turquoise — Strategic-Planning Game
 
 ## 1. Core Mechanic
 
-Planning within effortless action — the paradox of strategy at White is that genuine planning dissolves into spontaneous arising. The game presents movement-sequences that COULD be planned but measures whether the player pre-plans (grasping) or allows action to arise moment-by-moment.
+Planning within effortless action — the paradox of strategy at Turquoise is that genuine planning dissolves into spontaneous arising. The game presents movement-sequences that COULD be planned but measures whether the player pre-plans (grasping) or allows action to arise moment-by-moment.
 
-The game shows upcoming movement demands. The player can prepare — or not. Measurement: does preparation improve or degrade movement quality? At White, genuine effortless action means the body responds optimally WITHOUT deliberate sequencing. Planning itself becomes the shadow.
+The game shows upcoming movement demands. The player can prepare — or not. Measurement: does preparation improve or degrade movement quality? At Turquoise, genuine effortless action means the body responds optimally WITHOUT deliberate sequencing. Planning itself becomes the shadow.
 
 ## 2. Shadow Detection
 

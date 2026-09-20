@@ -67,8 +67,8 @@ insula and cingulate. See `foundations/07`.
 | Amber | Mythic-membership faith — "the one true way" | Choose a tradition; tradition gives buffs and constraints |
 | Orange | Rational-questioning faith — universal principles | Choose a value-principle; principle becomes vow-like buff |
 | Green | Pluralistic faith — multiple paths, equal validity | Hold multiple paths; tradition flex |
-| Turquoise | Integral spirituality — paths as facets of one architecture | Compose paths; cross-tradition synthesis |
-| White | Non-dual; surrender of grasping | "No path" stance; full mana, no doctrine |
+| Teal | Integral spirituality — paths as facets of one architecture | Compose paths; cross-tradition synthesis |
+| Turquoise | Non-dual; surrender of grasping | "No path" stance; full mana, no doctrine |
 
 ## 4. Game-design mapping
 
@@ -87,8 +87,8 @@ comes from the *hierarchy of what matters now*.
 | Sanctify Ground | Locality of value | Mark a tile sacred — bonus when defending it; cannot retreat | Amber+ |
 | Hold the Vow | Value-coherence under temptation | Sustained refusal of off-value reward | Orange+ |
 | Cross-Path Synthesis | Compose two traditions' buffs | Combine; risk of dilution if traditions conflict | Green+ |
-| Surrender | Convert defeat into unmaking | Voluntary fall to a held value; ally-revive on next turn | Turquoise+ |
-| Pathless Path | All abilities unlocked, all paths active, no hierarchy | Highest tier; rare, scripted | White |
+| Surrender | Convert defeat into unmaking | Voluntary fall to a held value; ally-revive on next turn | Teal+ |
+| Pathless Path | All abilities unlocked, all paths active, no hierarchy | Highest tier; rare, scripted | Turquoise |
 
 ### 4.3 Module parameters(s) backed
 
@@ -123,8 +123,8 @@ under temptation* in main-boss synthesis exams.
 | Amber | "Order-Servitor" — enforces tradition; rewards orthodoxy | Doctrinal compliance |
 | Orange | "Critic-of-Faith" — challenges principles; rewards reasoned defence | Rational coherence |
 | Green | "Many-Path Pilgrim" — invites cross-tradition exchange | Plural integration |
-| Turquoise | "Holonic Adept" — composes tests across traditions | Integral synthesis |
-| White | "Empty Sage" — no test; the player must arrive empty-handed | Non-grasping |
+| Teal | "Holonic Adept" — composes tests across traditions | Integral synthesis |
+| Turquoise | "Empty Sage" — no test; the player must arrive empty-handed | Non-grasping |
 
 ### 5.2 Cross-line encounterses
 
@@ -147,8 +147,8 @@ stage:
 - Amber: "Tradition, comrades, or self?"
 - Orange: "Truth, freedom, or success?"
 - Green: "Care, justice, or beauty?"
-- Turquoise: "Depth, span, or process?"
-- White: (no question; the player invokes their own)
+- Teal: "Depth, span, or process?"
+- Turquoise: (no question; the player invokes their own)
 
 ### 5.4 Shadow encounters
 

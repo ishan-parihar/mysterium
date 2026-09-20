@@ -2,13 +2,13 @@
 
 | Field | Value |
 |---|---|
-| Module | Intrapersonal / White |
+| Module | Intrapersonal / Turquoise |
 | Modality | Strategic-Planning |
 | Unique lateral | Planning without a planner — the paradox of structuring life without self-grasping |
 
 ## 2. Core Mechanic
 
-Long-horizon planning and resource-allocation tasks where the player must organise, prioritise, and sequence actions. The paradox: effective planning at White requires no fixed planner. The game detects whether plans serve a self-image or arise transparently from situational intelligence.
+Long-horizon planning and resource-allocation tasks where the player must organise, prioritise, and sequence actions. The paradox: effective planning at Turquoise requires no fixed planner. The game detects whether plans serve a self-image or arise transparently from situational intelligence.
 
 ## 3. Shadow Detection
 

@@ -22,6 +22,9 @@ Every TypeScript identifier in `core/domain/` that names a concept defined here 
 
 ```
 type Stage = 'Infrared'|'Magenta'|'Red'|'Amber'|'Orange'|'Green'|'Turquoise'|'White';
+//   ^ CODE-PASS PENDING (ratified ladder 2026-09-20, foundations/06 §5.1): stage 7 is **Teal**
+//     and stage 8 is **Teal**; `White` retires as a stage. The code identifier is renamed
+//     in the code pass (with its tests) — docs must not rename it alone.
 type Line  = 'Cognitive'|'Emotional'|'Moral'|'Intrapersonal'|'Spiritual'|'Somatic'|'Willpower'|'Interpersonal';
 type Quadrant = 'UL'|'UR'|'LL'|'LR';
 type State = 'Gross'|'Subtle'|'Causal'|'Witness'|'NonDual';
@@ -49,9 +52,9 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 | **Line (of intelligence)** | `Line` | A relatively-independent developmental stream. Mysterium canonises eight: see table above. |
 | **Quadrant** | `Quadrant` | One of UL (individual interior), UR (individual exterior), LL (collective interior), LR (collective exterior). |
 | **Significator** | `Significator` | The sole state vessel for the player's developmental profile. Replaces the legacy PlayerProfile. Stores altitudes, shadow ledger, drive balance, transformation state, theta timestamps, and polarity traces. |
-| **Stage (of consciousness)** | `Stage` | One of the eight macro-developmental levels Infrared → White. Stage is reached only when *every* line has cleared the threshold, not when one has. |
+| **Stage (of consciousness)** | `Stage` | One of the eight macro-developmental levels Infrared → Turquoise (ratified ladder, `foundations/06` §5.1). Stage is reached only when *every* line has cleared the threshold, not when one has. |
 | **State** | `State` | One of {Gross, Subtle, Causal, Witness, Non-Dual}. Orthogonal to stage; trains via meditative mini-game. |
-| **Sub-octave** | `sub_octave` | The fractal recapitulation of the eight-stage octave inside a single stage. Used in the Law-of-One layer. |
+| **Sub-octave** | `sub_octave` | The fractal recapitulation of the eight-stage octave inside a single stage. Used in the Law-of-One layer. The eight Mysterium stages **are** the D3 sub-octave (06 §5.1). |
 
 ### Lines, expanded
 
@@ -76,8 +79,9 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 | Amber | `Amber` | Green | Belonging, rule-and-role |
 | Orange | `Orange` | Blue (in) | Reason, achievement, science |
 | Green | `Green` | Blue (out) | Sensitivity, plurality, inclusion |
-| Turquoise | `Turquoise` | Indigo | Vision-logic, holism |
-| White | `White` | Violet | Non-dual, harvest |
+| Teal | `Teal` | Indigo (6a) | Vision-logic; the gateway opens |
+| Teal | `Turquoise` | Indigo (6b) | Total integration; holism; closure readiness |
+| *(the closure — not a stage)* | `Violet` | Violet | The harvest event (the D3→D4 transition) |
 
 ### Rays, expanded (canonical — see `foundations/06`)
 
@@ -88,8 +92,8 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 | Yellow | `Yellow` | Solar plexus / Manipura | Red | Ego / will; "great stepping-stone ray" |
 | Green | `Green` | Heart / Anahata | Amber | First true heart-opening |
 | Blue | `Blue` (`in` / `out`) | Throat / Vishuddha | Orange (in) / Green (out) | Co-creator, bidirectional |
-| Indigo | `Indigo` | Brow / Ajna | Turquoise | Gateway; vision-logic |
-| Violet | `Violet` | Crown / Sahasrara | White | Total integration; harvest |
+| Indigo | `Indigo` | Brow / Ajna | Teal (6a) / Teal (6b) | Gateway; vision-logic |
+| Violet | `Violet` | Crown / Sahasrara | *(the closure — not a stage)* | Total integration; the harvest event |
 
 ### Assessment modalities
 
@@ -149,7 +153,7 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 | **STS** | `STS` | Service-to-Self — the polarity direction where choices prioritize individual advantage. One of {STO, STS, Neutral}. |
 | **Polarity Texture** | `polarityTexture` | The specific expression of STO/STS tendency for a given (line × stage) cell. 64 unique textures in the catalogue. See `foundations/23-polarity-ontology.md`. |
 | **Polarity Trace** | `polarityTrace` | The per-encounter record of polarity signals: energetic direction, drive directionality, stage orientation, source of nourishment. |
-| **Crystallization** | `crystallization` | The process by which scattered polarity choices coalesce into a consistent STO or STS orientation. Occurs as the player approaches White stage. |
+| **Crystallization** | `crystallization` | The process by which scattered polarity choices coalesce into a consistent STO or STS orientation. Occurs as the player approaches Turquoise stage. |
 
 ### Agentic orchestration & domain expansion
 

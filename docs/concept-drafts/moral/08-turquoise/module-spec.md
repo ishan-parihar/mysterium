@@ -1,15 +1,15 @@
 ## 1. Module Identity
 
 - **Line:** Moral
-- **Stage:** 8 — White / Super-Integral
+- **Stage:** 8 — Turquoise / Super-Integral
 - **Energy Ray:** Violet
 - **Defining Capacity:** Kosmocentric ethics — all-sentient compassion arising spontaneously from non-grasping presence. Right action without deliberation.
-- **Below (Turquoise):** Holonic ethics — depth-span trade-offs, developmental ethics, multi-level harm assessment
+- **Below (Teal):** Holonic ethics — depth-span trade-offs, developmental ethics, multi-level harm assessment
 - **Above:** None (final stage)
 
 ## 2. Shadow Model — Residual Grasping Patterns
 
-At White, shadows are not gross distortions but residual grasping patterns — subtle attachments that prevent full transparency.
+At Turquoise, shadows are not gross distortions but residual grasping patterns — subtle attachments that prevent full transparency.
 
 - **2.1 Residual Grasping-at-Rightness:** Still attached to being 'good', still needs moral validation, cannot let ethical action be transparent and unclaimed.
 - **2.2 Residual Aversion-to-Harm:** Still avoids moral complexity, residual moral blind spots, cannot face certain ethical truths without flinching.
@@ -18,7 +18,7 @@ At White, shadows are not gross distortions but residual grasping patterns — s
 
 ## 3. Drive Model
 
-At White, all four drives express equanimously. The game detects residual imbalance rather than gross pathology.
+At Turquoise, all four drives express equanimously. The game detects residual imbalance rather than gross pathology.
 
 | Parameter | Value |
 |---|---|
@@ -39,7 +39,7 @@ At White, all four drives express equanimously. The game detects residual imbala
 
 ## 5. Catalyst Architecture
 
-Every modality delivers catalyst at the Violet-ray frequency of kosmocentric ethics. The catalyst→experience→integration cycle at White:
+Every modality delivers catalyst at the Violet-ray frequency of kosmocentric ethics. The catalyst→experience→integration cycle at Turquoise:
 
 - **Catalyst:** Situations that reveal residual grasping in moral action
 - **Experience:** The felt-sense of subtle attachment dissolving — ethics becoming transparent
@@ -65,4 +65,4 @@ Every modality delivers catalyst at the Violet-ray frequency of kosmocentric eth
 
 ## 8. Infinite Checkpoint & Theta-Decay
 
-White-stage moral games never complete. Residual grasping can re-emerge. Theta-decay ensures periodic re-engagement. The game surfaces increasingly subtle grasping patterns as the player's transparency deepens. Session length is player-determined; every checkpoint saves the current transparency profile.
+Turquoise-stage moral games never complete. Residual grasping can re-emerge. Theta-decay ensures periodic re-engagement. The game surfaces increasingly subtle grasping patterns as the player's transparency deepens. Session length is player-determined; every checkpoint saves the current transparency profile.

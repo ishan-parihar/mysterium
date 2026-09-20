@@ -146,7 +146,7 @@ These are NFRs; they appear in `architecture/07` and `architecture/10`.
   but allows per-locale tuning data in `combat/02`.
 - **Flow vs. attainment.** Flow is hedonic; stage advancement is
   developmental. They coincide most of the time, but a serious
-  Turquoise practitioner might prefer slow contemplation over a
+  Teal practitioner might prefer slow contemplation over a
   fast-pace flow channel. The state-training mini-game
   (`progression/06`) is the safety valve.
 - **Loot and ethics.** Even cosmetic variable-ratio rewards can be

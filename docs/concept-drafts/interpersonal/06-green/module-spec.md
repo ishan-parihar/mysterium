@@ -20,7 +20,7 @@ Refuses authentic relating entirely. Remains in Orange contractual coordination 
 
 ### 2.3 Golden-Addiction: The Premature Integral Relater
 
-Performs Turquoise transpersonal connection without genuine Green mutual vulnerability. Claims "I relate to the divine in you" while unable to be genuinely vulnerable with one specific person. Eros without grounding — reaches for integral relating without having mastered mutual vulnerability.
+Performs Teal transpersonal connection without genuine Green mutual vulnerability. Claims "I relate to the divine in you" while unable to be genuinely vulnerable with one specific person. Eros without grounding — reaches for integral relating without having mastered mutual vulnerability.
 
 ### 2.4 Golden-Allergy: The Authentic Fortress
 

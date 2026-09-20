@@ -2,7 +2,7 @@
 
 > **Axis:** The strategic-planning axis probes willpower through MULTI-STEP VOLITIONAL SEQUENCING — planning a chain of commitments, managing volitional resources across goals, and maintaining a goal-plan under changing conditions. Not "can you will one thing" but "can you will a SEQUENCE?"
 >
-> **Why this axis for Willpower/Red:** At Red, volitional planning is 2-step: "First I commit to THIS, then I commit to THAT." The player can sequence 2 vows but cannot yet manage goal-portfolios (Green) or nested goal-trees (Turquoise). This axis isolates the PLANNING component of will.
+> **Why this axis for Willpower/Red:** At Red, volitional planning is 2-step: "First I commit to THIS, then I commit to THAT." The player can sequence 2 vows but cannot yet manage goal-portfolios (Green) or nested goal-trees (Teal). This axis isolates the PLANNING component of will.
 
 ---
 

@@ -1,4 +1,4 @@
-# Cognitive / Turquoise — Social-Cooperative
+# Cognitive / Teal — Social-Cooperative
 
 ## 1. Game Identity
 
@@ -13,15 +13,15 @@
 
 ### 2.1 Cross-Altitude Attunement
 
-AI agents represent Red, Amber, Orange, Green, and Turquoise cognitive styles. Player must identify each agent's altitude from their reasoning patterns, then communicate integral insights in language each agent can receive. Scored on: altitude-identification accuracy, translation fidelity, agent-comprehension (measured by agent's subsequent reasoning quality).
+AI agents represent Red, Amber, Orange, Green, and Teal cognitive styles. Player must identify each agent's altitude from their reasoning patterns, then communicate integral insights in language each agent can receive. Scored on: altitude-identification accuracy, translation fidelity, agent-comprehension (measured by agent's subsequent reasoning quality).
 
 ### 2.2 Collective Holonic Problem-Solving
 
-A problem is distributed across agents at different altitudes. Each agent holds a piece valid AT THEIR LEVEL. Player must integrate contributions without dismissing any — Red's power-insight, Amber's structural insight, Orange's strategic insight, Green's relational insight — into a Turquoise whole. Scored on: integration completeness, no-stage-dismissed metric, solution quality.
+A problem is distributed across agents at different altitudes. Each agent holds a piece valid AT THEIR LEVEL. Player must integrate contributions without dismissing any — Red's power-insight, Amber's structural insight, Orange's strategic insight, Green's relational insight — into a Teal whole. Scored on: integration completeness, no-stage-dismissed metric, solution quality.
 
 ### 2.3 Developmental Mentorship
 
-Player guides a lower-altitude agent toward the next stage WITHOUT imposing Turquoise prematurely. Must meet the agent where they are and offer the minimal catalyst for their specific growth-edge. Scored on: developmental appropriateness, agent-growth (post-interaction altitude shift), absence of stage-skipping.
+Player guides a lower-altitude agent toward the next stage WITHOUT imposing Teal prematurely. Must meet the agent where they are and offer the minimal catalyst for their specific growth-edge. Scored on: developmental appropriateness, agent-growth (post-interaction altitude shift), absence of stage-skipping.
 
 ## 3. Shadow Surfacing
 
@@ -34,7 +34,7 @@ Player guides a lower-altitude agent toward the next stage WITHOUT imposing Turq
 
 ## 4. Catalyst → Experience → Integration
 
-**Catalyst:** Problems require genuine cross-altitude collaboration. No single altitude (including Turquoise) can solve them alone. The player NEEDS the lower-altitude agents' contributions — integral cognition here means orchestrating a developmental ecology, not imposing a framework.
+**Catalyst:** Problems require genuine cross-altitude collaboration. No single altitude (including Teal) can solve them alone. The player NEEDS the lower-altitude agents' contributions — integral cognition here means orchestrating a developmental ecology, not imposing a framework.
 
 **Experience:** Player feels the difference between mapping others' altitudes and genuinely attuning to them. The Meta-Mapper feels the loneliness of framework-mediated relating. The Green Pluralist feels the cost of refusing to see altitude. The Premature Non-Dualist feels the disconnect of bypassing. The Integral Fortress feels the invitation to be changed by the encounter.
 

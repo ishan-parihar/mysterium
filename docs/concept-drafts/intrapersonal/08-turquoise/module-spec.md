@@ -3,10 +3,10 @@
 | Field | Value |
 |---|---|
 | Line | Intrapersonal |
-| Stage | 8 — White / Super-Integral |
+| Stage | 8 — Turquoise / Super-Integral |
 | Ray | Violet |
 | Core capacity | Non-dual self — self transparent to awareness |
-| Below | Turquoise intrapersonal (vision-logic meta-self, witness of stages) |
+| Below | Teal intrapersonal (vision-logic meta-self, witness of stages) |
 | Above | None (final stage) |
 
 ## 2. Shadow Model — Residual Grasping Patterns
@@ -20,7 +20,7 @@
 
 ## 3. Drive Model
 
-At White, all four drives express equanimously. The game detects residual imbalance rather than gross pathology.
+At Turquoise, all four drives express equanimously. The game detects residual imbalance rather than gross pathology.
 
 | Parameter | Value |
 |---|---|
@@ -62,7 +62,7 @@ At White, all four drives express equanimously. The game detects residual imbala
 - Sessions end at any natural pause; state persists
 - No 'completion' — self-transparency deepens indefinitely
 - Theta-decay ensures neglected shadow quadrants resurface
-- Lower-stage intrapersonal health (Turquoise witness, Green sensitivity-self, etc.) required for White unlock
+- Lower-stage intrapersonal health (Teal witness, Green sensitivity-self, etc.) required for Turquoise unlock
 
 ## 8. Design Constraints
 

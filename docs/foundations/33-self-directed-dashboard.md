@@ -84,7 +84,7 @@ A navigable graph of all concepts the learner has encountered.
   - Green = applied
   - Blue = analyzed
   - Purple = evaluated
-  - White = transformed
+  - Turquoise = transformed
 - **Edges** are prerequisite relationships (thick = strong prerequisite, thin = weak)
 - **Gaps** are visible as missing nodes or thin connections
 - **Click any node** to see:

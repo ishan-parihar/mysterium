@@ -1,4 +1,4 @@
-# Moral / Turquoise — Strategic-Planning
+# Moral / Teal — Strategic-Planning
 
 ## 1. Game Identity
 

@@ -1,13 +1,13 @@
 ## 1. Modality Identity
 
-- **Module:** Moral / White
+- **Module:** Moral / Turquoise
 - **Modality:** Strategic-Planning
 - **Unique Axis:** The paradox of structuring moral life without grasping — planning within kosmocentric ethics
 - **Core Mechanic:** Resource-allocation and sequencing tasks where the player must organize ethical action without attachment to the plan itself
 
 ## 2. What This Measures
 
-At White, the paradox of moral planning: how does one structure compassionate action without grasping at the structure? This modality measures whether the player can plan ethically while remaining transparent to the plan — holding strategy lightly, adapting fluidly, releasing attachment to moral outcomes.
+At Turquoise, the paradox of moral planning: how does one structure compassionate action without grasping at the structure? This modality measures whether the player can plan ethically while remaining transparent to the plan — holding strategy lightly, adapting fluidly, releasing attachment to moral outcomes.
 
 ## 3. Shadow Detection
 

@@ -1,4 +1,4 @@
-# Cognitive / Turquoise — Deterministic
+# Cognitive / Teal — Deterministic
 
 ## 1. Game Identity
 

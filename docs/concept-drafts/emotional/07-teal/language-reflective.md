@@ -1,4 +1,4 @@
-# Emotional / Turquoise — Language-Reflective
+# Emotional / Teal — Language-Reflective
 
 ## 1. Core Mechanic
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Spiritual / White |
+| Module | Spiritual / Turquoise |
 | Modality | Embodied-Somatic |
 | Probe axis | Body as site of non-dual sacred — embodied presence, physical non-grasping |
 | Core mechanic | Somatic tasks measuring whether body-state is treated as sacred/ordinary without distinction |

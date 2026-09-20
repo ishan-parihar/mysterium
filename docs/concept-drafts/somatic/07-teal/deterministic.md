@@ -1,4 +1,4 @@
-# Somatic × Turquoise — Deterministic Game
+# Somatic × Teal — Deterministic Game
 
 ## 1. Core Mechanic
 

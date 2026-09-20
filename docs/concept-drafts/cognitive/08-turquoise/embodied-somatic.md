@@ -1,4 +1,4 @@
-# Cognitive / White — Embodied-Somatic Game
+# Cognitive / Turquoise — Embodied-Somatic Game
 
 > **Modality:** Embodied-Somatic (body-based cognition)  
 > **Unique lateral:** The body as site of trans-rational cognition — still-mind embodiment, effortless physical complexity. Knowing expressed through movement rather than thought.
@@ -7,7 +7,7 @@
 
 ## 1. Core Mechanic
 
-**Effortless Complexity in Motion.** The player performs physically complex cognitive-motor tasks (rhythm sequences, spatial navigation, multi-limb coordination) while the system measures whether the body operates from direct knowing or deliberate control. At White, the body-mind is unified — complex action arises without a controller.
+**Effortless Complexity in Motion.** The player performs physically complex cognitive-motor tasks (rhythm sequences, spatial navigation, multi-limb coordination) while the system measures whether the body operates from direct knowing or deliberate control. At Turquoise, the body-mind is unified — complex action arises without a controller.
 
 Key task types:
 - **Still-mind rhythm:** Complex polyrhythmic patterns that degrade under conscious control. Success requires releasing the body to its own intelligence.
@@ -40,7 +40,7 @@ Detected when: performance improves with self-referential framing ("feel YOUR bo
 - **Agency residue:** Performance improves in solo-body tasks vs. tasks requiring receptivity to external rhythm.
 - **Communion residue:** Performance improves in externally-paced tasks vs. self-generated rhythm.
 
-Healthy White: no systematic difference across framing conditions. The body responds to what is.
+Healthy Turquoise: no systematic difference across framing conditions. The body responds to what is.
 
 ## 4. Progression Arc
 

@@ -62,8 +62,8 @@ regions for self-other modelling.
 | Amber | Conformist-others — in-group bonding, out-group opaque | Tribal allies; party bound by shared rule |
 | Orange | Rational-others — contractual coordination | Specialised parties; clear roles |
 | Green | Pluralistic-others — many valid relational styles | Diverse parties; relational nuance |
-| Turquoise | Integral-others — multiple selves attuned at multiple levels | Holonic teams; cross-stage attunement |
-| White | Non-dual others — no fixed boundary self/other | Communion; merged action |
+| Teal | Integral-others — multiple selves attuned at multiple levels | Holonic teams; cross-stage attunement |
+| Turquoise | Non-dual others — no fixed boundary self/other | Communion; merged action |
 
 ## 4. Game-design mapping
 
@@ -89,8 +89,8 @@ multiplayer**, by design.
 | Co-Parry | Joint defensive | Both players parry on shared timing; failure costs both | Orange+ |
 | Rally | Restore party morale after a loss | Brief rhythm task; success resets fatigue across party | Orange+ |
 | Hold the We-Space | Sustain group coherence under pressure | Multi-channel task: own affect + partner affect + shared goal | Green+ |
-| Cross-Style Synthesis | Compose two parties' build philosophies | Buff if both philosophies hit synergy threshold | Turquoise+ |
-| Communion | Merge action briefly | Synced inputs from both players → single super-action | White (multiplayer-only) |
+| Cross-Style Synthesis | Compose two parties' build philosophies | Buff if both philosophies hit synergy threshold | Teal+ |
+| Communion | Merge action briefly | Synced inputs from both players → single super-action | Turquoise (multiplayer-only) |
 
 ### 4.3 Module parameters(s) backed
 
@@ -130,8 +130,8 @@ play, not from solo grind.
 | Amber | "Tribe-Member" — strict in-group code | Tribal-rule conformity |
 | Orange | "Contractor-Partner" — clear expectations | Role coordination |
 | Green | "Plural-Ally" — different style requiring adaptation | Style attunement |
-| Turquoise | "Cross-Stage Mentor" — partner at different altitude | Asymmetric attunement |
-| White | "Communion" — fellow-being indistinguishable from self | Merged action |
+| Teal | "Cross-Stage Mentor" — partner at different altitude | Asymmetric attunement |
+| Turquoise | "Communion" — fellow-being indistinguishable from self | Merged action |
 
 ### 5.2 Cross-line encounterses
 
@@ -152,7 +152,7 @@ as:
 - Multiplayer: a phase that *requires* both/all players to coordinate
   against a divide-and-conquer boss; failure to attune costs both.
 
-Late-stage bosses (Turquoise, White) cannot be defeated solo at the
+Late-stage bosses (Teal, Turquoise) cannot be defeated solo at the
 highest tier; they require multiplayer.
 
 ### 5.4 Shadow encounters

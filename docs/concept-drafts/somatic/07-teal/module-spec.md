@@ -1,19 +1,19 @@
-# Somatic × Turquoise — Module Specification
+# Somatic × Teal — Module Specification
 
 ## 1. Module Identity
 
 | Field | Value |
 |---|---|
 | Line | Somatic |
-| Stage | 07 — Turquoise (Integral / Vision-Logic) |
+| Stage | 07 — Teal (Integral / Vision-Logic) |
 | Ray | Indigo |
 | Core capacity | Integrated body — body-mind-emotion as unified holonic field |
 | Below (Green) | Listening body — somatic empathy, co-presence, body-as-relational |
-| Above (White) | Luminous body — body as energy, non-grasping movement, effortless action |
+| Above (Turquoise) | Luminous body — body as energy, non-grasping movement, effortless action |
 
 ## 2. Developmental Signature
 
-The Turquoise somatic capacity is the integration of ALL previous somatic stages into a single unified embodiment. The body is no longer separate from cognition or emotion — it IS cognition-emotion-action as one field. Compound stances hold multiple body-states simultaneously. Effort-rest-effort cycling happens at will. The body listens to and informs cognition equally — somatic vision-logic.
+The Teal somatic capacity is the integration of ALL previous somatic stages into a single unified embodiment. The body is no longer separate from cognition or emotion — it IS cognition-emotion-action as one field. Compound stances hold multiple body-states simultaneously. Effort-rest-effort cycling happens at will. The body listens to and informs cognition equally — somatic vision-logic.
 
 This is second-tier embodiment: the body holds all previous capacities (survival reflexes, magical agency, power, discipline, achievement, relational sensitivity) as partial truths within a greater whole.
 
@@ -23,7 +23,7 @@ This is second-tier embodiment: the body holds all previous capacities (survival
 |---|---|---|
 | Dark-Addiction | The Somatic Perfectionist | Addicted to integral embodiment practice; cannot rest from body-optimization; uses somatic mastery to avoid direct being |
 | Dark-Allergy | The Sensitive Pluralist | Refuses integral embodiment; stays in Green somatic empathy; "the body is relational, not hierarchical" |
-| Golden-Addiction | The Premature Energy Body | Performs White luminous body without genuine integral mastery; claims effortless action while unable to execute compound stances |
+| Golden-Addiction | The Premature Energy Body | Performs Turquoise luminous body without genuine integral mastery; claims effortless action while unable to execute compound stances |
 | Golden-Allergy | The Integral Body Fortress | Integrated embodiment present but refuses luminous opening; terrified of losing the body in non-dual states |
 
 ## 4. Compound Shadows (Cross-Line)

@@ -1,4 +1,4 @@
-# Spiritual / Turquoise — Language-Reflective
+# Spiritual / Teal — Language-Reflective
 
 ## 1. Core Mechanic
 

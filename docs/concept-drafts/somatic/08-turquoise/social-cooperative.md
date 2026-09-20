@@ -1,10 +1,10 @@
-# Somatic / White — Social-Cooperative Game
+# Somatic / Turquoise — Social-Cooperative Game
 
 ## 1. Core Mechanic
 
 Shared luminous embodiment — communion in effortless movement and non-verbal somatic attunement. Two or more players move together, and the game measures whether coordination arises from effortless attunement or from deliberate synchronization (grasping).
 
-The game pairs players in movement tasks requiring coordination. Measurement: does synchrony emerge spontaneously (transparent) or through effort (grasping)? At White, genuine somatic communion means bodies attune without trying — like birds in murmuration.
+The game pairs players in movement tasks requiring coordination. Measurement: does synchrony emerge spontaneously (transparent) or through effort (grasping)? At Turquoise, genuine somatic communion means bodies attune without trying — like birds in murmuration.
 
 ## 2. Shadow Detection
 

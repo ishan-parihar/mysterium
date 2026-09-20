@@ -1,13 +1,13 @@
-# Interpersonal × Turquoise — Module Specification
+# Interpersonal × Teal — Module Specification
 
 ## 1. Module Identity
 
 - **Line:** Interpersonal
-- **Stage:** Turquoise (Integral / Vision-Logic)
+- **Stage:** Teal (Integral / Vision-Logic)
 - **Energy Ray:** Indigo
 - **Core Capacity:** Integral others — multiple selves attuned at multiple levels. Holonic teams; cross-stage attunement; mentorship across altitude differences. The capacity to relate to others AT THEIR LEVEL while maintaining one's own integral centre.
 - **Below (Green):** Authentic relating — mutual vulnerability, deep listening, dialogue-as-practice
-- **Above (White):** Non-dual others — no fixed boundary self/other, communion, merged action
+- **Above (Turquoise):** Non-dual others — no fixed boundary self/other, communion, merged action
 
 ## 2. Shadow Taxonomy
 
@@ -15,7 +15,7 @@
 |----------|------|---------|
 | Dark-Addiction | The Relational Architect | Addicted to mapping relational dynamics, cannot stop analysing group structure, uses integral relating to avoid direct connection |
 | Dark-Allergy | The Authentic Pluralist | Refuses integral relating, stays in Green mutual vulnerability, 'hierarchy in relationship is oppressive' |
-| Golden-Addiction | The Premature Merger | Performs White non-dual relating without genuine integral relational mastery, claims 'we are one' while unable to attune across altitudes |
+| Golden-Addiction | The Premature Merger | Performs Turquoise non-dual relating without genuine integral relational mastery, claims 'we are one' while unable to attune across altitudes |
 | Golden-Allergy | The Integral Relational Fortress | Cross-altitude attunement present but refuses non-dual opening, terrified of boundary dissolution, 'I can relate to anyone but I will not merge' |
 
 ## 3. Compound Shadows
@@ -29,7 +29,7 @@
 
 ## 4. Drive Dynamics
 
-- **Eros (vertical-up):** Pull toward non-dual communion, dissolving relational boundaries into White-stage merged action
+- **Eros (vertical-up):** Pull toward non-dual communion, dissolving relational boundaries into Turquoise-stage merged action
 - **Agape (vertical-down):** Descent to meet others at their altitude, holding Green vulnerability without collapsing into it
 - **Agency:** Maintaining integral centre while attuning — the 'I' that can flex without losing coherence
 - **Communion:** Joining holonic teams, cross-altitude resonance, the relational field itself

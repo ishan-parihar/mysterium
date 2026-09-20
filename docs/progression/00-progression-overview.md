@@ -71,7 +71,7 @@ shadow encounters. Browseable in the codex.
 
 Player-authored entries — what they encountered, what they chose,
 what they noted. Not a checklist; a *journal*. The closing entry
-(at White) is the player's own developmental summary.
+(at Turquoise) is the player's own developmental summary.
 
 These five surfaces together compose the progression view; no single
 surface tells the whole story.
@@ -173,7 +173,7 @@ visited stage*; the gap between them is where shadow work lives.
 ## 9. The "no end-game grind" rule
 
 Mysterium does **not** ship endless-grind end-game content of the
-loot-treadmill kind. The end-game (`stages/08-white-superintegral.md`)
+loot-treadmill kind. The end-game (`stages/08-turquoise-superintegral.md`)
 is *contemplative* — the player returns to mentor others (multiplayer),
 to clear remaining shadow encounters, or to start a new character with
 different drive weights.

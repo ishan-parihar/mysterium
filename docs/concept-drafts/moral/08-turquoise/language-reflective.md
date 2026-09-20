@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Moral / White
+- **Module:** Moral / Turquoise
 - **Modality:** Language-Reflective
 - **Unique Axis:** Verbal articulation of kosmocentric ethics — how the player talks about morality reveals residual grasping
 - **Core Mechanic:** Open-ended moral reflection prompts scored by LLM rubrics for transparency vs. grasping

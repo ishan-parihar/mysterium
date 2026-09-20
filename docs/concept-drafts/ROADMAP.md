@@ -142,9 +142,9 @@ The "personal" tier. Most adult players calibrate here.
 
 **Total Phase 3:** 128 files (16 modules × 8 files)
 
-### Phase 4: Infrared + Turquoise + White × All 8 Lines (192 files)
+### Phase 4: Infrared + Teal + Turquoise × All 8 Lines (192 files)
 
-Edge cases. Infrared is pre-developmental. Turquoise and White are transpersonal.
+Edge cases. Infrared is pre-developmental. Teal and Turquoise are transpersonal.
 
 **Total Phase 4:** 192 files (24 modules × 8 files)
 

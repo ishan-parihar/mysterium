@@ -45,7 +45,7 @@ The KosmOS ontology defines 17 stages for the framework-complexity line, mapped 
 | 12 | Formal Landmark | 11 | 5 | Green/Teal | Formal meta-systematic | Creating novel meta-frameworks |
 | 13 | Systematic Green | 12 | 5 | Green | Paradigmatic | Paradigm-internal coherence, paradigm as object |
 | 14 | Metasystematic Teal | 13 | 5+ | Teal | Metasystematic | Cross-paradigm translation, universal meta-principles |
-| 15 | Paradigmatic Turquoise | 14 | 5++ | Turquoise | Cross-paradigmatic | Mapping relationships between incommensurable paradigms |
+| 15 | Paradigmatic Teal | 14 | 5++ | Teal | Cross-paradigmatic | Mapping relationships between incommensurable paradigms |
 | 16 | Cross-paradigmatic | 15 | 6 | Indigo | Cross-paradigmatic | Translating truths across worldviews without reduction |
 | 17 | Meta-cross Violet | 16 | 6+ | Violet | Meta-cross-paradigmatic | Nondual unification of all frameworks |
 

@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Emotional / White
+- **Module:** Emotional / Turquoise
 - **Modality:** Language-Reflective
 - **Unique Lateral:** Verbal articulation of luminous affect — how the player talks about feeling reveals residual grasping
 - **What this measures that no other modality measures:** The linguistic structure of emotional self-report — whether language about feeling is transparent, grasping, avoidant, performative, or self-referential

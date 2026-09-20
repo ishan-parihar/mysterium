@@ -54,8 +54,8 @@ A simplification of developmental-cognitive-neuroscience consensus:
 | Amber (7–11y) | Bilateral cortical, parietal | High |
 | Orange (12–25y) | dlPFC, FPCN, late myelination | Moderate-high |
 | Green (25y+) | Continued FPCN refinement, DMN integration | Moderate |
-| Turquoise (with practice) | DMN-FPCN integration | Practice-dependent |
-| White (with deep practice) | Long-term meditators show structural changes | Practice-dependent |
+| Teal (with practice) | DMN-FPCN integration | Practice-dependent |
+| Turquoise (with deep practice) | Long-term meditators show structural changes | Practice-dependent |
 
 Mysterium is honest about these windows: a 35-year-old playing the game is
 not going to acquire 0–2y plasticity. The claim is **practice-driven
@@ -98,8 +98,8 @@ realistic load capacity at that altitude:
 | Amber | n=2 | 800 ms | low |
 | Orange | n=3 | 700 ms | moderate |
 | Green | n=3–4 | 600 ms | high |
-| Turquoise | n=4 | 500 ms | very high (with meta) |
-| White | n=5 (rarely) | 400 ms | continuous |
+| Teal | n=4 | 500 ms | very high (with meta) |
+| Turquoise | n=5 (rarely) | 400 ms | continuous |
 
 These are *defaults*, modulated by the staircase per player. The point
 of this table is to give level designers a *feasibility envelope* —

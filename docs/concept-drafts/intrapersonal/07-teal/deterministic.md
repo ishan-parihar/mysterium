@@ -1,4 +1,4 @@
-# Intrapersonal × Turquoise — Deterministic
+# Intrapersonal × Teal — Deterministic
 
 ## 1. Game Identity
 

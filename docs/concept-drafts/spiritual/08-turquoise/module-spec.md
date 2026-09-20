@@ -3,15 +3,15 @@
 | Field | Value |
 |---|---|
 | Line | Spiritual |
-| Stage | 8 — White / Super-Integral |
+| Stage | 8 — Turquoise / Super-Integral |
 | Ray | Violet |
 | Core capacity | Non-dual presence — the sacred as ordinary, pathless path |
-| Below | Turquoise: integral spirituality, cross-tradition synthesis |
+| Below | Teal: integral spirituality, cross-tradition synthesis |
 | Above | None (final stage) |
 
 ## 2. Shadow Model — Residual Grasping Patterns
 
-At White, shadows are not gross distortions but residual micro-grasping patterns that prevent full transparency.
+At Turquoise, shadows are not gross distortions but residual micro-grasping patterns that prevent full transparency.
 
 | # | Shadow | Pattern | Signature |
 |---|---|---|---|
@@ -22,7 +22,7 @@ At White, shadows are not gross distortions but residual micro-grasping patterns
 
 ## 3. Drive Expression
 
-At White, all four drives manifest in equanimous expression. The game detects residual imbalance rather than gross pathology.
+At Turquoise, all four drives manifest in equanimous expression. The game detects residual imbalance rather than gross pathology.
 
 - **Eros:** Transparent upward movement without grasping at higher states
 - **Agape:** Effortless descent without aversion to lower expression
@@ -62,7 +62,7 @@ At White, all four drives manifest in equanimous expression. The game detects re
 
 ## 7. Integration with Harvest Mechanic
 
-White/Spiritual is the capstone module. Full integration here signals readiness for the 4th-density harvest narrative arc. The module does not "complete" — it deepens indefinitely. Theta-decay applies: neglect of transparent presence causes subtle re-grasping patterns to re-emerge.
+Turquoise/Spiritual is the capstone module. Full integration here signals readiness for the 4th-density harvest narrative arc. The module does not "complete" — it deepens indefinitely. Theta-decay applies: neglect of transparent presence causes subtle re-grasping patterns to re-emerge.
 
 ## 8. Design Principle
 

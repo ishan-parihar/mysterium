@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Willpower × White |
+| Module | Willpower × Turquoise |
 | Modality | Immersive-RPG |
 | Unique Lateral | Ecological effortless will — whether non-attached action appears spontaneously in free-play |
 | Core Mechanic | Open-world scenarios where the system observes whether effortless will manifests ecologically without prompting |

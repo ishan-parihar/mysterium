@@ -1,4 +1,4 @@
-# Moral / Turquoise — Immersive-RPG
+# Moral / Teal — Immersive-RPG
 
 ## 1. Game Identity
 
@@ -13,8 +13,8 @@
 
 **The Living Holarchy:** An open-world environment populated by NPCs, factions, and ecosystems at different developmental altitudes. Moral situations arise naturally from world-state — never flagged as 'ethical choices'. The game observes whether the player perceives and responds to holonic moral reality without prompting.
 
-- **Emergent Holonic Situations:** World events create multi-level ethical tensions — a Red-stage faction threatens an Amber community, an Orange institution exploits Green idealism, a Turquoise leader faces kosmocentric dissolution. Player encounters these through exploration, not menu selection.
-- **Spontaneous Depth-Perception:** Does the player notice developmental altitude in NPCs? Do they respond differently to Red aggression vs. Green manipulation vs. Turquoise rigidity? Unprompted perception of developmental hierarchy is the core diagnostic.
+- **Emergent Holonic Situations:** World events create multi-level ethical tensions — a Red-stage faction threatens an Amber community, an Orange institution exploits Green idealism, a Teal leader faces kosmocentric dissolution. Player encounters these through exploration, not menu selection.
+- **Spontaneous Depth-Perception:** Does the player notice developmental altitude in NPCs? Do they respond differently to Red aggression vs. Green manipulation vs. Teal rigidity? Unprompted perception of developmental hierarchy is the core diagnostic.
 - **Ecological Moral Action:** Player's actions ripple through the world-ecology. Holonic interventions (protecting depth for span) create cascading positive effects. Flat interventions (treating all claims equally) create cascading dysfunction. The world reflects back the player's moral altitude.
 - **Kosmocentric Dissolution Events:** Rare world-moments where the entire holonic structure becomes transparent — where compassion without object is the only appropriate response. Does the player recognise these moments and release their integral framework?
 

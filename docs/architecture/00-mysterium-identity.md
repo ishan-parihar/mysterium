@@ -100,7 +100,7 @@ Wilber's AQAL framework provides the five-dimensional coordinate system:
 | Axis | What it tracks | Mysterium's canon |
 |---|---|---|
 | **Quadrants** | Four irreducible perspectives (UL/UR/LL/LR) | Every stage advancement touches all four |
-| **Levels (=stages)** | Developmental altitudes | 8 stages: Infrared → White |
+| **Levels (=stages)** | Developmental altitudes | 8 stages: Infrared → Turquoise |
 | **Lines** | Independent developmental streams | 8 lines: Cognitive, Emotional, Moral, Intrapersonal, Spiritual, Somatic, Willpower, Interpersonal |
 | **States** | Temporary consciousness conditions | Gross, Subtle, Causal, Witness, Non-Dual |
 | **Types** | Horizontal categories (non-developmental) | Mostly cosmetic; does not gate progression |

@@ -1,4 +1,4 @@
-# Intrapersonal × Turquoise — Scenario-Choice
+# Intrapersonal × Teal — Scenario-Choice
 
 ## 1. Game Identity
 
@@ -15,7 +15,7 @@ Scenarios present situations where the player's Red self wants power, Amber self
 High-stakes moments where maintaining integral self-concept is costly. Scenarios where performing a lower stage would be socially rewarded, or where claiming non-dual transcendence would avoid responsibility. The player must hold integral ground without rigidity.
 
 ### 2.3 Developmental History Integration
-Scenarios that activate specific past-self memories and require the player to act from present integration rather than regression or dissociation. A situation that mirrors a Red-stage wound must be met with Turquoise wholeness that INCLUDES the Red response.
+Scenarios that activate specific past-self memories and require the player to act from present integration rather than regression or dissociation. A situation that mirrors a Red-stage wound must be met with Teal wholeness that INCLUDES the Red response.
 
 ## 3. Shadow Surfacing
 
@@ -33,7 +33,7 @@ Initial scenarios establish baseline: can the player hold multiple self-voices s
 Scenarios calibrate toward shadow-specific edges: DA players face scenarios where observation IS the failure mode; DAll players face scenarios where multiplicity without synthesis causes harm; GA players face scenarios requiring embodied personal history; GAll players face scenarios where the integral structure must soften.
 
 ### 4.3 Evolution Phase
-Scenarios require genuine Turquoise operation: acting decisively from a position that visibly includes all developmental voices, where the action itself demonstrates integration rather than merely claiming it.
+Scenarios require genuine Teal operation: acting decisively from a position that visibly includes all developmental voices, where the action itself demonstrates integration rather than merely claiming it.
 
 ## 5. Scoring Integration
 

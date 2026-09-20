@@ -1,4 +1,4 @@
-# Spiritual / Turquoise — Strategic-Planning
+# Spiritual / Teal — Strategic-Planning
 
 ## 1. Core Mechanic
 

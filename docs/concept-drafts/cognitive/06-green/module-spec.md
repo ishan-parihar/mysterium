@@ -9,7 +9,7 @@
 Late formal / early post-formal cognition. The defining leap: simultaneous perspective-holding across 4 valid viewpoints without premature closure. Complex span n=3-4 with processing load. Rapid task-switching (WCST high-shift cadence). Dialectical reasoning (thesis-antithesis-synthesis without forced resolution). Context-dependent rule application where the "correct" answer depends on which framework you inhabit. Contradiction tolerance — holding two valid but mutually exclusive conclusions as simultaneously true-in-context.
 
 Below (Orange): formal operational, hypothetico-deductive, single-perspective rigour, n=3.
-Above (Turquoise): vision-logic, all perspectives held as unified field, integral reasoning.
+Above (Teal): vision-logic, all perspectives held as unified field, integral reasoning.
 
 ## 2. Shadow Archetypes
 
@@ -23,7 +23,7 @@ Refuses multi-perspectival reasoning. Clings to Orange single-perspective rigour
 
 ### 2.3 Golden-Addiction (GA): The Premature Integralist
 
-Performs Turquoise vision-logic without genuine Green mastery. Claims to "see the whole" while unable to genuinely hold 4 perspectives simultaneously. Leaps to meta-systematic integration before inhabiting each perspective fully. Spiritual bypassing of cognitive complexity.
+Performs Teal vision-logic without genuine Green mastery. Claims to "see the whole" while unable to genuinely hold 4 perspectives simultaneously. Leaps to meta-systematic integration before inhabiting each perspective fully. Spiritual bypassing of cognitive complexity.
 
 ### 2.4 Golden-Allergy (GAll): The Pluralist Fortress
 
@@ -33,7 +33,7 @@ Multi-perspectival reasoning present but refuses integral commitment. Terrified 
 
 | Drive | Healthy expression | DA distortion | DAll distortion | GA distortion | GAll distortion |
 |---|---|---|---|---|---|
-| Eros | Reaches toward integral synthesis | Reaches but never lands | Refuses to reach beyond Orange | Grasps Turquoise prematurely | Reaches but refuses to commit |
+| Eros | Reaches toward integral synthesis | Reaches but never lands | Refuses to reach beyond Orange | Grasps Teal prematurely | Reaches but refuses to commit |
 | Agape | Returns to embody each perspective | Drowns in return, never ascends | Returns only to single-perspective | Skips embodiment of Green | Embodies pluralism, refuses ascent |
 | Agency | Commits to contextual action | Cannot commit (all views valid) | Over-commits to one framework | Commits to false integration | Refuses commitment as hierarchy |
 | Communion | Joins multiple perspectives relationally | Merges without differentiation | Refuses relational knowing | Performs communion without depth | Communes but refuses synthesis |

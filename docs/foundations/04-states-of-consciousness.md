@@ -8,7 +8,7 @@ optional state-training mini-game (in `progression/06`) lives here.
 
 The slogan: **stages are slow vertical growth; states are fast horizontal
 access.** A player at Amber stage can have a Non-Dual peak experience.
-Conversely, a Turquoise-stage player who has never meditated may have
+Conversely, a Teal-stage player who has never meditated may have
 poor access to subtle states. Stage and state are independent axes.
 
 ## 2. Scientific basis
@@ -47,7 +47,7 @@ state is interpreted.** A Non-Dual peak experience interpreted at:
 - **Amber** — "I had a vision granted by my tradition's deity."
 - **Orange** — "Interesting altered state, probably temporal-lobe."
 - **Green** — "All paths lead to the same truth."
-- **Turquoise** — "The non-dual is a feature of consciousness as such."
+- **Teal** — "The non-dual is a feature of consciousness as such."
 
 The same state, eight different interpretive frames. Mysterium's narrative
 honours this: a state-experience cutscene is *interpreted* by the

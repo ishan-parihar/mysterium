@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Willpower × White |
+| Module | Willpower × Turquoise |
 | Modality | Deterministic |
 | Unique Lateral | Objective effortless-will measurement — action-without-strain metrics, outcome-attachment detection |
 | Core Mechanic | Timed action sequences where strain, hesitation, and outcome-checking are measured instrumentally |

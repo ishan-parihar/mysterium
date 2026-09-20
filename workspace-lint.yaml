@@ -50,6 +50,7 @@ rules:
       - "error.log"
       - "lifeos.config.json"
     allowed_root_files:
+      - "_org.yaml"
       - ".clippy.toml"
       - ".editorconfig"
       - ".env.example"

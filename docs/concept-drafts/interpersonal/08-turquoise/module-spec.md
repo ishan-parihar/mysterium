@@ -3,10 +3,10 @@
 | Field | Value |
 |---|---|
 | Line | Interpersonal |
-| Stage | 8 — White / Super-Integral |
+| Stage | 8 — Turquoise / Super-Integral |
 | Energy Ray | Violet |
 | Core Capacity | Non-dual others — transparent relational field, communion without fusion |
-| Prerequisite | Interpersonal/Turquoise shadow-health ≥ 0.7 |
+| Prerequisite | Interpersonal/Teal shadow-health ≥ 0.7 |
 | Availability | Multiplayer or advanced NPC simulation only |
 
 ## 2. Shadow Taxonomy (Residual Grasping Patterns)
@@ -20,7 +20,7 @@
 
 ## 3. Drive Model
 
-At White, all four drives manifest in equanimous expression. The system detects residual imbalance rather than measuring drive strength directly.
+At Turquoise, all four drives manifest in equanimous expression. The system detects residual imbalance rather than measuring drive strength directly.
 
 | Parameter | Value |
 |---|---|
@@ -69,5 +69,5 @@ At White, all four drives manifest in equanimous expression. The system detects 
 
 ## 8. Relationship to Adjacent Modules
 
-- **Below (Turquoise):** Integral others — cross-altitude attunement, holonic teams. White transcends and includes this by dissolving the attunement-structure itself.
-- **Above:** None. White is the final stage. Mastery here = harvest-readiness on the interpersonal line.
+- **Below (Teal):** Integral others — cross-altitude attunement, holonic teams. Turquoise transcends and includes this by dissolving the attunement-structure itself.
+- **Above:** None. Turquoise is the final stage. Mastery here = harvest-readiness on the interpersonal line.

@@ -22,7 +22,7 @@
 **Mechanic 1 — Council Assembly:** 3–5 inner voices present their case for different choices. Player can "amplify" or "acknowledge" each voice. Pattern of engagement reveals shadow type.  
 **Mechanic 2 — Tension Holding:** After hearing all voices, a tension meter rises. Player must hold the tension (not collapse into premature choice or avoidance) until genuine clarity emerges. Optimal hold-time is adaptive per player.  
 **Mechanic 3 — Committed Choice:** Player chooses. Post-choice, unchosen voices respond. Player must integrate their responses (acknowledge grief, honour the part, commit anyway). Quality of integration scored.  
-**Progression:** Early dilemmas are low-stakes (weekend plans). Mid dilemmas are relational (career vs. relationship). Late dilemmas are existential (identity commitment vs. openness). Final dilemmas probe the Green→Turquoise edge.
+**Progression:** Early dilemmas are low-stakes (weekend plans). Mid dilemmas are relational (career vs. relationship). Late dilemmas are existential (identity commitment vs. openness). Final dilemmas probe the Green→Teal edge.
 
 ## 4. Item Pool
 

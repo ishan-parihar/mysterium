@@ -30,8 +30,8 @@ src/core/assessments/
 │   ├── amber.ts                      ← Cognitive at Amber stage
 │   ├── orange.ts                     ← Cognitive at Orange stage
 │   ├── green.ts                      ← Cognitive at Green stage
-│   ├── turquoise.ts                  ← Cognitive at Turquoise stage
-│   └── white.ts                      ← Cognitive at White stage
+│   ├── turquoise.ts                  ← Cognitive at Teal stage
+│   └── white.ts                      ← Cognitive at Teal stage (L8); identifier renamed in the code pass
 ├── emotional/
 │   ├── infrared.ts → white.ts
 ├── moral/
@@ -123,8 +123,8 @@ Each stage assessment module defines:
 | **Amber** | Concrete operations stable — rule-following, categorisation | n=2 stable + Stroop (rule conflict); WCST (category switching, low) | accuracy, interference resistance, consistency |
 | **Orange** | Formal operations — abstract reasoning, hypothesis testing | n=3 n-back; WCST (high switch rate); analogical reasoning | accuracy, transfer, metacognition (do they notice errors?) |
 | **Green** | Post-formal emerging — perspective coordination, dialectical | n=3-4; multi-rule coordination; "both/and" reasoning tasks | complexity handled, integration, perspective-taking |
-| **Turquoise** | Vision-logic — systems thinking, pattern across patterns | n=4+; complex systems prediction; meta-pattern recognition | systems accuracy, transfer across domains, self-correction |
-| **White** | Non-dual cognition — effortless complexity, no-mind | n=5; paradox resolution; "what is the question?" tasks | response quality under no-time-pressure, depth, coherence |
+| **Teal** | Vision-logic — systems thinking, pattern across patterns | n=4+; complex systems prediction; meta-pattern recognition | systems accuracy, transfer across domains, self-correction |
+| **Turquoise** | Non-dual cognition — effortless complexity, no-mind | n=5; paradox resolution; "what is the question?" tasks | response quality under no-time-pressure, depth, coherence |
 
 ### 3.2 Emotional Line
 
@@ -136,8 +136,8 @@ Each stage assessment module defines:
 | **Amber** | In-group empathy — can read familiar emotions, suppress own | Identify emotions in social scenarios; "what should you feel?" (norm) | accuracy, norm-awareness, suppression speed |
 | **Orange** | Reflective emotion — can label complex emotions, basic regulation | Mixed/complex emotion identification; regulation strategy choice | depth (complex labels), strategy quality |
 | **Green** | Pluralistic empathy — contradictory emotions, empathy for outgroup | Identify contradictory emotions; empathy for unlike-self scenarios | integration, breadth, tolerance of ambiguity |
-| **Turquoise** | Emotional wisdom — emotions as information, no attachment | Emotion-as-signal tasks; "what is this emotion telling you?" | depth of interpretation, non-reactivity, coherence |
-| **White** | Equanimity — all emotions arise and pass without identification | Emotional perturbation + recovery speed; non-attachment measures | recovery speed, equanimity under provocation |
+| **Teal** | Emotional wisdom — emotions as information, no attachment | Emotion-as-signal tasks; "what is this emotion telling you?" | depth of interpretation, non-reactivity, coherence |
+| **Turquoise** | Equanimity — all emotions arise and pass without identification | Emotional perturbation + recovery speed; non-attachment measures | recovery speed, equanimity under provocation |
 
 ### 3.3 Moral Line
 
@@ -149,8 +149,8 @@ Each stage assessment module defines:
 | **Amber** | Conformist — "right = what the group/rules say" (Kohlberg Stage 3-4) | Rule-following vs. compassion dilemmas; loyalty scenarios | choice pattern, rule-rigidity, justification (LLM) |
 | **Orange** | Principled — "right = universal principles" (Kohlberg Stage 5) | Principle vs. law dilemmas; rights-based reasoning | principle identification, consistency, justification (LLM) |
 | **Green** | Contextual — "right = depends on all perspectives" (Kohlberg Stage 6) | Multi-stakeholder dilemmas; "no right answer" scenarios | perspective breadth, tolerance of ambiguity, integration (LLM) |
-| **Turquoise** | Systemic — "right = what serves the whole system" | Systemic impact dilemmas; long-term vs. short-term; ecological | systems thinking, temporal breadth, coherence (LLM) |
-| **White** | Non-dual morality — action arises from being, not from rules | Paradox dilemmas; "what would you do if there were no rules?" | depth, spontaneity, coherence, non-attachment to outcome (LLM) |
+| **Teal** | Systemic — "right = what serves the whole system" | Systemic impact dilemmas; long-term vs. short-term; ecological | systems thinking, temporal breadth, coherence (LLM) |
+| **Turquoise** | Non-dual morality — action arises from being, not from rules | Paradox dilemmas; "what would you do if there were no rules?" | depth, spontaneity, coherence, non-attachment to outcome (LLM) |
 
 ### 3.4 Intrapersonal Line
 
@@ -162,8 +162,8 @@ Each stage assessment module defines:
 | **Amber** | Interpersonal self — "I am my roles/relationships" | "Who are you?" (role-based); predict own behaviour in scenarios | role-identification, prediction accuracy |
 | **Orange** | Institutional self — "I am my goals/achievements" | Self-assessment accuracy (predict performance, then compare); identify own biases | prediction accuracy, bias awareness, metacognition |
 | **Green** | Inter-individual self — "I am my values/process" | Identify internal contradictions; "what part of you wants X while another wants Y?" | contradiction awareness, parts-language, depth (LLM) |
-| **Turquoise** | Construct-aware self — "I am the awareness that holds all parts" | Witness perspective tasks; "observe your reaction without acting on it" | dis-identification speed, meta-awareness, equanimity |
-| **White** | Unitive self — "I am" (no predicate needed) | Paradox of self-description; "describe yourself without using roles, traits, or history" | depth, simplicity, coherence, non-attachment (LLM) |
+| **Teal** | Construct-aware self — "I am the awareness that holds all parts" | Witness perspective tasks; "observe your reaction without acting on it" | dis-identification speed, meta-awareness, equanimity |
+| **Turquoise** | Unitive self — "I am" (no predicate needed) | Paradox of self-description; "describe yourself without using roles, traits, or history" | depth, simplicity, coherence, non-attachment (LLM) |
 
 ### 3.5 Spiritual Line
 
@@ -175,8 +175,8 @@ Each stage assessment module defines:
 | **Amber** | Mythic faith — "God has rules; follow them" (conformist) | Value-ranking under social-pressure temptation | coherence under social pressure |
 | **Orange** | Rational spirituality — "I choose my values based on evidence" | Value-ranking under logical-argument temptation; "why do you value X?" | justification depth, resistance to sophistry (LLM) |
 | **Green** | Pluralistic spirituality — "all paths are valid" | Value-ranking under relativistic challenge; "what if your value harms another's?" | tolerance + commitment simultaneously, integration (LLM) |
-| **Turquoise** | Integral spirituality — "values arise from the structure of reality" | Value-coherence under paradox; "hold two contradictory values" | paradox tolerance, coherence, depth (LLM) |
-| **White** | Non-dual spirituality — "value and valuelessness are one" | "What matters?" under conditions of radical uncertainty | depth, simplicity, non-attachment, spontaneity (LLM) |
+| **Teal** | Integral spirituality — "values arise from the structure of reality" | Value-coherence under paradox; "hold two contradictory values" | paradox tolerance, coherence, depth (LLM) |
+| **Turquoise** | Non-dual spirituality — "value and valuelessness are one" | "What matters?" under conditions of radical uncertainty | depth, simplicity, non-attachment, spontaneity (LLM) |
 
 ### 3.6 Somatic Line
 
@@ -188,8 +188,8 @@ Each stage assessment module defines:
 | **Amber** | Disciplined body — sustained posture, endurance | Sustained hold + rhythm maintenance over time | endurance, consistency over time |
 | **Orange** | Skilled body — multi-limb coordination, precision | Complex rhythm (polyrhythm: 3 against 2); precision tapping | polyrhythm accuracy, precision |
 | **Green** | Expressive body — body as communication, flow | Free-form rhythm creation; "make a pattern that feels like X" | creativity, expressiveness (LLM for description) |
-| **Turquoise** | Integrated body — body-mind unity, proprioceptive wisdom | Anticipatory timing (predict when stimulus will appear); body-scan accuracy | anticipation accuracy, interoceptive precision |
-| **White** | Effortless body — wu-wei, action without actor | RT under no-urgency conditions; "respond when it feels right" | naturalness, consistency without effort |
+| **Teal** | Integrated body — body-mind unity, proprioceptive wisdom | Anticipatory timing (predict when stimulus will appear); body-scan accuracy | anticipation accuracy, interoceptive precision |
+| **Turquoise** | Effortless body — wu-wei, action without actor | RT under no-urgency conditions; "respond when it feels right" | naturalness, consistency without effort |
 
 ### 3.7 Willpower Line
 
@@ -201,8 +201,8 @@ Each stage assessment module defines:
 | **Amber** | Sustained effort — follow through on commitments | Hold for 8-12s; multi-trial consistency (don't degrade over trials) | duration, consistency across trials, no degradation |
 | **Orange** | Strategic willpower — allocate effort wisely | Choose WHEN to exert effort (some trials are worth more); resource management | strategic allocation, total score optimisation |
 | **Green** | Flexible willpower — hold AND release appropriately | Hold when told to hold, release when told to release (switching); "let go" tasks | switching accuracy, release speed, flexibility |
-| **Turquoise** | Effortful effortlessness — sustained without strain | Long hold (15-20s) with minimal physiological cost (measured by consistency, not just duration) | consistency of hold (no jitter), smoothness |
-| **White** | Wu-wei — action without actor, will without willing | "Hold until it feels right to release" (no external cue); self-determined timing | coherence of self-timing, non-reactivity to perturbation |
+| **Teal** | Effortful effortlessness — sustained without strain | Long hold (15-20s) with minimal physiological cost (measured by consistency, not just duration) | consistency of hold (no jitter), smoothness |
+| **Turquoise** | Wu-wei — action without actor, will without willing | "Hold until it feels right to release" (no external cue); self-determined timing | coherence of self-timing, non-reactivity to perturbation |
 
 ### 3.8 Interpersonal Line
 
@@ -214,8 +214,8 @@ Each stage assessment module defines:
 | **Amber** | Other as role — "what should they do?" (norm-based) | Predict NPC's behaviour based on their stated role/rules | role-based prediction, norm awareness |
 | **Orange** | Other as mind — theory of mind, false belief | False-belief tasks: "NPC doesn't know X — what will they do?" | ToM accuracy, perspective-taking |
 | **Green** | Other as subject — empathic coordination, mutual | Cooperative timing: sync with NPC who is also trying to sync with you | mutual adaptation speed, coordination quality |
-| **Turquoise** | Other as self — non-dual relating, field awareness | Predict NPC's behaviour when NPC is adapting to YOU (recursive ToM) | recursive prediction accuracy, adaptation speed |
-| **White** | No other — unity, spontaneous coordination | "Act together without communication" — emergent synchrony | synchrony quality, spontaneity |
+| **Teal** | Other as self — non-dual relating, field awareness | Predict NPC's behaviour when NPC is adapting to YOU (recursive ToM) | recursive prediction accuracy, adaptation speed |
+| **Turquoise** | No other — unity, spontaneous coordination | "Act together without communication" — emergent synchrony | synchrony quality, spontaneity |
 
 ---
 
@@ -376,7 +376,7 @@ To calibrate whether someone is below, at, or above Red, we need:
 
 For players who are above Amber.
 
-### Phase 4: Infrared + Turquoise + White assessments
+### Phase 4: Infrared + Teal + Turquoise assessments
 
 Edge cases — very low or very high.
 
@@ -617,7 +617,7 @@ export interface CompleteStageModule {
 | **Phase 1** | Red × all 8 lines (8 modules) | Capacity tasks + drive probes + shadow archetypes |
 | **Phase 2** | Amber + Magenta × all 8 lines (16 modules) | Adjacent stages for calibration |
 | **Phase 3** | Orange + Green × all 8 lines (16 modules) | Mid-range stages |
-| **Phase 4** | Infrared + Turquoise + White × all 8 lines (24 modules) | Edge stages |
+| **Phase 4** | Infrared + Teal + Turquoise × all 8 lines (24 modules) | Edge stages |
 | **Phase 5** | Composite onboarding + holonic return system | The orchestration layer |
 
 Each phase delivers **playable, testable modules** that work in isolation before being composed.

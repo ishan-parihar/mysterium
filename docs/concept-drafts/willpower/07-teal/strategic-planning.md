@@ -1,4 +1,4 @@
-# Willpower × Turquoise — Strategic-Planning
+# Willpower × Teal — Strategic-Planning
 
 ## 1. Core Mechanic
 

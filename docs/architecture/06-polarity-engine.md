@@ -10,7 +10,7 @@ Describes the 64-cell polarity texture catalogue, STO/STS crystallization, 4-lev
 
 - **Polarity ontology** — Foundations/23: 64-cell texture catalogue (8 lines × 8 stages)
 - **STO/STS vectors** — Foundations/19: Service-to-Others vs Service-to-Self crystallization
-- **Harvest mechanics** — Foundations/06: 4th-density harvest as canonical endgame at White stage
+- **The closure** — Foundations/06 §7.4: the 4th-density harvest is the **Violet event** at the sub-octave closure (L8 Teal completed), scripted epilogue — never a stage
 
 ## 3. Game-design mapping
 
@@ -41,7 +41,7 @@ Each (line × stage) cell has a unique polarity texture — the specific way STO
 
 ### Harvest Mechanics
 
-At White stage, the player's polarity crystallization determines their harvest:
+At the closure (L8 Teal completed; the Violet event), the player's polarity crystallization determines their harvest:
 - **STO harvest** — 4th-density positive harvest (service-to-others orientation)
 - **STS harvest** — 4th-density negative harvest (service-to-self orientation)
 - **No harvest** — insufficient crystallization (remains in 3rd density)

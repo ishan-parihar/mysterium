@@ -1,4 +1,4 @@
-# Cognitive / White — Immersive-RPG Game
+# Cognitive / Turquoise — Immersive-RPG Game
 
 > **Modality:** Immersive-RPG (ecological free-play)  
 > **Unique lateral:** Whether direct knowing appears spontaneously in free-play — trans-rational cognition as the player's default mode rather than a special state.
@@ -7,7 +7,7 @@
 
 ## 1. Core Mechanic
 
-**Transparent Cognition in the Wild.** The player navigates a rich, open game-world where cognitive challenges arise organically — not as announced tasks but as features of the environment. The system observes whether the player's cognitive engagement with the world is effortful or transparent. At White, the entire game-world becomes a field of direct knowing.
+**Transparent Cognition in the Wild.** The player navigates a rich, open game-world where cognitive challenges arise organically — not as announced tasks but as features of the environment. The system observes whether the player's cognitive engagement with the world is effortful or transparent. At Turquoise, the entire game-world becomes a field of direct knowing.
 
 Key environmental features:
 - **Ambient complexity:** The world contains patterns, puzzles, and strategic situations woven into the environment. No UI markers distinguish "cognitive challenges" from scenery. The player either sees or doesn't.
@@ -40,7 +40,7 @@ Detected when: the player's avatar-relationship reveals identification. Choices 
 - **Agency residue:** Solo exploration dominates. Avoids NPC collaboration. Approaches the world as territory to be mastered.
 - **Communion residue:** Over-reliance on NPC guidance. Cannot navigate the world sovereignly. Seeks collective validation for direct knowing.
 
-Healthy White: moves through the world as the world moves through awareness. No systematic preference for any engagement style.
+Healthy Turquoise: moves through the world as the world moves through awareness. No systematic preference for any engagement style.
 
 ## 4. Progression Arc
 

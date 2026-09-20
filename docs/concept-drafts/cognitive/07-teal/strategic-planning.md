@@ -1,4 +1,4 @@
-# Cognitive / Turquoise — Strategic-Planning
+# Cognitive / Teal — Strategic-Planning
 
 ## 1. Game Identity
 

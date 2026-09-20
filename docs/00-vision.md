@@ -9,7 +9,7 @@ Mysterium is a contemplative practice that uses game mechanics as its delivery v
 1. **A developmental assessment engine** — 64 modules (8 lines × 8 stages), 1,280 items, 7 modalities. Every encounter is a validated developmental assessment.
 2. **A complete education replacement** — 5-level holonic curriculum, knowledge graph, 6-level depth assessment, spaced repetition, cross-domain isomorphisms, research pipeline through Ph.D.
 3. **A shadow work tool** — 4-quadrant shadow model (Dark-Addiction/Allergy, Golden-Addiction/Allergy), 256 shadow configurations, detection→surfacing→integration mechanics.
-4. **A polarity engine** — 64-cell polarity texture catalogue, STO/STS crystallization, harvest mechanics at White stage. Every choice is a polarity signal.
+4. **A polarity engine** — 64-cell polarity texture catalogue, STO/STS crystallization, and the closure event (the Violet event — not a stage; 06 §5.1). Every choice is a polarity signal.
 5. **An incarnation architecture** — ONE world with 8 perceptual layers. The world doesn't change—your perception does. Transformation is a layer-shift, not a teleport.
 6. **A cosmology** — Law-of-One energy-ray correspondence as canonical metaphysics, mapping the soul's journey through density.
 
@@ -23,7 +23,7 @@ It is a *literal* developmental practice that hides inside a *legitimate* game. 
 
 Mysterium sits at the intersection of four mature research traditions:
 
-- **Integral developmental psychology** — Wilber's AQAL framework synthesising Piaget (cognitive), Kohlberg (moral), Fowler (faith), Gardner (multiple intelligences), Loevinger (ego), Goleman (emotional). The game's macro-progression IS the eight stages (Infrared → White / Archaic → Super-Integral).
+- **Integral developmental psychology** — Wilber's AQAL framework synthesising Piaget (cognitive), Kohlberg (moral), Fowler (faith), Gardner (multiple intelligences), Loevinger (ego), Goleman (emotional). The game's macro-progression IS the eight stages (Infrared → Turquoise / Archaic → Super-Integral).
 - **Meta-learning science** — Spaced repetition, forgetting curves, desirable difficulties, interleaving, the testing effect, depth-of-processing theory. The curriculum system replaces formal education with adaptive, depth-aware learning.
 - **Shadow work psychology** — Jungian shadow integration, 4-quadrant shadow model (Dark-Addiction/Allergy, Golden-Addiction/Allergy), developmental pathology across 8 lines × 8 stages.
 - **Psychophysics of skill acquisition** — The transformed up-down staircase (1-up/2-down rule), which converges difficulty to the player's 70.7% performance threshold, the empirically established sweet-spot for both engagement (flow theory) and neuroplastic gain.

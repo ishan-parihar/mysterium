@@ -16,9 +16,9 @@
 | 2 | **Intrapersonal:** same scenario repeats | Only 6 scenarios; `getScenarioForLevel` uses `this.currentTrial % matching.length` — at level 3-4, only 2 scenarios exist, so they repeat immediately | Feels broken, no new information gathered |
 | 3 | **Moral:** limited spectrum, scratches surface | Only 4 dilemmas with 3 options each. Options are tagged Red/Amber/Orange/Green but the scenarios don't probe the *unconscious* moral structure — they test *stated preference* | Cannot distinguish genuine moral development from social desirability |
 | 4 | **Spiritual:** same temptation repeats | `getTemptations(topValue)` returns exactly 4 per value, and the staircase stays at the same level, so the same temptation appears multiple times | Feels repetitive, easily gamed once you see the pattern |
-| 5 | **Willpower:** easily spoofed | Just hold the button — no multi-dimensional challenge. No delay-of-gratification, no strategic allocation, no "release when told" | A robot could pass at White stage |
+| 5 | **Willpower:** easily spoofed | Just hold the button — no multi-dimensional challenge. No delay-of-gratification, no strategic allocation, no "release when told" | A robot could pass at L8 Teal |
 | 6 | **Post-probe result:** "Strong/Developing/Emerging" | `showProbeComplete` shows a single word based on accuracy > 0.8/0.5 | No meaningful feedback; doesn't reflect the multi-dimensional reality |
-| 7 | **Final calibration gives inflated results** | Somatic: Turquoise, Moral: White, Willpower: Green — from 3-6 trials each | The staircase converges too fast on too little data |
+| 7 | **Final calibration gives inflated results** | Somatic: Teal, Moral: Teal, Willpower: Green — from 3-6 trials each | The staircase converges too fast on too little data |
 | 8 | **Emotional:** basic recognition only | Ekman 6 faces with 4 options — measures "can you name emotions" not "how deeply do you understand them" | Cannot distinguish Red (self-other split) from Green (pluralistic empathy) |
 
 ### 1.2 Structural problems
@@ -70,7 +70,7 @@ For each line:
 3. If PASSED with confidence > 0.6:
    a. Record: "player is AT LEAST at this stage"
    b. Move UP: estimated_stage = next_stage
-   c. If at White: done (altitude = White)
+   c. If at Turquoise: done (altitude = Turquoise)
    d. Else: go to step 2
 4. If FAILED with confidence > 0.6:
    a. Record: "player is BELOW this stage"
@@ -280,7 +280,7 @@ These are quick fixes that make the current system usable while we build the pro
 
 ### Medium-term (next 4 sprints): Complete the 64-module system
 
-1. Implement Orange through White for all lines
+1. Implement Orange through Turquoise for all lines
 2. Build the multi-session onboarding flow
 3. Build the quick-calibration mode
 4. Integrate with combat (single-trial mode)

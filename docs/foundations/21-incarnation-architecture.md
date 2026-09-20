@@ -61,15 +61,15 @@ The game world is ONE coherent geography. It does not branch into parallel dimen
 | 4 | Amber | Cathedral-ordered, gold/stone, hierarchical | Rule-governed, structured, ceremonial | Priests, knights, judges, tradition-keepers |
 | 5 | Orange | Mechanism-precise, steel/glass, achievement | Rational causation, measurable, optimisable | Inventors, strategists, merchants, scholars |
 | 6 | Green | Garden-lush, earth-toned, communal | Relational, ecological, interconnected | Healers, pluralists, activists, artists |
-| 7 | Turquoise | Crystalline, vast, translucent | Holonic, multi-scale, integral | Sages, vision-logicians, planetary stewards |
-| 8 | White | Luminous silence, minimal, spacious | Non-dual, paradox-holding | The witness, the transparent vessel |
+| 7 | Teal | Crystalline, vast, translucent | Holonic, multi-scale, integral | Sages, vision-logicians, planetary stewards |
+| 8 | Turquoise | Luminous silence, minimal, spacious | Non-dual, paradox-holding | The witness, the transparent vessel |
 
 ### 2.2 Layers are strata of perception, not separate maps
 
 A player at Red altitude and a player at Green altitude stand in the *same* world-coordinate. They perceive different things:
 
 - **NPCs visible:** Each NPC has a primary layer. An NPC whose signature is Amber is invisible (or perceived as a flat background figure) to a Red-altitude player. At Amber altitude, that NPC becomes a full interactable character with dialogue, quests, and relational depth.
-- **Environments accessible:** Certain spaces exist only at certain layers. A meditation grove is physically present at all layers but is perceived as "empty clearing" at Red, "pleasant garden" at Green, and "crystalline sanctuary" at Turquoise.
+- **Environments accessible:** Certain spaces exist only at certain layers. A meditation grove is physically present at all layers but is perceived as "empty clearing" at Red, "pleasant garden" at Green, and "crystalline sanctuary" at Teal.
 - **Encounter types eligible:** The encounter scheduler only draws from modules at or below the player's current altitude (plus golden-shadow horizon encounters from one layer above).
 - **Palette and music:** Each layer carries its ray-palette and modal audio signature (per MVP-BLUEPRINT §14–15). The renderer blends layers based on the player's perceptual state.
 
@@ -77,7 +77,7 @@ A player at Red altitude and a player at Green altitude stand in the *same* worl
 
 The player does not perceive *only* their dominant layer. Two additional perceptual phenomena operate:
 
-**Theta-decay bleed-through (downward):** When a lower layer's module has decayed (theta-decay per foundations/14), that layer *bleeds through* into the player's perception. A Turquoise player who has neglected their Red-stage health will see Red-layer elements intruding — fortress walls cracking through the crystalline landscape, aggressive NPCs appearing where none should be. This is the holonic maintenance principle made perceptual: neglected lower stages demand attention.
+**Theta-decay bleed-through (downward):** When a lower layer's module has decayed (theta-decay per foundations/14), that layer *bleeds through* into the player's perception. A Teal player who has neglected their Red-stage health will see Red-layer elements intruding — fortress walls cracking through the crystalline landscape, aggressive NPCs appearing where none should be. This is the holonic maintenance principle made perceptual: neglected lower stages demand attention.
 
 **Golden-shadow horizon (upward):** The player receives faint impressions of the *next* layer above their current altitude. These are not full interactions — they are glimpses: a distant figure that vanishes, a sound that doesn't belong, an environmental detail that seems to shimmer with unrealised meaning. These impressions are the emergent unconscious (the Potentiator) calling the Significator forward. They intensify as the player approaches a Transformation threshold.
 
@@ -340,7 +340,7 @@ The player learns to perceive the world. The Significator is nascent — drive-p
 The bulk of gameplay. The player becomes a *self* — first as warrior (Red), then as tradition-member (Amber), then as rational individual (Orange), then as sensitive pluralist (Green). Each stage's layer reveals new dimensions of the same world.
 
 **Structural role:**
-- Four full Transformation events (Red→Amber, Amber→Orange, Orange→Green, Green→Turquoise)
+- Four full Transformation events (Red→Amber, Amber→Orange, Orange→Green, Green→Teal)
 - Four major antagonists, each embodying a stage-fixation (per narrative/00 §4.2):
   - The Conqueror (Red × Agency-fixation)
   - The Inquisitor (Amber × Communion-fixation)
@@ -352,21 +352,21 @@ The bulk of gameplay. The player becomes a *self* — first as warrior (Red), th
 
 **Transformation events within Act II** follow the full Lovers Crucible pattern (per foundations/17 §2.2): Unravelling → Crucible → Emergence. Each transition costs the player something they valued at the previous stage. Each transition reveals something that was always present but imperceptible.
 
-### 6.3 Act III — The World of Wholes (Turquoise, White)
+### 6.3 Act III — The World of Wholes (Teal, Teal)
 
 **Theme:** "Who am I, when 'I' is one of many holons in a larger field?"
 
 The integral and non-dual stages. The world becomes spacious — fewer encounters, deeper each. The narrative quiets. The player's *self* is transcended-and-included into larger holons.
 
 **Structural role:**
-- Two final Transformation events (Turquoise→White, White→Harvest)
+- Two final Transformation events (Teal→Teal, then the closure — the Violet event)
 - The Choice crystallises — polarity vector reaches locked phase (magnitude ≥ 0.85)
-- The protagonist's future self appears as mentor at Turquoise threshold
-- The protagonist *authors* their closing reflection at White (player-written text)
-- The harvest endgame (post-White) — transition into 4th density (per MVP-BLUEPRINT §16)
+- The protagonist's future self appears as mentor at Teal threshold
+- The protagonist *authors* their closing reflection at the closure (player-written text)
+- The closure endgame (post-apex) — scripted transition into 4th density (per MVP-BLUEPRINT §16)
 - The world renders with maximum perceptual depth — all 8 layers simultaneously visible to the integral perceiver
 
-**Transformation at Act III's close:** The final Transformation is not into a new stage but into a new *density*. The Significator's game-lifetime concludes. The character is retired; the psychograph preserved; the player's words become part of the world (multiplayer: mentor presence for other players).
+**Transformation at Act III's close:** The final event is not into a new stage but into a new *density* — the closure, which is not a stage (06 §5.1). The Significator's game-lifetime concludes. The character is retired; the psychograph preserved; the player's words become part of the world (multiplayer: mentor presence for other players).
 
 ### 6.4 How Transformation events bridge acts and stages
 
@@ -379,9 +379,9 @@ Each Transformation event is both a narrative climax and a mechanical phase-tran
 | Red → Amber | The surrender of dominance; joining a tradition | Layer 4 activates; rule-based encounters unlock |
 | Amber → Orange | The questioning; breaking from dogma | Layer 5 activates; rational/strategic encounters unlock |
 | Orange → Green | The opening; feeling the other | Layer 6 activates; relational/ecological encounters unlock |
-| Green → Turquoise | The integration; seeing the whole spiral | Layer 7 activates; integral encounters unlock |
-| Turquoise → White | The silence; releasing the need to integrate | Layer 8 activates; non-dual encounters unlock |
-| White → Harvest | The authoring; the player's final words | All layers unified; game-lifetime concludes |
+| Green → Teal | The integration; seeing the whole spiral | Layer 7 activates; integral encounters unlock |
+| Teal → Turquoise | The silence; releasing the need to integrate | Layer 8 activates; non-dual encounters unlock |
+| Teal → the closure | The authoring; the player's final words | All layers unified; game-lifetime concludes |
 
 ---
 
@@ -467,8 +467,8 @@ Per concept-drafts/ROADMAP and MVP-BLUEPRINT §37:
 | MVP | Red (full) + Infrared (prologue) | 8 modules × 7 games + narrative arc |
 | Drop 1 | Amber + Magenta | 16 modules × 7 games + 2 narrative arcs |
 | Drop 2 | Orange + Green | 16 modules × 7 games + 2 narrative arcs |
-| Drop 3 | Infrared (full) + Turquoise + White | 24 modules × 7 games + 3 narrative arcs |
-| Drop 4 | Harvest endgame | Post-White scripted content |
+| Drop 3 | Infrared (full) + Teal + Turquoise | 24 modules × 7 games + 3 narrative arcs |
+| Drop 4 | Closure endgame | Post-apex scripted content (the Violet event) |
 
 Each drop activates a new perceptual layer, populates new collective holons in the Great Way, and introduces new encounters drawn from the relevant line×stage modules. The player who has been playing since MVP experiences each drop as the world *deepening* — new layers becoming perceptible as their altitude advances.
 

@@ -1,20 +1,20 @@
-# Cognitive / Turquoise — Module Specification
+# Cognitive / Teal — Module Specification
 
 ## 1. Module Identity
 
 | Field | Value |
 |---|---|
 | Line | Cognitive |
-| Stage | 07 — Turquoise (Integral / Vision-Logic) |
+| Stage | 07 — Teal (Integral / Vision-Logic) |
 | Ray | Indigo |
 | Core capacity | Post-formal integrative thinking — holding all prior cognitive stages as partial truths within a unified field |
 | Defining tasks | Meta-WCST (rules-about-rules), n=4 holonic working memory, recursive Tower of London, dialectical reasoning, pattern-of-patterns detection, cross-domain integration |
 | Below | Green — multi-perspectival reasoning, contradiction tolerance, systems thinking |
-| Above | White — trans-rational direct knowing without conceptual mediation |
+| Above | Turquoise — trans-rational direct knowing without conceptual mediation |
 
 ## 2. Drive Dynamics
 
-| Drive | Healthy expression at Turquoise |
+| Drive | Healthy expression at Teal |
 |---|---|
 | Eros | Reaches toward trans-rational opening; yearns to dissolve the mapper into the mapped |
 | Agape | Returns to earlier stages with compassion, holding Green/Orange/Amber as valid partial truths |
@@ -27,7 +27,7 @@
 |---|---|---|
 | Dark-Addiction | The Meta-Mapper | Addicted to integral frameworks; meta-cognition as defence against direct experience |
 | Dark-Allergy | The Green Pluralist | Refuses integral cognition; stays in Green multi-perspectival; 'hierarchy is oppressive' |
-| Golden-Addiction | The Premature Non-Dualist | Performs White trans-rational knowing without genuine integral mastery |
+| Golden-Addiction | The Premature Non-Dualist | Performs Turquoise trans-rational knowing without genuine integral mastery |
 | Golden-Allergy | The Integral Fortress | Vision-logic present but refuses non-dual opening; terrified of ego-dissolution |
 
 ## 4. Compound Shadows

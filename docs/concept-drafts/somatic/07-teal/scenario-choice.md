@@ -1,4 +1,4 @@
-# Somatic × Turquoise — Scenario-Choice Game
+# Somatic × Teal — Scenario-Choice Game
 
 ## 1. Core Mechanic
 

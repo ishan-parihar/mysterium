@@ -1,4 +1,4 @@
-# Moral / Turquoise — Scenario-Choice
+# Moral / Teal — Scenario-Choice
 
 ## 1. Game Identity
 
@@ -13,7 +13,7 @@
 
 **The Holonic Crossroads:** Player faces moral scenarios involving multiple stakeholders at different developmental altitudes. No option is 'wrong' — each represents a valid moral logic at its stage. The integral choice honours all while protecting the most depth for the most span.
 
-- **Multi-Altitude Stakeholders:** Each scenario contains characters operating from Red (power), Amber (duty), Orange (achievement), Green (care), and Turquoise (holonic) moral logic. Player must navigate competing claims without dismissing any stage.
+- **Multi-Altitude Stakeholders:** Each scenario contains characters operating from Red (power), Amber (duty), Orange (achievement), Green (care), and Teal (holonic) moral logic. Player must navigate competing claims without dismissing any stage.
 - **Depth-Span Dilemmas:** Scenarios where protecting depth (one highly-developed entity) conflicts with protecting span (many less-developed entities). No formulaic answer — genuine holonic reasoning required.
 - **Developmental Honour Choices:** Options that rank developmental stages while simultaneously honouring the dignity of each. The integral choice is never condescending to lower stages.
 - **Kosmocentric Edge Scenarios:** Late-game scenarios where holonic ranking itself must be released — where the compassionate response transcends the integral framework. Tests whether player can let go of structure when appropriate.

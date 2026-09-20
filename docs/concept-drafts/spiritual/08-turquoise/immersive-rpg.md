@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Spiritual / White |
+| Module | Spiritual / Turquoise |
 | Modality | Immersive-RPG |
 | Probe axis | Whether transparent presence appears spontaneously in free-play |
 | Core mechanic | Open-world ecological observation — does non-dual sacred arise without prompting? |
@@ -15,7 +15,7 @@ The ultimate test of non-dual integration: does transparent presence appear spon
 
 ### 3.1 The Transparent World
 
-The game world at White contains no explicitly sacred locations, no temples, no meditation spots. Every location is equally ordinary. The system measures whether the player's engagement quality varies by location or remains constant.
+The game world at Turquoise contains no explicitly sacred locations, no temples, no meditation spots. Every location is equally ordinary. The system measures whether the player's engagement quality varies by location or remains constant.
 
 ### 3.2 Ambient Presence Markers
 

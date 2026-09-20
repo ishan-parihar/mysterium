@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Moral / White
+- **Module:** Moral / Turquoise
 - **Modality:** Embodied-Somatic
 - **Unique Axis:** Body as site of kosmocentric ethics — embodied compassion, physical non-grasping at rightness
 - **Core Mechanic:** Rhythm and movement tasks where moral content is delivered through somatic channels, measuring bodily ease vs. tension in ethical engagement

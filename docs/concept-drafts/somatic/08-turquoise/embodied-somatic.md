@@ -1,8 +1,8 @@
-# Somatic / White — Embodied-Somatic Game
+# Somatic / Turquoise — Embodied-Somatic Game
 
 ## 1. Core Mechanic
 
-The luminous body itself — this is the PRIMARY somatic modality for White. Non-grasping movement and transparent embodiment measured through the body's own activity. The game uses device sensors (accelerometer, gyroscope, touch pressure) to detect whether the player's physical engagement is effortless or strained.
+The luminous body itself — this is the PRIMARY somatic modality for Turquoise. Non-grasping movement and transparent embodiment measured through the body's own activity. The game uses device sensors (accelerometer, gyroscope, touch pressure) to detect whether the player's physical engagement is effortless or strained.
 
 Core tasks: hold the device with minimal grip while performing gestures; move through space without excess muscular engagement; breathe without controlling breath; be still without rigidity. The body IS the instrument and the measurement simultaneously.
 

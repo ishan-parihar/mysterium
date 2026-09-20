@@ -1,4 +1,4 @@
-# Intrapersonal × Turquoise — Embodied-Somatic
+# Intrapersonal × Teal — Embodied-Somatic
 
 ## 1. Game Identity
 

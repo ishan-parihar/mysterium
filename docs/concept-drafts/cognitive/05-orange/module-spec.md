@@ -20,7 +20,7 @@ Refuses formal reasoning entirely. Remains in Amber concrete operations while ra
 
 ### 2.3 Golden-Addiction (GA): The Premature Systems-Thinker
 
-Performs Green/Turquoise multi-perspectival reasoning without genuine formal-operational mastery. Talks fluently about "complexity," "emergence," and "integral" while unable to execute rigorous deduction. Skips the discipline of Orange to wear the costume of Turquoise.
+Performs Green/Teal multi-perspectival reasoning without genuine formal-operational mastery. Talks fluently about "complexity," "emergence," and "integral" while unable to execute rigorous deduction. Skips the discipline of Orange to wear the costume of Teal.
 
 ### 2.4 Golden-Allergy (GAll): The Rationalist Fortress
 

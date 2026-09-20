@@ -148,7 +148,7 @@ the player threatens it. The fight has four phases:
   schedule* dictate openings.
 
 Outcomes: defeat (rejecting orthodoxy), conversion (joining — locks
-out higher stages until shadow work), reform (the rare Turquoise-tier
+out higher stages until shadow work), reform (the rare Teal-tier
 ending that requires demonstrating Orange-style reasoned discourse
 during the fight).
 

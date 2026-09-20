@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Interpersonal / White |
+| Module | Interpersonal / Turquoise |
 | Modality | Social-Cooperative |
 | Unique Lateral | Live non-dual relating — communion with NPC partners, transparent relational field in real-time |
 | Core Mechanic | Cooperative tasks requiring genuine field-communion rather than role-based collaboration |

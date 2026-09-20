@@ -1,4 +1,4 @@
-# Somatic × Turquoise — Immersive-RPG Game
+# Somatic × Teal — Immersive-RPG Game
 
 ## 1. Core Mechanic
 

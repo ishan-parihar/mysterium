@@ -1,4 +1,4 @@
-# Emotional / Turquoise — Deterministic
+# Emotional / Teal — Deterministic
 
 ## 1. Core Mechanic
 

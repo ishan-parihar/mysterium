@@ -3,12 +3,12 @@
 > **Status:** canonical-hypothesis (Wilber synthesis + Law-of-One Ra material + Primal Distortion Genesis Theorem correspondence).
 >
 > HoloOS anchor: `_THEORY/02_Ontology/08.8.7_Primal_Distortion_Genesis_Theorem.md` (canonical-hypothesis). The Primal Distortion Genesis Theorem establishes that each Stage corresponds to an established Primal Law:
-> **Vocabulary correction (2026-09-20, canon home = 06 §5.1):** the bands below are **substrate layers within D3** (the density of the Choice), **not densities**. Densities are VIBGYOR — D1 Red, D2 Orange, **D3 Yellow**, D4 Green … D7 Violet, with the 8th as the octave-closure — and Mysterium's stage names (Infrared … White) are Spiral-Dynamics colours. Each integrated substrate layer carries one of the three established Laws; Mysterium's eight stages traverse the **D3 sub-octave**, whose closure is White (`01.4` §2.5.2, 06 §5.1).
+> **Vocabulary correction (2026-09-20, canon home = 06 §5.1):** the bands below are **substrate layers within D3** (the density of the Choice), **not densities**. Densities are VIBGYOR — D1 Red, D2 Orange, **D3 Yellow**, D4 Green … D7 Violet, with the 8th as the octave-closure — and Mysterium's stage names (Infrared … Turquoise) are Spiral-Dynamics colours. Each integrated substrate layer carries one of the three established Laws; Mysterium's eight stages traverse the **D3 sub-octave**, whose closure is Turquoise (`01.4` §2.5.2, 06 §5.1).
 >
 > - **Substrate layer 1 — Infrared/Magenta ≈ Free Will** (First Distortion, established by Octave N-3's complete D1→D7 harvest). Encounters about choice as such; quantum-like superposition of possibilities.
 > - **Substrate layer 2 — Red/Amber ≈ Love / Logos** (Second Distortion, established by Octave N-2). Directed growth, Logos-focusing, the principle of unity-attracting.
-> - **Substrate layer 3 — Orange/Green/Turquoise ≈ Light** (Third Distortion, established by Octave N-1). Self-reflective choice within archetypal form; manifestation.
-> - **The sub-octave closure — White ≈ our octave's contributions** — the Light-Law fully operative across all substrate layers; this is the Yellow→Green harvest into D4 (06 §5.1, 19 §9.6), not a "D4+" density.
+> - **Substrate layer 3 — Orange/Green/Teal ≈ Light** (Third Distortion, established by Octave N-1). Self-reflective choice within archetypal form; manifestation.
+> - **The sub-octave closure — Turquoise ≈ our octave's contributions** — the Light-Law fully operative across all substrate layers; this is the Yellow→Green harvest into D4 (06 §5.1, 19 §9.6), not a "D4+" density.
 >
 > This Law-correspondence is the metaphysical grounding for Mysterium's Stage semantics. Each Stage's content should express its corresponding Law's phenomenology.
 
@@ -50,8 +50,8 @@ disambiguated in per-stage docs.
 | 4 | **Amber / Mythic** | Belonging; rule-and-role | Concrete operational | Stage 3–4 (conformist) | 25–30% | D2 ≈ Love / Logos (unity-attracting) |
 | 5 | **Orange / Rational** | Reason; achievement; objectivity | Formal operational | Stage 5 (post-conventional, social-contract) | 30–40% | D3 ≈ Light (self-reflective choice in form) |
 | 6 | **Green / Pluralistic** | Sensitivity; multi-perspective | Late formal / early post-formal | Stage 6 (universal-ethical, relativistic) | 15–20% | D3 ≈ Light (multi-perspective illumination) |
-| 7 | **Turquoise / Integral** | Vision-logic; integration | Post-formal vision-logic | Stage 7 (universal-systemic) | ~5% | D3 ≈ Light (integral vision) |
-| 8 | **White / Super-Integral** | Non-dual; unity | Trans-rational | Stage 8 (kosmocentric) | <1% | D4+ ≈ our octave's contributions (Light fully operative) |
+| 7 | **Teal / Integral** | Vision-logic; integration | Post-formal vision-logic | Stage 7 (universal-systemic) | ~5% | D3 ≈ Light (integral vision) |
+| 8 | **Turquoise / Super-Integral** | Non-dual; unity | Trans-rational | Stage 8 (kosmocentric) | <1% | D4+ ≈ our octave's contributions (Light fully operative) |
 
 \* Adult-population estimates are approximate, drawn from Cook-Greuter's
 sentence-completion data and Wilber's syntheses. They are illustrative —
@@ -116,7 +116,7 @@ literatures, plus the user's stated framework. The mapping to the
 Law-of-One seven-ray system is given in `foundations/06`; the eight-stage
 sequence with the seven-ray system maps as **Blue-Ray = two stages
 (Orange and Green; in-flowing and out-flowing)** and **Indigo-Ray = two
-stages (Turquoise and White's lower half)**, totalling eight integral
+stages (Teal and Turquoise's lower half)**, totalling eight integral
 stages over seven rays. This is documented as canon, not invented.
 
 ### 3.4 Backward access — the regression mechanic
@@ -135,7 +135,7 @@ const STAGES: ReadonlyArray<Stage> =
   ['Infrared','Magenta','Red','Amber','Orange','Green','Turquoise','White'] as const;
 
 function stageIndex(s: Stage): number;            // 0..7
-function nextStage(s: Stage): Stage | null;       // White → null
+function nextStage(s: Stage): Stage | null;       // Turquoise → null
 function prevStage(s: Stage): Stage | null;       // Infrared → null
 function synthesizeStage(altitudes: Record<Line, Stage>): Stage;
 ```

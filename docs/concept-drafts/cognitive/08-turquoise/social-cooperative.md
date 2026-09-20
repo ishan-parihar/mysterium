@@ -1,4 +1,4 @@
-# Cognitive / White — Social-Cooperative Game
+# Cognitive / Turquoise — Social-Cooperative Game
 
 > **Modality:** Social-Cooperative (shared cognition)  
 > **Unique lateral:** Shared trans-rational knowing — communion in direct knowing, non-verbal cognitive attunement. Thinking together without thinking.
@@ -7,7 +7,7 @@
 
 ## 1. Core Mechanic
 
-**Collective Direct Knowing.** Two or more players face cognitive challenges that require shared knowing without explicit communication. At White, individual minds become transparent to each other — not through empathy or theory-of-mind (prior stages) but through shared participation in knowing itself.
+**Collective Direct Knowing.** Two or more players face cognitive challenges that require shared knowing without explicit communication. At Turquoise, individual minds become transparent to each other — not through empathy or theory-of-mind (prior stages) but through shared participation in knowing itself.
 
 Key task types:
 - **Non-verbal coordination:** Complex patterns requiring synchronized response from multiple players without communication channels. Success requires attunement beyond inference.
@@ -40,7 +40,7 @@ Detected when: the player cannot dissolve into collective knowing without losing
 - **Agency residue:** Consistently leads or initiates in group-field tasks. Cannot receive direction from the collective without asserting individual knowing.
 - **Communion residue:** Consistently follows or merges. Cannot contribute sovereign knowing to the collective without dissolving into it.
 
-Healthy White: sovereign and joined simultaneously. Contributes unique knowing while participating in shared field.
+Healthy Turquoise: sovereign and joined simultaneously. Contributes unique knowing while participating in shared field.
 
 ## 4. Progression Arc
 

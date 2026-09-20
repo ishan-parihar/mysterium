@@ -1,4 +1,4 @@
-# Somatic × Turquoise — Embodied-Somatic Game
+# Somatic × Teal — Embodied-Somatic Game
 
 ## 1. Core Mechanic
 

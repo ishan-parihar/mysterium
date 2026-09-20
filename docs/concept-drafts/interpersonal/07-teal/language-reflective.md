@@ -1,4 +1,4 @@
-# Interpersonal × Turquoise — Language-Reflective
+# Interpersonal × Teal — Language-Reflective
 
 ## 1. Core Mechanic
 

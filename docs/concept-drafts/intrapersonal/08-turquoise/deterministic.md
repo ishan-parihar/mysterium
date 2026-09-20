@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Intrapersonal / White |
+| Module | Intrapersonal / Turquoise |
 | Modality | Deterministic |
 | Unique lateral | Objective self-transparency measurement — self-reference latency, identity-grasping detection, witness-attachment metrics |
 
@@ -23,7 +23,7 @@ Timed cognitive tasks where self-referential processing is the measured variable
 
 ### 4.1 Self-Reference Latency Probe
 - Rapid word/image categorisation: self-relevant vs. other-relevant vs. universal
-- At White, genuine transparency yields no RT difference across categories
+- At Turquoise, genuine transparency yields no RT difference across categories
 - Residual grasping shows as category-specific latency spikes
 
 ### 4.2 Identity Dissolution Sequence

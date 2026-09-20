@@ -59,7 +59,7 @@ first-tier consciousness.
 
 ### 2.3 Act III — The World of Wholes (Trans-personal)
 
-**Stages: Turquoise, White**
+**Stages: Teal, Turquoise**
 **Theme: Who am I, when "I" is one of many holons in a larger field?**
 
 The integral and non-dual stages. The protagonist's *self* is
@@ -115,7 +115,7 @@ Each stage has a major antagonist who *fixates* the stage's
 characteristic drive (`foundations/05`). The Conqueror (Red ×
 Agency-fixation), the Inquisitor (Amber × Communion-fixation), the
 Architect (Orange × Eros-fixation), the Equivocator (Green ×
-Agape-fixation), the Adept Above (Turquoise × subtle-pride). They
+Agape-fixation), the Adept Above (Teal × subtle-pride). They
 are *not* villains; they are *charismatic embodiments* of what each
 stage offers and what its shadow costs.
 
@@ -133,8 +133,8 @@ permanent companion. Mentors model what is *possible*; they do not
 solve the protagonist's problems.
 
 The most important mentor is **the protagonist's future self**, who
-appears at the Turquoise threshold as a being of vision-logic and
-quiet humour, and at the White threshold as silence.
+appears at the Teal threshold as a being of vision-logic and
+quiet humour, and at the Turquoise threshold as silence.
 
 ## 5. The recurring characters across acts
 
@@ -144,7 +144,7 @@ the world:
 - The **animal companion / maternal figure** from Infrared returns at
   Magenta (revealed to speak in dream-imagery), at Red (as a
   battle-bond ally), at Amber (as an elder), and at Orange / Green
-  (as a contemplative partner). At White, they appear in the
+  (as a contemplative partner). At Turquoise, they appear in the
   Communion ring.
 - **The Conqueror's son/daughter** — saved or spared at Red — returns
   at Amber as a knight of an opposing tradition, at Orange as a
@@ -194,7 +194,7 @@ content is cut.
 ### 6.6 The player authors the close
 
 The endings are *not* fully scripted. The player writes their own
-final reflection at White; the game presents the rough shape but the
+final reflection at Turquoise; the game presents the rough shape but the
 words are the player's. This is the strongest expression of "earned
 progression."
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Willpower × White |
+| Module | Willpower × Turquoise |
 | Modality | Strategic-Planning |
 | Unique Lateral | The paradox of planning without grasping at plans — holding intention lightly while acting precisely |
 | Core Mechanic | Planning tasks where the system measures attachment to plans vs. transparent planning |

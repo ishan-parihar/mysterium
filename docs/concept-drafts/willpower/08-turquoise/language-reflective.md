@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Willpower × White |
+| Module | Willpower × Turquoise |
 | Modality | Language-Reflective |
 | Unique Lateral | Verbal articulation of effortless will — how player talks about action reveals residual grasping |
 | Core Mechanic | Open-ended prompts about action, will, and doing — LLM-scored for grasping markers |

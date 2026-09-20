@@ -1,4 +1,4 @@
-# Somatic × Turquoise — Social-Cooperative Game
+# Somatic × Teal — Social-Cooperative Game
 
 ## 1. Core Mechanic
 

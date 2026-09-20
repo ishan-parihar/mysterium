@@ -1,4 +1,4 @@
-# Interpersonal × Turquoise — Strategic-Planning
+# Interpersonal × Teal — Strategic-Planning
 
 ## 1. Core Mechanic
 

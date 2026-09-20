@@ -1,4 +1,4 @@
-# Cognitive / Turquoise — Immersive-RPG
+# Cognitive / Teal — Immersive-RPG
 
 ## 1. Game Identity
 
@@ -17,11 +17,11 @@ The game world is structured as nested holons — each zone is simultaneously a 
 
 ### 2.2 Emergent Pattern Recognition
 
-Hidden cross-zone patterns exist that are only visible to vision-logic. A player operating at Green sees local systems. A player operating at Turquoise sees patterns-of-patterns spanning the entire world. These meta-patterns unlock narrative threads, abilities, and world-states unavailable to lower-altitude play. Detection is never prompted — it must emerge from the player's own cognitive operations.
+Hidden cross-zone patterns exist that are only visible to vision-logic. A player operating at Green sees local systems. A player operating at Teal sees patterns-of-patterns spanning the entire world. These meta-patterns unlock narrative threads, abilities, and world-states unavailable to lower-altitude play. Detection is never prompted — it must emerge from the player's own cognitive operations.
 
 ### 2.3 Spontaneous Integration Moments
 
-The world periodically presents situations where multiple previously-separate narrative threads converge. The player's response reveals whether they can hold all threads simultaneously (Turquoise), must choose between them (Orange/Green), or collapse them into a single frame (Amber/Red). Scored implicitly by world-response quality and narrative-branch unlocked.
+The world periodically presents situations where multiple previously-separate narrative threads converge. The player's response reveals whether they can hold all threads simultaneously (Teal), must choose between them (Orange/Green), or collapse them into a single frame (Amber/Red). Scored implicitly by world-response quality and narrative-branch unlocked.
 
 ## 3. Shadow Surfacing
 

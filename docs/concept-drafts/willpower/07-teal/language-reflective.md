@@ -1,4 +1,4 @@
-# Willpower × Turquoise — Language-Reflective
+# Willpower × Teal — Language-Reflective
 
 ## 1. Core Mechanic
 
@@ -13,7 +13,7 @@ The player engages in **Integral Commitment Articulation** — prompted verbal/w
 
 ### 1.2 Rubric Dimensions
 
-| Dimension | Low (Green) | Mid (Turquoise) | High (approaching White) |
+| Dimension | Low (Green) | Mid (Teal) | High (approaching Turquoise) |
 |---|---|---|---|
 | Holonic depth | Single-level or flat | Multi-level nested | Nested + fluid |
 | Agency-communion balance | One-sided | Both named | Both embodied in language |

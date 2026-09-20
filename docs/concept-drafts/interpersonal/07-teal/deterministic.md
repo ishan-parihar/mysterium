@@ -1,4 +1,4 @@
-# Interpersonal × Turquoise — Deterministic
+# Interpersonal × Teal — Deterministic
 
 ## 1. Core Mechanic
 

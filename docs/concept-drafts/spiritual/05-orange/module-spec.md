@@ -24,7 +24,7 @@ Performs Green interfaith appreciation without genuine Orange rational examinati
 
 ### 2.4 Golden-Allergy: The Rational Fortress
 
-Rational examination is present and genuine but refuses pluralistic opening. Terrified of "anything goes." Insists there is ONE rational answer to the meaning question. Has done the Orange work but white-knuckles the result, refusing the next developmental invitation.
+Rational examination is present and genuine but refuses pluralistic opening. Terrified of "anything goes." Insists there is ONE rational answer to the meaning question. Has done the Orange work but turquoise-knuckles the result, refusing the next developmental invitation.
 
 ## 3. Drive-Health Landscape
 

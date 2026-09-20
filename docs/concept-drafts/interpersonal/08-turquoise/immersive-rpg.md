@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Interpersonal / White |
+| Module | Interpersonal / Turquoise |
 | Modality | Immersive-RPG |
 | Unique Lateral | Ecological non-dual relating — whether boundary-transparency appears spontaneously in free-play |
 | Core Mechanic | Open-world relational encounters measuring emergent communion without task-framing |

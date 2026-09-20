@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Intrapersonal / White |
+| Module | Intrapersonal / Turquoise |
 | Modality | Embodied-Somatic |
 | Unique lateral | Body as site of non-dual self — embodied self-transparency, physical non-grasping at identity |
 

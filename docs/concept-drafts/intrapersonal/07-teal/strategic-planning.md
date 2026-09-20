@@ -1,4 +1,4 @@
-# Intrapersonal × Turquoise — Strategic-Planning
+# Intrapersonal × Teal — Strategic-Planning
 
 ## 1. Game Identity
 

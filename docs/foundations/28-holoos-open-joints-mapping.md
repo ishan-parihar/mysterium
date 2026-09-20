@@ -36,7 +36,7 @@
 | J-INV-1 | 🟡 Partial | Prior-octave count (3-4 hypothesis). Mysterium uses 3 (N-3, N-2, N-1) in INVOLUTION_GROUND. |
 | J-INV-3 | 🔴 Open | Substrate of prior octaves. Mysterium doesn't model this (single-octave scope). |
 | J-INV-4 | 🔴 Open | Weight of accumulated Experience. Mysterium models via `totalEncounters` but not as a weight. |
-| J-INV-6 | 🔴 Open | Our octave's novel contributions. Mysterium's White stage = D4+ contributions. |
+| J-INV-6 | 🔴 Open | Our octave's novel contributions. Mysterium's Turquoise stage = D4+ contributions. |
 | J-VERT-1 through 5 | 🔴 Open | Sub-density validation, density-defaults derivation. Mysterium uses Spiral Dynamics stages, not HoloOS density-defaults. |
 | J-COLL-1 through 5 | 🔴 Open | Collectivity axis. Mysterium has `HolonKind` (8 kinds) but not log₁₀-C. |
 | J-REALM-1 through 7 | 🔴 Open | Realm-placement. Mysterium has State enum (Gross/Subtle/Causal/Witness/Non-Dual). |

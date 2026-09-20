@@ -1,4 +1,4 @@
-# stages/07 — Turquoise / Integral
+# stages/07 — Teal / Integral
 
 > **Cross-references:** [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/02-eight-stages-overview|02 — Eight Stages Overview]]
 
@@ -16,7 +16,7 @@ psychological development.
 
 ## 2. Stage definition
 
-Turquoise is the **integral** structure of consciousness. The mind
+Teal is the **integral** structure of consciousness. The mind
 operates with **vision-logic** — the capacity to hold multiple maps at
 once, to see partial truths *as partial*, to integrate contradictions
 into larger holons. *Each previous stage was important because it
@@ -34,23 +34,23 @@ typically late-adulthood with appropriate developmental work; it is
 also accelerated by integral practices, deep contemplative training,
 and exposure to integral theory itself.
 
-Pathologies of Turquoise: *integral elitism* (subtle pride at "seeing
+Pathologies of Teal: *integral elitism* (subtle pride at "seeing
 through" everyone), *integral arrogance* (using the meta-map to dismiss
 people at lower altitudes), *bypass* of necessary first-tier work in
 the rush to claim integral.
 
 Energetic correspondence: **Indigo-Ray** — the brow / third-eye
 centre. *"The gateway to intelligent infinity, worked upon only by the
-adept."* The gateway *opens* at Turquoise.
+adept."* The gateway *opens* at Teal.
 
-The Turquoise world is **observatories, holonic architecture, integral
+The Teal world is **observatories, holonic architecture, integral
 training centres, global commons, knowledge networks, cross-tradition
 sanctuaries**. The player's relationship with this world is "I see the
 whole, and I am part of it."
 
-## 3. The eight lines AT Turquoise
+## 3. The eight lines AT Teal
 
-| Line | What it looks like at Turquoise |
+| Line | What it looks like at Teal |
 |---|---|
 | Cognitive | Vision-logic — post-formal, integrative, dialectical thinking. n=4; meta-WCST (rules-about-rules); recursive Tower of London. The mind that thinks *in wholes*. |
 | Emotional | Vision-logic affect — sees emotional patterns across systems. *Reading the room* — group-level emotional waves. Equanimity emerging as baseline. |
@@ -61,13 +61,13 @@ whole, and I am part of it."
 | Willpower | Integral will — vision-logic alignment of all goals. Holonic goal architecture: super-goals, sub-goals, evolutionary purpose. |
 | Interpersonal | Integral others — multiple selves attuned at multiple levels. Holonic teams; cross-stage attunement; mentorship across altitude differences. |
 
-The line that *carries the player* through Turquoise: **Intrapersonal**
+The line that *carries the player* through Teal: **Intrapersonal**
 and **Cognitive** in their meta-forms. The player must *see the whole
-arc of their own development* to operate at Turquoise.
+arc of their own development* to operate at Teal.
 
 ## 4. AQAL quadrant snapshots
 
-| Quadrant | At Turquoise |
+| Quadrant | At Teal |
 |---|---|
 | **UL** Individual Interior | Vision-logic awareness, the felt-sense of *holding the whole arc*, deep equanimity with nuance. |
 | **UR** Individual Exterior | Integral practice — meditation + study + body + shadow + ethics + relationship as a *single* daily integration. |
@@ -79,7 +79,7 @@ arc of their own development* to operate at Turquoise.
 ### 5.1 Visual language
 
 - **Palette anchor:** indigo / midnight (Indigo-Ray); secondary
-  turquoise, silver, deep violet, starlight white.
+  teal, silver, deep violet, starlight turquoise.
 - **Motifs:** observatories, fractal architecture, holonic
   geometries (circles within circles), libraries-of-libraries, vast
   integral training campuses, planetary gardens, contemplative
@@ -117,7 +117,7 @@ arc of their own development* to operate at Turquoise.
 - **Ally:** a fellow integral practitioner — peer-equal across many
   lines simultaneously, including ones the player is weaker at.
 
-## 6. Encounter archetypes at Turquoise
+## 6. Encounter archetypes at Teal
 
 ### 6.1 Module-level encounters concepts
 
@@ -144,7 +144,7 @@ arc of their own development* to operate at Turquoise.
 
 ### 6.3 Main-boss concept
 
-**The Adept Above** — the apex Turquoise pathology figure. A genuine
+**The Adept Above** — the apex Teal pathology figure. A genuine
 high-altitude practitioner who has *fallen into integral elitism*.
 Sees through everyone. Cannot meet anyone where they are. Subtly
 contemptuous of "first tier" — even though they are entirely composed
@@ -168,21 +168,21 @@ The fight has four phases:
 
 Outcomes: defeat (the Adept's integral arrogance pierced), partnership
 (synthesis ending — the Adept is restored to genuine humble integral
-practice), transformation (rare — the Adept advances to White-altitude
+practice), transformation (rare — the Adept advances to Turquoise-altitude
 non-dual humility under the player's witnessing).
 
 ### 6.4 Shadow concept
 
-**The Bypass** — Turquoise's signature shadow. The player who has
+**The Bypass** — Teal's signature shadow. The player who has
 *claimed* integral capacity without doing the first-tier work — usually
 detected as a player who has rushed through Red, Amber, Orange, or
-Green without lingering and now flounders at Turquoise. The shadow is
+Green without lingering and now flounders at Teal. The shadow is
 *one of the bypassed stages* returning *as itself* — usually whichever
 the player evaded most. Win condition: spend serious time *back at
 that stage* doing the work; altitude on that line resets to a healthy
 expression and gradually re-climbs.
 
-**The Subtle Pride** — Turquoise's gentler shadow. A small, persistent
+**The Subtle Pride** — Teal's gentler shadow. A small, persistent
 inflation of "I see what they don't see." Detected from microaggressions
 in dialogue choices, cross-stage condescension. Defeated by a brief
 encounter where the player is *seen through* by a Magenta-altitude
@@ -191,11 +191,11 @@ becomes embarrassing in a kindly way.
 
 ## 7. Stage advancement criteria
 
-To pass Turquoise and unlock White:
+To pass Teal and unlock Turquoise:
 
-1. All 8 lines ≥ Turquoise (floor) — extremely demanding gate
-2. ≥ 2 lines ≥ White — typically Spiritual and Intrapersonal
-3. All 4 quadrants demonstrated at Turquoise, with multiplayer
+1. All 8 lines ≥ Teal (floor) — extremely demanding gate
+2. ≥ 2 lines ≥ Turquoise — typically Spiritual and Intrapersonal
+3. All 4 quadrants demonstrated at Teal, with multiplayer
    demonstration of the LL quadrant required (cannot fully demonstrate
    integral collective interior in solo)
 4. Defeat / partner / transform The Adept Above
@@ -207,15 +207,15 @@ To pass Turquoise and unlock White:
 
 ## 8. Open questions
 
-- **The depiction of Turquoise.** Authentic Turquoise is rare; the
+- **The depiction of Teal.** Authentic Teal is rare; the
   game cannot stereotype it. Collaboration with integral practitioners
   is implied. The Adept Above must be charismatic, not a strawman.
-- **The temporal-honesty problem at Turquoise.** Real-life Turquoise
+- **The temporal-honesty problem at Teal.** Real-life Teal
   takes decades. Compressed to a game it risks being a *rumour* of
-  Turquoise rather than the thing itself. The codex must be explicit:
-  "in-game Turquoise is a *practice indicator*, not a clinical
+  Teal rather than the thing itself. The codex must be explicit:
+  "in-game Teal is a *practice indicator*, not a clinical
   attainment."
-- **Multiplayer demand.** Turquoise's interpersonal-line demands
+- **Multiplayer demand.** Teal's interpersonal-line demands
   multiplayer. Single-player runs of Mysterium cap at high-Green by
   design, with a clear narrative that the *we-space* lives elsewhere.
 

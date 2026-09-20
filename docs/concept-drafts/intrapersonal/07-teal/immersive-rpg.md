@@ -1,4 +1,4 @@
-# Intrapersonal × Turquoise — Immersive-RPG
+# Intrapersonal × Teal — Immersive-RPG
 
 ## 1. Game Identity
 

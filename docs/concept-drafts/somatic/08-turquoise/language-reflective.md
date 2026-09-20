@@ -1,4 +1,4 @@
-# Somatic / White — Language-Reflective Game
+# Somatic / Turquoise — Language-Reflective Game
 
 ## 1. Core Mechanic
 

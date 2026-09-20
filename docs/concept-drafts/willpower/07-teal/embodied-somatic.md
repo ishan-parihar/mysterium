@@ -1,4 +1,4 @@
-# Willpower × Turquoise — Embodied-Somatic
+# Willpower × Teal — Embodied-Somatic
 
 ## 1. Core Mechanic
 

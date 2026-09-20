@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Emotional / White
+- **Module:** Emotional / Turquoise
 - **Modality:** Deterministic
 - **Unique Lateral:** Objective equanimity measurement — affect-transparency metrics, non-grasping response to emotional stimuli
 - **What this measures that no other modality measures:** Whether the player's affective system responds to stimuli without contraction, preference, or avoidance — measured through objective behavioral and timing metrics

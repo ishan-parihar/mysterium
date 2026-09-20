@@ -1,4 +1,4 @@
-# Cognitive / Turquoise — Language-Reflective
+# Cognitive / Teal — Language-Reflective
 
 ## 1. Game Identity
 

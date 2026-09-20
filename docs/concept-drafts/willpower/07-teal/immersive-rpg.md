@@ -1,4 +1,4 @@
-# Willpower × Turquoise — Immersive-RPG
+# Willpower × Teal — Immersive-RPG
 
 ## 1. Core Mechanic
 

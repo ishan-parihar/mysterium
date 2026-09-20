@@ -21,7 +21,7 @@ The empirical finding that motivates the whole multi-line architecture
 
 > A 50-year-old PhD physicist may sit at Orange/Green on cognitive but
 > Amber on emotional. A 22-year-old social worker may sit at
-> Green/Turquoise on moral but Red on financial.
+> Green/Teal on moral but Red on financial.
 
 Lines are *relatively* independent — not absolutely. Some lines have
 *partial* dependencies:
@@ -68,7 +68,7 @@ Mini-bosses are exactly the design space for these compositions
 ### 3.1 The radial chart
 
 Eight spokes, one per line, around a central point. Concentric rings
-mark stages (Infrared at centre → White at rim). The current altitude
+mark stages (Infrared at centre → Turquoise at rim). The current altitude
 on each line is plotted; the chart's filled area is the *psychograph*.
 
 The visualisation immediately reveals:

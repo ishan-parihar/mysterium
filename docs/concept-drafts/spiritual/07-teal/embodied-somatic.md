@@ -1,4 +1,4 @@
-# Spiritual / Turquoise — Embodied-Somatic
+# Spiritual / Teal — Embodied-Somatic
 
 ## 1. Core Mechanic
 

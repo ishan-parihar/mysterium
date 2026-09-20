@@ -1,4 +1,4 @@
-# Spiritual / Turquoise — Scenario-Choice
+# Spiritual / Teal — Scenario-Choice
 
 ## 1. Core Mechanic
 

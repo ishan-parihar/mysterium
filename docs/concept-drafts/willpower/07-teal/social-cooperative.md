@@ -1,4 +1,4 @@
-# Willpower × Turquoise — Social-Cooperative
+# Willpower × Teal — Social-Cooperative
 
 ## 1. Core Mechanic
 
@@ -6,7 +6,7 @@ The player engages in **Shared Integral Will** — cooperative tasks requiring c
 
 ### 1.1 Task Structure
 
-- **Cross-Altitude Coordination:** Player (at Turquoise) coordinates with AI agents operating at Green, Orange, and Amber will-levels. Each agent has legitimate goals; player must create holonic architecture that includes all without reducing to lowest common denominator.
+- **Cross-Altitude Coordination:** Player (at Teal) coordinates with AI agents operating at Green, Orange, and Amber will-levels. Each agent has legitimate goals; player must create holonic architecture that includes all without reducing to lowest common denominator.
 - **Mentoring Will-Development:** Guide a Green-level agent toward integral will without imposing — the agent must discover holonic structuring through facilitation, not instruction.
 - **Collective Purpose Emergence:** Group task where evolutionary purpose must emerge from collaboration rather than being imposed by the player.
 - **Shared Sacrifice:** Scenarios where the player's personal holonic architecture must be partially released to serve the collective — tests communion-capacity of integral will.

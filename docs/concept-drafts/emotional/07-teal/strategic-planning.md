@@ -1,4 +1,4 @@
-# Emotional / Turquoise — Strategic-Planning
+# Emotional / Teal — Strategic-Planning
 
 ## 1. Core Mechanic
 

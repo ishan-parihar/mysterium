@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Emotional / White
+- **Module:** Emotional / Turquoise
 - **Modality:** Scenario-Choice
 - **Unique Lateral:** Non-dual emotional dilemmas — situations requiring compassion without attachment
 - **What this measures that no other modality measures:** Whether the player can act from genuine compassion in situations where attachment, aversion, bypassing, or self-reference would produce subtly different choices

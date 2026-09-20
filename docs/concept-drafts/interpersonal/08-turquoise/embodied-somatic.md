@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Interpersonal / White |
+| Module | Interpersonal / Turquoise |
 | Modality | Embodied-Somatic |
 | Unique Lateral | Body as site of non-dual relating — physical communion, embodied boundary-transparency |
 | Core Mechanic | Rhythm-synchronisation and movement-coordination tasks requiring somatic field-awareness |

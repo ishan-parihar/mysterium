@@ -1,4 +1,4 @@
-# Somatic × Turquoise — Strategic-Planning Game
+# Somatic × Teal — Strategic-Planning Game
 
 ## 1. Core Mechanic
 

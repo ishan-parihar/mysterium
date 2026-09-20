@@ -1,4 +1,4 @@
-# Spiritual / Turquoise — Immersive-RPG
+# Spiritual / Teal — Immersive-RPG
 
 ## 1. Core Mechanic
 

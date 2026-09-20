@@ -1,6 +1,6 @@
 ## 1. Modality Identity
 
-- **Module:** Emotional / White
+- **Module:** Emotional / Turquoise
 - **Modality:** Social-Cooperative
 - **Unique Lateral:** Shared luminous affect — communion in compassion, non-grasping emotional attunement
 - **What this measures that no other modality measures:** Whether the player can be emotionally present with others without grasping at connection, performing compassion, or losing transparency in the relational field

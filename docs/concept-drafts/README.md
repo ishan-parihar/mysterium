@@ -23,7 +23,7 @@ concept-drafts/
 │   │   └── immersive-rpg.md
 │   ├── 02-magenta/
 │   │   └── ... (same 8 files)
-│   └── ... (through 08-white)
+│   └── ... (through 08-turquoise)
 ├── emotional/
 ├── moral/
 ├── intrapersonal/
@@ -188,7 +188,7 @@ Modalities validate each other. Discrepancies between modalities are diagnostic:
 | **Phase 1** | Red × all 8 lines | 64 files (8 modules × 8 files) |
 | **Phase 2** | Amber + Magenta × all 8 lines | 128 files |
 | **Phase 3** | Orange + Green × all 8 lines | 128 files |
-| **Phase 4** | Infrared + Turquoise + White × all 8 lines | 192 files |
+| **Phase 4** | Infrared + Teal + Turquoise × all 8 lines | 192 files |
 
 ---
 

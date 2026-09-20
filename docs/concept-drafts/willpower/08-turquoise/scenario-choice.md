@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Module | Willpower × White |
+| Module | Willpower × Turquoise |
 | Modality | Scenario-Choice |
 | Unique Lateral | Non-dual will dilemmas — situations requiring action without attachment to outcome |
 | Core Mechanic | Branching scenarios where every option succeeds but reveals residual grasping in how the choice is made |

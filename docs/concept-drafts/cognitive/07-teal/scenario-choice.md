@@ -1,4 +1,4 @@
-# Cognitive / Turquoise — Scenario-Choice
+# Cognitive / Teal — Scenario-Choice
 
 ## 1. Game Identity
 
@@ -13,7 +13,7 @@
 
 ### 2.1 Holarchic Dilemmas
 
-Each scenario presents a problem with solutions valid at Red (power), Amber (rule), Orange (strategy), Green (inclusion), AND Turquoise (integration). Player must demonstrate they SEE each stage's validity before choosing. Choices that dismiss lower stages score as shadow. Choices that refuse to choose score as shadow. Only choices that include-and-transcend score as integral.
+Each scenario presents a problem with solutions valid at Red (power), Amber (rule), Orange (strategy), Green (inclusion), AND Teal (integration). Player must demonstrate they SEE each stage's validity before choosing. Choices that dismiss lower stages score as shadow. Choices that refuse to choose score as shadow. Only choices that include-and-transcend score as integral.
 
 ### 2.2 Commitment Under Irreducible Complexity
 
@@ -21,7 +21,7 @@ After demonstrating multi-stage awareness, player must ACT. The dilemma is desig
 
 ### 2.3 Recursive Consequence Chains
 
-Choices cascade. Second-order consequences reveal whether the player's initial reasoning was genuinely integral or merely performed. A choice that looked integral but was actually Green-disguised-as-Turquoise produces Green-level consequences. The game makes cognitive altitude visible through narrative outcomes.
+Choices cascade. Second-order consequences reveal whether the player's initial reasoning was genuinely integral or merely performed. A choice that looked integral but was actually Green-disguised-as-Teal produces Green-level consequences. The game makes cognitive altitude visible through narrative outcomes.
 
 ## 3. Shadow Surfacing
 
@@ -38,7 +38,7 @@ Choices cascade. Second-order consequences reveal whether the player's initial r
 
 **Experience:** Player feels the weight of integral commitment — the loneliness of seeing all stages and still having to choose. The Meta-Mapper feels analysis-paralysis made visible. The Green Pluralist feels the cost of refusing hierarchy. The Premature Non-Dualist is forced to show their work. The Integral Fortress encounters dilemmas where the only integral choice requires surrender.
 
-**Integration:** Consequence chains reward genuine integration and expose performance. Over time, the player develops the capacity to hold-and-act simultaneously — the defining Turquoise cognitive skill.
+**Integration:** Consequence chains reward genuine integration and expose performance. Over time, the player develops the capacity to hold-and-act simultaneously — the defining Teal cognitive skill.
 
 ## 5. Progression & Infinite Checkpoint
 

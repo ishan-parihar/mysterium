@@ -43,14 +43,14 @@ AQAL = "All Quadrants, All Levels, All Lines, All States, All Types"
   - **LL** Collective Interior — "We" — culture, shared values, mutual understanding.
   - **LR** Collective Exterior — "Its" — systems, institutions, infrastructure.
 - **Levels (= stages)** — developmental altitudes any phenomenon can
-  occupy. Mysterium canonises eight (Infrared → White).
+  occupy. Mysterium canonises eight (Infrared → Turquoise).
 - **Lines** — the relatively-independent developmental streams running
   through every level. Mysterium canonises eight: Cognitive, Emotional,
   Moral, Intrapersonal, Spiritual, Somatic, Willpower, Interpersonal.
 - **States** — temporary, accessible conditions of consciousness (Gross,
   Subtle, Causal, Witness, Non-Dual). Orthogonal to stage; you can have a
   Non-Dual state experience at Amber stage and a stage-bound experience
-  at Turquoise.
+  at Teal.
 - **Types** — horizontal categories that do not develop (e.g., Myers-Briggs,
   enneagram). Mysterium mostly ignores types except as character-creation
   flavour.
@@ -61,7 +61,7 @@ The non-obvious empirical claim Wilber makes — supported by Cook-Greuter,
 Kegan, Fowler, Loevinger, Piaget — is that **lines develop at different
 altitudes within the same person**. A 50-year-old PhD physicist may sit at
 Orange/Green on cognitive but Amber on emotional; a 22-year-old social
-worker may sit at Green/Turquoise on moral but Red on financial. This is
+worker may sit at Green/Teal on moral but Red on financial. This is
 the **psychograph**: a profile, not a number.
 
 The corollary: a single XP bar is a *category error*. The richness of human
@@ -109,7 +109,7 @@ bestiary covers the space evenly.
 
 The skill-tree visualisation in `ux/02-skill-tree-visualisation.md` is
 literally a polar plot: angle = line (8 spokes), radius = altitude
-(Infrared at centre, White at rim), tint = quadrant. The chart IS the
+(Infrared at centre, Turquoise at rim), tint = quadrant. The chart IS the
 AQAL psychograph.
 
 ## 4. Architectural contract

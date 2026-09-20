@@ -58,8 +58,8 @@ network. See `foundations/07`.
 | Amber | Conformist emotion — group-shame, group-pride | Empath read of in-group NPCs; out-group emotions opaque |
 | Orange | Reflective self-awareness; emotion as data | Empath read of any NPC; emotion-regulation skills unlock |
 | Green | Pluralistic empathy — multi-perspective affect | Holding contradictory emotions; co-regulating with allies |
-| Turquoise | Vision-logic affect — sees emotional patterns across systems | "Reading the room" — group-level emotional waves |
-| White | Equanimity — affect is luminous, not gripping | Emotion as energy; non-defensive presence |
+| Teal | Vision-logic affect — sees emotional patterns across systems | "Reading the room" — group-level emotional waves |
+| Turquoise | Equanimity — affect is luminous, not gripping | Emotion as energy; non-defensive presence |
 
 ## 4. Game-design mapping
 
@@ -79,7 +79,7 @@ emotion into power (rage as buff; sorrow as healing focus).
 | Affect Channel | Hold target emotion under load | Sustained labelling task; converts affect to mana | Orange+ |
 | Co-Regulate | Reduce ally's affect-spike | Multiplayer: tap-rhythm with partner under their stress wave | Green+ |
 | Equanimity Stance | Reduced damage from emotional attacks | Sustained calm-affect under provocation | Green+ |
-| Compassion Burst | AoE that targets only fixated enemies | Demands accurate moral-affect read of every enemy in scene | Turquoise+ |
+| Compassion Burst | AoE that targets only fixated enemies | Demands accurate moral-affect read of every enemy in scene | Teal+ |
 
 ### 4.3 Module parameters(s) backed
 
@@ -117,8 +117,8 @@ is therefore proportionally weighted to give the line room to grow.
 | Amber | "Lamenter" — broadcasts in-group grief that buffs allies and de-buffs out-group | Group-affect read |
 | Orange | "Mask-Smith" — wears different emotional masks; surface vs. true affect | Emotional Stroop |
 | Green | "Choir of Ten" — ten distinct affect signatures, each requiring own response | Multi-target affect read |
-| Turquoise | "Hollow Mirror" — reflects player's own affect; misreads cause self-damage | Self-affect awareness |
-| White | "Silent Witness" — non-reactive; player must self-regulate to engage | Pure equanimity |
+| Teal | "Hollow Mirror" — reflects player's own affect; misreads cause self-damage | Self-affect awareness |
+| Turquoise | "Silent Witness" — non-reactive; player must self-regulate to engage | Pure equanimity |
 
 ### 5.2 Cross-line encounterses (emotional × other lines)
 

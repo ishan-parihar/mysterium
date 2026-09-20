@@ -20,7 +20,7 @@ Refuses all communal tradition. Remains in Red transactional spirituality ("what
 
 ### 2.3 Golden-Addiction (GA): The Premature Mystic
 
-Performs post-conventional spirituality — rational theology, interfaith dialogue, integral frameworks — without genuine mythic-membership underneath. Skips the embodied belonging of tradition. Speaks the language of Turquoise while having no Amber root. Ungrounded transcendence.
+Performs post-conventional spirituality — rational theology, interfaith dialogue, integral frameworks — without genuine mythic-membership underneath. Skips the embodied belonging of tradition. Speaks the language of Teal while having no Amber root. Ungrounded transcendence.
 
 ### 2.4 Golden-Allergy (GAll): The Tradition-Clinger
 
