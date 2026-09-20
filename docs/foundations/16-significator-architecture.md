@@ -590,16 +590,16 @@ The Significator evolves through distinct lifecycle stages, each with characteri
 | `transformations[]` | 8–12+ entries; late transformations are subtle frame-shifts, not dramatic upheavals |
 | `stage` | Teal → Turquoise |
 
-**Characteristic events:** `transformation_completed` (Teal → Turquoise; the runtime stage identifier still reads `Turquoise` until the code re-index pass); deep `shadow_integrated` events; polarity-locking choices; theta-decay vigilance (all lower stages must remain healthy).
+**Characteristic events:** `transformation_completed` (Teal → Turquoise; the runtime stage identifier still reads `White` until the code re-index pass); deep `shadow_integrated` events; polarity-locking choices; theta-decay vigilance (all lower stages must remain healthy).
 
-**Exit criteria:** All lines at Teal (L8); crystallisationIndex ≥ closure threshold; all ray integrations complete.
+**Exit criteria:** All lines at Turquoise (L8); crystallisationIndex ≥ closure threshold; all ray integrations complete.
 
 ### 11.5 Stage E: Harvest (the closure — a horizon event, not a stage)
 
 **Purpose:** The Veil lifts. Final polarity crystallises. The Significator is archived.
 
 **Ruling 2026-09-20 — the harvest is a horizon, never the objective.** The ladder's last
-*developable* stage is **L8 Teal** ("total integration; harvest readiness", 06 §5.1);
+*developable* stage is **L8 Turquoise** ("total integration; harvest readiness", 06 §5.1);
 the harvest itself is the **Violet closure position** (KosmOS `lenses/rays.md`: "the
 sub-octaves of 3rd-to-4th-density consciousness… Violet is the harvest into 4th density").
 The system's objective is **continuing developmental progression across all dimensions without

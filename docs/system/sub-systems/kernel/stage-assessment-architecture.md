@@ -386,15 +386,19 @@ Once all 64 modules exist, build the binary-search onboarding that samples from 
 
 ---
 
-## Part VIII — Relationship to Combat
+## Part VIII — Relationship to narrative encounters
 
-In combat, the cognitive task overlay IS a stage assessment module running in "single-trial" mode:
+The progression spine is **assessment-module execution** (`foundations/26`), not any narrative
+affordance. Whatever the player is doing on screen — exploring, negotiating, fighting a narrative
+antagonist — the cognitive task overlay is a stage assessment module running in "single-trial" mode:
 - The encounter scheduler picks a line and stage
 - The corresponding assessment module provides a single task at that difficulty
 - The player's response updates their staircase AND contributes to their ongoing assessment
 - Over many encounters, the system accumulates enough data to refine the altitude with high confidence
 
-This means: **every combat encounter is also an assessment trial**. The game IS the test. The test IS the game.
+This means: **every encounter is also an assessment trial**. The game IS the test. The test IS the
+game. Narrative frames (including conflict) are *delivery vehicles* — `foundations/11` owns how each
+modality delivers catalyst, and no narrative frame is ever the progression mechanism.
 
 ---
 
@@ -624,17 +628,21 @@ Each phase delivers **playable, testable modules** that work in isolation before
 
 ---
 
-## Part XIV — How This Replaces "Combat-Only" Progression
+## Part XIV — The developmental loop
 
-### 14.1 The old model (combat-centric)
+### 14.1 What progression is not
+
+A single-axis loop —
 
 ```
-Player → Combat encounter → Win/Lose → XP → Level up
+Player → encounter → win/lose → XP → level up
 ```
 
-This is a single-axis progression that measures nothing developmental.
+— measures nothing developmental and is not Mysterium's spine. (The superseded design whose
+progression was a time-barred conflict loop is **archived** in `docs/historical/archive/atb-combat/`;
+that is a dated record, not a contract. The vocabulary blacklist in `foundations/44 §9` keeps it from returning.)
 
-### 14.2 The new model (integrative)
+### 14.2 The developmental loop
 
 ```
 Player → Assessment encounter (capacity OR shadow mode)

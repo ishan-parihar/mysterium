@@ -241,7 +241,7 @@ Per the narrative architecture: the protagonist's future self can appear and spe
 
 ### 8.4 The closure threshold and the lifted Veil
 
-At the closure threshold (**L8 Teal** completed; the **Violet event** — 06 §5.1), corresponding to the harvest into 4th density, the Veil is fully lifted. The player-character remembers. The unified nature of reality becomes apparent. The measurement architecture can be revealed — because at this point, the Choice has already been made. The Veil's purpose has been fulfilled.
+At the closure threshold (**L8 Turquoise** completed; the **Violet event** — 06 §5.1), corresponding to the harvest into 4th density, the Veil is fully lifted. The player-character remembers. The unified nature of reality becomes apparent. The measurement architecture can be revealed — because at this point, the Choice has already been made. The Veil's purpose has been fulfilled.
 
 **What this means in practice:** A post-harvest mode where the player can optionally view their full developmental trajectory, see the measurements that were taken, understand the architecture. This is a reward for completion, not a tool for optimisation.
 

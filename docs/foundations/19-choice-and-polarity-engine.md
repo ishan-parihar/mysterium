@@ -555,10 +555,10 @@ The 95% threshold is *demanding* — near-total absorption across nearly all lin
 
 ### 9.4 The closure gate
 
-The closure opens only at the **sub-octave closure** — L8 Teal completed, the **Violet event**
+The closure opens only at the **sub-octave closure** — L8 Turquoise completed, the **Violet event**
 (06 §5.1; 16 §11.5). A player who meets the structural requirements at earlier stages is *on track*
 but not yet at the gate — the full sub-octave must be traversed. The closure gate requires:
-1. Arrival at the closure (all prior stages healthy and L8 Teal integrated — holonic integrity)
+1. Arrival at the closure (all prior stages healthy and L8 Turquoise integrated — holonic integrity)
 2. Choice-eligibility per §9.2 or §9.3
 3. Violet-ray integration quality (foundations/06 §7.5)
 
@@ -578,7 +578,7 @@ invisible. They are separated here:
 | Concept | What it is | Criterion | Where it fires |
 |---|---|---|---|
 | **Choice-eligibility** | a *condition* — is this entity's Choice structurally authentic at all? | §9.2 or §9.3's structural set (crystallized mode, coherent lines, choice-readiness, violet-ray integration ≥ 0.80, 51%/95%) | evaluated continuously; produces a *state*, never an event |
-| **The Harvest** | the *event* — polarity locks, archive, retirement | eligibility **∧** arrival at the sub-octave closure (**the Violet event**; L8 Teal completed, 06 §5.1) | once, at the apex (16 §11.5, 06 §7.4) |
+| **The Harvest** | the *event* — polarity locks, archive, retirement | eligibility **∧** arrival at the sub-octave closure (**the Violet event**; L8 Turquoise completed, 06 §5.1) | once, at the apex (16 §11.5, 06 §7.4) |
 
 The runtime function currently named `checkHarvest` computes **eligibility**, not the harvest;
 it is renamed `checkChoiceEligibility` in the owning code, and its verdict is never itself an
@@ -595,7 +595,7 @@ document:
 - The world is **D3 / Yellow** — correct (06 §1). The eight stages are the **D3 sub-octave**
   traversal (fractal nesting: "D8 of the 3rd-density sub-octave = D1 of the 4th-density
   sub-octave, yellow→green transition"), so **the sub-octave closure = the Yellow→Green harvest
-  into D4 (Love/SMC)** — the **Violet event**, for which **L8 Teal** is the final stage of
+  into D4 (Love/SMC)** — the **Violet event**, for which **L8 Turquoise** is the final stage of
   readiness (06 §5.1) — exactly matching 06 §7.4's description
   ("unity consciousness and social-memory complex").
 - The `altitude_floor ≥ Orange` criterion in §9.2/§9.3 is re-expressed as **choice-readiness**
@@ -668,7 +668,7 @@ This document specifies the polarity engine in full technical detail — for dev
 
 ### 12.1 Beyond the closure
 
-After the closure event (the Violet event — L8 Teal completed), the harvest opens into
+After the closure event (the Violet event — L8 Turquoise completed), the harvest opens into
 **4th-density experience** — the density of love/understanding, where entities form
 social-memory complexes (foundations/06 §7.4). This is **scripted epilogue**, never simulated
 D4 play (06 §5.1 rule 3), and it is reserved territory (16 §11.6 Stage F) — not a design target.

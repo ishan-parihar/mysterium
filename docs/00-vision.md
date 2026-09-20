@@ -4,7 +4,16 @@
 
 ## 1. Purpose
 
-Mysterium is a contemplative practice that uses game mechanics as its delivery vehicle. Every encounter simultaneously diagnoses AND heals/evolves the player across all dimensions of being. It functions as:
+Mysterium is a contemplative practice that uses game mechanics as its delivery vehicle. Every encounter simultaneously diagnoses AND heals/evolves the player across all dimensions of being.
+
+**The objective (ratified 2026-09-20, `06 §7.4`).** The game's objective is **continuing developmental
+progression across all dimensions — every line, every stage below the player's centre of gravity —
+without residual entropy and without residual shadows.** It is *not* to reach the harvest: the
+closure is an emergent horizon, never a target the system optimises toward, and `Samsara` is the
+normal condition of a healthy continuing practice rather than a failure state. Every mechanic in
+this document is subordinate to that objective.
+
+It functions as:
 
 1. **A developmental assessment engine** — 64 modules (8 lines × 8 stages), 1,280 items, 7 modalities. Every encounter is a validated developmental assessment.
 2. **A complete education replacement** — 5-level holonic curriculum, knowledge graph, 6-level depth assessment, spaced repetition, cross-domain isomorphisms, research pipeline through Ph.D.

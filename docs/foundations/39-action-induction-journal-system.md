@@ -1,6 +1,6 @@
 # 39 — Action Induction & the Journal System
 
-> **Cross-references:** [[docs/validation/BENCHMARK-ARCHITECTURE|Validation Benchmark Architecture]]
+> **Cross-references:** [[docs/system/sub-systems/validation/benchmark-architecture|Validation Benchmark Architecture]]
 > **Status:** canonical-hypothesis (architecture; builds on existing `Vow` machinery).
 > **Lateral:** the bridge between the virtual game and the player's actual life —
 > real-world practice objectives ("homework-like" without homework's coercion), their

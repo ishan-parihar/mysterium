@@ -1,8 +1,9 @@
 # Mysterium Research Requirements — The Document of Documents
 
-> **Cross-references:** [[docs/architecture/01-overview|Overview]] · [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/architecture/11-curriculum-authoring|Curriculum Authoring]] · [[docs/architecture/ONBOARDING-REDESIGN-PLAN|Onboarding Redesign Plan]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/36-curriculum-upgrade-plan|36 — Curriculum Upgrade Plan]]
+> **Cross-references:** [[docs/system/AGENTS.md|Overview]] · [[docs/system/sub-systems/kernel/stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/system/sub-systems/curriculum/curriculum-authoring|Curriculum Authoring]] · [[docs/ONBOARDING-REDESIGN-PLAN|Onboarding Redesign Plan]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/36-curriculum-upgrade-plan|36 — Curriculum Upgrade Plan]]
 > **Status:** Active — Research + Implementation phases running concurrently.
-> See `architecture/01-overview.md` for the binding architectural contract.
+> See `docs/system/AGENTS.md` for the system architecture and organ map; contracts are owned by
+> `docs/foundations/` and sequencing by `docs/DEVELOPMENT-PLAN.md`.
 
 ---
 
@@ -60,7 +61,7 @@ docs/
 │   ├── 00-overview.md
 │   └── 01-...08-...
 │
-├── architecture/10-stage-assessment-architecture.md  ← module contract, composition rules
+├── docs/system/sub-systems/kernel/stage-assessment-architecture.md  ← module contract, composition rules
 ├── ONBOARDING-REDESIGN-PLAN.md       ← binary-search composite assessment
 │
 ├── progression/                      ← how the player grows
@@ -69,7 +70,7 @@ docs/
 ├── narrative/                        ← story as developmental scaffolding
 │   └── 00-narrative-architecture.md
 │
-├── architecture/11-curriculum-authoring.md           ← how to author curriculum holons
+├── docs/system/sub-systems/curriculum/curriculum-authoring.md           ← how to author curriculum holons
 │
 ├── concept-drafts/                   ← 512 game concept documents
 │

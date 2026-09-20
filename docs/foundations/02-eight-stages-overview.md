@@ -3,12 +3,12 @@
 > **Status:** canonical-hypothesis (Wilber synthesis + Law-of-One Ra material + Primal Distortion Genesis Theorem correspondence).
 >
 > HoloOS anchor: `_THEORY/02_Ontology/08.8.7_Primal_Distortion_Genesis_Theorem.md` (canonical-hypothesis). The Primal Distortion Genesis Theorem establishes that each Stage corresponds to an established Primal Law:
-> **Vocabulary correction (2026-09-20, canon home = 06 §5.1):** the bands below are **substrate layers within D3** (the density of the Choice), **not densities**. Densities are VIBGYOR — D1 Red, D2 Orange, **D3 Yellow**, D4 Green … D7 Violet, with the 8th as the octave-closure — and Mysterium's stage names (Infrared … Turquoise) are Spiral-Dynamics colours. Each integrated substrate layer carries one of the three established Laws; Mysterium's eight stages traverse the **D3 sub-octave**, whose closure is Turquoise (`01.4` §2.5.2, 06 §5.1).
+> **Vocabulary correction (2026-09-20, canon home = 06 §5.1):** the bands below are **substrate layers within D3** (the density of the Choice), **not densities**. Densities are VIBGYOR — D1 Red, D2 Orange, **D3 Yellow**, D4 Green … D7 Violet, with the 8th as the octave-closure — and Mysterium's stage names (Infrared … Turquoise) are Spiral-Dynamics colours. Each integrated substrate layer carries one of the three established Laws; Mysterium's eight stages traverse the **D3 sub-octave**, whose closure is the **Violet event** (L10 — an event, not a stage; `01.4` §2.5.2, 06 §5.1).
 >
 > - **Substrate layer 1 — Infrared/Magenta ≈ Free Will** (First Distortion, established by Octave N-3's complete D1→D7 harvest). Encounters about choice as such; quantum-like superposition of possibilities.
 > - **Substrate layer 2 — Red/Amber ≈ Love / Logos** (Second Distortion, established by Octave N-2). Directed growth, Logos-focusing, the principle of unity-attracting.
 > - **Substrate layer 3 — Orange/Green/Teal ≈ Light** (Third Distortion, established by Octave N-1). Self-reflective choice within archetypal form; manifestation.
-> - **The sub-octave closure — Turquoise ≈ our octave's contributions** — the Light-Law fully operative across all substrate layers; this is the Yellow→Green harvest into D4 (06 §5.1, 19 §9.6), not a "D4+" density.
+> - **The sub-octave closure — the Violet event** (L8 Turquoise completed) **≈ our octave's contributions** — the Light-Law fully operative across all substrate layers; this is the Yellow→Green harvest into D4 (06 §5.1, 19 §9.6), not a "D4+" density and not a playable level.
 >
 > This Law-correspondence is the metaphysical grounding for Mysterium's Stage semantics. Each Stage's content should express its corresponding Law's phenomenology.
 
@@ -42,16 +42,20 @@ disambiguated in per-stage docs.
 
 ### The summary table
 
-| # | Stage | Defining capacity | Cognitive (Piaget) | Moral (Kohlberg) | Population* | HoloOS Law-correspondence |
+| # | Stage | Defining capacity | Cognitive (Piaget) | Moral (Kohlberg) | Population* | Substrate layer / Law (within D3) |
 |:-:|---|---|---|---|---|---|
-| 1 | **Infrared / Archaic** | Survival; sensori-motor | Sensorimotor | Pre-moral (S0) | <2% adults | D1 ≈ Free Will (First Distortion) |
-| 2 | **Magenta / Magic** | Symbol; magical agency | Pre-operational early | Stage 1 (early) | 5–10% | D1 ≈ Free Will (superposition of possibilities) |
-| 3 | **Red / Power** | Ego; will; conquest | Pre-operational late / Concrete early | Stage 1–2 (egocentric) | 15–20% | D2 ≈ Love / Logos (directed growth, focusing) |
-| 4 | **Amber / Mythic** | Belonging; rule-and-role | Concrete operational | Stage 3–4 (conformist) | 25–30% | D2 ≈ Love / Logos (unity-attracting) |
-| 5 | **Orange / Rational** | Reason; achievement; objectivity | Formal operational | Stage 5 (post-conventional, social-contract) | 30–40% | D3 ≈ Light (self-reflective choice in form) |
-| 6 | **Green / Pluralistic** | Sensitivity; multi-perspective | Late formal / early post-formal | Stage 6 (universal-ethical, relativistic) | 15–20% | D3 ≈ Light (multi-perspective illumination) |
-| 7 | **Teal / Integral** | Vision-logic; integration | Post-formal vision-logic | Stage 7 (universal-systemic) | ~5% | D3 ≈ Light (integral vision) |
-| 8 | **Turquoise / Super-Integral** | Non-dual; unity | Trans-rational | Stage 8 (kosmocentric) | <1% | D4+ ≈ our octave's contributions (Light fully operative) |
+| 1 | **Infrared / Archaic** | Survival; sensori-motor | Sensorimotor | Pre-moral (S0) | <2% adults | layer 1 — Free Will (First Distortion) |
+| 2 | **Magenta / Magic** | Symbol; magical agency | Pre-operational early | Stage 1 (early) | 5–10% | layer 1 — Free Will (superposition of possibilities) |
+| 3 | **Red / Power** | Ego; will; conquest | Pre-operational late / Concrete early | Stage 1–2 (egocentric) | 15–20% | layer 2 — Love / Logos (directed growth, focusing) |
+| 4 | **Amber / Mythic** | Belonging; rule-and-role | Concrete operational | Stage 3–4 (conformist) | 25–30% | layer 2 — Love / Logos (unity-attracting) |
+| 5 | **Orange / Rational** | Reason; achievement; objectivity | Formal operational | Stage 5 (post-conventional, social-contract) | 30–40% | layer 3 — Light (self-reflective choice in form) |
+| 6 | **Green / Pluralistic** | Sensitivity; multi-perspective | Late formal / early post-formal | Stage 6 (universal-ethical, relativistic) | 15–20% | layer 3 — Light (multi-perspective illumination) |
+| 7 | **Teal / Integral** | Vision-logic; integration | Post-formal vision-logic | Stage 7 (universal-systemic) | ~5% | layer 3 — Light (integral vision) |
+| 8 | **Turquoise / Super-Integral** | Non-dual; unity | Trans-rational | Stage 7–8 (universal-systemic → trans-systemic) | <1% | layer 3 fully operative — **closure readiness** |
+
+The **`Substrate layer / Law`** column names Laws operating at substrate layers *inside* D3 — never
+densities one travels through. The closure (the harvest) is the D3→D4 transition itself, not row 8
+(06 §5.1).
 
 \* Adult-population estimates are approximate, drawn from Cook-Greuter's
 sentence-completion data and Wilber's syntheses. They are illustrative —
@@ -78,6 +82,36 @@ A higher stage *includes* the capacities of lower stages. A Green-stage
 player can still operate with Red ferocity in survival; an Orange player
 can still feel Amber belonging at a wedding. The stages are **not**
 mutually exclusive; they are the *highest centre of gravity available*.
+
+### 2.3 The within-stage resolution: the psychological axis (MHC / Kegan)
+
+An altitude is a *height*. It is not a resolution. The ratified ladder (`06 §5.1`) makes the
+**stage-number axis** canonical as the *within-altitude* detail — how the ascent actually
+differentiates. This axis is KosmOS's (`_Ontology/stages.md`), and it is firewalled from altitude and
+from the ray lens (`44 §3`).
+
+| Stage | Altitude | **MHC Orders** | **Kegan** | Ray lens (within D3) |
+|---|---|---|---|---|
+| 1 Infrared | L1 | 1–2 | — | Red (1st) |
+| 2 Magenta | L2 | 3 | 0→1 | Orange (2nd) |
+| 3 Red | L3 | 4–5 | 1→2 | Yellow (3rd) |
+| 4 Amber | L4 | 6–10 | 2→3 | Green (4th) |
+| 5 Orange | L5 | 11–12 | 3→4 | Blue in (5a) |
+| 6 Green | L6 | 13 | 4 | Blue out (5b) |
+| 7 **Teal** | L7 | 14 | 4→5 | Indigo (6a) |
+| 8 **Turquoise** | L8 | 15 | 5 | Indigo (6b) |
+| *(the closure — not a stage)* | L10 Violet | 17 | 5+ | Violet (7th) → the D3→D4 harvest |
+
+**Consequence for the design (this is why the axis matters).** Mysterium's item-difficulty bands are
+**derived from MHC order**, not invented. Two items at the same altitude are not at the same
+difficulty: an item testing MHC 6 (Amber: rules and roles) differs from one testing MHC 10 (Amber
+ending: the system as a whole), and the psychophysical staircase (`08`) needs that resolution to
+place a player inside a stage rather than at its label. The former arbitrary 0.2–0.9 bands are
+replaced by this mapping.
+
+**Why eight stages still hold.** Mysterium does not need seventeen stages: it needs *eight anchors*
+(KosmOS L1–L8) with the MHC orders resolving each. KosmOS itself keeps altitude and stage-number as
+separate axes, so this is its own structure, not a simplification of it.
 
 ## 3. Game-design mapping
 
@@ -166,10 +200,11 @@ Adjustable; see open questions.
   10–20 hours of focused play, with an explicit on-screen disclaimer
   that *in-game* stage progress is a *practice*, not a clinical
   attainment.
-- **Eight vs. seven.** If the user promotes the seven-ray Law-of-One layer
-  to canon, the design either splits Blue-Ray and Indigo-Ray as we have
-  done, or it collapses to seven stages. The current canon is eight; the
-  seven-ray layer is overlaid in `foundations/06`.
+- **Eight vs. seven — RESOLVED (ratified 2026-09-20).** Eight stages, and they are KosmOS
+  **L1–L8**; the ray/density layer is a **lens** (a horizon vocabulary), never a place one travels
+  through (`06 §5.1`, `44 §4`). The `07 Turquoise` → `07 Teal` re-index and the retirement of
+  `White` as a stage are the consequences. The 6a/6b split of the Indigo ray is what keeps the two
+  top stages distinct.
 
 ## 6. Principles served
 

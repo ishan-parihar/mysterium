@@ -1,6 +1,6 @@
 # Changelog -- Research Phase
 
-> **Cross-references:** [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/architecture/ONBOARDING-REDESIGN-PLAN|Onboarding Redesign Plan]] · [[docs/foundations/06-law-of-one-correspondence|06 — Law Of One Correspondence]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/foundations/25-cumulative-consciousness-index|25 — Cumulative Consciousness Index]] · [[docs/foundations/26-unified-core-architecture|26 — Unified Core Architecture]] · [[docs/foundations/27-auto-mode-strategy-engine|27 — Auto Mode Strategy Engine]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]]
+> **Cross-references:** [[docs/system/sub-systems/kernel/stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/architecture/ONBOARDING-REDESIGN-PLAN|Onboarding Redesign Plan]] · [[docs/foundations/06-law-of-one-correspondence|06 — Law Of One Correspondence]] · [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/foundations/25-cumulative-consciousness-index|25 — Cumulative Consciousness Index]] · [[docs/foundations/26-unified-core-architecture|26 — Unified Core Architecture]] · [[docs/foundations/27-auto-mode-strategy-engine|27 — Auto Mode Strategy Engine]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]]
 A record of canon decisions and major restructurings of `/docs/`.
 The implementation phase will track its own changelog at the repo
 root (or in `CHANGELOG.md`).
@@ -104,11 +104,11 @@ shadow work).
 | `foundations/25-cumulative-consciousness-index.md` | CCI composite metric |
 | `foundations/26-unified-core-architecture.md` | The unified core architecture spec |
 | `foundations/27-auto-mode-strategy-engine.md` | Auto-mode session strategy generation |
-| `docs/architecture/10-stage-assessment-architecture.md` | Module contract, composition rules, 4 execution modes |
+| `docs/system/sub-systems/kernel/stage-assessment-architecture.md` | Module contract, composition rules, 4 execution modes |
 | `docs/ONBOARDING-REDESIGN-PLAN.md` | Binary-search composite assessment for Significator seeding |
 | `UNIFIED-IMPLEMENTATION-PLAN.md` | The binding build plan (supersedes IMPLEMENTATION-PLAN.md) |
 
-### Documents archived to `docs/archive/`
+### Documents archived to `docs/historical/archive/`
 
 | Document | Reason |
 |---|---|

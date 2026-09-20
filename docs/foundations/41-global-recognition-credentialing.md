@@ -1,6 +1,6 @@
 # 41 — Global Recognition & Credentialing Architecture (EU-First)
 
-> **Cross-references:** [[docs/validation/BENCHMARK-ARCHITECTURE|Validation Benchmark Architecture]]
+> **Cross-references:** [[docs/system/sub-systems/validation/benchmark-architecture|Validation Benchmark Architecture]]
 > **Status:** canonical-hypothesis (architecture; contains a **canon revision** — see §0).
 > **Lateral:** the external-legitimacy layer — how demonstrated in-game competence
 > becomes *recognizable, portable, legally-compliant* credentialing, EU-first. This
@@ -17,7 +17,7 @@ user's direction explicitly reopens this: schooling inclusion is in-plan, and gl
 specifically EU-forward — recognition is a goal. **Revision:** certification/credentialing
 is now an architectural layer (this document), built *on top of* the developmental core,
 with the standing constraint that credentialing may never reshape the game's assessment
-psychology (the tail stops wagging the dog: see §4.4's firewall).The blueprint (archived at `docs/archive/old-plans/MVP-BLUEPRINT.md`) is not edited
+psychology (the tail stops wagging the dog: see §4.4's firewall).The blueprint (archived at `docs/historical/archive/old-plans/MVP-BLUEPRINT.md`) is not edited
 post-archival; this section is the canonical record of the revision, and `docs/INDEX.md`
 carries the reading-order pointer.
 

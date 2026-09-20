@@ -1,6 +1,6 @@
 # 40 — Measurement Packs & the Efficacy Infrastructure
 
-> **Cross-references:** [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/validation/BENCHMARK-ARCHITECTURE|Validation Benchmark Architecture]]
+> **Cross-references:** [[docs/foundations/24-encounter-scheduler|24 — Encounter Scheduler]] · [[docs/system/sub-systems/validation/benchmark-architecture|Validation Benchmark Architecture]]
 > **Status:** canonical-hypothesis (architecture; kernel precedent exists and is load-bearing).
 > **Lateral:** the *explicit measurement* substrate — swappable "measurement packs" that
 > assess concrete competencies (coding, language, cognition, memory, …) with psychometric
@@ -8,7 +8,7 @@
 > scaled as add-on modules. This document owns: the pack contract, the psychometric gates
 > a pack must pass, the skill-theta stream, the efficacy evidence chain, and the initial
 > pack set. It does NOT own the engine's self-validation (that is the benchmark kernel in
-> `docs/validation/BENCHMARK-ARCHITECTURE.md` and `src/core/validation/`), the implicit
+> `docs/system/sub-systems/validation/benchmark-architecture.md` and `src/core/validation/`), the implicit
 > drive/shadow assessment inside the 64 modules (12), or what credentials may be built
 > from pack evidence (41).
 >

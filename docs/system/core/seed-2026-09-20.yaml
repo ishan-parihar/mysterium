@@ -1,0 +1,597 @@
+# seed-2026-09-20.yaml — the transcription map for the inaugural record ledger.
+#
+# Every entry names the canon section it transcribes. Records are TRANSCRIPTIONS of decisions
+# already ratified in prose, not new theory: if a body cannot point at a `source`, it does not
+# belong here (P5, docs/ARCHITECTURE-TRANSMUTATION-PLAN.md §5).
+#
+# This file is provenance, not authority: once created, the records in
+# `docs/system/core/{decisions,regressions}/` and `docs/system/sub-systems/*/core/` are canonical.
+#
+# Create with:  python3 scripts/arch.py seed docs/system/core/seed-2026-09-20.yaml
+
+records:
+  # ── system-wide decisions (RUNG 2/3) ──────────────────────────────────────
+  - id: MY-AD-0001
+    type: ad
+    system: true
+    title: "Assessment-module execution replaces the ATB combat spine"
+    organ: kernel
+    source: "foundations/26-unified-core-architecture"
+    description: "Progression runs on assessment-module execution; narrative frames (including conflict) are delivery vehicles, never the progression mechanism."
+    related: [MY-AD-0002, MY-RG-0005]
+    body: |
+      ## Context
+      The original design used a time-bar (ATB) combat system as the progression spine. It measured
+      nothing developmental, and it forced every other mechanic to hang off damage and XP.
+
+      ## Decision
+      The progression spine is **assessment-module execution** (`foundations/26`). Encounters are
+      delivered by the seven modalities (`foundations/11`); conflict may appear as a *narrative*
+      frame but never as the mechanism that advances the player. The superseded ATB design is
+      archived in `docs/historical/archive/atb-combat/`.
+
+      ## Consequences
+      - Positive: every encounter is measurable; the module contract is the single integration point.
+      - Negative: the combat-fantasy appeal must be re-earned through narrative framing.
+      - Guard: `MY-RG-0005` (superseded-vocabulary regression) keeps the old vocabulary out.
+
+  - id: MY-AD-0002
+    type: ad
+    system: true
+    title: "Layer rules: core is pure, infra integrates, surfaces consume, content is data"
+    organ: kernel
+    source: "docs/system/AGENTS.md §3"
+    description: "Four layer rules bounding src/core, src/infra, the rendering surfaces and content data."
+    related: [MY-AD-0001]
+    body: |
+      ## Context
+      Without a stated layer contract, engine code drifts into `src/infra/` and content hard-codes
+      into logic, which makes the system untestable and the curriculum unextendable.
+
+      ## Decision
+      1. `src/core/` is pure TypeScript — no game engine, no native bridge, no networking.
+      2. `src/infra/` holds every external integration (LLM, persistence, profiles, telemetry, crypto).
+      3. Rendering surfaces (`src/routes/`, the CLI) are consumers and first-class peers.
+      4. A new line, stage, shadow archetype, curriculum concept or assessment item is a **data**
+         change, not a code change.
+
+      ## Consequences
+      - Positive: pure core = testable contracts; data-driven content = the corpus can grow without code.
+      - Negative: some integrations need adapters rather than direct calls.
+      - Enforcement: `G12-identity-firewall` and the kernel gates in `src/core/validation/gates.ts`.
+
+  - id: MY-AD-0003
+    type: ad
+    system: true
+    title: "Vocabulary is owned by foundations/44; the ladder is ratified"
+    organ: kernel
+    source: "foundations/44-system-ontology-and-vocabulary §3-§4"
+    description: "One term, one owner, one meaning; the eight stages are KosmOS L1-L8 with a closure that is not a stage."
+    related: [MY-AD-0004, MY-AD-0005, MY-RG-0001]
+    body: |
+      ## Context
+      The vocabulary was scattered across six documents, so each redefined it slightly — which is how
+      stage/density conflation entered the canon (`docs/audits/DOC-SET-AUDIT-2026-09-20` D1/D2).
+
+      ## Decision
+      `foundations/44` owns the alphabet: the five axes and their firewalls, the ratified ladder, the
+      term→owner table and the blacklist. The eight stages are KosmOS **L1–L8**; `White` retires as a
+      stage (content splits into L8 Turquoise and the Violet closure event); L9 and D5+ are out of
+      scope as developmental states.
+
+      ## Consequences
+      - Positive: one place to answer "what does this word mean" and "who owns it".
+      - Negative: term changes now require a sweep plus a blacklist entry (see MY-RG-0001).
+      - Enforcement: gates DG5 (blacklist) and DG7 (ownership) in `scripts/arch.py`.
+
+  - id: MY-AD-0004
+    type: ad
+    system: true
+    title: "The objective is continuing development, not the harvest"
+    organ: catalyst
+    source: "foundations/06-law-of-one-correspondence §7.4"
+    description: "Continuing progression across all dimensions without residual entropy or shadows; the closure is an emergent horizon, never an optimisation target."
+    related: [MY-AD-0003, MY-AD-0009]
+    body: |
+      ## Context
+      Earlier designs treated the harvest as a destination with an endgame. That made the system
+      optimise for arrival, which contradicts the holon-is-never-outgrown commitment.
+
+      ## Decision
+      The objective is **continuing developmental progression across all dimensions — every line, every
+      stage below the centre of gravity — without residual entropy and without residual shadows.**
+      Selection (`foundations/24`), strategy (`foundations/27`) and the composite index
+      (`foundations/25`) may not use the closure as a target function.
+
+      ## Consequences
+      - Positive: `Samsara` becomes the normal condition of a healthy practice, not a failure state.
+      - Positive: theta-decay and floor-health gating become first-class mechanics.
+      - Negative: no "win screen" as a retention hook; growth must be felt (see MY-AD-0006).
+
+  - id: MY-AD-0005
+    type: ad
+    system: true
+    title: "Eligibility is a condition; the closure is an event"
+    organ: catalyst
+    source: "foundations/19-choice-and-polarity-engine §9.6"
+    description: "checkChoiceEligibility computes a condition; the harvest is the event gated by eligibility AND arrival. The two were conflated."
+    related: [MY-AD-0004, MY-RG-0006]
+    body: |
+      ## Context
+      `checkHarvest` computed a structural condition but its name implied an endgame trigger, and the
+      documentation used "harvest" for both. The code also permitted `Exploring -> Harvesting`.
+
+      ## Decision
+      - **Choice-eligibility** — a condition (`§9.2`/`§9.3`), computed continuously, producing state.
+      - **The harvest / closure** — the event, gated on eligibility **and** arrival at the closure.
+      The function is renamed `checkChoiceEligibility` and its verdict never triggers an endgame.
+
+      ## Consequences
+      - Positive: the lifecycle gate becomes expressible; the Samsara loop becomes coherent.
+      - Guard: `MY-RG-0006` (orphan policy seam) and the lifecycle transition contract test.
+
+  - id: MY-AD-0006
+    type: ad
+    system: true
+    title: "Register classes: the full metric register is available at any stage"
+    organ: profiling
+    source: "foundations/20-veil-of-forgetting §11"
+    description: "Open vs closed register classes, with the HoloOS D3-Veil divergence recorded and its compensation specified."
+    related: [MY-AD-0007, MY-AD-0003]
+    body: |
+      ## Context
+      HoloOS states the Veil is active at D3 (thins at D4+, dissolves at D5+), which would forbid
+      showing a D3 player their own metrics. The user's ruling requires full metric availability.
+
+      ## Decision
+      Registers are classes: **open** (available at any stage) and **closed** (identity diagnostics
+      that remain behind the operational veil). The divergence from HoloOS is **recorded with its
+      compensation** rather than silently absorbed.
+
+      ## Consequences
+      - Positive: the self can see everything about itself; the game never withholds the user's own data.
+      - Negative: a recorded divergence must be maintained as HoloOS evolves.
+      - Pattern: this is the model for every future divergence (AGENTS.md §2.0).
+
+  - id: MY-AD-0007
+    type: ad
+    system: true
+    title: "One articulation ladder, two registers, no privilege tiers"
+    organ: profiling
+    source: "foundations/16-significator-architecture §10.5"
+    description: "L0-L7 with AL1-AL6: the same derivation rendered in a self-register and an auditor-register; access is consented traversal, never a credential class."
+    related: [MY-AD-0006]
+    body: |
+      ## Context
+      The auditor surface was treated as a separate subsystem requiring its own authentication model
+      (`foundations/33` §5 open question). That premise is dissolved: there is no auditor identity
+      class, only a consented traversal of one ladder.
+
+      ## Decision
+      One ladder (L0–L7) with two registers: self-register (phenomenological, stage-articulated,
+      scoreless) and auditor-register (metric-bearing). The same derivation feeds both. Access is a
+      player-issued, revocable, scope-bounded consent link, re-checked at every render.
+
+      ## Consequences
+      - Positive: no privilege subsystem; the deepest level is available to the self too.
+      - Negative: consent plumbing becomes load-bearing (revocation must be immediate).
+
+  - id: MY-AD-0008
+    type: ad
+    system: true
+    title: "Objective alignment biases catalyst selection; it never replaces it"
+    organ: catalyst
+    source: "foundations/27-auto-mode-strategy-engine §5.4"
+    description: "AlignmentContract (author, intent, target, deviation band, ceiling) applies through the existing scheduler bias seam, as a bias only."
+    related: [MY-AD-0004, MY-RG-0008]
+    body: |
+      ## Context
+      `propose_alignment_adjustment` and `propose_trajectory` existed in the tool system and
+      `ratifyProposals` dispositioned them, but nothing applied an adjustment — a dormant seam.
+
+      ## Decision
+      An `AlignmentContract` (author, intent, target, deviation band, window, ceiling) is applied as a
+      **bias** over the priority computation, never as a replacement for it. Self and auditor use the
+      same route and the same laws (Veil, firewall, ceiling). The 8-criterion priority canon
+      (`foundations/24` §3.2) remains the single selection vocabulary.
+
+      ## Consequences
+      - Positive: trajectory alignment becomes a first-class, bounded capability.
+      - Negative: objective alignment now needs its own invariants documented and tested.
+      - Guard: `MY-RG-0008` (orphan proposal types must have an applying consumer).
+
+  - id: MY-AD-0009
+    type: ad
+    system: true
+    title: "Two-fold world memory with a per-holon owner worker"
+    organ: world
+    source: "foundations/22-holon-context-engine §7.4-§7.5"
+    description: "Profiling memory and object memory are separate ledgers; each holon has exactly one owning worker (local single writer) and context is handed to the game agent."
+    related: [MY-AD-0010, MY-AD-0004]
+    body: |
+      ## Context
+      A single orchestrating agent cannot hold long-horizon consequences for every world object, and
+      concurrent writers silently corrupt shared world state. Long-horizon propagation had been
+      deferred on the assumption that no single writer could be identified.
+
+      ## Decision
+      (1) Memory is two-fold: player/profiling (actions and tendencies) and object/world
+      (per-entity impact). (2) Every holon has exactly **one owner worker** — a local single writer.
+      (3) Owner workers hand context to the foreground game agent, which renders scenarios. Offline,
+      the pipeline degrades to deterministic ledger replay so the world never forgets.
+
+      ## Consequences
+      - Positive: NPC/world causality becomes updatable without global locking.
+      - Negative: worker lifecycle and offline degradation must be tested as failure modes.
+
+  - id: MY-AD-0010
+    type: ad
+    system: true
+    title: "One foreground orchestrator; background workers for menial jobs"
+    organ: orchestration
+    source: "foundations/43-agentic-orchestration-architecture §4.5b/§5.4"
+    description: "A single foreground agent owns the user interaction; sub-agents run sessions and report into the cycle; menial work runs as background workers under ratification-only commits."
+    related: [MY-AD-0011, MY-AD-0009]
+    body: |
+      ## Context
+      Concurrency policy was an open question: how many specialist sessions may run at once, and how
+      do their outputs reach the world?
+
+      ## Decision
+      Exactly **one** foreground orchestrator, which never emits player-visible text itself. It spawns
+      a sub-agent per session/assessment; when the session ends, the sub-agent feeds the reporting
+      system and the orchestrator, closing the cycle. Menial background work runs as workers (W1–W5)
+      and commits are ratification-only.
+
+      ## Consequences
+      - Positive: one author of player-visible output; a legible audit trail per session.
+      - Negative: worker failures need explicit degradation paths (see MY-AD-0009).
+
+  - id: MY-AD-0011
+    type: ad
+    system: true
+    title: "Human intervention is integrated, not a privileged handoff path"
+    organ: safety
+    source: "foundations/43-agentic-orchestration-architecture §4.7"
+    description: "No separate handoff policy: the platform stays one integrated system for user and auditor alike, with no privilege tiers."
+    related: [MY-AD-0010, MY-AD-0007]
+    body: |
+      ## Context
+      A deferred item proposed a separate human-handoff subsystem. Its premise was that a human
+      operator needs privileges the user lacks.
+
+      ## Decision
+      The premise is rejected. There is **no separate handoff policy and no privileged class**:
+      escalation surfaces through the same consented-linkage and safety mechanisms the user already
+      has, and adverse events surface through the observers that already exist.
+
+      ## Consequences
+      - Positive: one safety model; no parallel authorization surface to secure.
+      - Negative: safety content (local crisis patterns, escalation contacts) must be authored in the
+        safety organ rather than assumed from a handoff protocol.
+
+  - id: MY-AD-0012
+    type: ad
+    system: true
+    title: "Grading is evidence-only; competence and identity never mix"
+    organ: kernel
+    source: "foundations/42-developmental-levelling-mechanism §1.1"
+    description: "Ladder movement derives only from demonstrated evidence; knowledge-axis measures never feed identity diagnostics."
+    related: [MY-AD-0003]
+    body: |
+      ## Context
+      Curriculum progress could be mistaken for developmental attainment, letting a well-drilled player
+      appear to have outgrown a stage they still inhabit.
+
+      ## Decision
+      Grading is **evidence-only**: ladder movement requires demonstrated competence on that rung with
+      the shadow gate satisfied (`MY-AD-0004`'s floor-health rule). A firewall separates competence
+      from identity in both directions.
+
+      ## Consequences
+      - Positive: the corpus can be rigorous without corrupting the developmental reading.
+      - Enforcement: `G11-levelling-mechanism` and `G12-identity-firewall` in `src/core/validation/gates.ts`.
+
+  - id: MY-AD-0013
+    type: ad
+    system: true
+    title: "Documentation is governed as a three-record system"
+    organ: platform
+    source: "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md §2.2"
+    description: "Decisions (AD), regression guards (RG) and a mutation ledger, with a machine-readable structure declaration and fail-closed gates."
+    related: [MY-AD-0003, MY-RG-0001, MY-RG-0010]
+    body: |
+      ## Context
+      706 markdown files and no architecture record: decisions lived as prose sections, audit findings
+      never closed, and nothing declared which directories were live.
+
+      ## Decision
+      Three record types with distinct owners — AD (forward design), RG (post-mortem guard), Log (the
+      append-only mutation ledger) — plus `_org.yaml` (the structure declaration) and `scripts/arch.py`
+      (the only write path, with gates DG1–DG10).
+
+      ## Consequences
+      - Positive: "what did we decide and is it still true" becomes answerable; findings close.
+      - Negative: a linter and a ledger to maintain — accepted because the alternative is drift.
+      - Evidence: the first ledger entry is `MY-RG-0001`, an incident caused during this very migration.
+
+  # ── regression guards ─────────────────────────────────────────────────────
+  - id: MY-RG-0001
+    type: rg
+    system: true
+    severity: High
+    title: "A one-way migration script looks idempotent and is not"
+    organ: platform
+    source: "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md §12 (Incident 1)"
+    description: "doc-stage-reindex.py was applied twice in one pipeline; the second pass re-mapped the correct new stage name and corrupted 194 files."
+    related: [MY-AD-0003]
+    body: |
+      ## Symptom
+      After a documentation vocabulary migration, stage 8 read `Teal` everywhere: e.g.
+      `docs/concept-drafts/somatic/08-turquoise/module-spec.md` line 6,
+      `Stage: Teal (super-integral / non-dual / harvest)`. 194 files, no error, exit code 0.
+
+      ## Root cause
+      The mapping is a **chained renaming** (White→Turquoise, Turquoise→Teal). It is therefore not
+      idempotent: after a correct pass, the newly-correct `Turquoise` is exactly the token that maps to
+      `Teal`. Nothing enforced one-way ness, and `--apply` looked like an ordinary idempotent command —
+      so a second invocation (used to print a different section of the report) ran live.
+
+      ## What happened — Incident 1 (2026-09-20)
+      `python3 scripts/doc-stage-reindex.py --apply | sed -n 1,3p` followed by
+      `python3 scripts/doc-stage-reindex.py --apply | sed -n '/HELD/,$p'` in one shell command.
+      The first pass was correct; the second corrupted 194 files. Recovery: `git checkout -- docs/`,
+      re-apply hand edits, re-run once.
+
+      ## Detection
+      `grep -rn "L8 Teal\|Teal→Teal" docs/` — any hit is corruption. The script itself now refuses:
+      `python3 scripts/doc-stage-reindex.py` exits 2 when a receipt exists.
+
+      ## Prevention
+      - `scripts/doc-stage-reindex.py` writes `docs/.doc-stage-reindex.applied` on `--apply` and
+        **refuses to re-run** (`--force` overrides, documented as dangerous).
+      - The one-way nature is stated in the script's first docstring paragraph.
+      - Class rule: a migration whose correctness depends on how many times it has run must ship with a
+        receipt, and its report section must never be produced by re-running the migration.
+
+  - id: MY-RG-0002
+    type: rg
+    system: true
+    severity: High
+    title: "Stage vocabulary drift (superseded names reappearing in active canon)"
+    organ: platform
+    source: "docs/audits/DOC-SET-AUDIT-2026-09-20 D1/D2"
+    description: "The retired stage vocabulary (White as a stage, Turquoise as stage 7, stage=density labels) keeps reappearing in new prose."
+    related: [MY-AD-0003, MY-RG-0001]
+    body: |
+      ## Symptom
+      A new document written months after the re-index says "at White stage", or labels a band "D4+",
+      or writes "07 Turquoise". Nothing fails; the canon just forks again.
+
+      ## Root cause
+      Vocabulary corrections lived only in prose. Nothing executable prevented a regression, so the
+      only detector was a human re-reading ~700 files — which is why D1/D2 were found by an audit
+      rather than by the build.
+
+      ## Detection
+      `python3 scripts/arch.py validate --gate DG5`
+
+      ## Prevention
+      - The blacklist block in `docs/foundations/44 §9` is machine-read; DG5 fails on a live document
+        that uses a superseded sense, with `exempt_in` covering the documents that legitimately discuss
+        the retirement.
+      - Adding a term to the blacklist is the required final step of any vocabulary correction.
+
+  - id: MY-RG-0003
+    type: rg
+    system: true
+    severity: Medium
+    title: "A document claims authority it does not own"
+    organ: platform
+    source: "docs/audits/DOC-SET-AUDIT-2026-09-20 D3"
+    description: "architecture/01-overview.md described itself as the binding architectural contract while the ratified hierarchy gives contracts to foundations and sequencing to the plan."
+    related: [MY-AD-0013]
+    body: |
+      ## Symptom
+      A doc set has two documents that both call themselves authoritative (`docs/architecture/01-overview.md`
+      said "The binding architectural contract for Mysterium"), so an agent cannot tell which to follow.
+
+      ## Root cause
+      Authority was written by hand into prose, and nothing owned the authority map. Any document could
+      promote itself.
+
+      ## Detection
+      `python3 scripts/arch.py validate --gate DG4`
+
+      ## Prevention
+      - `_org.yaml → authority_map` names the only documents that may self-describe as binding.
+      - DG4 fails any other live document claiming authority; the former overview is now
+        `docs/system/AGENTS.md`, a router without the claim.
+
+  - id: MY-RG-0004
+    type: rg
+    system: true
+    severity: Medium
+    title: "A dormant directory reads as live canon"
+    organ: platform
+    source: "docs/audits/DOC-SET-AUDIT-2026-09-20 D5"
+    description: "Dated directories (agentic-loop/, brain-game-upgrade/, superpowers/, a June red-team audit at the docs root) were navigable as if current."
+    related: [MY-AD-0013]
+    body: |
+      ## Symptom
+      An agent reads `docs/RED-TEAM-AUDIT-DEFINITIVE.md` ("Status: CRITICAL - 3 architectural pillars
+      must be rebuilt", dated 2026-06-23) and treats a two-month-old audit as a live verdict.
+
+      ## Root cause
+      Historical material was left in place with no status stamp and no rung declaration, so "is this
+      current?" had no answer other than the reader's judgment.
+
+      ## Detection
+      `python3 scripts/arch.py validate --gate DG6`
+
+      ## Prevention
+      - Dated material moves to `docs/historical/` (rung declared `live: false` in `_org.yaml`).
+      - DG6 fails a live document that cites `docs/historical/` as authority.
+      - `docs/INDEX.md` is generated from live rungs only, so historical material cannot appear as current.
+
+  - id: MY-RG-0005
+    type: rg
+    system: true
+    severity: Medium
+    title: "Canon and code drift apart on a shared vocabulary"
+    organ: kernel
+    source: "docs/audits/DOC-SET-AUDIT-2026-09-20 §D1 + plan §13"
+    description: "The priority weights in PriorityComputation.ts disagreed with the documented canon (7 criteria vs 8), and the stage re-index renamed docs without renaming the code identifiers."
+    related: [MY-AD-0001, MY-AD-0003]
+    body: |
+      ## Symptom
+      `src/core/engines/PriorityComputation.ts` carried 7 criteria with `userMatrixTargeting: 0.12`,
+      while `foundations/24 §3.2` canonised 8 with `masteryAlignment: 0.10`. Separately, docs read
+      `Teal`/`Turquoise` while `src/core/assessments/*/white.ts` and the `Stage` union still read the
+      pre-re-index names.
+
+      ## Root cause
+      The docs and the code each owned a copy of the same vocabulary, and no check compared them. A
+      documentation-only rename is *worse* than no rename, because it creates a silent mismatch.
+
+      ## Detection
+      `python3 scripts/arch.py validate --gate DG10` (records citing code artifacts must resolve);
+      plus a test asserting the computed criteria match `foundations/24 §3.2`.
+
+      ## Prevention
+      - Where a term is also a code identifier, docs **hold** the rename and annotate it
+        `CODE-PASS PENDING` until the code pass lands atomically with its tests.
+      - Every such held span is listed in the sweep report
+        (`python3 scripts/doc-stage-reindex.py`).
+
+  - id: MY-RG-0006
+    type: rg
+    system: true
+    severity: High
+    title: "A ratified policy seam with no consumer (dormant proposals)"
+    organ: orchestration
+    source: "docs/audits/DOC-SET-AUDIT-2026-09-20 (R-class) + foundations/27 §5.4"
+    description: "propose_alignment_adjustment was dispositioned by ratifyProposals but nothing applied it, so an approved policy had no effect."
+    related: [MY-AD-0008]
+    body: |
+      ## Symptom
+      A user or auditor approves an alignment adjustment; the tool reports success; play does not change.
+      Nothing errors, because "consumed by orchestrator planning" was a comment, not an implementation.
+
+      ## Root cause
+      The proposal type and its disposition path were built together, but the *applier* was never built,
+      and no test asserted that each proposal type has an effect.
+
+      ## Detection
+      A contract test enumerating every proposal type and asserting each has an applying consumer that
+      changes observable state.
+
+      ## Prevention
+      - A proposal type may not ship without its consumer in the same change.
+      - `MY-AD-0008` specifies the applier for `alignment_adjustment` (a bias over the priority
+        computation).
+
+  - id: MY-RG-0007
+    type: rg
+    system: true
+    severity: High
+    title: "A lifecycle state machine permits a transition the canon forbids"
+    organ: profiling
+    source: "foundations/19-choice-and-polarity-engine §9.6"
+    description: "Significator.ts allowed Exploring -> Harvesting directly, bypassing Developing, Crystallizing and Transforming."
+    related: [MY-AD-0005]
+    body: |
+      ## Symptom
+      A profile can reach the harvest state from the exploration state, skipping the crystallisation the
+      Choice requires — the endgame fires for a player who never crystallised.
+
+      ## Root cause
+      `VALID_TRANSITIONS` was written as a set of reachable states rather than as the canon's gated path,
+      and no test asserted that the forbidden transition is actually rejected.
+
+      ## Detection
+      A transition contract test asserting each forbidden edge is refused and each allowed edge is gated.
+
+      ## Prevention
+      - The lifecycle test enumerates the canon's path (`19 §9.6`) and fails on any extra edge.
+      - `MY-AD-0005` owns the eligibility/event distinction the machine must express.
+
+  - id: MY-RG-0008
+    type: rg
+    system: true
+    severity: Medium
+    title: "Two documents own one formula"
+    organ: platform
+    source: "docs/audits/DOC-SET-AUDIT-2026-09-20 R4"
+    description: "concept-drafts/SCORING-ARCHITECTURE.md and foundations/25 both carried the consciousness-index aggregation formula."
+    related: [MY-AD-0003]
+    body: |
+      ## Symptom
+      The composite index formula exists in two documents and they disagree; a reader cannot tell which
+      is current, and an implementer picks whichever they saw first.
+
+      ## Root cause
+      No document owned "the composite", so each author restated what they needed. Redundancy was
+      invisible because nothing checked ownership.
+
+      ## Detection
+      `python3 scripts/arch.py validate --gate DG7` (every concept has exactly one owner in `44 §8`).
+
+      ## Prevention
+      - One owner per concept, named in `docs/foundations/44 §8`; other documents link, never restate.
+      - `foundations/25` owns the composite formula; `concept-drafts/SCORING-ARCHITECTURE.md` owns the
+        per-module scoring skeleton and cites 25.
+
+  - id: MY-RG-0009
+    type: rg
+    system: true
+    severity: Medium
+    title: "A partial purge leaves the old system's vocabulary in place"
+    organ: kernel
+    source: "docs/audits/DOC-SET-AUDIT-2026-09-20 D4"
+    description: "The ATB removal pass updated foundations but missed architecture/10, which kept 'Relationship to Combat' and 'How This Replaces Combat-Only Progression'."
+    related: [MY-AD-0001]
+    body: |
+      ## Symptom
+      Months after a subsystem was removed, a live architecture document still specifies how that
+      subsystem works, so new work is designed against a system that no longer exists.
+
+      ## Root cause
+      The purge was executed as a document-by-document review with no inventory of which documents
+      mention the subsystem. Coverage was assumed rather than checked.
+
+      ## Detection
+      `grep -rln "ATB\|combat-only" docs/ --include=*.md | grep -v docs/historical` must return nothing;
+      DG5's blacklist carries the vocabulary patterns.
+
+      ## Prevention
+      - A removal pass starts with a token inventory across live canon and ends by adding those tokens
+        to the blacklist (`foundations/44 §9`), so the class cannot return.
+
+  - id: MY-RG-0010
+    type: rg
+    system: true
+    severity: Medium
+    title: "A gate passes because its fixture cannot fail"
+    organ: validation
+    source: "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md §10 (success criteria 1)"
+    description: "Every gate must demonstrably fail on an injected violation, or it is decoration rather than enforcement."
+    related: [MY-AD-0013, MY-RG-0002]
+    body: |
+      ## Symptom
+      A validator reports 0 violations while the defect it claims to prevent is present in the tree.
+
+      ## Root cause
+      Gates are written against the happy path and validated only by running them on a clean tree, which
+      cannot distinguish "no violations" from "no detection". The validator's own config lookup had this
+      bug in its first draft (a key-shape mismatch silently enabled everything).
+
+      ## Detection
+      For each gate: introduce a deliberate violation in a scratch copy, run the gate, assert a
+      non-zero exit; then revert.
+
+      ## Prevention
+      - `scripts/arch.py validate --gate DGn` is part of the iteration protocol (`AGENTS.md §7.5`).
+      - Every new gate lands with a documented injection that proves it fails closed.
+      - Kernel gates (`src/core/validation/gates.ts`) follow the same rule: each hard gate must fail on
+        an injected regression.

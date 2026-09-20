@@ -6,6 +6,25 @@ This document is the *spine* of the research phase. It expands the eight first-p
 
 When a design decision is made anywhere in Mysterium, it must be possible to walk it back to one of these eight principles. If it cannot, either the decision is wrong or the principle list is incomplete.
 
+### Principle 0 — *What is this actually for?*
+
+**The objective (ratified 2026-09-20, `06 §7.4`): continuing developmental progression across all
+dimensions — every line, every stage below the player's centre of gravity — without residual entropy
+and without residual shadows.**
+
+This sits *above* the eight principles because it disciplines all of them. Three of its consequences
+are load-bearing and each has been violated in earlier designs:
+
+1. **The harvest is a horizon, not a goal.** No mechanic may optimise toward the closure; selection
+   (`24`), strategy (`27`) and the composite index (`25`) are all forbidden from using it as a
+   target function. `Samsara` is not a failure state.
+2. **Regression is maintenance, not loss.** The holon is never outgrown (`AGENTS.md §5.6`): lower
+   stages must remain healthy, and theta-decay makes neglect visible. A player's growth at the top is
+   *invalid* if their floor is unhealthy — Principle 4 (earned progression) depends on this.
+3. **Zero residual entropy is measurable.** "No residual shadows" is not an aspiration here: it is
+   the shadow-ledger invariant (`16 §3`, `10`), and lower-stage health is a gate on upper-stage
+   unlocks (`25`). If an implementation cannot report floor health, it cannot satisfy Principle 0.
+
 ## 2. Scientific basis
 
 The eight principles are not invented — they are the residue of merging six literatures:

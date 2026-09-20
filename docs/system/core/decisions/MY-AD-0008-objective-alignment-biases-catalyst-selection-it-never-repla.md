@@ -1,0 +1,25 @@
+---
+ID: MY-AD-0008
+Title: "Objective alignment biases catalyst selection; it never replaces it"
+Status: Active
+Date: 2026-09-20
+Organ: catalyst
+Source: "foundations/27-auto-mode-strategy-engine §5.4"
+Description: "AlignmentContract (author, intent, target, deviation band, ceiling) applies through the existing scheduler bias seam, as a bias only."
+Related: [MY-AD-0004, MY-RG-0008]
+---
+
+## Context
+`propose_alignment_adjustment` and `propose_trajectory` existed in the tool system and
+`ratifyProposals` dispositioned them, but nothing applied an adjustment — a dormant seam.
+
+## Decision
+An `AlignmentContract` (author, intent, target, deviation band, window, ceiling) is applied as a
+**bias** over the priority computation, never as a replacement for it. Self and auditor use the
+same route and the same laws (Veil, firewall, ceiling). The 8-criterion priority canon
+(`foundations/24` §3.2) remains the single selection vocabulary.
+
+## Consequences
+- Positive: trajectory alignment becomes a first-class, bounded capability.
+- Negative: objective alignment now needs its own invariants documented and tested.
+- Guard: `MY-RG-0008` (orphan proposal types must have an applying consumer).

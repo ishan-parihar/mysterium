@@ -44,6 +44,13 @@ Usage:
     python3 scripts/doc-stage-reindex.py            # dry run: report only
     python3 scripts/doc-stage-reindex.py --apply    # write changes (once)
     python3 scripts/doc-stage-reindex.py --force    # override the receipt guard (dangerous)
+
+POST-RECEIPT CORRECTIONS (--only):
+    A file deliberately excluded from the main sweep (because it needed hand-review) is corrected
+    with `--only <path>`, which applies the same single pass to that file alone and is exempt from
+    the receipt guard. Hand-review it FIRST: the transformation is still one-way, so a file already
+    reading Teal/Turquoise must not be passed here.
+        python3 scripts/doc-stage-reindex.py --only docs/foundations/23-polarity-ontology.md
 """
 
 from __future__ import annotations
@@ -217,7 +224,16 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
     ap.add_argument("--force", action="store_true", help="override the one-way receipt guard")
+    ap.add_argument("--only", action="append", help="correct a single hand-reviewed file")
     args = ap.parse_args()
+
+    if args.only:
+        files = [Path(p) if Path(p).is_absolute() else ROOT / p for p in args.only]
+        missing = [str(f) for f in files if not f.is_file()]
+        if missing:
+            print(f"arch: --only paths not found: {missing}", file=sys.stderr)
+            return 2
+        return _run(files, args)
 
     if RECEIPT.exists() and not args.force:
         print(
@@ -230,14 +246,17 @@ def main() -> int:
         )
         return 2
 
-    files = candidates()
+    return _run(candidates(), args)
+
+
+def _run(files: list[Path], args: argparse.Namespace) -> int:
     changed: list[tuple[str, int]] = []
     held_report: list[tuple[str, int, str]] = []
     total = 0
     for p in files:
         before = p.read_text(encoding="utf-8")
         after, held = transform(before)
-        rel = p.relative_to(DOCS).as_posix()
+        rel = p.relative_to(DOCS).as_posix() if str(p).startswith(str(DOCS)) else p.name
         for ln, tok in held:
             held_report.append((rel, ln, tok))
         if after == before:
@@ -248,7 +267,7 @@ def main() -> int:
         if args.apply:
             p.write_text(after, encoding="utf-8")
 
-    if args.apply:
+    if args.apply and not args.only:
         import subprocess
 
         try:

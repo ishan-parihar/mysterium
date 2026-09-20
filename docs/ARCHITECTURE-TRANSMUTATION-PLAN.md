@@ -186,13 +186,13 @@ parent sequence). This keeps one sequence and one ledger for a single-repo syste
 | **D2** density labels as developmental states | **P1** — sweep 42/38/32/28/21/REQUIREMENTS/INDEX; DG5 owns the blacklist; the class is recorded as **RG-0001** |
 | **D3** competing authority claims | **P3** — `architecture/01` → `docs/system/AGENTS.md` (router, no authority claim); red-team doc → `docs/historical/audits/` + stamp; DG4 enforces; **RG-0002** |
 | **D4** ATB combat residue in `architecture/10` | **P1** — purge Part VIII + Part XIV; the class is **RG-0003** (forbidden-token check in `validate`) |
-| **D5** dormant dirs read as canon | **P6** — `agentic-loop/`, `brain-game-upgrade/`, `superpowers/`, `research/`, `archive/`, `PROGRESS.md`, red-team doc → `docs/historical/` with stamps; DG6 enforces; **RG-0004** |
+| **D5** dormant dirs read as canon | **P6** — `agentic-loop/`, `brain-game-upgrade/`, `superpowers/`, `research/`, `docs/historical/archive/`, `PROGRESS.md`, red-team doc → `docs/historical/` with stamps; DG6 enforces; **RG-0004** |
 | **R1** `architecture/06` restates 19+23 | **P3** — shrinks to an implementation pointer inside `catalyst` (code paths + links) |
 | **R2** `architecture/01` binding claim | **P3** — merges into `docs/system/AGENTS.md` (DG4) |
 | **R3** `architecture/11` vs 30/31/32/34/37 | **P3** — stays as the authoring *procedure* under `curriculum`, references the rule owners |
 | **R4** `SCORING-ARCHITECTURE.md` vs `foundations/25` | **P3** — 25 keeps the composite formula; the draft keeps the per-module scoring skeleton and cites 25 |
 | **R5** `agentic-loop` audit vs `foundations/43` | **P6** — audit → `docs/historical/audits/`; 43 remains the contract |
-| **R6** `validation/BENCHMARK-ARCHITECTURE.md` vs 40 | **P3** — moves to the `validation` organ; both docs declare the boundary explicitly |
+| **R6** `docs/system/sub-systems/validation/benchmark-architecture.md` vs 40 | **P3** — moves to the `validation` organ; both docs declare the boundary explicitly |
 | **R7** `PROGRESS.md` vs plan §9 | **P6** — → `docs/historical/` (it is a frozen log, not a plan) |
 | **R8** onboarding plan vs 16 §11.1 | **P3** — moves under the `onboarding` organ with a read-first pointer to 16 §11.1 |
 | **R9** `foundations/26` vs `43` | **keep** — verify 43 doesn't restate 26's invariants (DG7 check) |
@@ -257,12 +257,12 @@ Removed from the live architecture (not deleted — stamped and moved):
 
 1. `README.md` as a second router (AGENTS.md is canonical; README becomes a pointer).
 2. `docs/INDEX.md` as a hand-maintained file (generated).
-3. `docs/PROGRESS.md` (frozen duplicate of the plan's status section).
-4. `docs/RED-TEAM-AUDIT-DEFINITIVE.md` at the docs root (June snapshot read as live authority).
-5. `docs/agentic-loop/` (superseded by `foundations/43`).
-6. `docs/brain-game-upgrade/` (absorbed; unstamped).
-7. `docs/superpowers/plans/*` (historical).
-8. `docs/research/` (pre-canon exploration).
+3. `docs/historical/PROGRESS.md` (frozen duplicate of the plan's status section).
+4. `docs/historical/audits/RED-TEAM-AUDIT-DEFINITIVE.md` at the docs root (June snapshot read as live authority).
+5. `docs/historical/agentic-loop/` (superseded by `foundations/43`).
+6. `docs/historical/brain-game-upgrade/` (absorbed; unstamped).
+7. `docs/historical/superpowers/plans/*` (historical).
+8. `docs/historical/research/` (pre-canon exploration).
 9. `docs/architecture/06`'s restated polarity theory + `architecture/10`'s combat parts.
 10. `docs/audits/*` as *authority* (they remain the historical evidence behind each RG).
 
@@ -338,6 +338,30 @@ how many times it has run, with no receipt.
 **Guard (implemented).** `--apply` writes `docs/.doc-stage-reindex.applied` (base rev, counts,
 timestamp). A re-run **refuses** with exit 2 unless `--force`. The docstring now states the one-way
 nature in its first paragraph. Recorded as **RG-0001** in the seed ledger (§5).
+
+---
+
+## 12b. Execution outcome (P0–P6 complete, 2026-09-20)
+
+| Phase | Outcome | Evidence |
+|---|---|---|
+| **P0** structure | `_org.yaml` declares 4 rungs, 13 organs, record homes, DG1–DG10; 94 declared paths resolve | `python3 scripts/arch.py route <path>` |
+| **P1** vocabulary | 193 files / 543 lines swept; 39 stale lines remain, all code identifiers or `CODE-PASS PENDING` annotations; `23` corrected post-review via `--only` | sweep report; `grep -rn "L8 Teal\|Teal→Teal" docs/` empty |
+| **P2** canon | `foundations/44` (grammar: 5 axes, ratified ladder, owners table, blacklist) + `foundations/AGENTS.md` canon router + `02 §2.3` (MHC/Kegan) + Principle 0 in `01` + objective in `00-vision` + HoloOS/KosmOS in `AGENTS.md §2.0` | DG5/DG7 read `44` |
+| **P3** system | `docs/architecture/` → `docs/system/sub-systems/<organ>/` (13 organ pools, each with `core/{decisions,regressions}`); `docs/system/AGENTS.md` absorbs the overview (authority claim dropped); `docs/validation/` → the `validation` organ; **D4 purged** (ATB residue); **R1 collapsed** (polarity engine → pointer); links rewritten by `scripts/doc-path-reindex.py` | `docs/architecture/` and `docs/validation/` no longer exist |
+| **P4** tooling | `scripts/arch.py`: `route · recon · new · update · seed · log · emit · validate`; 10 gates; `emit` generates `INDEX.md` + the 13 organ routers (auto-zone + preserved manual zone) | `arch.py validate` → 0 violations |
+| **P5** ledger | 23 records seeded (13 AD + 10 RG) with ledger receipts, from the transcription map `docs/system/core/seed-2026-09-20.yaml` | `docs/system/logs/mutations.jsonl` |
+| **P6** quarantine | `agentic-loop/`, `brain-game-upgrade/`, `superpowers/`, `research/`, `archive/`, the red-team doc and `PROGRESS.md` → `docs/historical/` (+ its own router); `README.md` demoted to a pointer; `INDEX.md` generated | `arch.py route docs/historical/...` → `live: False` |
+
+**Gate proof (RG-0010).** Three injections were applied and detected, then reverted: a hand-written
+record with no ledger receipt (DG1/DG2/DG9), superseded vocabulary in live canon (DG5), and an
+authority claim outside the map (DG4). A gate that cannot fail is decoration.
+
+**Still open (declared in `_org.yaml → pending`):**
+1. **CODE-PASS** — rename the 8 stage identifiers (`src/core/assessments/*/white.ts`, the `Stage` union,
+   threshold maps, fixtures) atomically with their tests, and update the ~39 held doc lines.
+2. **DG-ENFORCE** — wire `arch.py validate` into the CI/iteration path (it is documented in
+   `AGENTS.md §7.5` step 2b and must be run by hand until then).
 
 ---
 

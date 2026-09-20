@@ -80,7 +80,7 @@ These are the canonical strings. Using `'IndividualInterior'` instead of `'UL'` 
 | Orange | `Orange` | Blue (in) | Reason, achievement, science |
 | Green | `Green` | Blue (out) | Sensitivity, plurality, inclusion |
 | Teal | `Teal` | Indigo (6a) | Vision-logic; the gateway opens |
-| Teal | `Turquoise` | Indigo (6b) | Total integration; holism; closure readiness |
+| Turquoise | `Turquoise` | Indigo (6b) | Total integration; holism; closure readiness |
 | *(the closure — not a stage)* | `Violet` | Violet | The harvest event (the D3→D4 transition) |
 
 ### Rays, expanded (canonical — see `foundations/06`)

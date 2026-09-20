@@ -207,7 +207,7 @@ The game ends with the player's own words.
   representation; trust silence and absence; let the player project
   their own meaning.
 - **End-game retention.** Most games keep players engaged with
-  loops. Mysterium's Teal stage (L8) has *no loop*. This is honest but
+  loops. Mysterium's Turquoise stage (L8) has *no loop*. This is honest but
   commercially unusual. The implicit return path is to mentor others
   (multiplayer) or to start a new character with different drive
   weights.

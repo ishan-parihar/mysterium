@@ -359,7 +359,7 @@ The bulk of gameplay. The player becomes a *self* — first as warrior (Red), th
 The integral and non-dual stages. The world becomes spacious — fewer encounters, deeper each. The narrative quiets. The player's *self* is transcended-and-included into larger holons.
 
 **Structural role:**
-- Two final Transformation events (Teal→Teal, then the closure — the Violet event)
+- Two final Transformation events (Teal→Turquoise, then the closure — the Violet event)
 - The Choice crystallises — polarity vector reaches locked phase (magnitude ≥ 0.85)
 - The protagonist's future self appears as mentor at Teal threshold
 - The protagonist *authors* their closing reflection at the closure (player-written text)

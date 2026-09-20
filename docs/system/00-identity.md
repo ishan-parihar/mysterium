@@ -147,7 +147,7 @@ When reading this project's documentation, follow these rules:
 1. **Read this document first** — it tells you what the system IS
 2. **Read `AGENTS.md` second** — it tells you how to work on the project
 3. **Read `docs/INDEX.md` third** — it tells you where everything lives
-4. **Don't read `docs/00-vision.md` first** — it describes the ATB-combat era. This document (`architecture/00-mysterium-identity.md`) supersedes it.
+4. **Don't read `docs/00-vision.md` first** — it describes the ATB-combat era. This document (`docs/system/00-identity.md`) supersedes it.
 5. **Don't assume it's a game** — it's a contemplative practice; the "RPG" framing is a delivery mechanism
 6. **Don't add redundant docs** — the uniqueness principle (AGENTS.md §2.2) is absolute
 7. **Always push commits after each iteration** — never leave work uncommitted

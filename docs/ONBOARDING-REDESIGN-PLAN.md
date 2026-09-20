@@ -1,6 +1,6 @@
 # Onboarding Redesign Plan
 
-> **Depends on:** `architecture/10-stage-assessment-architecture.md` (the 64-module system + shadow diagnostics + holonic return)
+> **Depends on:** `docs/system/sub-systems/kernel/stage-assessment-architecture.md` (the 64-module system + shadow diagnostics + holonic return)
 > **Depends on:** `foundations/10-shadow-and-pathology.md` (the 128-shadow model)
 > **Purpose:** Define the UX flow and player experience of the composite onboarding. For the underlying architecture (module contracts, scoring rubrics, drive-health probes), see the architecture doc. This document focuses on *how it feels to play*.
 
@@ -16,7 +16,7 @@
 | 2 | **Intrapersonal:** same scenario repeats | Only 6 scenarios; `getScenarioForLevel` uses `this.currentTrial % matching.length` — at level 3-4, only 2 scenarios exist, so they repeat immediately | Feels broken, no new information gathered |
 | 3 | **Moral:** limited spectrum, scratches surface | Only 4 dilemmas with 3 options each. Options are tagged Red/Amber/Orange/Green but the scenarios don't probe the *unconscious* moral structure — they test *stated preference* | Cannot distinguish genuine moral development from social desirability |
 | 4 | **Spiritual:** same temptation repeats | `getTemptations(topValue)` returns exactly 4 per value, and the staircase stays at the same level, so the same temptation appears multiple times | Feels repetitive, easily gamed once you see the pattern |
-| 5 | **Willpower:** easily spoofed | Just hold the button — no multi-dimensional challenge. No delay-of-gratification, no strategic allocation, no "release when told" | A robot could pass at L8 Teal |
+| 5 | **Willpower:** easily spoofed | Just hold the button — no multi-dimensional challenge. No delay-of-gratification, no strategic allocation, no "release when told" | A robot could pass at L8 Turquoise |
 | 6 | **Post-probe result:** "Strong/Developing/Emerging" | `showProbeComplete` shows a single word based on accuracy > 0.8/0.5 | No meaningful feedback; doesn't reflect the multi-dimensional reality |
 | 7 | **Final calibration gives inflated results** | Somatic: Teal, Moral: Teal, Willpower: Green — from 3-6 trials each | The staircase converges too fast on too little data |
 | 8 | **Emotional:** basic recognition only | Ekman 6 faces with 4 options — measures "can you name emotions" not "how deeply do you understand them" | Cannot distinguish Red (self-other split) from Green (pluralistic empathy) |

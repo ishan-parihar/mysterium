@@ -34,7 +34,6 @@ rungs:
       - path: docs/foundations
         format: {pattern: "*.md"}
     authority: docs/foundations/AGENTS.md
-    pending_phase: P2
     live: true
 
   canon-domain:
@@ -56,7 +55,6 @@ rungs:
     dirs:
       - path: docs/system
         format: {pattern: "**/*.md"}
-        pending_phase: P3          # created by the structural move in P3
     authority: docs/system/AGENTS.md
     live: true
 
@@ -73,7 +71,6 @@ rungs:
     # Holoarchic (Q4 ratified): system-wide verdicts live in the system core;
     # organ-scoped records live in each organ's own core. System-wide verdicts
     # MUST NOT be filed in an organ core.
-    pending_phase: P3             # record dirs are created with the system rung
     decisions:
       system: docs/system/core/decisions
       organ_pattern: docs/system/sub-systems/{organ}/core/decisions
@@ -107,7 +104,9 @@ rungs:
     dirs:
       - path: docs/historical
         format: {pattern: "**/*.md"}
-        pending_phase: P6
+    files:
+      - docs/CHANGELOG.md       # release history: a log, not an authority
+    authority: docs/historical/AGENTS.md
     live: false
 
   audits:
@@ -227,11 +226,16 @@ authority_map:
 # phase completes; on completion the `pending_phase` key is removed and the path
 # becomes mandatory. Never leave a completed phase's key in place.
 # ─────────────────────────────────────────────────────────────────────────────
+completed:
+  P0: "structure declared; 94 paths resolved"
+  P1: "vocabulary sweep (193 files) + D4 purge + D6 ray ruling"
+  P2: "foundations/44 + canon router + 02 MHC + objective + AGENTS.md external canon"
+  P3: "docs/architecture -> docs/system (13 organs) + R1-R9 + link rewrite"
+  P4: "scripts/arch.py (route/recon/new/seed/log/emit/validate, DG1-DG10)"
+  P5: "23 records seeded with ledger receipts (seed-2026-09-20.yaml)"
+  P6: "docs/historical/ quarantine + generated INDEX + README demoted to pointer"
+
 pending:
-  P1: "vocabulary sweep (D1/D2) + architecture/10 combat purge (D4)"
-  P2: "foundations/44 created; 02 MHC extend; objective propagated; AGENTS.md external canon"
-  P3: "docs/architecture -> docs/system + 12 organ routers + R1-R9 consolidations"
-  P4: "scripts/arch.py + DG1-DG10 wired into AGENTS.md 7.5"
-  P5: "seed ledger: AD/RG records transcribed from ratified prose"
-  P6: "docs/historical/ quarantine + root hygiene"
   P7: "re-audit + full iteration protocol + dual-remote push"
+  CODE-PASS: "rename the 8 stage identifiers (src/core/assessments/*/white.ts, the Stage union, threshold maps, fixtures) atomically with their tests"
+  DG-ENFORCE: "wire `arch.py validate` + DG gates into the CI/iteration path and prove each gate fails on an injected violation"

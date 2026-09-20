@@ -1,6 +1,6 @@
 # foundations/14 — Game as Developmental Catalyst: The Catalyst→Experience→Integration Mechanics
 
-> **Cross-references:** [[docs/architecture/10-stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]]
+> **Cross-references:** [[docs/system/sub-systems/kernel/stage-assessment-architecture|Stage Assessment Architecture]] · [[docs/foundations/00-integral-theory|00 — Integral Theory]] · [[docs/foundations/11-game-modalities|11 — Game Modalities]]
 > **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2 (the catalyst→experience→integration cycle, its cognitive-science grounding); Game-design mapping → §3–§7 (vertical/horizontal catalyst mechanics and the tapestry); Architectural contract → §5 (the internal progression as the module's design contract); Principles served → §9 (integrative transcendence).
 >
 > **Open questions (added 2026-09-16):**
@@ -278,7 +278,7 @@ Shadow mode is triggered by the EncounterScheduler when it detects dark shadows 
 | foundations/11 | The game modalities (what types exist) — this doc specifies how each type becomes a catalyst |
 | foundations/12 | The drive probes (how to measure) — this doc specifies how measurement becomes transformation |
 | foundations/13 | The theoretical substrate (topography, contact boundary) — this doc operationalises it into game mechanics |
-| architecture/10-stage-assessment-architecture | The module contract — this doc specifies the developmental contract each game fulfils |
+| docs/system/sub-systems/kernel/stage-assessment-architecture | The module contract — this doc specifies the developmental contract each game fulfils |
 
 ---
 

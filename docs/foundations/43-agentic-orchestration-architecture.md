@@ -1,6 +1,6 @@
 # 43 — Agentic Orchestration Architecture: the Primary Orchestrator, the Sub-Agent Council, and the Tool Systems
 
-> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/23-polarity-ontology|23 — Polarity Ontology]] · [[docs/validation/BENCHMARK-ARCHITECTURE|Validation Benchmark Architecture]]
+> **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/23-polarity-ontology|23 — Polarity Ontology]] · [[docs/system/sub-systems/validation/benchmark-architecture|Validation Benchmark Architecture]]
 > **Status:** canonical-hypothesis (architecture; precedents exist and are load-bearing — see §8).
 > **Lateral:** the **multi-agent execution topology** — how profile management, context
 > acquisition, curriculum alignment, and every developmental surface are *agentically
@@ -586,8 +586,9 @@ interface Proposal {
   projections and whose outputs their proposals feed.
 - `src/core/healing/HealingContext.ts` — the purpose-bound context projector (16 §2.1);
   the only identity-context source permitted in DelegationSpecs.
-- `docs/agentic-loop/02-system-architecture-audit-2026-08-28.md` — the audit that
-  established the current loop; doc 43 supersedes its *topology* recommendations,
+- `docs/historical/agentic-loop/02-system-architecture-audit-2026-08-28.md` — the **dated historical
+  record** (not an authority) of the audit that established the current loop; doc 43 supersedes its
+  *topology* recommendations,
   not its engine-level findings.
 - Validation kernel gates (G1–G12) — extend to orchestration via the
   determinism-of-delegation and firewall-of-toolsets checks (§5.3, §4.7).
