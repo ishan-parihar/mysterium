@@ -1,9 +1,30 @@
 name: CI
+
 on:
   push:
+    branches: [main]
     tags: ['v*']
+  pull_request:
   workflow_dispatch:
+
 jobs:
+  governance:
+    # The iteration protocol (AGENTS.md §7.5): workspace-lint -> arch.py validate -> build+test.
+    # Before this job existed, CI ran on tags only and never invoked either doc/workspace gate,
+    # so the whole protocol was honour-system (red-team RT-6).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Workspace lint
+        run: python3 skills/workspace-lint/scripts/workspace_lint.py --root .
+      - name: Install doc-governance dependency (PyYAML)
+        run: python3 -m pip install --quiet pyyaml
+      - name: Doc-governance gates (DG1-DG12)
+        run: python3 scripts/arch.py validate
+
   build:
     runs-on: ubuntu-latest
     steps:

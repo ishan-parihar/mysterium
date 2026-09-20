@@ -9,12 +9,13 @@
 | Rung | Path | Live | Authority |
 |---|---|---|---|
 | `canon` | `docs/foundations` | yes | `docs/foundations/AGENTS.md` |
+| `canon-root` | `docs/00-vision.md`<br>`docs/01-first-principles.md`<br>`docs/02-glossary.md`<br>`docs/03-research-methodology.md` | yes | `docs/00-vision.md` |
 | `canon-domain` | `docs/lines`<br>`docs/stages`<br>`docs/narrative`<br>`docs/progression` | yes | `docs/foundations/02-eight-stages-overview.md` |
 | `system` | `docs/system` | yes | `docs/system/AGENTS.md` |
 | `content` | `docs/concept-drafts` | yes | `docs/concept-drafts/README.md` |
-| `records` | `` | yes | `—` |
-| `plans` | `docs/DEVELOPMENT-PLAN.md, docs/ONBOARDING-REDESIGN-PLAN.md, docs/ARCHITECTURE-TRANSMUTATION-PLAN.md, docs/REQUIREMENTS.md` | yes | `docs/DEVELOPMENT-PLAN.md` |
-| `historical` | `docs/historical` | no | `—` |
+| `records` | `docs/system/core/decisions`<br>`docs/system/core/regressions`<br>`docs/system/core/worklog` | yes | `—` |
+| `plans` | `docs/DEVELOPMENT-PLAN.md`<br>`docs/ONBOARDING-REDESIGN-PLAN.md`<br>`docs/ARCHITECTURE-TRANSMUTATION-PLAN.md`<br>`docs/REQUIREMENTS.md` | yes | `docs/DEVELOPMENT-PLAN.md` |
+| `historical` | `docs/historical` | no | `docs/historical/AGENTS.md` |
 | `audits` | `docs/audits` | no | `—` |
 
 ## Organs
@@ -35,8 +36,38 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (0)
+## Records (27)
 
-| ID | Status | Title |
-|---|---|---|
-| — | — | *(none yet)* |
+| ID | Kind | Organ | Status | Title |
+|---|---|---|---|---|
+| `MY-AD-0001` | AD | kernel | Active | Assessment-module execution replaces the ATB combat spine |
+| `MY-AD-0002` | AD | kernel | Active | Layer rules: core is pure, infra integrates, surfaces consume, content is data |
+| `MY-AD-0003` | AD | kernel | Active | Vocabulary is owned by foundations/44; the ladder is ratified |
+| `MY-AD-0004` | AD | catalyst | Active | The objective is continuing development, not the harvest |
+| `MY-AD-0005` | AD | catalyst | Active | Eligibility is a condition; the closure is an event |
+| `MY-AD-0006` | AD | profiling | Active | Register classes: the full metric register is available at any stage |
+| `MY-AD-0007` | AD | profiling | Active | One articulation ladder, two registers, no privilege tiers |
+| `MY-AD-0008` | AD | catalyst | Active | Objective alignment biases catalyst selection; it never replaces it |
+| `MY-AD-0009` | AD | world | Active | Two-fold world memory with a per-holon owner worker |
+| `MY-AD-0010` | AD | orchestration | Active | One foreground orchestrator; background workers for menial jobs |
+| `MY-AD-0011` | AD | safety | Active | Human intervention is integrated, not a privileged handoff path |
+| `MY-AD-0012` | AD | kernel | Active | Grading is evidence-only; competence and identity never mix |
+| `MY-AD-0013` | AD | platform | Active | Documentation is governed as a three-record system |
+| `MY-RG-0001` | RG | platform | Active | A one-way migration script looks idempotent and is not |
+| `MY-RG-0002` | RG | platform | Active | Stage vocabulary drift (superseded names reappearing in active canon) |
+| `MY-RG-0003` | RG | platform | Active | A document claims authority it does not own |
+| `MY-RG-0004` | RG | platform | Active | A dormant directory reads as live canon |
+| `MY-RG-0005` | RG | kernel | Active | Canon and code drift apart on a shared vocabulary |
+| `MY-RG-0006` | RG | orchestration | Active | A ratified policy seam with no consumer (dormant proposals) |
+| `MY-RG-0007` | RG | profiling | Active | A lifecycle state machine permits a transition the canon forbids |
+| `MY-RG-0008` | RG | platform | Active | Two documents own one formula |
+| `MY-RG-0009` | RG | kernel | Active | A partial purge leaves the old system's vocabulary in place |
+| `MY-RG-0010` | RG | validation | Active | A gate passes because its fixture cannot fail |
+| `MY-AD-0014` | AD | platform | Active | The doc set is readable as a map: route resolves code and context emits the bundle |
+| `MY-RG-0011` | RG | platform | Active | A generated surface drifts and the commit still looks green |
+| `MY-RG-0012` | RG | platform | Active | A declared rung that no gate reads |
+| `MY-RG-0013` | RG | platform | Active | A verification step mutates the artefact it verifies, or a restore discards unrelated work |
+
+## Generated surfaces (never hand-edited)
+
+- `docs/INDEX.md`

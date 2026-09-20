@@ -29,7 +29,8 @@ __pycache__/
 # Tests
 coverage/
 
-# Tool & session state (transient)
+# Tool & session state (transient), incl. agent skills installed via `npx skills add`
+.agents/
 .contexty/
 .memsearch/
 .hive/

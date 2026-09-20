@@ -6,7 +6,11 @@ const DRAFTS = join(ROOT, 'docs', 'concept-drafts');
 const OUT = join(ROOT, 'src', 'core', 'data', 'concept-drafts.json');
 
 const LINES = ['cognitive', 'emotional', 'moral', 'intrapersonal', 'spiritual', 'somatic', 'willpower', 'interpersonal'] as const;
-const STAGES = ['01-infrared', '02-magenta', '03-red', '04-amber', '05-orange', '06-green', '07-turquoise', '08-white'] as const;
+// Stage DIRECTORY names. These were stale (`07-turquoise`, `08-white`) after the 2026-09-20 ladder
+// re-index renamed the corpus dirs to `07-teal` / `08-turquoise`; because the reads below are
+// guarded by `existsSync`, the mismatch degraded SILENTLY into empty `modalities` arrays instead of
+// failing (red-team RT-2). The `missing` guard below makes that failure loud.
+const STAGES = ['01-infrared', '02-magenta', '03-red', '04-amber', '05-orange', '06-green', '07-teal', '08-turquoise'] as const;
 
 const GAME_FILES = [
   ['deterministic.md', 'Deterministic'],
@@ -38,6 +42,12 @@ const modules: Record<string, ModuleOut> = {};
 for (const line of LINES) {
   for (const stageDir of STAGES) {
     const dir = join(DRAFTS, line, stageDir);
+    if (!existsSync(dir)) {
+      console.error(`\nbuild-concept-index: corpus module directory is missing:\n  ${dir}\n`);
+      console.error('The generator may not silently produce an empty index. Either the corpus was');
+      console.error('moved/re-indexed and these constants are stale, or the file list here is wrong.');
+      process.exit(1);
+    }
     const stage = extractStageName(stageDir);
     const key = `${line}:${stage.toLowerCase()}`;
 

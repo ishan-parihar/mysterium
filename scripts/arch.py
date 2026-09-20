@@ -10,13 +10,14 @@ Specification + rationale: docs/ARCHITECTURE-TRANSMUTATION-PLAN.md
 Vocabulary + ownership:     docs/foundations/44-system-ontology-and-vocabulary.md
 Structure declaration:      _org.yaml
 
-    python3 scripts/arch.py route <path>                 resolve a path to its rung/organ
+    python3 scripts/arch.py route <path>                 resolve a path (doc OR code) to its rung/organ
+    python3 scripts/arch.py context <path>               contract docs + invariants + records for a path
     python3 scripts/arch.py recon <keyword>              coverage report before creating a record
     python3 scripts/arch.py new --type ad|rg --title T --desc D --organ O --body F --recon R
     python3 scripts/arch.py update <ID> --field Status=Superseded --reason R --recon I
     python3 scripts/arch.py log --action A --target T --reason R
-    python3 scripts/arch.py emit                         regenerate docs/INDEX.md
-    python3 scripts/arch.py validate [--gate DG5]        run the doc-governance gates
+    python3 scripts/arch.py emit                         regenerate INDEX.md + organ routers
+    python3 scripts/arch.py validate [--gate DG5]        run the doc-governance gates (DG1-DG12)
 
 Exit codes: 0 = clean, 1 = violations, 2 = misuse.
 """
@@ -43,6 +44,23 @@ VOCAB_FILE = ROOT / "docs" / "foundations" / "44-system-ontology-and-vocabulary.
 VOCAB_REL = "docs/foundations/44-system-ontology-and-vocabulary.md"
 
 RECORD_RE = re.compile(r"^(MY)-(AD|RG)-(\d{4})-([a-z0-9-]+)\.md$")
+
+# The gate name -> `_org.yaml` config key. `enabled: false` is only honoured when the lookup
+# key matches the declared key (red-team RT-5a).
+GATE_CONFIG_KEY = {
+    "DG1": "dg1_frontmatter",
+    "DG2": "dg2_status_enum",
+    "DG3": "dg3_numbering",
+    "DG4": "dg4_authority",
+    "DG5": "dg5_vocabulary",
+    "DG6": "dg6_historical_quarantine",
+    "DG7": "dg7_ownership",
+    "DG8": "dg8_references",
+    "DG9": "dg9_ledger",
+    "DG10": "dg10_canon_code",
+    "DG11": "dg11_derived_surfaces",
+    "DG12": "dg12_canon_links",
+}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -108,14 +126,26 @@ def live_roots(cfg: dict) -> list[Path]:
 
 
 def live_files(cfg: dict) -> list[Path]:
+    """Every LIVE canon file: whole directories PLUS individually-declared `files:`.
+
+    Files-only rungs (e.g. `canon-root`, `plans`) were previously only ever contributed by the
+    hardcoded `plans` special case — so a rung declared with `files:` was silently unscanned
+    (red-team RT-3). A rung that no gate reads is not a rung.
+    """
     out: list[Path] = []
+    seen: set[Path] = set()
     for d in live_roots(cfg):
-        out.extend(sorted(d.rglob("*.md")))
-    plans = cfg["rungs"]["plans"]
-    for f in plans.get("files", []):
-        p = ROOT / f
-        if p.is_file():
+        for p in sorted(d.rglob("*.md")):
             out.append(p)
+            seen.add(p.resolve())
+    for rung in cfg["rungs"].values():
+        if not rung.get("live") or rung.get("pending_phase"):
+            continue
+        for f in rung.get("files", []):
+            p = ROOT / f
+            if p.is_file() and p.resolve() not in seen:
+                out.append(p)
+                seen.add(p.resolve())
     return out
 
 
@@ -176,8 +206,73 @@ def frontmatter(text: str) -> dict:
         return {}
 
 
+def strip_generated_date(text: str) -> str:
+    """Drop the `> Generated:` line so DG11 compares content, not the day it was emitted."""
+    return "\n".join(l for l in text.splitlines() if not l.startswith("> Generated:"))
+
+
+def link_resolves(raw: str, relative_to: Path | None = None) -> bool:
+    """Resolve a doc cross-reference, whether it was written as a wiki-link or a markdown link."""
+    raw = raw.strip()
+    if raw.startswith(("http://", "https://", "mailto:", "#")):
+        return True
+    cands: list[Path] = []
+    if relative_to is not None:
+        cands.append((relative_to / raw).resolve())
+    cands += [ROOT / raw, ROOT / f"{raw}.md", ROOT / "docs" / raw, ROOT / f"docs/{raw}.md"]
+    return any(c.exists() for c in cands)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
-# Gates (DG1–DG10)
+# Generated surfaces (rendered here so DG11 can diff them against disk)
+# ─────────────────────────────────────────────────────────────────────────────
+def render_index(cfg: dict) -> str:
+    lines = [
+        "# Mysterium — Documentation Index",
+        "",
+        "> **GENERATED FILE — do not edit.** Produced by `python3 scripts/arch.py emit` from",
+        "> `_org.yaml` plus the AD/RG records. Edit the source, then re-emit.",
+        f"> Generated: {datetime.now(timezone.utc).date().isoformat()}",
+        "",
+        "## Rungs",
+        "",
+        "| Rung | Path | Live | Authority |",
+        "|---|---|---|---|",
+    ]
+    rec = cfg["rungs"]["records"]
+    for name, rung in cfg["rungs"].items():
+        if name == "records":
+            paths = [rec["decisions"]["system"], rec["regressions"]["system"], rec["worklog"]["dir"]]
+        else:
+            paths = [d["path"] for d in rung.get("dirs", [])] or list(rung.get("files", []))
+        lines.append(
+            f"| `{name}` | {'<br>'.join('`' + p + '`' for p in paths)} | "
+            f"{'yes' if rung.get('live') else 'no'} | `{rung.get('authority', '—')}` |"
+        )
+    lines += ["", "## Organs", "", "| Organ | Architecture doc | Code it describes |", "|---|---|---|"]
+    for organ, o in cfg["organs"].items():
+        doc = f"`docs/system/sub-systems/{organ}/AGENTS.md`"
+        lines.append(f"| `{organ}` | {doc} | {', '.join('`' + c + '`' for c in o.get('code', []))} |")
+    recs = records(cfg)
+    lines += ["", f"## Records ({len(recs)})", "", "| ID | Kind | Organ | Status | Title |", "|---|---|---|---|---|"]
+    rows = []
+    for r in recs:
+        fm = frontmatter(r["text"])
+        rid = str(fm.get("ID"))
+        rows.append(
+            f"| `{rid}` | {rid.split('-')[1] if '-' in rid else '—'} | {fm.get('Organ')} "
+            f"| {fm.get('Status')} | {fm.get('Title')} |"
+        )
+    lines += rows or ["| — | — | — | — | *(none yet)* |"]
+    gen = cfg.get("generated") or []
+    if gen:
+        lines += ["", "## Generated surfaces (never hand-edited)", ""]
+        lines += [f"- `{g}`" for g in gen]
+    return "\n".join(lines) + "\n"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Gates (DG1–DG12)
 # ─────────────────────────────────────────────────────────────────────────────
 class Gate:
     def __init__(self, cfg: dict):
@@ -200,13 +295,17 @@ class Gate:
             ("DG8", self.dg8_references),
             ("DG9", self.dg9_ledger),
             ("DG10", self.dg10_canon_code),
+            ("DG11", self.dg11_derived_surfaces),
+            ("DG12", self.dg12_canon_links),
         ]
         for name, fn in gates:
             if only and name != only:
                 continue
-            if not self.cfg["gates"].get(f"{name.lower()}_{name.lower()}", {}).get("enabled", True):
-                # config keys are dgN_<slug>; absence of an explicit disabled flag = enabled
-                pass
+            # Config keys are `dgN_<slug>`; resolve them through the gate's own key so
+            # `enabled: false` actually disables the gate (red-team RT-5a: it silently did not).
+            gcfg = self.cfg.get("gates", {}).get(GATE_CONFIG_KEY.get(name, ""), {})
+            if gcfg.get("enabled", True) is False:
+                continue
             fn(name)
         width = max((len(k) for k in self.checked), default=0)
         for name, n in self.checked.items():
@@ -253,7 +352,7 @@ class Gate:
         n = 0
         seen: dict[str, str] = {}
         ledger_path = ROOT / self.cfg["rungs"]["records"]["ledger"]["path"]
-        retired: set[str] = set()
+        issued_at: dict[str, str] = {}
         if ledger_path.exists():
             for line in ledger_path.read_text(encoding="utf-8").splitlines():
                 if not line.strip():
@@ -263,8 +362,8 @@ class Gate:
                 except json.JSONDecodeError:
                     self.err(g, f"ledger line is not JSON: {line[:60]}")
                     continue
-                if ev.get("action") == "create" and ev.get("target"):
-                    retired.add(ev["target"])
+                if ev.get("action") in ("create", "seed") and ev.get("target"):
+                    issued_at.setdefault(str(ev["target"]), str(ev.get("path") or ""))
         for r in records(self.cfg):
             n += 1
             m = RECORD_RE.match(r["path"].name)
@@ -278,6 +377,12 @@ class Gate:
                 self.err(g, f"{r['rel']}: ID {fm['ID']} already used by {seen[fm['ID']]}")
             elif fm.get("ID"):
                 seen[fm["ID"]] = r["rel"]
+            # A number is never re-issued: if the ledger already created this ID at another
+            # path, the number was reused (red-team RT-5b — this check collected the data and
+            # then never read it).
+            issued = issued_at.get(str(fm.get("ID")))
+            if issued and issued != r["rel"]:
+                self.err(g, f"{r['rel']}: ID {fm['ID']} was issued to {issued} — numbers are never re-issued")
         self.checked[g] = n
 
     # DG4 — authority uniqueness (no doc may claim authority outside authority_map)
@@ -441,6 +546,49 @@ class Gate:
                 self.err(g, f"{r['rel']}: no ledger receipt — records are written via `arch new`")
         self.checked[g] = n
 
+    # DG11 — derived surfaces are current. `emit` is idempotent, so a generated file that does
+    # not equal its regeneration is stale (red-team RT-4: docs/INDEX.md was committed saying
+    # `Records (0)` while 23 records existed, and nothing noticed).
+    def dg11_derived_surfaces(self, g: str) -> None:
+        cfg = self.cfg
+        n = 0
+        idx = ROOT / "docs" / "INDEX.md"
+        n += 1
+        if not idx.exists():
+            self.err(g, "docs/INDEX.md is missing — run `python3 scripts/arch.py emit`")
+        elif strip_generated_date(idx.read_text(encoding="utf-8")) != strip_generated_date(
+            render_index(cfg)
+        ):
+            self.err(g, "docs/INDEX.md is stale — run `python3 scripts/arch.py emit` (never hand-edit it)")
+        for organ, o in cfg["organs"].items():
+            n += 1
+            p = ROOT / "docs" / "system" / "sub-systems" / organ / "AGENTS.md"
+            if not p.exists():
+                self.err(g, f"docs/system/sub-systems/{organ}/AGENTS.md is missing — run emit")
+                continue
+            existing = p.read_text(encoding="utf-8")
+            if organ_router(cfg, organ, o, existing) != existing:
+                self.err(g, f"docs/system/sub-systems/{organ}/AGENTS.md auto-zone is stale — run emit")
+        self.checked[g] = n
+
+    # DG12 — canon link integrity. Canon cross-references with wiki-links (`[[path|label]]`),
+    # which DG8 (records' markdown links) never sees (red-team RT-3: 168 links, 0 guards).
+    def dg12_canon_links(self, g: str) -> None:
+        n = 0
+        for p in live_files(self.cfg):
+            r = rel(p)
+            if r.startswith("docs/system/core/"):
+                continue  # records: DG8 owns their links
+            n += 1
+            text = p.read_text(encoding="utf-8")
+            for raw in re.findall(r"\[\[([^\]|]+)(?:\|[^\]]*)?\]\]", text):
+                if not link_resolves(raw):
+                    self.err(g, f"{r}: wiki-link [[{raw}]] does not resolve")
+            for raw in re.findall(r"\]\(([^)\s#]+?\.md)(?:#[^)]*)?\)", text):
+                if not link_resolves(raw, relative_to=p.parent):
+                    self.err(g, f"{r}: link `{raw}` does not resolve")
+        self.checked[g] = n
+
     # DG10 — canon↔code: every code artifact cited by a record exists
     def dg10_canon_code(self, g: str) -> None:
         n = 0
@@ -455,6 +603,64 @@ class Gate:
 # ─────────────────────────────────────────────────────────────────────────────
 # Commands
 # ─────────────────────────────────────────────────────────────────────────────
+def contract_path(ref: str) -> Path | None:
+    """Resolve an organ `contract_docs` ref (e.g. `foundations/26-unified-core-architecture`)."""
+    for cand in (ROOT / "docs" / f"{ref}.md", ROOT / f"docs/{ref}/AGENTS.md", ROOT / f"{ref}.md"):
+        if cand.exists():
+            return cand
+    return None
+
+
+def doc_title(p: Path) -> str:
+    for line in p.read_text(encoding="utf-8", errors="ignore").splitlines():
+        if line.startswith("# "):
+            return line[2:].strip()
+    return p.stem
+
+
+def organ_block(cfg: dict, organ: str, o: dict, via: str | None = None) -> str:
+    """The bundle an agent needs before touching any file of an organ.
+
+    This is the retrieval half of the governance layer (red-team RT-1): a code path must be
+    able to answer `which docs govern me, and what was decided about me`.
+    """
+    rec = cfg["rungs"]["records"]
+    out = ["rung:   system", f"organ:  {organ}"]
+    if via:
+        out.append(f"code:   {via}")
+    out.append("contract docs (canon):")
+    docs = []
+    for ref in o.get("contract_docs") or []:
+        p = contract_path(str(ref))
+        docs.append(f"{rel(p)} — {doc_title(p)}" if p else f"{ref}  ** MISSING **")
+    out += [f"  - {d}" for d in docs] or ["  - (none declared)"]
+    out.append("records scoped to this organ:")
+    found: list[str] = []
+    for home in ("decisions", "regressions"):
+        d = ROOT / rec[home]["organ_pattern"].format(organ=organ)
+        for p in (sorted(d.glob("*.md")) if d.is_dir() else []):
+            fm = frontmatter(p.read_text(encoding="utf-8", errors="ignore"))
+            found.append(f"{fm.get('ID')} [{fm.get('Status')}] {fm.get('Title')}")
+    out += [f"  - {f}" for f in found] or ["  - (none yet)"]
+    out.append("records governing this organ (system core, by `Organ:`):")
+    found = []
+    for home in ("decisions", "regressions"):
+        d = ROOT / rec[home]["system"]
+        for p in (sorted(d.glob("*.md")) if d.is_dir() else []):
+            fm = frontmatter(p.read_text(encoding="utf-8", errors="ignore"))
+            if str(fm.get("Organ")) == organ:
+                found.append(f"{fm.get('ID')} [{fm.get('Status')}] {fm.get('Title')}")
+    out += [f"  - {f}" for f in found] or ["  - (none yet)"]
+    inv = ROOT / "docs" / "system" / "sub-systems" / organ / "AGENTS.md"
+    if inv.exists():
+        text = inv.read_text(encoding="utf-8")
+        if MAN_START in text and MAN_END in text:
+            body = text[text.index(MAN_START) + len(MAN_START) : text.index(MAN_END)].strip()
+            if body and "not yet curated" not in body:
+                out += ["invariants (organ router, curated):", body]
+    return "\n".join(out)
+
+
 def cmd_route(args: argparse.Namespace) -> int:
     cfg = org()
     target = Path(args.path)
@@ -469,11 +675,38 @@ def cmd_route(args: argparse.Namespace) -> int:
         if r in rung.get("files", []):
             print(f"rung:   {name}\nlive:   {bool(rung.get('live'))}\nauthority: {rung.get('authority', '—')}")
             return 0
+    for pattern in cfg.get("generated", []):
+        if Path(pattern).match(r) or r == pattern:
+            print(f"rung:   generated (derived — never hand-edit)\nowner:  scripts/arch.py emit")
+            return 0
     for organ, o in cfg["organs"].items():
         if f"docs/system/sub-systems/{organ}/" in r:
-            print(f"rung:   system\norgan:  {organ}\ncontract: {o.get('contract_docs')}\ncode:   {o.get('code')}")
+            print(organ_block(cfg, organ, o))
             return 0
+    # CODE -> ORGAN: the direction an agent actually needs (red-team RT-1).
+    for organ, o in cfg["organs"].items():
+        for c in o.get("code") or []:
+            if r == c or r.startswith(c.rstrip("/") + "/"):
+                print(organ_block(cfg, organ, o, via=c))
+                return 0
     print(f"rung:   (unclaimed)\n{cfg['project']['name']}: this path is not declared in _org.yaml")
+    return 1
+
+
+def cmd_context(args: argparse.Namespace) -> int:
+    """The start-of-work bundle for a path: contract docs, invariants, governing records."""
+    cfg = org()
+    target = Path(args.path)
+    if not target.is_absolute():
+        target = ROOT / target
+    r = rel(target.resolve())
+    for organ, o in cfg["organs"].items():
+        in_organ_docs = f"docs/system/sub-systems/{organ}/" in r
+        in_organ_code = any(r == c or r.startswith(c.rstrip("/") + "/") for c in o.get("code") or [])
+        if in_organ_docs or in_organ_code:
+            print(organ_block(cfg, organ, o, via=r if in_organ_code else None))
+            return 0
+    print(f"{cfg['project']['name']}: `{r}` belongs to no organ — nothing to align to.\nRun `arch.py route {r}` for its rung.")
     return 1
 
 
@@ -665,7 +898,14 @@ def emit_organ_routers(cfg: dict) -> int:
         d = ROOT / "docs" / "system" / "sub-systems" / organ
         d.mkdir(parents=True, exist_ok=True)
         for sub in ("core/decisions", "core/regressions"):
-            (d / sub).mkdir(parents=True, exist_ok=True)
+            sd = d / sub
+            sd.mkdir(parents=True, exist_ok=True)
+            # Record homes are declared mandatory by _org.yaml, but git does not track empty
+            # directories (red-team RT-7): without a keep-file they vanish on a fresh clone
+            # and the first organ-scoped record has nowhere to land.
+            keep = sd / ".gitkeep"
+            if not keep.exists():
+                keep.write_text("", encoding="utf-8")
         p = d / "AGENTS.md"
         existing = p.read_text(encoding="utf-8") if p.exists() else None
         p.write_text(organ_router(cfg, organ, o, existing), encoding="utf-8")
@@ -677,40 +917,9 @@ def cmd_emit(args: argparse.Namespace) -> int:
     cfg = org()
     organs_written = emit_organ_routers(cfg)
     print(f"wrote {organs_written} organ routers under docs/system/sub-systems/")
-    lines = [
-        "# Mysterium — Documentation Index",
-        "",
-        "> **GENERATED FILE — do not edit.** Produced by `python3 scripts/arch.py emit` from",
-        "> `_org.yaml` plus the AD/RG records. Edit the source, then re-emit.",
-        f"> Generated: {datetime.now(timezone.utc).date().isoformat()}",
-        "",
-        "## Rungs",
-        "",
-        "| Rung | Path | Live | Authority |",
-        "|---|---|---|---|",
-    ]
-    for name, rung in cfg["rungs"].items():
-        paths = [d["path"] for d in rung.get("dirs", [])] or [", ".join(rung.get("files", []))]
-        lines.append(
-            f"| `{name}` | {'<br>'.join('`' + p + '`' for p in paths)} | "
-            f"{'yes' if rung.get('live') else 'no'} | `{rung.get('authority', '—')}` |"
-        )
-    lines += ["", "## Organs", "", "| Organ | Architecture doc | Code it describes |", "|---|---|---|"]
-    for organ, o in cfg["organs"].items():
-        doc = f"`docs/system/sub-systems/{organ}/AGENTS.md`"
-        lines.append(
-            f"| `{organ}` | {doc} | {', '.join('`' + c + '`' for c in o.get('code', []))} |"
-        )
-    recs = records(cfg)
-    lines += ["", f"## Records ({len(recs)})", "", "| ID | Status | Title |", "|---|---|---|"]
-    rows = []
-    for r in recs:
-        fm = frontmatter(r["text"])
-        rows.append(f"| `{fm.get('ID')}` | {fm.get('Status')} | {fm.get('Title')} |")
-    lines += rows or ["| — | — | *(none yet)* |"]
     out = ROOT / "docs" / "INDEX.md"
-    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"wrote {rel(out)} ({len(recs)} records, {len(cfg['organs'])} organs)")
+    out.write_text(render_index(cfg), encoding="utf-8")
+    print(f"wrote {rel(out)} ({len(records(cfg))} records, {len(cfg['organs'])} organs)")
     return 0
 
 
@@ -798,6 +1007,10 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("recon", help="coverage report before creating a record")
     p.add_argument("keyword")
     p.set_defaults(fn=cmd_recon)
+
+    p = sub.add_parser("context", help="start-of-work bundle for a path (contract docs + records)")
+    p.add_argument("path")
+    p.set_defaults(fn=cmd_context)
 
     p = sub.add_parser("new", help="create an AD or RG record")
     p.add_argument("--type", required=True, choices=["ad", "rg"])

@@ -36,6 +36,18 @@ rungs:
     authority: docs/foundations/AGENTS.md
     live: true
 
+  canon-root:
+    # The four root canon docs were claimed by AGENTS.md §2 but belonged to NO rung, so no gate
+    # scanned them and `arch.py route` answered "(unclaimed)" (red-team RT-3).
+    purpose: "Root canon: vision, first principles, glossary, research method. Owns 'why' and the shared vocabulary."
+    files:
+      - docs/00-vision.md
+      - docs/01-first-principles.md
+      - docs/02-glossary.md
+      - docs/03-research-methodology.md
+    authority: docs/00-vision.md
+    live: true
+
   canon-domain:
     purpose: "Per-domain detail consumed by both cycles (lines, stages, narrative, progression)."
     dirs:
@@ -210,6 +222,13 @@ gates:
   dg8_references:         {enabled: true}
   dg9_ledger:             {enabled: true}
   dg10_canon_code:        {enabled: true}
+  dg11_derived_surfaces:  {enabled: true}
+  dg12_canon_links:       {enabled: true}
+
+# GENERATED SURFACES — derived from `_org.yaml` + the records by `arch.py emit`. Never
+# hand-edited; DG11 fails when one is stale. `route` reports them as generated.
+generated:
+  - docs/INDEX.md
 
 # Authority claims are restricted: only these documents may self-describe as
 # binding (DG4). Any other doc claiming authority is a violation.
@@ -237,5 +256,8 @@ completed:
 
 pending:
   P7: "re-audit + full iteration protocol + dual-remote push"
-  CODE-PASS: "rename the 8 stage identifiers (src/core/assessments/*/white.ts, the Stage union, threshold maps, fixtures) atomically with their tests"
-  DG-ENFORCE: "wire `arch.py validate` + DG gates into the CI/iteration path and prove each gate fails on an injected violation"
+  CODE-PASS: "rename the 8 stage identifiers (src/core/assessments/*/white.ts, the Stage union, threshold maps, fixtures) atomically with their tests; regenerate src/core/data/concept-drafts.json in the same commit"
+  RT-GATE-FIXTURES: "tests/governance/ — assert every gate (DG1-DG12) FAILS on an injected violation, automating the P7 hand-proof (red-team RT-5c / MY-RG-0010)"
+  RT-CORPUS-RECONCILE: "reconciliation check between docs/concept-drafts/<line>/<stage>/ and src/core/data/concept-drafts.json so the ingest path cannot silently diverge (red-team RT-2, DG13)"
+  RT-ORGAN-DIR: "gate: a record's `Organ:` must match the organ core it is filed in (red-team RT-7)"
+  RT-ARCHIVE-MIGRATIONS: "archive scripts/doc-stage-reindex.py + scripts/doc-path-reindex.py once CODE-PASS lands; they encode one-way migrations whose mappings are otherwise unverifiable from the tree (red-team RT-11)"
