@@ -231,6 +231,15 @@ owners:
   situation-as-holon: foundations/46-generative-world-composition
   world-store-layout: foundations/46-generative-world-composition
 
+  # preference inference and scaffolding (added 2026-09-20, MY-AD-0022 / MY-AD-0023)
+  evidence-tiers: foundations/47-preference-inference-and-scaffolding
+  meta-program-catalogue: foundations/47-preference-inference-and-scaffolding
+  interest-record: foundations/47-preference-inference-and-scaffolding
+  preference-inference-pipeline: foundations/47-preference-inference-and-scaffolding
+  probe-set: foundations/47-preference-inference-and-scaffolding
+  scaffold-library: foundations/47-preference-inference-and-scaffolding
+  scaffold-selection: foundations/47-preference-inference-and-scaffolding
+
   # curriculum detail
   meta-learning: foundations/29-meta-learning-science
   holonic-curriculum: foundations/30-holonic-curriculum-architecture
@@ -325,6 +334,15 @@ blacklist:
     patterns:
       - "checkHarvest"
     exempt_in: ["foundations/19-choice-and-polarity-engine", "DEVELOPMENT-PLAN", "ARCHITECTURE-TRANSMUTATION-PLAN"]
+
+  - term: "meta-pattern (in the NLP / preference sense)"
+    superseded_sense: "the NLP Lab-Profile detection vocabulary for a person's habitual sorting distinctions"
+    correct: "the NLP lineage's term is **meta-program** (47 §4). `meta-pattern` names something else in this project: vision-logic content in the cognitive line — pattern-across-patterns (the 07-teal and 08-turquoise scale items). Two unrelated constructs must not share a word, or a reader looking for the Teal construct arrives at the preference catalogue."
+    patterns:
+      - "meta-pattern\\s+(?:profile|catalogue|catalog|distinction|reading|inference|set)"
+      - "NLP\\s+meta-?patterns"
+      - "meta-?patterns?\\s+(?:from|of|in)\\s+NLP"
+    exempt_in: ["foundations/44-system-ontology-and-vocabulary", "foundations/47-preference-inference-and-scaffolding", "ARCHITECTURE-TRANSMUTATION-PLAN", "DEVELOPMENT-PLAN"]
 ```
 
 **Adding a term to this blacklist is how a vocabulary correction becomes permanent.** The pattern:

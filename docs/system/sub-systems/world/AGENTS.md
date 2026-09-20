@@ -5,7 +5,7 @@
 
 - **Organ:** `world`
 - **Rung:** system (`docs/system/sub-systems/world/`)
-- **Contract docs (canon):** `foundations/18-great-way-world-architecture`, `foundations/21-incarnation-architecture`, `foundations/22-holon-context-engine`, `foundations/45-personalization-and-context-pooling`, `foundations/46-generative-world-composition`
+- **Contract docs (canon):** `foundations/18-great-way-world-architecture`, `foundations/21-incarnation-architecture`, `foundations/22-holon-context-engine`, `foundations/45-personalization-and-context-pooling`, `foundations/46-generative-world-composition`, `foundations/47-preference-inference-and-scaffolding`
 - **Code it describes:** `src/core/pods`, `src/infra/pods`
 - **Records:** `core/decisions/` (AD) - `core/regressions/` (RG)
 

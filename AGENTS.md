@@ -300,8 +300,11 @@ R&D Documentation (refined theory + design)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All nine build phases** (1 Delegation Kernel → 9 Credentialing) are **implemented and
-gated** — kernel gates G1–G21 green, the post-plan frontier closed. **There is no current phase
-number.** Cite this section, never a phase.
+gated** — kernel gates G1–G21 green, the post-plan frontier closed. **There is no *current* phase
+number** — work is selected by the record layer. **One phase is ratified and unbuilt: Phase 10**
+(Generative World & Personalization, from `45` / `46` / `47`; gates G22–G25) — its order and gates are
+in `docs/DEVELOPMENT-PLAN.md §4`, and it is the only outstanding build work. Cite this section and the
+plan, never a phase number spoken from memory.
 
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
@@ -322,8 +325,10 @@ contents here; read them where they live:
    world memory + per-holon owner worker), `MY-AD-0010` (background workers), `MY-AD-0011`
    (integrated human intervention), `MY-AD-0018` (the user-dimensionality vector as retrieval key),
    `MY-AD-0019` (world/NPC/scenario pooling), `MY-AD-0020` (the ethics and data-privacy classes and
-   projection firewall), and `MY-AD-0021` (entities are composed from facets, not stored whole — with
-   the tag/dialectic store). Plus the Auditor Projection Layer (`16 §2.4/§10.4`).
+   projection firewall), `MY-AD-0021` (entities are composed from facets, not stored whole — with
+   the tag/dialectic store), `MY-AD-0022` (preference is inferred under an evidence tier; only the
+   instrumented tier becomes a field of record) and `MY-AD-0023` (delivery structure is selected from
+   a scaffold library and must fade). Plus the Auditor Projection Layer (`16 §2.4/§10.4`).
    `python3 scripts/arch.py related <ID>` pulls any record's edges.
 2. **Documentation and knowledge-base integrity.** `_org.yaml → pending` — `CODE-PASS`, the `RT-*`
    gate/ingest items and the `KB-*` items (orphan-script triage, the undocumented organs, skills

@@ -145,12 +145,12 @@ organs:
     status: active
 
   curriculum:
-    contract_docs: [foundations/29-meta-learning-science, foundations/30-holonic-curriculum-architecture, foundations/31-depth-assessment-model, foundations/32-agentic-curriculum-linter, foundations/33-self-directed-dashboard, foundations/34-curriculum-engine-bridge, foundations/37-k12-curriculum-expansion]
+    contract_docs: [foundations/29-meta-learning-science, foundations/30-holonic-curriculum-architecture, foundations/31-depth-assessment-model, foundations/32-agentic-curriculum-linter, foundations/33-self-directed-dashboard, foundations/34-curriculum-engine-bridge, foundations/37-k12-curriculum-expansion, foundations/47-preference-inference-and-scaffolding]
     code: [src/core/curriculum, src/core/packs, src/core/training]
     status: active
 
   profiling:
-    contract_docs: [foundations/12-drive-assessment-mechanics, foundations/16-significator-architecture, foundations/25-cumulative-consciousness-index, foundations/40-measurement-packs-efficacy-infra]
+    contract_docs: [foundations/12-drive-assessment-mechanics, foundations/16-significator-architecture, foundations/25-cumulative-consciousness-index, foundations/40-measurement-packs-efficacy-infra, foundations/47-preference-inference-and-scaffolding]
     code: [src/core/domain, src/infra/profiles]
     status: active
     note: "No architecture doc existed before this plan (audit gap G5)."
@@ -161,7 +161,7 @@ organs:
     status: active
 
   world:
-    contract_docs: [foundations/18-great-way-world-architecture, foundations/21-incarnation-architecture, foundations/22-holon-context-engine, foundations/45-personalization-and-context-pooling, foundations/46-generative-world-composition]
+    contract_docs: [foundations/18-great-way-world-architecture, foundations/21-incarnation-architecture, foundations/22-holon-context-engine, foundations/45-personalization-and-context-pooling, foundations/46-generative-world-composition, foundations/47-preference-inference-and-scaffolding]
     code: [src/core/pods, src/infra/pods]
     status: active
     note: "No architecture doc existed before this plan (audit gap G6)."
@@ -207,7 +207,7 @@ organs:
 
 # ─────────────────────────────────────────────────────────────────────────────
 # GATES — doc-governance (DG), distinct from the runtime kernel gates G1–G21
-# (src/core/validation/gates.ts). `arch.py validate` runs DG1–DG10 and exits
+# (src/core/validation/gates.ts). `arch.py validate` runs DG1–DG17 and exits
 # non-zero on any violation. Run as step 2b of the iteration protocol.
 # ─────────────────────────────────────────────────────────────────────────────
 gates:
@@ -266,7 +266,8 @@ pending:
   RT-CORPUS-RECONCILE: "reconciliation check between docs/concept-drafts/<line>/<stage>/ and src/core/data/concept-drafts.json so the ingest path cannot silently diverge (red-team RT-2, DG13)"
   RT-ARCHIVE-MIGRATIONS: "archive scripts/doc-stage-reindex.py + scripts/doc-path-reindex.py once CODE-PASS lands; they encode one-way migrations whose mappings are otherwise unverifiable from the tree (red-team RT-11)"
   RT-ORPHAN-LAW: "gate: an Active AD with no code anchor and no declared deferral is invisible pending work; the largest untracked backlog in the repo (red-team 2026-09-20 section 2). Needs a `Deferral:` or `Consumer:` field on the record so a law with no consumer is a violation rather than a note"
-  PLAN-IMPLEMENT: "the architecture ratified in 45 (user-dimensionality vector, three-library pooling, analogical bridge, engagement register) and in the safety ethics contract (data classes, projection firewall) has no code yet — MY-AD-0018, MY-AD-0019, MY-AD-0020, MY-RG-0017, MY-RG-0018"
+  PLAN-IMPLEMENT: "the architecture ratified in 45 (user-dimensionality vector, three-library pooling, analogical bridge, engagement register), 46 (facets, tag store, dialectic engine, composition) and 47 (evidence tiers, interest record, scaffold library), plus the safety ethics contract (data classes, projection firewall), has no code yet — MY-AD-0018, MY-AD-0019, MY-AD-0020, MY-AD-0021, MY-AD-0022, MY-AD-0023, MY-RG-0017, MY-RG-0018, MY-RG-0019, MY-RG-0020, MY-RG-0021. Sequenced as Phase 10 in DEVELOPMENT-PLAN"
+  PROFILE-INFERENCE: "the scaffold library and its selection rule (47 section 6) and the inference pipeline (47 section 8) have no code: no probe set, no evidence ledger, no tier gate, no scaffold store. The nine executable checks of 47 section 9 are the gate fixtures to write first; check 6 (no write path from inference to player state other than the UDV) is the structural form of the 47 section 2 red line"
   WORLD-STORE-MOVE: "create src/core/world/ (store, facets, tags, compose, libraries) and move the world content into it: domain/Holon.ts, data/HolonRegistry.ts, data/{stage-holons,red-layer-holons}.json, data/RedPESTLE.ts, data/encounters/ (46 section 10). Correct organs.world.code (currently cohort pods) and remove src/core/data from platform. This is what makes 18/21/22/45/46 reachable from the code they govern (KB-FOUNDATIONS-INGEST)"
   FACET-COMPILER: "compile the 512 concept-drafts into the facet store (46 section 8) so the corpus stays prose-for-humans and the store stays data-for-the-engine; the compiler is the only path, which is what keeps them from diverging (RT-CORPUS-RECONCILE)"
   TAG-ONTOLOGY: "author the initial tag set with axis positions and the curated dialectic pairs (46 section 4); a tag without a resolvable opposite is a compile error"
@@ -275,3 +276,4 @@ pending:
   KB-SKILLS-PROVENANCE: "mark which skills/ entries are house governance (workspace-lint, curriculum-linter) vs vendored third-party (134 tracked files: ui-styling, ui-ux-pro-max, design-taste-frontend) (KB audit UT-9)"
   KB-VALIDATE-JSON: "`arch.py validate --json` so CI, dashboards and agents can consume gate results; and an index artifact so validation stops being full-scan-per-gate (KB audit UT-10)"
   KB-FOUNDATIONS-INGEST: "no mechanical link exists between a foundation doc's contract and the code that must satisfy it, beyond contract_docs pointers — the reason RT-9 and MY-RG-0005 can exist (KB audit UT-11)"
+  RT-CANON-SHORTHAND: "canon documents cite each other as `NN §X` shorthand, and no edge extractor resolves that form (outbound_refs reads links, backticked paths and .md paths only). Consequence: the canon rung's doc→doc graph is effectively inbound-only — `arch.py related docs/foundations/45-...` reports `(none)` outbound while the document in fact depends on 18/22/24 — so editing a foundation doc is not shown what else it affects. Fix: resolve the shorthand as an edge class (and, if it becomes load-bearing, gate it). Found while writing 47, which now carries explicit §14 references as the workaround"

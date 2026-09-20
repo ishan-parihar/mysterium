@@ -36,7 +36,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (40)
+## Records (44)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -66,6 +66,10 @@
 | `MY-AD-0018` | AD | kernel | Active | The player's dimensionality is a first-class retrieval key |
 | `MY-AD-0019` | AD | kernel | Active | World, NPC and scenario libraries are pooled before selection |
 | `MY-RG-0017` | RG | kernel | Active | Engagement mechanisms drift into manipulation |
+| `MY-AD-0023` | AD | curriculum | Active | Delivery structure is selected from a scaffold library, never authored per encounter and never left unfaded |
+| `MY-AD-0022` | AD | profiling | Active | Preference is inferred under an evidence tier, and only the instrumented tier becomes a field of record |
+| `MY-RG-0020` | RG | profiling | Active | A language-derived inference becomes a field of record without a tier, a data class, or consent |
+| `MY-RG-0021` | RG | profiling | Active | A preference prior hardens into an identity label |
 | `MY-AD-0021` | AD | world | Active | World entities are composed from facets, not stored whole |
 | `MY-RG-0019` | RG | world | Active | A static store reasserts itself beside the generated one |
 | `MY-AD-0020` | AD | safety | Active | Ethics and data privacy is a binding contract on every organ |

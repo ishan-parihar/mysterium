@@ -4,7 +4,8 @@
 > rather than stored whole; the **tag ontology and its dialectical opposites**, which is the store
 > that makes a preference retrievable and its opposite trainable; and the composition pipeline that
 > turns those two stores into novel entities.
-> **Status:** recommended 2026-09-20 — awaiting ratification.
+> **Status:** ratified 2026-09-20 (`MY-AD-0021`, `MY-RG-0019`). §13's open questions are resolved
+> below; the implementation is sequenced as Phase 10 in `DEVELOPMENT-PLAN`.
 > **Owns:** the **facet/module model** (`[line × stage × characteristic]`), the **characteristic
 > axis**, the **tag ontology**, the **dialectic relation** (tag → opposite), the **dialectic engine**
 > (`familiar | expand | spiral`), the **composition pipeline**, and the **world store layout**.
@@ -14,7 +15,9 @@
 > contracts (`11`), the encounter priority formula (`24`), the 512 design briefs themselves
 > (`concept-drafts/README`).
 > **Cross-references:** all of the above. This document is the join between the corpus, the tag
-> store and the composed world.
+> store and the composed world. Since 2026-09-20 it is also paired with `47` at one seam: the
+> dialectic engine chooses *how much* familiarity and novelty (§5) from the tag positions, while
+> `47 §6` chooses *which structural arrangement* carries it for this particular person.
 
 ---
 
@@ -198,7 +201,10 @@ kind.**
 | **expand** | tags at the reflected position, ordered by `16 §6.4` distance | dimensional widening |
 | **spiral** | familiar for *surface*, opposite for *structure* — the default | both at once |
 
-**Spiral is the default and the reason this document exists.** It resolves an ambiguity in `45 §5.4`:
+**Spiral is the default and the reason this document exists.** The scaffold that carries it is
+`estrangement` (`47 §6.2`), which is why the dialectic engine and the scaffold selection cannot
+contradict each other: the engine sets the poles, the scaffold arranges them. It resolves an ambiguity
+in `45 §5.4`:
 the analogical bridge is specified as "map `C` onto the player's fluent domain `D`", which alone
 produces a filter bubble — the player learns everything in the vocabulary they already own, and the
 structure they cannot yet see is never trained. The refinement is:
@@ -432,19 +438,45 @@ the *what* (5); and the player can read, edit and export the model of themselves
 
 ---
 
-## 13. Open questions
+## 13. Resolutions (the questions this document opened, and their answers)
 
-- **Characteristic completeness.** Is 10 the right axis, or does `pressure-lever` and `stake` collapse
-  into one? The test is whether two facets can vary independently — if they always move together, they
-  are one characteristic.
-- **`expansionRatio` calibration.** Unresolved without play data; `45 §5.4`'s `noveltyBudget` has the
-  same open question and should be answered once.
-- **Tag vocabulary size.** Where is the point at which the ontology stops being learnable by a player
-  reading their own model? Unknown.
-- **Composition cost.** 640 base cells × 10 characteristics is small; the cross-product at runtime is
-  not. Does composition need a precomputed index for the hot cells?
-- **Situation scope.** A `Situation` holon generated per encounter could explode the holon store.
-  Does a situation persist after its encounter, or is it garbage-collected with its composition record
-  retained?
-- **Migration.** `src/core/data/{stage-holons.json, red-layer-holons.json}` are hand-authored entities.
-  Are they retro-fitted into facets, kept as a legacy overlay, or retired?
+Six questions were open at recommendation. Five are now decided; one is honestly data-dependent.
+
+**1. Characteristic completeness — 10 confirmed; `stake` and `pressure-lever` are independent.**
+The test is stated: two facets are one characteristic only if they cannot vary independently. An entity
+can desire one thing and apply pressure toward another — and that divergence is not an edge case, it is
+*required* by `19`'s choice engine. A holon whose want equals its pressure offers no choice, only
+compliance. The failure to model this divergence separately is precisely what makes a choice feel
+predetermined, so the axes stay distinct.
+
+**2. Tag vocabulary size — bounded, and the bound is on the player's subgraph, not the ontology.**
+The legibility constraint in `45 §3.1` rule 3 applies to *the model the player reads*, not to the
+ontology. The ontology is therefore bounded at **~120 tags in ~12 families**, while the
+**player-visible subgraph is capped at 24** active tags. A player never needs to comprehend the
+ontology; they need to be able to read their own model. This is what lets the store grow to serve
+world-building without the legibility promise breaking.
+
+**3. Situation scope — ephemeral by default, persisted only when a consequence is live.**
+A `Situation` holon is composed per encounter and released when the encounter closes. It persists
+beyond that only if it produced a consequence that must propagate (`19`) — an unresolved stake, a
+choice whose effect is still travelling. The **composition record is always retained** (§7.1), so the
+question *"why did this happen?"* is answerable even after the holon itself is gone. This bounds store
+growth without losing auditability.
+
+**4. Migration — retro-fit by the compiler; neither overlay nor retirement.**
+`src/core/data/stage-holons.json` and `src/core/data/red-layer-holons.json` are hand-authored entities
+carrying real content (the entire Red layer). The compiler (§8) emits them as facets with
+`source: 'authored'`, so no content is lost, no second store survives beside the generated one
+(`MY-RG-0019` is the guard against exactly that), and `src/core/data/encounters/red/`'s per-stage list
+is replaced by its compiled facets.
+
+**5. Composition cost — precomputed index for the hot cells.**
+640 base cells × 10 characteristics is a small store; the runtime cross-product is not. Composition
+therefore runs over a **precomputed candidate index per (line, stage)** rather than scanning the store,
+with the index regenerated by the compiler. Deferred as an implementation detail, not an open design
+question.
+
+**Still deferred (data-dependent, shared):** `expansionRatio` (§5.2) cannot be calibrated without play
+data — and it is the *same* calibration as `45`'s `noveltyBudget` and `47 §8`'s evidence floors. One
+measurement answers all three; until then the floors are reasoned, not measured, and are recorded as
+deferrals rather than as settled values.

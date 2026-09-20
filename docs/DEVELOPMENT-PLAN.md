@@ -103,8 +103,9 @@ Every phase: workspace-lint → build → full test suite → invariants → the
 → doc updates (concept→foundations feedback loop per AGENTS.md §3) → commit → push to
 BOTH remotes. Kernel gates G1–G21 stay green throughout (regression discipline).
 
-**All nine phases below are implemented and gated** (see §8, §9, and the closure evidence in §2).
-The phases are retained as the record of *order and gates*, not as outstanding work.
+**Phases 1–9 below are implemented and gated** (see §8, §9, and the closure evidence in §2); they
+are retained as the record of *order and gates*. **Phase 10 is the first phase ratified after this
+plan** and is the only outstanding build work — it is spec'd and not yet built.
 
 ### Phase 1 — Delegation Kernel (G-A) — ✅ implemented
 
@@ -228,11 +229,57 @@ trajectory renders K-5 → undergraduate on one branch.
 consent firewall (identity never in credential payloads).
 **Duration:** ~1.5 weeks. **Depends:** Phase 5.
 
+### Phase 10 — Generative World & Personalization (ratified 45 / 46 / 47) — ⬜ spec'd, not built
+
+This phase's deliverables come from canon written **after** the plan (`45` 2026-09-20, `46` and `47`
+same day), so it is recorded here as a phase rather than retro-fitted into §2's gap table. It is the
+only outstanding *build* work in the repository.
+
+**Deliverables:**
+1. **World store** (`46 §10`) — the holon store, the facet store, the tag store with the derived
+   dialectic relation, the composition pipeline, and the three library views. Correct
+   `organs.world.code` (currently cohort pods) and move the world content out of `src/core/data`.
+2. **Facet compiler** (`46 §8`) — compile the 512 concept-drafts into the facet store. The compiler is
+   the **only** path, which is what keeps the corpus and the store from diverging.
+3. **Tag ontology** (`46 §4`) — the initial tag set with axis positions and the curated dialectic
+   pairs; a tag without a resolvable opposite is a compile error. Bounded per `46 §13` res. 2.
+4. **Profile inference** (`47 §8`) — the evidence ledger, the tier gate, decay, and the deterministic
+   commit path (an LLM proposes, the counter commits).
+5. **Scaffold library** (`47 §6`) — the ten scaffolds, the selection function, and recorded selections
+   with their inputs.
+6. **Probe set** (`47 §7`) — in-world probes championed through `12 §5.4`'s RV protocol; a probe that
+   has not passed runs log-only and may not seed a T1 field.
+7. **ScenarioContext envelope** (`45 §6`) — the UDV + pooled set + bridge + catalyst target object the
+   scenario-catalyst agent consumes, with `45 §6.1`'s per-role projection scoping.
+8. **Engagement register** (`45 §7.3`) — the per-mechanism record of the two tests, seeded with the
+   mechanisms already in the tree.
+
+**Gates:**
+- **G22 — composition integrity** (`46 §11`). Every composition records `(facet keys, tag query, seed)`
+  and replays identically; `opposite(opposite(t)) == t` for every tag or the tag is excluded from
+  dialectic selection; no composed facet falls outside its target cell; an unknown tag fails closed.
+- **G23 — the tier gate** (`47 §9`). No field of record without `{tier, provenance, dataClass,
+  consentRef}`; the store schema has no slot for a T3 reading; no archetype prior lacks an expiry or
+  appears in an identity field; a T1 field cites a passing RV result.
+- **G24 — scaffold integrity** (`47 §9`). No scaffold outside its compatibility set; none exceeds
+  `maxExposures`; every selection is recorded; the expansion floor applies to the scaffold set; a
+  load-bearing domain never occupies the structural pole.
+- **G25 — the structural red line** (`47 §9` check 6). The inference module's only write path is the
+  UDV field set, asserted at the **module-graph** level rather than by review — a pure reader over text
+  cannot implement the forbidden technique set because there is nowhere for it to write.
+- **G1–G21 unregressed** throughout.
+
+**Duration:** ~3 weeks (facet compilation and the probe set are content-heavy).
+**Depends:** nothing outstanding — Phases 1–9 are closed.
+**Risk:** the facet compiler is the single point where 512 prose documents become data. If it is not
+*the only* path, corpus and store diverge silently — the failure class `RT-CORPUS-RECONCILE` tracks.
+
 ### Current work (post-plan) — not a phase
 
 All nine phases are closed; what remains is listed in §2.1 and owned by the record layer. When
 current work is described to an agent, cite `AGENTS.md §4.2` (which now carries the true state)
-and the ledger — never a phase number.
+and the ledger — never a phase number. **Phase 10 is the exception**: it is a scope'd phase whose
+deliverables were ratified after this plan, and it is the only outstanding build work.
 
 ## 5. Standing work-streams (not phases — continuous)
 
@@ -305,3 +352,4 @@ evidence), a partner institution (assess a portfolio), networked pod hosting
 | 2026-09-17 (same day, fifth exhaustive pass) | **Delegation CLI surface made flag-correct and whole-allowlist-conformant.** Independent re-verification confirmed the full battery green (lint, build, 1107→1120 tests, svelte-check 0/0, all 21 kernel gates, every CLI surface + both WebUI build targets exercised). Defects found by driving the `delegate` smoke across all 18 roles and fixed in the same commit: (1) **Root/subcommand flag collision** — `delegate` parsed its flags from the raw argv tail, but commander consumes ROOT-declared flags (`--json`, the old subcommand `--encounters` colliding with root `-e, --encounters`) before that scan: `--json` was silently dead (the documented machine-readable output never existed for this command) and a user-specified budget was silently dropped. Fix: `--json` now reads the root opt (JSON_MODE); the budget flag renamed to the collision-free `--budget` with default 6. (2) **Advisory-mandate starvation** — the old default budget (2) could not complete any 3-tool allowlist, so T1/T2/J3/J4/therapist (5 of 18 roles) always ended `budget_exhausted` with ZERO proposals: the spec→log→ratify→commit gate was unreachable for them through the CLI. (3) **S2/S5 allowlist violation** — their tools were shadowed as "proposal tools" in `ADVISORY_PROPOSAL_TOOL` (both are read/ops tools with no proposal kind, per 43 §4.2: S2's output IS the alignment context S3 consumes; S5 reports ops health), which excluded them from the read dispatch — S2 never ran `assemble_healing_context`, S5 never ran `run_benchmark_tier`. Now all 18 roles dispatch their complete allowlists; 16 emit ratifiable proposals, S2/S5 correctly emit none. (4) **CLI arg contract extracted + locked** — `scripts/cli/delegateArgs.ts` (role vocabulary, budget floor ≥ the largest allowlist) with `tests/cli/DelegateArgs.test.ts` including a SOURCE-level guard that the delegate path never re-scans argv for root-declared flag names (the defect class, not just the instance). (5) **Stale `test:cli` npm script** pointed at non-existent `tests/cli.test.ts` (now `tests/cli/`). Meta-verification (doc⇄code contrast): doc-40 §4.3 pack table byte-faithful (ids, forms 3/3/3/3/2/2/2/3, ship order, stopSe 0.30), subject→line map 12 present + SEL partial-by-design with inversion note (37 §3.1), `consent_inform` ratification records disclosure without touching consent state (43 §4.7 — only the player executes consent), G17 corpus-integrity gate has real teeth, static/SPA build asset graph complete. Tests: 1107 → 1120. |
 | 2026-09-17 (same day, foundations upgrade pass) | **Architectural documentation upgraded for the four verified weak links BEFORE implementation (user directive; foundations precede code per §4.3).** All upgrades extend existing owners — no new documents, no redundant infrastructure: (1) **Profiling-as-diagnostics** — doc 16 gains the **Auditor Projection Layer** (§2.4 + §10.4): the Significator is the single source for consented guardian diagnostics (parent/teacher-guardian/therapist), read through purpose-scoped projections (`guardian`/`educator`/`therapeutic`), hierarchical granularity drill-down (summary→line→line-stage→line-stage-cell, AP3 descent-only), consent re-checked at every render (AP4), auditors read-only + propose-only via `receive_auditor_request` (AP5). The four-layer observability model (§10.1) replaces three; §10.3 rule 6 rules the Veil binds the player surface only — auditor projections are the sanctioned metric-bearing surface (42 §1.1 firewall untouched). Doc 33 reframed as the render-contract document and gains §7: Guardian Mirror / Educator Desk / Therapeutic Pane over AuditorShell, with the unresolved auditor-authentication open question recorded. (2) **Knowledge-depth compilation validation** — doc 32 gains **Category E (E1–E7)**: deterministic depth-validation invariants (depth-profile completeness, task monotonicity, prerequisite DEPTH closure, blind-spot adjacency population + diagnosis validity, journey viability, rubric–agent consumability) that run first and gate the judgment checks; doc 31 gains **§3.5a** (`PrereqEdge.minDepth` + depth-closure computation with retention-demotion, `BlindSpotEntry` with four failure classes, `depthCeiling`) resolving two of its open questions, and doc 30's holon template gains the **depth-profile phase** at every hierarchy level. (3) **Mastery sequencing inside the catalyst loop** — doc 24 gains **§3.2.8 (mastery-sequence alignment, weight 0.10, weights renormalized)** so curriculum catalyst rides the SAME scheduler formula (no parallel queue, no study mode), consuming 31's blind-spot map for gap-directed probes; doc 34 §3.3's sketch is canonised-subordinate to 24 §3.2.8. (4) **Rubric-validation protocol** — doc 12 gains **§5.4 (RV1–RV6)**: inter-rater agreement (κ/ICC), construct coverage, known-answer stability on seeded personas, adversarial resistance, **below-stage discrimination (RV5: resolved/arrested/bypassed — the holonic diagnosis requirement making 16 §11.1's ±1 accuracy achievable and 42 §3.2's shadow gate meaningful)**, and runtime drift monitoring; unvalidated rubrics are log-only (24's instrument-intake rule); 40 §1's three-layer table stays unique (12 validates implicit instruments, 40 validates explicit packs). (5) **Deferments recorded** — doc 19 §13: long-horizon consequence propagation (cross-session world memory) deferred, ownership retained; doc 43 §4.7: human-handoff flows (escalation contacts, localized patterns, live handoff, adverse-event surfaces) deferred with `route_to_safety` contract unchanged. Focus ruling recorded in `docs/INDEX.md`: stage-development, evolution, and healing — via profiling-diagnostics + the validated agentic loop — take build priority. |
 | 2026-09-17 (same day, foundations re-audit) | **Architectural re-audit of the upgrade pass — 10 consistency defects found and repaired in the owning docs.** (1) **8-criterion canon propagated**: docs 25, 27 (lateral note, §2.3 interface + `masteryAlignment` field, §5.2 parameterisation table, worked example), 34 now all cite the scheduler's 8 criteria — no doc still claims seven; `masteryAlignment` documented as a first-class `PriorityWeightBias` member with bias + arc-ceiling compatibility rules (24 §3.2.8 note) and the 27 §5.3 wrapping contract verified unchanged (auto-mode multiplies then renormalises). (2) **R1 hardenings**: doc 20's cross-reference table gains the auditor-projection row (metric-bearing surface named as 16 §10.3 rule 6); doc 43 §4.7 gains the minor-guardianship ruling (guardian as consent-holder-of-record for young players + player assent; **minor-guardianship product design explicitly DEFERRED to the 38-era** — auditor layer serves documented-guardian flows only, a product-surface deferral, not a dependency) and the auditor-request un-delegability bullet; educator/therapeutic projections explicitly allowed to carry `skillTheta` streams (derivation invariants unchanged). (3) **R2 completion**: doc 32 gains **E8** (hierarchy-level depth aggregation — Topic/Subject/Branch holons re-run the E-gate at their own altitude, giving the teacher/assessor/developmental/therapeutic sub-agents a depth-validated framework at every altitude); Teacher toolset's `get_prereq_gaps` annotated to read 31 §3.5a DEPTH closure (unsatisfied edges, not mere existence). (4) **R3 completion**: doc 12 §5.4 gains the two validity accounts (psychometric = active-stage; shadow = below-stage quadrant fidelity), **shadow-quadrant specificity folded into RV2** (≥ 95% precision/recall — an allergy must never classify as an addiction, dark never as golden; the Distortion Ledger and vector selection key on it), **RV6 active-stage placement accuracy added** (±1 in ≥ 90% / exact in ≥ 70%), drift monitoring renumbered **RV7**; phases renamed RV-A/B/C to stop colliding with gate numbers; INDEX/AGENTS canon references synced to RV1–RV7; doc 19's deferral row now cites Phases RV-A–RV-C. (5) **Naming sync**: 33 §7 Educator Desk renders "mastery-sequence status (24 §3.2.8)". Sweep verified: zero stale "7 criteria"/RV-count references remain; scheduler weights sum to exactly 1.00. |
+| 2026-09-20 | **Phase 10 ratified: Generative World & Personalization (`45` / `46` / `47`).** The world/NPC/scenario + personalization architecture was ratified (`MY-AD-0018`, `MY-AD-0019`), then the generative model that makes it affordable (`MY-AD-0021` — entities composed from facets, a tag store whose dialectic opposites are *derived* by reflection rather than hand-paired), then the preference-inference and scaffolding model (`MY-AD-0022` — the evidence tier that makes `45 §10`'s inference boundary auditable; `MY-AD-0023` — delivery structure selected from a ten-scaffold library that fades along a DAG converging on unassisted practice). Four guards: `MY-RG-0017`/`MY-RG-0018` (engagement, data classes), `MY-RG-0019` (a static store reasserting itself), `MY-RG-0020` (a language-derived inference becoming a field of record without tier/data-class/consent), `MY-RG-0021` (a preference prior hardening into an identity label). Gates G22–G25 defined: composition integrity, the tier gate, scaffold integrity, and the *structural* red line (the inference module's only write path is the UDV field set — asserted at module-graph level, so the forbidden technique set has nowhere to write). `46 §13`'s six open questions resolved (stake/pressure-lever independence, tag bounds, situation lifecycle, compiler retro-fit, hot-cell index; `expansionRatio` remains data-dependent). New doc: `docs/foundations/47-preference-inference-and-scaffolding.md`. Also closed in the same pass: the stale `AGENTS.md §4.2` phase declaration and the plan's §2 gap rows (`MY-AD-0017`), and the documentation's relationality + BM25 retrieval (`MY-AD-0015`, `MY-AD-0016`; DG14–DG17). |

@@ -13,7 +13,9 @@
 > roster and toolset firewall (`43`), the profile's consent mechanics (`16 §2.1`), and — since
 > 2026-09-20 — the **composition of the entities that are pooled**: this document assumes libraries
 > exist and pools over them; `46` specifies that they are composed from facets and adds the tag
-> store and the dialectic engine.
+> store and the dialectic engine; and — since the same day — **how preference fields are inferred and
+> which delivery structure is chosen for a person**: `47` owns the evidence tiers, the meta-program
+> catalogue, the interest record and the scaffold library.
 > **Cross-references:** all of the above; this document is the join between them.
 
 ---
@@ -174,7 +176,9 @@ the player's fluent domain `D` in three layers, all three required:
 of the player's fluent domain — surface in `D`, structure in `D'`. Rendering in `D` alone produces a
 filter bubble: everything is learned in a vocabulary the player already owns, and the dimension they
 lack is never trained. Fluency is the carrier; the opposite pole is the payload. The two guards below
-are unchanged and now have a sharper job.
+are unchanged and now have a sharper job. The **structural arrangement** that carries the spiral is
+`estrangement` (`47 §6.2`), chosen by the rule in `47 §6.3` — so *how* a bridge is delivered is a
+selected object with its own library and fading rule, not a decision re-made per encounter.
 
 **Two guards, both mandatory:**
 
@@ -318,8 +322,10 @@ it (6).
 - **Embeddings and determinism.** A provider-backed embedding breaks the kernel's determinism
   guarantee unless the vector is frozen per encounter. Does the pooled set need to be *persisted*
   with the encounter, so a replayed session pools identically?
-- **UDV inference boundary.** §3.1 rule 1 forbids creating fields of record from observation — but
-  ranking weights may still adapt. Where exactly is the line, and is it auditable?
+- **UDV inference boundary — resolved 2026-09-20 (`47 §3`, `MY-AD-0022`).** The line is the
+  **evidence tier**: T1 may become a field of record, T2 may only bias ranking and select a scaffold,
+  T3 is never persisted. The tier is a property of the *distinction* rather than of the inference
+  method, which is what makes it auditable — `47 §9` lists the checks.
 - **Novelty budget calibration.** What fraction of encounters must introduce a new domain before
   rotation feels disruptive rather than invigorating? Unresolved; needs play data.
 - **Scenario template shape enforcement.** §2's invariant needs a linter (a schema gate) before the

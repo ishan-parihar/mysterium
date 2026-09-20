@@ -5,7 +5,7 @@
 
 - **Organ:** `profiling`
 - **Rung:** system (`docs/system/sub-systems/profiling/`)
-- **Contract docs (canon):** `foundations/12-drive-assessment-mechanics`, `foundations/16-significator-architecture`, `foundations/25-cumulative-consciousness-index`, `foundations/40-measurement-packs-efficacy-infra`
+- **Contract docs (canon):** `foundations/12-drive-assessment-mechanics`, `foundations/16-significator-architecture`, `foundations/25-cumulative-consciousness-index`, `foundations/40-measurement-packs-efficacy-infra`, `foundations/47-preference-inference-and-scaffolding`
 - **Code it describes:** `src/core/domain`, `src/infra/profiles`
 - **Records:** `core/decisions/` (AD) - `core/regressions/` (RG)
 
