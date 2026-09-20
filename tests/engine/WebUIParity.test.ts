@@ -20,10 +20,9 @@
  */
 import { describe, it, expect } from 'vitest';
 import { PERSONAS, type PersonaSpec } from '../../src/core/validation/personas.js';
-import { runPersonaTrajectory } from '../../src/core/validation/harness.js';
+import { runPersonaTrajectory, buildBenchWorld, BENCH_EPOCH as HARNESS_EPOCH } from '../../src/core/validation/harness.js';
 import { extractObservables } from '../../src/core/validation/observables.js';
 import { startSession, applyResponseOnly, endSession, tickWithStrategy } from '../../src/core/GameLoop.js';
-import { createInitialWorldState } from '../../src/core/engines/CandidateGeneration.js';
 import { processOutcome, applyConsequences } from '../../src/core/engines/ConsequenceEngine.js';
 import type { ScheduledEncounter } from '../../src/core/domain/EncounterSpecNew.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
@@ -31,9 +30,13 @@ import { seedInitialKnowledge } from '../../src/core/curriculum/SeedInitialKnowl
 import { seedCurriculumRegistry } from '../../src/core/curriculum/CurriculumSeed.js';
 import { ALL_LINES } from '../../src/core/domain/Line.js';
 import { ALL_DRIVES } from '../../src/core/domain/Drive.js';
-import type { Stage } from '../../src/core/domain/Stage.js';
 
-const BENCH_EPOCH = 1_700_000_000_000;
+// The SAME epoch the kernel harness anchors on. A local 1_700_000_000_000 (2023-11-14) sat two
+// years off the harness's `Date.UTC(2026, 0, 1)`, and theta staleness is a function of `now` —
+// so the two supposedly identical paths were scheduling on different clocks. That stayed
+// invisible only while an unvisited cell scored max theta urgency and flattened `now` out of the
+// ranking; implementing `24 §3.2.1` faithfully made it visible.
+const BENCH_EPOCH = HARNESS_EPOCH;
 
 function browserFreshSignificator(persona: PersonaSpec): ReturnType<typeof createSignificator> {
   // Entry configuration mirrors the kernel harness's freshSignificator
@@ -54,17 +57,11 @@ function browserFreshSignificator(persona: PersonaSpec): ReturnType<typeof creat
  */
 function runBrowserBindingSession(persona: PersonaSpec, encountersPerSession = 5): { sig: ReturnType<typeof createSignificator>; moduleRefs: string[] } {
   seedCurriculumRegistry();
-  const lines = ALL_LINES;
-  const holons = lines.flatMap((line) =>
-    ['Red' as Stage].map((stage) => ({
-      id: `h-${line}-${stage}`, name: `${line} ${stage} contact`, kind: 'NPC' as const,
-      line, stage,
-      drives: { dominant: 'Agency' as const, secondary: 'Eros' as const, shadowQuadrant: null },
-      polarity: 'Sovereign' as const, narrativeRole: 'parity', relationships: [] as string[], active: true,
-    })),
-  );
+  // The canonical benchmark world — shared with `runPersonaTrajectory`. Driving a private
+  // world made this a fixture comparison: the harness carries Infrared/Magenta/Red holons per
+  // line, so a Red-only imitation scheduled a different encounter set entirely.
+  let world = buildBenchWorld();
   let sig = browserFreshSignificator(persona);
-  let world = createInitialWorldState(holons as never);
   const session = { targetSessionLength: encountersPerSession, encountersSoFar: 0, sessionDurationMs: 0, recentLines: [] };
   let sessionState = startSession(sig, session);
   const moduleRefs: string[] = [];
@@ -150,20 +147,14 @@ describe('WebUI persona parity (plan Phase 6)', () => {
 /** Collect the kernel harness's module-ref stream (mirrors its offer policy). */
 function collectKernelRefs(persona: PersonaSpec, perSession: number): string[] {
   seedCurriculumRegistry();
-  const lines = ALL_LINES;
-  const holons = lines.flatMap((line) =>
-    ['Red' as Stage].map((stage) => ({
-      id: `h-${line}-${stage}`, name: `${line} ${stage} contact`, kind: 'NPC' as const,
-      line, stage,
-      drives: { dominant: 'Agency' as const, secondary: 'Eros' as const, shadowQuadrant: null },
-      polarity: 'Sovereign' as const, narrativeRole: 'benchmark', relationships: [] as string[], active: true,
-    })),
-  );
+  // The canonical benchmark world — shared with `runPersonaTrajectory`. Driving a private
+  // world made this a fixture comparison: the harness carries Infrared/Magenta/Red holons per
+  // line, so a Red-only imitation scheduled a different encounter set entirely.
+  let world = buildBenchWorld();
   let sig = createSignificator(`bench-${persona.name}`, persona.altitudes, persona.currentStage);
   if (persona.knowledgeLine) {
     sig = { ...sig, knowledge: seedInitialKnowledge(persona.knowledgeLine, persona.currentStage) } as typeof sig;
   }
-  let world = createInitialWorldState(holons as never);
   const session = { targetSessionLength: perSession, encountersSoFar: 0, sessionDurationMs: 0, recentLines: [] };
   let sessionState = startSession(sig, session);
   const refs: string[] = [];

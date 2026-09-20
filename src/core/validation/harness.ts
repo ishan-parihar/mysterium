@@ -55,6 +55,15 @@ export interface TrajectoryResult {
 }
 
 function makeWorld(): WorldState {
+  return buildBenchWorld();
+}
+
+/**
+ * The canonical benchmark world. Exported so a parity harness can drive its OWN loop over the
+ * SAME world the trajectory runs on: two loops over two different worlds compare fixtures, not
+ * the loop, and a duplicated fixture is exactly the drift the parity gate exists to catch.
+ */
+export function buildBenchWorld(): WorldState {
   const lines: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Somatic', 'Willpower', 'Interpersonal'];
   const stages: Stage[] = ['Infrared', 'Magenta', 'Red'];
   const holons: Holon[] = [];

@@ -88,12 +88,18 @@ restate their contents (uniqueness principle):
   split that the same contrast work produced is `MY-AD-0031` / `MY-RG-0026` (service-polarity vs
   reconciliation-polarity). Fallout now tracked rather than latent: `QUALITY-WIRING`,
   `VOCAB-SUBSTRATE`.
-- **Canon↔code conformance on a load-bearing equation** — `SCHEDULER-FORMULA`: the
-  implementation of `24 §3.2`'s priority formula carries a substituted eighth weight plus six
-  unweighted additive terms worth up to +0.72 on a 1.00 base score, so the ratified weights do
-  not presently decide selection (`MY-AD-0025`, `MY-RG-0023`, gate `G26`). This is the one entry
-  in the pending ledger that changes *player-visible* behaviour when closed, and it moves
-  selection, so it must be verified against the personas and the full kernel battery.
+- ~~**Canon↔code conformance on a load-bearing equation** — `SCHEDULER-FORMULA`~~ — **CLOSED
+  2026-09-21.** The implementation of `24 §3.2`'s priority formula carried a substituted eighth
+  weight plus six unweighted additive terms worth up to +0.72 on a 1.00 base score, so the
+  ratified weights did not decide selection. `PriorityComputation` now implements the eight
+  criteria as the only additive terms, `masteryAlignment` is implemented, every former term has a
+  recorded disposition, and **G26** holds the closure by asserting *additivity* across a 6 144-point
+  probe grid (the score must equal the weighted criterion sum exactly) rather than by checking a
+  ceiling no candidate can reach. Verified against the personas and the full kernel battery
+  (1 151 tests). Closing it surfaced three further defects, now guarded: an omitted
+  `sessionDurationMs` scoring a fresh session as long (`MY-RG-0027`), a parity harness carrying its
+  own clock and world (`MY-RG-0028`), and a tie-break reading recency off the head of a
+  chronological trace (`MY-RG-0029`).
 
 Neither list is duplicated here. Run `python3 scripts/arch.py related <ID>` for any of them;
 run `python3 scripts/arch.py validate` for the gate state.

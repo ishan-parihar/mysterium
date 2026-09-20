@@ -2024,16 +2024,39 @@ def cmd_update(args: argparse.Namespace) -> int:
     if not target:
         fail(f"no record with ID {args.id}")
     text = target["text"]
+    # `--unset KEY` removes a key from the frontmatter. Needed because a discharged field must GO:
+    # `Deferral:` names a `_org.yaml → pending` key, and once the work lands the key is removed from
+    # the ledger, so leaving the field behind fails DG19 forever. An empty `--field K=` deliberately
+    # means "leave this key alone", so removal has no other spelling.
+    for key in args.unset or []:
+        if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*", key):
+            fail(f"`{key}` is not a valid frontmatter key")
+        pat = re.compile(rf"(?m)^{re.escape(key)}:.*\n")
+        if not pat.search(text):
+            fail(f"{target['rel']}: frontmatter has no `{key}:` to unset")
+        text = pat.sub("", text, count=1)
     for field in args.field or []:
         key, _, value = field.partition("=")
         if not value:
             continue  # an empty value means "leave this key alone", never `Key: ""`
         if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*", key):
             fail(f"`{key}` is not a valid frontmatter key")
-        # Quote a value YAML cannot take as a plain scalar. A backtick is the common case here — a
-        # plain scalar may not START with one, and writing it unquoted silently corrupted six
-        # records' frontmatter (2026-09-20), which erased their IDs from every gate that reads them.
-        if re.search(r":\s", value) or value[:1] in "*&!%#@`|>[]{}'\"-?:,":
+        # A bracketed value is a YAML FLOW LIST, not a string — `Related: [MY-AD-0001]` is a list of
+        # IDs and every reader (`DG8`, `related`, `--json`) treats it as one. Quoting it wrote a
+        # one-element string that DG8 then split on punctuation, reporting `Related `G``, `Related
+        # `-`` and `Related `0`` as unresolvable IDs. `update` is the ONLY write path, so it has to
+        # be able to write the field shapes the records actually use.
+        if re.fullmatch(r"\[\s*\]", value):
+            value = "[]"
+        elif re.fullmatch(r"\[[^\[\]]*\]", value):
+            items = [x.strip() for x in value[1:-1].split(",") if x.strip()]
+            if all(re.fullmatch(r"[A-Za-z0-9_.\- ]+", i) for i in items):
+                value = "[" + ", ".join(items) + "]"
+        # Otherwise quote a value YAML cannot take as a plain scalar. A backtick is the common case
+        # here — a plain scalar may not START with one, and writing it unquoted silently corrupted
+        # six records' frontmatter (2026-09-20), which erased their IDs from every gate that reads
+        # them. A scalar that happens to start with `[` but is NOT a clean list still falls here.
+        elif re.search(r":\s", value) or value[:1] in "*&!%#@`|>[]{}'\"-?:,":
             value = '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
         pat = re.compile(rf"(?m)^{re.escape(key)}:.*$")
         if pat.search(text):
@@ -2426,6 +2449,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("update", help="amend a record")
     p.add_argument("id")
     p.add_argument("--field", action="append", help="Key=Value (repeatable)")
+    p.add_argument("--unset", action="append", help="remove a frontmatter key (repeatable)")
     p.add_argument("--reason", required=True)
     p.add_argument("--recon", required=True)
     p.set_defaults(fn=cmd_update)

@@ -7,7 +7,7 @@ Organ: catalyst
 Source: "foundations/24-encounter-scheduler §3.2.9"
 Description: "The scheduler's eight criteria are the only additive terms; any other consideration (UDV relevance, user-Matrix targeting, session theme) enters as a multiplicative bias renormalised to 1.00, and G26 enforces conformance."
 Related: [MY-AD-0008, MY-RG-0023, MY-AD-0019]
-Deferral: SCHEDULER-FORMULA
+Consumer: Gate G26 'priority formula closure' in src/core/validation/gates.ts (validatePriorityClosure) + src/core/engines/PriorityComputation.ts (DEFAULT_WEIGHTS, FORMER_TERM_DISPOSITION)
 ---
 
 ## Context
@@ -46,10 +46,21 @@ makes the catalyst sequence explainable to the player, to an auditor and to the 
 - Positive: biases are total-order-preserving and `27`-parameterisable; a bonus is neither, so
 `MY-AD-0008`'s bias contract now has exactly one place to speak.
 - Negative: reconciling the implementation is real work with test impact (it moves selection
-behaviour, so personas and kernel gates must be re-verified). Tracked as
-`_org.yaml → pending → SCHEDULER-FORMULA`; until then the canon is the contract and the code is the
-deviation.
+behaviour, so personas and kernel gates must be re-verified). **Discharged 2026-09-21** — the
+reconciliation landed (`SCHEDULER-FORMULA` removed from the pending ledger, personas and kernel
+battery re-verified) and the law's `Consumer:` is `G26`. The deviation record is preserved in
+`24 §3.2.9` rather than deleted, because it is the reason **G26 checks additivity instead of a
+ceiling**: the old file's weights were present and correct, and reading them would have certified a
+scheduler that ignored them. Closing this surfaced three further defects, each now a guard:
+`MY-RG-0027` (an absent optional input took a non-default branch — an omitted `sessionDurationMs`
+scored a fresh session as long), `MY-RG-0028` (the parity harness carried its own epoch and world,
+so it compared fixtures rather than the loop), `MY-RG-0029` (the new tie-break read recency off the
+head of a chronological trace, inverting `§3.3`).
 
 
 
 <!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->
+
+<!-- 2026-09-20: the SCHEDULER-FORMULA deferral is discharged: the reconciliation landed and G26 enforces the closure, so the law now names its consumer (recon 6d995d81c5) -->
+
+<!-- 2026-09-20: the SCHEDULER-FORMULA deferral is discharged: the reconciliation landed and G26 enforces the closure, so the law names its consumer instead of a pending key (recon 18c0b1305c) -->

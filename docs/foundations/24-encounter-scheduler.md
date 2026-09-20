@@ -378,6 +378,17 @@ mastery-alignment **0.10** (sums to exactly 1.00 — developmental scheduling is
 crowded out beyond its fair share, and the developmental weights remain strictly
 dominant).
 
+**Scope — which candidates this criterion applies to (clarified 2026-09-21).** Mastery alignment
+applies to **curriculum** candidates only, and the discriminator is **structural, never a string
+sniff**. A developmental candidate's `moduleRef` is exactly `<Line>:<Stage>` (`Cognitive:Turquoise`),
+so splitting it on `:` and taking element 1 yields `Turquoise` — a concept name that does not
+exist. A criterion that fires on that input applies mastery to developmental encounters whenever a
+mastery field happens to be set, which is the single thing this criterion must never do. The rule:
+**a ref of the form `<Line>:<Stage>` is developmental and scores 0 here; anything else is
+curriculum, and element 1 is its concept id.** `masteryConceptOf` is the one implementation of
+that rule, and the closed-formula test asserts both directions (a developmental twin is unaffected
+by mastery fields; a `algebra:linear-equations` candidate does score).
+
 **What mastery alignment deliberately does NOT do:** it never gates, never blocks
 the scheduler, and never creates a separate curriculum mode (no "now entering study
 mode"). A concept's depth ladder is simply one more voice in the chorus the scheduler
@@ -419,20 +430,43 @@ multiplicative and total-order-preserving; a bonus is neither.
 Neither is a developmental criterion: they say **where to look**, never **what is needed**. The
 eight criteria answer the second question and nothing else may.
 
-> **Recorded deviation (2026-09-20).** `src/core/engines/PriorityComputation.ts` does not
-> implement this contract. It (a) carries `userMatrixTargeting: 0.12` as an eighth additive
-> **weight** where the canon's eighth criterion is `masteryAlignment` (which has no
-> implementation at all — `grep masteryAlignment src/` returns nothing), and (b) adds up to six
+> **Resolved (2026-09-21), with the deviation kept on record.** The implementation did not honour
+> this contract: it carried `userMatrixTargeting: 0.12` as an eighth additive **weight** where the
+> eighth criterion is `masteryAlignment` (which had no implementation at all), plus up to six
 > further unweighted additive terms after the weighted sum — `noveltyBonus` (≤ 0.25),
 > `weaknessBonus` (≤ 0.15), `diversityBonus` (± 0.10), `bleedBoost` (≤ 0.15), `rayBoost`
-> (≤ 0.05) and `tieBreaker` (≤ 0.02). Against a base score bounded by 1.00, that envelope is
-> **up to +0.72**: today the bonuses govern selection and the ratified weights largely do not.
-> The code's own header comment still lists the *pre-2026-09-17 seven-criterion* formula, so the
-> drift is invisible from the file. Reconciling this is tracked as `_org.yaml → pending →
-> SCHEDULER-FORMULA`, and the gate that closes it is **G26** (`§3.2.9` conformance: the weights
-> sum to exactly 1.00, and no additive term exists outside the eight criteria). Until G26 is
-> green, the weights in this document are the *contract* and the code is the *deviation* — do not
-> read the code as canon.
+> (≤ 0.05) and `tieBreaker` (≤ 0.02). Against a base bounded by 1.00, that envelope reached
+> **+0.72**, so the bonuses governed selection and the ratified weights largely did not — while the
+> file's own header still transcribed the pre-2026-09-17 seven-criterion formula, which is why the
+> drift was invisible from inside the file. Reconciliation (`pending → SCHEDULER-FORMULA`, closed)
+> landed: the eight criteria are the only additive terms, `masteryAlignment` is implemented, every
+> former term has a recorded disposition in `FORMER_TERM_DISPOSITION`, and **G26** holds the
+> closure. The deviation is preserved here rather than deleted because it is the reason G26 checks
+> *behaviour*: the weights in the old file were present and correct, and reading them would have
+> certified a scheduler that ignored them.
+>
+> **How G26 establishes closure — additivity, not a ceiling.** The score must equal
+> `Σ W[c]·criterion(c)` **exactly** across a 6 144-point probe grid (every line × stage × session
+> duration × energy × modality × profile phase). An additive term outside the eight makes that
+> identity fail by exactly the term's value; the gate reports the residual, so a future "bonus"
+> cannot hide behind a weight literal that still reads correct. Check a *ceiling* instead and you
+> prove nothing: canon's own criterion maxima are all below 1 (session-fit tops out near 0.28,
+> transformation-readiness at 0.75, polarity at 0.9), so no candidate can reach the ceiling and the
+> assertion would be vacuous.
+>
+> **Three things the reconciliation had to settle beyond the arithmetic**, each now guarded:
+>
+> 1. **Absence is not data.** An omitted optional input must score as its documented default. An
+>    absent `sessionDurationMs` made `undefined < 900_000` false, so a freshly started session was
+>    scored as a LONG one while the same session carrying `0` was scored as short — two code paths
+>    differing only in whether they stamped the field scheduled different encounters
+>    (`MY-RG-0027`).
+> 2. **The tie-break is a comparator, not a score.** Variety prefers a different modality/line
+>    *between equals in a 0.05 band*; it never lifts a weaker candidate over a stronger one.
+> 3. **Applicability is structural.** `masteryAlignment` applies only to genuine curriculum
+>    candidates — see `§3.2.8`'s scope rule; a string-sniffing check handed the criterion the
+>    string `Turquoise` for a developmental `<Line>:<Stage>` ref and let mastery leak into
+>    developmental scoring, the one thing `§3.2.8` forbids.
 
 ### 3.3 Tie-breaking rules
 

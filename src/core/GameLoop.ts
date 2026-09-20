@@ -590,13 +590,13 @@ export function tickWithStrategy(
       updatedStrategy = {
         ...updatedStrategy,
         weightBias: {
-          thetaUrgency: updatedStrategy.weightBias.thetaUrgency + (postBias.thetaUrgency ?? 0),
-          shadowActivation: updatedStrategy.weightBias.shadowActivation + (postBias.shadowActivation ?? 0),
-          polarityAlignment: updatedStrategy.weightBias.polarityAlignment + (postBias.polarityAlignment ?? 0),
-          transformationReadiness: updatedStrategy.weightBias.transformationReadiness + (postBias.transformationReadiness ?? 0),
-          driveCorrection: updatedStrategy.weightBias.driveCorrection + (postBias.driveCorrection ?? 0),
-          narrativeCoherence: updatedStrategy.weightBias.narrativeCoherence + (postBias.narrativeCoherence ?? 0),
-          sessionFit: updatedStrategy.weightBias.sessionFit + (postBias.sessionFit ?? 0),
+          thetaUrgency: (updatedStrategy.weightBias.thetaUrgency ?? 1) + (postBias.thetaUrgency ?? 0),
+          shadowActivation: (updatedStrategy.weightBias.shadowActivation ?? 1) + (postBias.shadowActivation ?? 0),
+          polarityAlignment: (updatedStrategy.weightBias.polarityAlignment ?? 1) + (postBias.polarityAlignment ?? 0),
+          transformationReadiness: (updatedStrategy.weightBias.transformationReadiness ?? 1) + (postBias.transformationReadiness ?? 0),
+          driveCorrection: (updatedStrategy.weightBias.driveCorrection ?? 1) + (postBias.driveCorrection ?? 0),
+          narrativeCoherence: (updatedStrategy.weightBias.narrativeCoherence ?? 1) + (postBias.narrativeCoherence ?? 0),
+          sessionFit: (updatedStrategy.weightBias.sessionFit ?? 1) + (postBias.sessionFit ?? 0),
         },
       };
     }

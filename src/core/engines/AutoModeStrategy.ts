@@ -10,8 +10,8 @@
  * Pure functions: state in, strategy out. No side effects.
  */
 import type { SignificatorSnapshot } from '../domain/SignificatorSnapshot.js';
-import type { PriorityWeights, SessionContext } from './PriorityComputation.js';
-import { DEFAULT_WEIGHTS } from './PriorityComputation.js';
+import type { PriorityBias, SessionContext } from './PriorityComputation.js';
+import { applyWeightBias as applyCanonicalWeightBias } from './PriorityComputation.js';
 import type { CCIScore, SessionTheme } from './CCIEngine.js';
 import type { StudyTheme } from '../curriculum/types.js';
 
@@ -44,15 +44,21 @@ export interface ParameterisedSessionArc {
   };
 }
 
-export interface PriorityWeightBias {
-  thetaUrgency: number;
-  shadowActivation: number;
-  polarityAlignment: number;
-  transformationReadiness: number;
-  driveCorrection: number;
-  narrativeCoherence: number;
-  sessionFit: number;
-}
+/**
+ * A theme's emphasis, expressed as multiplicative bias on the eight criteria (`24 §3.2.9`).
+ * `1.0` (or absent) = no change. `masteryAlignment` is a first-class member (`24 §3.2.8`).
+ *
+ * This is an alias of the canonical `PriorityBias`, not a parallel type: two bias types meant
+ * two normalisation paths, and the second one carried `userMatrixTargeting` as a ninth weight —
+ * exactly the shape `§3.2.9` forbids (`MY-RG-0023`).
+ */
+export type PriorityWeightBias = PriorityBias;
+
+/**
+ * Canonical weight-bias application (`24 §3.2.9`): multiply, then renormalise to exactly 1.00.
+ * Re-exported rather than reimplemented — one normalisation path, always.
+ */
+export const applyWeightBias = applyCanonicalWeightBias;
 
 export interface EncounterBudget {
   totalTarget: number;
@@ -354,47 +360,9 @@ export function computeWeightBias(theme: SessionTheme, _cci?: CCIScore | null): 
 // Weight bias application
 // ---------------------------------------------------------------------------
 
-/**
- * Apply priority weight biases to the scheduler's default weights.
- * Multiplies each default weight by its corresponding bias multiplier,
- * then normalises so weights still sum to 1.0.
- */
-export function applyWeightBias(
-  defaults: PriorityWeights,
-  bias: PriorityWeightBias,
-): PriorityWeights {
-  const biased = {
-    thetaUrgency: defaults.thetaUrgency * bias.thetaUrgency,
-    shadowActivation: defaults.shadowActivation * bias.shadowActivation,
-    polarityAlignment: defaults.polarityAlignment * bias.polarityAlignment,
-    transformationReadiness: defaults.transformationReadiness * bias.transformationReadiness,
-    driveCorrection: defaults.driveCorrection * bias.driveCorrection,
-    narrativeCoherence: defaults.narrativeCoherence * bias.narrativeCoherence,
-    sessionFit: defaults.sessionFit * bias.sessionFit,
-    // T-userMatrix: include userMatrixTargeting in bias/normalization
-    userMatrixTargeting: defaults.userMatrixTargeting ?? 0,
-  };
+// `applyWeightBias` is the canonical one from `PriorityComputation` (re-exported above) —
+// `24 §3.2.9` allows exactly one normalisation path, so there is no local copy.
 
-  // Normalise so weights sum to 1.0
-  const total = biased.thetaUrgency + biased.shadowActivation + biased.polarityAlignment
-    + biased.transformationReadiness + biased.driveCorrection + biased.narrativeCoherence
-    + biased.sessionFit + biased.userMatrixTargeting;
-
-  if (total <= 0) return { ...DEFAULT_WEIGHTS };
-
-  return {
-    thetaUrgency: biased.thetaUrgency / total,
-    shadowActivation: biased.shadowActivation / total,
-    polarityAlignment: biased.polarityAlignment / total,
-    transformationReadiness: biased.transformationReadiness / total,
-    driveCorrection: biased.driveCorrection / total,
-    narrativeCoherence: biased.narrativeCoherence / total,
-    sessionFit: biased.sessionFit / total,
-    userMatrixTargeting: biased.userMatrixTargeting / total,
-  };
-}
-
-// ---------------------------------------------------------------------------
 // Arc parameterisation
 // ---------------------------------------------------------------------------
 
@@ -856,14 +824,16 @@ export function computePostTransformationBias(
   if (sessionsSinceTransformation < 5) return postWeights;
 
   const t = (sessionsSinceTransformation - 5) / 5;
+  // These are MULTIPLICATIVE deltas: the caller adds them to the theme multipliers, so a
+  // returned `-0.10` means "10% of this criterion's weight" (`24 §3.2.9` — bias multiplies).
   const result: PriorityWeightBias = {
-    thetaUrgency: postWeights.thetaUrgency * (1 - t),
-    shadowActivation: postWeights.shadowActivation * (1 - t),
-    polarityAlignment: postWeights.polarityAlignment * (1 - t),
-    transformationReadiness: postWeights.transformationReadiness * (1 - t),
-    driveCorrection: postWeights.driveCorrection * (1 - t),
-    narrativeCoherence: postWeights.narrativeCoherence * (1 - t),
-    sessionFit: postWeights.sessionFit * (1 - t),
+    thetaUrgency: (postWeights.thetaUrgency ?? 0) * (1 - t),
+    shadowActivation: (postWeights.shadowActivation ?? 0) * (1 - t),
+    polarityAlignment: (postWeights.polarityAlignment ?? 0) * (1 - t),
+    transformationReadiness: (postWeights.transformationReadiness ?? 0) * (1 - t),
+    driveCorrection: (postWeights.driveCorrection ?? 0) * (1 - t),
+    narrativeCoherence: (postWeights.narrativeCoherence ?? 0) * (1 - t),
+    sessionFit: (postWeights.sessionFit ?? 0) * (1 - t),
   };
   return result;
 }

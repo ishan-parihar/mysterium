@@ -36,7 +36,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (57)
+## Records (60)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -69,11 +69,13 @@
 | `MY-AD-0030` | AD | kernel | Active | Every altitude carries its quality, per quadrant, and the quadrants are read from it |
 | `MY-RG-0017` | RG | kernel | Active | Engagement mechanisms drift into manipulation |
 | `MY-RG-0025` | RG | kernel | Active | A flattened stage-to-ray map absorbs a shared ray by inventing one |
+| `MY-RG-0027` | RG | kernel | Active | An absent optional input takes a meaningful branch instead of its default |
 | `MY-AD-0025` | AD | catalyst | Active | The priority formula is closed: eight criteria, everything else is a multiplicative bias |
 | `MY-AD-0026` | AD | catalyst | Active | The aversion veto routes a catalyst, it never cancels one |
 | `MY-AD-0031` | AD | catalyst | Active | Bare polarity means service-polarity; the dialectic is reconciliation-polarity |
 | `MY-RG-0023` | RG | catalyst | Active | An additive term outside the ratified criteria silently outranks them |
 | `MY-RG-0026` | RG | catalyst | Active | One word carrying two frameworks re-merges them under pressure |
+| `MY-RG-0029` | RG | catalyst | Active | Recency is read off the head of a chronological trace |
 | `MY-AD-0023` | AD | curriculum | Active | Delivery structure is selected from a scaffold library, never authored per encounter and never left unfaded |
 | `MY-AD-0022` | AD | profiling | Active | Preference is inferred under an evidence tier, and only the instrumented tier becomes a field of record |
 | `MY-RG-0020` | RG | profiling | Active | A language-derived inference becomes a field of record without a tier, a data class, or consent |
@@ -97,6 +99,7 @@
 | `MY-RG-0016` | RG | platform | Active | A reference that resolves to nothing passes every gate |
 | `MY-RG-0022` | RG | platform | Active | A document omitted from its rung router passes every gate |
 | `MY-RG-0024` | RG | platform | Active | A law with no consumer passes every gate |
+| `MY-RG-0028` | RG | platform | Active | A parity harness with a private clock or fixture compares fixtures, not the loop |
 
 ## Generated surfaces (never hand-edited)
 

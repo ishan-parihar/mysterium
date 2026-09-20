@@ -21,6 +21,20 @@ export interface EncounterCandidate {
   readonly cooldownClear: boolean;
   /** Codex entry text unlocked upon completing this encounter. */
   readonly codexEntry?: string;
+
+  // --- Mastery-sequence alignment inputs (§3.2.8) ---------------------------------
+  // Optional, and absent for developmental encounters, which score 0 on the mastery
+  // criterion. `31` populates them during Phase-3 curriculum expansion; until then the
+  // criterion is implemented and simply weighs nothing for developmental candidates.
+
+  /** The declared blind-spot class this encounter probes (`31 §3.4`), or null. */
+  readonly targetBlindSpotClass?: string | null;
+  /** True when the encounter clears an unsatisfied prerequisite depth gate (`31 §3.5a`). */
+  readonly resolvesUnsatisfiedClosure?: boolean;
+  /** The depth level this encounter targets — scored against the learner's spiral (`31 §3.2`). */
+  readonly targetDepthLevel?: DepthLevel;
+  /** True when the encounter is review timed to the forgetting boundary (`31 §4.4`). */
+  readonly isRetentionBoundaryReview?: boolean;
 }
 
 export interface NarrativeBeat {

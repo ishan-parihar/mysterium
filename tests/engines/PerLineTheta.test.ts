@@ -3,7 +3,7 @@
  * Verifies that lines with different configured half-lives produce different theta urgencies.
  */
 import { describe, it, expect } from 'vitest';
-import { computePriority, DEFAULT_WEIGHTS, type SessionContext } from '../../src/core/engines/PriorityComputation.js';
+import { computePriority, type SessionContext } from '../../src/core/engines/PriorityComputation.js';
 import { DEFAULT_THETA_PARAMS } from '../../src/core/engines/ThetaDecay.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
 import type { Line } from '../../src/core/domain/Line.js';
@@ -86,23 +86,23 @@ describe('T-0.12 — per-line theta half-life', () => {
     const session = makeSession();
     const world = makeWorld();
 
-    const prioritySomatic = computePriority(
-      candidateSomatic, sigSomaticVisited, world, session, now,
-      { ...DEFAULT_WEIGHTS, thetaUrgency: 1.0, shadowActivation: 0, polarityAlignment: 0, transformationReadiness: 0, driveCorrection: 0, narrativeCoherence: 0, sessionFit: 0 },
-    );
-    const prioritySpiritual = computePriority(
-      candidateSpiritual, sigSpiritualVisited, world, session, now,
-      { ...DEFAULT_WEIGHTS, thetaUrgency: 1.0, shadowActivation: 0, polarityAlignment: 0, transformationReadiness: 0, driveCorrection: 0, narrativeCoherence: 0, sessionFit: 0 },
-    );
+    // Isolate thetaUrgency (every other criterion weighted 0). Because `24 §3.2.9` closes the
+    // formula, the score is now EXACTLY the weighted criterion sum — no unweighted bonuses ride
+    // along — so this test is a clean single-variable comparison.
+    const thetaOnly = { thetaUrgency: 1.0, shadowActivation: 0, polarityAlignment: 0, transformationReadiness: 0, driveCorrection: 0, narrativeCoherence: 0, sessionFit: 0, masteryAlignment: 0 };
+    const prioritySomatic = computePriority({
+      candidate: candidateSomatic, sig: sigSomaticVisited, world, session, now, weights: thetaOnly,
+    });
+    const prioritySpiritual = computePriority({
+      candidate: candidateSpiritual, sig: sigSpiritualVisited, world, session, now, weights: thetaOnly,
+    });
 
     // After 1 day: Somatic (3-day half-life) is more decayed → higher urgency
-    // than Spiritual (10-day half-life). We isolate thetaUrgency by zeroing
-    // other weights, but note that other bonuses (novelty, weakness, diversity)
-    // still contribute. The DIFFERENCE should still favor Somatic.
+    // than Spiritual (10-day half-life).
     expect(prioritySomatic).toBeGreaterThan(prioritySpiritual);
   });
 
-  it('a never-visited cell returns max theta urgency (1.0) regardless of line', () => {
+  it('a never-visited cell scores 0.0 theta urgency regardless of line (24 §3.2.1)', () => {
     const now = Date.now();
     const sig = createSignificator('p1', makeAltitudes('Red'), 'Red');
     // All cells at 0 (never visited) per createSignificator
@@ -112,21 +112,19 @@ describe('T-0.12 — per-line theta half-life', () => {
     const session = makeSession();
     const world = makeWorld();
 
-    // With theta weight = 1.0 and everything else 0, both should have the
-    // same base theta urgency (1.0) since neither has been visited.
-    // The difference will be only in the tie-breaker / bonuses.
-    const prioritySomatic = computePriority(
-      candidateSomatic, sig, world, session, now,
-      { ...DEFAULT_WEIGHTS, thetaUrgency: 1.0, shadowActivation: 0, polarityAlignment: 0, transformationReadiness: 0, driveCorrection: 0, narrativeCoherence: 0, sessionFit: 0 },
-    );
-    const prioritySpiritual = computePriority(
-      candidateSpiritual, sig, world, session, now,
-      { ...DEFAULT_WEIGHTS, thetaUrgency: 1.0, shadowActivation: 0, polarityAlignment: 0, transformationReadiness: 0, driveCorrection: 0, narrativeCoherence: 0, sessionFit: 0 },
-    );
+    // Canon is explicit: `if (!decay || decay.stage !== c.stage) return 0.0`. A cell with no
+    // decay record is NOT "maximally urgent" — it is simply not part of the player's
+    // developmental set, and canon does not schedule it as due. The old implementation
+    // returned 1.0 here, which made every unseen cell outrank every genuinely stale one.
+    const thetaOnly = { thetaUrgency: 1.0, shadowActivation: 0, polarityAlignment: 0, transformationReadiness: 0, driveCorrection: 0, narrativeCoherence: 0, sessionFit: 0, masteryAlignment: 0 };
+    const prioritySomatic = computePriority({
+      candidate: candidateSomatic, sig, world, session, now, weights: thetaOnly,
+    });
+    const prioritySpiritual = computePriority({
+      candidate: candidateSpiritual, sig, world, session, now, weights: thetaOnly,
+    });
 
-    // Both should be high (theta urgency = 1.0 contributes ~1.0 to the score
-    // when weight = 1.0). The difference is only in tie-breakers.
-    expect(prioritySomatic).toBeGreaterThan(0.9);
-    expect(prioritySpiritual).toBeGreaterThan(0.9);
+    expect(prioritySomatic).toBe(0);
+    expect(prioritySpiritual).toBe(0);
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { scheduleNext } from '../../src/core/engines/EncounterScheduler.js';
+import { scheduleNext, rankCandidates } from '../../src/core/engines/EncounterScheduler.js';
 import type { WorldState } from '../../src/core/engines/CandidateGeneration.js';
 import type { SessionContext } from '../../src/core/engines/PriorityComputation.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
@@ -302,8 +302,14 @@ describe('EncounterScheduler', () => {
     expect(result[0].modality).toBe('Deterministic');
   });
 
-  it('applies a deterministic tie-breaker so candidates at session start do not return the exact same priority', () => {
-    const customWorld: WorldState = {
+  /**
+   * `24 §3.2.9`: the formula is CLOSED. Two developmental twins — same line altitude, same
+   * shadows, same drive state, same holon shape — score IDENTICALLY. Distinctness is not a
+   * property of the score; a score that broke ties was carrying an unweighted additive term
+   * (`tieBreaker`, ≤ 0.02) that sat outside the eight ratified criteria and could reorder them.
+   */
+  it('scores developmental twins identically — the formula is closed', () => {
+    const twinWorld: WorldState = {
       holons: [
         { ...makeHolon('h-cog', 'Cognitive', 'Red'), modality: 'ImmersiveRPG' },
         { ...makeHolon('h-emo', 'Emotional', 'Red'), modality: 'ImmersiveRPG' },
@@ -319,16 +325,47 @@ describe('EncounterScheduler', () => {
       activeMacroEvents: [],
     };
 
-    const result = scheduleNext(sig, customWorld, session, Date.now(), 2);
+    const result = scheduleNext(sig, twinWorld, session, Date.now(), 2);
     expect(result).toHaveLength(2);
-    const p1 = result[0].priority;
-    const p2 = result[1].priority;
-    expect(p1).not.toBe(p2);
-    // T-0.12: per-line theta half-lives now cause Cognitive (7-day) and
-    // Emotional (5-day) to decay at different rates, so their priorities
-    // can differ by more than the old 0.01 threshold. The tie-breaker still
-    // ensures they're not identical; the 0.05 threshold verifies they're
-    // in the same ballpark.
-    expect(Math.abs(p1 - p2)).toBeLessThan(0.05);
+    expect(result[0].priority).toBe(result[1].priority);
+  });
+
+  it('ranks tied candidates reproducibly — the same state yields the same order', () => {
+    const first = scheduleNext(sig, world, session, Date.now(), 3);
+    const second = scheduleNext(sig, world, session, Date.now(), 3);
+    expect(first.length).toBeGreaterThan(1);
+    expect(first.map(e => e.moduleRef)).toEqual(second.map(e => e.moduleRef));
+  });
+
+  /**
+   * `24 §3.3` is a comparator in canonical order — novel modality, novel line, familiar holon,
+   * then a deterministic hash — and it is exercised through `rankCandidates` directly because the
+   * GENERATOR already hard-filters anything the trace covers (last-3 by tuple, last-2 by
+   * line+stage). Constructing the comparison by hand is the only way to assert the rule order
+   * itself rather than the generator's filter.
+   */
+  it('§3.3 prefers a modality absent from the LAST three encounters', () => {
+    const trace = [
+      { line: 'Cognitive' as Line, stage: 'Red' as Stage, modality: 'ImmersiveRPG' as const },
+      { line: 'Moral' as Line, stage: 'Red' as Stage, modality: 'ScenarioChoice' as const },
+      { line: 'Somatic' as Line, stage: 'Red' as Stage, modality: 'Embodied' as const },
+    ];
+    const traceWorld: WorldState = { ...world, recentEncounters: trace };
+    const mk = (line: Line, modality: 'Embodied' | 'Strategic', priority: number) => ({
+      candidate: {
+        moduleRef: `${line}:Red`, line, stage: 'Red' as Stage, modality,
+        holonId: `h-${line}`, cooldownClear: true,
+      },
+      priority,
+    });
+
+    // Somatic/Embodied is the NEWEST trace entry; Cognitive/Strategic is not in the trace at all.
+    // Both candidates are inside the tie band, so §3.3 rule 1 alone must order them.
+    const ranked = rankCandidates(
+      [mk('Somatic', 'Embodied', 0.5), mk('Cognitive', 'Strategic', 0.5)],
+      sig,
+      traceWorld,
+    );
+    expect(ranked[0]!.candidate.line).toBe('Cognitive');
   });
 });

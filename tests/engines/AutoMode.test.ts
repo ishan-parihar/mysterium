@@ -216,7 +216,7 @@ describe('AutoModeStrategy', () => {
         const result = applyWeightBias(DEFAULT_WEIGHTS, bias);
         const sum = result.thetaUrgency + result.shadowActivation + result.polarityAlignment
           + result.transformationReadiness + result.driveCorrection + result.narrativeCoherence
-          + result.sessionFit + (result.userMatrixTargeting ?? 0);
+          + result.sessionFit + result.masteryAlignment;
         expect(sum).toBeCloseTo(1.0, 5);
       }
     });

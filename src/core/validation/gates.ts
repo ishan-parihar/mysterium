@@ -59,6 +59,17 @@ import {
   DEFAULT_LEVELLING_CONFIG,
   EMPTY_PRIOR,
 } from '../curriculum/LevellingEngine.js';
+import {
+  ALL_CRITERIA,
+  CRITERION_SCORES,
+  DEFAULT_WEIGHTS,
+  FORMER_TERM_DISPOSITION,
+  applyWeightBias,
+  computePriority,
+  effectiveWeights,
+  weightSum,
+} from '../engines/PriorityComputation.js';
+import { rankCandidates, TIE_BAND } from '../engines/EncounterScheduler.js';
 
 // ---------------------------------------------------------------------------
 // Gate plumbing
@@ -825,6 +836,7 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   results.push(validateMeasurementPacks());
   results.push(validatePlacementConvergence());
   results.push(validateCredentialChain());
+  results.push(validatePriorityClosure());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
@@ -930,6 +942,181 @@ export function validateDelegationToolsetFirewall(): GateResult {
   } catch (e) {
     return { gate: 'G15 delegation toolset firewall', passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }
+}
+
+// ---------------------------------------------------------------------------
+// G26 — Priority formula closure (hard): `24 §3.2.9` conformance. The eight
+// criteria are the ONLY additive terms; the weights renormalise to exactly
+// 1.00 under any bias, so a perfect candidate scores exactly 1.00 and no
+// candidate can exceed it. `MY-AD-0025` / `MY-RG-0023`.
+//
+// This is a BEHAVIOURAL check, not a source inspection. The old implementation
+// carried the eight ratified weights and then added up to six further terms
+// after the weighted sum (see `FORMER_TERM_DISPOSITION`) — the weights were
+// present and correct, and selection was governed by the extras. A gate that
+// read the weight literal would have passed on a scheduler that ignored it.
+// ---------------------------------------------------------------------------
+export function validatePriorityClosure(): GateResult {
+  const problems: string[] = [];
+
+  // 1. The weight vector IS the eight criteria — no ninth key, none missing.
+  const keys = Object.keys(DEFAULT_WEIGHTS).sort();
+  const expected = [...ALL_CRITERIA].sort();
+  if (keys.join(',') !== expected.join(',')) {
+    problems.push(`criteria mismatch: have [${keys}] want [${expected}]`);
+  }
+
+  // 2. It sums to exactly 1.00, so the score is bounded by 1.00 by construction.
+  const sum = weightSum(DEFAULT_WEIGHTS);
+  if (Math.abs(sum - 1) > 1e-9) problems.push(`DEFAULT_WEIGHTS sums to ${sum}, not 1.00`);
+
+  // 3. Every bias renormalises back to 1.00 — bias cannot inflate the ceiling. The
+  //    probe set includes a total-silencing bias (all zeros) and extreme multipliers.
+  const biases: Record<string, Record<string, number>> = {
+    identity: {},
+    silenceAll: Object.fromEntries(ALL_CRITERIA.map(c => [c, 0])),
+    shadowTheme: { shadowActivation: 1.8, thetaUrgency: 0.6 },
+    extreme: { thetaUrgency: 100, sessionFit: 0.001 },
+    zeroAndExtreme: { shadowActivation: 0, masteryAlignment: 50 },
+  };
+  for (const [name, bias] of Object.entries(biases)) {
+    const biased = applyWeightBias(DEFAULT_WEIGHTS, bias);
+    const s = weightSum(biased);
+    if (Math.abs(s - 1) > 1e-9) problems.push(`bias '${name}' sums to ${s}, not 1.00`);
+    if (ALL_CRITERIA.some(c => (biased[c] ?? -1) < 0)) {
+      problems.push(`bias '${name}' produced a negative weight`);
+    }
+  }
+
+  // 4. THE CLOSURE TEST — additivity. The score must equal the weighted sum of the eight
+  //    criterion scores EXACTLY. Any additive term outside the eight makes this identity fail by
+  //    exactly that term, so a future "bonus" cannot hide behind a weight literal that still
+  //    reads correct — which is precisely how the old +0.72 envelope survived unnoticed.
+  //
+  //    Note the probe does NOT need to reach 1.00: canon's own criterion ceilings are below 1
+  //    (session-fit tops out at ~0.28, transformation-readiness at 0.75, polarity at 0.9), so
+  //    checking a ceiling would test a value no candidate can reach. Additivity is the real
+  //    invariant, and it holds at every point of the space.
+  const altitudeAll = Object.fromEntries(ALL_LINES.map(l => [l, 'Turquoise' as Stage])) as Record<Line, Stage>;
+  const perfectSig = createSignificator('g26-probe', altitudeAll, 'Turquoise');
+  // A shadow on EVERY line×stage so shadow-activation is non-zero for any candidate cell.
+  const saturating = {
+    ...perfectSig,
+    shadows: {
+      entries: ALL_LINES.flatMap(line => ALL_STAGES.map(stage => ({
+        id: `shadow-${line}-${stage}`, quadrant: 'DarkAddiction' as const, line, stage,
+        drive: 'Agency' as const, surfacedAt: 0, resolvedAt: null,
+        recurrenceCount: 1, compoundPartner: 'compound-probe', severity: 1,
+      }))),
+    },
+    // Every cell visited ONE millisecond into the epoch and long past its half-life — a real
+    // timestamp, not 0, because 0 is this codebase's "never visited" sentinel (§3.2.1).
+    theta: { lastEncounter: Object.fromEntries(ALL_LINES.flatMap(l => ALL_STAGES.map(s => [`${l}:${s}`, 1]))) },
+  } as unknown as typeof perfectSig;
+
+  const probeWorld = createInitialWorldState(
+    ALL_LINES.map(line => ({
+      id: `h-${line}-Turquoise`, name: `${line} probe`, kind: 'NPC' as const, line,
+      stage: 'Turquoise' as Stage,
+      drives: { dominant: 'Agency' as const, secondary: 'Eros' as const, shadowQuadrant: null },
+      polarity: 'Sovereign' as const, narrativeRole: 'g26', relationships: ['h-0'], active: true,
+    })) as never,
+  );
+
+  const now = Date.now();
+
+  // 5. Sweep the probe grid: every candidate on it must satisfy the additivity identity AND lie
+  //    inside [0, 1]. A nonzero residual is an additive term outside the eight; a score above
+  //    1.00 is an unnormalised one.
+  const durations = [0, 60_000, 600_000, 3_600_000];
+  const energies = ['low', 'moderate', 'high', undefined] as const;
+  const modalities = ['ImmersiveRPG', 'LanguageReflective', 'Deterministic'] as const;
+  const phases = ['unmapped', 'crystallized'] as const;
+  let maxSeen = -Infinity;
+  let minSeen = Infinity;
+  let worstResidual = 0;
+  let probes = 0;
+
+  for (const line of ALL_LINES) {
+    for (const stage of ALL_STAGES) {
+      for (const duration of durations) {
+        for (const energy of energies) {
+          for (const modality of modalities) {
+            for (const phase of phases) {
+              const inputs = {
+                candidate: {
+                  moduleRef: `${line}:${stage}:curriculum:g26`, line, stage, modality,
+                  holonId: `h-${line}-Turquoise`, cooldownClear: true,
+                  targetBlindSpotClass: 'overgeneralization-boundary',
+                  resolvesUnsatisfiedClosure: true,
+                  targetDepthLevel: 'transformed' as const,
+                  isRetentionBoundaryReview: true,
+                },
+                sig: saturating,
+                world: probeWorld,
+                session: {
+                  encountersSoFar: 3, sessionDurationMs: duration, targetSessionLength: 8,
+                  recentLines: [], inferredEnergy: energy,
+                },
+                now,
+                bleedThrough: [`${line}:${stage}`],
+                userMatrixModel: { phase, cells: {}, unmappedSurfaces: [] } as never,
+              };
+
+              const actual = computePriority(inputs);
+              const w = effectiveWeights(inputs);
+              const recomputed = ALL_CRITERIA.reduce(
+                (acc, c) => acc + (w[c] ?? 0) * CRITERION_SCORES[c](inputs),
+                0,
+              );
+              const residual = Math.abs(actual - recomputed);
+              if (residual > worstResidual) worstResidual = residual;
+              maxSeen = Math.max(maxSeen, actual);
+              minSeen = Math.min(minSeen, actual);
+              probes++;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (worstResidual > 1e-12) {
+    problems.push(
+      `additivity violated over ${probes} probes: worst residual ${worstResidual.toExponential(2)} — ` +
+      'a term outside the eight criteria is being added to the score',
+    );
+  }
+  if (maxSeen > 1 + 1e-9) problems.push(`probe grid max ${maxSeen.toFixed(4)} exceeds 1.00`);
+  if (minSeen < -1e-9) problems.push(`probe grid min ${minSeen.toFixed(4)} is negative`);
+
+  // 6. Every term canon's recorded deviation named has a disposition — the reconciliation cannot
+  //    silently regress, and a future additive term must add itself here to appear legitimate.
+  const accounted = ['noveltyBonus', 'weaknessBonus', 'diversityBonus', 'bleedBoost', 'rayBoost', 'tieBreaker', 'userMatrixTargeting'];
+  for (const term of accounted) {
+    if (!FORMER_TERM_DISPOSITION[term]) problems.push(`former additive term '${term}' has no recorded disposition`);
+  }
+
+  // 7. A tie band survives as a tie: §3.3 orders equals without inflating anyone's score.
+  const bandWorld = { ...probeWorld, recentEncounters: [] };
+  const bandProbe = rankCandidates(
+    [
+      { candidate: { moduleRef: 'b:one', line: 'Cognitive' as Line, stage: 'Turquoise' as Stage, modality: 'ImmersiveRPG' as const, holonId: 'h-b1', cooldownClear: true }, priority: 0.5 },
+      { candidate: { moduleRef: 'b:two', line: 'Emotional' as Line, stage: 'Turquoise' as Stage, modality: 'ImmersiveRPG' as const, holonId: 'h-b2', cooldownClear: true }, priority: 0.5 },
+    ],
+    perfectSig,
+    bandWorld,
+  );
+  if (bandProbe.length !== 2 || bandProbe[0]!.priority !== bandProbe[1]!.priority) {
+    problems.push('tie-breaking altered a priority score instead of ordering within the band');
+  }
+  if (!(TIE_BAND > 0)) problems.push('TIE_BAND must be positive');
+
+  const passed = problems.length === 0;
+  const details = passed
+    ? `weights sum ${sum.toFixed(4)}; additivity exact to ${worstResidual.toExponential(1)} over ${probes} probes; grid [${minSeen.toFixed(4)}, ${maxSeen.toFixed(4)}]; ${accounted.length} former terms dispositioned`
+    : problems.join(' | ');
+  return { gate: 'G26 priority formula closure', passed, hard: true, details };
 }
 
 /**

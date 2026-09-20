@@ -45,6 +45,11 @@ describe('Validation benchmark (CI tier)', () => {
     for (const r of suite.results) {
       expect(r.details.length).toBeGreaterThan(0);
     }
-    expect(suite.results.length).toBe(21);
+    // The count is deliberately literal: adding or removing a gate must be a conscious edit here,
+    // not a silent change to what the benchmark certifies. 21 → 22 with G26 (priority-formula
+    // closure, `24 §3.2.9` / `MY-AD-0025`).
+    expect(suite.results.length).toBe(22);
+    expect(suite.results.map((r) => r.gate).some((g) => g.startsWith('G26'))).toBe(true);
+    expect(new Set(suite.results.map((r) => r.gate)).size).toBe(suite.results.length);
   });
 });

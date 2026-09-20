@@ -6,7 +6,7 @@ import type { PolarityMode, ShadowQuadrant } from '../domain/enums.js';
 import type { ScheduledEncounter } from '../domain/EncounterSpecNew.js';
 import type { Significator } from '../domain/Significator.js';
 import type { ShadowEntry } from '../domain/ShadowLedger.js';
-import { generateCandidates, type WorldState } from './CandidateGeneration.js';
+import { generateCandidates, type EncounterCandidate, type WorldState } from './CandidateGeneration.js';
 import { computePriority, DEFAULT_WEIGHTS, type SessionContext, type PriorityWeights } from './PriorityComputation.js';
 import type { TransformationPhase } from './TransformationDetector.js';
 import type { UserMatrixModel } from './UserMatrixModel.js';
@@ -18,6 +18,105 @@ const SHADOW_WORK_THRESHOLD = 3;
 
 export type { WorldState } from './CandidateGeneration.js';
 export type { SessionContext } from './PriorityComputation.js';
+
+// ---------------------------------------------------------------------------
+// §3.3 Tie-breaking — a comparator, never a score
+// ---------------------------------------------------------------------------
+
+/** Candidates scoring within this band of each other are considered tied (`24 §3.3`). */
+export const TIE_BAND = 0.05;
+
+interface ScoredCandidate {
+  readonly candidate: EncounterCandidate;
+  readonly priority: number;
+}
+
+/**
+ * Deterministic final key — FNV-1a over the encounter's module ref. Reproducibility is the point
+ * (`24 §3.3` rule 4): two runs over the same state must order identically, and an ordering that
+ * depends on `Array.prototype.sort` stability or insertion order is not reproducible when the
+ * candidate set changes shape.
+ */
+function refHash(ref: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < ref.length; i++) {
+    h ^= ref.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h;
+}
+
+/**
+ * Order candidates within a tie band per `24 §3.3`, rules 1–4 in priority order.
+ *
+ * Rules 1 and 2 read NOVELTY off the world's recent-encounter trace. They used to be an additive
+ * `diversityBonus` inside the score; §3.2.9 moved them here, where canon always had them — a tie
+ * band is exactly the set of candidates whose developmental value is indistinguishable, so
+ * variety is how a decision gets made *between equals* rather than how a weaker candidate overtakes
+ * a stronger one.
+ */
+function compareWithinBand(
+  a: ScoredCandidate,
+  b: ScoredCandidate,
+  sig: Significator,
+  world: WorldState,
+): number {
+  // `world.recentEncounters` is CHRONOLOGICAL (oldest first) — the generator reads recency off
+  // its tail (`slice(-3)` / `slice(-2)`), so "the last 3" is the last three ELEMENTS. Reading the
+  // head here would have inverted the rule and made the tie-break prefer what the player had just
+  // been doing.
+  const trace = world.recentEncounters ?? [];
+
+  // 1. Prefer a modality absent from the last 3 encounters.
+  const recentModalities = trace.slice(-3).map(e => e.modality);
+  const aNewModality = !recentModalities.includes(a.candidate.modality);
+  const bNewModality = !recentModalities.includes(b.candidate.modality);
+  if (aNewModality !== bNewModality) return aNewModality ? -1 : 1;
+
+  // 2. Prefer a line absent from the last 2 encounters.
+  const recentLines = trace.slice(-2).map(e => e.line);
+  const aNewLine = !recentLines.includes(a.candidate.line);
+  const bNewLine = !recentLines.includes(b.candidate.line);
+  if (aNewLine !== bNewLine) return aNewLine ? -1 : 1;
+
+  // 3. Prefer holons the player already has a relationship with.
+  const familiar = (line: string): number =>
+    Object.keys(sig.theta.lastEncounter).some(k => k.startsWith(`${line}:`)) ? 1 : 0;
+  const aFam = familiar(a.candidate.line);
+  const bFam = familiar(b.candidate.line);
+  if (aFam !== bFam) return bFam - aFam;
+
+  // 4. Deterministic final key — reproducibility.
+  return refHash(a.candidate.moduleRef) - refHash(b.candidate.moduleRef);
+}
+
+/**
+ * Rank scored candidates: descending priority, with `24 §3.3` tie-breaking inside each 0.05 band.
+ * The returned order is total and reproducible — no ties survive.
+ */
+export function rankCandidates(
+  scored: readonly ScoredCandidate[],
+  sig: Significator,
+  world: WorldState,
+): ScoredCandidate[] {
+  const byPriority = [...scored].sort((a, b) => {
+    if (b.priority !== a.priority) return b.priority - a.priority;
+    return refHash(a.candidate.moduleRef) - refHash(b.candidate.moduleRef);
+  });
+
+  const ranked: ScoredCandidate[] = [];
+  let band: ScoredCandidate[] = [];
+  for (const item of byPriority) {
+    if (band.length === 0 || band[0]!.priority - item.priority <= TIE_BAND) {
+      band.push(item);
+    } else {
+      ranked.push(...band.sort((a, b) => compareWithinBand(a, b, sig, world)));
+      band = [item];
+    }
+  }
+  if (band.length > 0) ranked.push(...band.sort((a, b) => compareWithinBand(a, b, sig, world)));
+  return ranked;
+}
 
 /**
  * Check if a line has exceeded the shadow-work threshold (>3 unresolved shadows).
@@ -165,11 +264,13 @@ export function scheduleNext(
 
   const scored = candidates.map(c => ({
     candidate: c,
-    priority: computePriority(c, sig, world, session, now, weights, bleedThrough, userMatrixModel),
+    priority: computePriority({ candidate: c, sig, world, session, now, weights, bleedThrough, userMatrixModel }),
   }));
 
-  // Sort descending by priority
-  scored.sort((a, b) => b.priority - a.priority);
+  // Sort descending by priority, then apply §3.3 tie-breaking inside each 0.05 band. Canon puts
+  // variety here — not in the score — because a tie band is the set of candidates whose
+  // developmental value is indistinguishable, and a comparator cannot outrank a stronger candidate.
+  const ranked = rankCandidates(scored, sig, world);
 
   // Determine session position
   const progress = session.encountersSoFar / Math.max(1, session.targetSessionLength);
@@ -194,7 +295,7 @@ export function scheduleNext(
   const lineCounts: Record<string, number> = {};
   const moduleRefs = new Set<string>();
 
-  for (const { candidate, priority } of scored) {
+  for (const { candidate, priority } of ranked) {
     if (result.length >= count) break;
     const lc = lineCounts[candidate.line] ?? 0;
     if (lc >= 2) continue;
