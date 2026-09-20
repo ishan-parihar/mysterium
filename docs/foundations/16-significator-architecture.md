@@ -594,9 +594,18 @@ The Significator evolves through distinct lifecycle stages, each with characteri
 
 **Exit criteria:** All lines at White; crystallisationIndex ≥ harvest threshold; all ray integrations complete.
 
-### 11.5 Stage E: Harvest (endgame)
+### 11.5 Stage E: Harvest (the closure — a horizon event, not a stage)
 
 **Purpose:** The Veil lifts. Final polarity crystallises. The Significator is archived.
+
+**Ruling 2026-09-20 — the harvest is a horizon, never the objective.** The ladder's last
+*developable* stage is **L8 Turquoise** ("total integration; harvest readiness", 06 §5.1);
+the harvest itself is the **Violet closure position** (KosmOS `lenses/rays.md`: "the
+sub-octaves of 3rd-to-4th-density consciousness… Violet is the harvest into 4th density").
+The system's objective is **continuing developmental progression across all dimensions without
+residual entropy and without residual shadows** (06 §7.4) — so nothing schedules toward this
+event, no "progress to harvest" surface exists (20 §6), and reaching it is emergent. Event
+trigger, gates and archive behaviour below are unchanged.
 
 | Aspect | Final state |
 |---|---|
@@ -618,6 +627,11 @@ The Significator evolves through distinct lifecycle stages, each with characteri
 **Exit criteria:** Player acknowledges harvest; character retired (STO → mentor presence; STS → adversarial presence; per foundations/19 §9).
 
 ### 11.6 Stage F: Post-harvest (post-MVP, reserved)
+
+**Reserved territory (ruling 2026-09-20): `L9 Indigo` (kosmocentric / cross-paradigmatic) lives
+HERE and nowhere else.** It is post-harvest content, never a playable developmental stage, and
+the same reservation covers every density above D4 (D5 Blue, D6 Indigo, D7 Violet) — beyond the
+human range (06 §5.1). No other document may present L9 or those densities as a reachable state.
 
 The harvested Significator persists as an archived record. Future systems may allow:
 - The archived Significator to appear as an NPC in other players' worlds

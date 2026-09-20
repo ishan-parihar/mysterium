@@ -88,12 +88,12 @@ Per the user's `Integrated_Stage_Theory.md`:
   - **Blue-Ray (out) = Green (Pluralistic):** outflowing radiation,
     co-creator-as-expresser
 - **Indigo-Ray gateway:** Indigo-Ray is the gateway worked upon only
-  by the adept. The gateway *opens* (Turquoise) and is *traversed*
-  (early White).
+  by the adept. The gateway *opens* (Teal) and is *traversed*
+  (Turquoise) — re-indexed 2026-09-20; see §5.1.
 - **Violet-Ray as harvest:** Violet-Ray is the *total expression* of
   the entity's vibratory complex. Cannot be worked on directly; is
-  the *result* of all other work. Maps to White as the integration
-  of all prior stages.
+  the *result* of all other work. It is **not a stage**: it is the
+  **closure position** — the D3→D4 horizon event (§5.1, 19 §9.6).
 
 This is the canonical 8 × 7 mapping.
 
@@ -107,54 +107,90 @@ This is the canonical 8 × 7 mapping.
 | Amber | Green | Heart — first heart-opening, ethnocentric love | Astral body |
 | Orange | Blue (in) | Throat (inflow) — co-creator inflow, rational investigation | Devachanic body |
 | Green | Blue (out) | Throat (outflow) — co-creator outflow, pluralistic radiation | Devachanic body |
-| Turquoise | Indigo | Brow — gateway opens, vision-logic | Etheric body (form-maker) |
-| White | Violet (with Indigo traversed) | Crown — total integration, harvest readiness | Buddha body |
+| **Teal** | Indigo (6a) | Brow — gateway *opens*, vision-logic | Etheric body (form-maker) |
+| **Turquoise** | Indigo (6b) | Brow — gateway *traversed*; adept; total integration, harvest **readiness** | Buddha body |
+| *(closure, not a stage)* **Violet** | Violet (7th) | Crown — the total expression; the D3→D4 horizon event | — |
 
 This table is **canon**. Every encounter, every level, every NPC
 carries explicit ray information sourced from this table.
 
-### 5.1 Density vocabulary — HoloOS alignment (added 2026-09-20)
+### 5.1 The three axes and the ratified stage ladder (ratified 2026-09-20; supersedes the earlier draft of this subsection)
 
-This subsection fixes the vocabulary the table above depends on. It is load-bearing: the
-misuse of "density" for stage bands was diluting every downstream doc (18/19/22/24).
+This subsection fixes the vocabulary the table above depends on, and it is load-bearing: using
+density labels for stage bands had been diluting every downstream doc (18/19/22/24).
 
-**The canonical ontology (HoloOS `_THEORY/02_Ontology/`, the anchor this document's cosmology
-already cites):**
+**Sources.** HoloOS `_THEORY/02_Ontology/` (densities, octaves, the Veil, the primal
+distortions) and KosmOS `_Ontology/` (`stages/altitude.md`, `stages.md`, `lenses/rays.md`,
+`stages/framework-density.md`). Where they speak, they govern the vocabulary.
 
-- Densities are **VIBGYOR** — D1 **Red** (awareness), D2 **Orange** (growth), **D3 Yellow**
-  (self-awareness, the Choice, the Veil), D4 **Green** (love/understanding, social-memory
-  complex), D5 **Blue** (light/wisdom), D6 **Indigo** (unity), D7 **Violet**
-  (completion/gateway). There is **no D8**: the 8th is the *octave-closure*, which **is** D1 of
-  the next octave — one event, two sides (`01.4` §2.5.2).
-- `01.4` §2.5.3: D3 is "the **minimum density at which genuine choice is possible**" — D1/D2
-  lack the integrated substrate for self-conscious choice; D4+ have already committed.
-- HoloOS's `stage_codes` L1–L8 and densities D1–D7(+closure) are **the same axis** (§2.5.1).
-  But **Mysterium's eight stage names are Spiral-Dynamics colour names, not density rays.**
-  `Orange` in Mysterium is a developmental stage; `Orange` in VIBGYOR is D2.
+**Three axes, never conflated (KosmOS `framework-density.md`, CONSTITUTION rule 13):**
 
-**Therefore, for Mysterium:**
+| Axis | Meaning | Status in Mysterium |
+|---|---|---|
+| **Altitude** — L1…L10 | how high; the one vertical every line climbs | **canonical and neutral** (`stages/altitude.md`: "Neutral framing is canonical; the Law-of-One 7-ray/density/harvest mapping is the optional lens") |
+| **Stage number** — MHC 1–17 / Kegan 0–5+ | the *psychological resolution*; how the ascent actually differentiates | **canonical** (`stages.md`); it is the within-altitude detail |
+| **Ray / density** — 1–7 (Blue 5a/5b, Indigo 6a/6b → 9 sub-octave positions) | the LoO overlay | **a lens, never a place** (`lenses/rays.md`: "available on request… not parsed by diagnose.py") |
 
-1. **The world is D3 — but D3 is *Yellow*, not a stage band.** §1's "the entire density octave
-   inside this density" is read through fractal nesting (`01.4` §2.5.2): the eight stages are
-   the **D3 sub-octave**, and **White = the sub-octave's closure = the Yellow→Green transition
-   into D4 (Love / social-memory complex)** — which is exactly what §7.4 describes. The harvest
-   is therefore **in-octave** (the sub-octave closing, one event two sides), resolving the
-   tension with `20`'s single-octave scope note; the "4th density" epilogue is scripted
-   narrative, not simulated D4 play.
-2. **§5's 8-stage/7-ray table is a *sub-density decoration*, not a density mapping.** It maps
-   Mysterium stages onto the **energy centres within D3** (HoloOS: "the density-ray is the
-   macro structure; the energy centre is the micro expression within each density"), i.e. the
-   scale-local VIBGYOR decoration of `04_Scalar_Metric` §2.1 (2+3+5+3+3+2+1) — *not* the seven
-   universal density functions. It remains canon **as a sub-octave mapping** and must never be
-   cited as "stage = density".
-3. **§6's holographic principle is unaffected** — it is the same fractal claim the nesting
+**The arc is D3→D4, entirely.** `lenses/rays.md` §1: *"The Integral stages are the sub-octaves
+of 3rd-to-4th-density consciousness — the holographic recapitulation of the whole density octave
+within 3rd density. Super-Integral (Violet) is the harvest into 4th density."* And
+`stages/altitude.md` L10 Violet's threshold marker: *"open frontier (beyond the 3rd-density
+sub-octave arc)"*. Densities are the octave's name; the **rays are within-D3 sub-octave
+positions**, not densities one travels through.
+
+**The ratified ladder (8 stages = KosmOS L1–L8):**
+
+| Mysterium stage | KosmOS altitude | MHC stages | Kegan | Ray lens (within D3) |
+|---|---|---|---|---|
+| 1 Infrared | L1 Infrared | 1–2 | — | Red (1st) |
+| 2 Magenta | L2 Magenta | 3 | 0→1 | Orange (2nd) |
+| 3 Red | L3 Red | 4–5 | 1→2 | Yellow (3rd) |
+| 4 Amber | L4 Amber | 6–10 | 2→3 | Green (4th) |
+| 5 Orange | L5 Orange | 11–12 | 3→4 | Blue in (5a) |
+| 6 Green | L6 Green | 13 | 4 | Blue out (5b) |
+| 7 **Teal** | L7 Teal | 14 | 4→5 | Indigo (6a) — gateway opens |
+| 8 **Turquoise** | L8 Turquoise | 15 | 5 | Indigo (6b) — gateway traversed |
+| — *(closure, not a stage)* | **L10 Violet** | 17 | 5+ | Violet (7th) → **the D3→D4 harvest** |
+
+**Retirements and scope:**
+
+1. **`White` retires as a stage.** Its content splits: "total integration / harvest readiness" is
+   dialysed into **L8 Turquoise** (the last developable stage); the **harvest** becomes the
+   **Violet closure event** (16 §11.5), not a level one plays. The former `07 Turquoise`
+   content re-indexes to `07 Teal`.
+2. **`L9 Indigo` (kosmocentric / cross-paradigmatic) and every density above D4 (D5 Blue, D6
+   Indigo, D7 Violet) are OUT OF SCOPE as developmental states** — beyond the human range. L9 is
+   **reserved as post-harvest territory** (16 §11.6 Stage F), never a playable stage; the higher
+   densities appear only as horizon vocabulary in the lens.
+3. **The world is D3 (Yellow)** — the density of self-awareness, the Choice, and the Veil
+   (`04_VIBGYOR_Density_Functions.md`; `01.4` §2.5.3: "the minimum density at which genuine
+   choice is possible"). The eight stages are the D3 sub-octave; the harvest is its closure —
+   in-octave, one event two sides (`01.4` §2.5.2). The "4th density" epilogue is scripted
+   narrative (D4 Green — love / social-memory complex), not simulated D4 play.
+4. **§5's 8-stage/7-ray table is a sub-octave mapping** onto the energy centres *within D3* —
+   never "stage = density".
+5. **§6's holographic principle is unaffected** — the same fractal claim the nesting
    architecture makes.
+6. **The knowledge axis is separate** (`stages/framework-density.md`): concept → concrete-op →
+   formal-op → vision-logic → beyond is the *Subtle*-realm scale and corresponds to 31's
+   DepthLevel / 42's depth rungs. It is never averaged with altitude.
 
-**Ownership:** this doc owns the density/ray vocabulary and the harvest's cosmology; 19 §9.6
-owns eligibility vs. event and re-expresses the choice-readiness floor; 16 owns the lifecycle;
-02 §4 owns the substrate-layer table. Related HoloOS source: `04_VIBGYOR_Density_Functions.md`,
-`01.4_Scalar_Metric.md` §2.5, `08.8.7_Primal_Distortion_Genesis_Theorem.md` §6.5,
-`RD_Density_Ray_Dissonance_Audit.md`.
+**Objective (ruling 2026-09-20 — see §7.4's teleology revision):** the game's objective is
+**continuing developmental progression across all dimensions without residual entropy or
+shadows** — not reaching the harvest. The harvest is an emergent horizon, never a target the
+system optimises toward.
+
+**Implementation note (mechanical re-index, not yet applied):** `docs/stages/07-turquoise.md`
+→ `07-teal.md` and `08-white.md` → `08-turquoise.md` (harvest passages moving to the closure
+owner, 16 §11.5/§11.6), plus every cross-reference to "White" as a stage. Tracked as the next
+doc pass.
+
+**Ownership:** this doc owns the density/ray vocabulary and the ladder's cosmology; 19 §9.6
+owns eligibility vs. event; 16 owns the lifecycle; 02 §4 owns the substrate-layer table.
+Related sources: HoloOS `04_VIBGYOR_Density_Functions.md`, `01.4_Scalar_Metric.md` §2.5,
+`08.8.7_Primal_Distortion_Genesis_Theorem.md` §6.5, `RD_Density_Ray_Dissonance_Audit.md`;
+KosmOS `stages/altitude.md`, `stages.md`, `lenses/rays.md`, `stages/framework-density.md`,
+CONSTITUTION rule 13.
 
 ## 6. Holographic principle as world-truth
 
@@ -240,8 +276,20 @@ The harvest endgame is **scripted**, not procedural. It consists of:
   developmental psychograph is preserved as an immutable record
   visible in the codex
 
-Harvest is the **canonical endgame**. It is the narrative destination
-the entire arc points toward.
+**Teleology revision (ruling 2026-09-20).** Harvest is the canonical **horizon**, not the
+objective. The system's objective is stated positively and is *not* harvest-maximisation:
+
+> **The objective is that the player continues their developmental progression across ALL
+dimensions — every line, every stage below their centre of gravity — without residual
+entropy and without residual shadows.**
+
+Consequently: (1) the harvest is an *emergent* horizon a practice may reach, never a target the
+scheduler optimises toward (no harvest-maximising selection, no "progress to harvest"
+indicators — 20 §6); (2) `Samsara` (19 §9.5) is not a failure state but the *normal* condition
+of a healthy continuing practice; (3) the primary success signals are the ones that express the
+objective — per-line progression, theta freshness across all lines (residual entropy), and
+unresolved shadow load. Harvest narration (the rites, the closing reflection, the retirement)
+remains as specified below; it is what happens if and when the horizon is crossed.
 
 ### 7.5 The violet-ray expression as harvest criterion
 

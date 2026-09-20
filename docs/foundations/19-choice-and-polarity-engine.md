@@ -21,6 +21,13 @@ The lesser cycle (Matrix → Potentiator → Catalyst → Experience) processes 
 - The game's job is to provide *authentic conditions for crystallisation* — not to steer toward either pole.
 - The Choice emerges from below — it is not imposed from above.
 
+**Scope ruling (2026-09-20): the Choice is a horizon, not the objective.** This section's title is
+teleological in the *cosmological* sense only. Mysterium's design objective is **continuing
+developmental progression across all dimensions without residual entropy and without residual
+shadows** (06 §5.1, §7.4). Therefore the Choice is never a target the scheduler or levelling
+system optimises toward; `exploration` mode is the legitimate long-run state, not a way-station
+to be exited (see §10, §9.5).
+
 ---
 
 ## 2. Why polarity is multi-dimensional
