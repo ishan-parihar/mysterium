@@ -113,6 +113,49 @@ This is the canonical 8 × 7 mapping.
 This table is **canon**. Every encounter, every level, every NPC
 carries explicit ray information sourced from this table.
 
+### 5.1 Density vocabulary — HoloOS alignment (added 2026-09-20)
+
+This subsection fixes the vocabulary the table above depends on. It is load-bearing: the
+misuse of "density" for stage bands was diluting every downstream doc (18/19/22/24).
+
+**The canonical ontology (HoloOS `_THEORY/02_Ontology/`, the anchor this document's cosmology
+already cites):**
+
+- Densities are **VIBGYOR** — D1 **Red** (awareness), D2 **Orange** (growth), **D3 Yellow**
+  (self-awareness, the Choice, the Veil), D4 **Green** (love/understanding, social-memory
+  complex), D5 **Blue** (light/wisdom), D6 **Indigo** (unity), D7 **Violet**
+  (completion/gateway). There is **no D8**: the 8th is the *octave-closure*, which **is** D1 of
+  the next octave — one event, two sides (`01.4` §2.5.2).
+- `01.4` §2.5.3: D3 is "the **minimum density at which genuine choice is possible**" — D1/D2
+  lack the integrated substrate for self-conscious choice; D4+ have already committed.
+- HoloOS's `stage_codes` L1–L8 and densities D1–D7(+closure) are **the same axis** (§2.5.1).
+  But **Mysterium's eight stage names are Spiral-Dynamics colour names, not density rays.**
+  `Orange` in Mysterium is a developmental stage; `Orange` in VIBGYOR is D2.
+
+**Therefore, for Mysterium:**
+
+1. **The world is D3 — but D3 is *Yellow*, not a stage band.** §1's "the entire density octave
+   inside this density" is read through fractal nesting (`01.4` §2.5.2): the eight stages are
+   the **D3 sub-octave**, and **White = the sub-octave's closure = the Yellow→Green transition
+   into D4 (Love / social-memory complex)** — which is exactly what §7.4 describes. The harvest
+   is therefore **in-octave** (the sub-octave closing, one event two sides), resolving the
+   tension with `20`'s single-octave scope note; the "4th density" epilogue is scripted
+   narrative, not simulated D4 play.
+2. **§5's 8-stage/7-ray table is a *sub-density decoration*, not a density mapping.** It maps
+   Mysterium stages onto the **energy centres within D3** (HoloOS: "the density-ray is the
+   macro structure; the energy centre is the micro expression within each density"), i.e. the
+   scale-local VIBGYOR decoration of `04_Scalar_Metric` §2.1 (2+3+5+3+3+2+1) — *not* the seven
+   universal density functions. It remains canon **as a sub-octave mapping** and must never be
+   cited as "stage = density".
+3. **§6's holographic principle is unaffected** — it is the same fractal claim the nesting
+   architecture makes.
+
+**Ownership:** this doc owns the density/ray vocabulary and the harvest's cosmology; 19 §9.6
+owns eligibility vs. event and re-expresses the choice-readiness floor; 16 owns the lifecycle;
+02 §4 owns the substrate-layer table. Related HoloOS source: `04_VIBGYOR_Density_Functions.md`,
+`01.4_Scalar_Metric.md` §2.5, `08.8.7_Primal_Distortion_Genesis_Theorem.md` §6.5,
+`RD_Density_Ray_Dissonance_Audit.md`.
+
 ## 6. Holographic principle as world-truth
 
 The Ra material's claim — each density / level recapitulates the
@@ -179,9 +222,10 @@ reality at different resolutions.
 
 ### 7.4 The harvest endgame (canonical)
 
-Post-White content is the **harvest into 4th density** — the
-transition from the 3rd-density experience to the 4th-density
-experience of unity consciousness and social-memory complex.
+Post-White content is the **harvest into 4th density (D4 — Green, the density of love /
+understanding and social-memory complex per §5.1)** — the transition from the 3rd-density
+experience (D3, Yellow, the density of the Choice) to the 4th-density experience of unity
+consciousness and social-memory complex.
 
 The harvest endgame is **scripted**, not procedural. It consists of:
 

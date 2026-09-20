@@ -3,10 +3,12 @@
 > **Status:** canonical-hypothesis (Wilber synthesis + Law-of-One Ra material + Primal Distortion Genesis Theorem correspondence).
 >
 > HoloOS anchor: `_THEORY/02_Ontology/08.8.7_Primal_Distortion_Genesis_Theorem.md` (canonical-hypothesis). The Primal Distortion Genesis Theorem establishes that each Stage corresponds to an established Primal Law:
-> - **D1 (Infrared/Magenta) ≈ Free Will** (First Distortion, established by Octave N-3's complete D1→D7 harvest). Encounters about choice as such; quantum-like superposition of possibilities.
-> - **D2 (Red/Amber) ≈ Love / Logos** (Second Distortion, established by Octave N-2). Directed growth, Logos-focusing, the principle of unity-attracting.
-> - **D3 (Orange/Green/Turquoise) ≈ Light** (Third Distortion, established by Octave N-1). Self-reflective choice within archetypal form; manifestation.
-> - **D4+ (White) ≈ our octave's contributions** — the Light-Law fully operative across all substrate-layers.
+> **Vocabulary correction (2026-09-20, canon home = 06 §5.1):** the bands below are **substrate layers within D3** (the density of the Choice), **not densities**. Densities are VIBGYOR — D1 Red, D2 Orange, **D3 Yellow**, D4 Green … D7 Violet, with the 8th as the octave-closure — and Mysterium's stage names (Infrared … White) are Spiral-Dynamics colours. Each integrated substrate layer carries one of the three established Laws; Mysterium's eight stages traverse the **D3 sub-octave**, whose closure is White (`01.4` §2.5.2, 06 §5.1).
+>
+> - **Substrate layer 1 — Infrared/Magenta ≈ Free Will** (First Distortion, established by Octave N-3's complete D1→D7 harvest). Encounters about choice as such; quantum-like superposition of possibilities.
+> - **Substrate layer 2 — Red/Amber ≈ Love / Logos** (Second Distortion, established by Octave N-2). Directed growth, Logos-focusing, the principle of unity-attracting.
+> - **Substrate layer 3 — Orange/Green/Turquoise ≈ Light** (Third Distortion, established by Octave N-1). Self-reflective choice within archetypal form; manifestation.
+> - **The sub-octave closure — White ≈ our octave's contributions** — the Light-Law fully operative across all substrate layers; this is the Yellow→Green harvest into D4 (06 §5.1, 19 §9.6), not a "D4+" density.
 >
 > This Law-correspondence is the metaphysical grounding for Mysterium's Stage semantics. Each Stage's content should express its corresponding Law's phenomenology.
 

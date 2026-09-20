@@ -386,6 +386,77 @@ Consequence produced:
 
 ---
 
+### 7.4 The long-horizon consequence memory (two-fold) — added 2026-09-20
+
+Session-local consequence buffers (§7.2 rule 6, a 50-entry ring) cannot carry a world across
+sessions. The memory is therefore **two-fold**, and each half has its own owner:
+
+| Half | List of record | Owner | Contains |
+|---|---|---|---|
+| **Player-side (tendency)** | Significator ledgers + delegation ledger | 16 / 43 §5.3 | choice trails, polarity traces, drive/shadow deltas, avoidance patterns, session tendencies |
+| **Object-side (world)** | the **World Consequence Ledger** | this document | per-holon deltas with their narrative summaries, relationship edges, PESTLE shifts, macro-event history |
+
+**Three storage tiers:**
+
+- **L1 — Event ledger (append-only, authoritative).** Every resolved encounter appends its
+  `ConsequenceRecord`s (§7.1) keyed `(holonId, sessionIndex)`, with deterministic ids and no
+  clock-dependent ordering. **State is a projection of the ledger** — so "no-retcon" is
+  structural: a worker may append an event or compress with provenance, never rewrite history.
+- **L2 — Live profiles (hot-set).** Only holons inside the player's reach are "warm"
+  (§4.1's selection rule IS the hot-set rule). The propagation worker drains the queue between
+  sessions and applies deltas under the §7.2 caps (±0.3/encounter) and world inertia (18 §4.3).
+- **L3 — Compressed memory (cold, long horizon).** Recency (last K events per holon) +
+  **archetypal compression** (pattern classes: betrayal, debt, gratitude, vengeance) +
+  relationship anchors — 2–5 sentences **in the holon's own voice register**. This is what
+  generation consumes, so context stays bounded while memory stays long.
+
+**Eloquence is a property of L2/L3, not a new engine.** An NPC speaks well because its profile
+supplies (i) drive/shadow/polarity state (§2.1), (ii) compressed history-with-player as voice
+anchors, and (iii) the last-N material consequences it suffered or enjoyed — with
+`llmMetadata.voiceProfile` + §5's voice specs constraining generation. The NPC "remembers"
+because the ledger remembers.
+
+**Why this is causal architecture, not storage:** today one agent infers the world at
+generation time (§4.6 reads the last 3 summaries). With the ledger, background workers
+maintain per-holon state *between* sessions and the game agent receives **ready context**
+(current profile + memory digest + relationship edges) and only *narrates* it. The world thus
+evolves while the player is away — bounded by inertia (18 §4.3, "the mirror is not instant")
+and never perfectly (18 §4.4).
+
+**Laws:** L1 is append-only; the player-side half never feeds generation directly (engines
+mediate, and 42 §1.1's firewall binds — world workers read derived projections, never
+HealingContext); **no LLM-authored state** (§2.2 holds); the whole pipeline degrades to a
+deterministic ledger replay offline, so the world never forgets because a worker didn't run.
+
+### 7.5 The per-holon owner worker (single writer, added 2026-09-20)
+
+World-side state needs a writer without creating a global bottleneck. Ruling: **each holon has
+exactly one owning worker, and that worker is its single writer.**
+
+```
+Orchestrator ── dispatch_menial ──► owner worker(holonId)   ← the ONLY writer for that holon
+                                         │ commits profile deltas from L1 events
+                                         └─ proposals for anything that reaches the PLAYER
+```
+
+- **Local single-writer law.** The owner commits its holon's `driveState` / `shadowState` /
+  `polarity` / `relationships` / `stateHistory` from consequence events under the §7.2 caps.
+  Two writers over the same holon is a violation, exactly as two writers over the Significator
+  would be (43 W2).
+- **Orchestrator boundary.** Anything that affects the *player* (a faction's hostility raising
+  encounter pressure, a PESTLE shift gating a macro-event, a relationship edge altering the
+  hot-set) is a **proposal** ratified through L4 — the world may write itself, but it may not
+  unilaterally write the player.
+- **Layer-stack (fractal grounding).** HoloOS `01.4 §2.5.3`: a holon at density n runs n
+  concurrent lesser cycles, one per integrated substrate-layer. A Great-Way collective holon is
+  a nested stack of lesser cycles, so one worker per holon-layer IS the ontology's own
+  architecture — 18 §2's taxonomy (individual → dyadic → group → … → cosmic) is the layer stack.
+- **Scale.** Workers are dispatched for the hot-set only, are concurrency-capped and budgeted
+  (43 §4.5b W5), carry deterministic seeds + idempotency keys (W4), and log with
+  `foreground: false` (43 §4.4).
+
+---
+
 ## 8. Authored vs generated boundary (implementation level)
 
 ### 8.1 Hard-authored (NEVER LLM)
@@ -536,7 +607,8 @@ The Veil is maintained: the player experiences story, not assessment.
 | Macro-scale archetypal theory | foundations/15 | This doc implements the theory; 15 IS the theory |
 | Significator state schema | foundations/16 | This doc reads from Significator; 16 defines its structure |
 | Great Way world structure | foundations/18 | This doc implements holons as data; 18 defines them as design |
-| Consequence propagation logic | foundations/19 | This doc produces ConsequenceRecords; 19 propagates them |
+| Consequence propagation logic | foundations/19 | This doc produces ConsequenceRecords; 19 propagates them (§8); the long-horizon tiers and owner-worker are HERE (§7.4–§7.5), un-deferring 19 §13 |
+| Background worker doctrine and job list | foundations/43 | §5.4 owns the doctrine/budget/cadence; this doc owns the memory contract workers commit against |
 | Veil constraints | foundations/20 | This doc enforces Veil in generation; 20 defines why |
 | Encounter scheduler | foundations/21 | This doc receives scheduler output; 21 defines the scheduler |
 | Concept-draft templates | concept-drafts/README.md | This doc consumes concept-drafts as encounter specs |

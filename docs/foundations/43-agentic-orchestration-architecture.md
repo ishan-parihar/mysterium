@@ -342,6 +342,52 @@ contractual basis of background orchestration:
   4. `budget_exhausted` — §4.3 TL3; the orchestrator re-plans.
   5. `recalled` — the orchestrator recalls the foreground (rare; logged with reason).
 
+### 4.5b Background workers (added 2026-09-20 — ruling)
+
+**Exactly one agent holds the foreground at any moment.** Every session and every assessment
+is a *delegated* foreground tenure: the orchestrator spawns a sub-agent, the player interacts
+with it and gives feedback, and on session end the result feeds the reporting system AND the
+orchestrator, so the cycle continues (§4.6). Nothing else may take the foreground.
+
+Background work, however, **must run** — the menial mandates that keep long-horizon state
+honest cannot wait for player sessions (§5.4). The topology is therefore one foreground plus
+a **capped pool of background workers**:
+
+```
+                 ORCHESTRATOR  ── plan (27) → spec → ratify (L4) → re-plan
+                    │        │
+   delegate_session │        │ dispatch_menial (background pool, concurrency-capped)
+                    ▼        ▼
+        ONE FOREGROUND      N BACKGROUND WORKERS
+        session/assessment  reports + proposals only (never player-visible text)
+                    │                │
+     user interaction + feedback     │  profile updates · consequence propagation
+                    ▼                │  holon/NPC profiles · theta/retention
+        session end (5 events) ──► EAGER SIGNALS (§5.1)
+                    │
+                    └──► REPORTING FEED (26 CCI · 16 §10.4 projections · 33 render · ledger §5.3)
+                                  │
+                       orchestrator re-plans ──► next delegation
+```
+
+**Worker laws:**
+
+- **W1 — No foreground contention.** A worker never emits player-visible text and never
+  preempts; its output is *signals and proposals* plus a `foreground:false` session log (§4.4).
+- **W2 — No state writes.** Workers inherit the single-writer law. Player-side state is
+  committed only through L4 ratification. World-side state is committed by its **per-holon
+  owner worker** (22 §7.5) — a local single writer per holon, not a global one; the
+  orchestrator ratifies only the deltas that reach the player.
+- **W3 — Reporting is one contract.** Worker output and session signals land in the same
+  reporting feed: CCI (25), the projection registry (16 §10.4) and its render (33 §7), and
+  the delegation ledger (§5.3). The 42 §1.1 firewall holds across the feed — competence-side
+  and healing-side projections are never merged.
+- **W4 — Determinism and offline truth.** Every job carries a deterministic seed and an
+  idempotency key; offline, the pipeline degrades to a deterministic replay of the ledger
+  (22 §7.4), never a silent skip.
+- **W5 — Budgets and caps.** Every job has a tool/budget ceiling and a concurrency slot; a
+  worker exceeding either is recalled and logged (same recall semantics as §4.5.5).
+
 ### 4.6 Delegation lifecycle
 
 ```
@@ -358,14 +404,20 @@ orchestrator: read log → eager signals → (if warranted) analyze_session_logs
 
 - **Safety is un-delegatable.** `route_to_safety` is available to every agent; the
   safety layer is outside the council (existing architecture) and preempts (§4.5.3).
-- **Human-handoff flows are DEFERRED (2026-09-17).** The crisis layer stays
-deterministic and local (offline-safe pattern scan, one definition consumed by the
-practice loop and orchestration distressSignal). What is explicitly deferred: external
-escalation contacts, localized/multilingual crisis patterns, live human handoff
-protocols, and adverse-event surfaces. Stage-development, evolution, and healing —
-profiling-diagnostics plus the validated agentic loop (12 §5.4) — take build priority.
-`route_to_safety`'s contract is unaffected: it halts catalyst and holds a safe state;
-it simply does not yet dial a human. Ownership stays here; no other document may claim it.
+- **Human intervention is INTEGRATED, not a handoff policy (ruling 2026-09-20).** There is
+no separate intervention subsystem, no privileged channel, and no escalation tier. The
+platform is one integrated system for player and auditor alike (16 §10.5 — no special
+privileges). A human (auditor, guide, therapist) acts through the *ordinary* surfaces: a
+consented projection traversal (16 §2.4/§10.4, scope-bounded, revocable) and, if a change
+is warranted, an auditor request entering the ordinary delegation lifecycle (§4.6, 16 AP5).
+**Nothing dials a human**: if a human is engaged, it is because the player consented to
+that linkage — the same consent mechanism as the auditor layer (S4 is the sole executor of
+consent, and only on the player's own action). `route_to_safety` keeps its contract
+unchanged (halt catalyst, hold safe state, present the deterministic local support surface —
+a safety-layer content concern, not a subsystem). Adverse events need no separate surface:
+they surface as `distressSignal` through the system that already observes them. *(Supersedes
+the 2026-09-17 deferral of escalation contacts, live handoff protocols, and adverse-event
+surfaces — the deferral's premise, a privileged intervention channel, is rejected.)*
 - **Consent is un-delegatable in the granting direction.** Only the S4 Data Warden may
   *execute* consent changes, and only with the player's direct action; other agents may
   only *inform* the player about consent. Auditor linkage extends this: for adult
@@ -428,6 +480,30 @@ behavioral gates.
 
 ---
 
+### 5.4 The background job table (added 2026-09-20)
+
+The menial mandates that must run without the player. Each is a worker mandate per §4.5b:
+
+| Job | Consumes | Produces (proposals / signals) | Cadence |
+|---|---|---|---|
+| **Identity/profile update** | committed session log | drive/shadow/theta deltas, drift check (12 §5.4 RV7) | session-end |
+| **Consequence propagation** | queued `ConsequenceRecord`s (19 §8.2 holonic layer) | holon deltas (≤ ±0.3/encounter, world inertia 18 §4.3) | between encounters / session-end |
+| **Holon/NPC profile refresh** | the world ledger (22 §7.4) | updated `driveState`/`shadowState`/`polarity`, voice anchors, relationship edges | session-end + idle |
+| **Retention / theta recompute** | encounter history | decay levels, staleness flags | clock-driven |
+| **Reliability collection** (40) | pack sessions | interval records, retest r, form effect, ceiling retirement | on pack completion |
+| **Corpus / registry health** (S5) | registry + linters | health report, joint deltas | weekly / CI |
+| **Log compaction** (§7.4) | raw transcripts | signals-only record + long-horizon memory commit | retention horizon |
+| **Trend / pattern mining** | delegation ledger (§5.3) | `OrchestratorInsight`-class findings (gates: 25, 27) | weekly |
+
+**Ownership:** this doc owns the *worker doctrine and job list*; 22 §7.4–§7.5 own the memory
+tiers and the per-holon owner-worker contract; 40 owns reliability methodology; 19 owns the
+consequence-propagation engine the propagation worker drives. New proposal kinds introduced
+by workers (`holon_delta`, `relationship_update`, `world_memory_commit`, `pestle_shift`,
+`npc_context_refresh`) follow the §6 `Proposal` union and are ratified (or owner-committed,
+per W2) exactly like existing kinds.
+
+---
+
 ## 6. The delegation contract (types)
 
 The kernel-of-record for this document is a small type contract (implementation §8):
@@ -465,9 +541,11 @@ interface Proposal {
 1. **Voice continuity across cell agents:** do J1–J3 for the same cell share one voice
    with different stances, or are they distinct personae? (Leans shared-voice; needs
    narrative-design confirmation against concept-drafts.)
-2. **Parallel background sessions:** the contract says one foreground; may *non-foreground*
-   specialist sessions (S1 packs, S5 ops) run concurrently? (Leans yes with a
-   concurrency cap; must not double-write the delegation ledger.)
+2. ~~**Parallel background sessions:** the contract says one foreground; may *non-foreground*
+   specialist sessions (S1 packs, S5 ops) run concurrently?~~ **ANSWERED (2026-09-20):** yes.
+   Exactly one foreground; a capped background worker pool runs concurrently (§4.5b), and the
+   job list is fixed in §5.4. Ledger double-write is prevented by W2 — workers propose, and
+   world-side commits are per-holon-owner serialised (22 §7.5).
 3. **Orchestrator model tiering:** does the steward run on a stronger model than council
    agents? Cost/latency policy is an open product decision.
 4. **Log retention horizon:** how long do raw transcripts persist client-side before

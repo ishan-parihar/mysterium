@@ -8,9 +8,11 @@
 
 > **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2–§3 (inputs + priority computation, the psychophysics grounding in 08's staircase + 09's flow band); Game-design mapping → §4–§8 (polarity-conditioning, shadow-targeting, transformation windows, session arcs, macro-catalyst engine); Principles served → added below with genuine content.
 >
-> **Open questions (added 2026-09-16):**
-> - What is the scheduler's fallback contract when the strategy engine (27) and the shadow-targeting rule (§5) conflict — which overrides, and is the priority deterministic under tie-break?
+> **Open questions (added 2026-09-16; updated 2026-09-20):**
+> - What is the scheduler's fallback contract when the strategy engine (27) and the shadow-targeting rule (§5) conflict — which overrides, and is the priority deterministic under tie-break? **(partially answered: objective-vs-theme precedence is settled in 27 §5.4 — an active `AlignmentContract` outranks the injected CCI theme, both yielding to filters/gates and to safety/transformation windows; the shadow-targeting sub-case remains open.)**
 > - Should transformation-window scheduling (§6) be allowed to override theta-urgency ordering, or is the current interleaving the settled design?
+>
+> **Bias-only rule (added 2026-09-20):** objective alignment (27 §5.4) and auto-mode (27 §2.3) act on the EIGHT criteria of §3.2 **by multiplying existing weights** — they never add a ninth criterion and never convert a filter into a score. §3.1's filters (altitude horizon, closure, shadow gate) remain unimpeachable: alignment can re-weight the frontier, never move it.
 >
 > **Principles served (added 2026-09-16):** principles 3 (adaptive), 5 (multi-dimensional), 7 (codebase honesty) per docs/01-first-principles.md — the scheduler is the point where developmental theory becomes encounter order, and it must stay deterministic, demographic-blind (42), and Veil-compliant (20).
 

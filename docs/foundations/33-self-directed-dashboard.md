@@ -273,7 +273,7 @@ All views share:
 
 - **The learning pattern engine.** The trajectory view shows "patterns" (e.g., "you learn faster in mornings"). Detecting these patterns requires statistical analysis of the learner's session data. The pattern engine must be robust enough to detect real patterns but not so sensitive that it finds spurious correlations.
 
-- **Auditor authentication in a local-first architecture (added 2026-09-17).** The app has no accounts; identity is device-local. §7's consent brokerage and request logging assume an authenticated, revocable auditor link — how that link is established and verified without compromising the pseudonymous-by-design profile (16 §3.2) is unresolved. Candidate directions: guardian-held pairing codes, platform account anchoring (Capacitor/OS), or credential-ledger attestation (41). Must be resolved BEFORE §7 implementation; the §7 render contract is valid regardless of the mechanism chosen.
+- ~~**Auditor authentication in a local-first architecture (added 2026-09-17).**~~ **DISSOLVED (ruling 2026-09-20).** There is no auditor identity class to authenticate, so authentication is not a separate concern. Auditor access is a **consented traversal of the same profiling system** the player already owns (16 §10.5): the link is a player-issued, revocable, scope-bounded **consent linkage** (16 §2.4 brokerage, extended), not a credential. "No special privileges" is structural — the auditor-visible register differs from the self-register in *which register class and scope* it may read (20 §11.1, 16 §10.5 AL2/AL4), never in rights. §7's render contract is unchanged by this: it renders a projection whose scope and level the linkage authorises, with consent re-checked at every render (AP4).
 
 ---
 
@@ -290,6 +290,15 @@ and therapists. This section is the RENDER CONTRACT for those dashboards; the da
 authority is 16 §2.4 + §10.4 (Auditor Projection Layer). The three scope projections
 arrive pre-filtered and consent-checked — this layer adds visual hierarchy and
 interaction only.
+
+### 7.0 The ladder mapping (added 2026-09-20)
+
+§7 renders levels **L1–L7** of the Articulation Ladder (16 §10.5); each surface opens at
+its scope's entry level and drills toward the deepest level its scope whitelists (AP2),
+presenting open-class content in full and closed-class content only where the scope
+(L4/L5 for `therapeutic`; aggregate wellbeing only for `guardian`) admits it. The
+self-directed dashboard (§1–§5) renders the same ladder in the self register — the two are
+not parallel systems, only two traversals of one profiling surface.
 
 ### 7.1 The three auditor surfaces (one per scope)
 

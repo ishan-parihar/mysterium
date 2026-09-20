@@ -601,6 +601,87 @@ The scheduler receives `SchedulerParams` and uses them to:
 
 ---
 
+### 5.4 Objective alignment: the trajectory fine-tuning mechanism (added 2026-09-20)
+
+Auto-mode derives a strategy from *state* (CCI theme). Objective alignment derives a bias
+from a *declared objective*. They are two strategy sources feeding the SAME scheduler —
+no new engine, no parallel queue, no study mode (24 §3.2.8's discipline, generalised).
+
+**The object.** An `AlignmentContract` is a player- or auditor-authored objective, stored on
+the profile (16) and carried into strategy generation:
+
+```ts
+interface AlignmentContract {
+  readonly id: string;
+  readonly author: 'self' | 'auditor';        // same route either way (43 §4.3 S3)
+  readonly intent: 'strengthen' | 'consolidate' | 'maintain' | 'protect' | 'open';
+  readonly target:
+    | { kind: 'line'; line: Line; stageBand?: { from: Stage; to: Stage } }
+    | { kind: 'quadrant'; quadrant: ShadowQuadrant; line?: Line }
+    | { kind: 'branch'; branch: string; conceptIds?: readonly string[] }
+    | { kind: 'polarityLean'; line?: Line }   // exploratory only — never steered (19 CDC)
+    | { kind: 'cadence'; practice: 'reflection' | 'vow' | 'pack'; perWeek: number };
+  readonly deviation: {                        // "a certain deviation"
+    readonly observable: 'cci' | 'altitude' | 'depthRung' | 'shadowLoad' | 'retention';
+    readonly target: number;
+    readonly tolerance: number;                // the band inside which the objective is met
+  };
+  readonly window: { readonly fromMs: number; readonly untilMs: number | null };
+  readonly ceiling: number;                    // max share of the session arc this objective may occupy
+  readonly ratifiedAtMs: number | null;        // null until L4 ratification (43)
+  readonly revokedAtMs: number | null;
+}
+```
+
+**Translation — three existing seams, nothing else:**
+
+| Contract field | Existing seam it rides | Effect |
+|---|---|---|
+| `intent` + `target` | `PriorityWeightBias` (§2.3, 8 multipliers) | raises/lowers existing criteria weights (e.g. an integration objective raises `shadowActivation` + `driveCorrection` and lowers `masteryAlignment`) |
+| `target` coordinates | 24's conditioning inputs (`polarity_mode`, `shadow_target`, `session_position`, `difficulty`) and `SessionContext.targetLine/targetStage` | the scheduler's *bias targets* — rank, never force (24 §3.4) |
+| `ceiling` + `window` | `ParameterisedSessionArc` (§2.2) + `EncounterBudget` (§2.4) | caps how much of the arc the objective may occupy (`masteryAlignment`'s fair-share rule) |
+
+**The deviation controller.** At session end, the engine compares the observed trajectory to
+`deviation.target ± tolerance`, and the signed error sets the *magnitude* of the next
+session's bias and **constrains the admissible theme set** from §3.1 (reusing §4.2's
+majority-adjustment machinery). This is proportional control over existing themes —
+no new selection logic.
+
+**The invariance law (the mechanism's safety).** Alignment may **re-weight the frontier but
+never move it**. Filters stay filters: the altitude horizon (24 §3.1), prerequisite DEPTH
+closure (31 §3.5a), the shadow gate (42 §3.2), transformation-window precedence (24 §6),
+and safety preemption (§7.3). Because none of these are *scores*, no objective — however
+authored — can bypass development, skip a foundation, or force an offer. Two hard floors:
+
+- **No sub-floor suppression**: an objective may never reduce theta-maintenance below its
+  fair share (the mirror of 24 §3.2.8's "developmental weights stay dominant").
+- **No golden bypass**: an objective cannot target beyond altitude+1 (already a filter, not a
+  weight — 24 §3.1). Aspiration is expressed as bias toward the *legitimate* frontier.
+
+**Honesty semantics (non-negotiable).** If the objective is unreachable within its window, or
+would require a bypass, the engine returns a **deviation report** with a named reason and does
+not fudge the trajectory (precedent: the 5-factor transformation gate refusing the integral
+fallacy; `retireProvisional` refusing to flip a ceiling early). "Chart the course" is this
+report, never an opaque optimiser.
+
+**Authority and direction.** Self-authored and auditor-proposed contracts take the same route:
+S3's `propose_alignment_adjustment` → `alignment_adjustment` proposal (one already exists in
+`src/core/orchestration/types.ts` and is currently only *dispositioned* by
+`ratifyProposals`) → **L4 ratification applies the bias**. Applying — not merely
+validating — is the code change this section sanctions (43 §4.3). Auditor-initiated contracts
+arrive via `receive_auditor_request` (16 AP5) and are bound by the same laws.
+
+**Precedence (answers 24's conflict open question):** on conflict, an active objective
+outranks the CCI theme, because the objective is the player's/auditor's declared intent while
+the theme is inferred; both yield to the filters and gates above and to safety/transformation
+windows. Tie-break remains deterministic (24 §3.3).
+
+**Veil:** alignment context shapes catalyst *implicitly*. The contract itself is open-class
+(20 §11) — the player may see the objective and its deviation report; the weights, biases, and
+theme choices are developer-facing only (§6.1 unchanged).
+
+---
+
 ## 6. The "recommended gaming strategy" (internal plan)
 
 ### 6.1 What this is

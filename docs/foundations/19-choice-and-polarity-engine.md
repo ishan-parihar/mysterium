@@ -557,6 +557,45 @@ Harvestability is checked only at White stage (the final stage). A player who me
 
 A player who reaches White but is uncrystallised (master.mode != 'crystallized' OR thresholds unmet) enters the **Samsara ending**: the game does not end. The player continues in a post-White loop receiving increasingly intense catalysts designed to force crystallization. There is no "game over" for the uncrystallised — only "not yet."
 
+### 9.6 Eligibility vs event, and the density vocabulary (added 2026-09-20)
+
+§9.2–§9.4 conflate two different things, and the runtime check's name made the conflation
+invisible. They are separated here:
+
+| Concept | What it is | Criterion | Where it fires |
+|---|---|---|---|
+| **Choice-eligibility** | a *condition* — is this entity's Choice structurally authentic at all? | §9.2 or §9.3's structural set (crystallized mode, coherent lines, choice-readiness, violet-ray integration ≥ 0.80, 51%/95%) | evaluated continuously; produces a *state*, never an event |
+| **The Harvest** | the *event* — polarity locks, archive, retirement | eligibility **∧** arrival at the sub-octave closure (White) | once, at the apex (16 §11.5, 06 §7.4) |
+
+The runtime function currently named `checkHarvest` computes **eligibility**, not the harvest;
+it is renamed `checkChoiceEligibility` in the owning code, and its verdict is never itself an
+endgame trigger.
+
+**Density vocabulary correction (per HoloOS `_THEORY/02_Ontology/`, ruling 2026-09-20).**
+Mysterium's eight stage names (Infrared … White) are **Spiral-Dynamics colour names**, not
+densities. HoloOS densities are VIBGYOR: D1 Red (awareness), D2 Orange (growth),
+**D3 Yellow (self-awareness + the Choice + the Veil)**, D4 Green (love / social-memory
+complex), D5 Blue (wisdom), D6 Indigo (unity), D7 Violet (completion/gateway); the 8th is the
+*octave-closure* = D1 of the next (`01.4 §2.5.2`), not a density. Consequences for this
+document:
+
+- The world is **D3 / Yellow** — correct (06 §1). The eight stages are the **D3 sub-octave**
+  traversal (fractal nesting: "D8 of the 3rd-density sub-octave = D1 of the 4th-density
+  sub-octave, yellow→green transition"), so **White = the sub-octave closure = the
+  Yellow→Green harvest into D4 (Love/SMC)** — exactly matching 06 §7.4's description
+  ("unity consciousness and social-memory complex").
+- The `altitude_floor ≥ Orange` criterion in §9.2/§9.3 is re-expressed as **choice-readiness**
+  (Ra's requirement that the Choice is only possible once self-conscious choice is available —
+  `01.4 §2.5.3`: D3 is "the minimum density at which genuine choice is possible"). It was
+  never a claim that the harvest occurs at a particular Mysterium stage.
+- The design intent behind it (no authentic Choice at low altitude, §10.2) is unchanged and
+  remains the reason early crystallization is treated as suspicious.
+- **Lifecycle hole closed:** the runtime lifecycle machine must not permit
+  `Exploring → Harvesting` directly; the event path is gated on eligibility ∧ closure.
+
+**Ownership:** this doc owns eligibility (§9) and the Choice (§12); 06 owns the density/ray
+alignment and the harvest event's cosmology; 16 owns the lifecycle and the `harvest_event`.
+
 ---
 
 ## 10. The exploratory state (legitimate, not failure)
@@ -658,7 +697,7 @@ The uncrystallised player does not harvest. They remain in the 3rd-density loop.
 | The Holon Context Engine (LLM narration of consequences) | foundations/22 |
 | The Incarnation Architecture (master synthesis of all systems) | foundations/21 |
 | In-encounter drive-balancing mechanics | foundations/12 |
-| **Long-horizon consequence propagation (deferred 2026-09-17):** cross-session world-memory of choice trails, multi-session consequence arcs, persistent world-state deltas. §8's propagation engine remains defined at session/episode scale; extending it to a persistent world memory is explicitly DEFERRED — stage-development, evolution, and healing (profiling-diagnostics + the validated agentic loop, 12 §5.4) take build priority. Revisit after the rubric-validation phases (12 §5.4 Phases RV-A–RV-C) are operational | post-MVP (this doc retains ownership — no other doc may claim it) |
+| **Long-horizon consequence propagation — UN-DEFERRED (ruling 2026-09-20):** cross-session world-memory of choice trails, multi-session consequence arcs, persistent world-state deltas. §8's propagation engine remains THIS document's (session/episode-scale computation); the persistent memory is specified as the two-fold ledger in 22 §7.4 (player-side tendency half + object-side World Consequence Ledger) with per-holon owner-workers committing world state (22 §7.5, 43 §4.5b/§5.4). The 2026-09-17 deferral is superseded by the user's directive: world-causality is maintained between sessions by background sub-agents | 22 §7.4–§7.5 |
 
 ---
 

@@ -262,7 +262,9 @@ ALL 4 drives can be pathological in BOTH domains. There is NO 1:1 mapping betwee
 
 ### 5.4 Game as Catalyst
 
-Every game follows: Catalyst → Experience → Integration. The game is not a test — it is a developmental practice that simultaneously diagnoses AND heals/evolves. The game is NEVER diagnostic to the user — everything happens implicitly in the background.
+Every game follows: Catalyst → Experience → Integration. The game is not a test — it is a developmental practice that simultaneously diagnoses AND heals/evolves.
+
+**Scope of "never diagnostic to the user" (revised 2026-09-20; canon home = `docs/foundations/20` §11).** The prohibition binds the **closed register class** absolutely: polarity (direction, magnitude, cells, textures, crystallization index), shadow (quadrants, intensities, ledger entries), ray profile, harvest eligibility/verdict, and delegation inference fields are **never player-readable, at any stage**. The **open register class** (stage altitudes, line profiles, drive balance, theta freshness, curriculum rungs/depth/retention, mastery sequences, pack θ, engagement patterns, and the system's own architecture) **is** player-readable at any stage, metric-bearing, through the Articulation Ladder (`foundations/16` §10.5). This is a deliberate, recorded divergence from HoloOS's D3 Veil (`foundations/20` §11.2), compensated by the closed class keeping the endgame's load-bearing state ungameable.
 
 ### 5.5 Self-Contained and All-Inclusive
 

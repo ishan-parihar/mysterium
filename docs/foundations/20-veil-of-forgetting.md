@@ -291,3 +291,42 @@ This document defines the *principle* of the Veil and its design implications. I
 | How encounters surface implicit signals without breaking the Veil | foundations/21 (Incarnation Architecture) |
 | The LLM translation layer that converts measurement into narrative | foundations/22 (Holon Context Engine) |
 | Auditor projections — the consent-brokered, METRIC-BEARING surface for guardians (the Veil binds the player surface only; §10.3 rule 6 of 16) | foundations/16 §2.4 + §10.4 (rendered by 33 §7) |
+
+---
+
+## 11. The register ontology and the recorded divergence
+
+### 11.1 Two register classes (ruling 2026-09-20)
+
+The Veil governs *what the player may read*. The profiling system is ONE system — the same
+one auditors traverse (16 §2.4/§10.4) — and what differs is not who is asking but which
+**register class** the answer belongs to:
+
+| Register class | Contains | Player-readable? |
+|---|---|---|
+| **Open** | stage altitudes and centre of gravity, line profiles, theta freshness, drive balance, curriculum rungs, depth levels, retention, mastery sequences, pack θ, engagement patterns, and the architecture of the system itself | ✅ **Yes, at any stage** — metric-bearing, rubric-named (the Articulation Ladder, 16 §10.5) |
+| **Closed** | polarity (direction, magnitude, cells, textures, crystallization index), shadow (quadrant names, intensities, ledger entries), ray profile (activation/decay values), harvest eligibility and verdict, and the delegation ledger's inference fields | ❌ **Never to the player, at any stage** — met only as narrative consequence (16 §10.3 rule 1 still binds absolutely here) |
+
+### 11.2 The divergence (canon: deliberate, recorded)
+
+HoloOS `08.8.7 §6.5` holds the Veil **active at D3**, thinning at D4+, dissolving at D5+.
+Mysterium's player is a D3 entity (06) and §11.1 now exposes an open, metric-bearing
+self-register *within D3*. That is a deliberate divergence from the anchor. It is taken
+because the game's purpose is the player's actual development — and it is only permissible
+because the closed class keeps the endgame's load-bearing state ungameable:
+
+- **The Choice stays authentic (19 §11):** polarity, shadow, and ray state — the states the
+  Choice and the harvest verdict are computed from — remain strictly veiled. What the player
+  can read cannot be optimised toward the harvest.
+- **Implicit assessment survives where it matters:** the implicit instruments that serve the
+  endgame measure closed-class state, so RV4's adversarial resistance (12 §5.4) continues to
+  hold for them. Open-class instruments are by construction *explicit* measurement — the
+  learner's curriculum surface, validated by 40, not by the Veil.
+- **The harvest epilogue is unaffected:** lifting the Veil at closure remains an *event*, not
+  a permission. A player who has read the open register has not thereby seen the Choice.
+- **Scope revision recorded:** AGENTS.md §5.4's "the game is NEVER diagnostic to the user"
+  is hereby scoped — it binds the **closed** register classes absolutely, and does not bind
+  the open class (already anticipated by §9.3's on-demand developmental report).
+
+**Ownership:** the register classes are declared here; the ladder that traverses them is
+16 §10.5; the player render contract is 33 §7; the auditor projections are 16 §2.4/§10.4.

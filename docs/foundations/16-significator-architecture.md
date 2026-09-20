@@ -373,7 +373,7 @@ The Significator's state is sensitive developmental data. Access is stratified i
 | **Engine-internal** | Encounter scheduler, polarity engine, theta-decay engine, transformation detector, stage synthesiser, drive-health monitor | Full — all fields, all precision | Compute next catalyst, detect thresholds, enforce invariants |
 | **LLM-context** | Holon Context Engine (foundations/22 §4.2) | Filtered — Veil-respecting machine signals only | Condition generation on player state without exposing raw metrics |
 | **Player-visible** | Player (via UI, Codex, narrative, aesthetics) | Bounded — felt-sense only, no measurement language | Preserve the Veil; enable authentic experience |
-| **Auditor-visible** (added 2026-09-17) | Guardians: parent / teacher-guardian / therapist, via §2.4 consent brokerage | Projected — purpose-scoped, metric-bearing, rubric-named (§10.4) | Legitimate oversight without touching player-surface Veil or writing state |
+| **Auditor-visible** (added 2026-09-17; reframed 2026-09-20) | Guardians: parent / teacher-guardian / therapist, via §2.4 consent brokerage | Projected — purpose-scoped, metric-bearing, rubric-named (§10.4); additionally reaches the **closed register class** (20 §11) under consent | Legitimate oversight without special privilege: a consented traversal of the SAME ladder, never a role class (16 §10.5) |
 
 ### 10.2 Per-field access matrix
 
@@ -404,7 +404,7 @@ The Significator's state is sensitive developmental data. Access is stratified i
 3. **The LLM receives machine signals, not player-facing language.** The LLM translates signals into narrative; it never echoes them verbatim.
 4. **Player-authored fields** (vows, primaryValue) are the only Significator data the player sees directly.
 5. **The harvest exception:** At harvest (foundations/20 §8.4), the Veil lifts. The player may optionally view their full developmental trajectory — because the Choice has already been made.
-6. **The auditor exception (added 2026-09-17):** The Veil binds the *player surface only* (20 §11). Auditor projections are the sanctioned metric-bearing surface: rubric names, rung indices, and stage labels appear there in full. The boundary that still binds auditors is CONSENT (§2.4 brokerage), PURPOSE (one scope per projection, 43 TL2), and the firewall (42 §1.1 — measurement-side derivation only).
+6. **The register boundary (revised 2026-09-20):** The Veil binds the **closed register class** (20 §11.1) — polarity, shadow, ray state, harvest verdict — for the PLAYER at every stage. The open class (stages, drives, theta, curriculum, packs) is player-readable at any stage. Auditor projections read BOTH classes as consented traversals of the same ladder; what binds auditors is CONSENT (§2.4 brokerage), PURPOSE (one scope per projection, 43 TL2), and the firewall (42 §1.1 — measurement-side derivation only) — never a privilege tier.
 
 ### 10.4 Auditor projection schemas (added 2026-09-17)
 
@@ -479,6 +479,43 @@ interface TherapeuticView {
 - **AP3 — Granularity descends only.** `line-stage-cell` requests require the same request chain to have passed through coarser levels (progressive disclosure refactored for auditors, 33 §2.4).
 - **AP4 — Consent is checked at every render.** Revocation nulls the projection at any granularity instantly (consent is read, not cached).
 - **AP5 — Auditors propose, never dispose.** Any auditor-initiated change enters the orchestrator as a delegation proposal (43 §4.6) and is ratified under the same laws as council proposals — the Significator's owner-of-record still controls the game.
+
+### 10.5 The Articulation Ladder (added 2026-09-20)
+
+The profiling system is ONE system with ONE ladder of articulation. There is no separate
+auditor subsystem. Two parties traverse the same ladder — the player (self-awareness) and a
+consented auditor (stance diagnostics) — and the ladder's levels are the same for both:
+
+| Level | Articulation | Source |
+|---|---|---|
+| **L0** | Felt-sense / lived experience | the player surface |
+| **L1** | Whole-person holonic span (centre of gravity + health of all lower stages) | §5.4, §10.4 `holonicSpan` |
+| **L2** | Line profile (8 altitudes + theta freshness) | §10.4 `StageHealth` |
+| **L3** | Line × stage (where growth stalls, per stage) | 42 ladder + theta |
+| **L4** | Line × stage × **quadrant** (the stance-diagnostics core) | Distortion Ledger, §3 (closed class) |
+| **L5** | Line × stage × **polarity cell** (STO/STS/exploratory texture) | 23's 64-cell catalogue, live state (closed class) |
+| **L6** | Evidence layer (rubric-named instrument detail, RV status, skill-θ streams) | 12 §5.4, 40 |
+| **L7** | Derivation / provenance (which encounter produced which signal) | 43 §4.4 session logs |
+
+**Ladder laws:**
+
+- **AL1 — One ladder, no privilege tiers.** Access is determined by register class (20 §11.1)
+  and consent linkage — never by an identity class. There is no "auditor account" and no
+  privileged role; the deepest levels are available to the self too.
+- **AL2 — Registers, not gatekeeping.** Each level renders in a **self register**
+  (open class in full, metric-bearing; closed class as narrative consequence only) and an
+  **auditor register** (both classes, scope-whitelisted per §10.4 AP2).
+- **AL3 — Presentation, not availability, is stage-articulated.** Availability does not
+  change with altitude (open class is readable at any stage, ruling 2026-09-20);
+  *presentation* adapts — an Infrared-stage player is shown concrete markers, a Turquoise
+  player the full multi-line structure (22 §5 voice specs, 33 theming). "Understand yourself
+  at any stage" is a voicing guarantee, not a data restriction.
+- **AL4 — Descent only for auditors** (progressive disclosure, §10.4 AP3); the self may
+  address any level directly.
+- **AL5 — Consent is re-checked at every render** (§10.4 AP4); revocation nulls the
+  projection at any level instantly.
+- **AL6 — Presentation is never measurement pressure.** No comparison dynamics, no streaks,
+  no leaderboards (20 §6) — the open class is available, not pushed.
 
 ---
 
