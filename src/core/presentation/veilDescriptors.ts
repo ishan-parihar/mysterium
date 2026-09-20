@@ -25,8 +25,8 @@ export function describeStage(stage: Stage): string {
     Amber: 'cathedral-ordered, gold-stone',
     Orange: 'mechanism-precise, steel-glass',
     Green: 'garden-lush, earth-toned',
-    Turquoise: 'crystalline, translucent',
-    White: 'luminous silence, spacious',
+    Teal: 'crystalline, translucent',
+    Turquoise: 'luminous silence, spacious',
   };
   return stageAesthetics[stage] ?? 'shifting, becoming';
 }

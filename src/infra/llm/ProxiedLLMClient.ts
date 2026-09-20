@@ -356,7 +356,7 @@ export async function proxyEvaluateResponse(
   rubric: string,
   playerResponse: string,
 ): Promise<{ readonly score: number; readonly feedback: string; readonly inferredStage?: string; readonly confidence?: number }> {
-  const systemContent = `You are a developmental psychology scoring rubric evaluator. ${rubric}\nIf evaluating a calibration probe, determine which developmental stage (Infrared, Magenta, Red, Amber, Orange, Green, Turquoise, White) the player response corresponds to and provide a confidence rating. Respond ONLY with JSON: {"score": <0-1>, "feedback": "<brief>", "inferredStage": "<stage>", "confidence": <0-1>}`;
+  const systemContent = `You are a developmental psychology scoring rubric evaluator. ${rubric}\nIf evaluating a calibration probe, determine which developmental stage (Infrared, Magenta, Red, Amber, Orange, Green, Teal, Turquoise) the player response corresponds to and provide a confidence rating. Respond ONLY with JSON: {"score": <0-1>, "feedback": "<brief>", "inferredStage": "<stage>", "confidence": <0-1>}`;
   const userContent = `Prompt: ${prompt}\nPlayer response: ${playerResponse}`;
 
   try {

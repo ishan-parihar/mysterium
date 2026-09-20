@@ -5,6 +5,11 @@
 > HoloOS anchor: `_THEORY/02_Ontology/08.8.7_Primal_Distortion_Genesis_Theorem.md` (canonical-hypothesis). The Primal Distortion Genesis Theorem establishes that each Stage corresponds to an established Primal Law:
 > **Vocabulary correction (2026-09-20, canon home = 06 §5.1):** the bands below are **substrate layers within D3** (the density of the Choice), **not densities**. Densities are VIBGYOR — D1 Red, D2 Orange, **D3 Yellow**, D4 Green … D7 Violet, with the 8th as the octave-closure — and Mysterium's stage names (Infrared … Turquoise) are Spiral-Dynamics colours. Each integrated substrate layer carries one of the three established Laws; Mysterium's eight stages traverse the **D3 sub-octave**, whose closure is the **Violet event** (L10 — an event, not a stage; `01.4` §2.5.2, 06 §5.1).
 >
+> **Term scope.** *Substrate layer* here means a law-band **of the D3 sub-octave** (Free Will / Love /
+> Light / the octave's contributions). It is **not** the intra-holonic compositional vertical — the
+> substrate→core→emergent stratum stack that `13` owns and `44` axis E names. Two different axes
+> borrowed one word; the collision is tracked as `VOCAB-SUBSTRATE` (`_org.yaml → pending`).
+>
 > - **Substrate layer 1 — Infrared/Magenta ≈ Free Will** (First Distortion, established by Octave N-3's complete D1→D7 harvest). Encounters about choice as such; quantum-like superposition of possibilities.
 > - **Substrate layer 2 — Red/Amber ≈ Love / Logos** (Second Distortion, established by Octave N-2). Directed growth, Logos-focusing, the principle of unity-attracting.
 > - **Substrate layer 3 — Orange/Green/Teal ≈ Light** (Third Distortion, established by Octave N-1). Self-reflective choice within archetypal form; manifestation.
@@ -177,15 +182,23 @@ between them is where shadow work lives. See
 
 ## 4. Architectural contract
 
-```
+```ts
+// The union is the ratified ladder of §3.1 / 06 §5.1. It read `'Turquoise','White'` until
+// CODE-PASS — i.e. this block reproduced the pre-re-index noun fifteen lines after §3.1 stated
+// the corrected one, which is how a canon code block can contradict its own page.
 const STAGES: ReadonlyArray<Stage> =
-  ['Infrared','Magenta','Red','Amber','Orange','Green','Turquoise','White'] as const;
+  ['Infrared','Magenta','Red','Amber','Orange','Green','Teal','Turquoise'] as const;
 
 function stageIndex(s: Stage): number;            // 0..7
-function nextStage(s: Stage): Stage | null;       // Turquoise → null
-function prevStage(s: Stage): Stage | null;       // Infrared → null
+function nextStage(s: Stage): Stage | null;       // Turquoise (7) → null
+function prevStage(s: Stage): Stage | null;       // Infrared (0) → null
 function synthesizeStage(altitudes: Record<Line, Stage>): Stage;
 ```
+
+`White` is **retired**, not renamed: `White` named both the top of the ladder *and* the closure,
+and the closure is an **event** (§5, `06 §5.1`), not a stage. The top of the ladder is
+**Turquoise**, and its ray-lens position is Indigo 6b — not Violet. The three axes (`44` axis
+table) must not be collapsed back together.
 
 Invariants tested in `core/usecases/StageSynthesizer.spec.ts`:
 

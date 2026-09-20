@@ -57,8 +57,8 @@ const STAGE_DIFFICULTY_DEV: Record<string, { symbolPool: readonly string[]; hold
   Amber: { symbolPool: NBACK_SYMBOLS_DEV, holdDurationMs: 6000, stroopColors: ['R','G','B'], goStimuli: ['⚔','🛡'] },
   Orange: { symbolPool: NBACK_SYMBOLS_DEV, holdDurationMs: 7000, stroopColors: ['R','G','B'], goStimuli: ['⚔','🛡'] },
   Green: { symbolPool: NBACK_SYMBOLS_DEV, holdDurationMs: 8000, stroopColors: ['R','G','B'], goStimuli: ['⚔','🛡'] },
-  Turquoise: { symbolPool: NBACK_SYMBOLS_DEV, holdDurationMs: 9000, stroopColors: ['R','G','B'], goStimuli: ['⚔','🛡'] },
-  White: { symbolPool: NBACK_SYMBOLS_DEV, holdDurationMs: 10000, stroopColors: ['R','G','B'], goStimuli: ['⚔','🛡'] },
+  Teal: { symbolPool: NBACK_SYMBOLS_DEV, holdDurationMs: 9000, stroopColors: ['R','G','B'], goStimuli: ['⚔','🛡'] },
+  Turquoise: { symbolPool: NBACK_SYMBOLS_DEV, holdDurationMs: 10000, stroopColors: ['R','G','B'], goStimuli: ['⚔','🛡'] },
 };
 function getDifficulty(stage?: string): { symbolPool: readonly string[]; holdDurationMs: number; stroopColors: readonly string[]; goStimuli: readonly string[] } {
   return STAGE_DIFFICULTY_DEV[stage ?? 'Red'] ?? STAGE_DIFFICULTY_DEV['Red']!;

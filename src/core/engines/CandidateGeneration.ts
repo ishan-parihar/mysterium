@@ -81,7 +81,7 @@ export function createInitialWorldState(holons: readonly Holon[]): WorldState {
     { id: 'order-emerges', stage: 'Amber', prerequisiteBeats: ['first-challenge'], completed: false, gatedEncounterIds: [] },
     { id: 'autonomy-calls', stage: 'Orange', prerequisiteBeats: ['order-emerges'], completed: false, gatedEncounterIds: [] },
     { id: 'connection-awakens', stage: 'Green', prerequisiteBeats: ['autonomy-calls'], completed: false, gatedEncounterIds: [] },
-    { id: 'systemic-vision', stage: 'Turquoise', prerequisiteBeats: ['connection-awakens'], completed: false, gatedEncounterIds: [] },
+    { id: 'systemic-vision', stage: 'Teal', prerequisiteBeats: ['connection-awakens'], completed: false, gatedEncounterIds: [] },
   ];
 
   return {

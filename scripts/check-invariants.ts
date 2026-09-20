@@ -6,6 +6,9 @@
  * Verifies that core registries, data indices, enums, engines, and modules
  * are structurally valid and internally consistent.
  */
+// @script-status: wired — `npm run check:invariants`, which `npm run build` runs first and
+//                          install.sh calls as a smoke gate. Read-only structural verification of
+//                          the registries, data indices and enums.
 
 import { bootRegistries } from '../src/core/registries/boot.js';
 import { allModuleKeys, queryByLineStage } from '../src/core/data/ConceptDraftIndex.js';

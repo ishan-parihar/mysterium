@@ -129,7 +129,7 @@ export function detectShadows(
  * return encounter at that (line, stage) in SHADOW MODE."
  *
  * The Holonic Return is the spec's mechanism for ensuring the "holon is never
- * outgrown" — players can't advance to Turquoise while their Red-stage shadows
+ * outgrown" — players can't advance to Teal while their Red-stage shadows
  * fester untreated. Every 3 encounters at the current stage, the system checks
  * for unresolved shadows at earlier stages and surfaces a return encounter.
  *

@@ -10,7 +10,7 @@ interface VeilPattern {
 
 const VEIL_PATTERNS: readonly VeilPattern[] = [
   {
-    regex: /\b(Infrared|Magenta|Red|Amber|Orange|Green|Turquoise|White)\s+(stage|level|altitude|development)/gi,
+    regex: /\b(Infrared|Magenta|Red|Amber|Orange|Green|Teal|Turquoise)\s+(stage|level|altitude|development)/gi,
     category: 'stage-as-developmental-label',
   },
   {

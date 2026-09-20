@@ -19,12 +19,12 @@ import {
 import type { Stage } from '../../src/core/domain/Stage.js';
 
 const ALL_STAGES: readonly Stage[] = [
-  'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White',
+  'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise',
 ];
 
 const VEIL_VIOLATION_PATTERNS: readonly RegExp[] = [
   // Raw stage names used as labels
-  /\b(stage|level|altitude)\s+(is|equals|=)\s+(infrared|magenta|red|amber|orange|green|turquoise|white)\b/i,
+  /\b(stage|level|altitude)\s+(is|equals|=)\s+(infrared|magenta|red|amber|orange|green|teal|turquoise)\b/i,
   // Numerical scores
   /\b\d+(\.\d+)?\s*%/,
   /\b(score|rating|level|altitude|metric)\s*[:=]?\s*\d+/i,

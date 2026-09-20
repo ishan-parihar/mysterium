@@ -84,10 +84,10 @@
         "ImmersiveRPG"
       ]
     },
-    "cognitive:turquoise": {
+    "cognitive:teal": {
       "line": "Cognitive",
-      "stage": "Turquoise",
-      "title": "Cognitive / Turquoise — Module Specification",
+      "stage": "Teal",
+      "title": "Cognitive / Teal — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -98,10 +98,10 @@
         "ImmersiveRPG"
       ]
     },
-    "cognitive:white": {
+    "cognitive:turquoise": {
       "line": "Cognitive",
-      "stage": "White",
-      "title": "Cognitive / White — Module Specification",
+      "stage": "Turquoise",
+      "title": "Cognitive / Turquoise — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -196,10 +196,10 @@
         "ImmersiveRPG"
       ]
     },
-    "emotional:turquoise": {
+    "emotional:teal": {
       "line": "Emotional",
-      "stage": "Turquoise",
-      "title": "Emotional / Turquoise — Module Specification",
+      "stage": "Teal",
+      "title": "Emotional / Teal — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -210,10 +210,10 @@
         "ImmersiveRPG"
       ]
     },
-    "emotional:white": {
+    "emotional:turquoise": {
       "line": "Emotional",
-      "stage": "White",
-      "title": "Emotional / White — Module Specification",
+      "stage": "Turquoise",
+      "title": "Emotional / Turquoise — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -308,10 +308,10 @@
         "ImmersiveRPG"
       ]
     },
-    "moral:turquoise": {
+    "moral:teal": {
       "line": "Moral",
-      "stage": "Turquoise",
-      "title": "Moral / Turquoise — Module Spec",
+      "stage": "Teal",
+      "title": "Moral / Teal — Module Spec",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -322,10 +322,10 @@
         "ImmersiveRPG"
       ]
     },
-    "moral:white": {
+    "moral:turquoise": {
       "line": "Moral",
-      "stage": "White",
-      "title": "Moral / White — Module Specification",
+      "stage": "Turquoise",
+      "title": "Moral / Turquoise — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -420,10 +420,10 @@
         "ImmersiveRPG"
       ]
     },
-    "intrapersonal:turquoise": {
+    "intrapersonal:teal": {
       "line": "Intrapersonal",
-      "stage": "Turquoise",
-      "title": "Intrapersonal × Turquoise — Module Spec",
+      "stage": "Teal",
+      "title": "Intrapersonal × Teal — Module Spec",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -434,10 +434,10 @@
         "ImmersiveRPG"
       ]
     },
-    "intrapersonal:white": {
+    "intrapersonal:turquoise": {
       "line": "Intrapersonal",
-      "stage": "White",
-      "title": "Intrapersonal / White — Module Specification",
+      "stage": "Turquoise",
+      "title": "Intrapersonal / Turquoise — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -532,10 +532,10 @@
         "ImmersiveRPG"
       ]
     },
-    "spiritual:turquoise": {
+    "spiritual:teal": {
       "line": "Spiritual",
-      "stage": "Turquoise",
-      "title": "Spiritual / Turquoise — Module Specification",
+      "stage": "Teal",
+      "title": "Spiritual / Teal — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -546,10 +546,10 @@
         "ImmersiveRPG"
       ]
     },
-    "spiritual:white": {
+    "spiritual:turquoise": {
       "line": "Spiritual",
-      "stage": "White",
-      "title": "Spiritual / White — Module Specification",
+      "stage": "Turquoise",
+      "title": "Spiritual / Turquoise — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -644,10 +644,10 @@
         "ImmersiveRPG"
       ]
     },
-    "somatic:turquoise": {
+    "somatic:teal": {
       "line": "Somatic",
-      "stage": "Turquoise",
-      "title": "Somatic × Turquoise — Module Specification",
+      "stage": "Teal",
+      "title": "Somatic × Teal — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -658,10 +658,10 @@
         "ImmersiveRPG"
       ]
     },
-    "somatic:white": {
+    "somatic:turquoise": {
       "line": "Somatic",
-      "stage": "White",
-      "title": "Somatic / White — Module Specification",
+      "stage": "Turquoise",
+      "title": "Somatic / Turquoise — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -756,10 +756,10 @@
         "ImmersiveRPG"
       ]
     },
-    "willpower:turquoise": {
+    "willpower:teal": {
       "line": "Willpower",
-      "stage": "Turquoise",
-      "title": "Willpower × Turquoise — Module Specification",
+      "stage": "Teal",
+      "title": "Willpower × Teal — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -770,10 +770,10 @@
         "ImmersiveRPG"
       ]
     },
-    "willpower:white": {
+    "willpower:turquoise": {
       "line": "Willpower",
-      "stage": "White",
-      "title": "Willpower / White — Module Specification",
+      "stage": "Turquoise",
+      "title": "Willpower / Turquoise — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -868,10 +868,10 @@
         "ImmersiveRPG"
       ]
     },
-    "interpersonal:turquoise": {
+    "interpersonal:teal": {
       "line": "Interpersonal",
-      "stage": "Turquoise",
-      "title": "Interpersonal × Turquoise — Module Specification",
+      "stage": "Teal",
+      "title": "Interpersonal × Teal — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",
@@ -882,10 +882,10 @@
         "ImmersiveRPG"
       ]
     },
-    "interpersonal:white": {
+    "interpersonal:turquoise": {
       "line": "Interpersonal",
-      "stage": "White",
-      "title": "Interpersonal / White — Module Specification",
+      "stage": "Turquoise",
+      "title": "Interpersonal / Turquoise — Module Specification",
       "modalities": [
         "Deterministic",
         "Strategic",

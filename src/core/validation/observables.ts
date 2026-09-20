@@ -47,7 +47,7 @@ export interface Observables {
   currentStage: Stage;
 }
 
-const STAGE_ORDER: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'];
+const STAGE_ORDER: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
 
 export interface EncounterCounters {
   curriculum: number;

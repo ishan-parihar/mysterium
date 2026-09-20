@@ -15,6 +15,9 @@
  *   npx tsx scripts/cli-game.ts --verbose                # show full narrative flow
  *   npx tsx scripts/cli-game.ts --json                   # machine-readable JSON output
  *   npx tsx scripts/cli-game.ts --new-game               # start fresh (delete saved progress)
+ *
+ * @script-status: wired — `npm run cli` (and `cli:bundle` for the built copy). The headless runner;
+ *                          mutates only the player's own save file, never the tree.
  */
 
 import * as fs from 'fs';

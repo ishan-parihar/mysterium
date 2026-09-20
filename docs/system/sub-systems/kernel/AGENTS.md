@@ -5,7 +5,7 @@
 
 - **Organ:** `kernel`
 - **Rung:** system (`docs/system/sub-systems/kernel/`)
-- **Contract docs (canon):** `foundations/26-unified-core-architecture`, `foundations/42-developmental-levelling-mechanism`
+- **Contract docs (canon):** `foundations/02-eight-stages-overview`, `foundations/06-law-of-one-correspondence`, `foundations/26-unified-core-architecture`, `foundations/42-developmental-levelling-mechanism`
 - **Code it describes:** `src/core/engines`, `src/core/assessments`, `src/core/registries`, `src/core/domain`, `src/core/logic`, `src/core/usecases`
 - **Records:** `core/decisions/` (AD) - `core/regressions/` (RG)
 

@@ -210,7 +210,7 @@ export async function evaluateResponse(
     let inferredStage: Stage | undefined = undefined;
     if (result.inferredStage) {
       const normalized = result.inferredStage.charAt(0).toUpperCase() + result.inferredStage.slice(1).toLowerCase();
-      const stages: string[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'];
+      const stages: string[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
       if (stages.includes(normalized)) {
         inferredStage = normalized as Stage;
       }
@@ -226,7 +226,7 @@ export async function evaluateResponse(
   const config = getEnabledConfig();
   if (!config) return FALLBACK;
 
-  const systemContent = `You are a developmental psychology scoring rubric evaluator. ${rubric}\nIf evaluating a calibration probe, determine which developmental stage (Infrared, Magenta, Red, Amber, Orange, Green, Turquoise, White) the player response corresponds to and provide a confidence rating. Respond ONLY with JSON: {"score": <0-1>, "feedback": "<brief>", "inferredStage": "<stage>", "confidence": <0-1>}`;
+  const systemContent = `You are a developmental psychology scoring rubric evaluator. ${rubric}\nIf evaluating a calibration probe, determine which developmental stage (Infrared, Magenta, Red, Amber, Orange, Green, Teal, Turquoise) the player response corresponds to and provide a confidence rating. Respond ONLY with JSON: {"score": <0-1>, "feedback": "<brief>", "inferredStage": "<stage>", "confidence": <0-1>}`;
   const userContent = `Prompt: ${prompt}\nPlayer response: ${playerResponse}`;
 
   try {
@@ -270,7 +270,7 @@ export async function evaluateResponse(
     let inferredStage: Stage | undefined = undefined;
     if (parsed.inferredStage) {
       const normalized = parsed.inferredStage.charAt(0).toUpperCase() + parsed.inferredStage.slice(1).toLowerCase();
-      const stages: string[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'];
+      const stages: string[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
       if (stages.includes(normalized)) {
         inferredStage = normalized as Stage;
       }

@@ -59,7 +59,7 @@
       ],
       "stageRange": {
         "min": "Orange",
-        "max": "Turquoise"
+        "max": "Teal"
       }
     },
     "depthMeta": {
@@ -756,7 +756,7 @@
       ],
       "stageRange": {
         "min": "Green",
-        "max": "Turquoise"
+        "max": "Teal"
       }
     },
     "depthMeta": {
@@ -931,8 +931,8 @@
         "Intrapersonal"
       ],
       "stageRange": {
-        "min": "Turquoise",
-        "max": "White"
+        "min": "Teal",
+        "max": "Turquoise"
       }
     },
     "depthMeta": {

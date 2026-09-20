@@ -18,7 +18,11 @@ We extract and reorganize into:
   §6 Compound Shadows & Cross-Module
   §7 Shadow Surfacing Sequence
 """
-import os
+# @script-status: historical — repaired the malformed concatenated module-spec files produced by
+#                              `make_module_specs.py`; that repair is complete and the malformed
+#                              inputs no longer exist. It rewrites module-spec.md wholesale from a
+#                              hardcoded absolute path (/home/ishanp/...) and would destroy the
+#                              current specs if run. Destructive: do not run.
 import re
 
 BASE = "/home/ishanp/Documents/GitHub/MY-PROJECTS/Mysterium/docs/concept-drafts"

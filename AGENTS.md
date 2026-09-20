@@ -402,12 +402,29 @@ The 7 game modalities are 7 AXES through which catalyst of a particular frequenc
 
 ---
 
-## 6. AQAL Quadrants (Deferred)
+## 6. AQAL Quadrants (model closed 2026-09-20; wiring deferred)
 
-The 4 AQAL quadrants (UL/UR/LL/LR) are implicitly present in the line taxonomy. Explicit quadrant integration into the game architecture is deferred until:
-1. The core drive×shadow model is stable through Phase 1 concept-drafts
-2. We have clarity on how quadrant dynamics ADD to the existing architecture
-3. The user decides it's time to integrate them
+The 4 AQAL quadrants (UL interior-individual · UR exterior-individual · LL interior-collective · LR
+exterior-collective) are no longer a missing model. The ratified ontology Mysterium is already
+governed by carries every altitude's markers **per quadrant** — integrity and pathology alike — and
+those are now ingested into code (`StageQuality`, `MY-AD-0030`, canon `02 §3` / KosmOS
+`_Ontology/stages/altitude.md`). `pathologies.md` is the same fourfold model as §5.2 below.
+
+Three things follow, and one is still deferred:
+
+- **Closed.** The quadrants are present, per altitude, from a ratified source — not invented locally.
+- **Closed.** The dual vectors of §5.3 became computable: `agapeScan(cog)` enumerates every altitude
+  below the centre of gravity (the heal/evolve agenda, and the mechanism by which §5.6's
+  never-outgrown lower stages are actually maintained), and `erosScan(cog)` reads the CoG's own
+  threshold markers plus the altitude they are called toward.
+- **STILL DEFERRED — wiring.** How quadrant dynamics *feed the encounter architecture* (which
+  quadrant a generated encounter should stress, and how a macro-catalyst's PESTLE pressure maps onto
+  LR) is unresolved, and nothing at runtime reads the markers yet. Tracked as
+  `_org.yaml → pending → QUALITY-WIRING`. It is now a wiring question, not a missing-model question,
+  which is what the original deferral was waiting for.
+
+Latitude: `LINE_QUADRANT` maps lines to UL/UR/LL and leaves LR to the world-state PESTLE system
+(`TransformationDetector` documents the proxy it uses in the interim).
 
 ---
 

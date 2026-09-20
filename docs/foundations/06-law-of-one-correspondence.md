@@ -362,22 +362,47 @@ export type Ray =
 
 export type BlueFlow = 'in' | 'out';
 
+// The nine within-D3 positions. Seven rays, with Blue and Indigo each spanning two: the
+// co-Creator both receives (5a) and radiates (5b); the gateway first opens (6a) and is then
+// traversed (6b). Position count (9) > ray count (7) is what lets two altitudes share a ray
+// and stay distinguishable.
+export type SubOctave = '1st' | '2nd' | '3rd' | '4th' | '5a' | '5b' | '6a' | '6b' | '7th';
+
 export interface RayBinding {
   ray: Ray;
+  subOctave: SubOctave;    // the lens position — NOT derivable from the altitude index
+  rayFunction: string;     // what the lens reads this position as doing (§5)
+  subtleBody: string;      // the subtle vehicle carried at this position (§5)
   blueFlow?: BlueFlow;     // required when ray === 'Blue'
 }
 
-export const STAGE_TO_RAY: Record<Stage, RayBinding> = {
-  Infrared:  { ray: 'Red' },
-  Magenta:   { ray: 'Orange' },
-  Red:       { ray: 'Yellow' },
-  Amber:     { ray: 'Green' },
-  Orange:    { ray: 'Blue', blueFlow: 'in' },
-  Green:     { ray: 'Blue', blueFlow: 'out' },
-  Turquoise: { ray: 'Indigo' },
-  Turquoise: { ray: 'Violet' },
+// The lens. `RAY_LENS[stage]` — ONE binding per altitude, with its sub-octave position.
+// Teal and Turquoise BOTH read Indigo: they are 6a and 6b, and that a/b is what keeps the two
+// top altitudes distinct without giving either one the Violet ray.
+export const RAY_LENS: Readonly<Record<Stage, RayBinding>> = {
+  Infrared:  { ray: 'Red',    subOctave: '1st' },
+  Magenta:   { ray: 'Orange', subOctave: '2nd' },
+  Red:       { ray: 'Yellow', subOctave: '3rd' },
+  Amber:     { ray: 'Green',  subOctave: '4th' },
+  Orange:    { ray: 'Blue',   subOctave: '5a', blueFlow: 'in' },
+  Green:     { ray: 'Blue',   subOctave: '5b', blueFlow: 'out' },
+  Teal:      { ray: 'Indigo', subOctave: '6a' },
+  Turquoise: { ray: 'Indigo', subOctave: '6b' },
 };
+
+// The Violet-ray position (7th) belongs to the CLOSURE EVENT, which has no altitude: it is the
+// harvest into D4 (`lenses/rays.md`). Addressed by the closure, never by an index into `Stage`.
+export const CLOSURE_BINDING: RayBinding =
+  { ray: 'Violet', subOctave: '7th' };
 ```
+
+> This block previously carried **two `Turquoise` keys** — one Indigo, one Violet — because the doc
+> had been re-indexed (`Turquoise` → `Teal`, `White` → `Turquoise`) without the block's second
+> entry being resolved. Duplicate keys are invalid TypeScript, so the block could not have been
+> the implemented contract; it read as one. The code's real export is `RAY_LENS`, and the flat
+> `STAGE_RAY_MAP` (`Record<Stage, Ray>`) is **derived** from it, never restated — a flat map cannot
+> express that two altitudes share a ray, so a hand-written copy absorbs the difference by
+> inventing one. That is precisely how stage 8 acquired the Violet ray.
 
 This is read by:
 
@@ -385,7 +410,14 @@ This is read by:
 - **Audio engine** — modal scale + instrumentation selection
 - **Narrative engine** — codex entries, stage-rite invocations
 - **Combat engine** — ray-aligned ability bonuses
-- **Harvest engine** — violet-ray expression computation
+- **Harvest engine** — violet-ray expression computation, read at `CLOSURE_BINDING`
+
+The **harvest** is the one consumer that must not be read off an altitude. Per `lenses/rays.md`
+("Harvest condition") it is a *Violet-ray* judgement over the whole rainbow — "a Violet expression
+tinged with a distinct green/blue/indigo rainbow … each color distinct, none bypassed" — so the
+Violet position is an independent accumulator, and the qualification is **distinctness across the
+rainbow**, not only a Violet total. Reading it as "the top stage's ray" is the conflation this
+section now forbids (tracked as `CHOICE-CLOSURE`).
 
 The data file is small; its presence is everywhere.
 

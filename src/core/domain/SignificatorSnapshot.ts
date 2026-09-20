@@ -156,7 +156,7 @@ function computeTransformationReadiness(sig: Significator): TransformationReadin
   const pendingTransformation = readinessScore >= readinessThreshold && shadowClearance;
 
   const ALL_STAGES: readonly Stage[] = [
-    'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White',
+    'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise',
   ];
   const targetStage = pendingTransformation && currentOrdinal < ALL_STAGES.length - 1
     ? ALL_STAGES[currentOrdinal + 1]

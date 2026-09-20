@@ -4,7 +4,11 @@ Strip old 9-section game concept files to new 5-section template.
 Keeps: header quote, §1 Game Identity, §2→Catalyst Delivery, §6→Game Design, §7→Item Pool, §9→Technical Requirements
 Removes: §3 Drive Probing, §4 Shadow Surfacing, §5 Healing/Evolution, §8 Scoring Rubric
 """
-import os
+# @script-status: historical — converted the corpus from the 9-section to the 5-section game-file
+#                              template; that conversion is complete. It DELETES sections from every
+#                              game file it matches, and its target template is itself superseded by
+#                              the current concept-draft template in docs/concept-drafts/README.md,
+#                              so running it would strip live content. Destructive: do not run.
 import re
 import sys
 

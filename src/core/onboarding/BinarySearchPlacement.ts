@@ -106,7 +106,7 @@ export function placeLine(line: Line, probe: PlacementProbe): LinePlacement {
     if (result.outcome === 'pass') {
       bestPass = { idx, confidence: result.confidence };
       if (idx >= ALL_STAGES.length - 1) {
-        // Top of the ladder: altitude is White.
+        // Top of the ladder: altitude is Turquoise.
         return { line, altitude: stageAt(idx), confidence: result.confidence, converged: true, probesUsed, boundary: false };
       }
       // Check the convergence law with an already-known fail above.

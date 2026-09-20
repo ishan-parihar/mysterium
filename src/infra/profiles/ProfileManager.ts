@@ -445,7 +445,7 @@ export function getWorldStatePath(profileName: string): string {
 
 /**
  * Agent sandbox: read a file from the active profile directory.
- * Only whitelisted filenames are allowed.
+ * Only turquoiselisted filenames are allowed.
  */
 const READABLE_FILES = new Set([
   'identity.yaml', 'preferences.yaml', 'goals.yaml',

@@ -4,7 +4,7 @@
  *
  * CRITICAL FIX (altitude-scaling audit): The player's CURRENT altitude now shapes
  * the complexity register of the catalyst, not just the encounter's target stage.
- * A Turquoise player encountering Red-stage material gets a DIFFERENT complexity
+ * A Teal player encountering Red-stage material gets a DIFFERENT complexity
  * register than a Red player encountering the same material. This prevents the
  * "naive and childish" problem where high-altitude players get low-altitude-framed
  * questions that create no developmental edge.
@@ -81,14 +81,14 @@ const STAGE_VOICE_TABLE: Readonly<Record<Stage, StageVoice>> = {
     taboos: ['hierarchy', 'exclusion'],
     complexityRegister: 'pluralistic-contextual',
   },
-  Turquoise: {
+  Teal: {
     toneDirective: 'integral/paradox-holding',
     vocabularyBand: 'multi-layered/both-and',
     valueLens: 'wholeness/emergence',
     taboos: ['reductionism', 'either/or'],
     complexityRegister: 'integral-paradox-holding',
   },
-  White: {
+  Turquoise: {
     toneDirective: 'minimal/spacious',
     vocabularyBand: 'sparse/koan-like',
     valueLens: 'presence/release',

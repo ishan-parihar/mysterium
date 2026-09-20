@@ -1,5 +1,5 @@
 /**
- * TDG integration probe — used by install.sh to verify Mysterium ↔ TDG-Rust wiring.
+ * TDG integration probe — verifies Mysterium ↔ TDG-Rust wiring on demand.
  * Spawns the real TDG-Rust binary, performs the MCP handshake, lists tools,
  * and confirms the agent's 7 expected TDG tools are present.
  *
@@ -7,6 +7,10 @@
  *
  * Usage: LD_LIBRARY_PATH=<hermes>/tdg-rust/lib TDG_HOME=<hermes> npx tsx scripts/tdg-probe.ts
  */
+// @script-status: probe — read-only integration check against the TDG-Rust binary; spawns a
+//                         subprocess and mutates nothing. NOT wired to install.sh: the earlier
+//                         docstring claimed it was and that claim was false (KB-ORPHAN-TRIAGE,
+//                         KB audit UT-7). Run it by hand when the TDG seam is suspected.
 import { TDGClient } from '../src/infra/tdg/TDGClient.js';
 
 async function main(): Promise<void> {

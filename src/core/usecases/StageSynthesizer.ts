@@ -29,8 +29,8 @@ import { ALL_STAGES, stageOrdinal } from '../domain/Stage.js';
  *   {all Red}                       → Red    (floor = Red)
  *   {all Amber}                     → Amber  (floor = Amber)
  *   {Cognitive: Orange, rest Amber} → Amber  (floor = Amber; Cognitive pulls but rest hold)
- *   {all White}                     → White  (floor = White)
- *   {Somatic: Infrared, rest White} → Infrared (floor = Infrared)
+ *   {all Turquoise}                     → Turquoise  (floor = Turquoise)
+ *   {Somatic: Infrared, rest Turquoise} → Infrared (floor = Infrared)
  */
 export function synthesiseStage(altitudes: Record<Line, Stage>): Stage {
   // The synthesized stage is the highest S such that all lines ≥ S.

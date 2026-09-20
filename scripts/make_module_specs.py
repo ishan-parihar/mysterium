@@ -4,7 +4,12 @@ For each module that has scoring.md + shadow-diagnostics.md but no module-spec.m
 - Create module-spec.md by concatenating them with a clean header
 - Delete scoring.md and shadow-diagnostics.md
 """
-import os
+# @script-status: historical — the retirement tool for the split `scoring.md` +
+#                              `shadow-diagnostics.md` template. Every module now has a
+#                              `module-spec.md` and the two source files are gone, so its own
+#                              precondition is unreachable — but if it ever ran it would COPY those
+#                              files into module-spec.md and DELETE them, shredding the authored
+#                              spec. Destructive: do not run.
 import re
 
 BASE = "/home/ishanp/Documents/GitHub/MY-PROJECTS/Mysterium/docs/concept-drafts"

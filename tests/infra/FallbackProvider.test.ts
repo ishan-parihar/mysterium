@@ -69,7 +69,7 @@ describe('FallbackProvider', () => {
   });
 
   it('returns fallback even for stages without specific content (graceful generic)', () => {
-    const content = getFallback('LanguageReflective', 'Cognitive', 'Turquoise');
+    const content = getFallback('LanguageReflective', 'Cognitive', 'Teal');
     expect(content.prompt).toBeDefined();
     expect(content.prompt!.length).toBeGreaterThan(0);
   });

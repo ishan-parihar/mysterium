@@ -218,7 +218,7 @@ export function validateSignificator(input: unknown): Significator | null {
   }
 
   // --- Identity (doc 16 §2.1: consent-bound, healing-layer-only) ---
-  // Whitelist reconstruction: only known fields/consents survive. A value
+  // Turquoiselist reconstruction: only known fields/consents survive. A value
   // without an active consent record is DROPPED (consent-gated existence).
   let identity: IdentityProfile | undefined;
   if (obj.identity && typeof obj.identity === 'object') {

@@ -29,7 +29,7 @@ describe('synthesiseStage', () => {
   });
 
   it('returns Infrared if any line is at Infrared', () => {
-    const altitudes = { ...makeAltitudes('White'), Somatic: 'Infrared' as Stage };
+    const altitudes = { ...makeAltitudes('Turquoise'), Somatic: 'Infrared' as Stage };
     expect(synthesiseStage(altitudes)).toBe('Infrared');
   });
 });

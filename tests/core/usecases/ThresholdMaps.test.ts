@@ -5,7 +5,7 @@
  * Contract: per-line task-unit thresholds map to stages via THRESHOLD_MAPS;
  * Somatic is inverted (lower RT = higher stage). A threshold value is only
  * meaningful in its line's own units — feeding a 0–1 normalized value to a
- * ms-scale map silently saturates (previously produced a spurious 'White').
+ * ms-scale map silently saturates (previously produced a spurious 'Turquoise').
  */
 import { describe, it, expect } from 'vitest';
 import { thresholdToStage, THRESHOLD_MAPS } from '../../../src/core/usecases/ThresholdMaps.js';
@@ -21,8 +21,8 @@ describe('thresholdToStage — standard (ascending) maps', () => {
     expect(thresholdToStage('Cognitive', 2.8)).toBe('Amber');
     expect(thresholdToStage('Cognitive', 3.5)).toBe('Orange');
     expect(thresholdToStage('Cognitive', 4.5)).toBe('Green');
-    expect(thresholdToStage('Cognitive', 5.5)).toBe('Turquoise');
-    expect(thresholdToStage('Cognitive', 7)).toBe('White');
+    expect(thresholdToStage('Cognitive', 5.5)).toBe('Teal');
+    expect(thresholdToStage('Cognitive', 7)).toBe('Turquoise');
   });
 
   it('maps boundary values inclusively (>= cutoff)', () => {
@@ -44,7 +44,7 @@ describe('thresholdToStage — Somatic (inverted RT map)', () => {
     expect(thresholdToStage('Somatic', 650)).toBe('Red');
     expect(thresholdToStage('Somatic', 550)).toBe('Amber');
     expect(thresholdToStage('Somatic', 350)).toBe('Green');
-    expect(thresholdToStage('Somatic', 200)).toBe('White');
+    expect(thresholdToStage('Somatic', 200)).toBe('Turquoise');
   });
 
   it('continues the inverted ladder below the minimum cutoff (faster → ceiling)', () => {
@@ -53,13 +53,13 @@ describe('thresholdToStage — Somatic (inverted RT map)', () => {
     // inverted ladder to its ceiling. Callers feeding normalized 0–1 values
     // will saturate — that is the caller's unit bug (see TrainingRuntime demo
     // thresholds, which use per-line task units).
-    expect(thresholdToStage('Somatic', 150)).toBe('White');
+    expect(thresholdToStage('Somatic', 150)).toBe('Turquoise');
   });
 
-  it('seeds Amber — not White — from ms-unit demo thresholds (calibrate path)', () => {
+  it('seeds Amber — not Turquoise — from ms-unit demo thresholds (calibrate path)', () => {
     // Mirrors src/cli/TrainingRuntime.ts --onboard demo thresholds: per-line
     // task units, all landing at Amber. The pre-fix demo fed 0.55 to every
-    // line, saturating Somatic to a spurious White.
+    // line, saturating Somatic to a spurious Turquoise.
     const out = calibrate(
       ALL_LINES.map((line) => ({
         line,
@@ -81,7 +81,7 @@ describe('map integrity', () => {
     for (const line of ALL_LINES) {
       const map = THRESHOLD_MAPS[line];
       expect(map.map(([, s]) => s), `${line} stages`).toEqual([
-        'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White',
+        'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise',
       ]);
       const values = map.map(([v]) => v);
       const sorted = [...values].sort((a, b) => (line === 'Somatic' ? b - a : a - b));

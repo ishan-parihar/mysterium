@@ -18,7 +18,7 @@ describe('T-0.9 — synthesiseStage floor semantics', () => {
   it('returns the uniform stage when all lines are equal', () => {
     expect(synthesiseStage(makeAltitudes('Red'))).toBe('Red');
     expect(synthesiseStage(makeAltitudes('Amber'))).toBe('Amber');
-    expect(synthesiseStage(makeAltitudes('White'))).toBe('White');
+    expect(synthesiseStage(makeAltitudes('Turquoise'))).toBe('Turquoise');
   });
 
   it('returns the lowest line altitude (floor)', () => {
@@ -27,7 +27,7 @@ describe('T-0.9 — synthesiseStage floor semantics', () => {
   });
 
   it('returns Infrared if any line is at Infrared', () => {
-    const altitudes = { ...makeAltitudes('White'), Somatic: 'Infrared' as Stage };
+    const altitudes = { ...makeAltitudes('Turquoise'), Somatic: 'Infrared' as Stage };
     expect(synthesiseStage(altitudes)).toBe('Infrared');
   });
 

@@ -1,7 +1,7 @@
 /**
  * Wave 1.7: Integration test verifying that ContextPipeline's system prompt
  * contains the complexityRegister and crossAltitudeDirective for a
- * cross-altitude scenario (Turquoise player × Red holon).
+ * cross-altitude scenario (Teal player × Red holon).
  */
 import { describe, it, expect } from 'vitest';
 import { buildContext, type ContextPipelineInput } from '../../src/infra/llm/ContextPipeline.js';
@@ -74,16 +74,16 @@ describe('Wave 1.7: ContextPipeline altitude-scaling integration', () => {
     expect(output.systemPrompt).toContain('concrete-imperative');
   });
 
-  it('system prompt contains complexityRegister for cross-altitude (Turquoise player × Red holon)', () => {
-    const output = buildContext(makeInput('Turquoise'));
+  it('system prompt contains complexityRegister for cross-altitude (Teal player × Red holon)', () => {
+    const output = buildContext(makeInput('Teal'));
     expect(output.systemPrompt).toContain('complexity=');
     expect(output.systemPrompt).toContain('integral-paradox-holding');
   });
 
   it('system prompt contains crossAltitudeDirective for cross-altitude scenario', () => {
-    const output = buildContext(makeInput('Turquoise'));
+    const output = buildContext(makeInput('Teal'));
     expect(output.systemPrompt).toContain('CROSS-ALTITUDE DIRECTIVE');
-    expect(output.systemPrompt).toContain('Turquoise');
+    expect(output.systemPrompt).toContain('Teal');
     expect(output.systemPrompt).toContain('Red');
     expect(output.systemPrompt).toContain('Do NOT collapse to the Red register');
   });

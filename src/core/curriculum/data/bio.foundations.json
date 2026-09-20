@@ -328,7 +328,7 @@
     "devMapping": {
       "primaryLine": "Cognitive",
       "secondaryLines": ["Moral"],
-      "stageRange": { "min": "Orange", "max": "Turquoise" }
+      "stageRange": { "min": "Orange", "max": "Teal" }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
@@ -612,7 +612,7 @@
     "devMapping": {
       "primaryLine": "Cognitive",
       "secondaryLines": ["Moral", "Naturalist"],
-      "stageRange": { "min": "Orange", "max": "Turquoise" }
+      "stageRange": { "min": "Orange", "max": "Teal" }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",

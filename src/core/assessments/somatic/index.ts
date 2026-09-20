@@ -4,5 +4,5 @@ export { somaticRed } from './red.js';
 export { somaticAmber } from './amber.js';
 export { somaticOrange } from './orange.js';
 export { somaticGreen } from './green.js';
+export { somaticTeal } from './teal.js';
 export { somaticTurquoise } from './turquoise.js';
-export { somaticWhite } from './white.js';

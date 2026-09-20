@@ -6,7 +6,7 @@ import type { Line } from '../domain/Line.js';
 import { ALL_LINES, LINE_QUADRANT } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
 import { ALL_STAGES, stageOrdinal } from '../domain/Stage.js';
-import { STAGE_RAY_MAP } from '../domain/Ray.js';
+import { STAGE_RAY_MAP, sameRay } from '../domain/Ray.js';
 import type { Significator } from '../domain/Significator.js';
 import type { Quadrant } from '../domain/SharedTypes.js';
 
@@ -31,8 +31,8 @@ const CONVERGENCE_REQUIREMENTS: Record<number, number> = {
   2: 5, // Red→Amber: 5 lines
   3: 5, // Amber→Orange
   4: 6, // Orange→Green
-  5: 6, // Green→Turquoise
-  6: 7, // Turquoise→White
+  5: 6, // Green→Teal
+  6: 7, // Teal→Turquoise
 };
 
 // P1-3 (UX-R3): SATURATION_THRESHOLD is now exported and mutable so the
@@ -84,7 +84,7 @@ export function getLineProgress(sig: Significator): readonly LineProgress[] {
 /** Detect whether transformation threshold is crossed. */
 export function detectThreshold(sig: Significator): TransformationSignal | null {
   const currentOrd = stageOrdinal(sig.currentStage);
-  if (currentOrd >= ALL_STAGES.length - 1) return null; // already at White
+  if (currentOrd >= ALL_STAGES.length - 1) return null; // already at Turquoise
 
   const targetStage = ALL_STAGES[currentOrd + 1]!;
   const report = computeReadiness(sig, targetStage);
@@ -133,12 +133,24 @@ export function computeReadiness(sig: Significator, targetStage: Stage): Readine
   // this is a phase-transition signal. The current stage's ray should be highly
   // activated (saturation), and the next stage's ray should be rising (catalytic
   // interference per 08.8.14 §2.3).
+  //
+  // SAME-RAY TRANSITIONS (CODE-PASS): Orange/Green share the Blue ray and Teal/Turquoise share
+  // the Indigo ray, so `currentRay === targetRay` for those steps. The signal above is then
+  // degenerate — one activation would have to be both saturated and rising — and it used to be
+  // masked only by the conflation that gave stage 8 the Violet ray. A same-ray step is NOT a
+  // ray transition: the lens reads the two positions as 5a→5b / 6a→6b (`RAY_LENS`), and what
+  // actually separates them is QUALITY (gateway opens vs gateway traversed, `StageQuality`). So
+  // the ray term abstains (1 = no ray objection) and the AQAL + saturation terms carry the
+  // boundary, rather than reporting a barrier that does not exist.
   const currentRay = STAGE_RAY_MAP[sig.currentStage] ?? 'Yellow';
   const targetRay = STAGE_RAY_MAP[targetStage] ?? 'Green';
   const currentRayActivation = sig.rayProfile[currentRay] ?? 0;
   const targetRayActivation = sig.rayProfile[targetRay] ?? 0;
-  // Ray readiness: current ray saturated (>0.6) AND target ray rising (>0.3)
-  const rayReadiness = (currentRayActivation > 0.6 && targetRayActivation > 0.3) ? 1 : 0;
+  const rayReadiness = sameRay(sig.currentStage, targetStage)
+    ? 1
+    : (currentRayActivation > 0.6 && targetRayActivation > 0.3)
+      ? 1
+      : 0;
 
   // CRITICAL-1: AQAL 4-quadrant coherence gate.
   // Per foundations/01 §4, all 4 quadrants (UL/UR/LL/LR) must have at least

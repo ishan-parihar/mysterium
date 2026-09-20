@@ -176,7 +176,45 @@ the pedagogically correct opposite (culture, not geometry, decides those). The r
 - **reflexive-safe** — a tag at the origin reflects to itself and must declare its own opposite
   explicitly, or be excluded from dialectic selection
 
-### 4.3 What the tag store is for
+**`opposite()` PROPOSES a pole; it does not describe the pair's standing.** Geometry can always name
+an opposite, including between two tags the player has already integrated — for which the pair has
+nothing left to teach. The relation above is therefore a *candidate generator*, and §4.3 is what
+decides whether a candidate is worth spending an encounter on.
+
+### 4.3 A pair is a reconciliation-polarity, and its STATE is what selection reads
+
+A tag pair is a **reconciliation-polarity** in the sense of KosmOS `_Ontology/polarity.md`, whose
+formula is the one this engine needs:
+
+> *A polarity is not solved by picking a pole; it is reconciled by a synthesis that holds both.*
+> A **concept = one reconciled polarity**, and reconciling the tensions *among* reconciliations is
+the next rung up.
+
+Naming the pair that way is not decoration: it supplies **state**, which is the missing selection
+signal. KosmOS carries three, and they map onto the player's developmental position rather than onto
+the tag's geometry:
+
+| State | Meaning for the player | Selection consequence |
+|---|---|---|
+| `undiscovered` | a pole is sensed but not articulated — the pair is below the horizon | the *familiar* pole may appear as texture; the pair is **not** a structural candidate |
+| `active-tension` | both poles are known, neither held — **the live frontier** | **the structural pole**. This is the expansion dimension, and the only state that should carry one |
+| `reconciled` | the player holds both poles in synthesis | **stop selecting it structurally** — this is the saturation guard of §5.2, stated as a state instead of a threshold |
+
+Two consequences that change the engine's behaviour:
+
+1. **Expansion targets `active-tension`, not mere distance.** `16 §6.4` distance says *how far* a
+   pole is; state says *whether the far pole is the player's next edge*. A maximally distant pole the
+   player cannot yet articulate is `undiscovered`, and pitching it structurally is the Golden-Allergy
+   failure (`AGENTS.md §5.2`) dressed as ambition.
+2. **A `reconciled` pair re-opens.** KosmOS gives the mechanism an inverse edge — an entity
+   `refutes` a framework and the polarity flips back to `active-tension`. Mysterium's evidence for a
+   refutation is the same **live evidence** the rest of the system runs on: an `active-tension` pair
+   that the player then handles structurally without the scaffold (§5.2's measurement) is reconciled;
+   a later encounter where the player *fails* to hold both poles is evidence that the synthesis was
+   provisional, and re-opens it. **This replaces a monotone coverage counter with a falsifiable
+   state** — which is what stops the store from ossifying around what the player once managed.
+
+### 4.4 What the tag store is for
 
 | Consumer | Query | Purpose |
 |---|---|---|
@@ -198,7 +236,7 @@ kind.**
 | Mode | Selection | Serves |
 |---|---|---|
 | **familiar** | tags nearest the UDV position | retention, fluency, the surface of a bridge |
-| **expand** | tags at the reflected position, ordered by `16 §6.4` distance | dimensional widening |
+| **expand** | tags at the reflected position **whose pair the player has in `active-tension`** (`§4.3`), ordered by `16 §6.4` distance | dimensional widening |
 | **spiral** | familiar for *surface*, opposite for *structure* — the default | both at once |
 
 **Spiral is the default and the reason this document exists.** The scaffold that carries it is
@@ -222,13 +260,16 @@ only surface ever used.
 ### 5.2 The expansion budget
 
 Repetition of any single tag or of any single opposite pair is the failure mode. The engine therefore
-carries, per player, a **coverage vector** over the tag space and derives:
+carries, per player, a **state map** over the tag space — each reconciliation-polarity at
+`reconciled` / `active-tension` / `undiscovered` (`§4.3`) — and derives:
 
 - `expansionRatio` — the fraction of composed encounters whose *structure* must come from the
   opposite pole (seeded from `45 §5.4`'s `noveltyBudget`, calibrated by play data)
 - `rotationFloor` — a minimum interval between two encounters sharing a dominant tag
-- **saturation guard** — once a tag's coverage entry is high, it stops being selectable as the
-  structural pole (it has nothing left to teach)
+- **saturation guard** — a pair at `reconciled` stops being selectable as the structural pole (it
+  has nothing left to teach). This is `§4.3`'s `reconciled` state expressed as a rule, and it is
+  **re-openable**: evidence that the player later fails to hold both poles returns the pair to
+  `active-tension`, so "saturated" is a claim the system can be wrong about, not a permanent grade.
 
 ### 5.3 What the engine may not do
 
@@ -239,6 +280,17 @@ carries, per player, a **coverage vector** over the tag space and derives:
 - **It may not collapse into a comfort engine.** `expansionRatio` has a floor; a player who always
   chooses the familiar is still given the opposite — that is the standing `16 §6.4` counterweight
   applied to *content* rather than difficulty.
+- **It may not select on a `reconciled` or `undiscovered` pair (§4.3).** Geometry supplies a
+  candidate; state decides whether it is the player's edge. An engine that expands toward
+  `undiscovered` is not stretching the player, it is bypassing them.
+
+**Vocabulary firewall (`44 §3.1`).** The polarities in this section are
+**reconciliation-polarities** — thesis⟷antithesis distinctions with a reconciliation state. They are
+not **service-polarities**: the STO/STS orientation a Significator crystallises and is harvested by
+(`19`, `23`). Bare "polarity" in Mysterium means the *service* sense, so this document says
+**reconciliation-polarity** or **dialectic**. KosmOS `polarity-self.md` adds a third thing to keep
+out: an insight's `±` valent is **insight valence** (descriptive, opportunity/risk) and is not a
+dialectical state, however much it rhymes with one.
 
 ---
 

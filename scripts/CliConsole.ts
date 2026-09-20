@@ -2,6 +2,9 @@
  * CliConsole — shared console helpers extracted from cli-game.ts.
  * Used by CurriculumCommands and the rest of the CLI for consistent
  * banner/info/warn/error formatting and JSON-mode awareness.
+ *
+ * @script-status: wired — imported by cli-game.ts and CurriculumCommands.ts, which `npm run cli`
+ *                          drives. Not standalone: run the CLI, not this module.
  */
 import chalk from 'chalk';
 

@@ -54,9 +54,9 @@ summed, or used as proxies for one another.
 
 | Axis | Domain | Canonical home | Meaning |
 |---|---|---|---|
-| **A** — **Altitude** | the one vertical | `06 §5.1`, `02` | how high; L1…L10. Every line climbs this. |
+| **A** — **Altitude** | the one vertical | `06 §5.1`, `02` | how high; L1…L10. Every line climbs this. Each altitude carries its own **quality** — emergent order, per-quadrant integrity/pathology markers, threshold markers (`StageQuality`) |
 | **B** — **Stage number** | within-altitude resolution | `02 §2.3` (MHC/Kegan spans) | *how* the ascent differentiates — MHC Orders 0–16, Kegan 0–5+. |
-| **C** — **Ray / density lens** | the Law-of-One overlay | `06 §5.1`, `06 §3` | **a lens, never a place.** 9 sub-octave positions (Blue 5a/5b, Indigo 6a/6b). Horizon vocabulary. |
+| **C** — **Ray / density lens** | the Law-of-One overlay | `06 §5.1`, `06 §8` | **a lens, never a place.** 9 sub-octave positions (Blue 5a/5b, **Indigo 6a/6b**), and position count (9) exceeds ray count (7) precisely so two altitudes can share a ray. Teal and Turquoise BOTH read Indigo; the Violet (7th) position is the **closure event**. Horizon vocabulary. |
 | **D** — **Framework-density** | the *knowledge* axis | `31` (DepthLevel), `42` (depth rungs) | concept → concrete-op → formal-op → vision-logic → beyond. A different question entirely. |
 | **E** — **Intra-holonic vertical** | the consciousness topography | `13` | the 5 substrate layers *inside* a holon — not stages, not densities. |
 
@@ -72,6 +72,35 @@ summed, or used as proxies for one another.
    different stores with different owners.
 6. **Mysterium stage names are Spiral-Dynamics *colours*.** They are not HoloOS densities. The
    colours are names for altitudes; HoloOS's VIBGYOR names are functions of density. `06 §5.1`.
+7. **A ray is never restated per stage.** The lens is the single source (`RAY_LENS`,
+   `src/core/domain/Ray.ts`) and the flat `STAGE_RAY_MAP` is **derived** from it. A per-stage
+   `ray` field is a defect even when its value is right: one field cannot express that two
+   altitudes share a ray, so the missing distinction gets absorbed by inventing a ray for one of
+   them. That is exactly how stage 8 acquired the Violet ray, and why `StageModule` no longer has
+   a `ray` member.
+8. **Never derive a distinction from a shared ray.** For a doubled ray (Blue, Indigo) the ray
+   activation cannot separate the pair — 5a/5b and 6a/6b are the same centre. The **quality** axis
+   separates them (`StageQuality`), and any transition signal that would read the ray must abstain
+   rather than report a boundary that does not exist.
+
+### 3.1 One word, two frameworks: *polarity*
+
+Two ratified models use this word for unrelated things, and they must never share a slot:
+
+| Term | Framework | Means | Canon |
+|---|---|---|---|
+| **service-polarity** | Law of One — the Choice | the STO/STS orientation a Significator crystallises and is harvested by | `19`, `23` |
+| **reconciliation-polarity** | KosmOS `polarity.md` | a **thesis⟷antithesis distinction** reconciled into a synthesis (a concept); carries a state — `reconciled` / `active-tension` / `undiscovered` | `46 §4` |
+
+They are not two views of one thing. A service-polarity is *which way the entity serves*; a
+reconciliation-polarity is *which tension a piece of knowledge closes*. KosmOS `polarity-self.md`
+adds a third thing that must not be folded in either: an insight's `±` valent is **insight valence**
+(descriptive — opportunity/risk), *not* a dialectical state.
+
+Bare **“polarity”** in Mysterium therefore means **service-polarity** (it is the older and
+dominant use), and any document meaning the dialectical sense must say
+**reconciliation-polarity** or **dialectic**. `46 §4`'s tag pairs are reconciliation-polarities:
+their KosmOS name is `polar_pair`, and their state — not their existence — is what selection reads.
 
 ---
 
@@ -327,6 +356,31 @@ blacklist:
       - "combat-only progression"
       - "time-bar combat"
     exempt_in: ["DEVELOPMENT-PLAN", "ARCHITECTURE-TRANSMUTATION-PLAN", "docs/foundations/44-system-ontology-and-vocabulary.md"]
+
+  - term: "stage 8 carries the Violet ray"
+    superseded_sense: "the top altitude's ray is Violet (and/or that stage 8 is Indigo 6b but Violet-rayed)"
+    correct: "Teal and Turquoise **both** read Indigo — 6a and 6b. The Violet (7th) position is the **closure event**, not a stage's ray (`06 §5`, `06 §5.1`, KosmOS `lenses/rays.md`). Code: `RAY_LENS` + `CLOSURE_BINDING`."
+    patterns:
+      - "Turquoise\\s*[:=]\\s*['\"]?Violet"
+      - "8\\s*→\\s*Violet"
+      - "stage\\s*8\\s*(?:is|=)\\s*(?:the\\s+)?Violet"
+    exempt_in: ["docs/foundations/44-system-ontology-and-vocabulary.md", "foundations/06-law-of-one-correspondence", "foundations/02-eight-stages-overview", "ARCHITECTURE-TRANSMUTATION-PLAN", "DEVELOPMENT-PLAN"]
+
+  - term: "a per-stage `ray` field"
+    superseded_sense: "declaring the ray beside each stage, so the ladder's own table is the mapping"
+    correct: "the ray is a **lens** over the altitude ladder: `RAY_LENS[stage]` is the single source and `STAGE_RAY_MAP` is derived from it (44 law 7). One value per stage cannot express a shared ray, so the copy invents one."
+    patterns:
+      - "ray\\s*:\\s*['\"](?:Red|Orange|Yellow|Green|Blue|Indigo|Violet)['\"]"
+    exempt_in: ["foundations/06-law-of-one-correspondence", "docs/foundations/44-system-ontology-and-vocabulary.md", "ARCHITECTURE-TRANSMUTATION-PLAN", "DEVELOPMENT-PLAN"]
+
+  - term: "polarity (unqualified, meaning the dialectic)"
+    superseded_sense: "`polarity` used for a thesis/antithesis distinction, or for a tag's opposite pole"
+    correct: "bare **polarity** = **service-polarity** (STO/STS, the Choice). The dialectical sense is **reconciliation-polarity** — a KosmOS `polar_pair` with a state (44 §3.1). KosmOS also warns that an insight's `±` valent is insight valence, not a dialectical state (`polarity-self.md`)."
+    patterns:
+      - "polarity\\s+(?:pair|graph|state|reconcil(?:e|ed|iation))\\s+(?:of|is|are)\\s+(?:a\\s+)?(?:thesis|tag|opposite)"
+      - "tag\\s+polarit(?:y|ies)"
+      - "polarity\\s*:\\s*\\[\\[pole/"
+    exempt_in: ["docs/foundations/44-system-ontology-and-vocabulary.md", "foundations/46-generative-world-composition", "foundations/19-choice-and-polarity-engine", "foundations/23-polarity-ontology", "ARCHITECTURE-TRANSMUTATION-PLAN", "DEVELOPMENT-PLAN"]
 
   - term: "checkHarvest"
     superseded_sense: "the name of the eligibility function"

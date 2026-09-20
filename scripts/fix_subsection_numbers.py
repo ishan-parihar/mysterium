@@ -3,7 +3,11 @@
 Renumber ### subsections so they match their parent ## section number.
 E.g., ### 1.1 inside ## 2. Shadow Archetypes → ### 2.1
 """
-import os, re
+# @script-status: historical — a corpus-wide renumbering for the retired template. It rewrites
+#                              heading numbers in docs/concept-drafts/ in place, and the corpus was
+#                              already renumbered by hand into its current SCORING-ARCHITECTURE
+#                              shape. Running it now would renumber current headings against the old
+#                              section semantics. Destructive: do not run.
 
 BASE = "docs/concept-drafts"
 

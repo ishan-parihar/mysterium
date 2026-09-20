@@ -408,8 +408,8 @@ function formatPlayerState(sig: VeilFilteredSignificator): string {
     Amber: 'player resonance = belonging-seeking, rule-bound',
     Orange: 'player resonance = reason-driven, achievement-oriented',
     Green: 'player resonance = pluralistic, multi-perspective',
-    Turquoise: 'player resonance = integral, vision-logic',
-    White: 'player resonance = trans-rational, unity-seeking',
+    Teal: 'player resonance = integral, vision-logic',
+    Turquoise: 'player resonance = trans-rational, unity-seeking',
   };
   signals.push(layerResonance[sig.perceivedLayer] ?? `player resonance = ${sig.perceivedLayer.toLowerCase()}`);
 

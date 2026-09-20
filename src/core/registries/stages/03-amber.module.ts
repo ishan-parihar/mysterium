@@ -3,7 +3,6 @@ import { StageRegistry } from '../index.js';
 export function register(): void {
   StageRegistry.register('Amber', {
     stage: 'Amber',
-    ray: 'Green',
     description: 'Belonging, rule-and-role.',
     stub: true,
     // UX-02: Amber = D2 ≈ Love/Logos (unity-attracting). Palette is

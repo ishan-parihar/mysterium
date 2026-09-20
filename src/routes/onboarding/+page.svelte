@@ -236,7 +236,7 @@
     // Stage gates: the ratio required to pass climbs with the stage.
     const stageGates: Record<string, number> = {
       Infrared: 0.05, Magenta: 0.1, Red: 0.2, Amber: 0.34,
-      Orange: 0.5, Green: 0.66, Turquoise: 0.8, White: 0.95,
+      Orange: 0.5, Green: 0.66, Teal: 0.8, Turquoise: 0.95,
     };
     const gate = stageGates[stage] ?? 0.34;
     const margin = upperRatio - gate;

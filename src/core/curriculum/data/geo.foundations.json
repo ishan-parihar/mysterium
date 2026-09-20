@@ -329,7 +329,7 @@
     "devMapping": {
       "primaryLine": "Moral",
       "secondaryLines": ["Cognitive", "Somatic"],
-      "stageRange": { "min": "Orange", "max": "Turquoise" }
+      "stageRange": { "min": "Orange", "max": "Teal" }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",

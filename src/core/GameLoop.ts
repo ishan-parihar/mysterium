@@ -326,7 +326,7 @@ export function startSession(sig: Significator, session: SessionContext): Sessio
   try {
     // Detect readiness for the next stage above currentStage.
     const nextStageOrd = stageOrdinal(migratedSig.currentStage) + 1;
-    const allStages = ['Infrared','Magenta','Red','Amber','Orange','Green','Turquoise','White'] as const;
+    const allStages = ['Infrared','Magenta','Red','Amber','Orange','Green','Teal','Turquoise'] as const;
     const nextStage = allStages[nextStageOrd] as Stage | undefined;
     if (nextStage) perLineTransformations = detectPerLineTransformation(migratedSig as any, nextStage);
   } catch { /* best-effort */ }
@@ -615,7 +615,7 @@ export function tickWithStrategy(
   let perLineTransformations = sessionState.perLineTransformations ?? [];
   try {
     const nextOrd = stageOrdinal(updatedSig.currentStage) + 1;
-    const allStages = ['Infrared','Magenta','Red','Amber','Orange','Green','Turquoise','White'] as const;
+    const allStages = ['Infrared','Magenta','Red','Amber','Orange','Green','Teal','Turquoise'] as const;
     const nextStage = allStages[nextOrd] as Stage | undefined;
     if (nextStage) perLineTransformations = detectPerLineTransformation(updatedSig as any, nextStage);
   } catch { /* best-effort */ }
@@ -1058,15 +1058,15 @@ export function endSession(
   };
 
   // P2-Critical: Wire checkHarvest into runtime. Per foundations/19 §9, at
-  // White stage, check if the player is harvestable. If not, enter Samsara
-  // mode (the player continues in a post-White loop receiving increasingly
+  // Turquoise stage, check if the player is harvestable. If not, enter Samsara
+  // mode (the player continues in a post-Turquoise loop receiving increasingly
   // intense catalysts to force crystallization). The harvest check uses the
   // STO 51% / STS 95% thresholds per foundations/19 §5.
   let harvestResult: { harvestable: boolean; direction: 'STO' | 'STS' | null; reason: string } | null = null;
-  if (updatedSig.currentStage === 'White') {
+  if (updatedSig.currentStage === 'Turquoise') {
     // P0-FIX: checkHarvest is now statically imported — the previous
     // require()-inside-try silently swallowed "require is not defined" and the
-    // harvest check ALWAYS returned null at White stage. No try/catch is needed
+    // harvest check ALWAYS returned null at Turquoise stage. No try/catch is needed
     // for the import; validateSignificator guarantees the polarity/altitude
     // shapes consumed below.
     // WIRE-5: Use crystallization (direction commitment) not coherence
@@ -1155,7 +1155,7 @@ export function endSession(
     sig: finalSig,
     ...(updatedWorld !== world ? { world: updatedWorld } : {}),
     summary: { encountersCompleted, shadowsSurfaced, shadowsResolved, userMatrixSummary, macroEventsAdvanced, curriculumProbe },
-    // P2-Critical: harvest check result (null unless player is at White stage)
+    // P2-Critical: harvest check result (null unless player is at Turquoise stage)
     harvestCheck: harvestResult,
   };
 }

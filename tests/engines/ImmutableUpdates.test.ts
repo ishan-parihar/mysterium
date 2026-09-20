@@ -56,7 +56,7 @@ describe('T-5.8 — Immutable Significator updates', () => {
     const updatedLast = updatedSig.theta.lastEncounter as Record<string, number>;
     const originalLast = sig.theta.lastEncounter as Record<string, number>;
     expect(updatedLast['Emotional:Red']).toBe(originalLast['Emotional:Red']);
-    expect(updatedLast['Somatic:White']).toBe(originalLast['Somatic:White']);
+    expect(updatedLast['Somatic:Turquoise']).toBe(originalLast['Somatic:Turquoise']);
   });
 
   it('immutable update preserves all other Significator fields', () => {

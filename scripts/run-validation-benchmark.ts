@@ -6,9 +6,12 @@
  * The full tier runs extended trajectories (8 sessions × 8 encounters, plus the
  * temporal personas' real horizons) to calibrate gate thresholds: it prints the
  * observed margins next to each gate's CI threshold so threshold drift can be
- * tuned from evidence (spec §7-§8). Output is written to
- * docs/validation/last-full-run.json when --json is given.
+ * tuned from evidence (spec §7-§8). `--json=<path>` writes the report wherever
+ * you point it; pass an explicit path — `docs/validation/` was removed in the
+ * P3 structural move and no longer exists (KB-ORPHAN-TRIAGE / KB audit UT-7).
  */
+// @script-status: wired — `npm run bench:validation`. Read-only trajectory simulation against
+//                          the ratified gate thresholds; it writes nothing unless --json is given.
 import { runValidationSuite, type ValidationReport } from '../src/core/validation/gates.js';
 
 function parseArgs(): { tier: 'ci' | 'full'; json?: string } {

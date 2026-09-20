@@ -11,6 +11,10 @@ S-1..S-5 structural closure, D-1..D-4 developmental alignment).
 
 Output: src/core/curriculum/data/{branch}.foundations.json
 """
+# @script-status: one-shot — authored the six K-12 branch foundation files (doc 37 §8 item 4) and
+#                            was run once to produce them. It writes the data files wholesale, so it
+#                            is safe only from the pre-authoring state; re-running overwrites any
+#                            hand-tuned branch content. Never schedule it.
 
 import json
 import os

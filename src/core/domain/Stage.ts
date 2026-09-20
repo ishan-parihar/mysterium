@@ -9,8 +9,8 @@ export type Stage =
   | 'Amber'
   | 'Orange'
   | 'Green'
-  | 'Turquoise'
-  | 'White';
+  | 'Teal'
+  | 'Turquoise';
 
 export const ALL_STAGES: readonly Stage[] = [
   'Infrared',
@@ -19,11 +19,11 @@ export const ALL_STAGES: readonly Stage[] = [
   'Amber',
   'Orange',
   'Green',
+  'Teal',
   'Turquoise',
-  'White',
 ];
 
-/** Ordinal index of a stage (0 = Infrared, 7 = White). */
+/** Ordinal index of a stage (0 = Infrared, 7 = Turquoise). */
 export function stageOrdinal(s: Stage): number {
   return ALL_STAGES.indexOf(s);
 }

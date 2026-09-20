@@ -310,7 +310,7 @@ export function validateTransformationGating(personas: readonly PersonaSpec[] = 
       const stage = s.observables.currentStage;
       // Invariant (both tiers): stage changes are exactly +1 — no skips, no demotion.
       if (prevStage !== null && stage !== prevStage) {
-        const stageOrd = (st: string) => ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'].indexOf(st);
+        const stageOrd = (st: string) => ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'].indexOf(st);
         if (stageOrd(stage) !== stageOrd(prevStage) + 1) {
           return {
             gate: 'G8-transformation-gating', passed: false, hard: true,
@@ -698,7 +698,7 @@ export function validatePlacementConvergence(): GateResult {
       };
     };
 
-    for (const truth of ['Red', 'Amber', 'Orange', 'Turquoise'] as const) {
+    for (const truth of ['Red', 'Amber', 'Orange', 'Teal'] as const) {
       const p = placeLine('Cognitive', makeProbe(truth));
       if (!p.converged) return mk(`line did not converge for truth ${truth}`);
       if (p.probesUsed > MAX_PROBES_PER_LINE) return mk(`probe budget exceeded for truth ${truth} (${p.probesUsed})`);
@@ -710,11 +710,11 @@ export function validatePlacementConvergence(): GateResult {
     const boundary = placeLine('Somatic', ambiguousProbe);
     if (boundary.converged || !boundary.boundary) return mk('persistent ambiguity must mark boundary, not fake convergence');
 
-    // Ladder edges: truth at Infrared (fail at start → down-walk) and White.
+    // Ladder edges: truth at Infrared (fail at start → down-walk) and Turquoise.
     const bottom = placeLine('Moral', makeProbe('Infrared'));
     if (bottom.altitude !== 'Infrared') return mk('bottom-of-ladder placement failed');
-    const top = placeLine('Spiritual', makeProbe('White'));
-    if (top.altitude !== 'White') return mk('top-of-ladder placement failed');
+    const top = placeLine('Spiritual', makeProbe('Turquoise'));
+    if (top.altitude !== 'Turquoise') return mk('top-of-ladder placement failed');
 
     return { gate: 'G20 placement convergence', passed: true, hard: true, details: `converges ≤${MAX_PROBES_PER_LINE} probes at all truths tested; edges hold; ambiguity → boundary` };
   } catch (e) {
@@ -775,7 +775,7 @@ export function validateCredentialChain(): GateResult {
     if (!bad.some((f) => f.rule === 'E2')) return mk('undisclosed pack evidence accepted (E2 lacks teeth)');
 
     // 4. Stage-shaped evidence under EQF is the category error — must fail (E4).
-    const stageRef: typeof mastery = { type: 'mastery', ref: 'stage:Turquoise', reliability: { measuredAtMs: now } };
+    const stageRef: typeof mastery = { type: 'mastery', ref: 'stage:Teal', reliability: { measuredAtMs: now } };
     const cat = validateClaim({ ...draft.claim, id: 'cat', evidence: [stageRef] });
     if (!cat.some((f) => f.rule === 'E4')) return mk('stage-shaped evidence passed under EQF (category-error firewall open)');
 

@@ -29,8 +29,8 @@ describe('FrequencyConditioner', () => {
       expect(spec.taboos).toContain('compromise');
     });
 
-    it('produces integral/paradox-holding tone for Turquoise stage', () => {
-      const spec = generateFrequencySpec('Spiritual', 'Turquoise', 'Spiritual', 'Turquoise', 'LanguageReflective');
+    it('produces integral/paradox-holding tone for Teal stage', () => {
+      const spec = generateFrequencySpec('Spiritual', 'Teal', 'Spiritual', 'Teal', 'LanguageReflective');
       expect(spec.toneDirective).toContain('integral/paradox-holding');
       expect(spec.vocabularyBand).toContain('multi-layered/both-and');
       expect(spec.valueLens).toBe('wholeness/emergence');
@@ -38,7 +38,7 @@ describe('FrequencyConditioner', () => {
     });
 
     it('produces distinct toneDirective for at least 4 different stages', () => {
-      const stages: Stage[] = ['Infrared', 'Red', 'Orange', 'Green', 'Turquoise'];
+      const stages: Stage[] = ['Infrared', 'Red', 'Orange', 'Green', 'Teal'];
       const tones = stages.map(
         (s) => generateFrequencySpec('Cognitive', s, 'Cognitive', s, 'Deterministic').toneDirective,
       );
@@ -47,7 +47,7 @@ describe('FrequencyConditioner', () => {
     });
 
     it('produces distinct vocabularyBand for different stages', () => {
-      const stages: Stage[] = ['Magenta', 'Amber', 'Orange', 'White'];
+      const stages: Stage[] = ['Magenta', 'Amber', 'Orange', 'Turquoise'];
       const bands = stages.map(
         (s) => generateFrequencySpec('Cognitive', s, 'Cognitive', s, 'Deterministic').vocabularyBand,
       );

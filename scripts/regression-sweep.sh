@@ -3,6 +3,10 @@
 # Runs typecheck + unit tests + a comprehensive smoke-test matrix across
 # every flag combination the fresh-user audit exercised.
 # Exits non-zero on any failure.
+# @script-status: one-shot — the UX-R3 flag-matrix sweep written for the fresh-user CLI audit
+#                            (docs/audits/FRESH-USER-CLI-UX-AUDIT-2026-07-25-V2.md). It drives the
+#                            CLI through an exhaustive flag matrix, so it is slow and its matrix is
+#                            tied to that audit's CLI surface; re-run deliberately, never schedule it.
 
 set -uo pipefail
 cd "$(dirname "$0")/.."

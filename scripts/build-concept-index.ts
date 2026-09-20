@@ -1,3 +1,6 @@
+// @script-status: wired — the corpus generator (`npm run corpus:build`): reads the 64 module
+//                          directories under docs/concept-drafts/ and emits the engine-facing
+//                          src/core/data/concept-drafts.json. DG21 reconciles the two.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 

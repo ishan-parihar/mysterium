@@ -1,0 +1,30 @@
+{
+  "tool": "code-stage-reindex",
+  "mapping": [
+    {
+      "from": "turquoise",
+      "to": "teal"
+    },
+    {
+      "from": "Turquoise",
+      "to": "Teal"
+    },
+    {
+      "from": "white",
+      "to": "turquoise"
+    },
+    {
+      "from": "White",
+      "to": "Turquoise"
+    }
+  ],
+  "files_changed": 87,
+  "paths_renamed": 18,
+  "held": [
+    "src/core/domain/Ray.ts  (2 line(s)) \u2014 ray bindings \u2014 Turquoise is Indigo 6b, not Violet (canon \u00a75.1)",
+    "src/core/engines/GreaterCycleEngine.ts  (2 line(s)) \u2014 SUBSTRATE_LAYER_LAW's D4 row names the closure event",
+    "src/core/orchestration/delegate.ts  (2 line(s)) \u2014 veil-leak regex \u2014 White is a colour word, not only a stage",
+    "src/core/registries/stages/06-turquoise.module.ts  (2 line(s)) \u2014 becomes 06-teal; ray stays Indigo",
+    "src/core/registries/stages/07-white.module.ts  (2 line(s)) \u2014 becomes 07-turquoise; ray must become Indigo"
+  ]
+}

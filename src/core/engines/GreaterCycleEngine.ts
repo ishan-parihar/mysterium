@@ -422,8 +422,12 @@ function clamp01(x: number): number {
 export const SUBSTRATE_LAYER_LAW: readonly { readonly density: number; readonly law: string; readonly stage: string }[] = [
   { density: 1, law: 'Free Will', stage: 'Infrared/Magenta' },
   { density: 2, law: 'Love', stage: 'Red/Amber' },
-  { density: 3, law: 'Light', stage: 'Orange/Green/Turquoise' },
-  { density: 4, law: 'Our octave contributions', stage: 'White' },
+  { density: 3, law: 'Light', stage: 'Orange/Green/Teal' },
+  // NOT a stage. Canon 02: "The sub-octave closure — the Violet event (L8 Turquoise completed)
+  // ≈ our octave's contributions". The row previously read `'White'`, which named the retired
+  // stage 8 — the same conflation of the ladder's top with the closure EVENT that gave stage 8
+  // the Violet ray (see domain/Ray.ts CLOSURE_BINDING). There is no D4 stage in Mysterium.
+  { density: 4, law: 'Our octave contributions', stage: 'Violet event (closure — not a stage)' },
 ];
 
 /** Involution-ground block: 3 prior octaves, each contributing a substrate-layer. */

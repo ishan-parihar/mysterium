@@ -3,7 +3,7 @@
  *
  * P0: endSession crashed with "require is not defined" in every ESM runtime
  *     (tsx/vitest/dev) whenever world.activeMacroEvents was non-empty, and the
- *     White-stage harvest check silently no-op'ed through the same pattern.
+ *     Turquoise-stage harvest check silently no-op'ed through the same pattern.
  * P5: lastSessionAt / curriculumIntervention were untyped `as any` fields that
  *     validateSignificator stripped on load; the intervention flag was also
  *     sticky forever (consumed in a local copy that never persisted), and
@@ -112,9 +112,9 @@ describe('P0: endSession macro-event lifecycle survives ESM (require is not defi
   });
 });
 
-describe('P0: White-stage harvest check actually runs', () => {
-  it('returns a real verdict (not the silently-swallowed null) at White stage', () => {
-    const sig = createSignificator('p0-harvest', { ...altitudes, Cognitive: 'White' } as Record<Line, Stage>, 'White');
+describe('P0: Turquoise-stage harvest check actually runs', () => {
+  it('returns a real verdict (not the silently-swallowed null) at Turquoise stage', () => {
+    const sig = createSignificator('p0-harvest', { ...altitudes, Cognitive: 'Turquoise' } as Record<Line, Stage>, 'Turquoise');
     const session: any = { targetSessionLength: 5, encountersSoFar: 0, recentLines: ['Cognitive'] };
     const sessionState = startSession(sig, session);
 
@@ -124,12 +124,12 @@ describe('P0: White-stage harvest check actually runs', () => {
     expect(result.harvestCheck).not.toBeNull();
     expect(typeof result.harvestCheck!.harvestable).toBe('boolean');
     expect(typeof result.harvestCheck!.reason).toBe('string');
-    // A fresh White significator is Exploring-mode: not harvestable, with a reason.
+    // A fresh Turquoise significator is Exploring-mode: not harvestable, with a reason.
     expect(result.harvestCheck!.harvestable).toBe(false);
     expect(result.harvestCheck!.direction).toBeNull();
   });
 
-  it('does not run the harvest check below White stage', () => {
+  it('does not run the harvest check below Turquoise stage', () => {
     const sig = createSignificator('p0-noharvest', altitudes, 'Red');
     const session: any = { targetSessionLength: 5, encountersSoFar: 0, recentLines: ['Cognitive'] };
     const sessionState = startSession(sig, session);

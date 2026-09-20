@@ -39,8 +39,8 @@ describe('P1-F7: stages never demote (regression guard)', () => {
       const nextStage = ALL_STAGES[i + 1]!;
       expect(stageOrdinal(nextStage)).toBeGreaterThan(stageOrdinal(currentStage));
     }
-    // White is the top — there is no next stage.
-    expect(ALL_STAGES[ALL_STAGES.length - 1]).toBe('White');
+    // Turquoise is the top — there is no next stage.
+    expect(ALL_STAGES[ALL_STAGES.length - 1]).toBe('Turquoise');
   });
 
   it('a fresh Significator always starts at Red (never demoted from a higher stage)', () => {

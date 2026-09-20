@@ -97,11 +97,11 @@ export function scoreResponse(
   // Stage-aware thresholds
   const earlyStages: readonly Stage[] = ['Infrared', 'Magenta', 'Red'];
   const middleStages: readonly Stage[] = ['Amber', 'Orange'];
-  // Later stages: Green, Turquoise, White
+  // Later stages: Green, Teal, Turquoise
 
   const isEarly = earlyStages.includes(stage);
   const isMiddle = middleStages.includes(stage);
-  // isLater is the default (Green, Turquoise, White)
+  // isLater is the default (Green, Teal, Turquoise)
 
   // Self-referential language detection
   const selfRefPattern = /\b(I|my|me|myself|I'm|I've|I'd|I'll)\b/gi;

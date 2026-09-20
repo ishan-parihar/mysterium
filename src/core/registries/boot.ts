@@ -21,8 +21,8 @@ import { register as red } from './stages/02-red.module.js';
 import { register as amber } from './stages/03-amber.module.js';
 import { register as orange } from './stages/04-orange.module.js';
 import { register as green } from './stages/05-green.module.js';
-import { register as turquoise } from './stages/06-turquoise.module.js';
-import { register as white } from './stages/07-white.module.js';
+import { register as teal } from './stages/06-teal.module.js';
+import { register as turquoise } from './stages/07-turquoise.module.js';
 
 import { register as rayRed } from './rays/01-red.module.js';
 import { register as rayOrange } from './rays/02-orange.module.js';
@@ -56,8 +56,8 @@ export function bootRegistries(): void {
   amber();
   orange();
   green();
+  teal();
   turquoise();
-  white();
 
   // Rays
   rayRed();

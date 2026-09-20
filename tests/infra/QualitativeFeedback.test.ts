@@ -44,7 +44,7 @@ describe('QualitativeFeedback — band classification', () => {
 
 describe('QualitativeFeedback — Veil compliance', () => {
   it('never includes stage labels (Red, Amber, etc.) in the output', () => {
-    const stages = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'];
+    const stages = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
     for (const shadowQuadrant of ['DarkAddiction', 'DarkAllergy', 'GoldenAddiction', 'GoldenAllergy'] as const) {
       const fb = toQualitativeFeedback(withDrive('Agency', 'DarkAddicted'), shadowQuadrant, false);
       const text = formatQualitativeFeedback(fb);

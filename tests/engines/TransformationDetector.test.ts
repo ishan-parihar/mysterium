@@ -16,12 +16,12 @@ describe('TransformationDetector', () => {
       expect(detectThreshold(sig)).toBeNull();
     });
 
-    it('returns null when at White (max stage)', () => {
-      const whiteAlt: Record<Line, Stage> = {
-        Cognitive: 'White', Emotional: 'White', Moral: 'White', Intrapersonal: 'White',
-        Spiritual: 'White', Somatic: 'White', Willpower: 'White', Interpersonal: 'White',
+    it('returns null when at Turquoise (max stage)', () => {
+      const turquoiseAlt: Record<Line, Stage> = {
+        Cognitive: 'Turquoise', Emotional: 'Turquoise', Moral: 'Turquoise', Intrapersonal: 'Turquoise',
+        Spiritual: 'Turquoise', Somatic: 'Turquoise', Willpower: 'Turquoise', Interpersonal: 'Turquoise',
       };
-      const sig = createSignificator('p1', whiteAlt, 'White');
+      const sig = createSignificator('p1', turquoiseAlt, 'Turquoise');
       expect(detectThreshold(sig)).toBeNull();
     });
   });

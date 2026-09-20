@@ -8,8 +8,8 @@
  *   amber:    chime     — fade + scale up slightly
  *   orange:   tick      — quick slide from right
  *   green:    grow      — scale from 0.9 + fade
- *   turquoise: refract  — fade + slight horizontal shift
- *   white:    dissolve  — slow fade, no movement
+ *   teal: refract  — fade + slight horizontal shift
+ *   turquoise:    dissolve  — slow fade, no movement
  *
  * These are Svelte transition functions compatible with `transition:` and
  * `in:` / `out:` directives. They read duration from --mysterium-duration-* tokens.

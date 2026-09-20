@@ -10,23 +10,23 @@ type ThresholdMap = readonly (readonly [number, Stage])[];
 
 const COGNITIVE: ThresholdMap = [
   [1, 'Infrared'], [1.5, 'Magenta'], [2.2, 'Red'], [2.8, 'Amber'],
-  [3.5, 'Orange'], [4.5, 'Green'], [5.5, 'Turquoise'], [7, 'White'],
+  [3.5, 'Orange'], [4.5, 'Green'], [5.5, 'Teal'], [7, 'Turquoise'],
 ];
 
 const EMOTIONAL: ThresholdMap = [
   [1, 'Infrared'], [1.8, 'Magenta'], [2.5, 'Red'], [3.2, 'Amber'],
-  [4, 'Orange'], [4.8, 'Green'], [5.5, 'Turquoise'], [6.5, 'White'],
+  [4, 'Orange'], [4.8, 'Green'], [5.5, 'Teal'], [6.5, 'Turquoise'],
 ];
 
 /** Somatic: lower RT = higher stage. Map stores RT cutoffs in ascending order. */
 const SOMATIC: ThresholdMap = [
   [900, 'Infrared'], [750, 'Magenta'], [650, 'Red'], [550, 'Amber'],
-  [450, 'Orange'], [350, 'Green'], [280, 'Turquoise'], [200, 'White'],
+  [450, 'Orange'], [350, 'Green'], [280, 'Teal'], [200, 'Turquoise'],
 ];
 
 const WILLPOWER: ThresholdMap = [
   [1, 'Infrared'], [2.5, 'Magenta'], [4, 'Red'], [5.5, 'Amber'],
-  [7, 'Orange'], [9, 'Green'], [12, 'Turquoise'], [15, 'White'],
+  [7, 'Orange'], [9, 'Green'], [12, 'Teal'], [15, 'Turquoise'],
 ];
 
 export const THRESHOLD_MAPS: Record<Line, ThresholdMap> = {
@@ -50,7 +50,7 @@ export function thresholdToStage(line: Line, threshold: number): Stage {
 
   if (line === 'Somatic') {
     // Inverted: lower threshold (faster RT) = higher stage.
-    // Map is sorted descending: [900→Infrared, 800→Magenta, ... 200→White]
+    // Map is sorted descending: [900→Infrared, 800→Magenta, ... 200→Turquoise]
     let result: Stage = 'Infrared';
     for (const [cutoff, stage] of map) {
       if (threshold <= cutoff) {

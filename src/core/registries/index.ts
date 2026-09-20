@@ -21,9 +21,14 @@ export interface LineModule {
 
 export interface StageModule {
   readonly stage: Stage;
-  readonly ray: Ray;
   readonly description: string;
   readonly stub: boolean;
+  // NOTE: `ray` used to be declared here, per module, as a hand-copied value. Nothing read it,
+  // and because a single field cannot express that Teal and Turquoise SHARE the Indigo ray, the
+  // copy silently absorbed the difference by inventing one (`Turquoise: 'Violet'`). The ray is a
+  // LENS, not a stage property: read `RAY_LENS[stage]` (domain/Ray.ts). Restating it here is
+  // what let the altitude framework and the ray framework drift together — see P1 in
+  // docs/foundations/44-system-ontology-and-vocabulary.md.
   readonly palette?: {
     readonly primary: string;
     readonly secondary: string;

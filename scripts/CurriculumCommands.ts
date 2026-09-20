@@ -2,6 +2,8 @@
  * CurriculumCommands — CLI subcommands for curriculum management.
  * Extracted from cli-game.ts as part of Phase C modular split.
  * Handles `mysterium curriculum [lint|list|progress|status]`.
+ *
+ * @script-status: wired — imported by cli-game.ts, which `npm run cli` runs. Not standalone.
  */
 import chalk from 'chalk';
 import { getCurriculumRegistry } from '../src/core/curriculum/CurriculumRegistry.js';

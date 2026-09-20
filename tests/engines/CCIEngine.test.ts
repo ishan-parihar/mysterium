@@ -148,11 +148,11 @@ describe('CCIEngine', () => {
       expect(normaliseAltitude(input)).toBe(0);
     });
 
-    it('returns 1.0 for White centre of gravity with no penalties', () => {
+    it('returns 1.0 for Turquoise centre of gravity with no penalties', () => {
       const input = makeAltitudeInput({
-        centreOfGravity: 'White',
-        lowestAltitude: 'Turquoise',
-        highestAltitude: 'White',
+        centreOfGravity: 'Turquoise',
+        lowestAltitude: 'Teal',
+        highestAltitude: 'Turquoise',
         spread: 0,
       });
       expect(normaliseAltitude(input)).toBeCloseTo(1.0, 1);
@@ -548,15 +548,15 @@ describe('CCIEngine', () => {
       expect(['altitude', 'driveHealth', 'polarity', 'shadowTopology', 'transformationReadiness']).toContain(score.dominantDimension);
     });
 
-    it('handles snapshot at White stage', () => {
-      const allWhite: Record<Line, Stage> = {
-        Cognitive: 'White', Emotional: 'White', Moral: 'White',
-        Intrapersonal: 'White', Spiritual: 'White', Somatic: 'White',
-        Willpower: 'White', Interpersonal: 'White',
+    it('handles snapshot at Turquoise stage', () => {
+      const allTurquoise: Record<Line, Stage> = {
+        Cognitive: 'Turquoise', Emotional: 'Turquoise', Moral: 'Turquoise',
+        Intrapersonal: 'Turquoise', Spiritual: 'Turquoise', Somatic: 'Turquoise',
+        Willpower: 'Turquoise', Interpersonal: 'Turquoise',
       };
       const snapshot = makeMinimalSnapshot({
-        altitudes: allWhite,
-        currentStage: 'White',
+        altitudes: allTurquoise,
+        currentStage: 'Turquoise',
         transformationReadiness: {
           linesAtEdge: 8, shadowClearance: true, catalystSaturation: 1.0,
           pendingTransformation: false, targetStage: null, sessionsSinceLastTransformation: 20,

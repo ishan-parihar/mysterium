@@ -89,7 +89,7 @@ describe('category-error firewall (C3)', () => {
   });
 
   it('stage-shaped evidence is rejected outright (E3/E4)', () => {
-    const stageRef = { type: 'mastery' as const, ref: 'stage:Turquoise', reliability: { measuredAtMs: NOW } };
+    const stageRef = { type: 'mastery' as const, ref: 'stage:Teal', reliability: { measuredAtMs: NOW } };
     const claim = draftClaim(validDraft()).claim;
     const failures = validateClaim({ ...claim, evidence: [stageRef] });
     expect(failures.some((f) => f.rule === 'E3')).toBe(true);

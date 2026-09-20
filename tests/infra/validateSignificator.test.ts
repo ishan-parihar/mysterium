@@ -68,7 +68,7 @@ describe('T-0.8 — validateSignificator', () => {
     const restored = validateSignificator({ id: 'p5' });
     expect(restored).not.toBeNull();
     expect(restored!.theta.lastEncounter['Cognitive:Red']).toBe(0);
-    expect(restored!.theta.lastEncounter['Somatic:White']).toBe(0);
+    expect(restored!.theta.lastEncounter['Somatic:Turquoise']).toBe(0);
   });
 
   it('fills missing transformations with empty array', () => {

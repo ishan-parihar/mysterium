@@ -52,6 +52,13 @@ POST-RECEIPT CORRECTIONS (--only):
     reading Teal/Turquoise must not be passed here.
         python3 scripts/doc-stage-reindex.py --only docs/foundations/23-polarity-ontology.md
 """
+# @script-status: historical — the DOC half of the 2026-09-20 ladder re-index; already applied to
+#                              active canon. The mapping is NOT idempotent (a second pass corrupts
+#                              stage 8 into stage 7 — incident 2026-09-20, 194 files, reverted from
+#                              git), so it must not be run again. Its CODE half is CODE-PASS, which
+#                              the script explicitly HOLDS rather than rewriting. Retired by
+#                              RT-ARCHIVE-MIGRATIONS. `--only <path>` remains the one live use, and
+#                              only for a single hand-reviewed file.
 
 from __future__ import annotations
 

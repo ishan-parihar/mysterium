@@ -27,7 +27,7 @@ const LINE_CEILINGS: Readonly<Record<Line, CeilingRule>> = {
  */
 export function lineCeiling(line: Line, altitudes: Record<Line, Stage>): Stage {
   const rule = LINE_CEILINGS[line];
-  if (!rule.dependsOn) return 'White';
+  if (!rule.dependsOn) return 'Turquoise';
   const depOrd = stageOrdinal(altitudes[rule.dependsOn]);
   const maxOrd = Math.min(depOrd + rule.offset, ALL_STAGES.length - 1);
   return ALL_STAGES[maxOrd]!;

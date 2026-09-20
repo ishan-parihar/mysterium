@@ -8,7 +8,7 @@
  *   syllabus.<branch>  — 8 depth rungs (absent → transformed), aggregated
  *                        from per-concept depth × retention, capped by
  *                        prerequisite closure.
- *   line.<line>        — 8 stage rungs (Infrared → White) from the
+ *   line.<line>        — 8 stage rungs (Infrared → Turquoise) from the
  *                        Significator's altitudes, discounted by theta
  *                        staleness, gated by shadow load.
  *

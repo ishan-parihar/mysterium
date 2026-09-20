@@ -852,7 +852,7 @@ You are conducting a deep developmental assessment through open-ended dialogue.
 
 INSTRUCTIONS:
 1. Generate a single, profound reflective prompt that invites the player to explore their inner landscape. The prompt should be:
-   - Stage-appropriate (Red = survival/immediate, Amber = order/belonging, Orange = achievement/autonomy, Green = connection/equity, Turquoise = systemic/integral, White = unity/transcendent)
+   - Stage-appropriate (Red = survival/immediate, Amber = order/belonging, Orange = achievement/autonomy, Green = connection/equity, Teal = systemic/integral, Turquoise = unity/transcendent)
    - Line-specific (Cognitive = thinking patterns, Emotional = feeling landscape, Moral = ethical reasoning, Intrapersonal = self-awareness, Spiritual = meaning/purpose, Interpersonal = relational dynamics, Somatic = body wisdom, Willpower =意志力/fortitude)
    - Evocative, not leading. Open a door, don't push them through it.
 
@@ -1553,7 +1553,7 @@ INSTRUCTIONS:
     let finalSig = updated.sig;
     if (altitudeShift) {
       const currentOrd = stageOrdinal(altitudeShift.to);
-      const ALL_STAGES: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'];
+      const ALL_STAGES: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
       if (currentOrd < ALL_STAGES.length - 1) {
         const nextStage = ALL_STAGES[currentOrd + 1]!;
         finalSig = {
@@ -1977,8 +1977,8 @@ INSTRUCTIONS:
       Amber: 'a rule-governed',
       Orange: 'an achievement-driven',
       Green: 'a pluralistic',
-      Turquoise: 'an integral',
-      White: 'a transcendent',
+      Teal: 'an integral',
+      Turquoise: 'a transcendent',
     };
 
     // Randomized narrative pools for variety within same-line encounters

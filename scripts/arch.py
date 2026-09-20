@@ -25,6 +25,9 @@ Structure declaration:      _org.yaml
 
 Exit codes: 0 = clean, 1 = violations, 2 = misuse.
 """
+# @script-status: wired — the doc-governance validator, run by .github/workflows/ci.yml on every
+#                          push and by hand per AGENTS.md §7.5. Read-only over the tree except for
+#                          `emit` (regenerates INDEX.md + organ routers) and `fixtures`.
 
 from __future__ import annotations
 
@@ -72,7 +75,24 @@ GATE_CONFIG_KEY = {
     "DG17": "dg17_record_refs",
     "DG18": "dg18_router_coverage",
     "DG19": "dg19_law_consumer",
+    "DG20": "dg20_script_provenance",
+    "DG21": "dg21_corpus_reconcile",
 }
+
+# KB-ORPHAN-TRIAGE (KB audit UT-7): 11 of 15 scripts were unreferenced by package.json, CI,
+# install.sh or the routers, and four of them rewrite the corpus in place for superseded
+# templates. Nothing in the tree let an agent decide which were safe to run — so the fix is a
+# declaration in the file itself plus a gate that reads it, not a hand-maintained list.
+SCRIPT_CLASSES = {
+    "wired": "referenced by package.json / CI / install.sh; repeatable and safe to run any time",
+    "probe": "read-only diagnostic; exits non-zero on failure; never mutates the tree",
+    "one-shot": "mutates the tree and is safe only from its pre-state; never schedule it",
+    "historical": "superseded; must NOT be run (rewrites the tree for a retired template)",
+}
+SCRIPT_STATUS_RE = re.compile(
+    r"^[ \t]*(?:#|//|\*)?[ \t]*@script-status:[ \t]*([\w-]+)[ \t]*[\u2014\u2013:]?[ \t]*(.*)$",
+    re.M,
+)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -91,6 +111,47 @@ def rel(p: Path) -> str:
 def fail(msg: str) -> None:
     print(f"arch: {msg}", file=sys.stderr)
     sys.exit(2)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Shared per-pass index (KB-VALIDATE-JSON)
+#
+# `records()` re-read and re-parsed all 27 records in seven separate gates, and `live_files()`
+# re-globbed the tree per gate; DG12 scanned all live files, DG5 6 terms x N patterns. The cost is
+# small today (2.7 s) but the shape is O(docs) x N_gates with no index, which is the one part of the
+# KB that does not scale the way the specification claims.
+#
+# The index is PER-PASS and in-process. A PERSISTED cache was designed and deliberately rejected: a
+# stale cache is a gate that passes on a broken tree, which is precisely the failure class
+# `fm_parses` / DG1 exist to surface (a silently unparsed frontmatter erased a record's ID from every
+# gate). Storage scales because markdown is path-addressed; validation scales by reading each file
+# ONCE per pass, not by trusting bytes from a previous run. `bust()` is the only invalidation and is
+# called at every command start and between gate-fixture injections.
+# ─────────────────────────────────────────────────────────────────────────────
+_TEXT: dict[str, str] = {}
+_MEMO: dict[str, object] = {}
+
+
+def bust() -> None:
+    """Drop the per-pass index. Call on any write, and between fixtures iterations."""
+    _TEXT.clear()
+    _MEMO.clear()
+
+
+def read_text_cached(path: Path) -> str:
+    """Read a file once per pass. Byte-identical to `path.read_text(encoding='utf-8')`."""
+    key = str(path)
+    if key not in _TEXT:
+        _TEXT[key] = path.read_text(encoding="utf-8")
+    return _TEXT[key]
+
+
+def read_text_lenient(path: Path) -> str:
+    """As above, for the `errors='ignore'` reads that scan arbitrary live documents."""
+    key = f"{path}\x00lenient"
+    if key not in _TEXT:
+        _TEXT[key] = path.read_text(encoding="utf-8", errors="ignore")
+    return _TEXT[key]
 
 
 def fenced_block(path: Path, marker: str) -> dict | None:
@@ -143,7 +204,11 @@ def live_files(cfg: dict) -> list[Path]:
     Files-only rungs (e.g. `canon-root`, `plans`) were previously only ever contributed by the
     hardcoded `plans` special case — so a rung declared with `files:` was silently unscanned
     (red-team RT-3). A rung that no gate reads is not a rung.
+
+    Memoized per pass (KB-VALIDATE-JSON): every gate asked for the same glob.
     """
+    if "live_files" in _MEMO:
+        return _MEMO["live_files"]  # type: ignore[return-value]
     out: list[Path] = []
     seen: set[Path] = set()
     for d in live_roots(cfg):
@@ -158,6 +223,7 @@ def live_files(cfg: dict) -> list[Path]:
             if p.is_file() and p.resolve() not in seen:
                 out.append(p)
                 seen.add(p.resolve())
+    _MEMO["live_files"] = out
     return out
 
 
@@ -171,6 +237,9 @@ def record_dirs(cfg: dict) -> list[Path]:
 
 
 def records(cfg: dict) -> list[dict]:
+    """Every AD/RG record, read once per pass (KB-VALIDATE-JSON: seven gates re-parsed these)."""
+    if "records" in _MEMO:
+        return _MEMO["records"]  # type: ignore[return-value]
     out = []
     for d in record_dirs(cfg):
         if not d.is_dir():
@@ -178,8 +247,23 @@ def records(cfg: dict) -> list[dict]:
         for p in sorted(d.glob("*.md")):
             if p.name.startswith("."):
                 continue
-            out.append({"path": p, "dir": d, "text": p.read_text(encoding="utf-8"), "rel": rel(p)})
+            out.append({"path": p, "dir": d, "text": read_text_cached(p), "rel": rel(p)})
+    _MEMO["records"] = out
     return out
+
+
+def is_record_path(rel_path: str) -> bool:
+    """Is this an AD/RG record, in the system core OR any organ core?
+
+    A record's job is to DOCUMENT an incident, which means quoting the superseded vocabulary it is
+    about and naming the retired rung it moved out of. Both exemptions therefore have to cover every
+    record directory. They previously matched `docs/system/core/` only — so the exemption silently
+    stopped applying the moment records began living under `docs/system/sub-systems/<organ>/core/`,
+    and a record that correctly quoted the term it was recording failed the gate that exists to
+    catch the term's unrecorded use (MY-AD-0029, found 2026-09-20).
+    """
+    parts = rel_path.split("/")
+    return len(parts) >= 4 and parts[0] == "docs" and parts[1] == "system" and "core" in parts
 
 
 def norm_doc(p: str) -> str:
@@ -313,6 +397,8 @@ class Gate:
         self.cfg = cfg
         self.problems: list[str] = []
         self.checked: dict[str, int] = {}
+        self.by_gate: dict[str, list[str]] = {}
+        self.skipped: list[str] = []
         self._edges: dict[str, list[Path]] | None = None
 
     def edge_index(self) -> dict[str, list[Path]]:
@@ -321,7 +407,7 @@ class Gate:
             idx: dict[str, list[Path]] = {}
             for p in live_files(self.cfg):
                 idx[rel(p)] = outbound_refs(
-                    p.read_text(encoding="utf-8", errors="ignore"), p.parent, self_path=p
+                    read_text_lenient(p), p.parent, self_path=p
                 )
             self._edges = idx
         return self._edges
@@ -335,8 +421,9 @@ class Gate:
 
     def err(self, gate: str, msg: str) -> None:
         self.problems.append(f"{gate}: {msg}")
+        self.by_gate.setdefault(gate, []).append(msg)
 
-    def run(self, only: str | None) -> int:
+    def run(self, only: str | None, as_json: bool = False, out: str | None = None) -> int:
         gates = [
             ("DG1", self.dg1_frontmatter),
             ("DG2", self.dg2_status),
@@ -357,6 +444,8 @@ class Gate:
             ("DG17", self.dg17_record_refs),
             ("DG18", self.dg18_router_coverage),
             ("DG19", self.dg19_law_consumer),
+            ("DG20", self.dg20_script_provenance),
+            ("DG21", self.dg21_corpus_reconcile),
         ]
         for name, fn in gates:
             if only and name != only:
@@ -365,8 +454,54 @@ class Gate:
             # `enabled: false` actually disables the gate (red-team RT-5a: it silently did not).
             gcfg = self.cfg.get("gates", {}).get(GATE_CONFIG_KEY.get(name, ""), {})
             if gcfg.get("enabled", True) is False:
+                self.skipped.append(f"{name} (disabled in _org.yaml)")
                 continue
             fn(name)
+        # A gate that ran and a gate that was configured but NOT reached are different facts. A gate
+        # absent from `checked` because `only` filtered it, or because it is disabled, must never be
+        # reported as passing — that is how a gate goes quietly missing (the DG18 class).
+        ran = list(self.checked)
+        skipped = list(self.skipped)
+        if only:
+            skipped += [f"{n} (--gate {only})" for n, _ in gates if n != only and n not in ran]
+        else:
+            skipped += [f"{n} (no result recorded)" for n, _ in gates if n not in ran]
+        status = "fail" if self.problems else "pass"
+        if as_json or out:
+            payload = {
+                "tool": "arch validate",
+                "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "status": status,
+                "summary": {
+                    "gates_run": len(ran),
+                    "checks": sum(self.checked.values()),
+                    "violations": len(self.problems),
+                },
+                "gates": {
+                    n: {"checked": self.checked.get(n, 0), "violations": self.by_gate.get(n, [])}
+                    for n, _ in gates
+                    if n in ran
+                },
+                "skipped": skipped,
+                "violations": self.problems,
+            }
+            blob = json.dumps(payload, indent=2, sort_keys=False)
+            if out:
+                dest = Path(out)
+                if not dest.is_absolute():
+                    dest = ROOT / out
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_text(blob + "\n", encoding="utf-8")
+                print(f"arch validate — wrote {rel(dest)} ({status})")
+            if as_json:
+                # stdout is the artifact and nothing else: a trailing human line made the output
+                # unparseable as JSON, which defeats the point of the flag.
+                print(blob)
+                if status == "pass":
+                    print(f"arch: 0 violations — {len(ran)} gates passed", file=sys.stderr)
+            elif status == "pass":
+                print(f"arch: 0 violations — {len(ran)} gates passed")
+            return 1 if self.problems else 0
         width = max((len(k) for k in self.checked), default=0)
         for name, n in self.checked.items():
             print(f"  {name:<{width}}  {n}")
@@ -375,7 +510,7 @@ class Gate:
             for p in self.problems:
                 print(f"  ✗ {p}")
             return 1
-        print("\narch: 0 violations — all requested gates passed")
+        print(f"\narch: 0 violations — {len(ran)} gates passed")
         return 0
 
     # DG1 — frontmatter + filename schema
@@ -420,7 +555,7 @@ class Gate:
         ledger_path = ROOT / self.cfg["rungs"]["records"]["ledger"]["path"]
         issued_at: dict[str, str] = {}
         if ledger_path.exists():
-            for line in ledger_path.read_text(encoding="utf-8").splitlines():
+            for line in read_text_cached(ledger_path).splitlines():
                 if not line.strip():
                     continue
                 try:
@@ -474,7 +609,7 @@ class Gate:
             if "/core/" in r or r == "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md":
                 continue
             n += 1
-            text = p.read_text(encoding="utf-8")
+            text = read_text_cached(p)
             for pat in patterns:
                 for m in re.finditer(pat, text, re.IGNORECASE):
                     line = text[: m.start()].count("\n") + 1
@@ -496,10 +631,10 @@ class Gate:
         for p in live_files(self.cfg):
             r = rel(p)
             n += 1
-            text = p.read_text(encoding="utf-8")
+            text = read_text_cached(p)
             # The vocabulary doc DEFINES the blacklist; records QUOTE superseded vocabulary when
             # documenting an incident. Neither is a drift.
-            if r == VOCAB_REL or r.startswith("docs/system/core/"):
+            if r == VOCAB_REL or is_record_path(r):
                 continue
             for entry in block.get("blacklist", []):
                 if exempt(r, entry.get("exempt_in")):
@@ -528,10 +663,10 @@ class Gate:
         for p in live_files(self.cfg):
             r = rel(p)
             # The quarantine's own definition and its records legitimately name the rung.
-            if r == "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md" or r.startswith("docs/system/core/"):
+            if r == "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md" or is_record_path(r):
                 continue
             n += 1
-            text = p.read_text(encoding="utf-8")
+            text = read_text_cached(p)
             for i, line in enumerate(text.splitlines(), 1):
                 if "docs/historical/" not in line:
                     continue
@@ -599,7 +734,7 @@ class Gate:
         ledger_path = ROOT / self.cfg["rungs"]["records"]["ledger"]["path"]
         created: set[str] = set()
         if ledger_path.exists():
-            for line in ledger_path.read_text(encoding="utf-8").splitlines():
+            for line in read_text_cached(ledger_path).splitlines():
                 if not line.strip():
                     continue
                 try:
@@ -627,7 +762,7 @@ class Gate:
         n += 1
         if not idx.exists():
             self.err(g, "docs/INDEX.md is missing — run `python3 scripts/arch.py emit`")
-        elif strip_generated_date(idx.read_text(encoding="utf-8")) != strip_generated_date(
+        elif strip_generated_date(read_text_cached(idx)) != strip_generated_date(
             render_index(cfg)
         ):
             self.err(g, "docs/INDEX.md is stale — run `python3 scripts/arch.py emit` (never hand-edit it)")
@@ -637,7 +772,7 @@ class Gate:
             if not p.exists():
                 self.err(g, f"docs/system/sub-systems/{organ}/AGENTS.md is missing — run emit")
                 continue
-            existing = p.read_text(encoding="utf-8")
+            existing = read_text_cached(p)
             if organ_router(cfg, organ, o, existing) != existing:
                 self.err(g, f"docs/system/sub-systems/{organ}/AGENTS.md auto-zone is stale — run emit")
         self.checked[g] = n
@@ -648,10 +783,14 @@ class Gate:
         n = 0
         for p in live_files(self.cfg):
             r = rel(p)
-            if r.startswith("docs/system/core/"):
-                continue  # records: DG8 owns their links
+            # RECORDS ARE NOT SKIPPED HERE. DG8 validates records' MARKDOWN links, but it does not
+            # read wiki-links — so skipping records left every record's wiki-links unchecked, and
+            # the skip's original wording ("DG8 owns their links") was true only of one link form.
+            # The exemption was also prefix-scoped (`docs/system/core/`), so organ-core records
+            # were checked while system-core records were not: the same artefact class validated
+            # two different ways depending on its directory (found 2026-09-20 via MY-AD-0031).
             n += 1
-            text = p.read_text(encoding="utf-8")
+            text = read_text_cached(p)
             for raw in re.findall(r"\[\[([^\]|]+)(?:\|[^\]]*)?\]\]", text):
                 if not link_resolves(raw):
                     self.err(g, f"{r}: wiki-link [[{raw}]] does not resolve")
@@ -785,7 +924,7 @@ class Gate:
             ):
                 continue
             n += 1
-            text = p.read_text(encoding="utf-8", errors="ignore")
+            text = read_text_lenient(p)
             for m in pat.finditer(text):
                 tok = m.group(1)
                 head = tok.lstrip("./")
@@ -870,7 +1009,7 @@ class Gate:
             if "/core/" in here:
                 continue  # a record quoting another record is already covered by DG8
             n += 1
-            text = p.read_text(encoding="utf-8", errors="ignore")
+            text = read_text_lenient(p)
             for m in pat.finditer(text):
                 if m.group(0) not in known:
                     self.err(
@@ -929,6 +1068,165 @@ class Gate:
                     self.err(g, f"{r['rel']}: `Consumer:` names `{ref}` which does not resolve")
         self.checked[g] = n
 
+    # DG20 — script provenance (KB-ORPHAN-TRIAGE, KB audit UT-7).
+    #
+    # Every script in `scripts/` must declare what it IS, in the file, in a form a gate can read:
+    #
+    #     @script-status: one-shot — writes the six K-12 branch files; safe only from the
+    #                                 pre-authoring state.
+    #
+    # Five of these are corpus rewriters for RETIRED templates. Before this gate, an agent had no way
+    # from the tree to tell `check-invariants.ts` (run on every build) from `strip_game_files.py`
+    # (would shred the current corpus). The declaration is in the file rather than in a list because
+    # a list is a registry someone must remember to update — the fourth orphan-proof surface.
+    #
+    # `wired` is a CLAIM and is corroborated: the basename must appear in `package.json`, a CI
+    # workflow, `install.sh`, or a live router. A script that says `wired` and is invoked by nothing
+    # is the false-compliance class (MY-RG-008) in its cheapest form.
+    SCRIPT_DIR = "scripts"
+
+    def dg20_script_provenance(self, g: str) -> None:
+        d = ROOT / self.SCRIPT_DIR
+        if not d.is_dir():
+            self.checked[g] = 0
+            return
+        wire_files = ["package.json", "install.sh", "AGENTS.md", "README.md"]
+        wf = ROOT / ".github" / "workflows"
+        if wf.is_dir():
+            wire_files += [str(p.relative_to(ROOT)) for p in sorted(wf.glob("*.yml"))]
+        wiring = ""
+        for cand in wire_files:
+            p = ROOT / cand
+            if p.is_file():
+                wiring += read_text_cached(p)
+        scripts = [
+            p
+            for p in sorted(d.iterdir())
+            if p.is_file() and p.suffix in (".py", ".ts", ".sh", ".mjs", ".js")
+        ]
+        texts = {p: read_text_cached(p) for p in scripts}
+        n = 0
+        for p in scripts:
+            n += 1
+            # Exclude SELF and the VALIDATOR. A script's own docstring names it, and `arch.py`
+            # names every script it gates (its fixture table, its own comments) — so an `internals`
+            # built over all scripts corroborates every `wired` claim with a mention of the claim.
+            # `wired` means something RUNS it; a governance tool naming it is not an invocation.
+            # Caught by DG20's own fixture, which passed on an injected false claim.
+            internals = "\n".join(
+                t for q, t in texts.items() if q != p and q.name != "arch.py"
+            )
+            r = rel(p)
+            head = "\n".join(read_text_cached(p).splitlines()[:60])
+            m = SCRIPT_STATUS_RE.search(head)
+            if not m:
+                self.err(
+                    g,
+                    f"{r}: declares no `@script-status:` — one of {sorted(SCRIPT_CLASSES)} plus a "
+                    f"reason (an agent cannot tell a build step from a destructive one-shot)",
+                )
+                continue
+            cls, why = m.group(1), (m.group(2) or "").strip().strip("—-– ")
+            if cls not in SCRIPT_CLASSES:
+                self.err(g, f"{r}: `@script-status: {cls}` is not one of {sorted(SCRIPT_CLASSES)}")
+                continue
+            # `arch.py` is the validator itself and is wired by the CI workflow; the marker's
+            # reason is required for every class, because "why is this here" is the whole finding.
+            if len(why) < 20:
+                self.err(
+                    g,
+                    f"{r}: `@script-status: {cls}` carries no reason — say what it does and under "
+                    f"what pre-state it is safe",
+                )
+            # Corroboration: a name in package.json / CI / install.sh / a router, OR a position as a
+            # module imported by one of the scripts above (CliConsole and CurriculumCommands are
+            # wired only through `cli-game.ts`). A script that claims to be wired and is named
+            # nowhere is a false claim — the cheapest form of MY-RG-008.
+            if cls == "wired" and p.name not in wiring and p.stem not in internals:
+                self.err(
+                    g,
+                    f"{r}: claims `wired` but nothing invokes it — no reference in package.json, "
+                    f"a CI workflow, install.sh, a router, or another script (false claim, MY-RG-008)",
+                )
+        self.checked[g] = n
+
+    # DG21 — corpus reconciliation (RT-CORPUS-RECONCILE, red-team RT-2).
+    #
+    # `docs/concept-drafts/<line>/<stage>/` is prose-for-humans; `src/core/data/concept-drafts.json`
+    # is what the engine reads. The generator (`scripts/build-concept-index.ts`) guards its own
+    # `existsSync` reads — but nothing guarded the JOIN, so a corpus re-index (the 2026-09-20 ladder
+    # rename) silently produced empty `modalities` arrays instead of an error. This gate derives the
+    # expectation from the directory tree and compares it to the shipped index, so the ingest path
+    # cannot diverge without a gate saying so.
+    CORPUS_DIR = "docs/concept-drafts"
+    CORPUS_INDEX = "src/core/data/concept-drafts.json"
+    CORPUS_MODALITIES = (
+        ("deterministic.md", "Deterministic"),
+        ("strategic-planning.md", "Strategic"),
+        ("embodied-somatic.md", "Embodied"),
+        ("scenario-choice.md", "ScenarioChoice"),
+        ("language-reflective.md", "LanguageReflective"),
+        ("social-cooperative.md", "SocialCooperative"),
+        ("immersive-rpg.md", "ImmersiveRPG"),
+    )
+
+    def dg21_corpus_reconcile(self, g: str) -> None:
+        base = ROOT / self.CORPUS_DIR
+        idx_path = ROOT / self.CORPUS_INDEX
+        if not base.is_dir():
+            self.checked[g] = 0
+            return
+        if not idx_path.is_file():
+            self.err(g, f"{self.CORPUS_INDEX} is missing — run the corpus generator")
+            self.checked[g] = 0
+            return
+        try:
+            shipped = json.loads(read_text_cached(idx_path)).get("modules", {})
+        except json.JSONDecodeError as exc:
+            self.err(g, f"{self.CORPUS_INDEX} is not valid JSON: {exc}")
+            self.checked[g] = 0
+            return
+        n = 0
+        derived: dict[str, dict] = {}
+        for line_dir in sorted(p for p in base.iterdir() if p.is_dir()):
+            for stage_dir in sorted(p for p in line_dir.iterdir() if p.is_dir()):
+                n += 1
+                line = line_dir.name[:1].upper() + line_dir.name[1:]
+                stage = stage_dir.name.split("-", 1)[-1]
+                stage = stage[:1].upper() + stage[1:]
+                key = f"{line_dir.name}:{stage.lower()}"
+                spec = stage_dir / "module-spec.md"
+                title = f"{line} / {stage} — Module Specification"
+                if spec.is_file():
+                    m = re.search(r"^# (.+)$", read_text_cached(spec), re.M)
+                    if m:
+                        title = m.group(1).strip()
+                derived[key] = {
+                    "line": line,
+                    "stage": stage,
+                    "title": title,
+                    "modalities": [name for f, name in self.CORPUS_MODALITIES if (stage_dir / f).is_file()],
+                }
+        for key in sorted(set(derived) - set(shipped)):
+            self.err(g, f"{self.CORPUS_INDEX} is missing module `{key}` present in {self.CORPUS_DIR}")
+        for key in sorted(set(shipped) - set(derived)):
+            self.err(g, f"{self.CORPUS_INDEX} names module `{key}` with no directory in {self.CORPUS_DIR}")
+        for key in sorted(set(derived) & set(shipped)):
+            want, got = derived[key], shipped[key]
+            if want["modalities"] != list(got.get("modalities") or []):
+                self.err(
+                    g,
+                    f"{self.CORPUS_INDEX} `{key}` modalities {got.get('modalities')} != corpus "
+                    f"{want['modalities']} — regenerate it (never hand-edit)",
+                )
+            elif want["title"] != str(got.get("title") or "").strip():
+                self.err(
+                    g,
+                    f"{self.CORPUS_INDEX} `{key}` title does not match {self.CORPUS_DIR}/"
+                    f"{key.split(':')[0]}/{key.split(':')[1]}/module-spec.md",
+                )
+        self.checked[g] = n
+
     # DG18 — router coverage. A rung's router (`rungs.<name>.router`) is the only door into that
     # rung as far as an agent is concerned; a document it never names is unreachable from the map
     # that is actually read, while every other gate reports green (MY-RG-0022 — 45/46/47 sat in
@@ -945,7 +1243,7 @@ class Gate:
             if not router.exists():
                 self.err(g, f"rungs.{rung_name}.router `{router_rel}` does not exist")
                 continue
-            text = router.read_text(encoding="utf-8", errors="ignore")
+            text = read_text_lenient(router)
             named = set(re.findall(r"\b(\d{2})\b", text))
             # Ranges are written `` `23`–`36` `` — backticks sit between the endpoints.
             for a, b in re.findall(r"\b(\d{2})[`*]*\s*[–—-]\s*[`*]*(\d{2})\b", text):
@@ -1005,7 +1303,7 @@ def contract_path(ref: str) -> Path | None:
 
 
 def doc_title(p: Path) -> str:
-    for line in p.read_text(encoding="utf-8", errors="ignore").splitlines():
+    for line in read_text_lenient(p).splitlines():
         if line.startswith("# "):
             return line[2:].strip()
     return p.stem
@@ -1267,7 +1565,7 @@ class Corpus:
         self.df: dict[str, int] = {}
         self.records = records(cfg)
         for p in live_files(cfg):
-            text = p.read_text(encoding="utf-8", errors="ignore")
+            text = read_text_lenient(p)
             fm = frontmatter(text) if text.startswith("---") else {}
             title = str(fm.get("Title") or doc_title(p))
             headings = " ".join(re.findall(r"^#{1,6} (.+)$", text, re.M))
@@ -1931,8 +2229,11 @@ def cmd_seed(args: argparse.Namespace) -> int:
 
 def cmd_validate(args: argparse.Namespace) -> int:
     cfg = org()
-    print(f"arch validate — {len(org()['gates'])} gates configured\n")
-    return Gate(cfg).run(args.gate)
+    as_json = bool(getattr(args, "json", False))
+    out = getattr(args, "out", None)
+    if not as_json:
+        print(f"arch validate — {len(cfg['gates'])} gates configured\n")
+    return Gate(cfg).run(args.gate, as_json=as_json, out=out)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1975,6 +2276,10 @@ GATE_FIXTURES: dict[str, tuple[str, str, str]] = {
     "DG17": (CANON, "## 1. Purpose: the world's intelligence", "## 1. Purpose: the world's intelligence\n\nSuperseded by MY-AD-9999."),
     "DG18": ("docs/foundations/98-router-fixture.md", "", "__ORPHAN__"),
     "DG19": (RECORD, 'Consumer: "`src/core/assessments/AgenticOrchestrator.ts`, `src/core/GameLoop.ts`"', "ConsumerNote: moved out of the contract"),
+    # DG20: claim `wired` on a probe that nothing invokes — the false-compliance case (MY-RG-008).
+    "DG20": ("scripts/tdg-probe.ts", "@script-status: probe", "@script-status: wired"),
+    # DG21: desynchronise the generated corpus index from the corpus it is generated from.
+    "DG21": ("src/core/data/concept-drafts.json", '"Deterministic"', '"NoSuchModality"'),
 }
 
 
@@ -2025,7 +2330,12 @@ def cmd_fixtures(args: argparse.Namespace) -> int:
             else:
                 p.write_text(original.replace(find, repl, 1), encoding="utf-8")
             # Reload per fixture: a gate that reads `_org.yaml` (DG13, DG18) must see the injected
-            # config, and loading it once before the loop silently made those fixtures no-ops.
+            # config, and loading it once before the loop silently made those fixtures no-ops. The
+            # per-pass read index must be dropped for the same reason: without `bust()` the gate
+            # would re-read the PRE-injection bytes from cache and every fixture would report
+            # "gate passed on its injected violation" — a cache that hides the violation it is
+            # meant to expose. (KB-VALIDATE-JSON)
+            bust()
             g = Gate(org())
             g.run(gate)
             if not g.problems:
@@ -2033,6 +2343,7 @@ def cmd_fixtures(args: argparse.Namespace) -> int:
             else:
                 print(f"  ✓ {gate:5s} fails on injection ({len(g.problems)} finding(s))")
         finally:
+            bust()
             if created:
                 if wrote and p.exists():
                     p.unlink()
@@ -2138,12 +2449,20 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("validate", help="run the doc-governance gates")
     p.add_argument("--gate", help="run a single gate (e.g. DG5)")
+    p.add_argument("--json", action="store_true", help="machine-readable result on stdout")
+    p.add_argument(
+        "--out",
+        help="write the machine-readable result to a path (default: none — see KB-VALIDATE-JSON)",
+    )
     p.set_defaults(fn=cmd_validate)
 
     p = sub.add_parser("fixtures", help="prove every gate fails on an injected violation")
     p.set_defaults(fn=cmd_fixtures)
 
     args = ap.parse_args(argv)
+    # One command = one pass over the tree. The index is per-pass by design; a persisted cache is a
+    # gate that can pass on a broken tree (see the note above `bust`).
+    bust()
     return args.fn(args)
 
 

@@ -204,7 +204,7 @@ function extractAltitudeInput(sig: SignificatorSnapshot): AltitudeInput {
   const highestOrdinal = Math.max(...ordinals);
 
   const ALL_STAGES: readonly Stage[] = [
-    'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White',
+    'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise',
   ];
   const lowestAltitude = ALL_STAGES[lowestOrdinal] as Stage;
   const highestAltitude = ALL_STAGES[highestOrdinal] as Stage;

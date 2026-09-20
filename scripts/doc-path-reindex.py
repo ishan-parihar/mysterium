@@ -22,6 +22,11 @@ The map has TWO tables: `PATH_MAP` (bare whole-path rewrites from the P3 move) a
 `progression/06` — that the P3 move left behind). Both are idempotent; read `SHORT_MAP`'s comment
 for why its keys are anchored.
 """
+# @script-status: historical — the one-way path rewrite for the P3 structural move
+#                              (`docs/architecture/` -> `docs/system/sub-systems/`). It was applied
+#                              when that move landed; the old paths it maps no longer exist, so a
+#                              re-run can only corrupt live links. A receipt guards it. Superseded by
+#                              the tree as it now stands; retired by RT-ARCHIVE-MIGRATIONS.
 
 from __future__ import annotations
 

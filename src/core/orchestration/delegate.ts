@@ -7,7 +7,7 @@
  *   L4  single-writer    — only ratifyProposals mutates Significator state,
  *                          and only via processOutcome/applyConsequences.
  *   TL1  proposals not effects — delegated tools emit Proposal objects.
- *   TL2  purpose-scoped reads — projections are whitelisted per role.
+ *   TL2  purpose-scoped reads — projections are turquoiselisted per role.
  *   TL3  budgets — exceeding the tool budget ends the session (`budget_exhausted`).
  *   G15  toolset firewall — a spec whose toolset exceeds the role allowlist
  *         fails closed before execution.
@@ -733,7 +733,11 @@ const VEIL_LEAK_PATTERNS: readonly RegExp[] = [
   /\btheta\b/i,
   /\bse\s*[=:]\s*\d/i,
   /\b\d+(\.\d+)?\s*%/,
-  /\b(Red|Orange|Green|Yellow|Blue|Indigo|Violet|White|Clear|Infrared|Magenta|Ultraviolet)\b/,
+  // Stage names AND colour words: a leaked "turquoise" discloses the ladder either way, and both
+  // Teal and Turquoise are ordinary colour words, so coverage is preserved by listing them
+  // (ratified CODE-PASS decision). The retired `White` is DROPPED: it is no longer a stage, and
+  // leaving retired vocabulary in a leak detector trains the next reader on the old ladder.
+  /\b(Red|Orange|Green|Yellow|Blue|Indigo|Violet|Teal|Turquoise|Clear|Infrared|Magenta|Ultraviolet)\b/,
   /\b(Agency|Communion|Eros|Agape)\s*[:=]\s*\d/i,
   /\bcci\b/i,
   /\bretention\s*[:=]\s*\d/i,

@@ -39,8 +39,8 @@
     amber:     { count: 28, hue: 40,  speed: 0.3, size: [1, 2],  drift: 0.4 },
     orange:    { count: 20, hue: 200, speed: 0.5, size: [1, 2],  drift: 0.3 },
     green:     { count: 32, hue: 100, speed: 0.25, size: [1, 3], drift: 0.6 },
-    turquoise: { count: 30, hue: 175, speed: 0.35, size: [1, 2], drift: 0.5 },
-    white:     { count: 18, hue: 45,  speed: 0.15, size: [1, 2], drift: 0.2 },
+    teal: { count: 30, hue: 175, speed: 0.35, size: [1, 2], drift: 0.5 },
+    turquoise:     { count: 18, hue: 45,  speed: 0.15, size: [1, 2], drift: 0.2 },
   };
 
   function getStage(): string {

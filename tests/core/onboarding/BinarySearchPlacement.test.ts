@@ -5,7 +5,7 @@
  *   O1  Convergence law — pass(S) + fail(S+1) ⇒ altitude = S with combined
  *       confidence.
  *   O2  Probe budget — ≤ 8 probes per line across the whole ladder.
- *   O3  Ladder edges — Infrared and White truths resolve without overrun.
+ *   O3  Ladder edges — Infrared and Turquoise truths resolve without overrun.
  *   O4  Ambiguity — persistent low-confidence probes mark boundary, never
  *       fake convergence; resolvable ambiguity retries then proceeds.
  *   O5  Seeding — altitudesFromPlacement maps results to Significator shape
@@ -32,7 +32,7 @@ function probeWithTruth(truth: Stage): PlacementProbe {
 
 describe('convergence law (O1)', () => {
   it('places mid-ladder truths exactly, within budget', () => {
-    for (const truth of ['Red', 'Amber', 'Orange', 'Green', 'Turquoise'] as const) {
+    for (const truth of ['Red', 'Amber', 'Orange', 'Green', 'Teal'] as const) {
       const p = placeLine('Cognitive', probeWithTruth(truth));
       expect(p.converged, `truth ${truth}`).toBe(true);
       expect(p.altitude, `truth ${truth}`).toBe(truth);
@@ -77,9 +77,9 @@ describe('ladder edges (O3)', () => {
     expect(p.converged).toBe(true);
   });
 
-  it('top truth lands at White', () => {
-    const p = placeLine('Cognitive', probeWithTruth('White'));
-    expect(p.altitude).toBe('White');
+  it('top truth lands at Turquoise', () => {
+    const p = placeLine('Cognitive', probeWithTruth('Turquoise'));
+    expect(p.altitude).toBe('Turquoise');
     expect(p.converged).toBe(true);
   });
 });

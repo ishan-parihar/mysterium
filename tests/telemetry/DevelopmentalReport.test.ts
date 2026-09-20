@@ -100,7 +100,7 @@ describe('DevelopmentalReport', () => {
     ].join(' ');
 
     // Should not contain stage names as labels
-    expect(allText).not.toMatch(/\b(Infrared|Magenta|Red|Amber|Orange|Green|Turquoise|White)\s+(stage|level|altitude)/i);
+    expect(allText).not.toMatch(/\b(Infrared|Magenta|Red|Amber|Orange|Green|Teal|Turquoise)\s+(stage|level|altitude)/i);
     // Should not contain drive names as terms
     expect(allText).not.toMatch(/\b(Agency|Communion|Eros|Agape)\s+(drive|score)/i);
     // Should not contain shadow quadrant names

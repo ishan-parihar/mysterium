@@ -15,7 +15,7 @@
     },
     "isomorphisms": [],
     "prerequisites": [],
-    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Cognitive", "Intrapersonal"], "stageRange": { "min": "Amber", "max": "White" } },
+    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Cognitive", "Intrapersonal"], "stageRange": { "min": "Amber", "max": "Turquoise" } },
     "depthMeta": { "requiredPrerequisiteDepth": "absent", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
     "forgettingParams": { "initialHalfLifeMs": 86400000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
     "content": {
@@ -81,11 +81,11 @@
     },
     "isomorphisms": [],
     "prerequisites": ["integral.foundations"],
-    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Cognitive"], "stageRange": { "min": "Amber", "max": "White" } },
+    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Cognitive"], "stageRange": { "min": "Amber", "max": "Turquoise" } },
     "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "transformed" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated", "transformed"] },
     "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
     "content": {
-      "explanation": "A stage of consciousness is a coherent structure of meaning-making: the implicit answers a person lives by to the questions 'who am I, what is real, and what matters'. Each stage transcends and includes the previous one — it can handle problems the previous stage could not, while preserving what worked. The eight stages tracked here run from sensorimotor survival (Infrared), through magic and mythic belonging and power and reason and pluralism, to integral vision-logic (Turquoise) and non-dual openness (White). Two principles govern the whole arc. First, stages cannot be skipped: a later structure is built out of a stabilized earlier one, and apparent skips show up later as gaps. Second, the holon is never outgrown: an unhealthy earlier stage does not disappear — it goes underground and leaks into the present as reactivity, which is why this game keeps earlier-stage holons alive as shadow-mode encounters rather than declaring them complete.",
+      "explanation": "A stage of consciousness is a coherent structure of meaning-making: the implicit answers a person lives by to the questions 'who am I, what is real, and what matters'. Each stage transcends and includes the previous one — it can handle problems the previous stage could not, while preserving what worked. The eight stages tracked here run from sensorimotor survival (Infrared), through magic and mythic belonging and power and reason and pluralism, to integral vision-logic (Teal) and non-dual openness (Turquoise). Two principles govern the whole arc. First, stages cannot be skipped: a later structure is built out of a stabilized earlier one, and apparent skips show up later as gaps. Second, the holon is never outgrown: an unhealthy earlier stage does not disappear — it goes underground and leaks into the present as reactivity, which is why this game keeps earlier-stage holons alive as shadow-mode encounters rather than declaring them complete.",
       "examples": [
         "Amber takes the child's magical world and gives it rules and roles — mythic order",
         "Orange takes Amber's loyalty to the group and generalizes it to universal individual rights",
@@ -102,7 +102,7 @@
       ],
       "visuals": [
         "A spiral staircase where each landing is a stage and the view from each includes the previous landings",
-        "A color-gradient tower from deep infrared to luminous white"
+        "A color-gradient tower from deep infrared to luminous turquoise"
       ],
       "practiceProblems": [
         { "id": "ints.p1", "problemText": "Pick two adjacent stages and name one problem the later stage can solve that the earlier cannot.", "targetDepth": "comprehended" },
@@ -213,7 +213,7 @@
     },
     "isomorphisms": [],
     "prerequisites": ["integral.foundations"],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Interpersonal"], "stageRange": { "min": "Orange", "max": "Turquoise" } },
+    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Interpersonal"], "stageRange": { "min": "Orange", "max": "Teal" } },
     "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "evaluated" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"] },
     "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
     "content": {
@@ -279,7 +279,7 @@
     },
     "isomorphisms": [],
     "prerequisites": ["integral.foundations", "integral.holons"],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Interpersonal", "Moral"], "stageRange": { "min": "Orange", "max": "Turquoise" } },
+    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Interpersonal", "Moral"], "stageRange": { "min": "Orange", "max": "Teal" } },
     "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "evaluated" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"] },
     "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
     "content": {
@@ -345,7 +345,7 @@
     },
     "isomorphisms": [],
     "prerequisites": ["integral.foundations", "integral.stages"],
-    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Somatic", "Intrapersonal"], "stageRange": { "min": "Amber", "max": "White" } },
+    "devMapping": { "primaryLine": "Spiritual", "secondaryLines": ["Somatic", "Intrapersonal"], "stageRange": { "min": "Amber", "max": "Turquoise" } },
     "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "evaluated" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"] },
     "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
     "content": {
@@ -411,7 +411,7 @@
     },
     "isomorphisms": [],
     "prerequisites": ["integral.foundations", "integral.stages"],
-    "devMapping": { "primaryLine": "Intrapersonal", "secondaryLines": ["Emotional", "Spiritual"], "stageRange": { "min": "Amber", "max": "Turquoise" } },
+    "devMapping": { "primaryLine": "Intrapersonal", "secondaryLines": ["Emotional", "Spiritual"], "stageRange": { "min": "Amber", "max": "Teal" } },
     "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "transformed" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated", "transformed"] },
     "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
     "content": {
@@ -477,7 +477,7 @@
     },
     "isomorphisms": [],
     "prerequisites": ["integral.foundations", "integral.stages"],
-    "devMapping": { "primaryLine": "Intrapersonal", "secondaryLines": ["Willpower", "Spiritual"], "stageRange": { "min": "Orange", "max": "White" } },
+    "devMapping": { "primaryLine": "Intrapersonal", "secondaryLines": ["Willpower", "Spiritual"], "stageRange": { "min": "Orange", "max": "Turquoise" } },
     "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "comprehended", "max": "transformed" }, "depthProgression": ["comprehended", "applied", "analyzed", "evaluated", "transformed"] },
     "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
     "content": {

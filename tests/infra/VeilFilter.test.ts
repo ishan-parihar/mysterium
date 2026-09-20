@@ -141,14 +141,14 @@ describe('VeilFilter', () => {
     });
 
     it('reports multiple violations when present', () => {
-      const content = 'At Turquoise level, your assessment shows score: 8 and 90% complete.';
+      const content = 'At Teal level, your assessment shows score: 8 and 90% complete.';
       const result = filterOutput(content);
       expect(result.passed).toBe(false);
       expect(result.violations.length).toBeGreaterThanOrEqual(3);
     });
 
     it('does NOT false-positive on legitimate game narrative', () => {
-      const content = 'The old amber lantern cast a warm glow on the white marble stage where performers danced.';
+      const content = 'The old amber lantern cast a warm glow on the turquoise marble stage where performers danced.';
       const result = filterOutput(content);
       expect(result.passed).toBe(true);
       expect(result.violations).toHaveLength(0);
@@ -220,7 +220,7 @@ describe('VeilFilter', () => {
     });
 
     it('still detects Veil violations alongside script leaks', () => {
-      const content = 'At Turquoise stage, the player wears礼貌.';
+      const content = 'At Teal stage, the player wears礼貌.';
       const result = filterOutput(content);
       expect(result.violations).toContain('non-ascii-script-leak');
       expect(result.violations).toContain('stage-as-developmental-label');

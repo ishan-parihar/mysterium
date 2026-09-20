@@ -20,14 +20,14 @@ describe('Altitude-scaling: FallbackProvider reframe layers', () => {
     expect(reframed.prompt).toContain('What does the pattern still cost you');
   });
 
-  it('reframes with high-altitude meta-cognitive framing when player is at Turquoise encountering Red', () => {
-    const reframed = getFallback('LanguageReflective', 'Cognitive', 'Red', 'Turquoise');
+  it('reframes with high-altitude meta-cognitive framing when player is at Teal encountering Red', () => {
+    const reframed = getFallback('LanguageReflective', 'Cognitive', 'Red', 'Teal');
     expect(reframed.prompt).toContain('Notice the Red-stage pattern arising');
     expect(reframed.prompt).toContain('Where does the pattern still live unmetabolized');
   });
 
-  it('reframes with peak-altitude framing when player is at White encountering Red', () => {
-    const reframed = getFallback('LanguageReflective', 'Cognitive', 'Red', 'White');
+  it('reframes with peak-altitude framing when player is at Turquoise encountering Red', () => {
+    const reframed = getFallback('LanguageReflective', 'Cognitive', 'Red', 'Turquoise');
     expect(reframed.prompt).toContain('From presence, witness the Red pattern');
     expect(reframed.prompt).toContain('felt-quality of recognizing it as pattern');
   });
@@ -36,14 +36,14 @@ describe('Altitude-scaling: FallbackProvider reframe layers', () => {
     // Call twice with same stage — both get the same random pick from the pool
     // (deterministic in test since there's no time-based randomization affecting pick)
     // Instead, just verify the reframe adds prefix+suffix around SOMETHING
-    const reframed = getFallback('LanguageReflective', 'Cognitive', 'Red', 'Turquoise');
+    const reframed = getFallback('LanguageReflective', 'Cognitive', 'Red', 'Teal');
     // The reframed prompt should be longer than just the prefix or suffix alone
     // (meaning the base content is sandwiched between them)
     expect(reframed.prompt).toMatch(/^Notice the Red-stage pattern.*Where does the pattern.*$/s);
   });
 
   it('applies reframe to ScenarioChoice scenarios too', () => {
-    const reframed = getFallback('ScenarioChoice', 'Moral', 'Red', 'Turquoise');
+    const reframed = getFallback('ScenarioChoice', 'Moral', 'Red', 'Teal');
     if (reframed.scenario) {
       expect(reframed.scenario).toContain('Notice the Red-stage pattern');
     }
@@ -55,16 +55,16 @@ describe('Altitude-scaling: FallbackProvider reframe layers', () => {
     expect(base.prompt).not.toContain('You can see the structure');
   });
 
-  it('does reframe Amber encounters for Turquoise players', () => {
-    const reframed = getFallback('LanguageReflective', 'Cognitive', 'Amber', 'Turquoise');
+  it('does reframe Amber encounters for Teal players', () => {
+    const reframed = getFallback('LanguageReflective', 'Cognitive', 'Amber', 'Teal');
     expect(reframed.prompt).toContain('Notice the Amber-stage pattern');
   });
 });
 
 describe('Altitude-scaling: FrequencyConditioner complexityRegister', () => {
   it('includes complexityRegister from the player\'s stage (not the holon\'s)', () => {
-    const spec = generateFrequencySpec('Cognitive', 'Turquoise', 'Cognitive', 'Red', 'LanguageReflective');
-    // Player is at Turquoise → complexityRegister should be integral-paradox-holding
+    const spec = generateFrequencySpec('Cognitive', 'Teal', 'Cognitive', 'Red', 'LanguageReflective');
+    // Player is at Teal → complexityRegister should be integral-paradox-holding
     expect(spec.complexityRegister).toBe('integral-paradox-holding');
   });
 
@@ -74,9 +74,9 @@ describe('Altitude-scaling: FrequencyConditioner complexityRegister', () => {
   });
 
   it('includes crossAltitudeDirective with structured instructions', () => {
-    const spec = generateFrequencySpec('Cognitive', 'Turquoise', 'Cognitive', 'Red', 'LanguageReflective');
+    const spec = generateFrequencySpec('Cognitive', 'Teal', 'Cognitive', 'Red', 'LanguageReflective');
     expect(spec.crossAltitudeDirective).toContain('CROSS-ALTITUDE DIRECTIVE');
-    expect(spec.crossAltitudeDirective).toContain('Turquoise');
+    expect(spec.crossAltitudeDirective).toContain('Teal');
     expect(spec.crossAltitudeDirective).toContain('Red');
     expect(spec.crossAltitudeDirective).toContain('Do NOT collapse to the Red register');
     expect(spec.crossAltitudeDirective).toContain('still-unmetabolized');
@@ -88,7 +88,7 @@ describe('Altitude-scaling: FrequencyConditioner complexityRegister', () => {
   });
 
   it('crossAltitudeDirective provides scaffolding instructions when player is below holon', () => {
-    const spec = generateFrequencySpec('Cognitive', 'Red', 'Cognitive', 'Turquoise', 'LanguageReflective');
+    const spec = generateFrequencySpec('Cognitive', 'Red', 'Cognitive', 'Teal', 'LanguageReflective');
     expect(spec.crossAltitudeDirective).toContain('from below');
     expect(spec.crossAltitudeDirective).toContain('scaffolding');
   });

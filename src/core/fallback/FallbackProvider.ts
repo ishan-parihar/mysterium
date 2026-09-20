@@ -872,7 +872,7 @@ const DET_WILLPOWER_RED: readonly FallbackContent[] = [
 // (Red and Orange have the richest content; higher stages get line-specific generics)
 // ============================================================================
 
-// GAP-1b: LR_GENERIC_STAGE removed — Turquoise and White now have
+// GAP-1b: LR_GENERIC_STAGE removed — Teal and Turquoise now have
 // line-specific authored content (LR_BY_LINE_TURQUOISE, LR_BY_LINE_WHITE).
 
 // ============================================================================
@@ -1096,8 +1096,8 @@ const LR_BY_LINE_GREEN: Record<string, ContentPool> = {
 };
 
 // ============================================================================
-// LINE-SPECIFIC LANGUAGE REFLECTIVE CONTENT — Turquoise stage
-// GAP-1b (Efficacy Audit): Turquoise = integral/vision-logic. Can hold
+// LINE-SPECIFIC LANGUAGE REFLECTIVE CONTENT — Teal stage
+// GAP-1b (Efficacy Audit): Teal = integral/vision-logic. Can hold
 // multiple paradigms simultaneously, sees patterns across patterns, operates
 // from worldcentric + ecological + kosmocentric awareness. Shadow: meta-bypass
 // (seeing the pattern of patterns as an excuse to not act), arrogance of
@@ -1204,11 +1204,11 @@ const LR_BY_LINE_TURQUOISE: Record<string, ContentPool> = {
 };
 
 // ============================================================================
-// LINE-SPECIFIC LANGUAGE REFLECTIVE CONTENT — White stage
-// GAP-1b: White = super-integral / non-dual. The witness dissolves into
+// LINE-SPECIFIC LANGUAGE REFLECTIVE CONTENT — Turquoise stage
+// GAP-1b: Turquoise = super-integral / non-dual. The witness dissolves into
 // the witnessed. The doer dissolves into the doing. Shadow: the "nobody
 // here" bypass — using non-dual framing to avoid the messy work of being
-// a person. These probes challenge the White-stage practitioner to bring
+// a person. These probes challenge the Turquoise-stage practitioner to bring
 // the non-dual realization INTO form, relationship, and action — not as
 // transcendence but as incarnation.
 // ============================================================================
@@ -1434,7 +1434,7 @@ function pickFromStageLinePools(
 }
 
 // ─── Altitude-conditional reframe layers ─────────────────────────────
-// Per the altitude-scaling audit: a Turquoise player encountering Red-stage
+// Per the altitude-scaling audit: a Teal player encountering Red-stage
 // content needs a DIFFERENT framing than a Red player encountering the same
 // content. These reframe layers wrap the base prompt with altitude-conditional
 // meta-cognitive framing. The base prompt (Red-stage content) is preserved;
@@ -1443,11 +1443,11 @@ function pickFromStageLinePools(
 type AltitudeBand = 'low' | 'mid' | 'high' | 'peak';
 
 function altitudeBand(playerStage: Stage): AltitudeBand {
-  const ord = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'].indexOf(playerStage);
+  const ord = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'].indexOf(playerStage);
   if (ord <= 2) return 'low';    // Infrared, Magenta, Red
   if (ord <= 4) return 'mid';    // Amber, Orange
-  if (ord <= 6) return 'high';   // Green, Turquoise
-  return 'peak';                  // White
+  if (ord <= 6) return 'high';   // Green, Teal
+  return 'peak';                  // Turquoise
 }
 
 interface ReframeLayer {
@@ -1512,21 +1512,21 @@ const REFRAME_LAYERS: Partial<Record<string, Record<AltitudeBand, ReframeLayer>>
       suffix: ' — What is the felt-quality of the inclusion-impulse arising and dissolving?',
     },
   },
-  Turquoise: {
+  Teal: {
     low: { prefix: '', suffix: '' },
     mid: { prefix: '', suffix: '' },
-    high: { prefix: '', suffix: '' },  // co-altitudinal for high-band Turquoise players
+    high: { prefix: '', suffix: '' },  // co-altitudinal for high-band Teal players
     peak: {
-      prefix: 'From presence, witness the Turquoise pattern of integral vision. ',
+      prefix: 'From presence, witness the Teal pattern of integral vision. ',
       suffix: ' — What is the felt-quality of the integral-impulse arising and dissolving?',
     },
   },
-  White: {
+  Turquoise: {
     low: { prefix: '', suffix: '' },
     mid: { prefix: '', suffix: '' },
     high: { prefix: '', suffix: '' },
     peak: {
-      prefix: 'From presence, witness the White pattern of non-dual release. ',
+      prefix: 'From presence, witness the Turquoise pattern of non-dual release. ',
       suffix: ' — What is the felt-quality of presence itself, without object?',
     },
   },
@@ -1572,8 +1572,8 @@ export function getFallback(modality: Modality, line: Line, stage: Stage, player
         Orange: LR_BY_LINE_ORANGE,
         Amber: LR_BY_LINE_AMBER,
         Green: LR_BY_LINE_GREEN,
-        Turquoise: LR_BY_LINE_TURQUOISE,
-        White: LR_BY_LINE_WHITE,
+        Teal: LR_BY_LINE_TURQUOISE,
+        Turquoise: LR_BY_LINE_WHITE,
       };
       if (stage === 'Infrared') content = pickRandom(LANGUAGE_REFLECTIVE_INFRARED);
       else if (stage === 'Magenta') content = pickRandom(LANGUAGE_REFLECTIVE_MAGENTA);
