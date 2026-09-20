@@ -7,6 +7,7 @@ Organ: kernel
 Source: "docs/system/AGENTS.md §3"
 Description: "Four layer rules bounding src/core, src/infra, the rendering surfaces and content data."
 Related: [MY-AD-0001]
+Consumer: "`src/core`, `src/infra` layer boundaries, enforced by gate DG7 in `scripts/arch.py`"
 ---
 
 ## Context
@@ -24,3 +25,5 @@ into logic, which makes the system untestable and the curriculum unextendable.
 - Positive: pure core = testable contracts; data-driven content = the corpus can grow without code.
 - Negative: some integrations need adapters rather than direct calls.
 - Enforcement: `G12-identity-firewall` and the kernel gates in `src/core/validation/gates.ts`.
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

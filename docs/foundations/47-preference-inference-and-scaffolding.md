@@ -476,8 +476,10 @@ attributed and the player's to read, edit and delete (6).
 ## 14. References
 
 Listed as resolvable paths so the knowledge-base graph can see this document's dependencies. Canon's
-`NN §X` shorthand is the reading convention but is **not** an edge — no extractor resolves that form,
-which is why a canon document's doc→doc edges are currently invisible (`RT-CANON-SHORTHAND`).
+`NN §X` shorthand was the reading convention but was **not** an edge — no extractor resolved that
+form, so a canon document's doc→doc edges were invisible (the whole canon rung's graph was
+inbound-only). The extractor now resolves it (`outbound_refs` style 6), so the explicit list below is
+kept for prose clarity rather than as a workaround.
 
 | Depends on | For |
 |---|---|

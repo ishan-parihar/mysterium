@@ -7,6 +7,8 @@ Organ: safety
 Source: "docs/system/sub-systems/safety/ethics-and-data-privacy.md"
 Description: "The project could measure a person's developmental interior without a written boundary on what that measurement may be used for; four live documents cited this contract and it did not exist. Every stored field now belongs to exactly one of four classes (inherent play state, developmental inference, identity context, consent record) determining retention and readers; C3 outlives C1 and C2; aggregation destroys identity or does not exist; no class may be created from inference; C1 and C2 are reachable only through a registered purpose-bound projection; and no role grants access - auditors reach data by consent and projection, never by privilege."
 Related: ["MY-AD-0011", "MY-AD-0018", "MY-RG-0017", "MY-RG-0018"]
+Consumer: "`docs/system/sub-systems/safety/ethics-and-data-privacy.md`, `src/core/safety/crisis.ts`"
+Deferral: ARTICULATION-LAYER
 ---
 
 ## Decision
@@ -63,3 +65,5 @@ same audit trail (`MY-AD-0011`).
 - `docs/foundations/16-significator-architecture.md` §2.1, §2.4, §10.4
 - `docs/foundations/45-personalization-and-context-pooling.md` §3.1, §7
 - `MY-AD-0011` (human intervention is integrated), `MY-AD-0018`, `MY-RG-0017`, `MY-RG-0018`
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

@@ -14,7 +14,7 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 
 ### Documents in this organ (auto-discovered — never hand-maintained)
 
-*(none yet — author one with `arch.py doc add --organ onboarding --title ...`)*
+- [first-session-placement.md](./first-session-placement.md) — First-Session Placement
 
 <!-- arch:auto-zone:end -->
 

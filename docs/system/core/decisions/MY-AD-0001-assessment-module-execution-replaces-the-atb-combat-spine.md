@@ -7,6 +7,7 @@ Organ: kernel
 Source: "foundations/26-unified-core-architecture"
 Description: "Progression runs on assessment-module execution; narrative frames (including conflict) are delivery vehicles, never the progression mechanism."
 Related: [MY-AD-0002, MY-RG-0005]
+Consumer: "`src/core/assessments/AgenticOrchestrator.ts`, `src/core/GameLoop.ts`"
 ---
 
 ## Context
@@ -23,3 +24,5 @@ archived in `docs/historical/archive/atb-combat/`.
 - Positive: every encounter is measurable; the module contract is the single integration point.
 - Negative: the combat-fantasy appeal must be re-earned through narrative framing.
 - Guard: `MY-RG-0005` (superseded-vocabulary regression) keeps the old vocabulary out.
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

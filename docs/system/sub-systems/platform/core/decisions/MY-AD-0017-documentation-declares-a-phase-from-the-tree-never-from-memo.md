@@ -7,6 +7,7 @@ Organ: platform
 Source: "docs/DEVELOPMENT-PLAN.md section 2"
 Description: "AGENTS.md section 4.2 declared Phase 1 current while DEVELOPMENT-PLAN section 8 recorded all nine phases implemented; DEVELOPMENT-PLAN section 2 described G-A..G-F as absent while section 8 cited the code that closed them. Both were stale from 2026-09-16 to 2026-09-20. A phase claim is now re-verified against the tree and cites its closing evidence, and no document may state a phase status it has not re-verified."
 Related: ["MY-AD-0013", "MY-RG-0002"]
+Consumer: "`AGENTS.md`, `docs/DEVELOPMENT-PLAN.md`"
 ---
 
 ## Decision
@@ -50,3 +51,5 @@ in the authority map.
 - `docs/DEVELOPMENT-PLAN.md` §2, §8, §9
 - `AGENTS.md` §4.2
 - `MY-RG-0002` (stage-vocabulary drift), `MY-RG-0016` (a reference that resolves to nothing)
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

@@ -7,6 +7,7 @@ Organ: kernel
 Source: "docs/foundations/45-personalization-and-context-pooling.md section 3"
 Description: "The generation pipeline carried only a developmental description of the player (VeilFilteredSignificator, 22 section 4.2) and no account of who this person is. The user-dimensionality vector is added as the retrieval key for content pooling: consent-first and purpose-bound, with aversion fail-closed and veto power over the priority formula, readable and exportable by the player; personalization shapes how catalyst is delivered and never which development is served."
 Related: ["MY-AD-0008", "MY-AD-0019", "MY-AD-0011", "MY-RG-0017"]
+Deferral: PLAN-IMPLEMENT
 ---
 
 ## Decision
@@ -54,3 +55,5 @@ boredom backstop for plateau. This decision adds no third mechanism.
 - `docs/foundations/45-personalization-and-context-pooling.md` §3, §4, §6
 - `docs/foundations/16-significator-architecture.md` §2.1, §6.4
 - `MY-AD-0008` (alignment biases selection), `MY-AD-0009` (two-fold world memory), `MY-RG-0017`
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

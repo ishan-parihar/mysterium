@@ -7,6 +7,7 @@ Organ: curriculum
 Source: "docs/foundations/47-preference-inference-and-scaffolding.md section 6"
 Description: "29 section 2.7 owns ZPD and fading as learning science but nothing selects which scaffold for which person, and 11's modalities are catalyst axes rather than scaffolds. Ten scaffolds are declared (worked-example, stepped-ladder, choice-set, estrangement, immersion, compare-and-contrast, quest-chain, moment-press, witness-and-invite, solo-inquiry), each carrying the meta-program readings that select it, its modality and depth compatibility, and its fading rule. Selection is a multiplicative bias in the same seam as every other bias (MY-AD-0008) rather than a fork of 24; the catalyst target is fixed before the scaffold is chosen; fading is mandatory because a scaffold that never fades is a crutch, and the expansion-ratio floor of 46 section 5.2 applies to the scaffold set as well as to the tag set."
 Related: ["MY-AD-0021", "MY-AD-0008", "MY-AD-0018", "MY-RG-0017"]
+Deferral: PROFILE-INFERENCE
 ---
 
 ## Decision
@@ -84,3 +85,5 @@ from being handled.
 - `docs/foundations/16-significator-architecture.md` §6.4 (growth edge)
 - `docs/foundations/11-game-modalities.md`, `docs/foundations/08-psychophysics-and-staircase.md`
 - `MY-AD-0008`, `MY-AD-0018`, `MY-AD-0021`, `MY-RG-0017`
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

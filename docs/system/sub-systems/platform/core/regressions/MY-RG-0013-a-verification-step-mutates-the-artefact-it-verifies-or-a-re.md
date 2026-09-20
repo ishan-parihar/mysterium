@@ -36,8 +36,12 @@ verification step that destroys the artefact under test can only ever produce fa
    copy **in the same command**, or commit first and use `git stash`/`git checkout` knowingly.
 2. After any injection cycle, re-run the **full** gate set and confirm the gate *count* and each
    gate's inspected-file count are what they were before — not merely that exit is 0.
-3. The governance gate-fixture suite (declared as `RT-GATE-FIXTURES` in `_org.yaml → pending`) must
-   inject into temporary copies, so the proof stops depending on a human reverting carefully.
+3. The governance gate-fixture suite is now **built**: `python3 scripts/arch.py fixtures` injects one
+   targeted violation per gate, runs that gate alone, and restores the file in a `finally`. It exposed
+   this regression's own hand-proof assumption the day it landed — the harness deleted `docs/INDEX.md`
+   because its delete path was gated on "this was meant to be a creation" rather than on "we actually
+   created it". That fix is the rule this guard generalises: **a verification step may only undo what
+   it can prove it did.**
 
 ## References
 

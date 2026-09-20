@@ -502,6 +502,62 @@ by workers (`holon_delta`, `relationship_update`, `world_memory_commit`, `pestle
 `npc_context_refresh`) follow the §6 `Proposal` union and are ratified (or owner-committed,
 per W2) exactly like existing kinds.
 
+### 5.5 The reporting feed (added 2026-09-20)
+
+§4.5b names the reporting feed as the destination of every session signal and every worker
+proposal, and until this section it was a phrase: named once in the whole set, with no record
+shape, no writer list and no consumer list (`_org.yaml → pending → REPORTING-FEED`). It is
+specified here because the loop is only closed if its centre is a *contract* rather than a
+convention.
+
+**One feed, one entry per unit of work.** Both a session and a background job append the same
+shape — this is what makes "the orchestrator re-plans" a single code path instead of two.
+
+```ts
+interface FeedEntry {
+  id: string;                          // idempotency key (§W4): replay yields the same entry, not a second one
+  at: number;                          // deterministic clock for replay (22 §9)
+  source: 'session' | 'worker';        // W1: a worker never holds the foreground
+  ref: LogRef | WorkerJobRef;          // the §4.4 session log, or the §5.4 job record
+  signals?: SessionSignals;            // sessions only — the eager-reading layer (§5.1)
+  proposals: readonly Proposal[];      // worker jobs: the same union the session arm emits (§5.4 note)
+  proposalsOwnerCommitted?: readonly Proposal[]; // world-side deltas committed by a holon's owner
+                                       // worker under W2 — recorded here, never ratified here
+  forecast?: { expected: string; observed: string; deviation: number }; // what 27 predicted vs what happened
+}
+```
+
+**Four writers, three readers, and the one rule that binds them.**
+
+| Side | Who | What it contributes / consumes |
+|---|---|---|
+| writer | session end (§4.6) | `signals` + the session's `proposals` |
+| writer | a background worker (§5.4) | its `proposals` and its owner-committed deltas |
+| writer | ratification (L4) | the *verdict*: which proposals committed, which were rejected and why |
+| writer | the orchestrator's own loop (§5.2) | `OrchestratorInsight` findings — the orchestrator is logged like any agent |
+| reader | **27** (planning) | `progressDelta`, `forecast.deviation` → the next session's strategy |
+| reader | **25** (CCI) | committed evidence → the composite; never raw signals |
+| reader | **16 §10.4 → 33 §7** (projections) | committed state only, purpose-scoped, consent re-checked at render |
+
+**Feed laws.**
+
+- **F1 — Committed, not observed.** Only ratified (or owner-committed, W2) deltas leave the feed
+  as state. Raw signals inform *planning*; they never enter the player's record — the same
+  firewall `42 §1.1` draws, crossing the orchestration layer.
+- **F2 — One feed, no side channels.** A reader that needs session outcome reads this feed; it may
+  not read session logs directly (that is `analyze_session_logs`, on warrant, §5.2). Otherwise
+  "the reporting system" becomes several incompatible ones.
+- **F3 — Replayable and idempotent.** Every entry carries an idempotency key, so offline the feed
+  replays deterministically (W4) and a re-run cannot double-count a session.
+- **F4 — Forecast is the loop's only self-criticism.** `forecast` records what `27` expected before
+  the session and what the signals show after. Without it the orchestrator can only notice that a
+  session happened, never that its own plan was wrong — which is the whole point of §5.3's
+  cross-session memory.
+
+**Ownership.** This section owns the feed's *record, writers and readers*. `25` owns what the CCI
+computes from committed evidence, `27` owns the strategy the feed's `progressDelta` feeds, `16 §10.4`
+owns the projections, `22 §7.4` owns world-side memory. The feed carries; it does not compute.
+
 ---
 
 ## 6. The delegation contract (types)

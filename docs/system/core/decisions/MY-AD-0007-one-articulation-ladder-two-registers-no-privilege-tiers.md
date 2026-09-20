@@ -7,6 +7,7 @@ Organ: profiling
 Source: "foundations/16-significator-architecture §10.5"
 Description: "L0-L7 with AL1-AL6: the same derivation rendered in a self-register and an auditor-register; access is consented traversal, never a credential class."
 Related: [MY-AD-0006]
+Deferral: ARTICULATION-LAYER
 ---
 
 ## Context
@@ -22,3 +23,5 @@ player-issued, revocable, scope-bounded consent link, re-checked at every render
 ## Consequences
 - Positive: no privilege subsystem; the deepest level is available to the self too.
 - Negative: consent plumbing becomes load-bearing (revocation must be immediate).
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

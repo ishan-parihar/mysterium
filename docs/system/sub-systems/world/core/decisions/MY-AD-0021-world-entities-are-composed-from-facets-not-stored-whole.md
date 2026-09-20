@@ -7,6 +7,7 @@ Organ: world
 Source: "docs/foundations/46-generative-world-composition.md"
 Description: "The world model assumed authored entities: the code holds hand-written holons in stage-holons.json and red-layer-holons.json plus one TypeScript file per line for the Red layer, and 45's three libraries had nothing to pool from because the corpus index carries only line, stage, title and modalities. World, NPC and scenario are now compositions over a facet stock keyed by line x stage x characteristic (640 base cells per characteristic-set), a Situation joins the holon kind taxonomy so the scenario library is a view rather than a second store, and each composition records its facet keys, tag query and seed so it is reproducible and auditable. Two players at the same line-stage no longer receive interchangeable content."
 Related: ["MY-AD-0018", "MY-AD-0019", "MY-AD-0009", "MY-RG-0019"]
+Deferral: PLAN-IMPLEMENT
 ---
 
 ## Decision
@@ -74,3 +75,5 @@ govern. Recommended (proposed, not yet existing): a new `src/core/world/` with
 - `docs/foundations/18-great-way-world-architecture.md` §2, §2.2
 - `docs/foundations/22-holon-context-engine.md` §2.1
 - `MY-AD-0018`, `MY-AD-0019`, `MY-AD-0009`, `MY-RG-0019`
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

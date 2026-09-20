@@ -14,7 +14,7 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 
 ### Documents in this organ (auto-discovered — never hand-maintained)
 
-*(none yet — author one with `arch.py doc add --organ profiling --title ...`)*
+- [player-diagnostics-the-significator.md](./player-diagnostics-the-significator.md) — Player Diagnostics & the Significator
 
 <!-- arch:auto-zone:end -->
 

@@ -7,6 +7,7 @@ Organ: platform
 Source: "docs/foundations/AGENTS.md (canon rung router) + _org.yaml rungs.canon.router"
 Description: "The file declared as a rung's authority is the only door into that rung; every live document in the rung must be named by it, and DG18 enforces this."
 Related: [MY-AD-0017, MY-AD-0016, MY-RG-0022]
+Consumer: "`scripts/arch.py` (gate DG18)"
 ---
 
 ## Context
@@ -43,3 +44,5 @@ the failure mode is reported at the moment of creation, not discovered by a read
 the gate cannot see the coverage. This is a small authoring constraint and it is visible.
 
 
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

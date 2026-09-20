@@ -7,6 +7,7 @@ Organ: catalyst
 Source: "foundations/24-encounter-scheduler §3.2.9"
 Description: "The scheduler's eight criteria are the only additive terms; any other consideration (UDV relevance, user-Matrix targeting, session theme) enters as a multiplicative bias renormalised to 1.00, and G26 enforces conformance."
 Related: [MY-AD-0008, MY-RG-0023, MY-AD-0019]
+Deferral: SCHEDULER-FORMULA
 ---
 
 ## Context
@@ -50,3 +51,5 @@ behaviour, so personas and kernel gates must be re-verified). Tracked as
 deviation.
 
 
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

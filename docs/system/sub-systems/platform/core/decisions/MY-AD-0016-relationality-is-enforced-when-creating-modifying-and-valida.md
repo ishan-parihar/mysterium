@@ -7,6 +7,7 @@ Organ: platform
 Source: "docs/audits/KB-UTILITIES-AUDIT-2026-09-20.md C4"
 Description: "Relationality was reported, never enforced: DG12 proved links resolved and discarded the edge, and an authored document with zero links passed all thirteen gates. Now DG14 fails any live document in an authored rung with no inbound and no outbound reference (rung content/corpus exempt by design: its relationality is structural), DG15 requires a record's Source: to name a resolvable document, doc add refuses to create an orphan and prints BM25 link candidates instead, and search --relations plus related emit declared structural edges and BM25-similar documents not yet linked. Measured: canon-domain 5 -> 0 zero-edge docs, system 4 -> 1 (a generated router), 550 citation edges over 645 documents."
 Related: []
+Consumer: "`scripts/arch.py` (gates DG12, DG14, DG15)"
 ---
 
 ## Decision
@@ -47,8 +48,10 @@ enforcement whose scope is invisible is worse than none.
 
 ## Consequences (measured at 645 live documents)
 
-- `canon-domain`: **5 → 0** zero-edge documents. `system`: **4 → 1** (the generated `platform` router,
-  which is empty because that organ has no documents yet — `KB-ORGAN-DOCS`).
+- `canon-domain`: **5 → 0** zero-edge documents. `system`: **4 → 1** at the time of writing — the
+  generated `platform` router, because that organ had no documents yet. The five undocumented organs
+  (`KB-ORGAN-DOCS`) have since been authored, and DG19 now additionally requires every Active AD to
+  declare its consumer or a deferral.
 - 550 citation edges, 0.85 out-edges/document. `canon`, `canon-root` and `plans` were already at 0.
 - Cost: `Corpus` build ~1.0 s; a BM25 query ~1 ms; `relations()` ~10 ms.
 - Both new gates proven to fail on injection (an injected orphan document; a fabricated `Source:`).
@@ -58,3 +61,5 @@ enforcement whose scope is invisible is worse than none.
 - `docs/audits/KB-UTILITIES-AUDIT-2026-09-20.md` §0 (C4), UT-3
 - `MY-RG-0016` (a reference that resolves to nothing passes every gate)
 - `MY-AD-0015` (the knowledge-base is queried, not only validated)
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

@@ -7,6 +7,7 @@ Organ: world
 Source: "foundations/22-holon-context-engine §7.4-§7.5"
 Description: "Profiling memory and object memory are separate ledgers; each holon has exactly one owning worker (local single writer) and context is handed to the game agent."
 Related: [MY-AD-0010, MY-AD-0004]
+Deferral: PLAN-IMPLEMENT
 ---
 
 ## Context
@@ -23,3 +24,5 @@ the pipeline degrades to deterministic ledger replay so the world never forgets.
 ## Consequences
 - Positive: NPC/world causality becomes updatable without global locking.
 - Negative: worker lifecycle and offline degradation must be tested as failure modes.
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

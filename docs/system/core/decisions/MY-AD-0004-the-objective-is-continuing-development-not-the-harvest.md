@@ -7,6 +7,7 @@ Organ: catalyst
 Source: "foundations/06-law-of-one-correspondence §7.4"
 Description: "Continuing progression across all dimensions without residual entropy or shadows; the closure is an emergent horizon, never an optimisation target."
 Related: [MY-AD-0003, MY-AD-0009]
+Consumer: "`src/core/engines/GreaterCycleEngine.ts`, `src/core/engines/CCIEngine.ts`"
 ---
 
 ## Context
@@ -23,3 +24,5 @@ Selection (`foundations/24`), strategy (`foundations/27`) and the composite inde
 - Positive: `Samsara` becomes the normal condition of a healthy practice, not a failure state.
 - Positive: theta-decay and floor-health gating become first-class mechanics.
 - Negative: no "win screen" as a retention hook; growth must be felt (see MY-AD-0006).
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

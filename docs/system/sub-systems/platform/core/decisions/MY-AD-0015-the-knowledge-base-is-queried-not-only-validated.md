@@ -7,6 +7,7 @@ Organ: platform
 Source: "docs/audits/KB-UTILITIES-AUDIT-2026-09-20.md C2-C5"
 Description: "The governance layer could author and validate but not answer questions over the corpus. Three verbs close it: search (keyword over live docs and records, ranked, each hit reporting where it lives and what it references), related (the referential graph with BACKLINKS, joining organ<->contract docs and organ<->code, term<->owner, record<->organ/Related/Source, and doc<->doc across five citation styles), and doc add (author an organ document via CLI). Organ documents are DISCOVERED from the tree, not declared, so a new document is reachable from route/context/search/related the moment it exists and no registry is hand-edited."
 Related: []
+Consumer: "`scripts/arch.py` (the search and related verbs)"
 ---
 
 ## Decision
@@ -57,3 +58,5 @@ generated router); before this decision the question had no answer at all.
 
 - `docs/audits/KB-UTILITIES-AUDIT-2026-09-20.md` §0 (C2–C5), UT-1…UT-4
 - `AGENTS.md` §2.0, §7.5 step 1b
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

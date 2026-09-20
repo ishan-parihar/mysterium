@@ -7,6 +7,7 @@ Organ: kernel
 Source: "docs/foundations/45-personalization-and-context-pooling.md sections 2 and 5"
 Description: "World content is three libraries with different lifecycles; a scenario is the unit of instantiation and declares only locus kind, cast shape, catalytic purpose, modality, stake kind and pressure levers, so content scales by combination rather than by authoring variants. Pooling is retrieval-then-rank producing a candidate set; selection stays with the ONE priority formula (24) as a multiplicative bias, never a parallel queue."
 Related: ["MY-AD-0009", "MY-AD-0018", "MY-AD-0008"]
+Deferral: PLAN-IMPLEMENT
 ---
 
 ## Decision
@@ -63,3 +64,5 @@ into unfamiliar material and not a wall around familiar material).
 - `docs/foundations/18-great-way-world-architecture.md` §2, §5
 - `docs/foundations/24-encounter-scheduler.md`
 - `MY-AD-0008`, `MY-AD-0009`, `MY-AD-0018`, `MY-RG-0008`
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

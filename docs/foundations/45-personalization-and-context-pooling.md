@@ -152,6 +152,33 @@ with deterministic lexical fallback so pooling never depends on a network call.
    player's is not offered as primary; it may appear as texture.
 5. **Modality fitness** (`11`) — the candidate's modality must be able to probe the target line-stage.
 
+#### 5.2.1 The veto is a routing rule, never a scheduling rule (resolved 2026-09-20)
+
+Rule 3 is the one place a preference may suppress a candidate, and it was left without a conflict
+rule — which is exactly the case that matters: what happens when the aversive candidate is the only
+carrier of the catalyst the developmental state requires?
+
+**The requirement is structural; the candidate is a surface.** A catalyst target is a *cell*
+(`24 §2.1`: line × stage × modality × shadow quadrant). An aversive candidate is one *rendering* of
+that cell. The veto therefore removes renderings and never targets:
+
+| Situation | What happens |
+|---|---|
+| Another candidate carries the same cell | the vetoed one is dropped, the alternative is offered; the veto is invisible to `24` |
+| No other candidate carries the cell | the cell is **deferred**, not forced, and the deferral is recorded with the veto that caused it |
+| The veto names a *whole cell* rather than a rendering | treated as rule 1 territory (a `20` safety/re-traumatisation condition), not as a preference — routed to the safety layer, never adjudicated by the scheduler |
+
+**Why deferral and not override.** Overriding a stated aversion to deliver a therapeutic encounter is
+the coercion `24 §3.4` and the ethics contract (`MY-AD-0020`) both forbid, and it would make the
+player's own boundary negotiable by an algorithm. Deferral costs time; override costs consent. The
+recorded deferral is also diagnostic in its own right: a cell that stays deferred because of an
+aversion *is* the material, and it reaches the player through the healing path (`16 §10.4`, `43 §4.7`)
+rather than through the scheduler.
+
+This is a **routing** rule: it changes which candidate the scheduler sees, never which cell the
+decision above it chose. `46 §5.3` inherits it — the dialectic engine may not reach for the opposite
+of an aversive domain by treating the aversion as the pole to be trained.
+
 ### 5.3 Ranking: relevance is a bias, never a replacement
 
 Pooling produces a *ranked candidate set*. `24`'s ONE priority formula remains the single selection
@@ -332,3 +359,10 @@ it (6).
   template library can be authored at volume.
 - **Cross-cultural analogy.** Fluency domains are culture-laden; a domain fluent for one player is
   exotic or offensive to another. The bridge needs the same cultural-review discipline as `11`.
+- **The aversion veto versus the developmental requirement — resolved 2026-09-20 (`§5.2.1`,
+  `MY-AD-0026`).** The requirement is structural and the candidate is a surface, so the veto routes:
+the cell survives, the rendering is dropped, and a cell with no alternative rendering is *deferred*
+  and recorded rather than forced. Chosen because override would make a player's stated boundary
+  negotiable by the scheduler (`24 §3.4`, `MY-AD-0020`). **Still open:** who reviews a deferral that
+  has stood for a long time, and whether the healing path is obliged to pick it up — the deferral is
+  diagnostic material (`16 §10.4`) and nothing yet owns its review cadence.

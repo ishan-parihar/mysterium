@@ -7,6 +7,7 @@ Organ: catalyst
 Source: "foundations/27-auto-mode-strategy-engine §5.4"
 Description: "AlignmentContract (author, intent, target, deviation band, ceiling) applies through the existing scheduler bias seam, as a bias only."
 Related: [MY-AD-0004, MY-RG-0008]
+Deferral: PLAN-IMPLEMENT
 ---
 
 ## Context
@@ -23,3 +24,5 @@ same route and the same laws (Veil, firewall, ceiling). The 8-criterion priority
 - Positive: trajectory alignment becomes a first-class, bounded capability.
 - Negative: objective alignment now needs its own invariants documented and tested.
 - Guard: `MY-RG-0008` (orphan proposal types must have an applying consumer).
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

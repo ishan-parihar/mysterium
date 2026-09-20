@@ -14,7 +14,7 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 
 ### Documents in this organ (auto-discovered — never hand-maintained)
 
-*(none yet — author one with `arch.py doc add --organ platform --title ...`)*
+- [documentation-governance-tooling.md](./documentation-governance-tooling.md) — Documentation Governance & Tooling
 
 <!-- arch:auto-zone:end -->
 

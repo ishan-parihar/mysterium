@@ -71,6 +71,7 @@ GATE_CONFIG_KEY = {
     "DG16": "dg16_cited_paths",
     "DG17": "dg17_record_refs",
     "DG18": "dg18_router_coverage",
+    "DG19": "dg19_law_consumer",
 }
 
 
@@ -217,6 +218,23 @@ def frontmatter(text: str) -> dict:
         return {}
 
 
+def fm_parses(text: str) -> bool:
+    """Does this file's frontmatter block actually parse? `frontmatter()` swallows YAMLError and
+    returns `{}`, so ONE unquoted scalar (a value starting with a backtick, say) erases the record's
+    ID from every gate that reads it — the gates then report a phantom "record does not exist" and
+    the real cause is invisible. DG1 asks this directly."""
+    if not text.startswith("---"):
+        return True
+    end = text.find("\n---", 3)
+    if end < 0:
+        return True
+    try:
+        yaml.safe_load(text[3:end])
+        return True
+    except yaml.YAMLError:
+        return False
+
+
 def strip_generated_date(text: str) -> str:
     """Drop the `> Generated:` line so DG11 compares content, not the day it was emitted."""
     return "\n".join(l for l in text.splitlines() if not l.startswith("> Generated:"))
@@ -302,7 +320,9 @@ class Gate:
         if self._edges is None:
             idx: dict[str, list[Path]] = {}
             for p in live_files(self.cfg):
-                idx[rel(p)] = outbound_refs(p.read_text(encoding="utf-8", errors="ignore"), p.parent)
+                idx[rel(p)] = outbound_refs(
+                    p.read_text(encoding="utf-8", errors="ignore"), p.parent, self_path=p
+                )
             self._edges = idx
         return self._edges
 
@@ -336,6 +356,7 @@ class Gate:
             ("DG16", self.dg16_cited_paths),
             ("DG17", self.dg17_record_refs),
             ("DG18", self.dg18_router_coverage),
+            ("DG19", self.dg19_law_consumer),
         ]
         for name, fn in gates:
             if only and name != only:
@@ -365,6 +386,12 @@ class Gate:
             m = RECORD_RE.match(r["path"].name)
             if not m:
                 self.err(g, f"{r['rel']}: filename must match MY-(AD|RG)-NNNN-kebab.md")
+            if not fm_parses(r["text"]):
+                self.err(
+                    g,
+                    f"{r['rel']}: frontmatter is not valid YAML — every gate reads it as empty "
+                    f"(quote the offending scalar)",
+                )
             fm = frontmatter(r["text"])
             for key in ("ID", "Title", "Status", "Date", "Description", "Organ"):
                 if not fm.get(key):
@@ -853,6 +880,55 @@ class Gate:
                     )
         self.checked[g] = n
 
+    # DG19 — a ratified law must have a consumer. RT-ORPHAN-LAW: an Active AD with no code anchor and
+    # no declared deferral is invisible pending work — the largest untracked backlog in the repository
+    # (red-team 2026-09-20 §2). Every Active AD declares either `Consumer:` (where the law is
+    # consumed: a resolving path, a gate id, or a record id) or `Deferral:` (a `_org.yaml → pending`
+    # key naming the work that will consume it). A `Deferral:` is checked against the pending ledger,
+    # so it cannot name work nobody tracks (MY-RG-0014's class). The gate reports what it checked, so
+    # its coverage is visible rather than implied.
+    def dg19_law_consumer(self, g: str) -> None:
+        pending = set((self.cfg.get("pending") or {}).keys())
+        known_ids = {str(frontmatter(x["text"]).get("ID") or "") for x in records(self.cfg)}
+        known_ids.discard("")
+        n = 0
+        for r in records(self.cfg):
+            if "/decisions/" not in r["rel"]:
+                continue  # laws only; an RG's consumer is the gate that implements it
+            fm = frontmatter(r["text"])
+            if str(fm.get("Status") or "").strip().lower() != "active":
+                continue
+            n += 1
+            cons, defer = fm.get("Consumer"), fm.get("Deferral")
+            if not cons and not defer:
+                self.err(
+                    g,
+                    f"{r['rel']}: Active AD declares neither `Consumer:` nor `Deferral:` — a law "
+                    f"with no consumer is invisible pending work",
+                )
+                continue
+            if defer:
+                for k in (x.strip() for x in re.split(r"[;,]", str(defer))):
+                    if k and k not in pending:
+                        self.err(g, f"{r['rel']}: `Deferral: {k}` names no `_org.yaml → pending` key")
+            if cons:
+                text = str(cons)
+                refs = re.findall(r"`([^`]+)`", text)
+                gates = re.findall(r"\b(?:DG|G)\d+\b", text)
+                if not refs and not gates:
+                    self.err(
+                        g,
+                        f"{r['rel']}: `Consumer:` names no path, gate id or record id — it must "
+                        f"point at something that can be read",
+                    )
+                for ref in refs:
+                    if ref.startswith("planned:"):
+                        continue
+                    if (ROOT / ref).exists() or ref in known_ids:
+                        continue
+                    self.err(g, f"{r['rel']}: `Consumer:` names `{ref}` which does not resolve")
+        self.checked[g] = n
+
     # DG18 — router coverage. A rung's router (`rungs.<name>.router`) is the only door into that
     # rung as far as an agent is concerned; a document it never names is unreachable from the map
     # that is actually read, while every other gate reports green (MY-RG-0022 — 45/46/47 sat in
@@ -965,7 +1041,7 @@ def resolve_ref(raw: str, base: Path | None = None) -> Path | None:
     return None
 
 
-def outbound_refs(text: str, base: Path) -> list[Path]:
+def outbound_refs(text: str, base: Path, self_path: Path | None = None) -> list[Path]:
     """Every resolved doc->doc edge in `text` — the graph DG12 validated and then discarded (UT-3).
 
     Four citation styles are in use across the canon, and an edge extractor that only understood the
@@ -989,10 +1065,26 @@ def outbound_refs(text: str, base: Path) -> list[Path]:
         r"concept-drafts|audits|historical|archive)/[A-Za-z0-9_./-]+)",
         text,
     )
+    # 6. the canon's own shorthand — `NN §X` means `docs/foundations/NN-*.md`. Every canon document
+    # cites canon this way (427 occurrences inside foundations alone) and no extractor understood it,
+    # so the canon rung's doc->doc graph was effectively INBOUND-ONLY: `related 45-...` reported no
+    # outbound edges for a document that depends on 18/22/24 (`_org.yaml → pending →
+    # RT-CANON-SHORTHAND`). The shorthand is unambiguous in this corpus — the only occurrence outside
+    # `foundations/` is a `stages/` document citing `16 §11.6`.
+    for num in set(re.findall(r"(?<![\w/])(\d{2})\s*§", text)):
+        hits = sorted((ROOT / "docs" / "foundations").glob(f"{num}-*.md"))
+        if hits:
+            raws.append(str(hits[0].relative_to(ROOT)))
     out: list[Path] = []
     for raw in raws:
         p = resolve_ref(raw, base)
-        if p is not None and p not in out:
+        if p is None:
+            continue
+        # A document citing its own section is not an edge. Keeping it would make every document
+        # that says `NN §` about itself look connected and silently destroy DG14's orphan detection.
+        if self_path is not None and p.resolve() == self_path.resolve():
+            continue
+        if p not in out:
             out.append(p)
     return out
 
@@ -1198,7 +1290,7 @@ class Corpus:
                 "len": sum(tf.values()) or 1,
                 "rung": rung,
                 "organ": organ,
-                "refs": outbound_refs(text, p.parent),
+                "refs": outbound_refs(text, p.parent, self_path=p),
             }
             self.docs.append(doc)
             self.by_path[doc["rel"]] = doc
@@ -1388,7 +1480,7 @@ def cmd_related(args: argparse.Namespace) -> int:
             print(f"related: {other}")
 
     print("\n=== outbound (this -> elsewhere) ===")
-    edges = outbound_refs(text, target.parent)
+    edges = outbound_refs(text, target.parent, self_path=target)
     for p in edges:
         print(f"  -> {rel(p)}")
     if not edges:
@@ -1412,7 +1504,9 @@ def cmd_related(args: argparse.Namespace) -> int:
     for p in live_files(cfg):
         if p == target:
             continue
-        if target in outbound_refs(p.read_text(encoding="utf-8", errors="ignore"), p.parent):
+        if target in outbound_refs(
+            p.read_text(encoding="utf-8", errors="ignore"), p.parent, self_path=p
+        ):
             print(f"  <- {rel(p)}")
             n += 1
     for other, oo in cfg["organs"].items():
@@ -1518,7 +1612,7 @@ def cmd_doc_add(args: argparse.Namespace) -> int:
     # Relationality is enforced at CREATION time, not only at validate time (audit UT-4): a document
     # that arrives with no reference in either direction is an orphan from birth, and DG14 would fail
     # on the next validate with a message about a file the author has already moved on from.
-    if not outbound_refs(body, d) and not args.allow_orphan:
+    if not outbound_refs(body, d, self_path=out) and not args.allow_orphan:
         corpus = Corpus(cfg)
         print(f"\n`{rel(out)}` would be an ORPHAN: it references nothing and nothing references it.")
         print("Candidates by BM25 over the knowledge-base (add at least one reference, then re-run):\n")
@@ -1634,15 +1728,34 @@ def cmd_update(args: argparse.Namespace) -> int:
     text = target["text"]
     for field in args.field or []:
         key, _, value = field.partition("=")
-        text = re.sub(rf"(?m)^{key}:.*$", f"{key}: {value}", text, count=1)
+        if not value:
+            continue  # an empty value means "leave this key alone", never `Key: ""`
+        if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*", key):
+            fail(f"`{key}` is not a valid frontmatter key")
+        # Quote a value YAML cannot take as a plain scalar. A backtick is the common case here — a
+        # plain scalar may not START with one, and writing it unquoted silently corrupted six
+        # records' frontmatter (2026-09-20), which erased their IDs from every gate that reads them.
+        if re.search(r":\s", value) or value[:1] in "*&!%#@`|>[]{}'\"-?:,":
+            value = '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+        pat = re.compile(rf"(?m)^{re.escape(key)}:.*$")
+        if pat.search(text):
+            text = pat.sub(lambda _m, v=value: f"{key}: {v}", text, count=1)
+            continue
+        # A key the record does not carry yet (e.g. the `Consumer:`/`Deferral:` pair DG19 requires)
+        # is inserted INSIDE the frontmatter block. Replacing in place silently did nothing for a new
+        # key, so `update` reported success while writing no change (found while declaring DG19's
+        # fields fleet-wide, 2026-09-20).
+        m = re.match(r"---\n(.*?)\n---\n", text, re.S)
+        if not m:
+            fail(f"{target['rel']}: no frontmatter block to add `{key}:` to")
+        text = f"---\n{m.group(1)}\n{key}: {value}\n---\n" + text[m.end() :]
     text += f"\n<!-- {datetime.now(timezone.utc).date().isoformat()}: {args.reason} (recon {args.recon}) -->\n"
     target["path"].write_text(text, encoding="utf-8")
     append_ledger(
         cfg,
-        {
-            "action": "update",
-            "target": args.id,
-            "fields": args.field,
+        {                "action": "update",
+                "target": args.id,
+                "fields": list(args.field or []),
             "reason": args.reason,
             "recon": args.recon,
             "path": target["rel"],
@@ -1822,6 +1935,120 @@ def cmd_validate(args: argparse.Namespace) -> int:
     return Gate(cfg).run(args.gate)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Gate fixtures (RT-GATE-FIXTURES): prove a gate FAILS on an injected violation.
+#
+# Every injection is targeted at a single file, restored in a `finally`, and only its own gate is
+# run — so the proof is fast, has no side effects, and does not depend on the rest of the tree being
+# clean. A fixture is `(path, find, replace)`; `find == ""` means "create this file" (used where the
+# violation is a document that should not exist). A gate with no entry is reported as UNPROVEN rather
+# than passed silently — the same honesty rule the kernel gates use for rubric validity.
+# ─────────────────────────────────────────────────────────────────────────────
+RECORD = "docs/system/core/decisions/MY-AD-0001-assessment-module-execution-replaces-the-atb-combat-spine.md"
+CANON = "docs/foundations/24-encounter-scheduler.md"
+ROUTER = "docs/foundations/AGENTS.md"
+
+def _fixture_orphan() -> str:
+    return (
+        "---\ntitle: Fixture orphan\nstatus: Active\n---\n\n"
+        "# Fixture orphan\n\nAn injected document with no reference in either direction.\n"
+    )
+
+
+GATE_FIXTURES: dict[str, tuple[str, str, str]] = {
+    "DG1": (RECORD, "Status: Active", "StatusRenamed: Active"),
+    "DG2": (RECORD, "Status: Active", "Status: Retired"),
+    "DG3": (RECORD, "ID: MY-AD-0001", "ID: MY-AD-0002"),
+    "DG4": (CANON, "## 1. Purpose: the world's intelligence", "## 1. Purpose: the world's intelligence\n\nThis binding contract is the single source of truth for encounter order."),
+    "DG5": (CANON, "## 9. The scheduler's relationship to the LLM", "## 9. The White stage and the scheduler"),
+    "DG6": (CANON, "## 1. Purpose: the world's intelligence", "## 1. Purpose: the world's intelligence\n\nThe plan is recorded in docs/historical/brain-game-upgrade/02-gap-analysis.md."),
+    "DG7": (VOCAB_REL, "  root-protocol: AGENTS.md", "  root-protocol: docs/foundations/99-no-such-owner"),
+    "DG8": (RECORD, "Related: [MY-AD-0002, MY-RG-0005]", "Related: [MY-AD-9999]"),
+    "DG9": ("docs/system/logs/mutations.jsonl", '"target": "MY-AD-0001"', '"target": "MY-AD-9999"'),
+    "DG10": (RECORD, "## Context", "## Context\n\nImplemented in `src/core/nonexistent-module.ts`.\n"),
+    "DG11": ("docs/INDEX.md", "", ""),  # special-cased: index staleness is proven by appending a line
+    "DG12": (CANON, "## 1. Purpose: the world's intelligence", "## 1. Purpose: the world's intelligence\n\nSee [[docs/foundations/99-does-not-exist]]."),
+    "DG13": ("_org.yaml", "    code: [src/core/onboarding, src/core/adaptive]", "    code: [src/core/no-such-organ-code]"),
+    "DG14": ("docs/foundations/98-fixture-orphan.md", "", "__ORPHAN__"),
+    "DG15": (RECORD, 'Source: "foundations/26-unified-core-architecture"', 'Source: "foundations/99-does-not-exist"'),
+    "DG16": (CANON, "## 1. Purpose: the world's intelligence", "## 1. Purpose: the world's intelligence\n\nSee `src/core/nonexistent-module.ts`."),
+    "DG17": (CANON, "## 1. Purpose: the world's intelligence", "## 1. Purpose: the world's intelligence\n\nSuperseded by MY-AD-9999."),
+    "DG18": ("docs/foundations/98-router-fixture.md", "", "__ORPHAN__"),
+    "DG19": (RECORD, 'Consumer: "`src/core/assessments/AgenticOrchestrator.ts`, `src/core/GameLoop.ts`"', "ConsumerNote: moved out of the contract"),
+}
+
+
+def cmd_fixtures(args: argparse.Namespace) -> int:
+    """Prove every gate fails on an injected violation (RT-GATE-FIXTURES).
+
+    AGENTS.md §7.5 step 1b required this by hand for every gate change; a manual proof is the same
+    attention whose absence caused the failure it is meant to catch, so it is automated here and
+    runs as part of the battery.
+    """
+    cfg = org()
+    order = list(GATE_CONFIG_KEY)
+    unproven: list[str] = []
+    broken: list[str] = []
+    for gate in order:
+        spec = GATE_FIXTURES.get(gate)
+        if spec is None:
+            unproven.append(gate)
+            continue
+        target, find, repl = spec
+        p = ROOT / target
+        # DG11's injection is an appended line, not a creation (its `find` is empty by design).
+        created = find == "" and gate != "DG11"
+        if created and p.exists():
+            broken.append(f"{gate}: fixture path {target} already exists — refusing to clobber it")
+            continue
+        if not created and not p.exists():
+            broken.append(f"{gate}: fixture target {target} is missing from the tree")
+            continue
+        original = None if created else p.read_text(encoding="utf-8")
+        if not created and find not in original:
+            broken.append(f"{gate}: fixture anchor not found in {target} — the fixture is stale")
+            continue
+        # `wrote` is the ONLY thing that may authorise a delete. Deciding it from `created` alone
+        # deleted `docs/INDEX.md` when an unrelated "already exists" guard ran inside the try block
+        # (2026-09-20): a fixture harness must never be able to remove a file it did not create.
+        wrote = False
+        try:
+            if created:
+                body = _fixture_orphan() if repl == "__ORPHAN__" else repl
+                p.write_text(body, encoding="utf-8")
+                wrote = True
+            elif gate == "DG11":
+                p.write_text(
+                    original + "\n- an injected line that makes a generated surface stale\n",
+                    encoding="utf-8",
+                )
+            else:
+                p.write_text(original.replace(find, repl, 1), encoding="utf-8")
+            # Reload per fixture: a gate that reads `_org.yaml` (DG13, DG18) must see the injected
+            # config, and loading it once before the loop silently made those fixtures no-ops.
+            g = Gate(org())
+            g.run(gate)
+            if not g.problems:
+                broken.append(f"{gate}: gate PASSED on its injected violation — it has no teeth")
+            else:
+                print(f"  ✓ {gate:5s} fails on injection ({len(g.problems)} finding(s))")
+        finally:
+            if created:
+                if wrote and p.exists():
+                    p.unlink()
+            elif original is not None:
+                p.write_text(original, encoding="utf-8")
+    print()
+    for b in broken:
+        print(f"  ✗ {b}")
+    if unproven:
+        print(f"  ! no fixture (teeth unproven): {', '.join(unproven)}")
+    print(
+        f"\narch fixtures — {len(order) - len(unproven)}/{len(order)} gates proven to fail on injection"
+    )
+    return 1 if broken else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="arch", description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -1912,6 +2139,9 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("validate", help="run the doc-governance gates")
     p.add_argument("--gate", help="run a single gate (e.g. DG5)")
     p.set_defaults(fn=cmd_validate)
+
+    p = sub.add_parser("fixtures", help="prove every gate fails on an injected violation")
+    p.set_defaults(fn=cmd_fixtures)
 
     args = ap.parse_args(argv)
     return args.fn(args)

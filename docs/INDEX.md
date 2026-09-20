@@ -36,7 +36,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (48)
+## Records (52)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -67,6 +67,7 @@
 | `MY-AD-0019` | AD | kernel | Active | World, NPC and scenario libraries are pooled before selection |
 | `MY-RG-0017` | RG | kernel | Active | Engagement mechanisms drift into manipulation |
 | `MY-AD-0025` | AD | catalyst | Active | The priority formula is closed: eight criteria, everything else is a multiplicative bias |
+| `MY-AD-0026` | AD | catalyst | Active | The aversion veto routes a catalyst, it never cancels one |
 | `MY-RG-0023` | RG | catalyst | Active | An additive term outside the ratified criteria silently outranks them |
 | `MY-AD-0023` | AD | curriculum | Active | Delivery structure is selected from a scaffold library, never authored per encounter and never left unfaded |
 | `MY-AD-0022` | AD | profiling | Active | Preference is inferred under an evidence tier, and only the instrumented tier becomes a field of record |
@@ -81,6 +82,8 @@
 | `MY-AD-0016` | AD | platform | Active | Relationality is enforced when creating, modifying and validating the knowledge-base |
 | `MY-AD-0017` | AD | platform | Active | Documentation declares a phase from the tree, never from memory |
 | `MY-AD-0024` | AD | platform | Active | A rung's router must name every document in its rung |
+| `MY-AD-0027` | AD | platform | Active | A gate is not trusted until it has been shown to fail |
+| `MY-AD-0028` | AD | platform | Active | A ratified law declares its consumer or a tracked deferral |
 | `MY-RG-0011` | RG | platform | Active | A generated surface drifts and the commit still looks green |
 | `MY-RG-0012` | RG | platform | Active | A declared rung that no gate reads |
 | `MY-RG-0013` | RG | platform | Active | A verification step mutates the artefact it verifies, or a restore discards unrelated work |
@@ -88,6 +91,7 @@
 | `MY-RG-0015` | RG | platform | Active | A registry is hand-maintained where the tree could be discovered |
 | `MY-RG-0016` | RG | platform | Active | A reference that resolves to nothing passes every gate |
 | `MY-RG-0022` | RG | platform | Active | A document omitted from its rung router passes every gate |
+| `MY-RG-0024` | RG | platform | Active | A law with no consumer passes every gate |
 
 ## Generated surfaces (never hand-edited)
 

@@ -7,6 +7,8 @@ Organ: catalyst
 Source: "foundations/19-choice-and-polarity-engine §9.6"
 Description: "checkChoiceEligibility computes a condition; the harvest is the event gated by eligibility AND arrival. The two were conflated."
 Related: [MY-AD-0004, MY-RG-0006]
+Consumer: "`src/core/engines/PolarityEngine.ts` (the eligibility half)"
+Deferral: CHOICE-CLOSURE
 ---
 
 ## Context
@@ -21,3 +23,5 @@ The function is renamed `checkChoiceEligibility` and its verdict never triggers 
 ## Consequences
 - Positive: the lifecycle gate becomes expressible; the Samsara loop becomes coherent.
 - Guard: `MY-RG-0006` (orphan policy seam) and the lifecycle transition contract test.
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

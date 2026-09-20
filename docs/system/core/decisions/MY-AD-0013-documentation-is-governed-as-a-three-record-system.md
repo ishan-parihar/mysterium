@@ -7,6 +7,7 @@ Organ: platform
 Source: "docs/ARCHITECTURE-TRANSMUTATION-PLAN.md §2.2"
 Description: "Decisions (AD), regression guards (RG) and a mutation ledger, with a machine-readable structure declaration and fail-closed gates."
 Related: [MY-AD-0003, MY-RG-0001, MY-RG-0010]
+Consumer: "`scripts/arch.py`, `_org.yaml`"
 ---
 
 ## Context
@@ -22,3 +23,5 @@ append-only mutation ledger) — plus `_org.yaml` (the structure declaration) an
 - Positive: "what did we decide and is it still true" becomes answerable; findings close.
 - Negative: a linter and a ledger to maintain — accepted because the alternative is drift.
 - Evidence: the first ledger entry is `MY-RG-0001`, an incident caused during this very migration.
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

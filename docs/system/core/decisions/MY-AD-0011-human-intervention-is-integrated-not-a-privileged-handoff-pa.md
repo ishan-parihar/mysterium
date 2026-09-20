@@ -7,6 +7,8 @@ Organ: safety
 Source: "foundations/43-agentic-orchestration-architecture §4.7"
 Description: "No separate handoff policy: the platform stays one integrated system for user and auditor alike, with no privilege tiers."
 Related: [MY-AD-0010, MY-AD-0007]
+Consumer: "`src/core/orchestration/delegate.ts` (the ordinary path every intervention must enter)"
+Deferral: ARTICULATION-LAYER
 ---
 
 ## Context
@@ -22,3 +24,5 @@ has, and adverse events surface through the observers that already exist.
 - Positive: one safety model; no parallel authorization surface to secure.
 - Negative: safety content (local crisis patterns, escalation contacts) must be authored in the
   safety organ rather than assumed from a handoff protocol.
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

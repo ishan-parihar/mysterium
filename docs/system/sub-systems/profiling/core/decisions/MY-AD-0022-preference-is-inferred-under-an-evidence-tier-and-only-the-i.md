@@ -7,6 +7,7 @@ Organ: profiling
 Source: "docs/foundations/47-preference-inference-and-scaffolding.md sections 3, 5, 8"
 Description: "45 section 3.1 rule 1 forbids creating fields of record from observation but leaves the line unauditable, and 45 section 10 names that as an open question. The line is now the evidence tier: tier 1 (a validated instrument or an empirically robust construct with a game-measurable expression) may become a consent-bound field of record with a declared data class; tier 2 (an established construct with no validated instrument here) may bias ranking and select a scaffold but may not be a field of record and may not be surfaced as a fact about the player; tier 3 (meta-program distinctions with no empirical support) may shape the surface of one encounter and is never persisted. Every stored field carries tier, provenance, data class and consent reference; a scaffold archetype is a prior with an expiry, never a stored identity label."
 Related: ["MY-AD-0018", "MY-AD-0020", "MY-AD-0012", "MY-RG-0018", "MY-RG-0020", "MY-RG-0021"]
+Deferral: PROFILE-INFERENCE
 ---
 
 ## Decision
@@ -80,3 +81,5 @@ mix, and a typology is identity by another route).
 - `docs/foundations/12-drive-assessment-mechanics.md` §5.4 (RV1–RV7 — the validation protocol a T1 probe must pass)
 - `docs/foundations/04-states-of-consciousness.md` §3.1
 - `MY-AD-0012`, `MY-AD-0018`, `MY-AD-0020`, `MY-RG-0018`, `MY-RG-0020`, `MY-RG-0021`
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

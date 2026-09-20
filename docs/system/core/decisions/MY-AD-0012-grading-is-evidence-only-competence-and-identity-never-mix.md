@@ -7,6 +7,7 @@ Organ: kernel
 Source: "foundations/42-developmental-levelling-mechanism §1.1"
 Description: "Ladder movement derives only from demonstrated evidence; knowledge-axis measures never feed identity diagnostics."
 Related: [MY-AD-0003]
+Consumer: "`src/core/curriculum/LevellingEngine.ts`, gate G11 in `src/core/validation/gates.ts`"
 ---
 
 ## Context
@@ -21,3 +22,5 @@ from identity in both directions.
 ## Consequences
 - Positive: the corpus can be rigorous without corrupting the developmental reading.
 - Enforcement: `G11-levelling-mechanism` and `G12-identity-firewall` in `src/core/validation/gates.ts`.
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

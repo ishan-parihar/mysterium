@@ -7,6 +7,7 @@ Organ: kernel
 Source: "foundations/44-system-ontology-and-vocabulary §3-§4"
 Description: "One term, one owner, one meaning; the eight stages are KosmOS L1-L8 with a closure that is not a stage."
 Related: [MY-AD-0004, MY-AD-0005, MY-RG-0001]
+Consumer: "`docs/foundations/44-system-ontology-and-vocabulary.md` (the term-owner table), gates DG5 and DG6"
 ---
 
 ## Context
@@ -23,3 +24,5 @@ scope as developmental states.
 - Positive: one place to answer "what does this word mean" and "who owns it".
 - Negative: term changes now require a sweep plus a blacklist entry (see MY-RG-0001).
 - Enforcement: gates DG5 (blacklist) and DG7 (ownership) in `scripts/arch.py`.
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->

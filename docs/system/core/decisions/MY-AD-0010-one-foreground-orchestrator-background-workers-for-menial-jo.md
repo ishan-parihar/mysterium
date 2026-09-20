@@ -7,6 +7,7 @@ Organ: orchestration
 Source: "foundations/43-agentic-orchestration-architecture §4.5b/§5.4"
 Description: "A single foreground agent owns the user interaction; sub-agents run sessions and report into the cycle; menial work runs as background workers under ratification-only commits."
 Related: [MY-AD-0011, MY-AD-0009]
+Deferral: PLAN-IMPLEMENT
 ---
 
 ## Context
@@ -22,3 +23,5 @@ and commits are ratification-only.
 ## Consequences
 - Positive: one author of player-visible output; a legible audit trail per session.
 - Negative: worker failures need explicit degradation paths (see MY-AD-0009).
+
+<!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->
