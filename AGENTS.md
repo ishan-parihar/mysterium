@@ -65,7 +65,10 @@ bundle you need before editing:
 ```bash
 python3 scripts/arch.py route docs/foundations/19-choice-and-polarity-engine.md
 python3 scripts/arch.py route src/core/orchestration        # code -> organ + contract docs
-python3 scripts/arch.py context src/core/assessments       # contract docs + invariants + records
+python3 scripts/arch.py context src/core/assessments       # contract docs + organ docs + records
+python3 scripts/arch.py search "alignment adjustment"      # keyword search over the live KB
+python3 scripts/arch.py related docs/foundations/19-choice-and-polarity-engine.md   # + backlinks
+python3 scripts/arch.py doc add --organ safety --title "..."   # author an organ document
 ```
 
 **Start work on any code path with `context`.** It answers *which foundation docs govern this, what
@@ -426,6 +429,7 @@ Every development iteration — no exceptions — must follow this sequence:
 1b. **Doc-governance gates** — Run `python3 scripts/arch.py validate` after every change to `docs/`, `_org.yaml`, or a record. It must exit 0 (gates DG1–DG12: record schema, status enum, numbering + no-reissue, authority uniqueness, superseded vocabulary, historical quarantine, ownership, reference resolution, ledger integrity, canon↔code, **derived-surface freshness**, **canon link integrity**).
 
    - **Records are written only through the tool.** Never hand-create or hand-edit a `MY-AD-*`/`MY-RG-*` file: `arch.py new` / `arch.py update` / `arch.py seed` write the ledger receipt that DG9 requires.
+   - **Documents are written through the tool too.** Use `arch.py doc add --organ <organ> --title "..."` to author an architecture document; it lands in the organ, is **auto-discovered** (reachable from `route`/`context`/`search`/`related` the moment it exists), and needs no registry edit. Authoring a document by hand means hand-editing `_org.yaml` and `44` — which `MY-RG-0015` exists to prevent. Never enumerate an organ's contents anywhere: `_org.yaml` declares the *structure*; the *contents* are discovered.
    - **Generated surfaces are never hand-edited.** After any change to `_org.yaml` or to a record, run `python3 scripts/arch.py emit`; DG11 fails while `docs/INDEX.md` or an organ router's auto-zone is stale.
    - **Vocabulary changes** happen only via `docs/foundations/44` (add a blacklist entry, then sweep — see RG-0001 for why a chained renaming is one-way and receipt-guarded).
    - **Before answering "what does this word mean" or "who owns this?"** read `docs/foundations/44`; before answering "what did we decide / what broke?" read `docs/system/core/{decisions,regressions}/`; before editing code, run `arch.py context <path>`.

@@ -10,6 +10,14 @@
 - **Records:** `core/decisions/` (AD) - `core/regressions/` (RG)
 
 Route anything here with `python3 scripts/arch.py route <path>`.
+Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
+
+### Documents in this organ (auto-discovered — never hand-maintained)
+
+- [encounter-system.md](./encounter-system.md) — Encounter System Architecture
+- [polarity-engine.md](./polarity-engine.md) — Polarity Engine Architecture
+- [shadow-work.md](./shadow-work.md) — Shadow Work Architecture
+
 <!-- arch:auto-zone:end -->
 
 <!-- arch:manual-zone:start -->

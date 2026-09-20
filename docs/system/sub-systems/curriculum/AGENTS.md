@@ -10,6 +10,13 @@
 - **Records:** `core/decisions/` (AD) - `core/regressions/` (RG)
 
 Route anything here with `python3 scripts/arch.py route <path>`.
+Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
+
+### Documents in this organ (auto-discovered — never hand-maintained)
+
+- [curriculum-authoring.md](./curriculum-authoring.md) — Curriculum Authoring Guide
+- [curriculum-system.md](./curriculum-system.md) — Curriculum System Architecture
+
 <!-- arch:auto-zone:end -->
 
 <!-- arch:manual-zone:start -->

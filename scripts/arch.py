@@ -11,7 +11,11 @@ Vocabulary + ownership:     docs/foundations/44-system-ontology-and-vocabulary.m
 Structure declaration:      _org.yaml
 
     python3 scripts/arch.py route <path>                 resolve a path (doc OR code) to its rung/organ
-    python3 scripts/arch.py context <path>               contract docs + invariants + records for a path
+    python3 scripts/arch.py context <path>               start-of-work bundle: contract docs, organ
+                                                         documents, invariants, governing records
+    python3 scripts/arch.py search <keyword>             keyword search over the live knowledge-base
+    python3 scripts/arch.py related <path|ID>            referential graph: outbound edges + BACKLINKS
+    python3 scripts/arch.py doc add --organ O --title T  author a document (auto-discovered, no registry)
     python3 scripts/arch.py recon <keyword>              coverage report before creating a record
     python3 scripts/arch.py new --type ad|rg --title T --desc D --organ O --body F --recon R
     python3 scripts/arch.py update <ID> --field Status=Superseded --reason R --recon I
@@ -60,6 +64,7 @@ GATE_CONFIG_KEY = {
     "DG10": "dg10_canon_code",
     "DG11": "dg11_derived_surfaces",
     "DG12": "dg12_canon_links",
+    "DG13": "dg13_organ_integrity",
 }
 
 
@@ -297,6 +302,7 @@ class Gate:
             ("DG10", self.dg10_canon_code),
             ("DG11", self.dg11_derived_surfaces),
             ("DG12", self.dg12_canon_links),
+            ("DG13", self.dg13_organ_integrity),
         ]
         for name, fn in gates:
             if only and name != only:
@@ -589,6 +595,28 @@ class Gate:
                     self.err(g, f"{r}: link `{raw}` does not resolve")
         self.checked[g] = n
 
+    # DG13 — organ integrity. `_org.yaml` claimed "`code` paths MUST resolve on disk (arch.py
+    # validate enforces)" and no gate did; the only detector was DG11's mislabelled staleness
+    # message, and following its advice (`emit`) baked the bogus path into the canonical router
+    # (audit UT-5). The declaration now enforces itself.
+    def dg13_organ_integrity(self, g: str) -> None:
+        n = 0
+        for organ, o in self.cfg["organs"].items():
+            n += 1
+            code = list(o.get("code") or [])
+            if not code:
+                self.err(g, f"organ `{organ}`: declares no `code` paths — nothing is owned")
+            for c in code:
+                if not (ROOT / c).exists():
+                    self.err(g, f"organ `{organ}`: code path `{c}` does not exist on disk")
+            for ref in o.get("contract_docs") or []:
+                n += 1
+                if contract_path(str(ref)) is None:
+                    self.err(g, f"organ `{organ}`: contract doc `{ref}` does not resolve")
+            if not (ROOT / "docs" / "system" / "sub-systems" / organ / "AGENTS.md").exists():
+                self.err(g, f"organ `{organ}`: no router at docs/system/sub-systems/{organ}/AGENTS.md")
+        self.checked[g] = n
+
     # DG10 — canon↔code: every code artifact cited by a record exists
     def dg10_canon_code(self, g: str) -> None:
         n = 0
@@ -618,6 +646,87 @@ def doc_title(p: Path) -> str:
     return p.stem
 
 
+def organ_docs(organ: str) -> list[Path]:
+    """Documents living in an organ, DISCOVERED from the tree rather than declared.
+
+    Auto-discovery is deliberate (audit UT-1). The router and `context` listed only the organ's
+    `contract_docs` — which point at *foundations* docs — so an organ's own architecture documents
+    were unreachable from every index unless someone hand-edited a registry: 8 of 11 had zero inbound
+    links anywhere in the repository. A declaration that can be derived from the tree must be, so a
+    document is reachable the moment it exists.
+    """
+    d = ROOT / "docs" / "system" / "sub-systems" / organ
+    if not d.is_dir():
+        return []
+    return sorted((p for p in d.glob("*.md") if p.name != "AGENTS.md"), key=lambda p: p.name)
+
+
+def resolve_ref(raw: str, base: Path | None = None) -> Path | None:
+    """Resolve a doc cross-reference (wiki-link or markdown link) to a file on disk."""
+    raw = raw.strip().split("#")[0].strip()
+    if not raw or raw.startswith(("http://", "https://", "mailto:")):
+        return None
+    cands: list[Path] = []
+    if base is not None:
+        cands.append((base / raw).resolve())
+    cands += [ROOT / raw, ROOT / f"{raw}.md", ROOT / "docs" / raw, ROOT / f"docs/{raw}.md"]
+    for c in cands:
+        if c.is_file():
+            return c
+    return None
+
+
+def outbound_refs(text: str, base: Path) -> list[Path]:
+    """Every resolved doc->doc edge in `text` — the graph DG12 validated and then discarded (UT-3).
+
+    Four citation styles are in use across the canon, and an edge extractor that only understood the
+    first two silently reported `(no backlinks)` for a document that four other files point at:
+
+    1. wiki-links — what canon uses between foundations docs        `[[docs/foundations/19-...]]`
+    2. markdown links                                               `[label](docs/foundations/19-...md)`
+    3. backticked paths — how routers, records and 44 cite docs     `` `foundations/19-...` ``
+    4. bare paths in prose and in `Source:` frontmatter             `docs/foundations/19-...md`
+    """
+    raws = re.findall(r"\[\[([^\]|]+)(?:\|[^\]]*)?\]\]", text)
+    raws += re.findall(r"\]\(([^)\s]+?\.md)(?:#[^)]*)?\)", text)
+    raws += re.findall(r"(?<![\w/`])((?:docs/)?\S+?\.md)", text)
+    for span in re.findall(r"`([^`\n]{3,120})`", text):
+        if "/" in span and " " not in span.strip():
+            raws.append(span)
+    # 5. rung-relative paths with a section suffix and no extension — how a record's `Source:`
+    # field cites the canon section it transcribes: `foundations/19-choice-and-polarity-engine §9.6`
+    raws += re.findall(
+        r"(?<![\w/`])((?:docs/)?(?:foundations|system|stages|lines|progression|narrative|concept-drafts)/[A-Za-z0-9_./-]+)",
+        text,
+    )
+    out: list[Path] = []
+    for raw in raws:
+        p = resolve_ref(raw, base)
+        if p is not None and p not in out:
+            out.append(p)
+    return out
+
+
+def where_is(cfg: dict, r: str) -> tuple[str, str]:
+    """(rung, organ) for a repo-relative path. The inverse of `route`."""
+    for name, rung in cfg["rungs"].items():
+        for d in rung.get("dirs", []):
+            if r.startswith(d["path"].rstrip("/") + "/"):
+                return name, ""
+        if r in rung.get("files", []):
+            return name, ""
+    for pattern in cfg.get("generated", []):
+        if Path(pattern).match(r):
+            return "generated", ""
+    for organ, o in cfg["organs"].items():
+        if f"docs/system/sub-systems/{organ}/" in r:
+            return "system", organ
+        for c in o.get("code") or []:
+            if r == c or r.startswith(c.rstrip("/") + "/"):
+                return "system", organ
+    return "(unclaimed)", ""
+
+
 def organ_block(cfg: dict, organ: str, o: dict, via: str | None = None) -> str:
     """The bundle an agent needs before touching any file of an organ.
 
@@ -634,6 +743,11 @@ def organ_block(cfg: dict, organ: str, o: dict, via: str | None = None) -> str:
         p = contract_path(str(ref))
         docs.append(f"{rel(p)} — {doc_title(p)}" if p else f"{ref}  ** MISSING **")
     out += [f"  - {d}" for d in docs] or ["  - (none declared)"]
+    own = organ_docs(organ)
+    out.append("documents in this organ (discovered from the tree):")
+    out += [f"  - {rel(p)} — {doc_title(p)}" for p in own] or [
+        f"  - (none yet — author one with `arch.py doc add --organ {organ} --title ...`)"
+    ]
     out.append("records scoped to this organ:")
     found: list[str] = []
     for home in ("decisions", "regressions"):
@@ -726,6 +840,242 @@ def cmd_recon(args: argparse.Namespace) -> int:
         print("  (no coverage — a new record is appropriate)")
     digest = hashlib.sha1(f"{kw}:{datetime.now(timezone.utc).isoformat()}".encode()).hexdigest()[:10]
     print(f"\nrecon_id: {digest}")
+    return 0
+
+
+def cmd_search(args: argparse.Namespace) -> int:
+    """Keyword search over the LIVE knowledge-base: canon, organs, records, corpus.
+
+    The specification's *keyword -> docs + references* step (audit UT-2). AND across terms, ranked by
+    body frequency, title match, then heading match; every hit reports where it lives and what it
+    references, so a hit is a starting point rather than a dead end.
+    """
+    cfg = org()
+    terms = [t for t in re.split(r"\s+", (args.keyword or "").strip().lower()) if t]
+    if not terms:
+        fail("search needs at least one term")
+    hits: list[dict] = []
+    for p in live_files(cfg):
+        text = p.read_text(encoding="utf-8", errors="ignore")
+        low = text.lower()
+        if not all(t in low for t in terms):
+            continue
+        fm = frontmatter(text) if text.startswith("---") else {}
+        title = str(fm.get("Title") or doc_title(p))
+        headings = re.findall(r"^#{1,6} (.+)$", text, re.M)
+        score = sum(low.count(t) for t in terms)
+        score += 8 * sum(1 for t in terms if t in title.lower())
+        score += 4 * sum(1 for t in terms if any(t in h.lower() for h in headings))
+        lines: list[tuple[int, str]] = []
+        for i, line in enumerate(text.splitlines(), 1):
+            if any(t in line.lower() for t in terms):
+                lines.append((i, " ".join(line.split())[:140]))
+                if len(lines) >= args.lines:
+                    break
+        rung, organ = where_is(cfg, rel(p))
+        hits.append(
+            {
+                "score": score,
+                "path": rel(p),
+                "rung": rung,
+                "organ": organ,
+                "title": title,
+                "lines": [{"n": i, "text": s} for i, s in lines],
+                "refs": [rel(q) for q in outbound_refs(text, p.parent)],
+            }
+        )
+    hits.sort(key=lambda h: (-h["score"], h["path"]))
+    if args.json:
+        print(json.dumps({"keyword": args.keyword, "count": len(hits), "hits": hits[: args.limit]}, indent=2))
+        return 0 if hits else 1
+    if not hits:
+        print(f"no live document matches {terms}")
+        return 1
+    print(f"search {terms} — {len(hits)} hit(s)\n")
+    for h in hits[: args.limit]:
+        where = f"  [{h['organ']}]" if h["organ"] else ""
+        print(f"{h['path']}{where}  (score {h['score']})")
+        print(f"  {h['title']}")
+        for line in h["lines"]:
+            print(f"  {line['n']}: {line['text']}")
+        if h["refs"]:
+            tail = " …" if len(h["refs"]) > 6 else ""
+            print(f"  -> refs: {', '.join(h['refs'][:6])}{tail}")
+        print()
+    return 0
+
+
+def cmd_related(args: argparse.Namespace) -> int:
+    """The referential graph for a target: outbound edges AND backlinks.
+
+    Joins the islands that never met (audit UT-3) — organ<->contract docs and organ<->code from
+    `_org.yaml`, term<->owner from 44's owners table, record<->organ/Related from frontmatter, and
+    doc<->doc from wiki-links — and answers the question nothing could previously answer: what
+    references this?
+    """
+    cfg = org()
+    target: Path | None = None
+    rid = ""
+    for rec in records(cfg):
+        if str(frontmatter(rec["text"]).get("ID")) == args.target:
+            target, rid = rec["path"], args.target
+            break
+    if target is None:
+        for cand in (ROOT / args.target, ROOT / f"{args.target}.md", ROOT / "docs" / f"{args.target}.md"):
+            if cand.is_file():
+                target = cand
+                break
+    if target is None:
+        fail(f"`{args.target}` is neither a record ID nor a resolving path")
+    r = rel(target)
+    text = target.read_text(encoding="utf-8")
+    fm = frontmatter(text) if text.startswith("---") else {}
+    rung, organ = where_is(cfg, r)
+
+    print("=== node ===")
+    print(f"path:   {r}")
+    print(f"title:  {fm.get('Title') or doc_title(target)}")
+    print(f"rung:   {rung}" + (f"   organ: {organ}" if organ else ""))
+    if rid:
+        print(f"kind:   {rid}   status: {fm.get('Status')}   organ: {fm.get('Organ')}")
+        for other in fm.get("Related") or []:
+            print(f"related: {other}")
+
+    print("\n=== outbound (this -> elsewhere) ===")
+    edges = outbound_refs(text, target.parent)
+    for p in edges:
+        print(f"  -> {rel(p)}")
+    if not edges:
+        print("  (none)")
+
+    print("\n=== structural edges (declared) ===")
+    o = cfg["organs"].get(organ) if organ else None
+    if o:
+        for ref in o.get("contract_docs") or []:
+            p = contract_path(str(ref))
+            print(f"  governed by  {rel(p) if p else ref}")
+        for c in o.get("code") or []:
+            print(f"  implemented by  {c}")
+    owners = (fenced_block(VOCAB_FILE, "# owners-table") or {}).get("owners", {}) or {}
+    for term, ref in owners.items():
+        if resolve_ref(str(ref)) == target:
+            print(f"  owns term  `{term}`")
+
+    print("\n=== inbound (elsewhere -> this) ===")
+    n = 0
+    for p in live_files(cfg):
+        if p == target:
+            continue
+        if target in outbound_refs(p.read_text(encoding="utf-8", errors="ignore"), p.parent):
+            print(f"  <- {rel(p)}")
+            n += 1
+    for other, oo in cfg["organs"].items():
+        for ref in oo.get("contract_docs") or []:
+            if contract_path(str(ref)) == target and other != organ:
+                print(f"  <- organ `{other}` declares this a contract doc")
+                n += 1
+    if not n:
+        print("  (none — nothing in the live tree references this)")
+    return 0
+
+
+DOC_TEMPLATE = """# {{TITLE}}
+
+> **Organ:** `{{ORGAN}}` · **Status:** Active · **Date:** {{DATE}}
+> **Contract docs (canon):** {{CONTRACTS}}
+
+## 1. Purpose
+
+What this component exists for, in one paragraph. Reference the foundation doc that owns the
+concept; do not restate it.
+
+## 2. Boundaries
+
+What is inside this component and what is explicitly outside it. Name the neighbouring organ when a
+responsibility looks like it belongs here but does not.
+
+## 3. Interfaces
+
+| Surface | Direction | Contract |
+|---|---|---|
+| `src/...` | consumes / provides | ... |
+
+## 4. Invariants
+
+Rules that must hold at all times. Each invariant should be checkable; if it is enforced by a gate,
+name the gate (`src/core/validation/gates.ts` G-number) or the RG record.
+
+## 5. Records
+
+Decisions and regression guards governing this component live in `core/decisions/` and
+`core/regressions/`. Pull them with:
+
+```bash
+python3 scripts/arch.py context {{SAMPLE_CODE}}
+```
+
+## 6. References
+
+- ...
+"""
+
+
+def cmd_doc_add(args: argparse.Namespace) -> int:
+    """Author an organ document through the CLI (audit UT-4: only AD/RG records had a write path).
+
+    No registry is edited: documents are auto-discovered from the organ directory, so the new file is
+    reachable from `route`, `context`, `search`, the organ router and `related` the moment it exists.
+    """
+    cfg = org()
+    if args.organ not in cfg["organs"]:
+        fail(f"unknown --organ `{args.organ}` (see _org.yaml organs)")
+    title = (args.title or "").strip()
+    if len(title) < 8:
+        fail("--title must be descriptive (>= 8 chars): it becomes the document's H1 and index entry")
+    kebab = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:60]
+    d = ROOT / "docs" / "system" / "sub-systems" / args.organ
+    d.mkdir(parents=True, exist_ok=True)
+    out = d / f"{kebab}.md"
+    if out.exists():
+        fail(f"{rel(out)} already exists")
+    for p in organ_docs(args.organ):
+        if str(frontmatter(p.read_text(encoding="utf-8", errors="ignore")).get("Title", "")).strip().lower() == title.lower():
+            fail(f"a document with this title already exists: {rel(p)}")
+    today = datetime.now(timezone.utc).date().isoformat()
+    if args.file:
+        body = Path(args.file).read_text(encoding="utf-8")
+    else:
+        o = cfg["organs"][args.organ]
+        refs = []
+        for ref in o.get("contract_docs") or []:
+            p = contract_path(str(ref))
+            refs.append(f"[{ref}]({'/'.join(['..'] * 4)}/{rel(p)})" if p else str(ref))
+        code = (o.get("code") or ["src/"])[0]
+        body = (
+            DOC_TEMPLATE.replace("{{TITLE}}", title)
+            .replace("{{ORGAN}}", args.organ)
+            .replace("{{DATE}}", today)
+            .replace("{{CONTRACTS}}", ", ".join(refs) or "*(none declared)*")
+            .replace("{{SAMPLE_CODE}}", code)
+        )
+    out.write_text(body if body.startswith("---") else body.rstrip() + "\n", encoding="utf-8")
+    append_ledger(
+        cfg,
+        {
+            "action": "create",
+            "target": rel(out),
+            "type": "doc",
+            "title": title,
+            "organ": args.organ,
+            "path": rel(out),
+            "reason": args.reason or "document authored via `arch.py doc add`",
+            "source": args.source or "",
+            "operator": "agent",
+        },
+    )
+    print(f"created {rel(out)}\nledger receipt appended")
+    print("reachable immediately: `arch.py context", (cfg['organs'][args.organ].get('code') or [''])[0] or '', "`")
+    print("run `python3 scripts/arch.py emit` to refresh the organ router")
     return 0
 
 
@@ -873,8 +1223,16 @@ def organ_router(cfg: dict, organ: str, o: dict, existing: str | None) -> str:
         f"- **Records:** `core/decisions/` (AD) - `core/regressions/` (RG)",
         "",
         "Route anything here with `python3 scripts/arch.py route <path>`.",
-        AUTO_END,
+        "Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.",
+        "",
+        "### Documents in this organ (auto-discovered — never hand-maintained)",
+        "",
     ]
+    own = organ_docs(organ)
+    auto += [f"- [{p.name}](./{p.name}) — {doc_title(p)}" for p in own] or [
+        f"*(none yet — author one with `arch.py doc add --organ {organ} --title ...`)*"
+    ]
+    auto += ["", AUTO_END]
     manual = [
         MAN_START,
         "### Boundaries and invariants (curated - preserved across emits)",
@@ -1011,6 +1369,27 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("context", help="start-of-work bundle for a path (contract docs + records)")
     p.add_argument("path")
     p.set_defaults(fn=cmd_context)
+
+    p = sub.add_parser("search", help="keyword search over live docs + records")
+    p.add_argument("keyword")
+    p.add_argument("--limit", type=int, default=10, help="max hits to print")
+    p.add_argument("--lines", type=int, default=3, help="matching lines per hit")
+    p.add_argument("--json", action="store_true", help="machine-readable output")
+    p.set_defaults(fn=cmd_search)
+
+    p = sub.add_parser("related", help="referential graph for a path or record ID (forward + backlinks)")
+    p.add_argument("target")
+    p.set_defaults(fn=cmd_related)
+
+    p = sub.add_parser("doc", help="author a document in an organ (reachable the moment it exists)")
+    ds = p.add_subparsers(dest="doc_cmd", required=True)
+    pd = ds.add_parser("add", help="create an organ document from the house template")
+    pd.add_argument("--organ", required=True)
+    pd.add_argument("--title", required=True)
+    pd.add_argument("--file", help="markdown body to use instead of the house template")
+    pd.add_argument("--source", default="", help="canon section this documents")
+    pd.add_argument("--reason", default="")
+    pd.set_defaults(fn=cmd_doc_add)
 
     p = sub.add_parser("new", help="create an AD or RG record")
     p.add_argument("--type", required=True, choices=["ad", "rg"])

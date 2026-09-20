@@ -14,23 +14,34 @@ Law-of-One cosmology as canon.
 | looking for the system architecture | [`docs/system/AGENTS.md`](docs/system/AGENTS.md) — the organ map |
 | looking for decisions or past failures | [`docs/system/core/decisions/`](docs/system/core/decisions/) · [`docs/system/core/regressions/`](docs/system/core/regressions/) |
 | looking for the build plan | [`docs/DEVELOPMENT-PLAN.md`](docs/DEVELOPMENT-PLAN.md) |
+| **needing the context for a component** | `python3 scripts/arch.py context src/core/<organ-path>` |
+| **searching the knowledge-base** | `python3 scripts/arch.py search <keyword>` |
 
 ## The documentation rungs
 
 ```
+canon-root   docs/00-vision · 01-first-principles · 02-glossary · 03-research-methodology
 canon        docs/foundations/          theory — "what is true"
 canon-domain docs/{lines,stages,narrative,progression}/
 content      docs/concept-drafts/       512-file corpus
 system       docs/system/               contracts, as 13 organs
 records      docs/system/core/          AD · RG · Log   (decisions, guards, ledger)
+plans        docs/{DEVELOPMENT,ONBOARDING-REDESIGN,ARCHITECTURE-TRANSMUTATION}-PLAN + REQUIREMENTS
 historical   docs/historical/           dated; never an authority
+audits       docs/audits/               dated evidence; never an authority
+generated    docs/INDEX.md + docs/system/sub-systems/*/AGENTS.md   (never hand-edited)
 ```
 
-Declared machine-readably in [`_org.yaml`](_org.yaml). Validate and route with:
+Declared machine-readably in [`_org.yaml`](_org.yaml). Query the knowledge-base with:
 
 ```bash
-python3 scripts/arch.py validate          # the doc-governance gates
-python3 scripts/arch.py route <path>      # which rung/organ owns this file?
+python3 scripts/arch.py validate          # the doc-governance gates (DG1-DG13)
+python3 scripts/arch.py route <path>      # which rung/organ owns this file or code path?
+python3 scripts/arch.py context <path>    # contract docs + organ documents + records
+python3 scripts/arch.py search <keyword>  # keyword search over the live knowledge-base
+python3 scripts/arch.py related <path|ID> # outbound edges AND backlinks
+python3 scripts/arch.py doc add --organ O --title T   # author documentation
+python3 scripts/arch.py emit               # regenerate the derived surfaces
 ```
 
 ## Development

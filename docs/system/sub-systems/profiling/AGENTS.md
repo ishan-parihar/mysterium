@@ -10,6 +10,12 @@
 - **Records:** `core/decisions/` (AD) - `core/regressions/` (RG)
 
 Route anything here with `python3 scripts/arch.py route <path>`.
+Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
+
+### Documents in this organ (auto-discovered — never hand-maintained)
+
+*(none yet — author one with `arch.py doc add --organ profiling --title ...`)*
+
 <!-- arch:auto-zone:end -->
 
 <!-- arch:manual-zone:start -->

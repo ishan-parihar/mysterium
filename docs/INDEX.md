@@ -36,7 +36,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (27)
+## Records (30)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -64,9 +64,12 @@
 | `MY-RG-0009` | RG | kernel | Active | A partial purge leaves the old system's vocabulary in place |
 | `MY-RG-0010` | RG | validation | Active | A gate passes because its fixture cannot fail |
 | `MY-AD-0014` | AD | platform | Active | The doc set is readable as a map: route resolves code and context emits the bundle |
+| `MY-AD-0015` | AD | platform | Active | The knowledge-base is queried, not only validated |
 | `MY-RG-0011` | RG | platform | Active | A generated surface drifts and the commit still looks green |
 | `MY-RG-0012` | RG | platform | Active | A declared rung that no gate reads |
 | `MY-RG-0013` | RG | platform | Active | A verification step mutates the artefact it verifies, or a restore discards unrelated work |
+| `MY-RG-0014` | RG | platform | Active | A declaration claims enforcement that no gate performs |
+| `MY-RG-0015` | RG | platform | Active | A registry is hand-maintained where the tree could be discovered |
 
 ## Generated surfaces (never hand-edited)
 
