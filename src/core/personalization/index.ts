@@ -59,5 +59,11 @@ export {
 } from './probeSet.js';
 export type { Probe, ProbeReading, ProbeLedger, RVDimension } from './probeSet.js';
 
+export {
+  cellEntropy, detectVisibilityCollapse, detectScaffoldShareDefects,
+  ENTROPY_FLOOR, MIN_COMPOSITIONS, DEFAULT_SCAFFOLD_SHARE_CEILING,
+} from './diversityMonitor.js';
+export type { CompositionEvent, DefectReport } from './diversityMonitor.js';
+
 export { createEngagementRegister, FORBIDDEN_MECHANISMS } from './engagementRegister.js';
 export type { EngagementRegister, MechanismRecord, EngagementMechanismId } from './engagementRegister.js';

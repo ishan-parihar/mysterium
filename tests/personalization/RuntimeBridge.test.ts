@@ -92,3 +92,61 @@ describe('[COMPOSED WORLD] prompt block (ContextPipeline)', () => {
     expect(out.systemPrompt).not.toContain('[COMPOSED WORLD]');
   });
 });
+
+import { cellEntropy, detectVisibilityCollapse, detectScaffoldShareDefects } from '../../src/core/personalization/diversityMonitor.js';
+import type { CompositionEvent } from '../../src/core/personalization/diversityMonitor.js';
+
+describe('diversity monitor (46 §11 + 47 §9 check 9)', () => {
+  const varied: CompositionEvent[] = Array.from({ length: 12 }, (_, i) => ({
+    cell: 'Cognitive:Red',
+    facetKeys: [`Cognitive:Red:stake@v${i}`, 'Cognitive:Red:voice-register'],
+    at: i,
+  }));
+
+  it('high-entropy cells produce no collapse report', () => {
+    expect(detectVisibilityCollapse(varied, ['Cognitive:Red'], 0)).toHaveLength(0);
+  });
+
+  it('a repeating cell collapses and is reported (46 §11)', () => {
+    const collapsed: CompositionEvent[] = Array.from({ length: 12 }, (_, i) => ({
+      cell: 'Cognitive:Red', facetKeys: ['Cognitive:Red:stake'], at: i,
+    }));
+    const reports = detectVisibilityCollapse(collapsed, ['Cognitive:Red'], 0);
+    expect(reports).toHaveLength(1);
+    expect(reports[0]!.kind).toBe('visibility-collapse');
+  });
+
+  it('low-traffic cells are noise, not signal', () => {
+    const few: CompositionEvent[] = varied.slice(0, 3);
+    expect(detectVisibilityCollapse(few, ['Cognitive:Red'], 0)).toHaveLength(0);
+  });
+
+  it('cellEntropy measures distinct-key entropy', () => {
+    const { entropy, distinct, compositions } = cellEntropy(varied, 'Cognitive:Red');
+    expect(distinct).toBe(13);
+    expect(compositions).toBe(12);
+    expect(entropy).toBeGreaterThan(1);
+  });
+
+  it('a scaffold over its share ceiling triggers the defect report (47 §9 check 9)', () => {
+    const events: CompositionEvent[] = Array.from({ length: 10 }, (_, i) => ({
+      cell: 'Cognitive:Red',
+      facetKeys: ['Cognitive:Red:stake'],
+      scaffoldId: i < 8 ? 'heavy' : 'light',
+      at: i,
+    }));
+    const reports = detectScaffoldShareDefects(events, {}, 0);
+    expect(reports).toHaveLength(1);
+    expect(reports[0]!.subject).toBe('heavy');
+  });
+
+  it('a balanced scaffold distribution is clean', () => {
+    const events: CompositionEvent[] = Array.from({ length: 10 }, (_, i) => ({
+      cell: 'Cognitive:Red',
+      facetKeys: ['Cognitive:Red:stake'],
+      scaffoldId: `s${i}`,
+      at: i,
+    }));
+    expect(detectScaffoldShareDefects(events, {}, 0)).toHaveLength(0);
+  });
+});

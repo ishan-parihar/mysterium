@@ -45,6 +45,7 @@ import facetsJson from '../world/facets/facets.json';
 import { selectPoles, pairKeyOf } from '../personalization/dialecticEngine.js';
 import { compose, createCompositionStore } from '../personalization/composition.js';
 import { createInterestRecord } from '../personalization/interestRecord.js';
+import { detectScaffoldShareDefects, detectVisibilityCollapse, type CompositionEvent } from '../personalization/diversityMonitor.js';
 import { createEvidenceLedger, META_PROGRAMS } from '../../infra/profiles/evidenceLedger.js';
 import { createProbeLedger, recordProbePlay, recordProbeDecline, canOfferProbe, instrumentIsRVValidated, MAX_PROBES_PER_SESSION, type Probe } from '../personalization/probeSet.js';
 import { REFERENCE_PACKS } from '../packs/referencePacks.js';
@@ -1285,7 +1286,23 @@ export function validateScaffoldIntegrity(): GateResult {
     // Check 7: music is load-bearing → the structural pole must NOT be music.
     if (poles.structure.id === 'music') return mk('load-bearing domain was selected as the structural pole (47 §5.3, check 7)');
 
-    return { gate: 'G24 scaffold integrity', passed: true, hard: true, details: `load-bearing guard holds (structure=${poles.structure.id}); scaffold selection records inputs; maxExposures enforced in selectScaffold` };
+    // Check 9: a scaffold exceeding its declared share triggers a defect report, and the
+    // reporter actually fires (teeth check) — plus the 46 §11 visibility-collapse monitor runs.
+    const events: CompositionEvent[] = Array.from({ length: 10 }, (_, i) => ({
+      cell: 'Cognitive:Red',
+      facetKeys: [`Cognitive:Red:stake@v${i}`],
+      scaffoldId: i < 8 ? 'dominant-scaffold' : 'other-scaffold',
+      at: i,
+    }));
+    const shareReports = detectScaffoldShareDefects(events, {}, 0);
+    if (shareReports.length === 0) return mk('share-defect reporter has no teeth (47 §9 check 9)');
+    const collapseEvents: CompositionEvent[] = Array.from({ length: 12 }, (_, i) => ({
+      cell: 'Cognitive:Red', facetKeys: ['Cognitive:Red:stake'], at: i,
+    }));
+    const collapseReports = detectVisibilityCollapse(collapseEvents, ['Cognitive:Red'], 0);
+    if (collapseReports.length === 0) return mk('visibility-collapse monitor has no teeth (46 §11)');
+
+    return { gate: 'G24 scaffold integrity', passed: true, hard: true, details: `load-bearing guard holds (structure=${poles.structure.id}); maxExposures enforced; share-defect + visibility-collapse monitors have teeth` };
   } catch (e) {
     return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
   }
