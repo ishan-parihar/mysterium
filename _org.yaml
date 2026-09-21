@@ -388,13 +388,20 @@ completed:
     substrate (Ra)'' sense in 06 and the various ''theoretical substrate'' usages
     are unrelated compounds and stay'
 pending:
-  PLAN-IMPLEMENT: the architecture ratified in 45 (user-dimensionality vector, three-library
-    pooling, analogical bridge, engagement register), 46 (facets, tag store, reconciliation-polarity
-    state layer, composition) and 47 (evidence tiers, interest record, scaffold library),
-    plus the safety ethics contract (data classes, projection firewall), has no code
-    yet — MY-AD-0018, MY-AD-0019, MY-AD-0020, MY-AD-0021, MY-AD-0022, MY-AD-0023,
-    MY-AD-0031, MY-RG-0017, MY-RG-0018, MY-RG-0019, MY-RG-0020, MY-RG-0021, MY-RG-0026.
-    Sequenced as Phase 10 in DEVELOPMENT-PLAN
+  PLAN-IMPLEMENT: 'DONE 2026-09-21. src/core/personalization/: udv.ts (UDV projection
+    + REGISTERED_PROJECTIONS firewall, MY-AD-0020 §3 — stage labels downgraded to
+    bands, observed interests stay ranking-weight), dialecticEngine.ts (46 §5: spiral/expand/familiar,
+    pair-keyed PolarityStateMap — reconciliation-polarity states keyed by canonical
+    pairKeyOf, saturation guard, EXPANSION_RATIO_FLOOR, aversion excluded from both
+    poles), composition.ts (46 §3/§6/§7: Situation holon kind, library discriminator,
+    composedOf bindings, dependency-ordered compose, CompositionStore with replay),
+    pooling.ts (45 §5: query bands, constraint filter, veto-as-routing-rule with recorded
+    deferrals §5.2.1, relevance rank), scenarioContext.ts (45 §6/§6.1: envelope +
+    ROLE_SCOPES enforced absence-scoping), engagementRegister.ts (45 §7.3: both tests,
+    forbidden refusals, MY-RG-0017). compile-facets.ts now assigns tags from the authored
+    facetAffinity matrix (46 §4 join). Locked by tests/personalization/PlanImplement.test.ts
+    (25 tests). Remaining deferrals: none structural — LLM-side rendering of the analogical
+    bridge belongs to the scenario-catalyst agent (43).'
   WORLD-STORE-MOVE: DONE 2026-09-21. Holon.ts, HolonStore.ts, stage-holons.json, red-layer-holons.json,
     RedPESTLE.ts, and data/encounters/red/ (now world/encounters-red/) all live under
     src/core/world/; organs.world.code corrected; the three facades (domain/Holon.ts,

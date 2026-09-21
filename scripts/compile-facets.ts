@@ -56,6 +56,25 @@ const QUADRANT_ALIASES: Record<string, string> = {
 };
 const DRIVES = ['Agency', 'Communion', 'Eros', 'Agape'] as const;
 
+// 46 §4 — the authored facetAffinity matrix, mirrored from src/core/world/tags/initialTags.ts.
+// The compiler assigns each facet the tags whose affinity for its characteristic is positive, so
+// the facet store is poolable by tag (45 §5) and every tag resolves (46 §11 invariant 4).
+const TAG_AFFINITY: Record<string, Record<string, number>> = {
+  technology: { 'surface-aesthetic': 0.9, 'pressure-lever': 0.6, 'role-archetype': 0.4 },
+  nature: { 'surface-aesthetic': 0.9, 'polarity-texture': 0.5, 'relationship-pattern': 0.4 },
+  kindred: { 'relationship-pattern': 0.9, stake: 0.7, 'voice-register': 0.4 },
+  commerce: { stake: 0.9, 'pressure-lever': 0.7, 'role-archetype': 0.5 },
+  craft: { 'surface-aesthetic': 0.7, 'voice-register': 0.6, 'memory-schema': 0.4 },
+  music: { 'voice-register': 0.9, 'surface-aesthetic': 0.8, 'polarity-texture': 0.4 },
+  medicine: { stake: 0.8, 'pressure-lever': 0.8, 'role-archetype': 0.5 },
+  law: { 'role-archetype': 0.8, stake: 0.6, 'relationship-pattern': 0.5 },
+  warfare: { 'pressure-lever': 0.9, 'shadow-expression': 0.7, 'role-archetype': 0.6 },
+  exploration: { 'pressure-lever': 0.7, 'role-archetype': 0.7, 'surface-aesthetic': 0.5 },
+  ritual: { 'polarity-texture': 0.8, 'memory-schema': 0.6, 'relationship-pattern': 0.5 },
+  architecture: { 'surface-aesthetic': 0.9, 'memory-schema': 0.5, 'relationship-pattern': 0.3 },
+};
+const INITIAL_TAG_IDS = Object.keys(TAG_AFFINITY);
+
 interface ShadowExpr {
   quadrant: string; name: string; corePattern: string;
   behaviouralSignatures: string[]; atmanDefense: string;
@@ -347,10 +366,17 @@ function main(): number {
       if (!existsSync(specPath)) { errors.push(`${line}/${stage}: module-spec.md missing`); continue; }
       const spec = readFileSync(specPath, 'utf-8');
       const facetKeys: string[] = [];
-      const put = (characteristic: string, payload: unknown) => {
+      // 46 §4 — a facet's tags: the tags whose facetAffinity names this characteristic, so every
+      // facet resolves through the tag store (invariant 4) and byTags() can pool over them (§5).
+      const charTags = (characteristic: string): string[] =>
+        INITIAL_TAG_IDS.filter((t) => (TAG_AFFINITY[t]?.[characteristic] ?? 0) > 0);
+      const put = (characteristic: string, payload: unknown, extraTags: string[] = []) => {
         const key = `${line}:${stage}:${characteristic}`;
         facetKeys.push(key);
-        facets.push({ key, tags: [], tagAffinity: {}, payload, source: 'corpus' });
+        const tags = [...new Set([...charTags(characteristic), ...extraTags])];
+        const tagAffinity: Record<string, number> = {};
+        for (const t of tags) tagAffinity[t] = TAG_AFFINITY[t]?.[characteristic] ?? 0.5;
+        facets.push({ key, tags, tagAffinity, payload, source: 'corpus' });
       };
 
       const sh = extractShadows(spec);
