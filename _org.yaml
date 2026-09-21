@@ -165,10 +165,9 @@ organs:
 
   world:
     contract_docs: [foundations/18-great-way-world-architecture, foundations/21-incarnation-architecture, foundations/22-holon-context-engine, foundations/45-personalization-and-context-pooling, foundations/46-generative-world-composition, foundations/47-preference-inference-and-scaffolding]
-    code: [src/core/pods, src/infra/pods]
+    code: [src/core/world, src/core/data/encounters]
     status: active
-    note: "No architecture doc existed before this plan (audit gap G6)."
-    warning: "MISASSIGNED: `code` is cohort multiplayer (38), not world-building. The world's actual content lives in src/core/data (HolonRegistry, RedPESTLE, stage-holons.json, red-layer-holons.json, encounters/) held by platform, and its types in src/core/domain held by kernel. Recommended home is a new src/core/world/ per 46 section 10 — tracked as pending WORLD-STORE-MOVE."
+    note: "No architecture doc existed before this plan (audit gap G6). Corrected 2026-09-21 (WORLD-STORE-MOVE): pods moved to the cohort organ (38); the world's content moved out of src/core/data into src/core/world/ per 46 section 10. src/core/data/encounters/red/ remains the hand-authored Red layer until FACET-COMPILER replaces it with compiled facets (46 section 10)."
 
   onboarding:
     contract_docs: [foundations/21-incarnation-architecture, foundations/16-significator-architecture]
@@ -191,6 +190,12 @@ organs:
     status: active
     note: "No architecture doc existed before this plan (audit gap G7)."
 
+  cohort:
+    contract_docs: [foundations/38-cohort-weave-multiplayer]
+    code: [src/core/pods, src/infra/pods]
+    status: active
+    note: "Cohort multiplayer (38). Pods moved here from the world organ 2026-09-21 (WORLD-STORE-MOVE) - 38 is their contract."
+
   credentialing:
     contract_docs: [foundations/41-global-recognition-credentialing, foundations/38-cohort-weave-multiplayer]
     code: [src/core/credential]
@@ -206,7 +211,7 @@ organs:
     contract_docs: []
     code: [src/core/config, src/core/data, src/core/events, src/core/telemetry, src/infra/i18n, src/infra/telemetry, src/cli, src/shared]
     status: active
-    note: "System substrate: no theory of its own; exists so no code domain is unowned."
+    note: "System substrate: no theory of its own; exists so no code domain is unowned. src/core/data holds only substrate after WORLD-STORE-MOVE (concept-drafts.json index, glossary, shadowKeywords, calibrationPrompts, PolarityOntology); world content lives in the world organ."
 
 # ─────────────────────────────────────────────────────────────────────────────
 # GATES — doc-governance (DG), distinct from the runtime kernel gates G1–G21
@@ -280,6 +285,5 @@ pending:
   ARTICULATION-LAYER: "the register/articulation layer has no code: MY-AD-0006 (register classes - open vs closed, the full metric register available at any stage) and MY-AD-0007 (one articulation ladder L0-L7 / AL1-AL6, two registers, no privilege tiers) are ratified, and 16 section 2.4/section 10.4 plus 33 section 7 specify the auditor projections that render from it, but src/core/observability/ does not exist, there is no consent ledger in src/, no articulation routine anywhere (grep hits only unrelated game copy), and receive_auditor_request is absent from the orchestrator toolset. Auditor authentication is still an open question in 33 section 7. This key also carries the projection firewall half of MY-AD-0020 and the integrated-auditor half of MY-AD-0011"
   REPORTING-FEED: "the feed CONTRACT is now specified (43 section 5.5 - FeedEntry, four writers, three readers, laws F1-F4); what remains is code: no FeedEntry type exists in src/core/orchestration/types.ts, no writer appends one, and no consumer reads one, so 27's planning currently receives progressDelta directly from the delegation result rather than through the feed. Needed: the type, the four writers, the three readers, and a gate that no reader bypasses the feed for session outcome (law F2) - which is what makes 22's owner workers and 45/46's composition verifiable against the same contract"
   PROFILE-INFERENCE: "the scaffold library and its selection rule (47 section 6) and the inference pipeline (47 section 8) have no code: no probe set, no evidence ledger, no tier gate, no scaffold store. The nine executable checks of 47 section 9 are the gate fixtures to write first; check 6 (no write path from inference to player state other than the UDV) is the structural form of the 47 section 2 red line"
-  WORLD-STORE-MOVE: "create src/core/world/ (store, facets, tags, compose, libraries) and move the world content into it: domain/Holon.ts, data/HolonRegistry.ts, data/{stage-holons,red-layer-holons}.json, data/RedPESTLE.ts, data/encounters/ (46 section 10). Correct organs.world.code (currently cohort pods) and remove src/core/data from platform. This is what makes 18/21/22/45/46 reachable from the code they govern (KB-FOUNDATIONS-INGEST)"
+  WORLD-STORE-MOVE: "MOVE DONE 2026-09-21 for Holon.ts, HolonStore.ts, stage-holons.json, red-layer-holons.json, RedPESTLE.ts; organs.world.code corrected (pods to cohort). REMAINING: move data/encounters/red/ into the world organ (currently owned by world at src/core/data/encounters but sited in platform dir), then remove the domain/ and data/ facades once consumers import world/ directly. This is what makes 18/21/22/45/46 reachable from the code they govern (KB-FOUNDATIONS-INGEST)"
   FACET-COMPILER: "compile the 512 concept-drafts into the facet store (46 section 8) so the corpus stays prose-for-humans and the store stays data-for-the-engine; the compiler is the only path, which is what keeps them from diverging (RT-CORPUS-RECONCILE)"
-  TAG-ONTOLOGY: "author the initial tag set with axis positions and the curated dialectic pairs (46 section 4); a tag without a resolvable opposite is a compile error"

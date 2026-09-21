@@ -293,7 +293,7 @@ describe('Agentic Loop Integration — tools across dimensions', () => {
         Cognitive: 'Red', Emotional: 'Red', Moral: 'Red', Intrapersonal: 'Red',
         Spiritual: 'Red', Somatic: 'Red', Willpower: 'Red', Interpersonal: 'Red',
       } as any, 'Red');
-      const holonData = require('../../../src/core/data/red-layer-holons.json');
+      const holonData = require('../../../src/core/world/data/red-layer-holons.json');
       const world = createInitialWorldState(holonData as any) as any;
       const session = { targetSessionLength: 12, encountersSoFar: 0, energy: 'high' as const, holonAvailability: 'high' as const, recentLines: [] as string[], sessionDurationMs: 0 } as any;
       const state = startSession(sig2 as any, session);

@@ -27,11 +27,12 @@
 | `curriculum` | `docs/system/sub-systems/curriculum/AGENTS.md` | `src/core/curriculum`, `src/core/packs`, `src/core/training` |
 | `profiling` | `docs/system/sub-systems/profiling/AGENTS.md` | `src/core/domain`, `src/infra/profiles` |
 | `orchestration` | `docs/system/sub-systems/orchestration/AGENTS.md` | `src/core/orchestration`, `src/core/agent`, `src/core/fallback`, `src/infra/llm` |
-| `world` | `docs/system/sub-systems/world/AGENTS.md` | `src/core/pods`, `src/infra/pods` |
+| `world` | `docs/system/sub-systems/world/AGENTS.md` | `src/core/world`, `src/core/data/encounters` |
 | `onboarding` | `docs/system/sub-systems/onboarding/AGENTS.md` | `src/core/onboarding`, `src/core/adaptive` |
 | `persistence` | `docs/system/sub-systems/persistence/AGENTS.md` | `src/infra/persistence`, `src/infra/native`, `src/infra/crypto`, `src/infra/profiles` |
 | `presentation` | `docs/system/sub-systems/presentation/AGENTS.md` | `src/core/presentation`, `src/routes`, `src/lib`, `src/styles` |
 | `safety` | `docs/system/sub-systems/safety/AGENTS.md` | `src/core/safety`, `src/core/accessibility` |
+| `cohort` | `docs/system/sub-systems/cohort/AGENTS.md` | `src/core/pods`, `src/infra/pods` |
 | `credentialing` | `docs/system/sub-systems/credentialing/AGENTS.md` | `src/core/credential` |
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |

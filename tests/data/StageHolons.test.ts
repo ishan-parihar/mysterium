@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import stageHolonsJson from '../../src/core/data/stage-holons.json';
-import redHolonsJson from '../../src/core/data/red-layer-holons.json';
+import stageHolonsJson from '../../src/core/world/data/stage-holons.json';
+import redHolonsJson from '../../src/core/world/data/red-layer-holons.json';
 import type { Holon } from '../../src/core/domain/Holon.js';
 import { ALL_HOLON_KINDS, ALL_ENERGETIC_DIRECTIONS, ALL_SHADOW_QUADRANTS } from '../../src/core/domain/enums.js';
 import { ALL_LINES } from '../../src/core/domain/Line.js';

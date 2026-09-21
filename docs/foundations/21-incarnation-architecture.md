@@ -5,7 +5,7 @@
 > **Lateral:** Master synthesis — how greater-cycle archetypes + concept-drafts + modalities compose into a playable game.
 > **Depends on:** 11, 13, 14, 15, 16, 17, 18, 19, 20, 23, 24
 > **Referenced by:** all implementation work; MVP-BLUEPRINT
-> **Satisfied by:** `src/core/domain/Holon.ts` (the layered holon the incarnation is delivered through) · `src/core/data/stage-holons.json` (the per-stage holon content) · `src/core/data/HolonRegistry.ts` (holon resolution and lookup)
+> **Satisfied by:** `src/core/world/Holon.ts` (the layered holon the incarnation is delivered through; moved from domain/ 2026-09-21) · `src/core/world/data/stage-holons.json` (the per-stage holon content) · `src/core/world/store/HolonStore.ts` (holon resolution and lookup; moved from data/ 2026-09-21)
 
 ---
 

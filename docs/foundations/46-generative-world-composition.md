@@ -24,8 +24,9 @@
 ## 1. Purpose: why a static world store fails
 
 The preceding documents describe a world of **authored entities**. `18 §2` taxonomy, `22 §2.1` data
-model, `22 §3` worked examples, `21 §8` content drops, and the code (`src/core/data/stage-holons.json`,
-`src/core/data/red-layer-holons.json`, `src/core/data/encounters/red/`) all assume the same thing: a
+model, `22 §3` worked examples, `21 §8` content drops, and the code (`src/core/world/data/stage-holons.json`,
+`src/core/world/data/red-layer-holons.json` — both moved 2026-09-21, WORLD-STORE-MOVE — and
+`src/core/data/encounters/red/`) all assume the same thing: a
 human writes an NPC, a world region or an encounter, and it is stored.
 
 That assumption has three consequences, and all three are already visible in the tree:
@@ -432,10 +433,10 @@ src/core/world/
 
 | Now (a real citation) | Becomes | Why |
 |---|---|---|
-| `src/core/domain/Holon.ts` | the world's root entity | it belongs to the world organ, not to generic domain types |
-| `src/core/data/HolonRegistry.ts` | the world store | it is the store, not generic data |
-| `src/core/data/{stage-holons.json, red-layer-holons.json}` | world content | content, not substrate |
-| `src/core/data/RedPESTLE.ts` | the PESTLE facade | PESTLE is one stage deep today |
+| `src/core/domain/Holon.ts` → **now `src/core/world/Holon.ts`** (moved 2026-09-21) | the world's root entity | it belongs to the world organ, not to generic domain types |
+| `src/core/data/HolonRegistry.ts` → **now `src/core/world/store/HolonStore.ts`** (moved 2026-09-21) | the world store | it is the store, not generic data |
+| `src/core/data/{stage-holons.json, red-layer-holons.json}` → **now `src/core/world/data/`** (moved 2026-09-21, WORLD-STORE-MOVE) | world content | content, not substrate |
+| `src/core/data/RedPESTLE.ts` → **now `src/core/world/pestle/RedPESTLE.ts`** (moved 2026-09-21) | the PESTLE facade | PESTLE is one stage deep today |
 | `src/core/data/encounters/red/` | compiled facets | the hand-authored per-stage encounter list is the static model this document replaces |
 
 **Two ownership corrections in `_org.yaml`, both required:**
@@ -516,7 +517,7 @@ question *"why did this happen?"* is answerable even after the holon itself is g
 growth without losing auditability.
 
 **4. Migration — retro-fit by the compiler; neither overlay nor retirement.**
-`src/core/data/stage-holons.json` and `src/core/data/red-layer-holons.json` are hand-authored entities
+`src/core/world/data/stage-holons.json` and `src/core/world/data/red-layer-holons.json` are hand-authored entities
 carrying real content (the entire Red layer). The compiler (§8) emits them as facets with
 `source: 'authored'`, so no content is lost, no second store survives beside the generated one
 (`MY-RG-0019` is the guard against exactly that), and `src/core/data/encounters/red/`'s per-stage list
