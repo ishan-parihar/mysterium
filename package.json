@@ -20,6 +20,7 @@
     "build:cli": "svelte-kit sync && tsup",
     "check:invariants": "npx tsx scripts/check-invariants.ts",
     "corpus:build": "npx tsx scripts/build-concept-index.ts",
+    "facets:compile": "npx tsx scripts/compile-facets.ts",
     "arch:validate": "python3 scripts/arch.py validate",
     "arch:fixtures": "python3 scripts/arch.py fixtures",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
