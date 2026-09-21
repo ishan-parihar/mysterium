@@ -46,6 +46,9 @@ import { selectPoles, pairKeyOf } from '../personalization/dialecticEngine.js';
 import { compose, createCompositionStore } from '../personalization/composition.js';
 import { createInterestRecord } from '../personalization/interestRecord.js';
 import { detectScaffoldShareDefects, detectVisibilityCollapse, type CompositionEvent } from '../personalization/diversityMonitor.js';
+import { SCENARIO_SEEDS } from '../personalization/scenarioSeeds.js';
+import { AUTHORED_PROBES } from '../personalization/probeContent.js';
+import { checkCoherence } from '../personalization/stageCoherence.js';
 import { createEvidenceLedger, META_PROGRAMS } from '../../infra/profiles/evidenceLedger.js';
 import { createProbeLedger, recordProbePlay, recordProbeDecline, canOfferProbe, instrumentIsRVValidated, MAX_PROBES_PER_SESSION, type Probe } from '../personalization/probeSet.js';
 import { REFERENCE_PACKS } from '../packs/referencePacks.js';
@@ -851,6 +854,7 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   results.push(validateTierGate());
   results.push(validateScaffoldIntegrity());
   results.push(validateInferenceWriteFirewall());
+  results.push(validateAuthoredSeedCoherence());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
@@ -1355,6 +1359,48 @@ export function validateInferenceWriteFirewall(): GateResult {
     if (/export (function|const) set[A-Z]/.test(udvText)) return mk('udv.ts exports a setter — the UDV is a projection, not a store');
 
     return { gate: 'G25 inference write firewall', passed: true, hard: true, details: 'personalization modules expose no write surface beyond the UDV projection; evidence ledger not reachable from UDV/composition/pooling' };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// G27 — Stage-coherence of the authored seeding (hard, plan Phase 10): the [world, NPC, scenario]
+// combination must never produce a stage-incoherent simulation (46 §11 facet incoherence; 44
+// altitude separation). The authored scenario seeds are the load-bearing scenario layer — each
+// must declare its own cell (64/64 coverage) and be coherent against it; the authored probes'
+// poles must resolve in the tag store (47 §7 + 46 §11 invariant 4).
+export function validateAuthoredSeedCoherence(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G27 authored-seed stage coherence', passed: false, hard: true, details: m });
+  try {
+    // 64/64 cell coverage, no duplicates, each seed self-coherent.
+    const byCell = new Map<string, number>();
+    for (const s of SCENARIO_SEEDS) byCell.set(`${s.line}:${s.stage}`, (byCell.get(`${s.line}:${s.stage}`) ?? 0) + 1);
+    for (const [cell, n] of byCell) {
+      if (n > 1) return mk(`duplicate scenario seeds for ${cell} (${n})`);
+    }
+    for (const line of ALL_LINES) {
+      for (const stage of ALL_STAGES) {
+        if (!byCell.has(`${line}:${stage}`)) return mk(`scenario seed missing for cell ${line}:${stage}`);
+      }
+    }
+    // Every seed's stage must be coherent against its own declared cell (trivially true by
+    // construction — the check exists to catch future seed rows that misdeclare).
+    for (const s of SCENARIO_SEEDS) {
+      const verdict = checkCoherence(
+        [{ source: s.id, line: s.line, stage: s.stage, loadBearing: true }],
+        { line: s.line, stage: s.stage },
+      );
+      if (!verdict.coherent) return mk(`seed ${s.id}: ${verdict.defects.map((d) => d.rule).join(', ')}`);
+    }
+    // Probe poles resolve in the tag store (the store throws on unknown ids via probeSet's own
+    // check at read time — here we verify at authoring time).
+    const tagIds = new Set(INITIAL_TAGS.map((t) => t.id));
+    for (const p of AUTHORED_PROBES) {
+      if (!tagIds.has(p.poleA)) return mk(`probe ${p.id}: poleA '${p.poleA}' does not resolve in the tag store`);
+      if (!tagIds.has(p.poleB)) return mk(`probe ${p.id}: poleB '${p.poleB}' does not resolve in the tag store`);
+      if (p.poleA === p.poleB) return mk(`probe ${p.id}: both poles are the same tag — no discrimination`);
+    }
+    return { gate: 'G27 authored-seed stage coherence', passed: true, hard: true, details: `${SCENARIO_SEEDS.length}/64 seeds coherent, ${AUTHORED_PROBES.length} probes with resolvable poles` };
   } catch (e) {
     return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
   }

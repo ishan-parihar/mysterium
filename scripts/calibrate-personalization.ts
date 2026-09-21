@@ -26,6 +26,11 @@ import { INITIAL_TAGS } from '../src/core/world/tags/initialTags.js';
 import { composeWorldTexture } from '../src/core/personalization/runtimeBridge.js';
 import { createCompositionTelemetry } from '../src/core/personalization/compositionTelemetry.js';
 import { cellEntropy } from '../src/core/personalization/diversityMonitor.js';
+import { auditSeedLibrary } from '../src/core/personalization/stageCoherence.js';
+import { SCENARIO_SEEDS } from '../src/core/personalization/scenarioSeeds.js';
+import { seedCandidateLibrary } from '../src/core/personalization/candidateLibrary.js';
+import { AUTHORED_PROBES } from '../src/core/personalization/probeContent.js';
+import { createProbeLedger } from '../src/core/personalization/probeSet.js';
 import type { Line } from '../src/core/domain/Line.js';
 import type { Stage } from '../src/core/domain/Stage.js';
 import type { Modality } from '../src/core/domain/enums.js';
@@ -60,6 +65,16 @@ function main(): number {
   const telemetry = createCompositionTelemetry();
   const rows: Row[] = [];
   const emptyCells: string[] = [];
+
+  // ── Authored-content integrity (the seeding tier) ──────────────────────
+  const seedAudit = auditSeedLibrary(SCENARIO_SEEDS);
+  if (!seedAudit.ok) {
+    console.error('== scenario-seed audit FAILED ==');
+    for (const p of seedAudit.problems) console.error(`  - ${p}`);
+    return 1;
+  }
+  const library = seedCandidateLibrary(store);
+  const probeLedger = createProbeLedger(AUTHORED_PROBES);
   const now = 1_700_000_000_000;
   let compositions = 0;
 
@@ -95,7 +110,8 @@ function main(): number {
 
   // ── Report ────────────────────────────────────────────────────────────────
   console.log('== personalization calibration ==\n');
-  console.log(`store: ${storeSize} facets; compositions exercised: ${compositions}; cells: ${ALL_LINES.length * ALL_STAGES.length}; modalities: ${ALL_MODALITIES.length}\n`);
+  console.log(`store: ${storeSize} facets; compositions exercised: ${compositions}; cells: ${ALL_LINES.length * ALL_STAGES.length}; modalities: ${ALL_MODALITIES.length}`);
+  console.log(`authored seeds: ${SCENARIO_SEEDS.length}/64 cells; library: ${library.length} candidates; probes: ${AUTHORED_PROBES.length} (${probeLedger.probes.filter((p) => p.rvPassed).length} RV-validated)\n`);
 
   console.log('per-cell entropy (over synthetic rotated traffic):');
   const linesOut: string[] = [];

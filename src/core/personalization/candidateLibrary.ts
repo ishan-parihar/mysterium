@@ -25,6 +25,8 @@ import type { PoolCandidate } from './pooling.js';
 import type { FacetStore } from '../world/facets/FacetStore.js';
 import { INITIAL_TAGS } from '../world/tags/initialTags.js';
 import type { TagId } from '../world/tags/types.js';
+import { SCENARIO_SEEDS } from './scenarioSeeds.js';
+import type { ScenarioSeed } from './scenarioSeeds.js';
 
 /** The 8 stages as authored — the ladder the concept-drafts grid by. */
 const STAGES: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'] as const;
@@ -119,9 +121,32 @@ export function deriveNpcCandidates(holons: readonly { readonly id: string; read
 }
 
 /**
- * The full seeded library: 64 cells × 7 modalities × 2 renderings (world + scenario) = 896
- * derived candidates, plus the NPC derivations from the authored corpus. Deterministic; safe to
- * rebuild per process (pure data, no I/O).
+ * The AUTHORED scenario renderings (46 §2's scenario library; 46 §11's anti-static-reassertion
+ * rule is honoured because these are seeds — canonical situations per cell — not finished
+ * entities; composition still instantiates them into entities from facets). One authored seed per
+ * cell, registered per modality so the modality-fitness filter can match them.
+ */
+export function seedScenarioCandidates(seeds: readonly ScenarioSeed[] = SCENARIO_SEEDS): readonly PoolCandidate[] {
+  const out: PoolCandidate[] = [];
+  for (const s of seeds) {
+    for (const modality of ALL_MODALITIES) {
+      out.push({
+        id: `scenario-authored:${s.line}:${s.stage}:${modality}`,
+        cell: { line: s.line, stage: s.stage, modality },
+        tags: [...s.tags],
+        stratum: BASE_STRATUM,
+        depthFloor: BASE_DEPTH_FLOOR,
+        landsIn: [...s.tags],
+      });
+    }
+  }
+  return out;
+}
+
+/**
+ * The full seeded library: 64 cells × 7 modalities × 2 derived renderings (world + skeleton
+ * scenario) + the 64×7 authored scenario-seed registrations + NPC derivations from the authored
+ * corpus. Deterministic; safe to rebuild per process (pure data, no I/O).
  */
 export function seedCandidateLibrary(store: FacetStore): readonly PoolCandidate[] {
   const out: PoolCandidate[] = [];
@@ -132,5 +157,6 @@ export function seedCandidateLibrary(store: FacetStore): readonly PoolCandidate[
       }
     }
   }
+  out.push(...seedScenarioCandidates());
   return out;
 }

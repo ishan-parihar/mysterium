@@ -48,12 +48,14 @@ describe('Validation benchmark (CI tier)', () => {
     // The count is deliberately literal: adding or removing a gate must be a conscious edit here,
     // not a silent change to what the benchmark certifies. 21 → 22 with G26 (priority-formula
     // closure, `24 §3.2.9` / `MY-AD-0025`); 22 → 26 with the Phase 10 gates (G22 composition
-    // integrity, G23 tier gate, G24 scaffold integrity, G25 inference write firewall — 46/47).
-    expect(suite.results.length).toBe(26);
-    expect(suite.results.map((r) => r.gate).some((g) => g.startsWith('G26'))).toBe(true);
-    for (const g of ['G22', 'G23', 'G24', 'G25']) {
+    // integrity, G23 tier gate, G24 scaffold integrity, G25 inference write firewall — 46/47);
+    // 26 → 27 with G27 authored-seed stage coherence (46 §11 / 44 — the authored seeding tier).
+    expect(suite.results.length).toBe(27);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
+    expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);
+    expect(suite.results.map((r) => r.gate).some((g) => g.startsWith('G26 '))).toBe(true); // priority formula closure
     expect(new Set(suite.results.map((r) => r.gate)).size).toBe(suite.results.length);
   });
 });
