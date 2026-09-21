@@ -7,7 +7,7 @@ Organ: profiling
 Source: "docs/foundations/47-preference-inference-and-scaffolding.md sections 3, 5, 8"
 Description: "45 section 3.1 rule 1 forbids creating fields of record from observation but leaves the line unauditable, and 45 section 10 names that as an open question. The line is now the evidence tier: tier 1 (a validated instrument or an empirically robust construct with a game-measurable expression) may become a consent-bound field of record with a declared data class; tier 2 (an established construct with no validated instrument here) may bias ranking and select a scaffold but may not be a field of record and may not be surfaced as a fact about the player; tier 3 (meta-program distinctions with no empirical support) may shape the surface of one encounter and is never persisted. Every stored field carries tier, provenance, data class and consent reference; a scaffold archetype is a prior with an expiry, never a stored identity label."
 Related: ["MY-AD-0018", "MY-AD-0020", "MY-AD-0012", "MY-RG-0018", "MY-RG-0020", "MY-RG-0021"]
-Deferral: PROFILE-INFERENCE
+Consumer: "`src/infra/profiles/evidenceLedger.ts`, `src/core/world/scaffolds/ScaffoldLibrary.ts`"
 ---
 
 ## Decision
@@ -83,3 +83,9 @@ mix, and a typology is identity by another route).
 - `MY-AD-0012`, `MY-AD-0018`, `MY-AD-0020`, `MY-RG-0018`, `MY-RG-0020`, `MY-RG-0021`
 
 <!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->
+
+<!-- 2026-09-21: Deferral discharged 2026-09-21: the evidence ledger + tier gate exist at src/infra/profiles/evidenceLedger.ts and the scaffold library at src/core/world/scaffolds/ (PROFILE-INFERENCE key removed from _org.yaml pending ledger) (recon recon_id: 581aa7756a) -->
+
+<!-- 2026-09-21: Consumer declared: the tier gate and scaffold library implement this law (PROFILE-INFERENCE, 2026-09-21) (recon recon_id: 55e586e23c) -->
+
+<!-- 2026-09-21: Consumer paths backticked so DG19 resolves them as code paths (recon recon_id: 23814c0886) -->
