@@ -112,29 +112,33 @@ describe('P0: endSession macro-event lifecycle survives ESM (require is not defi
   });
 });
 
-describe('P0: Turquoise-stage harvest check actually runs', () => {
-  it('returns a real verdict (not the silently-swallowed null) at Turquoise stage', () => {
+describe('P0: Turquoise-stage Choice evaluation actually runs', () => {
+  it('returns a real Choice state (not the silently-swallowed null) at Turquoise stage', () => {
     const sig = createSignificator('p0-harvest', { ...altitudes, Cognitive: 'Turquoise' } as Record<Line, Stage>, 'Turquoise');
     const session: any = { targetSessionLength: 5, encountersSoFar: 0, recentLines: ['Cognitive'] };
     const sessionState = startSession(sig, session);
 
     // Pre-fix this was ALWAYS null: require() threw inside try/catch and the
-    // check silently no-op'ed. Now checkHarvest executes and returns a verdict.
+    // check silently no-op'ed. Now evaluateChoice executes and returns a state.
     const result = endSession(sig, sessionState, Date.now(), undefined);
-    expect(result.harvestCheck).not.toBeNull();
-    expect(typeof result.harvestCheck!.harvestable).toBe('boolean');
-    expect(typeof result.harvestCheck!.reason).toBe('string');
-    // A fresh Turquoise significator is Exploring-mode: not harvestable, with a reason.
-    expect(result.harvestCheck!.harvestable).toBe(false);
-    expect(result.harvestCheck!.direction).toBeNull();
+    expect(result.choiceState).not.toBeNull();
+    expect(typeof result.choiceState!.eligible).toBe('boolean');
+    expect(typeof result.choiceState!.reason).toBe('string');
+    // A fresh Turquoise significator is Exploring-mode: not eligible, with a reason.
+    expect(result.choiceState!.eligible).toBe(false);
+    expect(result.choiceState!.direction).toBeNull();
+    // 19 §9.6: eligibility is a CONDITION and the harvest is an EVENT. A player who is not
+    // eligible has not arrived, and must never have the closure reported as reached.
+    expect(result.choiceState!.harvestEvent).toBe(false);
+    expect(result.choiceState!.closure.reached).toBe(false);
   });
 
-  it('does not run the harvest check below Turquoise stage', () => {
+  it('does not evaluate the Choice below Turquoise stage', () => {
     const sig = createSignificator('p0-noharvest', altitudes, 'Red');
     const session: any = { targetSessionLength: 5, encountersSoFar: 0, recentLines: ['Cognitive'] };
     const sessionState = startSession(sig, session);
     const result = endSession(sig, sessionState, Date.now(), undefined);
-    expect(result.harvestCheck).toBeNull();
+    expect(result.choiceState).toBeNull();
   });
 });
 

@@ -590,7 +590,7 @@ The Significator evolves through distinct lifecycle stages, each with characteri
 | `transformations[]` | 8–12+ entries; late transformations are subtle frame-shifts, not dramatic upheavals |
 | `stage` | Teal → Turquoise |
 
-**Characteristic events:** `transformation_completed` (Teal → Turquoise; the runtime stage identifier still reads `White` until the code re-index pass); deep `shadow_integrated` events; polarity-locking choices; theta-decay vigilance (all lower stages must remain healthy).
+**Characteristic events:** `transformation_completed` (Teal → Turquoise; the runtime stage identifiers now read the ratified ladder — `Teal`/`Turquoise`, `White` retired); deep `shadow_integrated` events; polarity-locking choices; theta-decay vigilance (all lower stages must remain healthy).
 
 **Exit criteria:** All lines at Turquoise (L8); crystallisationIndex ≥ closure threshold; all ray integrations complete.
 

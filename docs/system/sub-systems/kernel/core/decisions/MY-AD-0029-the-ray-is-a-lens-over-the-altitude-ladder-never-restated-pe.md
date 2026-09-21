@@ -6,7 +6,7 @@ Date: 2026-09-20
 Organ: kernel
 Source: "foundations/06-law-of-one-correspondence §5, §5.1, §8"
 Description: "Ray is an overlay over Stage (a lens, never a place): RAY_LENS[stage] is the one source, STAGE_RAY_MAP is derived, SubOctave carries the 9 positions, Teal and Turquoise both read Indigo 6a/6b, and the Violet 7th position belongs to the closure event (CLOSURE_BINDING). No stage module declares a ray."
-Related: [MY-RG-0025, MY-AD-0030, MY-AD-0005]
+Related: [MY-AD-0025, MY-RG-0025, MY-AD-0030, MY-AD-0005, MY-RG-0030]
 Consumer: "`src/core/domain/Ray.ts`, `tests/core/domain/StageLadder.test.ts`, and the DG5 blacklist in `docs/foundations/44-system-ontology-and-vocabulary.md`"
 ---
 
@@ -66,9 +66,13 @@ depending on the bug.
 - Positive: the harvest keeps its independently accumulated `rayProfile.Violet` accumulator, and the
   change *clarifies* why it must: the Violet ray is the position at which the harvest is assessed, so
   reading it as "the top stage's ray" was a category error, not a rounding difference.
-- Negative / accepted: `checkHarvest` still tests only the Violet total and not the rainbow
-  distinctness that `lenses/rays.md` actually specifies ("each color distinct, none bypassed"). That
-  gap is real and is owned by `CHOICE-CLOSURE`, not by this record — see `06 §8`'s closing note.
+- Resolved (2026-09-21): the accepted negative this record carried — that the old `checkHarvest`
+  tested the Violet total alone and not the rainbow distinctness `lenses/rays.md` specifies ("each
+  color distinct, none bypassed") — is now closed. `rainbowDistinctness` (R-G-B floors + a min/max
+  distinctness floor) is part of `checkChoiceEligibility`, and `MY-AD-0005`/`MY-RG-0030` own the
+  condition/event split and the lifecycle licence. See `06 §8`'s closing note.
 - Neutral: this changes the ray read by `ConsequenceEngine`, `PriorityComputation` and
   `TransformationDetector` for stage-8 encounters, so the kernel battery and personas were re-verified
   in the same commit (`MY-AD-0025`'s rule for behaviour-moving changes).
+
+<!-- 2026-09-21: link the record that now owns the rainbow-distinctness half (recon 4d88e38dc0) -->

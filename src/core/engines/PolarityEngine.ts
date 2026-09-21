@@ -163,73 +163,219 @@ export function computeMasterPolarity(profiles: LineProfile[], altitudes?: Reado
   return { mode, dominantDirection, coherentLineCount: coherentCount, crystallizationProgress: avgCrystallization };
 }
 
+// ---------------------------------------------------------------------------
+// Eligibility and the Harvest are two different things (`19 §9.6`)
+// ---------------------------------------------------------------------------
+//
+//   Choice-eligibility — a CONDITION: is this entity's Choice structurally authentic at all?
+//                        Evaluated continuously; produces a STATE. Never an event.
+//   The Harvest        — an EVENT: polarity locks, archive, retirement.
+//                        eligibility ∧ arrival at the sub-octave closure (the Violet event).
+//                        Fires once, at the apex.
+//
+// The function here was called `checkHarvest` and its verdict gated the post-Turquoise
+// continuation directly, so a *condition* triggered an *event*. The rename is not cosmetic: the
+// old name meant every reader — and every test — treated "the player qualifies" as "the player
+// has finished", which is what let `Exploring → Harvesting` sit in the lifecycle table as a legal
+// transition for a player who had crystallized nothing.
+
+export interface ChoiceEligibility {
+  readonly eligible: boolean;
+  readonly direction: 'STO' | 'STS' | null;
+  readonly reason: string;
+}
+
+/** Arrival at the sub-octave closure — the Violet event, `06 §7.4` / `19 §9.6`. */
+export interface ClosureArrival {
+  readonly reached: boolean;
+  readonly reason: string;
+}
+
+export interface ChoiceState extends ChoiceEligibility {
+  readonly closure: ClosureArrival;
+  /**
+   * The Harvest EVENT: eligibility **∧** arrival. Never true on eligibility alone, and never true
+   * before the closure — that conjunction is the whole difference between the two rows of
+   * `19 §9.6`'s table.
+   */
+  readonly harvestEvent: boolean;
+}
+
 /**
- * P1-20: Check if the player is harvestable (ready for the endgame Choice).
+ * Choice-readiness: is genuine self-conscious choice available at all?
  *
- * Per foundations/19 §5, the harvest requires:
- * - STO: mode='Crystallized', direction='STO', ≥6 coherent lines, altitude_floor ≥ Orange,
- *   mean(direction_strength) ≥ 0.51, all prior stages healthy, violet_ray_integration ≥ 0.8
- * - STS: mode='Crystallized', direction='STS', ≥7 coherent lines, altitude_floor ≥ Orange,
- *   mean(direction_strength) ≥ 0.95 (stricter — STS requires near-total absorption efficiency)
- *
- * The 51% / 95% asymmetry follows from source-flow coupling: STO source=above
- * (inexhaustible) → slight opening suffices; STS source=below (finite) → near-total
- * efficiency required.
- *
- * @param master The master polarity state
- * @param directionStrengths Per-line direction strength (0-1). If omitted, harvestable=false.
- * @param altitudeFloor The lowest stage across coherent lines (ordinal 0-7)
- * @param violetRayIntegration The violet-ray integration score (0-1). If < 0.8, not harvestable.
- * @returns { harvestable: boolean, direction: 'STO'|'STS'|null, reason: string }
+ * `01.4 §2.5.3` — D3 is the minimum density at which real choice is possible, so no authentic
+ * Choice exists below it. This is deliberately NOT a claim that the harvest happens at a
+ * particular Mysterium stage; `19 §9.6` re-expressed the old `altitude_floor ≥ Orange` criterion
+ * as readiness for exactly that reason. The numeric bound is unchanged — the meaning is now
+ * honest about what it is testing.
  */
-export function checkHarvest(
+export const CHOICE_READY_ORDINAL = stageOrdinal('Orange');
+
+export function isChoiceReady(altitudes: Readonly<Record<string, Stage>>): boolean {
+  const ordinals = Object.values(altitudes).map(s => stageOrdinal(s));
+  if (ordinals.length === 0) return false;
+  return Math.min(...ordinals) >= CHOICE_READY_ORDINAL;
+}
+
+/**
+ * The rays the Violet expression must show distinctly — `lenses/rays.md` → "Harvest condition".
+ *
+ * The condition is a **rainbow-distinctness** one, not a threshold on the Violet total: a harvestable
+ * expression is "tinged with a distinct green/blue/indigo rainbow … each color distinct, none
+ * bypassed". Green is love/compassion, Blue is wisdom, Indigo is the gateway — and "none bypassed"
+ * is the operative clause. This is why `rayProfile.Violet` is an independently accumulated quantity
+ * rather than a lookup of the top stage's ray, and why checking the Violet total alone is NOT the
+ * condition.
+ */
+export const RAINBOW_RAYS = ['Green', 'Blue', 'Indigo'] as const;
+
+/** Every ray of the rainbow must be genuinely integrated, not merely present. */
+export const RAINBOW_RAY_FLOOR = 0.5;
+
+/**
+ * And none may be *bypassed*: a ray an order of magnitude below its siblings was skipped, and a
+ * gateway reached by skipping compassion is not the gateway. Expressed as a floor on min/max.
+ */
+export const RAINBOW_DISTINCTNESS_FLOOR = 0.5;
+
+export function rainbowDistinctness(
+  rayProfile: Readonly<Record<string, number>>,
+): { ok: boolean; reason: string } {
+  const values = RAINBOW_RAYS.map(r => rayProfile[r] ?? 0);
+  const weakest = RAINBOW_RAYS[values.reduce((lo, v, i) => (v < values[lo]! ? i : lo), 0)]!;
+  const lowest = Math.min(...values);
+  const highest = Math.max(...values);
+
+  const below = RAINBOW_RAYS.filter(r => (rayProfile[r] ?? 0) < RAINBOW_RAY_FLOOR);
+  if (below.length > 0) {
+    return {
+      ok: false,
+      reason: `rainbow not integrated: ${below.map(r => `${r} ${(rayProfile[r] ?? 0).toFixed(2)}`).join(', ')} < ${RAINBOW_RAY_FLOOR}`,
+    };
+  }
+  if (highest > 0 && lowest / highest < RAINBOW_DISTINCTNESS_FLOOR) {
+    return {
+      ok: false,
+      reason: `rainbow not distinct: ${weakest} ${lowest.toFixed(2)} is bypassed against the strongest ray ${highest.toFixed(2)}`,
+    };
+  }
+  return { ok: true, reason: `rainbow distinct (min/max ${highest > 0 ? (lowest / highest).toFixed(2) : 'n/a'})` };
+}
+
+/**
+ * Arrival at the sub-octave closure: every line has completed the final stage of readiness (L8
+ * Turquoise, `06 §5.1`). This is the Arrow's landing, not a reward — eligibility says the Choice is
+ * authentic; arrival says the traversal it is made *from* is complete.
+ */
+export function subOctaveClosureReached(
+  altitudes: Readonly<Record<string, Stage>>,
+): ClosureArrival {
+  const entries = Object.entries(altitudes);
+  if (entries.length === 0) return { reached: false, reason: 'no line altitudes recorded' };
+  const below = entries.filter(([, stage]) => stage !== 'Turquoise');
+  if (below.length > 0) {
+    return {
+      reached: false,
+      reason: `sub-octave closure not reached: ${below.length}/${entries.length} line(s) short of L8 Turquoise (${below.map(([l, s]) => `${l} ${s}`).slice(0, 3).join(', ')}${below.length > 3 ? ', …' : ''})`,
+    };
+  }
+  return { reached: true, reason: `sub-octave closure reached: all ${entries.length} lines at L8 Turquoise` };
+}
+
+/**
+ * CHOICE-ELIGIBILITY (`19 §5`, §9.2–§9.4) — the condition, evaluated continuously.
+ *
+ * Requirements:
+ * - STO: mode='Crystallized', direction='STO', ≥6 coherent lines, choice-ready,
+ *   mean(direction_strength) ≥ 0.51, violet_ray_integration ≥ 0.8, rainbow distinct
+ * - STS: mode='Crystallized', direction='STS', ≥7 coherent lines, choice-ready,
+ *   mean(direction_strength) ≥ 0.95 (stricter — STS requires near-total absorption efficiency),
+ *   violet_ray_integration ≥ 0.8, rainbow distinct
+ *
+ * The 51% / 95% asymmetry follows from source-flow coupling: STO source=above (inexhaustible) →
+ * a slight opening suffices; STS source=below (finite) → near-total efficiency required.
+ *
+ * The returned state is **never** an endgame trigger — see `evaluateChoice` for the event.
+ */
+export function checkChoiceEligibility(
   master: MasterPolarity,
   directionStrengths: readonly number[] | null,
-  altitudeFloor: number,
+  choiceReady: boolean,
   violetRayIntegration: number,
-): { harvestable: boolean; direction: 'STO' | 'STS' | null; reason: string } {
+  rayProfile: Readonly<Record<string, number>> = {},
+): ChoiceEligibility {
   if (master.mode !== 'Crystallized') {
-    return { harvestable: false, direction: null, reason: `Master mode is ${master.mode}, not Crystallized` };
+    return { eligible: false, direction: null, reason: `Master mode is ${master.mode}, not Crystallized` };
   }
   if (!master.dominantDirection) {
-    return { harvestable: false, direction: null, reason: 'No dominant direction crystallized' };
+    return { eligible: false, direction: null, reason: 'No dominant direction crystallized' };
   }
-
-  const ORANGE_ORDINAL = stageOrdinal('Orange');
-  if (altitudeFloor < ORANGE_ORDINAL) {
-    return { harvestable: false, direction: null, reason: `Altitude floor ${altitudeFloor} < Orange (${ORANGE_ORDINAL})` };
+  if (!choiceReady) {
+    return {
+      eligible: false,
+      direction: null,
+      reason: `not choice-ready: a line below the choice-readiness line (${CHOICE_READY_ORDINAL}); no authentic Choice exists below it (01.4 §2.5.3)`,
+    };
   }
-
   if (violetRayIntegration < 0.8) {
-    return { harvestable: false, direction: null, reason: `Violet-ray integration ${violetRayIntegration.toFixed(2)} < 0.80` };
+    return { eligible: false, direction: null, reason: `Violet-ray integration ${violetRayIntegration.toFixed(2)} < 0.80` };
   }
-
+  // Rainbow distinctness: the Violet total is a SUM, so it can be reached while a ray was skipped.
+  const rainbow = rainbowDistinctness(rayProfile);
+  if (!rainbow.ok) {
+    return { eligible: false, direction: null, reason: rainbow.reason };
+  }
   if (!directionStrengths || directionStrengths.length === 0) {
-    return { harvestable: false, direction: null, reason: 'No direction strengths available' };
+    return { eligible: false, direction: null, reason: 'No direction strengths available' };
   }
 
   const meanStrength = directionStrengths.reduce((a, b) => a + b, 0) / directionStrengths.length;
   const direction = master.dominantDirection === 'Radiative' ? 'STO' : 'STS';
 
   if (direction === 'STO') {
-    // STO: ≥6 coherent lines, mean strength ≥ 0.51
     if (master.coherentLineCount < 6) {
-      return { harvestable: false, direction: null, reason: `STO requires ≥6 coherent lines, found ${master.coherentLineCount}` };
+      return { eligible: false, direction: null, reason: `STO requires ≥6 coherent lines, found ${master.coherentLineCount}` };
     }
     if (meanStrength < 0.51) {
-      return { harvestable: false, direction: null, reason: `STO requires mean strength ≥ 0.51, found ${meanStrength.toFixed(3)}` };
+      return { eligible: false, direction: null, reason: `STO requires mean strength ≥ 0.51, found ${meanStrength.toFixed(3)}` };
     }
-    return { harvestable: true, direction: 'STO', reason: `STO harvest: ${master.coherentLineCount} coherent lines, mean strength ${meanStrength.toFixed(3)}` };
-  } else {
-    // STS: ≥7 coherent lines, mean strength ≥ 0.95 (stricter)
-    if (master.coherentLineCount < 7) {
-      return { harvestable: false, direction: null, reason: `STS requires ≥7 coherent lines, found ${master.coherentLineCount}` };
-    }
-    if (meanStrength < 0.95) {
-      return { harvestable: false, direction: null, reason: `STS requires mean strength ≥ 0.95, found ${meanStrength.toFixed(3)}` };
-    }
-    return { harvestable: true, direction: 'STS', reason: `STS harvest: ${master.coherentLineCount} coherent lines, mean strength ${meanStrength.toFixed(3)}` };
+    return { eligible: true, direction: 'STO', reason: `STO eligible: ${master.coherentLineCount} coherent lines, mean strength ${meanStrength.toFixed(3)}, ${rainbow.reason}` };
   }
+  if (master.coherentLineCount < 7) {
+    return { eligible: false, direction: null, reason: `STS requires ≥7 coherent lines, found ${master.coherentLineCount}` };
+  }
+  if (meanStrength < 0.95) {
+    return { eligible: false, direction: null, reason: `STS requires mean strength ≥ 0.95, found ${meanStrength.toFixed(3)}` };
+  }
+  return { eligible: true, direction: 'STS', reason: `STS eligible: ${master.coherentLineCount} coherent lines, mean strength ${meanStrength.toFixed(3)}, ${rainbow.reason}` };
+}
+
+/**
+ * THE CHOICE STATE — eligibility plus closure, and the event that is the conjunction.
+ *
+ * The event fires **once, at the apex**, and the lifecycle machine may only enter `Harvesting`
+ * through it (`Significator`'s `VALID_TRANSITIONS` no longer lets `Exploring` reach `Harvesting`
+ * directly — that hole let a player who had crystallized nothing lock a polarity for life).
+ */
+export function evaluateChoice(
+  master: MasterPolarity,
+  directionStrengths: readonly number[] | null,
+  altitudes: Readonly<Record<string, Stage>>,
+  violetRayIntegration: number,
+  rayProfile: Readonly<Record<string, number>> = {},
+): ChoiceState {
+  const eligibility = checkChoiceEligibility(
+    master, directionStrengths, isChoiceReady(altitudes), violetRayIntegration, rayProfile,
+  );
+  const closure = subOctaveClosureReached(altitudes);
+  const harvestEvent = eligibility.eligible && closure.reached;
+  const reason = harvestEvent
+    ? `HARVEST: ${eligibility.reason}; ${closure.reason}`
+    : eligibility.eligible
+      ? `eligible, closure pending — ${closure.reason}`
+      : eligibility.reason;
+  return { ...eligibility, closure, harvestEvent, reason };
 }
 
 /** Detect current polarity mode from master state. */

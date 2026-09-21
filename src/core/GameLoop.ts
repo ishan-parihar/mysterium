@@ -12,7 +12,7 @@ import { processOutcome, applyConsequences, type PlayerResponse } from './engine
 // bundling the call sites; every non-bundled runtime hit a dead macro-event
 // lifecycle and a silently no-op harvest check.
 import { advanceMacroEvent, resolveMacroEvent, type MacroEventState } from './engines/MacroCatalystEngine.js';
-import { checkHarvest } from './engines/PolarityEngine.js';
+import { evaluateChoice, type ChoiceState } from './engines/PolarityEngine.js';
 import { InfraConfig } from './config/InfraConfig.js';
 import { detectThreshold, advanceTransformation, commitTransformation, recordKnotResolution, reconstructTransformationState, detectPerLineTransformation, type TransformationSignal, type TransformationState, type PerLineTransformationSignal } from './engines/TransformationDetector.js';
 import { detectBleedThrough } from './engines/ThetaDecay.js';
@@ -987,7 +987,7 @@ export function endSession(
   sessionState: SessionState,
   now: number,
   world?: WorldState,
-): { sig: Significator; world?: WorldState; summary: { encountersCompleted: number; shadowsSurfaced: number; shadowsResolved: number; userMatrixSummary?: ReturnType<typeof summarizeUserMatrix>; macroEventsAdvanced?: number; curriculumProbe?: import('./curriculum/MetaCognitiveProbe.js').MetaCognitiveProbeResult }; harvestCheck?: { harvestable: boolean; direction: 'STO' | 'STS' | null; reason: string } | null } {
+): { sig: Significator; world?: WorldState; summary: { encountersCompleted: number; shadowsSurfaced: number; shadowsResolved: number; userMatrixSummary?: ReturnType<typeof summarizeUserMatrix>; macroEventsAdvanced?: number; curriculumProbe?: import('./curriculum/MetaCognitiveProbe.js').MetaCognitiveProbeResult }; choiceState?: ChoiceState | null } {
   const encountersCompleted = sessionState.recentOutcomes.filter(o => o.outcome === 'completed').length;
   const sessionStartMs = sessionState.sessionStartMs ?? now;
   const shadowsSurfaced = sig.shadows.entries.filter(e => e.surfacedAt >= sessionStartMs).length;
@@ -1057,18 +1057,15 @@ export function endSession(
     totalSessions: encountersCompleted > 0 ? sig.totalSessions + 1 : sig.totalSessions,
   };
 
-  // P2-Critical: Wire checkHarvest into runtime. Per foundations/19 §9, at
-  // Turquoise stage, check if the player is harvestable. If not, enter Samsara
-  // mode (the player continues in a post-Turquoise loop receiving increasingly
-  // intense catalysts to force crystallization). The harvest check uses the
-  // STO 51% / STS 95% thresholds per foundations/19 §5.
-  let harvestResult: { harvestable: boolean; direction: 'STO' | 'STS' | null; reason: string } | null = null;
+  // P2-Critical: evaluate the Choice at the apex. Per foundations/19 §9.6 this reports a STATE
+  // (eligibility) plus a closure ARRIVAL, and the harvest EVENT only when both hold — so the
+  // result is never itself an endgame trigger, and a merely-eligible player keeps receiving
+  // catalysts. Uses the STO 51% / STS 95% thresholds per foundations/19 §5.
+  let choiceState: ChoiceState | null = null;
   if (updatedSig.currentStage === 'Turquoise') {
-    // P0-FIX: checkHarvest is now statically imported — the previous
-    // require()-inside-try silently swallowed "require is not defined" and the
-    // harvest check ALWAYS returned null at Turquoise stage. No try/catch is needed
-    // for the import; validateSignificator guarantees the polarity/altitude
-    // shapes consumed below.
+    // No try/catch: `evaluateChoice` is statically imported, and validateSignificator guarantees
+    // the polarity/altitude shapes consumed below. (The old require()-inside-try silently
+    // swallowed "require is not defined", so the check always returned null here.)
     // WIRE-5: Use crystallization (direction commitment) not coherence
     // (consistency). Per foundations/19 §5, the harvest requires
     // mean(direction_strength) ≥ 0.51 (STO) / 0.95 (STS). Direction strength =
@@ -1081,8 +1078,13 @@ export function endSession(
         })
       : [updatedSig.polarity.master.crystallizationProgress ?? 0];
     const violetRay = updatedSig.rayProfile.Violet ?? 0;
-    const altitudeFloor = Math.min(...Object.values(updatedSig.altitudes).map(s => stageOrdinal(s)));
-    harvestResult = checkHarvest(updatedSig.polarity.master, directionStrengths, altitudeFloor, violetRay);
+    choiceState = evaluateChoice(
+      updatedSig.polarity.master,
+      directionStrengths,
+      updatedSig.altitudes,
+      violetRay,
+      updatedSig.rayProfile,
+    );
   }
 
   // Phase 4C: Update learning profile with analytics data so the scheduler
@@ -1156,7 +1158,7 @@ export function endSession(
     ...(updatedWorld !== world ? { world: updatedWorld } : {}),
     summary: { encountersCompleted, shadowsSurfaced, shadowsResolved, userMatrixSummary, macroEventsAdvanced, curriculumProbe },
     // P2-Critical: harvest check result (null unless player is at Turquoise stage)
-    harvestCheck: harvestResult,
+    choiceState,
   };
 }
 

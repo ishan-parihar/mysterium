@@ -417,7 +417,8 @@ The **harvest** is the one consumer that must not be read off an altitude. Per `
 tinged with a distinct green/blue/indigo rainbow … each color distinct, none bypassed" — so the
 Violet position is an independent accumulator, and the qualification is **distinctness across the
 rainbow**, not only a Violet total. Reading it as "the top stage's ray" is the conflation this
-section now forbids (tracked as `CHOICE-CLOSURE`).
+section now forbids (implemented: `rainbowDistinctness` in `src/core/engines/PolarityEngine.ts`,
+the condition half of `19 §9.6`; guarded by `MY-RG-0030`).
 
 The data file is small; its presence is everywhere.
 

@@ -2,7 +2,7 @@
 
 > **GENERATED FILE — do not edit.** Produced by `python3 scripts/arch.py emit` from
 > `_org.yaml` plus the AD/RG records. Edit the source, then re-emit.
-> Generated: 2026-09-20
+> Generated: 2026-09-21
 
 ## Rungs
 
@@ -36,7 +36,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (60)
+## Records (61)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -76,6 +76,7 @@
 | `MY-RG-0023` | RG | catalyst | Active | An additive term outside the ratified criteria silently outranks them |
 | `MY-RG-0026` | RG | catalyst | Active | One word carrying two frameworks re-merges them under pressure |
 | `MY-RG-0029` | RG | catalyst | Active | Recency is read off the head of a chronological trace |
+| `MY-RG-0030` | RG | catalyst | Active | A lifecycle table that lists the terminal event as an ordinary successor licenses the event by walking |
 | `MY-AD-0023` | AD | curriculum | Active | Delivery structure is selected from a scaffold library, never authored per encounter and never left unfaded |
 | `MY-AD-0022` | AD | profiling | Active | Preference is inferred under an evidence tier, and only the instrumented tier becomes a field of record |
 | `MY-RG-0020` | RG | profiling | Active | A language-derived inference becomes a field of record without a tier, a data class, or consent |

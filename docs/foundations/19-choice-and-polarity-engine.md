@@ -580,9 +580,11 @@ invisible. They are separated here:
 | **Choice-eligibility** | a *condition* — is this entity's Choice structurally authentic at all? | §9.2 or §9.3's structural set (crystallized mode, coherent lines, choice-readiness, violet-ray integration ≥ 0.80, 51%/95%) | evaluated continuously; produces a *state*, never an event |
 | **The Harvest** | the *event* — polarity locks, archive, retirement | eligibility **∧** arrival at the sub-octave closure (**the Violet event**; L8 Turquoise completed, 06 §5.1) | once, at the apex (16 §11.5, 06 §7.4) |
 
-The runtime function currently named `checkHarvest` computes **eligibility**, not the harvest;
-it is renamed `checkChoiceEligibility` in the owning code, and its verdict is never itself an
-endgame trigger.
+The runtime function that was named `checkHarvest` computed **eligibility**, not the harvest. It is
+now `checkChoiceEligibility`, whose verdict is never itself an endgame trigger; the arrival is a
+separate `subOctaveClosureReached`, and `evaluateChoice` is the **only** producer of the event
+(`harvestEvent = eligible ∧ reached`). Rainbow distinctness (`lenses/rays.md`, "Harvest condition")
+is part of the eligibility test, so a saturated Violet total with a skipped ray is not eligible.
 
 **Density vocabulary correction (per HoloOS `_THEORY/02_Ontology/`, ruling 2026-09-20).**
 Mysterium's eight stage names (Infrared … Teal) are **Spiral-Dynamics colour names**, not
@@ -604,8 +606,11 @@ document:
   never a claim that the harvest occurs at a particular Mysterium stage.
 - The design intent behind it (no authentic Choice at low altitude, §10.2) is unchanged and
   remains the reason early crystallization is treated as suspicious.
-- **Lifecycle hole closed:** the runtime lifecycle machine must not permit
-  `Exploring → Harvesting` directly; the event path is gated on eligibility ∧ closure.
+- **Lifecycle hole closed:** `VALID_TRANSITIONS` no longer lists `Harvesting` from `Exploring`
+  (it is reachable only from `Transforming`), and the enum alone is not a licence —
+  `canHarvest(from, choice)` requires `choice.harvestEvent`. Entering the harvest by walking the
+  state machine is impossible, so the event path is gated on eligibility ∧ closure and nothing else
+  (`MY-RG-0030`).
 
 **Ownership:** this doc owns eligibility (§9) and the Choice (§12); 06 owns the density/ray
 alignment and the harvest event's cosmology; 16 owns the lifecycle and the `harvest_event`.

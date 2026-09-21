@@ -56,17 +56,33 @@ export type LifecycleStage =
   | 'Transforming'
   | 'Harvesting';
 
+// `Harvesting` is deliberately NOT reachable from `Exploring` (see `canHarvest`): the harvest is
+// the closure EVENT (`19 §9.6`), and letting a merely-exploring Significator reach it made
+// "the player qualifies" indistinguishable from "the player has finished" in the transition table
+// itself. The enum now only permits the *late* entry point; the actual licence is the event.
 const VALID_TRANSITIONS: Record<LifecycleStage, readonly LifecycleStage[]> = {
   Onboarding: ['Exploring'],
-  Exploring: ['Developing', 'Transforming', 'Harvesting'],
+  Exploring: ['Developing', 'Transforming'],
   Developing: ['Crystallizing', 'Exploring'],
   Crystallizing: ['Transforming', 'Exploring'],
-  Transforming: ['Exploring'],
+  Transforming: ['Exploring', 'Harvesting'],
   Harvesting: [],
 };
 
 export function isValidTransition(from: LifecycleStage, to: LifecycleStage): boolean {
   return VALID_TRANSITIONS[from]?.includes(to) ?? false;
+}
+
+/**
+ * The ONLY licence to enter `Harvesting` — the enum alone is not one.
+ *
+ * `19 §9.6`: the Harvest is an event = choices-eligibility **∧** arrival at the sub-octave closure.
+ * A legal *transition* therefore additionally requires `harvestEvent` from `evaluateChoice`, so no
+ * caller can retire a Significator by walking the state machine. The parameter is structural
+ * (`{ harvestEvent: boolean }`) rather than `ChoiceState` to keep `domain/` free of `engines/`.
+ */
+export function canHarvest(from: LifecycleStage, choice: { readonly harvestEvent: boolean }): boolean {
+  return isValidTransition(from, 'Harvesting') && choice.harvestEvent;
 }
 
 export interface Significator {
