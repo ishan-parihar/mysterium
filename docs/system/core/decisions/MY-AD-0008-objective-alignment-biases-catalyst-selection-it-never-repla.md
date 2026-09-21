@@ -6,10 +6,11 @@ Date: 2026-09-20
 Organ: catalyst
 Source: "foundations/27-auto-mode-strategy-engine §5.4"
 Description: "AlignmentContract (author, intent, target, deviation band, ceiling) applies through the existing scheduler bias seam, as a bias only."
+Consumer: "`src/core/personalization/pooling.ts` (rankByRelevance — bias over the filtered set)"
 Related: [MY-AD-0004, MY-RG-0008]
-Deferral: PLAN-IMPLEMENT
 ---
 
+<!-- Discharged 2026-09-21: bias-as-bias is implemented in src/core/personalization/pooling.ts (rankByRelevance = ranking bias over the constraint-filtered set, never a replacement for the scheduler formula). Locked by tests/personalization/PlanImplement.test.ts (recon 06828d7aaa) -->
 ## Context
 `propose_alignment_adjustment` and `propose_trajectory` existed in the tool system and
 `ratifyProposals` dispositioned them, but nothing applied an adjustment — a dormant seam.

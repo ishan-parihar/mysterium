@@ -6,10 +6,11 @@ Date: 2026-09-20
 Organ: orchestration
 Source: "foundations/43-agentic-orchestration-architecture §4.5b/§5.4"
 Description: "A single foreground agent owns the user interaction; sub-agents run sessions and report into the cycle; menial work runs as background workers under ratification-only commits."
+Consumer: "`src/core/orchestration/reportingFeed.ts` + `src/core/orchestration/feedBridge.ts` (one feed, four writers)"
 Related: [MY-AD-0011, MY-AD-0009]
-Deferral: PLAN-IMPLEMENT
 ---
 
+<!-- Discharged 2026-09-21: the reporting feed is code (src/core/orchestration/reportingFeed.ts) with its four writers attached as a single flow surface (src/core/orchestration/feedBridge.ts) — session end, worker (incl. owner-worker drains as holon_npc_profile_refresh entries), ratification verdicts, orchestrator insights with the F4 forecast (recon 06828d7aaa) -->
 ## Context
 Concurrency policy was an open question: how many specialist sessions may run at once, and how
 do their outputs reach the world?

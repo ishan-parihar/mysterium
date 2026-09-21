@@ -6,10 +6,11 @@ Date: 2026-09-20
 Organ: world
 Source: "foundations/22-holon-context-engine §7.4-§7.5"
 Description: "Profiling memory and object memory are separate ledgers; each holon has exactly one owning worker (local single writer) and context is handed to the game agent."
+Consumer: "`src/core/world/ownerWorker.ts` + `src/core/world/ownerWorkerPool.ts` (single writer, caps, hot-set)"
 Related: [MY-AD-0010, MY-AD-0004]
-Deferral: PLAN-IMPLEMENT
 ---
 
+<!-- Discharged 2026-09-21: the per-holon owner worker exists at src/core/world/ownerWorker.ts (single writer, L2 commits under the §7.2 caps, L3 archetypal digest, player-facing effects as proposals) with the pool at src/core/world/ownerWorkerPool.ts (hot-set dispatch, W4 replay idempotence, W5 concurrency cap, offline degradation as a pure ledger fold). Locked by tests/world/OwnerWorker.test.ts (recon 06828d7aaa) -->
 ## Context
 A single orchestrating agent cannot hold long-horizon consequences for every world object, and
 concurrent writers silently corrupt shared world state. Long-horizon propagation had been

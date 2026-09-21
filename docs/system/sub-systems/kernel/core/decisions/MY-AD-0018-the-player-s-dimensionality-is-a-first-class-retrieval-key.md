@@ -6,10 +6,11 @@ Date: 2026-09-20
 Organ: kernel
 Source: "docs/foundations/45-personalization-and-context-pooling.md section 3"
 Description: "The generation pipeline carried only a developmental description of the player (VeilFilteredSignificator, 22 section 4.2) and no account of who this person is. The user-dimensionality vector is added as the retrieval key for content pooling: consent-first and purpose-bound, with aversion fail-closed and veto power over the priority formula, readable and exportable by the player; personalization shapes how catalyst is delivered and never which development is served."
+Consumer: "`src/core/personalization/udv.ts` + `src/core/personalization/envelopeRuntime.ts` (the live UDV path)"
 Related: ["MY-AD-0008", "MY-AD-0019", "MY-AD-0011", "MY-RG-0017"]
-Deferral: PLAN-IMPLEMENT
 ---
 
+<!-- Discharged 2026-09-21: the UDV + context pooling exist at src/core/personalization/ (udv.ts, pooling.ts, scenarioContext.ts, envelopeRuntime.ts — the live path) per 45; locked by tests/personalization/PlanImplement.test.ts and tests/orchestration/FeedBridge.test.ts (recon 06828d7aaa) -->
 ## Decision
 
 The player's **dimensionality** — preference, interest graph, purpose and vision, analogical

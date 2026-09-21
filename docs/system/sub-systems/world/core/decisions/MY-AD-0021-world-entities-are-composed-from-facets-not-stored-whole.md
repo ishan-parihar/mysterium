@@ -6,10 +6,11 @@ Date: 2026-09-20
 Organ: world
 Source: "docs/foundations/46-generative-world-composition.md"
 Description: "The world model assumed authored entities: the code holds hand-written holons in stage-holons.json and red-layer-holons.json plus one TypeScript file per line for the Red layer, and 45's three libraries had nothing to pool from because the corpus index carries only line, stage, title and modalities. World, NPC and scenario are now compositions over a facet stock keyed by line x stage x characteristic (640 base cells per characteristic-set), a Situation joins the holon kind taxonomy so the scenario library is a view rather than a second store, and each composition records its facet keys, tag query and seed so it is reproducible and auditable. Two players at the same line-stage no longer receive interchangeable content."
+Consumer: "`src/core/personalization/composition.ts` + `src/core/personalization/runtimeBridge.ts` (composition is the live path)"
 Related: ["MY-AD-0018", "MY-AD-0019", "MY-AD-0009", "MY-RG-0019"]
-Deferral: PLAN-IMPLEMENT
 ---
 
+<!-- Discharged 2026-09-21: composition is the live path — compose() binds entities from the facet stock with composedOf bindings + CompositionStore replay; runtimeBridge.ts composes the encounter texture into the LLM prompt at both orchestrator context builds (recon 06828d7aaa) -->
 ## Decision
 
 World, NPC and scenario entities are **composed at runtime from a facet stock**, not stored whole.

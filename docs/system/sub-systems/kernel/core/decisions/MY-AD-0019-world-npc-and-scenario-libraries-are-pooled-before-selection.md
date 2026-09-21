@@ -6,10 +6,11 @@ Date: 2026-09-20
 Organ: kernel
 Source: "docs/foundations/45-personalization-and-context-pooling.md sections 2 and 5"
 Description: "World content is three libraries with different lifecycles; a scenario is the unit of instantiation and declares only locus kind, cast shape, catalytic purpose, modality, stake kind and pressure levers, so content scales by combination rather than by authoring variants. Pooling is retrieval-then-rank producing a candidate set; selection stays with the ONE priority formula (24) as a multiplicative bias, never a parallel queue."
+Consumer: "`src/core/personalization/pooling.ts` + `src/core/personalization/composition.ts` (pool-before-compose)"
 Related: ["MY-AD-0009", "MY-AD-0018", "MY-AD-0008"]
-Deferral: PLAN-IMPLEMENT
 ---
 
+<!-- Discharged 2026-09-21: composition exists at src/core/personalization/composition.ts (46 §3/§6/§7) and the facet stock at src/core/world/facets/ (1792 compiled facets, DG21-reconciled); the tag store with derived dialectic at src/core/world/tags/ (recon 06828d7aaa) -->
 ## Decision
 
 The world's content is **three libraries with different lifecycles** — world, NPC, scenario — and a

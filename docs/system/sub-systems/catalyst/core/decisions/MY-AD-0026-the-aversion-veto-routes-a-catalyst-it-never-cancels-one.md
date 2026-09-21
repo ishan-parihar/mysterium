@@ -6,10 +6,11 @@ Date: 2026-09-20
 Organ: catalyst
 Source: "foundations/45-personalization-and-context-pooling section 5.2.1"
 Description: "A catalyst target is a cell and a candidate is one rendering of it: an aversion removes renderings, never targets, so the cell is re-rendered or deferred and recorded, never forced and never dropped."
+Consumer: "`src/core/personalization/pooling.ts` routeWithVeto (routes, never cancels)"
 Related: [MY-AD-0019, MY-AD-0020, MY-AD-0025]
-Deferral: PLAN-IMPLEMENT
 ---
 
+<!-- Discharged 2026-09-21: the aversion veto routes rather than cancels — routeWithVeto records DeferralRecords and re-queues them into texture positions; verified in tests/personalization/PlanImplement.test.ts (recon 06828d7aaa) -->
 ## Context
 
 `45 §4` holds that personalization shapes **how** catalyst is delivered and never **which**
