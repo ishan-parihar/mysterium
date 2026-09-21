@@ -9,7 +9,7 @@
 > **Forward-references:** 16 (Significator), 19 (Choice/polarity), 20 (Veil), 43 (agentic orchestration — J-council agents are the persona lenses that carry this engine's context to the foreground)
 >
 > **Orchestration note (43):** the context pipeline this document specifies is *delivered* by agents — the Journey-Guide council holds the foreground while holon context flows; the primary orchestrator never voices holon content directly.
-> **Satisfied by:** `src/core/data/HolonRegistry.ts` (the holon context currently served to generation) · `src/core/domain/Holon.ts` (the context shape)
+> **Satisfied by:** `src/core/world/store/HolonStore.ts` (the holon context currently served to generation; moved from the former data/HolonRegistry.ts) · `src/core/world/Holon.ts` (the context shape)
 
 ---
 

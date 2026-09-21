@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { redEncounterData } from '../../src/core/data/encounters/red/index.js';
+import { redEncounterData } from '../../src/core/world/encounters-red/index.js';
 import { ALL_LINES } from '../../src/core/domain/Line.js';
 import { ALL_MODALITIES } from '../../src/core/domain/enums.js';
 import type { TaskSlug } from '../../src/core/domain/SharedTypes.js';

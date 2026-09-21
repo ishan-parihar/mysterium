@@ -579,7 +579,7 @@ export function validateCorpusIntegrity(): GateResult {
   try {
     // 1. Stage-holon cells: all 8 stages × 8 lines covered by the combined
     //    red-layer + stage corpus, with all relationships resolvable.
-    const holons = [...redHolonsJson, ...stageHolonsJson] as unknown as import('../domain/Holon.js').Holon[];
+    const holons = [...redHolonsJson, ...stageHolonsJson] as unknown as import('../world/Holon.js').Holon[];
     const cells = new Set(holons.map((h) => `${h.line}:${h.stage}`));
     for (const line of ALL_LINES) {
       for (const stage of ALL_STAGES) {

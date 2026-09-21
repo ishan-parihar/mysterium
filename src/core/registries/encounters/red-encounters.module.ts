@@ -5,7 +5,7 @@
  */
 import { EncounterRegistry } from '../index.js';
 import type { EncounterSpec } from '../../domain/Encounter.js';
-import { redEncounterData } from '../../data/encounters/red/index.js';
+import { redEncounterData } from '../../world/encounters-red/index.js';
 
 const bosses: EncounterSpec[] = [
   // --- 3 Mini-bosses ---

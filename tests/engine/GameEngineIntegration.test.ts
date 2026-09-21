@@ -32,7 +32,7 @@ import { createInitialWorldState } from '../../src/core/engines/CandidateGenerat
 import { ALL_LINES, type Line } from '../../src/core/domain/Line.js';
 import type { Stage } from '../../src/core/domain/Stage.js';
 import type { ScheduledEncounter } from '../../src/core/domain/EncounterSpecNew.js';
-import type { Holon } from '../../src/core/domain/Holon.js';
+import type { Holon } from '../../src/core/world/Holon.js';
 import { SaveRepository } from '../../src/infra/persistence/SaveRepository.js';
 import { createKeyValueStore } from '../../src/infra/persistence/createKeyValueStore.js';
 

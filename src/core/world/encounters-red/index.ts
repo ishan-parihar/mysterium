@@ -1,4 +1,4 @@
-import type { EncounterSpec } from '../../../domain/Encounter.js';
+import type { EncounterSpec } from '../../domain/Encounter.js';
 import { cognitiveEncounters } from './cognitive.js';
 import { emotionalEncounters } from './emotional.js';
 import { moralEncounters } from './moral.js';

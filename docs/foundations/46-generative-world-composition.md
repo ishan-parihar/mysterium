@@ -26,14 +26,14 @@
 The preceding documents describe a world of **authored entities**. `18 §2` taxonomy, `22 §2.1` data
 model, `22 §3` worked examples, `21 §8` content drops, and the code (`src/core/world/data/stage-holons.json`,
 `src/core/world/data/red-layer-holons.json` — both moved 2026-09-21, WORLD-STORE-MOVE — and
-`src/core/data/encounters/red/`) all assume the same thing: a
+`src/core/world/encounters-red/`, moved there from the former data/encounters/red/ site, 2026-09-21) all assume the same thing: a
 human writes an NPC, a world region or an encounter, and it is stored.
 
 That assumption has three consequences, and all three are already visible in the tree:
 
 | Consequence | Evidence in the tree |
 |---|---|
-| **Authoring cost scales linearly with content** | one hand-written TypeScript file per line for the Red layer (`src/core/data/encounters/red/`) — 9 files reproduce one stage |
+| **Authoring cost scales linearly with content** | one hand-written TypeScript file per line for the Red layer (`src/core/world/encounters-red/`) — 9 files reproduce one stage |
 | **Two players receive interchangeable content** | the store cannot express "the same catalytic purpose, expressed in this player's vocabulary" |
 | **Personalization has nothing to select from** | `45` specifies pooling over three libraries, and there are no libraries — the corpus index (`src/core/data/concept-drafts.json`) carries only `{line, stage, title, modalities}` |
 
@@ -421,11 +421,12 @@ target, not as a citation:
 
 ```
 src/core/world/
-├── Holon.ts          ← moved from src/core/domain/Holon.ts
-├── store/            ← moved from src/core/data/HolonRegistry.ts (HolonStore)
+├── Holon.ts          ← the world's root entity (moved 2026-09-21 from the former domain/Holon.ts; facade retired)
+├── store/            ← HolonStore (moved 2026-09-21 from the former HolonRegistry.ts; facade retired)
 ├── data/             ← moved from src/core/data/{stage-holons,red-layer-holons}.json
-├── pestle/           ← moved from src/core/data/RedPESTLE.ts, extended to every stage (§2.1 ch. 8)
-├── facets/           ← compiled from the corpus (§8); replaces src/core/data/encounters/red/
+├── pestle/           ← RedPESTLE (moved 2026-09-21 from the former data/RedPESTLE.ts; facade retired), extended to every stage (§2.1 ch. 8)
+├── encounters-red/   ← hand-authored Red encounters (moved 2026-09-21 from the former data/encounters/red/)
+├── facets/           ← compiled from the corpus (§8); generalizes the encounters-red/ static model
 ├── tags/             ← the tag store (§4)
 ├── compose/          ← the composition pipeline (§7)
 └── libraries/        ← the three views: world · NPC · scenario
@@ -433,11 +434,11 @@ src/core/world/
 
 | Now (a real citation) | Becomes | Why |
 |---|---|---|
-| `src/core/domain/Holon.ts` → **now `src/core/world/Holon.ts`** (moved 2026-09-21) | the world's root entity | it belongs to the world organ, not to generic domain types |
-| `src/core/data/HolonRegistry.ts` → **now `src/core/world/store/HolonStore.ts`** (moved 2026-09-21) | the world store | it is the store, not generic data |
+| former `domain/Holon.ts` → **now `src/core/world/Holon.ts`** (moved 2026-09-21, facade retired) | the world's root entity | it belongs to the world organ, not to generic domain types |
+| former `HolonRegistry.ts` → **now `src/core/world/store/HolonStore.ts`** (moved 2026-09-21, facade retired) | the world store | it is the store, not generic data |
 | `src/core/data/{stage-holons.json, red-layer-holons.json}` → **now `src/core/world/data/`** (moved 2026-09-21, WORLD-STORE-MOVE) | world content | content, not substrate |
-| `src/core/data/RedPESTLE.ts` → **now `src/core/world/pestle/RedPESTLE.ts`** (moved 2026-09-21) | the PESTLE facade | PESTLE is one stage deep today |
-| `src/core/data/encounters/red/` | compiled facets | the hand-authored per-stage encounter list is the static model this document replaces |
+| former `data/RedPESTLE.ts` → **now `src/core/world/pestle/RedPESTLE.ts`** (moved 2026-09-21, facade retired) | the PESTLE facade | PESTLE is one stage deep today |
+| `src/core/world/encounters-red/` (the former data/encounters/red/ site) | compiled facets | the hand-authored per-stage encounter list is the static model this document generalizes |
 
 **Two ownership corrections in `_org.yaml`, both required:**
 
@@ -520,7 +521,7 @@ growth without losing auditability.
 `src/core/world/data/stage-holons.json` and `src/core/world/data/red-layer-holons.json` are hand-authored entities
 carrying real content (the entire Red layer). The compiler (§8) emits them as facets with
 `source: 'authored'`, so no content is lost, no second store survives beside the generated one
-(`MY-RG-0019` is the guard against exactly that), and `src/core/data/encounters/red/`'s per-stage list
+(`MY-RG-0019` is the guard against exactly that), and `src/core/world/encounters-red/`'s per-stage list
 is replaced by its compiled facets.
 
 **5. Composition cost — precomputed index for the hot cells.**

@@ -6,7 +6,7 @@ import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
 import { stageOrdinal } from '../domain/Stage.js';
 import type { Modality } from '../domain/enums.js';
-import type { Holon } from '../domain/Holon.js';
+import type { Holon } from '../world/Holon.js';
 import type { Significator } from '../domain/Significator.js';
 import type { SessionContext } from './PriorityComputation.js';
 import type { PESTLETension, MacroEvent } from './MacroCatalystEngine.js';

@@ -41,7 +41,7 @@ state, encounter content data.
 | Surface | Direction | Contract |
 |---|---|---|
 | planned layout (`46 §10`, not yet created): `src/core/world/` with `store`, `facets`, `tags`, `compose`, `libraries` | provides | the world store, the composition pipeline, the three views |
-| `src/core/domain/Holon.ts` | provides | the holon kind taxonomy, incl. `Situation` (`46 §3.1`) |
+| `src/core/world/Holon.ts` | provides | the holon kind taxonomy, incl. `Situation` (`46 §3.1`) |
 | `src/core/data/{stage-holons,red-layer-holons}.json`, `RedPESTLE.ts` | provides (today) | authored world state — to be superseded by the facet store |
 | `src/core/engines/CandidateGeneration.ts` | consumes | `WorldState`: holons, cooldowns, narrative beats, factions, NPC relationships, PESTLE tension, macro-event state |
 | `src/core/engines/MacroCatalystEngine.ts` | consumes | collective tension → macro-events (`24 §8`) |

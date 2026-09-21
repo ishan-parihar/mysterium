@@ -12,7 +12,7 @@
 
 import { bootRegistries } from '../src/core/registries/boot.js';
 import { allModuleKeys, queryByLineStage } from '../src/core/data/ConceptDraftIndex.js';
-import { createRegistry } from '../src/core/data/HolonRegistry.js';
+import { createRegistry } from '../src/core/world/store/HolonStore.js';
 import {
   ALL_MODALITIES,
   ALL_SHADOW_QUADRANTS,

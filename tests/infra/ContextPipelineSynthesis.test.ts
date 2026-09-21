@@ -6,12 +6,12 @@
 import { describe, it, expect } from 'vitest';
 import { buildContext, type ContextPipelineInput } from '../../src/infra/llm/ContextPipeline.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
-import { createRegistry } from '../../src/core/data/HolonRegistry.js';
+import { createRegistry } from '../../src/core/world/store/HolonStore.js';
 import type { ConceptDraftIndex as ConceptDraftIndexType } from '../../src/core/data/ConceptDraftIndex.js';
 import type { ScheduledEncounter } from '../../src/core/domain/EncounterSpecNew.js';
 import type { Line } from '../../src/core/domain/Line.js';
 import type { Stage } from '../../src/core/domain/Stage.js';
-import type { Holon } from '../../src/core/domain/Holon.js';
+import type { Holon } from '../../src/core/world/Holon.js';
 
 function makeAltitudes(stage: Stage): Record<Line, Stage> {
   return {

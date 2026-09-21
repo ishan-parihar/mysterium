@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import holonsJson from '../../src/core/world/data/red-layer-holons.json';
-import type { Holon } from '../../src/core/domain/Holon.js';
+import type { Holon } from '../../src/core/world/Holon.js';
 import { ALL_HOLON_KINDS, ALL_ENERGETIC_DIRECTIONS } from '../../src/core/domain/enums.js';
 import { ALL_LINES } from '../../src/core/domain/Line.js';
 import { ALL_DRIVES } from '../../src/core/domain/Drive.js';
-import { createRegistry, queryByNarrativeRole } from '../../src/core/data/HolonRegistry.js';
+import { createRegistry, queryByNarrativeRole } from '../../src/core/world/store/HolonStore.js';
 import { RedPESTLE, PESTLE_DIMENSIONS } from '../../src/core/world/pestle/RedPESTLE.js';
 
 const holons = holonsJson as unknown as Holon[];

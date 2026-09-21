@@ -6,9 +6,9 @@
  * GAP-WB-3: Now generates EncounterSpec objects for the EncounterRegistry
  * so the 4-phase boss can be scheduled and encountered at runtime.
  */
-import type { Quadrant, TaskSlug } from '../../../domain/SharedTypes.js';
-import type { EncounterSpec } from '../../../domain/Encounter.js';
-import type { Line } from '../../../domain/Line.js';
+import type { Quadrant, TaskSlug } from '../../domain/SharedTypes.js';
+import type { EncounterSpec } from '../../domain/Encounter.js';
+import type { Line } from '../../domain/Line.js';
 
 export interface TaskBind {
   readonly taskSlug: TaskSlug;

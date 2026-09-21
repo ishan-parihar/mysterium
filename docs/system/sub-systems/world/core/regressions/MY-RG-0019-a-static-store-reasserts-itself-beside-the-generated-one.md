@@ -18,7 +18,7 @@ specific NPC for one encounter, writing it directly is an afternoon's work, and 
 individually reasonable every single time.
 
 **Already present in the tree.** The Red layer is authored as **one TypeScript file per line across
-nine files** (`src/core/data/encounters/red/`) — one stage expressed as hand-written code. And the
+nine files** (`src/core/world/encounters-red/`) — one stage expressed as hand-written code. And the
 archived world-builder audit's `GAP-WB-4…10` remain unimplemented while `GAP-WB-1`, `-2` and `-3`
 were wired, so the codebase's world trajectory is *partially* what the archive planned and *nothing*
 like what `18`/`22`/`45`/`46` specify.

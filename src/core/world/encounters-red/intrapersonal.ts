@@ -1,4 +1,4 @@
-import type { EncounterSpec } from '../../../domain/Encounter.js';
+import type { EncounterSpec } from '../../domain/Encounter.js';
 
 export const intrapersonalEncounters: readonly EncounterSpec[] = [
   {

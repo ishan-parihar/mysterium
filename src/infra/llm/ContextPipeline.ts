@@ -5,16 +5,16 @@
 import type { Line } from '../../core/domain/Line.js';
 import type { Stage } from '../../core/domain/Stage.js';
 import type { Modality } from '../../core/domain/enums.js';
-import type { Holon } from '../../core/domain/Holon.js';
+import type { Holon } from '../../core/world/Holon.js';
 import type { ScheduledEncounter } from '../../core/domain/EncounterSpecNew.js';
 import type { Significator } from '../../core/domain/Significator.js';
-import type { HolonRegistry } from '../../core/data/HolonRegistry.js';
+import type { HolonRegistry } from '../../core/world/store/HolonStore.js';
 import type { ConceptDraftIndex } from '../../core/data/ConceptDraftIndex.js';
 import type { ConsequenceRecord } from '../../core/domain/ConsequenceRecord.js';
 import type { FrequencySpec } from './FrequencyConditioner.js';
 
 import { ALL_LINES } from '../../core/domain/Line.js';
-import { getHolon, queryByLine } from '../../core/data/HolonRegistry.js';
+import { getHolon, queryByLine } from '../../core/world/store/HolonStore.js';
 import { queryByLineStage } from '../../core/data/ConceptDraftIndex.js';
 import { type PolarityTexture } from '../../core/data/PolarityOntology.js';
 import { generateFrequencySpec } from './FrequencyConditioner.js';

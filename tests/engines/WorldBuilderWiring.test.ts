@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest';
 import { getPolarityTextureName, getPlayerPolarityTexture } from '../../src/core/engines/PolarityEngine.js';
 import { createInitialPolarityState } from '../../src/core/domain/PolarityCellVector.js';
 import { getPESTLEDescription, getPESTLEContextString, getDominantPESTLE, createInitialTension } from '../../src/core/engines/MacroCatalystEngine.js';
-import { conquerorEncounters, CONQUEROR_PHASES, isConquerorDefeated } from '../../src/core/data/encounters/red/conqueror.js';
+import { conquerorEncounters, CONQUEROR_PHASES, isConquerorDefeated } from '../../src/core/world/encounters-red/conqueror.js';
 import { applyConsequences, processOutcome, type PlayerResponse } from '../../src/core/engines/ConsequenceEngine.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
 import { createInitialWorldState } from '../../src/core/engines/CandidateGeneration.js';

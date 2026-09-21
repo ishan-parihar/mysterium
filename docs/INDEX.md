@@ -27,7 +27,7 @@
 | `curriculum` | `docs/system/sub-systems/curriculum/AGENTS.md` | `src/core/curriculum`, `src/core/packs`, `src/core/training` |
 | `profiling` | `docs/system/sub-systems/profiling/AGENTS.md` | `src/core/domain`, `src/infra/profiles` |
 | `orchestration` | `docs/system/sub-systems/orchestration/AGENTS.md` | `src/core/orchestration`, `src/core/agent`, `src/core/fallback`, `src/infra/llm` |
-| `world` | `docs/system/sub-systems/world/AGENTS.md` | `src/core/world`, `src/core/data/encounters` |
+| `world` | `docs/system/sub-systems/world/AGENTS.md` | `src/core/world`, `src/core/world/encounters-red` |
 | `onboarding` | `docs/system/sub-systems/onboarding/AGENTS.md` | `src/core/onboarding`, `src/core/adaptive` |
 | `persistence` | `docs/system/sub-systems/persistence/AGENTS.md` | `src/infra/persistence`, `src/infra/native`, `src/infra/crypto`, `src/infra/profiles` |
 | `presentation` | `docs/system/sub-systems/presentation/AGENTS.md` | `src/core/presentation`, `src/routes`, `src/lib`, `src/styles` |

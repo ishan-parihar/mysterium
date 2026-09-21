@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { bootRegistries } from '../../src/core/registries/boot.js';
 import { allModuleKeys } from '../../src/core/data/ConceptDraftIndex.js';
-import { createRegistry } from '../../src/core/data/HolonRegistry.js';
+import { createRegistry } from '../../src/core/world/store/HolonStore.js';
 import { ALL_MODALITIES, ALL_SHADOW_QUADRANTS, ALL_HOLON_KINDS } from '../../src/core/domain/enums.js';
 
 describe('Build Invariants', () => {

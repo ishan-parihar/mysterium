@@ -167,9 +167,9 @@
 1. **New holon level: `research`:**
    - `src/core/curriculum/types.ts` — Add `ResearchHolon` as a union variant of `CurriculumHolon` (discriminator: `level: 'research'`)
    - Additional fields: `researchQuestion`, `methodology`, `expectedContribution`, `advisorId`, `committeeIds`, `milestones`
-   - Note: `AdvisorNPC` is a planned new type to create in `src/core/curriculum/ResearchPipeline.ts`, not in the existing `src/core/domain/Holon.ts`
+   - Note: `AdvisorNPC` is a planned new type to create in `src/core/curriculum/ResearchPipeline.ts`, not in the existing world-root entity module (`src/core/world/Holon.ts`)
 2. **AdvisorNPC role:**
-   - `src/core/domain/Holon.ts` — Add `AdvisorNPC` type
+   - `src/core/world/Holon.ts` — Add `AdvisorNPC` type
    - Provides feedback, approves milestones, suggests方向
 3. **Publication pipeline:**
    - `src/core/curriculum/ResearchPipeline.ts` — New module

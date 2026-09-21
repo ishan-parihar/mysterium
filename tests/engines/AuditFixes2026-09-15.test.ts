@@ -17,7 +17,7 @@ import { describe, it, expect } from 'vitest';
 import { createSignificator } from '../../src/core/domain/Significator.js';
 import type { Line } from '../../src/core/domain/Line.js';
 import type { Stage } from '../../src/core/domain/Stage.js';
-import type { Holon } from '../../src/core/domain/Holon.js';
+import type { Holon } from '../../src/core/world/Holon.js';
 import { startSession, endSession, tickWithStrategy } from '../../src/core/GameLoop.js';
 import { createInitialWorldState } from '../../src/core/engines/CandidateGeneration.js';
 import { validateSignificator } from '../../src/infra/persistence/validateSignificator.js';

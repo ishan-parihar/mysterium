@@ -7,7 +7,7 @@
  * the RedPESTLE data, giving narrative substance to the PESTLE tension.
  */
 import type { Stage } from '../domain/Stage.js';
-import { RedPESTLE, PESTLE_DIMENSIONS } from '../data/RedPESTLE.js';
+import { RedPESTLE, PESTLE_DIMENSIONS } from '../world/pestle/RedPESTLE.js';
 
 export interface PESTLETension {
   readonly political: number;

@@ -5,7 +5,7 @@ import type { SessionContext } from '../../src/core/engines/PriorityComputation.
 import { createSignificator } from '../../src/core/domain/Significator.js';
 import type { Line } from '../../src/core/domain/Line.js';
 import type { Stage } from '../../src/core/domain/Stage.js';
-import type { Holon } from '../../src/core/domain/Holon.js';
+import type { Holon } from '../../src/core/world/Holon.js';
 
 function makeHolon(id: string, line: Line, stage: Stage): Holon {
   return {

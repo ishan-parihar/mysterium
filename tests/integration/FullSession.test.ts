@@ -24,7 +24,7 @@ import type { Stage } from '../../src/core/domain/Stage.js';
 import type { SessionContext } from '../../src/core/engines/PriorityComputation.js';
 import type { WorldState } from '../../src/core/engines/CandidateGeneration.js';
 import type { PlayerResponse } from '../../src/core/engines/ConsequenceEngine.js';
-import type { Holon } from '../../src/core/domain/Holon.js';
+import type { Holon } from '../../src/core/world/Holon.js';
 import type { SessionTheme } from '../../src/core/engines/CCIEngine.js';
 
 // ---------------------------------------------------------------------------

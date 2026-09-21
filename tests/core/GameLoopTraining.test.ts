@@ -3,7 +3,7 @@ import { startSession, tickWithStrategy } from '../../src/core/GameLoop.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
 import type { Line } from '../../src/core/domain/Line.js';
 import type { Stage } from '../../src/core/domain/Stage.js';
-import type { Holon } from '../../src/core/domain/Holon.js';
+import type { Holon } from '../../src/core/world/Holon.js';
 import type { WorldState } from '../../src/core/engines/CandidateGeneration.js';
 
 function makeHolon(id: string, line: Line, stage: Stage): Holon {

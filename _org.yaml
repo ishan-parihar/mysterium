@@ -1,91 +1,71 @@
-# _org.yaml — Mysterium structure declaration
-#
-# The single machine-readable map of the repository's architecture and its
-# documentation rungs. It is the source of truth for `scripts/arch.py route`,
-# `validate`, and `emit` (generated INDEX.md + AGENTS.md auto-zones).
-#
-# This file is LOCAL to the Mysterium repository: no external governance system
-# (no ~/.hermes, no external `arch` CLI) governs anything described here.
-# Rationale + phases: docs/ARCHITECTURE-TRANSMUTATION-PLAN.md
-#
-# Update discipline: this file is hand-edited (it IS the declaration), then
-# `python3 scripts/arch.py validate` must exit 0 and `... emit` regenerates the
-# derived surfaces. Never let a declared path go stale: `validate` fails closed
-# on a declared path that does not exist on disk.
-
 project:
   name: mysterium
   prefix: MY
   language: typescript
-  stack: [svelte, vite, tsup, vitest]
-  build: "npm run build"
-  test: "npm test"
-  lint: "python3 skills/workspace-lint/scripts/workspace_lint.py --root ."
-
-# ─────────────────────────────────────────────────────────────────────────────
-# RUNGS — the four firewalled layers of the documentation architecture.
-# Rungs never restate each other: SYSTEM references CANON, RECORDS record
-# changes to SYSTEM, CONTENT is consumed as templates.
-# ─────────────────────────────────────────────────────────────────────────────
+  stack:
+  - svelte
+  - vite
+  - tsup
+  - vitest
+  build: npm run build
+  test: npm test
+  lint: python3 skills/workspace-lint/scripts/workspace_lint.py --root .
 rungs:
   canon:
-    purpose: "Theory + design substrate. Owns 'what is true'."
+    purpose: Theory + design substrate. Owns 'what is true'.
     dirs:
-      - path: docs/foundations
-        format: {pattern: "*.md"}
+    - path: docs/foundations
+      format:
+        pattern: '*.md'
     authority: docs/foundations/AGENTS.md
-    # The router is the only door into this rung: DG18 fails when a document in it is unnamed here
-    # (`MY-AD-0024`). Opt-in — a rung that declares no router is not checked.
     router: docs/foundations/AGENTS.md
     live: true
-
   canon-root:
-    # The four root canon docs were claimed by AGENTS.md §2 but belonged to NO rung, so no gate
-    # scanned them and `arch.py route` answered "(unclaimed)" (red-team RT-3).
-    purpose: "Root canon: vision, first principles, glossary, research method. Owns 'why' and the shared vocabulary."
+    purpose: 'Root canon: vision, first principles, glossary, research method. Owns
+      ''why'' and the shared vocabulary.'
     files:
-      - docs/00-vision.md
-      - docs/01-first-principles.md
-      - docs/02-glossary.md
-      - docs/03-research-methodology.md
+    - docs/00-vision.md
+    - docs/01-first-principles.md
+    - docs/02-glossary.md
+    - docs/03-research-methodology.md
     authority: docs/00-vision.md
     live: true
-
   canon-domain:
-    purpose: "Per-domain detail consumed by both cycles (lines, stages, narrative, progression)."
+    purpose: Per-domain detail consumed by both cycles (lines, stages, narrative,
+      progression).
     dirs:
-      - path: docs/lines
-        format: {pattern: "*.md"}
-      - path: docs/stages
-        format: {pattern: "*.md"}
-      - path: docs/narrative
-        format: {pattern: "*.md"}
-      - path: docs/progression
-        format: {pattern: "*.md"}
+    - path: docs/lines
+      format:
+        pattern: '*.md'
+    - path: docs/stages
+      format:
+        pattern: '*.md'
+    - path: docs/narrative
+      format:
+        pattern: '*.md'
+    - path: docs/progression
+      format:
+        pattern: '*.md'
     authority: docs/foundations/02-eight-stages-overview.md
     live: true
-
   system:
-    purpose: "The built system's contracts, organised as ORGANS. Owns 'how it is built'."
+    purpose: The built system's contracts, organised as ORGANS. Owns 'how it is built'.
     dirs:
-      - path: docs/system
-        format: {pattern: "**/*.md"}
+    - path: docs/system
+      format:
+        pattern: '**/*.md'
     authority: docs/system/AGENTS.md
     live: true
-
   content:
-    purpose: "The 512-file concept-draft corpus. Owns 'what each module plays as'."
+    purpose: The 512-file concept-draft corpus. Owns 'what each module plays as'.
     dirs:
-      - path: docs/concept-drafts
-        format: {pattern: "**/*.md"}
+    - path: docs/concept-drafts
+      format:
+        pattern: '**/*.md'
     authority: docs/concept-drafts/README.md
     live: true
-
   records:
-    purpose: "AD / RG / Log. Owns 'what was decided / what broke / what changed'."
-    # Holoarchic (Q4 ratified): system-wide verdicts live in the system core;
-    # organ-scoped records live in each organ's own core. System-wide verdicts
-    # MUST NOT be filed in an organ core.
+    purpose: AD / RG / Log. Owns 'what was decided / what broke / what changed'.
     decisions:
       system: docs/system/core/decisions
       organ_pattern: docs/system/sub-systems/{organ}/core/decisions
@@ -94,192 +74,329 @@ rungs:
       organ_pattern: docs/system/sub-systems/{organ}/core/regressions
     worklog:
       dir: docs/system/core/worklog
-      format: {pattern: "NNNN-*.md"}
+      format:
+        pattern: NNNN-*.md
     ledger:
       path: docs/system/logs/mutations.jsonl
-      format: {suffix: [".jsonl"]}
-    numbering: global            # Q1 ratified: one MY-AD-/MY-RG- sequence project-wide
-    attribution_field: Organ     # routing lives in frontmatter, not in the number
-    filename_pattern: "{prefix}-{record}-{nnnn}-{kebab}.md"
-    status_enum: [Active, Accepted, Proposed, Draft, Superseded, Resolved, Open]
+      format:
+        suffix:
+        - .jsonl
+    numbering: global
+    attribution_field: Organ
+    filename_pattern: '{prefix}-{record}-{nnnn}-{kebab}.md'
+    status_enum:
+    - Active
+    - Accepted
+    - Proposed
+    - Draft
+    - Superseded
+    - Resolved
+    - Open
     live: true
-
   plans:
-    purpose: "In-flight process documents. Own sequencing, not contracts or theory."
+    purpose: In-flight process documents. Own sequencing, not contracts or theory.
     files:
-      - docs/DEVELOPMENT-PLAN.md          # owns build-phase order and gates
-      - docs/ONBOARDING-REDESIGN-PLAN.md
-      - docs/ARCHITECTURE-TRANSMUTATION-PLAN.md
-      - docs/REQUIREMENTS.md
+    - docs/DEVELOPMENT-PLAN.md
+    - docs/ONBOARDING-REDESIGN-PLAN.md
+    - docs/ARCHITECTURE-TRANSMUTATION-PLAN.md
+    - docs/REQUIREMENTS.md
     authority: docs/DEVELOPMENT-PLAN.md
     live: true
-
   historical:
-    purpose: "Dated records. Never an authority, never rewritten, never cited by live docs."
+    purpose: Dated records. Never an authority, never rewritten, never cited by live
+      docs.
     dirs:
-      - path: docs/historical
-        format: {pattern: "**/*.md"}
+    - path: docs/historical
+      format:
+        pattern: '**/*.md'
     files:
-      - docs/CHANGELOG.md       # release history: a log, not an authority
+    - docs/CHANGELOG.md
     authority: docs/historical/AGENTS.md
     live: false
-
   audits:
-    purpose: "Audit evidence behind the RG ledger. Dated snapshots, not authorities."
+    purpose: Audit evidence behind the RG ledger. Dated snapshots, not authorities.
     dirs:
-      - path: docs/audits
-        format: {pattern: "*.md"}
+    - path: docs/audits
+      format:
+        pattern: '*.md'
     live: false
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ORGANS — RUNG 2. Each organ is a sub-pool of docs/system that mirrors a real
-# code domain. `code` paths MUST resolve on disk (`arch.py validate` enforces).
-# Organ names are stable identifiers; the docs and the code must agree on them.
-# ─────────────────────────────────────────────────────────────────────────────
 organs:
   kernel:
-    contract_docs: [foundations/02-eight-stages-overview, foundations/06-law-of-one-correspondence, foundations/26-unified-core-architecture, foundations/42-developmental-levelling-mechanism]
-    code: [src/core/engines, src/core/assessments, src/core/registries, src/core/domain, src/core/logic, src/core/usecases]
+    contract_docs:
+    - foundations/02-eight-stages-overview
+    - foundations/06-law-of-one-correspondence
+    - foundations/26-unified-core-architecture
+    - foundations/42-developmental-levelling-mechanism
+    code:
+    - src/core/engines
+    - src/core/assessments
+    - src/core/registries
+    - src/core/domain
+    - src/core/logic
+    - src/core/usecases
     status: active
-
   catalyst:
-    contract_docs: [foundations/10-shadow-and-pathology, foundations/11-game-modalities, foundations/14-game-as-developmental-catalyst, foundations/19-choice-and-polarity-engine, foundations/23-polarity-ontology, foundations/24-encounter-scheduler, foundations/27-auto-mode-strategy-engine]
-    code: [src/core/practice, src/core/healing, src/core/braingame, src/core/GameLoop.ts]
+    contract_docs:
+    - foundations/10-shadow-and-pathology
+    - foundations/11-game-modalities
+    - foundations/14-game-as-developmental-catalyst
+    - foundations/19-choice-and-polarity-engine
+    - foundations/23-polarity-ontology
+    - foundations/24-encounter-scheduler
+    - foundations/27-auto-mode-strategy-engine
+    code:
+    - src/core/practice
+    - src/core/healing
+    - src/core/braingame
+    - src/core/GameLoop.ts
     status: active
-
   curriculum:
-    contract_docs: [foundations/29-meta-learning-science, foundations/30-holonic-curriculum-architecture, foundations/31-depth-assessment-model, foundations/32-agentic-curriculum-linter, foundations/33-self-directed-dashboard, foundations/34-curriculum-engine-bridge, foundations/37-k12-curriculum-expansion, foundations/47-preference-inference-and-scaffolding]
-    code: [src/core/curriculum, src/core/packs, src/core/training]
+    contract_docs:
+    - foundations/29-meta-learning-science
+    - foundations/30-holonic-curriculum-architecture
+    - foundations/31-depth-assessment-model
+    - foundations/32-agentic-curriculum-linter
+    - foundations/33-self-directed-dashboard
+    - foundations/34-curriculum-engine-bridge
+    - foundations/37-k12-curriculum-expansion
+    - foundations/47-preference-inference-and-scaffolding
+    code:
+    - src/core/curriculum
+    - src/core/packs
+    - src/core/training
     status: active
-
   profiling:
-    contract_docs: [foundations/12-drive-assessment-mechanics, foundations/16-significator-architecture, foundations/25-cumulative-consciousness-index, foundations/40-measurement-packs-efficacy-infra, foundations/47-preference-inference-and-scaffolding]
-    code: [src/core/domain, src/infra/profiles]
+    contract_docs:
+    - foundations/12-drive-assessment-mechanics
+    - foundations/16-significator-architecture
+    - foundations/25-cumulative-consciousness-index
+    - foundations/40-measurement-packs-efficacy-infra
+    - foundations/47-preference-inference-and-scaffolding
+    code:
+    - src/core/domain
+    - src/infra/profiles
     status: active
-    note: "No architecture doc existed before this plan (audit gap G5)."
-
+    note: No architecture doc existed before this plan (audit gap G5).
   orchestration:
-    contract_docs: [foundations/43-agentic-orchestration-architecture]
-    code: [src/core/orchestration, src/core/agent, src/core/fallback, src/infra/llm]
+    contract_docs:
+    - foundations/43-agentic-orchestration-architecture
+    code:
+    - src/core/orchestration
+    - src/core/agent
+    - src/core/fallback
+    - src/infra/llm
     status: active
-
   world:
-    contract_docs: [foundations/18-great-way-world-architecture, foundations/21-incarnation-architecture, foundations/22-holon-context-engine, foundations/45-personalization-and-context-pooling, foundations/46-generative-world-composition, foundations/47-preference-inference-and-scaffolding]
-    code: [src/core/world, src/core/data/encounters]
+    contract_docs:
+    - foundations/18-great-way-world-architecture
+    - foundations/21-incarnation-architecture
+    - foundations/22-holon-context-engine
+    - foundations/45-personalization-and-context-pooling
+    - foundations/46-generative-world-composition
+    - foundations/47-preference-inference-and-scaffolding
+    code:
+    - src/core/world
+    - src/core/world/encounters-red
     status: active
-    note: "No architecture doc existed before this plan (audit gap G6). Corrected 2026-09-21 (WORLD-STORE-MOVE): pods moved to the cohort organ (38); the world's content moved out of src/core/data into src/core/world/ per 46 section 10. src/core/data/encounters/red/ remains the hand-authored Red layer until FACET-COMPILER replaces it with compiled facets (46 section 10)."
-
+    note: 'No architecture doc existed before this plan (audit gap G6). Corrected
+      2026-09-21 (WORLD-STORE-MOVE): pods moved to the cohort organ (38); the world''s
+      content moved out of src/core/data into src/core/world/ per 46 section 10. src/core/world/encounters-red/red/
+      remains the hand-authored Red layer until FACET-COMPILER replaces it with compiled
+      facets (46 section 10).'
   onboarding:
-    contract_docs: [foundations/21-incarnation-architecture, foundations/16-significator-architecture]
-    code: [src/core/onboarding, src/core/adaptive]
+    contract_docs:
+    - foundations/21-incarnation-architecture
+    - foundations/16-significator-architecture
+    code:
+    - src/core/onboarding
+    - src/core/adaptive
     status: active
-
   persistence:
-    contract_docs: [foundations/43-agentic-orchestration-architecture]
-    code: [src/infra/persistence, src/infra/native, src/infra/crypto, src/infra/profiles]
+    contract_docs:
+    - foundations/43-agentic-orchestration-architecture
+    code:
+    - src/infra/persistence
+    - src/infra/native
+    - src/infra/crypto
+    - src/infra/profiles
     status: active
-
   presentation:
-    contract_docs: [foundations/33-self-directed-dashboard, foundations/20-veil-of-forgetting]
-    code: [src/core/presentation, src/routes, src/lib, src/styles]
+    contract_docs:
+    - foundations/33-self-directed-dashboard
+    - foundations/20-veil-of-forgetting
+    code:
+    - src/core/presentation
+    - src/routes
+    - src/lib
+    - src/styles
     status: active
-
   safety:
-    contract_docs: [foundations/43-agentic-orchestration-architecture]
-    code: [src/core/safety, src/core/accessibility]
+    contract_docs:
+    - foundations/43-agentic-orchestration-architecture
+    code:
+    - src/core/safety
+    - src/core/accessibility
     status: active
-    note: "No architecture doc existed before this plan (audit gap G7)."
-
+    note: No architecture doc existed before this plan (audit gap G7).
   cohort:
-    contract_docs: [foundations/38-cohort-weave-multiplayer]
-    code: [src/core/pods, src/infra/pods]
+    contract_docs:
+    - foundations/38-cohort-weave-multiplayer
+    code:
+    - src/core/pods
+    - src/infra/pods
     status: active
-    note: "Cohort multiplayer (38). Pods moved here from the world organ 2026-09-21 (WORLD-STORE-MOVE) - 38 is their contract."
-
+    note: Cohort multiplayer (38). Pods moved here from the world organ 2026-09-21
+      (WORLD-STORE-MOVE) - 38 is their contract.
   credentialing:
-    contract_docs: [foundations/41-global-recognition-credentialing, foundations/38-cohort-weave-multiplayer]
-    code: [src/core/credential]
+    contract_docs:
+    - foundations/41-global-recognition-credentialing
+    - foundations/38-cohort-weave-multiplayer
+    code:
+    - src/core/credential
     status: active
-    note: "No architecture doc existed before this plan (audit gap G8)."
-
+    note: No architecture doc existed before this plan (audit gap G8).
   validation:
-    contract_docs: [foundations/40-measurement-packs-efficacy-infra, foundations/12-drive-assessment-mechanics]
-    code: [src/core/validation, scripts/run-validation-benchmark.ts, src/core/braingame]
+    contract_docs:
+    - foundations/40-measurement-packs-efficacy-infra
+    - foundations/12-drive-assessment-mechanics
+    code:
+    - src/core/validation
+    - scripts/run-validation-benchmark.ts
+    - src/core/braingame
     status: active
-
   platform:
     contract_docs: []
-    code: [src/core/config, src/core/data, src/core/events, src/core/telemetry, src/infra/i18n, src/infra/telemetry, src/cli, src/shared]
+    code:
+    - src/core/config
+    - src/core/data
+    - src/core/events
+    - src/core/telemetry
+    - src/infra/i18n
+    - src/infra/telemetry
+    - src/cli
+    - src/shared
     status: active
-    note: "System substrate: no theory of its own; exists so no code domain is unowned. src/core/data holds only substrate after WORLD-STORE-MOVE (concept-drafts.json index, glossary, shadowKeywords, calibrationPrompts, PolarityOntology); world content lives in the world organ."
-
-# ─────────────────────────────────────────────────────────────────────────────
-# GATES — doc-governance (DG), distinct from the runtime kernel gates G1–G21
-# (src/core/validation/gates.ts). `arch.py validate` runs DG1–DG17 and exits
-# non-zero on any violation. Run as step 2b of the iteration protocol.
-# ─────────────────────────────────────────────────────────────────────────────
+    note: 'System substrate: no theory of its own; exists so no code domain is unowned.
+      src/core/data holds only substrate after WORLD-STORE-MOVE (concept-drafts.json
+      index, glossary, shadowKeywords, calibrationPrompts, PolarityOntology); world
+      content lives in the world organ.'
 gates:
-  dg1_frontmatter:        {enabled: true}
-  dg2_status_enum:        {enabled: true}
-  dg3_numbering:          {enabled: true}
-  dg4_authority:          {enabled: true}
-  dg5_vocabulary:         {enabled: true, blacklist_source: docs/foundations/44-system-ontology-and-vocabulary.md}
-  # ^ blacklist_source is authored in P2; until then DG5 runs against the
-  #   subset blacklist embedded in the audit appendix.
-  dg6_historical_quarantine: {enabled: true}
-  dg7_ownership:          {enabled: true, owners_table: docs/foundations/44-system-ontology-and-vocabulary.md}
-  dg8_references:         {enabled: true}
-  dg9_ledger:             {enabled: true}
-  dg10_canon_code:        {enabled: true}
-  dg11_derived_surfaces:  {enabled: true}
-  dg12_canon_links:       {enabled: true}
-  dg13_organ_integrity:   {enabled: true}
-  dg14_relationality:     {enabled: true}
-  dg15_source_resolves:   {enabled: true}
-  dg16_cited_paths:       {enabled: true}
-  dg17_record_refs:       {enabled: true}
-  dg18_router_coverage:   {enabled: true}
-  dg19_law_consumer:      {enabled: true}
-  dg20_script_provenance: {enabled: true}
-  dg21_corpus_reconcile:  {enabled: true}
-  dg22_skill_provenance:  {enabled: true, manifest: skills/PROVENANCE.yaml}
-  dg23_foundations_ingest: {enabled: true}
-
-# GENERATED SURFACES — derived from `_org.yaml` + the records by `arch.py emit`. Never
-# hand-edited; DG11 fails when one is stale. `route` reports them as generated.
+  dg1_frontmatter:
+    enabled: true
+  dg2_status_enum:
+    enabled: true
+  dg3_numbering:
+    enabled: true
+  dg4_authority:
+    enabled: true
+  dg5_vocabulary:
+    enabled: true
+    blacklist_source: docs/foundations/44-system-ontology-and-vocabulary.md
+  dg6_historical_quarantine:
+    enabled: true
+  dg7_ownership:
+    enabled: true
+    owners_table: docs/foundations/44-system-ontology-and-vocabulary.md
+  dg8_references:
+    enabled: true
+  dg9_ledger:
+    enabled: true
+  dg10_canon_code:
+    enabled: true
+  dg11_derived_surfaces:
+    enabled: true
+  dg12_canon_links:
+    enabled: true
+  dg13_organ_integrity:
+    enabled: true
+  dg14_relationality:
+    enabled: true
+  dg15_source_resolves:
+    enabled: true
+  dg16_cited_paths:
+    enabled: true
+  dg17_record_refs:
+    enabled: true
+  dg18_router_coverage:
+    enabled: true
+  dg19_law_consumer:
+    enabled: true
+  dg20_script_provenance:
+    enabled: true
+  dg21_corpus_reconcile:
+    enabled: true
+  dg22_skill_provenance:
+    enabled: true
+    manifest: skills/PROVENANCE.yaml
+  dg23_foundations_ingest:
+    enabled: true
 generated:
-  - docs/INDEX.md
-
-# Authority claims are restricted: only these documents may self-describe as
-# binding (DG4). Any other doc claiming authority is a violation.
+- docs/INDEX.md
 authority_map:
   build_order_and_gates: docs/DEVELOPMENT-PLAN.md
   theory_and_contracts: docs/foundations/AGENTS.md
   system_architecture: docs/system/AGENTS.md
   vocabulary_and_ownership: docs/foundations/44-system-ontology-and-vocabulary.md
   root_router: AGENTS.md
-
-# ─────────────────────────────────────────────────────────────────────────────
-# TRANSITION LEDGER — what still has to land for this file to be fully strict.
-# `arch.py validate` reports `pending_phase` paths as INFO (not ERROR) until the
-# phase completes; on completion the `pending_phase` key is removed and the path
-# becomes mandatory. Never leave a completed phase's key in place.
-# ─────────────────────────────────────────────────────────────────────────────
 completed:
-  P0: "structure declared; 94 paths resolved"
-  P1: "vocabulary sweep (193 files) + D4 purge + D6 ray ruling"
-  P2: "foundations/44 + canon router + 02 MHC + objective + AGENTS.md external canon"
-  P3: "docs/architecture -> docs/system (13 organs) + R1-R9 + link rewrite"
-  P4: "scripts/arch.py (route/recon/new/seed/log/emit/validate, DG1-DG10)"
-  P5: "23 records seeded with ledger receipts (seed-2026-09-20.yaml)"
-  P6: "docs/historical/ quarantine + generated INDEX + README demoted to pointer"
-  P7: "CHOICE-CLOSURE discharged: checkChoiceEligibility computes the condition, subOctaveClosureReached the arrival, evaluateChoice the only producer of the harvest EVENT (eligibility AND arrival) with rainbow distinctness per lenses/rays.md; `Exploring -> Harvesting` removed from VALID_TRANSITIONS and the enum's licence withdrawn by canHarvest; 19 section 9.6, 44's citation and 06 section 8's note resolved; MY-RG-0030 + tests/engines/ChoiceClosure.test.ts guard the class"
-  P8: "KB-SKILLS-PROVENANCE discharged: skills/PROVENANCE.yaml is the single decidable declaration of house vs vendored, DG22 keeps it total over skills/*/ and corroborates a `house` claim against upstream artifacts, `arch skills`/`arch route skills/<name>` answer the question from the CLI, and the two-vendored-entries-without-artifacts limit is stated in the gate rather than implied"
-  P9: "KB-FOUNDATIONS-INGEST discharged: DG23 verifies every code path a foundations document cites (75 citations) and requires every organ `contract_docs` entry to name code, so canon<->code is a checked edge in both directions; 21 contract docs that anchored to nothing now carry a `> **Satisfied by:**` line; `arch context <path>` prints the canon naming that path, derived from the documents themselves. Residual: 12 docs name no code (00, 01, 04, 05, 07, 08, 09, 13, 17, 28, 35, 39) and are linked only at organ granularity; the criterion is enforced on CONTRACT docs, not on all canon, because theory has no implementation to name"
-  P10: "RT-ARCHIVE-MIGRATIONS discharged: the three one-way stage migrations moved to scripts/migrations/ with their receipts (converted to JSON) beside them and a README stating what each did, why it is kept, and why re-running is refused; DG20 now walks scripts/ RECURSIVELY, which the move exposed as a coverage drop (16 -> 14) when it was a flat iterdir — a new directory shape silently left the gate, the scaffolder-vs-linter class; `arch context` and route are unaffected (migrations are not canon)"
-  P11: "QUALITY-WIRING discharged: three runtime readers for the ratified quality model — buildDevelopmentalAgenda (both §5.3 vectors, one computation) rendered Veil-safe by the ContextPipeline, generateFrequencySpec().lensRead consuming RAY_LENS.rayFunction/subtleBody + the emergent order, and buildShadowPromptSuffix grounding shadow encounters in pathologyIn via LINE_QUADRANT (the AQAL quadrant of the LINE, never the shadow quadrant); assessment scoring deliberately untouched (that escalation belongs to Phase 10 personalization); tests/core/domain/QualityWiring.test.ts locks all three at their own seams"
-  P12: "VOCAB-SUBSTRATE closed by USER RULING 2026-09-21 (ratified via session): *substrate layer* means ONLY the intra-holonic compositional vertical (13, 44 axis E); the D3 bands renamed LAW-BANDS across 02 §4 (table column + term-scope note), 06's ownership pointer, 22's layer-stack law, 28's J-INV-7, and the code constant SUBSTRATE_LAYER_LAW -> LAW_BANDS_D3 with its `density` field -> `band`. The 'energetic substrate (Ra)' sense in 06 and the various 'theoretical substrate' usages are unrelated compounds and stay"
-
+  P0: structure declared; 94 paths resolved
+  P1: vocabulary sweep (193 files) + D4 purge + D6 ray ruling
+  P2: foundations/44 + canon router + 02 MHC + objective + AGENTS.md external canon
+  P3: docs/architecture -> docs/system (13 organs) + R1-R9 + link rewrite
+  P4: scripts/arch.py (route/recon/new/seed/log/emit/validate, DG1-DG10)
+  P5: 23 records seeded with ledger receipts (seed-2026-09-20.yaml)
+  P6: docs/historical/ quarantine + generated INDEX + README demoted to pointer
+  P7: 'CHOICE-CLOSURE discharged: checkChoiceEligibility computes the condition, subOctaveClosureReached
+    the arrival, evaluateChoice the only producer of the harvest EVENT (eligibility
+    AND arrival) with rainbow distinctness per lenses/rays.md; `Exploring -> Harvesting`
+    removed from VALID_TRANSITIONS and the enum''s licence withdrawn by canHarvest;
+    19 section 9.6, 44''s citation and 06 section 8''s note resolved; MY-RG-0030 +
+    tests/engines/ChoiceClosure.test.ts guard the class'
+  P8: 'KB-SKILLS-PROVENANCE discharged: skills/PROVENANCE.yaml is the single decidable
+    declaration of house vs vendored, DG22 keeps it total over skills/*/ and corroborates
+    a `house` claim against upstream artifacts, `arch skills`/`arch route skills/<name>`
+    answer the question from the CLI, and the two-vendored-entries-without-artifacts
+    limit is stated in the gate rather than implied'
+  P9: 'KB-FOUNDATIONS-INGEST discharged: DG23 verifies every code path a foundations
+    document cites (75 citations) and requires every organ `contract_docs` entry to
+    name code, so canon<->code is a checked edge in both directions; 21 contract docs
+    that anchored to nothing now carry a `> **Satisfied by:**` line; `arch context
+    <path>` prints the canon naming that path, derived from the documents themselves.
+    Residual: 12 docs name no code (00, 01, 04, 05, 07, 08, 09, 13, 17, 28, 35, 39)
+    and are linked only at organ granularity; the criterion is enforced on CONTRACT
+    docs, not on all canon, because theory has no implementation to name'
+  P10: 'RT-ARCHIVE-MIGRATIONS discharged: the three one-way stage migrations moved
+    to scripts/migrations/ with their receipts (converted to JSON) beside them and
+    a README stating what each did, why it is kept, and why re-running is refused;
+    DG20 now walks scripts/ RECURSIVELY, which the move exposed as a coverage drop
+    (16 -> 14) when it was a flat iterdir — a new directory shape silently left the
+    gate, the scaffolder-vs-linter class; `arch context` and route are unaffected
+    (migrations are not canon)'
+  P11: 'QUALITY-WIRING discharged: three runtime readers for the ratified quality
+    model — buildDevelopmentalAgenda (both §5.3 vectors, one computation) rendered
+    Veil-safe by the ContextPipeline, generateFrequencySpec().lensRead consuming RAY_LENS.rayFunction/subtleBody
+    + the emergent order, and buildShadowPromptSuffix grounding shadow encounters
+    in pathologyIn via LINE_QUADRANT (the AQAL quadrant of the LINE, never the shadow
+    quadrant); assessment scoring deliberately untouched (that escalation belongs
+    to Phase 10 personalization); tests/core/domain/QualityWiring.test.ts locks all
+    three at their own seams'
+  P12: 'VOCAB-SUBSTRATE closed by USER RULING 2026-09-21 (ratified via session): *substrate
+    layer* means ONLY the intra-holonic compositional vertical (13, 44 axis E); the
+    D3 bands renamed LAW-BANDS across 02 §4 (table column + term-scope note), 06''s
+    ownership pointer, 22''s layer-stack law, 28''s J-INV-7, and the code constant
+    SUBSTRATE_LAYER_LAW -> LAW_BANDS_D3 with its `density` field -> `band`. The ''energetic
+    substrate (Ra)'' sense in 06 and the various ''theoretical substrate'' usages
+    are unrelated compounds and stay'
 pending:
-  PLAN-IMPLEMENT: "the architecture ratified in 45 (user-dimensionality vector, three-library pooling, analogical bridge, engagement register), 46 (facets, tag store, reconciliation-polarity state layer, composition) and 47 (evidence tiers, interest record, scaffold library), plus the safety ethics contract (data classes, projection firewall), has no code yet — MY-AD-0018, MY-AD-0019, MY-AD-0020, MY-AD-0021, MY-AD-0022, MY-AD-0023, MY-AD-0031, MY-RG-0017, MY-RG-0018, MY-RG-0019, MY-RG-0020, MY-RG-0021, MY-RG-0026. Sequenced as Phase 10 in DEVELOPMENT-PLAN"
-  WORLD-STORE-MOVE: "MOVE DONE 2026-09-21 for Holon.ts, HolonStore.ts, stage-holons.json, red-layer-holons.json, RedPESTLE.ts; organs.world.code corrected (pods to cohort). REMAINING: move data/encounters/red/ into the world organ (currently owned by world at src/core/data/encounters but sited in platform dir), then remove the domain/ and data/ facades once consumers import world/ directly. This is what makes 18/21/22/45/46 reachable from the code they govern (KB-FOUNDATIONS-INGEST)"
+  PLAN-IMPLEMENT: the architecture ratified in 45 (user-dimensionality vector, three-library
+    pooling, analogical bridge, engagement register), 46 (facets, tag store, reconciliation-polarity
+    state layer, composition) and 47 (evidence tiers, interest record, scaffold library),
+    plus the safety ethics contract (data classes, projection firewall), has no code
+    yet — MY-AD-0018, MY-AD-0019, MY-AD-0020, MY-AD-0021, MY-AD-0022, MY-AD-0023,
+    MY-AD-0031, MY-RG-0017, MY-RG-0018, MY-RG-0019, MY-RG-0020, MY-RG-0021, MY-RG-0026.
+    Sequenced as Phase 10 in DEVELOPMENT-PLAN
+  WORLD-STORE-MOVE: DONE 2026-09-21. Holon.ts, HolonStore.ts, stage-holons.json, red-layer-holons.json,
+    RedPESTLE.ts, and data/encounters/red/ (now world/encounters-red/) all live under
+    src/core/world/; organs.world.code corrected; the three facades (domain/Holon.ts,
+    data/HolonRegistry.ts, data/RedPESTLE.ts) DELETED — all consumers import world/
+    directly. 18/22/36/46 canon citations updated to the resolved paths (DG23 clean).

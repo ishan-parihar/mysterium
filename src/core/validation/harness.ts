@@ -19,7 +19,7 @@
  */
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
-import type { Holon } from '../domain/Holon.js';
+import type { Holon } from '../world/Holon.js';
 import type { Significator } from '../domain/Significator.js';
 import { createSignificator } from '../domain/Significator.js';
 import { startSession, endSession, tickWithStrategy, applyResponseOnly } from '../GameLoop.js';

@@ -7,7 +7,7 @@
 > **Depends on:** foundations/15 (macro-scale archetypal theory), foundations/06 (Law-of-One correspondence), foundations/01 (AQAL quadrants)
 >
 > **Forward-references:** foundations/19 (Choice & polarity engine), foundations/21 (Incarnation Architecture), foundations/22 (Holon Context Engine)
-> **Satisfied by:** `src/core/data/HolonRegistry.ts` (the collective-holon registry and its PESTLE mapping) · `src/core/data/RedPESTLE.ts` (the stratified PESTLE ratings) · `src/core/domain/Holon.ts` (the holon record itself)
+> **Satisfied by:** `src/core/world/store/HolonStore.ts` (the collective-holon registry and its PESTLE mapping; moved from the former data/HolonRegistry.ts) · `src/core/world/pestle/RedPESTLE.ts` (the stratified PESTLE ratings) · `src/core/world/Holon.ts` (the holon record itself)
 
 ---
 

@@ -3,7 +3,7 @@ import { tickWithStrategy, startSession } from '../../src/core/GameLoop.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
 import type { Line } from '../../src/core/domain/Line.js';
 import type { Stage } from '../../src/core/domain/Stage.js';
-import type { Holon } from '../../src/core/domain/Holon.js';
+import type { Holon } from '../../src/core/world/Holon.js';
 import type { WorldState } from '../../src/core/engines/CandidateGeneration.js';
 import type { SessionContext } from '../../src/core/engines/PriorityComputation.js';
 import type { PlayerResponse } from '../../src/core/engines/ConsequenceEngine.js';
