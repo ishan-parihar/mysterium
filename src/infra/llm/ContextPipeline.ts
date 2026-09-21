@@ -17,6 +17,7 @@ import { ALL_LINES } from '../../core/domain/Line.js';
 import { getHolon, queryByLine } from '../../core/world/store/HolonStore.js';
 import { queryByLineStage } from '../../core/data/ConceptDraftIndex.js';
 import { type PolarityTexture } from '../../core/data/PolarityOntology.js';
+import type { PersonalizationBlock } from '../../core/personalization/sessionRuntime.js';
 import { generateFrequencySpec } from './FrequencyConditioner.js';
 import {
   type DevelopmentalAgenda,
@@ -99,6 +100,19 @@ export interface ContextPipelineInput {
    * falls back to the holon registry alone.
    */
   readonly composedWorld?: ComposedWorldTexture;
+  /**
+   * RuntimeLoop (45 §5/§6 via sessionRuntime): the personalization envelope's qualitative
+   * rendering — dialectic mode + surface/structure poles, interest echo, deferral summary.
+   * Veil-safe by construction: bands and tag labels only, no numbers, no stage labels.
+   * Absent → no block (the pre-personalization pipeline is the fallback).
+   */
+  readonly personalizationBlock?: PersonalizationBlock;
+  /**
+   * RuntimeLoop (22 §7.4 L3 via sessionRuntime): the encounter holon's worker-maintained digest —
+   * what this NPC/place remembers about the player. Qualitative prose only. Absent/empty → no
+   * block (a cold holon has no history; that is correct, not an error).
+   */
+  readonly holonProfileBlock?: readonly string[];
 }
 
 /** The composed-facet prose blocks the prompt may carry (46 §7 step 5's applied facets). */
@@ -332,6 +346,8 @@ function assembleSystemPrompt(
   polarityTextures?: ReadonlyArray<{ readonly line: Line; readonly stage: Stage; readonly texture: PolarityTexture }>,
   developmentalAgenda?: DevelopmentalAgenda,
   composedWorld?: ComposedWorldTexture,
+  personalizationBlock?: PersonalizationBlock,
+  holonProfileBlock?: readonly string[],
 ): string {
   const holonDescriptions = formatHolonDescriptions(holonSelection);
   const playerStateSignals = formatPlayerState(veilFilteredSig);
@@ -358,6 +374,21 @@ function assembleSystemPrompt(
   // LLM plays an entity composed from the store rather than improvising one. Veil-safe: facet
   // payloads are corpus-derived canon text carrying no developmental numbers.
   const composedBlock = composedWorld ? formatComposedWorld(composedWorld) : '';
+  // RuntimeLoop: the personalization envelope — how the content is angled (mode/poles) and what
+  // it echoes (interests). Qualitative; never shows numbers to the player, only conditions the LLM.
+  const personalizationParts: string[] = [];
+  if (personalizationBlock) {
+    if (personalizationBlock.mode) personalizationParts.push(`mode=${personalizationBlock.mode}`);
+    if (personalizationBlock.surface) personalizationParts.push(`fluent-in=${personalizationBlock.surface}`);
+    if (personalizationBlock.structure) personalizationParts.push(`structured-by=${personalizationBlock.structure}`);
+    if (personalizationBlock.interestEcho.length > 0) personalizationParts.push(`resonates=${personalizationBlock.interestEcho.join('/')}`);
+    if (personalizationBlock.deferredCells.length > 0) personalizationParts.push(`deferred=${personalizationBlock.deferredCells.length} cells (route, don't force)`);
+  }
+  const personalizationBlockStr = personalizationParts.length > 0 ? `\n[PERSONALIZATION] ${personalizationParts.join('; ')}` : '';
+  // RuntimeLoop: the holon's memory — an NPC that remembers the player is the world feeling real.
+  const holonProfileStr = holonProfileBlock && holonProfileBlock.length > 0
+    ? `\n[HOLON MEMORY] ${holonProfileBlock.join('; ')}`
+    : '';
 
   return `[ROLE] You are the manifestation layer of Mysterium.
 [COSMOLOGY] Third Density constraints. Veil enforced. Free will absolute.
@@ -367,7 +398,7 @@ ${frequencySpec.crossAltitudeDirective}
 [ENCOUNTER] lines=${encounterContext.lines.join(',')}; stage=${encounterContext.stage}; modality=${encounterContext.modality}; purpose=${encounterContext.catalyticPurpose}; module=${encounterContext.moduleRef}
 [MODALITY] ${modalityRubric}
 [CONTINUITY] ${consequenceContext}
-[PLAYER STATE] ${playerStateSignals}${synthesisBlock}${cognitiveBlock}${knowledgeBlock}${polarityBlock}${agendaBlock}${composedBlock}
+[PLAYER STATE] ${playerStateSignals}${synthesisBlock}${cognitiveBlock}${knowledgeBlock}${polarityBlock}${agendaBlock}${composedBlock}${personalizationBlockStr}${holonProfileStr}
 [OUTPUT FORMAT] ${outputFormat}
 [RULES] No Veil violations. No clinical language. No scoring references. No frame-breaking. Stay in frequency. Scale cognitive complexity to the player's altitude, not the encounter's stage.`;
 }
@@ -591,6 +622,8 @@ export function buildContext(input: ContextPipelineInput): ContextPipelineOutput
     input.polarityTextures,
     input.developmentalAgenda,
     input.composedWorld,
+    input.personalizationBlock,
+    input.holonProfileBlock,
   );
 
   // Collect selected holons for output

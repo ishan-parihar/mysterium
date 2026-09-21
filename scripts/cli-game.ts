@@ -357,6 +357,10 @@ import type { ConsequenceRecord } from '../src/core/domain/ConsequenceRecord.js'
 import type { Modality } from '../src/core/domain/enums.js';
 import { ALL_MODALITIES } from '../src/core/domain/enums.js';
 import { thresholdToStage } from '../src/core/usecases/ThresholdMaps.js';
+// RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — feed, candidate
+// library, owner-worker pool. Carried across encounters in the session loop; persisted with the
+// world save so NPC profiles survive the process.
+import { createOrchestrationServices, type OrchestrationServices } from '../src/core/personalization/sessionRuntime.js';
 // P1-3 (UX-R3): configurable saturation threshold + per-line progress.
 import { setSaturationThreshold, getLineProgress, computeReadiness } from '../src/core/engines/TransformationDetector.js';
 // R5-BUG-5 (UX-R5): fallback narrative pool for empty LLM responses.
@@ -1665,6 +1669,8 @@ interface EncounterExecutionOptions {
   readonly responsesPool?: number[];
   readonly consecutivePasses?: Map<string, number>;
   readonly agentSynthesis?: string;
+  /** RuntimeLoop: the session-carried orchestration services (may be omitted — degradation law). */
+  readonly orchestration?: OrchestrationServices;
   // YAGNI-EFF-3: persistentAgent removed. USE_PERSISTENT_AGENT is always false;
   // the DQ path is the proven architecture. Story-Driven mode can be rebuilt
   // on top of DQ when needed.
@@ -1686,6 +1692,7 @@ async function executeEncounter(
   // always false; the DQ path is the proven architecture.
   const result = await runAgenticEncounter(
     encounter, sig, world, history, options.responsesPool, options.consecutivePasses, options.agentSynthesis,
+    options.orchestration,
   );
   return { ...result, effectiveEncounter: encounter };
 }
@@ -1699,6 +1706,7 @@ async function runAgenticEncounter(
   responsesPool?: number[],
   consecutivePasses?: Map<string, number>,
   agentSynthesis?: string,
+  orchestration?: OrchestrationServices,
 ): Promise<{
   outcome: import('../src/core/assessments/AgenticOrchestrator.js').OrchestratorResult;
   response: PlayerResponse;
@@ -1949,6 +1957,8 @@ async function runAgenticEncounter(
     // Brain-training + unified profile tools: Game Master can run games and orchestrate across psych/cog/education.
     training: await buildTrainingIntegration().catch(() => undefined),
     unifiedProfile: await buildUnifiedProfileServices().catch(() => undefined),
+    // RuntimeLoop: the orchestration services — personalization envelope + feed + owner workers.
+    orchestration,
   });
 
   // P1-R5 (Fresh-User UX Audit): Thinking indicator during LLM round-trip.
@@ -3375,6 +3385,10 @@ async function runFullSession(): Promise<void> {
   const sessionStartedAt = now;
   const history: ConsequenceRecord[] = [];
   const consecutivePasses = new Map<string, number>();
+  // RuntimeLoop (43 §5.5 + 22 §7.5): one services record for the whole session — the feed and the
+  // owner-worker profiles accumulate across encounters. Seeded from the authored holon corpus so
+  // NPC candidates derive and workers have owners.
+  const orchestration = createOrchestrationServices(world.holons);
 
   for (let i = 0; i < encounterCount; i++) {
     separator(`Encounter ${i + 1}/${encounterCount}`);
@@ -3558,6 +3572,7 @@ async function runFullSession(): Promise<void> {
     try {        const result = await executeEncounter(selectedEncounter, currentSig, currentWorld, history, {
             responsesPool,
             consecutivePasses,
+            orchestration,
           });
 
       // Apply consequences from the orchestrator result
@@ -3565,6 +3580,11 @@ async function runFullSession(): Promise<void> {
       history.push(record);
       currentSig = result.outcome.updatedSig;
       currentWorld = result.outcome.updatedWorld;
+      // RuntimeLoop: persist the post-drain worker state with the world save so NPC profiles
+      // survive the process (22 §7.5 — the pool state is serializable by design).
+      if (result.outcome.workers) {
+        (currentWorld as { orchestrationWorkers?: unknown }).orchestrationWorkers = result.outcome.workers;
+      }
 
       // Wave 1.1: Apply the response to the GameLoop's state engines
       // (UserMatrixModel + transformation state) WITHOUT re-applying consequences

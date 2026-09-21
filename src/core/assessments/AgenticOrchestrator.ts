@@ -27,6 +27,9 @@ function getFacetStore(): FacetStore {
   }
   return facetStoreSingleton;
 }
+import type { OrchestrationServices, PersonalizationBlock } from '../personalization/sessionRuntime.js';
+import { buildEnvelope, holonDigestBlock, sessionEnd } from '../personalization/sessionRuntime.js';
+import type { OwnerWorkerPoolState } from '../world/ownerWorkerPool.js';
 import { queryLLMWithTools, queryLLMStream } from '../../infra/llm/LLMClient.js';
 import { parseConsequence } from '../../infra/llm/ConsequenceParser.js';
 import { toQualitativeFeedback } from '../../infra/llm/QualitativeFeedback.js';
@@ -71,6 +74,17 @@ export interface OrchestratorResult {
   readonly narrativeSummary: string;
   readonly feedback: string;
   readonly messages: readonly AgentMessage[];
+  /**
+   * RuntimeLoop (22 §7.5 / 43 §5.5): the owner-worker pool state after this encounter's session-end
+   * drain. Carried by the caller so per-holon NPC profiles persist across sessions. Undefined when
+   * no OrchestrationServices were provided (the pre-personalization pipeline).
+   */
+  readonly workers?: OwnerWorkerPoolState;
+  /**
+   * RuntimeLoop (43 §5.5 W1): the session-end signals the orchestrator recorded to the feed.
+   * Exposed for callers that checkpoint the feed alongside the pool state.
+   */
+  readonly ownerCommitted?: number;
   /** Player's actual write-in response text (if any), for cross-encounter synthesis */
   readonly playerWriteIn?: string;
   /** Per-drive scores from the encounter evaluation */
@@ -216,6 +230,10 @@ export class AgenticOrchestrator {
   private training: TrainingIntegration | null = null;
   private _trainingSignal: AbortSignal | undefined;
   private unifiedProfile: UnifiedProfileServices | null = null;
+  /** RuntimeLoop: orchestration services (feed/pooling/workers) — null when unwired. */
+  private orchestration: OrchestrationServices | null = null;
+  /** RuntimeLoop: consent-checked identity projection for this session. */
+  private identity: { usable?: readonly string[]; declaredInterests?: readonly string[]; aversions?: readonly string[] } | undefined;
 
   /**
    * QUALITY-WIRING (MY-AD-0030): the developmental agenda for the current significator, computed
@@ -282,6 +300,20 @@ export class AgenticOrchestrator {
      */
     training?: TrainingIntegration;
     unifiedProfile?: UnifiedProfileServices;
+    /**
+     * RuntimeLoop: the orchestration services (feed + tag store + candidate library + owner-worker
+     * pool). When present, the orchestrator attaches the personalization envelope to its LLM
+     * context, records the session to the reporting feed at session end, and drains the
+     * owner-worker pool over touched holons. Omitting it leaves the orchestrator's behavior
+     * byte-for-byte identical to the pre-personalization pipeline.
+     */
+    orchestration?: OrchestrationServices;
+    /**
+     * RuntimeLoop (16 §2.1): the consent-checked identity projection for this session — which
+     * identity fields are usable and what interests/aversions were declared. Absent → the UDV is
+     * empty-but-valid (degradation, never a block).
+     */
+    identity?: { usable?: readonly string[]; declaredInterests?: readonly string[]; aversions?: readonly string[] };
   }) {
     this.encounter = params.encounter;
     this.significator = params.significator;
@@ -297,6 +329,9 @@ export class AgenticOrchestrator {
     this.agentSynthesis = params.agentSynthesis;
     this.training = params.training ?? null;
     this.unifiedProfile = params.unifiedProfile ?? null;
+    // RuntimeLoop: carry the orchestration services (may be undefined — the degradation law).
+    this.orchestration = params.orchestration ?? null;
+    this.identity = params.identity;
     // QUALITY-WIRING (MY-AD-0030): compute the agenda once at construction; refreshed by
     // `refreshAgenda` whenever the significator's altitudes change materially.
     this.developmentalAgenda = buildDevelopmentalAgenda(this.significator.currentStage);
@@ -524,6 +559,15 @@ export class AgenticOrchestrator {
           }) };
         } catch { return {}; }
       })(),
+      // RuntimeLoop (45 §5/§6 + 22 §7.4): the personalization envelope + the holon's memory.
+      // Both degrade to absent — never block a session.
+      ...(() => {
+        const { block, digest } = this.personalizationContext();
+        return {
+          ...(block ? { personalizationBlock: block } : {}),
+          ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
+        };
+      })(),
     };
     const context = buildContext(contextInput);
 
@@ -747,6 +791,7 @@ export class AgenticOrchestrator {
 
             return {
               ...outcome,
+              ...this.recordSessionEnd(outcome.consequenceRecord, params.passed, now),
               finalResult,
               messages: this.messages,
               playerWriteIn: this._lastPlayerWriteIn,
@@ -775,6 +820,7 @@ export class AgenticOrchestrator {
 
     return {
       ...outcome,
+      ...this.recordSessionEnd(outcome.consequenceRecord, fallbackParams.passed, now),
       finalResult,
       messages: this.messages,
     };
@@ -831,6 +877,14 @@ export class AgenticOrchestrator {
             shadowQuadrant: this.encounter.shadowTarget ?? null,
           }) };
         } catch { return {}; }
+      })(),
+      // RuntimeLoop (45 §5/§6 + 22 §7.4): same envelope + memory as the main path.
+      ...(() => {
+        const { block, digest } = this.personalizationContext();
+        return {
+          ...(block ? { personalizationBlock: block } : {}),
+          ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
+        };
       })(),
     };
     const context = buildContext(contextInput);
@@ -1044,6 +1098,7 @@ INSTRUCTIONS:
 
             return {
               ...outcome,
+              ...this.recordSessionEnd(outcome.consequenceRecord, params.passed, now),
               finalResult,
               messages: this.messages,
               playerWriteIn: this._lastPlayerWriteIn,
@@ -1332,6 +1387,7 @@ INSTRUCTIONS:
 
     return {
       ...outcome,
+      ...this.recordSessionEnd(outcome.consequenceRecord, evaluated.passed, now),
       finalResult,
       messages: this.messages,
       playerWriteIn: isSelfReflection ? playerResponseText : undefined,
@@ -1672,6 +1728,7 @@ INSTRUCTIONS:
       playerWriteIn: writeIn,
       driveScores: evaluation.driveScores,
       messages: this.messages,
+      ...this.recordSessionEnd(updatedRecord, evaluation.passed, now),
     };
   }
 
@@ -2376,6 +2433,74 @@ ${probes}${rubric}
       dimensions,
       rawTrials: trials,
     };
+  }
+
+  // ── RuntimeLoop helpers (43 §5.5 + 45 §5/§6 + 22 §7.5) ────────────────────────────────
+
+  /**
+   * The personalization context for this encounter, or `null, null` when unwired/failed.
+   * Degradation law: an exception inside the envelope path can NEVER break a session — the
+   * pre-personalization pipeline is the fallback (45 §5).
+   */
+  private personalizationContext(): {
+    block: PersonalizationBlock | null;
+    digest: readonly string[];
+  } {
+    if (!this.orchestration) return { block: null, digest: [] };
+    try {
+      const [line] = this.encounter.moduleRef.split(':') as [Line, ...unknown[]];
+      const { block } = buildEnvelope(
+        this.orchestration,
+        this.significator,
+        this.identity,
+        {
+          line: this.encounter.targetLines[0] ?? line,
+          stage: this.encounter.stage,
+          modality: this.encounter.modality,
+        },
+        this.encounter.codexEntry ?? `a ${this.encounter.modality.toLowerCase()} catalyst for ${this.encounter.targetLines[0] ?? line}`, // purpose from the encounter, never the UDV (46 §11 inv 5)
+        [], // veiled: the pipeline input is already veil-filtered (20)
+        Date.now(),
+      );
+      return { block, digest: holonDigestBlock(this.orchestration, this.encounter.holonSource) };
+    } catch {
+      return { block: null, digest: [] };
+    }
+  }
+
+  /**
+   * Session end (43 §4.6): record the session entry + drain the owner workers. Returns the
+   * post-drain state for the caller to persist, or undefined when unwired. Never throws.
+   */
+  private recordSessionEnd(record: ConsequenceRecord, passed: boolean, now: number): {
+    workers?: OwnerWorkerPoolState;
+    ownerCommitted?: number;
+  } {
+    if (!this.orchestration) return {};
+    try {
+      const outcome = sessionEnd(this.orchestration, {
+        logRef: {
+          sessionId: `orch:${this.encounter.id}`,
+          delegationId: 'foreground-orchestrator',
+          startedAtMs: now - 60_000, // the encounter's own wall-clock is not tracked; bounded window
+          endedAtMs: now,
+        },
+        signals: {
+          veilRisk: 0, // the deterministic Veil gate at ratification is the enforcement point
+          distressSignal: 0, // crisis routing is the safety sub-agent's eager path (43 §4.7)
+          frustrationSignal: 0,
+          progressDelta: passed ? 1 : -0.5, // signed engagement share for the strategy engine (27)
+          consentEvents: [],
+        },
+        proposals: [], // encounter evidence reaches the feed through the module pipeline; none here
+        touchedHolonIds: this.encounter.holonSource ? [this.encounter.holonSource] : [],
+        history: [record],
+        now,
+      });
+      return { workers: outcome.workers, ownerCommitted: outcome.ownerCommitted };
+    } catch {
+      return {}; // the feed can never break the session (degradation law)
+    }
   }
 
   private finalizeEncounter(

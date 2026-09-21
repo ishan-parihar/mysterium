@@ -29,6 +29,9 @@ import { scheduleNextWithHolonicReturn } from '$core/engines/EncounterScheduler.
 import { createModuleTaskTypesProvider } from '$core/engines/CandidateGeneration.js';
 import { DEFAULT_WEIGHTS } from '$core/engines/PriorityComputation.js';
 import { AgenticOrchestrator } from '$core/assessments/AgenticOrchestrator.js';
+// RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — one per browser
+// session, held in the engine store so the feed and worker profiles accumulate across encounters.
+import { createOrchestrationServices, type OrchestrationServices } from '$core/personalization/sessionRuntime.js';
 import { bootModuleRegistry } from '$core/assessments/bootModules.js';
 import { getParadigm } from '$core/braingame/registry.js';
 import type { Line } from '$core/domain/Line.js';
@@ -227,6 +230,15 @@ export async function runEncounter(
   recordEvent('session_started', { encounterId: encounter.id, moduleRef: encounter.moduleRef });
 
   try {
+    // RuntimeLoop: one services record per browser session — created lazily on the first
+    // encounter, carried in the store, seeded from the world's holons.
+    const storeNow = get(engineStore);
+    let orchestration = (storeNow as { orchestration?: OrchestrationServices }).orchestration;
+    if (!orchestration) {
+      orchestration = createOrchestrationServices(world.holons);
+      engineStore.update((s) => ({ ...s, orchestration }));
+    }
+
     const orchestrator = new AgenticOrchestrator({
       encounter,
       significator,
@@ -236,6 +248,7 @@ export async function runEncounter(
       uiHandler,
       noLlm: options.noLlm ?? false,
       forceShadow: options.forceShadow,
+      orchestration,
     });
 
     engineStore.update((s) => ({ ...s, activeOrchestrator: orchestrator }));
