@@ -580,6 +580,11 @@ invisible. They are separated here:
 | **Choice-eligibility** | a *condition* — is this entity's Choice structurally authentic at all? | §9.2 or §9.3's structural set (crystallized mode, coherent lines, choice-readiness, violet-ray integration ≥ 0.80, 51%/95%) | evaluated continuously; produces a *state*, never an event |
 | **The Harvest** | the *event* — polarity locks, archive, retirement | eligibility **∧** arrival at the sub-octave closure (**the Violet event**; L8 Turquoise completed, 06 §5.1) | once, at the apex (16 §11.5, 06 §7.4) |
 
+**Where this document's contract is satisfied:** `src/core/engines/PolarityEngine.ts` (the four-level
+aggregation of §4/§6, the eligibility test of §9, and the crystallization formula of §B2). The
+consequences below are all in that module; `arch context src/core/engines/PolarityEngine.ts` returns
+this document as the canon naming it.
+
 The runtime function that was named `checkHarvest` computed **eligibility**, not the harvest. It is
 now `checkChoiceEligibility`, whose verdict is never itself an endgame trigger; the arrival is a
 separate `subOctaveClosureReached`, and `evaluateChoice` is the **only** producer of the event

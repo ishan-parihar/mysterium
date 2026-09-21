@@ -7,6 +7,7 @@
 >
 > **Depends on:** 07 (neuroscience of development), 08 (psychophysics), 09 (flow), 03 (lines of intelligence)
 > **Referenced by:** 30 (holonic curriculum architecture), 31 (depth assessment model), 34 (curriculum-engine bridge)
+> **Satisfied by:** `src/core/curriculum/MetaCognitiveProbe.ts` (the metacognitive probe and its scoring) · `src/core/curriculum/LearningAnalytics.ts` (velocity, retention and modality effectiveness)
 
 ---
 

@@ -5,6 +5,7 @@
 > - Does the modality × line affinity matrix need per-stage modifiers (a dilemma probes Moral differently at Red than at Green), or is affinity stage-invariant as currently canonised?
 > - What is the minimum encounter count per modality for stable cross-modality triangulation (the doc asserts triangulation but not its sampling floor)?
 > - Should Immersive-RPG free-play override staircase pacing when flow absorption is detected, and how is that reconciled with scheduler authority (24)?
+> **Satisfied by:** `src/core/engines/CandidateGeneration.ts` (the modality x line affinity (`MODALITY_TASK_TYPES`) that routes a capacity to a modality) · `src/core/domain/enums.ts` (the modality set itself)
 
 ## 1. Purpose
 

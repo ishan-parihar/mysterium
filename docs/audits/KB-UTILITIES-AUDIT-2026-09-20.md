@@ -341,6 +341,31 @@ there is no mechanical link between a foundation doc's contract and the code tha
 beyond `contract_docs` pointers and DG10's check on paths *cited inside records*. Which is why
 RT-9 (the stage rename) and MY-RG-0005 (canon↔code drift) can exist at all.
 
+**RESOLVED 2026-09-21 (`KB-FOUNDATIONS-INGEST`), by derivation rather than by a registry.** **DG23**
+turns the citations canon already makes into the link. Two directions, both checked:
+
+1. **Every code path a foundations document cites must resolve** (75 citations today), *unless* the
+   citation sits in a `planned`/`removed` window — the same `declared_future` rule DG10 uses, so a
+   plan may still name the modules it intends to create. Seven unresolved citations exist and all
+   seven are honestly marked. A canon↔code drift now fails at the CITATION, which is one step
+   earlier than RT-9 was found.
+2. **Every document an organ declares as its `contract_docs` entry must name code.** A contract doc
+   anchored to nothing can never be returned by `arch context <file>`, so the organ's list is the
+   only (coarse) link that exists for it. **Nineteen docs were in that state** and now carry a
+   `> **Satisfied by:** …` line naming the module(s) they bind.
+
+The pay-off is the reverse index: `arch context <any code path>` now prints the foundation documents
+that NAME that path, with the token they name it by — derived from the same text the gate validates,
+so the two cannot disagree, and with no index to keep stale (48 files per call, the same order as one
+`search`). For `src/core/engines/CCIEngine.ts` it returns `25` and `36`, neither of which is in any
+organ's `contract_docs` for `kernel`.
+
+**Limit, measured rather than assumed:** the link exists only where canon names code. 36 of 48
+documents do; the residual 12 (`00`, `01`, `04`, `05`, `07`, `08`, `09`, `13`, `17`, `28`, `35`, `39`)
+are theory with no implementation to name and are linked only at organ granularity. The criterion is
+therefore enforced on *contract* docs, not on all canon — requiring a code citation from pure theory
+would manufacture fake edges, which is worse than the coarse one it replaced.
+
 ---
 
 ## 3. Disposition
@@ -381,10 +406,10 @@ router listed its contents from a declaration instead of discovering them.
 | UT-8 | `README.md` rung table reconciled with `AGENTS.md`; the six query verbs documented | — |
 | — | `activate the graph`: 1.4 s `validate`, 0.3 s `search` at 642 documents | — |
 
-**Still open, declared in `_org.yaml → pending`:** `KB-ORGAN-DOCS` (UT-6 — the 6 empty organs) and
-`KB-FOUNDATIONS-INGEST` (UT-11). Closed since this audit: `KB-ORPHAN-TRIAGE` (UT-7), `KB-VALIDATE-JSON`
-(UT-10), `KB-SKILLS-PROVENANCE` (UT-9), and the RT-2 corpus divergence it did not cover
-(`RT-CORPUS-RECONCILE`, gate `DG21`).
+**Still open, declared in `_org.yaml → pending`:** `KB-ORGAN-DOCS` (UT-6 — the 6 empty organs).
+Closed since this audit: `KB-ORPHAN-TRIAGE` (UT-7), `KB-VALIDATE-JSON` (UT-10),
+`KB-SKILLS-PROVENANCE` (UT-9), `KB-FOUNDATIONS-INGEST` (UT-11), and the RT-2 corpus divergence it
+did not cover (`RT-CORPUS-RECONCILE`, gate `DG21`).
 
 **Not a defect:** the four linters (`arch.py` DG1–DG22, `workspace-lint`, `check-invariants.ts`,
 `validation/gates.ts` G1–G26 — 22 gates) are genuinely disjoint — doc governance, file hygiene, static

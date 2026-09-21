@@ -7,6 +7,7 @@
 >
 > **Depends on:** 29 (meta-learning science), 30 (holonic curriculum architecture), 03 (lines of intelligence), 12 (drive assessment mechanics)
 > **Referenced by:** 32 (agentic curriculum linter), 34 (curriculum-engine bridge)
+> **Satisfied by:** `src/core/curriculum/DepthAssessment.ts` (the depth levels and their assessment)
 
 ---
 

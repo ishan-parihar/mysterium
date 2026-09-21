@@ -8,6 +8,7 @@
 > and the server-side coordination contract. Real-world practice and its social witness
 > are owned by 39 (which *consumes* pods for social-induction); legal/privacy substrate
 > is owned by 41.
+> **Satisfied by:** `src/core/pods/podStateMachine.ts` (the pod lifecycle and its ritual stages) · `src/infra/pods/PodTransport.ts` (the transport)
 
 ## 1. Purpose
 

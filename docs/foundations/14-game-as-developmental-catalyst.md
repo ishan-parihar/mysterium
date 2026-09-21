@@ -6,6 +6,7 @@
 > **Open questions (added 2026-09-16):**
 > - What distinguishes *integrated* catalyst from merely *repeated* catalyst in observable engine terms — is shadow-resolution latency the right proxy, or does it need a spaced-re-integration signal?
 > - The integration step is currently implicit (all-drives-healthy engagement); should there be an explicit consolidation mechanic (sleep/rest cycles in-world) without breaking the Veil?
+> **Satisfied by:** `src/core/usecases/ShadowDetector.ts` (the catalyst -> detection half: what an encounter surfaced) · `src/core/engines/ConsequenceEngine.ts` (the experience half: the consequence the catalyst leaves behind)
 
 ## 1. Purpose
 

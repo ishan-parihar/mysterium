@@ -2,6 +2,7 @@
 
 > **Cross-references:** [[docs/foundations/13-architecture-of-consciousness|13 — Architecture Of Consciousness]]
 > **Heading-contract map (2026-09-16):** all six sections present under canonical headings except Scientific basis, carried by §1 Purpose (theoretical grounding summary) + §3 (the drive-health determination model). §8 renamed from "Relationship to Combat" — legacy vocabulary purge, see docs/audits/DOC-SET-AUDIT-2026-09-16.md.
+> **Satisfied by:** `src/core/domain/ShadowLedger.ts` (the shadow ledger: the four quadrants, resolution state and integration history) · `src/core/engines/ShadowContentGenerator.ts` (shadow-surfacing content generation) · `src/core/data/shadowKeywords.ts` (the detection vocabulary)
 
 ## 1. Purpose
 

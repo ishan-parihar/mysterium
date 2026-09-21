@@ -7,6 +7,7 @@
 > **Referenced by:** 27 (auto-mode strategy engine)
 
 > **Heading-contract map (2026-09-16):** Purpose → §1; Scientific basis → §2 (the one-module-type thesis and its theoretical warrant); Game-design mapping → §2 (four purposes = the game-design mapping); Architectural contract → §4–§7 + §10 (state vessel, renderer, composition, module contract, invariants); Open questions → deferred to the subsystem docs (43 §7 for orchestration, 27 §7 for session edge cases); Principles served → §10 invariants.
+> **Satisfied by:** `src/core/assessments/types.ts` (the module contract and its four execution modes) · `src/core/assessments/engine.ts` (module execution and lifecycle) · `src/core/assessments/registry.ts` (the 64-cell module registry) · `src/core/domain/EncounterSpecNew.ts` (the encounter spec the scheduler consumes)
 
 ---
 

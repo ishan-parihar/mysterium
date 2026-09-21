@@ -21,6 +21,7 @@
 > **Open questions (added 2026-09-16):**
 > - Where exactly does the dashboard opt-in (33) sit relative to §4's withholding list — is per-metric opt-in Veil-valid, or does aggregate visibility alone breach the implicit-operation principle?
 > - Do healing-path agents (43 council) require a Veil-specific rubric distinct from the generation rubric of 22, given their privileged access to shadow-ledger projections?
+> **Satisfied by:** `src/core/presentation/veilDescriptors.ts` (the player-facing descriptors that carry no measurement) · `src/core/validation/gates.ts` (the veil-compliance gate that enforces the boundary)
 
 ---
 

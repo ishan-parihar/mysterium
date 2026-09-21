@@ -10,6 +10,7 @@
 > **Open questions (added 2026-09-16):**
 > - The 64 textures are authored priors — what is the update protocol when live telemetry shows a texture reads as stereotyped or fails to elicit its targeted polarity signal?
 > - Should exploratory textures (the third axis) have their own catalogue entries rather than being the residual category?
+> **Satisfied by:** `src/core/data/PolarityOntology.ts` (the 64-cell texture catalogue itself, and the lookup the LLM conditioning path reads)
 
 ---
 

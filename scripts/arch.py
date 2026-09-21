@@ -78,6 +78,7 @@ GATE_CONFIG_KEY = {
     "DG20": "dg20_script_provenance",
     "DG21": "dg21_corpus_reconcile",
     "DG22": "dg22_skill_provenance",
+    "DG23": "dg23_foundations_ingest",
 }
 
 # KB-ORPHAN-TRIAGE (KB audit UT-7): 11 of 15 scripts were unreferenced by package.json, CI,
@@ -448,6 +449,7 @@ class Gate:
             ("DG20", self.dg20_script_provenance),
             ("DG21", self.dg21_corpus_reconcile),
             ("DG22", self.dg22_skill_provenance),
+            ("DG23", self.dg23_foundations_ingest),
         ]
         for name, fn in gates:
             if only and name != only:
@@ -1165,6 +1167,11 @@ class Gate:
     SKILLS_DIR = "skills"
     SKILLS_MANIFEST = "skills/PROVENANCE.yaml"
 
+    # Code paths a foundations document cites. Canon's contract over a module IS, in practice, the
+    # set of paths it names — there is no other machine-readable form of it, and there should not be:
+    # duplicating the contract into a registry would create a second place to be wrong (principle 1).
+    CANON_CODE_CITE = re.compile(r"`((?:src|tests|scripts)/[A-Za-z0-9_./-]+)`")
+
     CORPUS_MODALITIES = (
         ("deterministic.md", "Deterministic"),
         ("strategic-planning.md", "Strategic"),
@@ -1325,6 +1332,71 @@ class Gate:
                         g,
                         f"{self.SKILLS_MANIFEST} `{name}` declares `license_file: none` without a "
                         f"`note` saying so — an unexplained absence is indistinguishable from an omission",
+                    )
+        self.checked[g] = n
+
+    # DG23 — foundations documents are linked to the code that must satisfy them
+    # (KB-FOUNDATIONS-INGEST, KB audit UT-11).
+    #
+    # `docs/foundations/` is ingested by nothing: no generator, no mirror, no index. That is
+    # *coherent* with the design — canon is the authority and code is the implementation — but it
+    # left no mechanical link between a foundation doc's contract and the code that must satisfy it,
+    # beyond `contract_docs` pointers on the ORGAN (coarse: one list per organ, so it can say "24
+    # governs catalyst" but never "24 governs this file") and DG10/DG16's checks on the paths cited
+    # inside *records*. Which is why a canon↔code drift like MY-RG-0005 can exist at all.
+    #
+    # The link is DERIVED, not declared. A registry mapping 48 documents to their implementing code
+    # would be a second place to be wrong and a hand-maintained list (MY-RG-0015); the paths the
+    # document actually names already ARE its contract's footprint, and a gate can check them. Two
+    # things follow, and both matter more than the check itself:
+    #   1. a foundations doc that cites a moved or renamed module FAILS — the RT-9 class, caught at
+    #      the citation instead of years later by a human reading prose;
+    #   2. the reverse index (path -> the canon that constrains it) is answerable from the tree, so
+    #      `arch context <code path>` can print the constitutional constraints on that file.
+    # Declared-future citations stay legal via the same `declared_future` window DG10 uses — a plan
+    # must be able to name the modules it intends to create.
+    def dg23_foundations_ingest(self, g: str) -> None:
+        d = ROOT / "docs" / "foundations"
+        if not d.is_dir():
+            self.checked[g] = 0
+            return
+        n = 0
+        by_doc: dict[str, list[str]] = {}
+        for p in sorted(d.glob("*.md")):
+            text = read_text_cached(p)
+            # A wiki-link target that happens to look like a path (`[[docs/system/...]]`) is DG12's
+            # citation and resolves by link rules, not path rules — strip those spans before scanning
+            # so the same token is not judged by two different standards (the DG12/DG8 lesson).
+            masked = re.sub(r"\[\[[^\]]*\]\]", lambda m: " " * len(m.group(0)), text)
+            for m in self.CANON_CODE_CITE.finditer(masked):
+                tok = m.group(1)
+                n += 1
+                by_doc.setdefault(p.stem, []).append(tok)
+                if self.cited_resolves(tok):
+                    continue
+                if self.declared_future(masked, m.start(), m.end()):
+                    continue
+                self.err(
+                    g,
+                    f"{rel(p)}: cites `{tok}` which does not resolve — canon constrains code that is "
+                    f"gone or was renamed; fix the citation or mark it planned/removed",
+                )
+        # The other direction, and the one that makes the reverse index useful at all: a document an
+        # organ declares as its CONTRACT must anchor that contract to code. A contract doc naming no
+        # code can never be returned by `arch context <file>`, so the organ's own list is the only
+        # link that exists for it — and an organ list is coarser than the file it governs, which is
+        # precisely the gap UT-11 described. 21 entries were in that state; each now carries a
+        # `> **Satisfied by:** ...` line naming the module(s) it binds.
+        for organ, o in (self.cfg.get("organs") or {}).items():
+            for ref in o.get("contract_docs") or []:
+                n += 1
+                stem = Path(str(ref)).name
+                if stem not in by_doc:
+                    self.err(
+                        g,
+                        f"organ `{organ}`: contract doc `{ref}` names no code path — its contract is "
+                        f"anchored to nothing, so `arch context <file>` can never return it. Add a "
+                        f"`> **Satisfied by:** \u0060<path>\u0060` line naming the module(s) it binds",
                     )
         self.checked[g] = n
 
@@ -1508,6 +1580,38 @@ def where_is(cfg: dict, r: str) -> tuple[str, str]:
     return "(unclaimed)", ""
 
 
+def canon_constraints(code_path: str) -> list[tuple[str, str, str]]:
+    """Reverse index: the foundations docs that NAME this code path, and the token they name it by
+    (DG23's other half).
+
+    The organ's `contract_docs` answers "which docs govern this organ" at the granularity of a whole
+    organ — eleven lists, none of which can say "24 governs this file". Scanning the citations gives
+    the per-file edge, and it is derived from the same text the gate validates, so the two can never
+    disagree. The matched token is returned rather than just the doc, because the useful fact is
+    *which sentence's* citation binds: a doc may constrain `src/core/engines/` wholesale and one file
+    in it by name, and those are different strengths of claim.
+
+    Ordered by the doc's own number so the output reads as a reading order. Cost: 48 files per call,
+    the same order of magnitude as one `search` — there is no index to keep stale.
+    """
+    out: list[tuple[str, str, str]] = []
+    d = ROOT / "docs" / "foundations"
+    if not d.is_dir():
+        return out
+    for p in sorted(d.glob("*.md")):
+        if p.name == "AGENTS.md":
+            continue
+        text = re.sub(r"\[\[[^\]]*\]\]", " ", read_text_cached(p))
+        hits: set[str] = set()
+        for m in Gate.CANON_CODE_CITE.finditer(text):
+            tok = m.group(1)
+            if code_path == tok or code_path.startswith(tok.rstrip("/") + "/") or tok.startswith(code_path.rstrip("/") + "/"):
+                hits.add(tok)
+        if hits:
+            out.append((rel(p), doc_title(p), " , ".join(sorted(hits))))
+    return out
+
+
 def organ_block(cfg: dict, organ: str, o: dict, via: str | None = None) -> str:
     """The bundle an agent needs before touching any file of an organ.
 
@@ -1524,6 +1628,22 @@ def organ_block(cfg: dict, organ: str, o: dict, via: str | None = None) -> str:
         p = contract_path(str(ref))
         docs.append(f"{rel(p)} — {doc_title(p)}" if p else f"{ref}  ** MISSING **")
     out += [f"  - {d}" for d in docs] or ["  - (none declared)"]
+    # Per-FILE canon, not per-organ: the docs whose text names this path (DG23's reverse index).
+    # `contract_docs` above says which docs govern the organ; this says which constrain *this file*
+    # and by which token, which is the question an agent is actually asking before it edits one.
+    # Deliberately NOT filtered against the list above: a doc that governs the organ AND names the
+    # file is a stronger claim than one that only governs the organ, and collapsing the two would
+    # hide exactly the distinction this section exists to show.
+    if via:
+        constraints = canon_constraints(via)
+        if constraints:
+            out.append("canon naming this path (from the document's own text):")
+            out += [f"  - {p} — {t}   [names `{tok}`]" for p, t, tok in constraints]
+        else:
+            out.append(
+                "canon naming this path: (none — no foundation document names it, so only the "
+                "organ-level contract docs above constrain it)"
+            )
     own = organ_docs(organ)
     out.append("documents in this organ (discovered from the tree):")
     out += [f"  - {rel(p)} — {doc_title(p)}" for p in own] or [
@@ -2394,6 +2514,11 @@ def cmd_validate(args: argparse.Namespace) -> int:
 # clean. A fixture is `(path, find, replace)`; `find == ""` means "create this file" (used where the
 # violation is a document that should not exist). A gate with no entry is reported as UNPROVEN rather
 # than passed silently — the same honesty rule the kernel gates use for rubric validity.
+#
+# A gate whose logic has MORE THAN ONE branch lists one fixture per branch (`"DGx": [f1, f2]`), and
+# EVERY fixture must fail. One fixture per gate proves one branch and silently vouches for the rest —
+# the shape of MY-RG-0010 one level up: a gate with three checks and one injected failure reads as
+# proven on all three.
 # ─────────────────────────────────────────────────────────────────────────────
 RECORD = "docs/system/core/decisions/MY-AD-0001-assessment-module-execution-replaces-the-atb-combat-spine.md"
 CANON = "docs/foundations/24-encounter-scheduler.md"
@@ -2406,7 +2531,8 @@ def _fixture_orphan() -> str:
     )
 
 
-GATE_FIXTURES: dict[str, tuple[str, str, str]] = {
+FIXTURE_SPEC = tuple[str, str, str]
+GATE_FIXTURES: dict[str, FIXTURE_SPEC | list[FIXTURE_SPEC]] = {
     "DG1": (RECORD, "Status: Active", "StatusRenamed: Active"),
     "DG2": (RECORD, "Status: Active", "Status: Retired"),
     "DG3": (RECORD, "ID: MY-AD-0001", "ID: MY-AD-0002"),
@@ -2430,6 +2556,31 @@ GATE_FIXTURES: dict[str, tuple[str, str, str]] = {
     "DG20": ("scripts/tdg-probe.ts", "@script-status: probe", "@script-status: wired"),
     # DG21: desynchronise the generated corpus index from the corpus it is generated from.
     "DG21": ("src/core/data/concept-drafts.json", '"Deterministic"', '"NoSuchModality"'),
+    # DG23 has two independent branches, so it carries two fixtures — one for each direction of the
+    # canon<->code edge. A single fixture would prove the citation check and leave the contract-doc
+    # coverage check vouched for by nothing.
+    "DG23": [
+        # (a) cite a module from canon that no longer exists, unmarked — the RT-9 class (canon
+        # constraining code that moved or was renamed, invisible because nothing read the citation).
+        (
+            "docs/foundations/19-choice-and-polarity-engine.md",
+            "src/core/engines/PolarityEngine.ts",
+            "src/core/engines/PolarityEngineRenamed.ts",
+        ),
+        # (b) strip a contract doc's only code citation, so the doc an organ declares as its contract
+        # is anchored to nothing and no `arch context <file>` can ever return it (UT-11's other half).
+        # The whole line goes, not just its prefix: leaving the tail in place kept the doc's
+        # `StageQuality.ts` citation alive and the injection was silently a no-op — which the
+        # harness caught by reporting "gate PASSED on its injected violation". That is the fixture
+        # checking itself.
+        (
+            "docs/foundations/02-eight-stages-overview.md",
+            "> **Satisfied by:** `src/core/domain/Stage.ts` (the eight-altitude ladder, its ordinals and"
+            " its names) · `src/core/domain/StageQuality.ts` (§5's per-altitude quality — emergent"
+            " order, per-quadrant integrity and pathology markers, identity band)\n",
+            "",
+        ),
+    ],
     # DG22: claim a vendored skill is `house`, with a resolving `spec` so the fixture reaches the
     # CORROBORATION branch and not the missing-field branch — the point of the gate is that the
     # declaration must agree with the content (a wrong provenance that passes is no provenance).
@@ -2452,68 +2603,81 @@ def cmd_fixtures(args: argparse.Namespace) -> int:
     order = list(GATE_CONFIG_KEY)
     unproven: list[str] = []
     broken: list[str] = []
+    proven: list[str] = []
     for gate in order:
-        spec = GATE_FIXTURES.get(gate)
-        if spec is None:
+        specs = GATE_FIXTURES.get(gate)
+        if specs is None:
             unproven.append(gate)
             continue
-        target, find, repl = spec
-        p = ROOT / target
-        # DG11's injection is an appended line, not a creation (its `find` is empty by design).
-        created = find == "" and gate != "DG11"
-        if created and p.exists():
-            broken.append(f"{gate}: fixture path {target} already exists — refusing to clobber it")
-            continue
-        if not created and not p.exists():
-            broken.append(f"{gate}: fixture target {target} is missing from the tree")
-            continue
-        original = None if created else p.read_text(encoding="utf-8")
-        if not created and find not in original:
-            broken.append(f"{gate}: fixture anchor not found in {target} — the fixture is stale")
-            continue
-        # `wrote` is the ONLY thing that may authorise a delete. Deciding it from `created` alone
-        # deleted `docs/INDEX.md` when an unrelated "already exists" guard ran inside the try block
-        # (2026-09-20): a fixture harness must never be able to remove a file it did not create.
-        wrote = False
-        try:
-            if created:
-                body = _fixture_orphan() if repl == "__ORPHAN__" else repl
-                p.write_text(body, encoding="utf-8")
-                wrote = True
-            elif gate == "DG11":
-                p.write_text(
-                    original + "\n- an injected line that makes a generated surface stale\n",
-                    encoding="utf-8",
-                )
-            else:
-                p.write_text(original.replace(find, repl, 1), encoding="utf-8")
-            # Reload per fixture: a gate that reads `_org.yaml` (DG13, DG18) must see the injected
-            # config, and loading it once before the loop silently made those fixtures no-ops. The
-            # per-pass read index must be dropped for the same reason: without `bust()` the gate
-            # would re-read the PRE-injection bytes from cache and every fixture would report
-            # "gate passed on its injected violation" — a cache that hides the violation it is
-            # meant to expose. (KB-VALIDATE-JSON)
-            bust()
-            g = Gate(org())
-            g.run(gate)
-            if not g.problems:
-                broken.append(f"{gate}: gate PASSED on its injected violation — it has no teeth")
-            else:
-                print(f"  ✓ {gate:5s} fails on injection ({len(g.problems)} finding(s))")
-        finally:
-            bust()
-            if created:
-                if wrote and p.exists():
-                    p.unlink()
-            elif original is not None:
-                p.write_text(original, encoding="utf-8")
+        if isinstance(specs, tuple):
+            specs = [specs]
+        ok = True
+        for n, (target, find, repl) in enumerate(specs, 1):
+            label = f"{gate}" if len(specs) == 1 else f"{gate}.{n}"
+            p = ROOT / target
+            # DG11's injection is an appended line, not a creation (its `find` is empty by design).
+            created = find == "" and gate != "DG11"
+            if created and p.exists():
+                broken.append(f"{label}: fixture path {target} already exists — refusing to clobber it")
+                ok = False
+                continue
+            if not created and not p.exists():
+                broken.append(f"{label}: fixture target {target} is missing from the tree")
+                ok = False
+                continue
+            original = None if created else p.read_text(encoding="utf-8")
+            if not created and find not in original:
+                broken.append(f"{label}: fixture anchor not found in {target} — the fixture is stale")
+                ok = False
+                continue
+            # `wrote` is the ONLY thing that may authorise a delete. Deciding it from `created` alone
+            # deleted `docs/INDEX.md` when an unrelated "already exists" guard ran inside the try block
+            # (2026-09-20): a fixture harness must never be able to remove a file it did not create.
+            wrote = False
+            try:
+                if created:
+                    body = _fixture_orphan() if repl == "__ORPHAN__" else repl
+                    p.write_text(body, encoding="utf-8")
+                    wrote = True
+                elif gate == "DG11":
+                    p.write_text(
+                        original + "\n- an injected line that makes a generated surface stale\n",
+                        encoding="utf-8",
+                    )
+                else:
+                    p.write_text(original.replace(find, repl, 1), encoding="utf-8")
+                # Reload per fixture: a gate that reads `_org.yaml` (DG13, DG18) must see the injected
+                # config, and loading it once before the loop silently made those fixtures no-ops. The
+                # per-pass read index must be dropped for the same reason: without `bust()` the gate
+                # would re-read the PRE-injection bytes from cache and every fixture would report
+                # "gate passed on its injected violation" — a cache that hides the violation it is
+                # meant to expose. (KB-VALIDATE-JSON)
+                bust()
+                g = Gate(org())
+                g.run(gate)
+                if not g.problems:
+                    broken.append(f"{label}: gate PASSED on its injected violation — it has no teeth")
+                    ok = False
+                else:
+                    print(f"  ✓ {label:7s} fails on injection ({len(g.problems)} finding(s))")
+            finally:
+                bust()
+                if created:
+                    if wrote and p.exists():
+                        p.unlink()
+                elif original is not None:
+                    p.write_text(original, encoding="utf-8")
+        if ok:
+            proven.append(gate)
     print()
     for b in broken:
         print(f"  ✗ {b}")
     if unproven:
         print(f"  ! no fixture (teeth unproven): {', '.join(unproven)}")
+    n_fixtures = sum(len(v) if isinstance(v, list) else 1 for v in GATE_FIXTURES.values())
     print(
-        f"\narch fixtures — {len(order) - len(unproven)}/{len(order)} gates proven to fail on injection"
+        f"\narch fixtures — {len(proven)}/{len(order)} gates proven to fail on injection "
+        f"({n_fixtures} injections)"
     )
     return 1 if broken else 0
 

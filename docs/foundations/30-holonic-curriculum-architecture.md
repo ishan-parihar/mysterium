@@ -7,6 +7,7 @@
 >
 > **Depends on:** 29 (meta-learning science), 00 (integral theory), 16 (Significator architecture), 21 (incarnation architecture)
 > **Referenced by:** 31 (depth assessment model), 32 (agentic curriculum linter), 34 (curriculum-engine bridge)
+> **Satisfied by:** `src/core/curriculum/CurriculumRegistry.ts` (the holonic curriculum registry) · `src/core/curriculum/KnowledgeGraph.ts` (prerequisite structure between concepts)
 
 ---
 

@@ -9,6 +9,7 @@
 > **Referenced by:** All implementation work for the curriculum expansion; 43 (agentic orchestration — Teacher/Assessor councils and the Curriculum Aligner consume this bridge's hooks through purpose-scoped projections)
 >
 > **Orchestration note (43):** the bridge functions and the curriculum-enhanced orchestrator extension (§3.4) execute *through* the delegated councils: tutoring, revision, prescription, examination, and alignment adjustments are agent mandates, not menu actions. Curriculum alignment context itself is assembled by the Context Steward (S2) and ratified by the orchestrator.
+> **Satisfied by:** `src/core/curriculum/CurriculumBridge.ts` (the bridge between curriculum state and engine state)
 
 ---
 

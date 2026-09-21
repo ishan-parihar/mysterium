@@ -7,6 +7,7 @@
 >
 > **Depends on:** 29 (meta-learning science), 30 (holonic curriculum architecture), 31 (depth assessment model)
 > **Referenced by:** 34 (curriculum-engine bridge)
+> **Satisfied by:** `src/core/curriculum/CurriculumLinter.ts` (the in-repo linter; `skills/curriculum-linter/` is its agentic surface)
 
 ---
 

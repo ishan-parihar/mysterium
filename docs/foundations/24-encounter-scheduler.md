@@ -15,6 +15,7 @@
 > **Bias-only rule (added 2026-09-20):** objective alignment (27 §5.4) and auto-mode (27 §2.3) act on the EIGHT criteria of §3.2 **by multiplying existing weights** — they never add a ninth criterion and never convert a filter into a score. §3.1's filters (altitude horizon, closure, shadow gate) remain unimpeachable: alignment can re-weight the frontier, never move it.
 >
 > **Principles served (added 2026-09-16):** principles 3 (adaptive), 5 (multi-dimensional), 7 (codebase honesty) per docs/01-first-principles.md — the scheduler is the point where developmental theory becomes encounter order, and it must stay deterministic, demographic-blind (42), and Veil-compliant (20).
+> **Satisfied by:** `src/core/engines/EncounterScheduler.ts` (selection, ordering and the §3.3 tie-break) · `src/core/engines/CandidateGeneration.ts` (candidate generation and the eligibility filters) · `src/core/engines/PriorityComputation.ts` (the eight-criterion priority formula of §3.2.9) · `src/core/engines/MacroCatalystEngine.ts` (PESTLE tension accumulation and macro-event lifecycle)
 
 ---
 

@@ -9,6 +9,7 @@
 > expansion plan, (4) the explicit rejection list of schooling's assembly-line assumptions.
 > WHAT knowledge content exists is owned by 30/36; HOW DEEP it goes by 31/35; HOW it
 > plugs into the engine by 34; HOW it is credentialed by 41; HOW it is measured by 40.
+> **Satisfied by:** `src/core/curriculum/data/` (the per-subject foundations packs the K-12 branches are authored into)
 
 ## 1. Purpose
 

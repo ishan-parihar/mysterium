@@ -8,6 +8,7 @@
 >
 > **Depends on:** 29, 30, 31, 16 (Significator), 25 (CCI), 11 (modalities)
 > **Referenced by:** 34 (curriculum-engine bridge)
+> **Satisfied by:** `src/routes/curriculum/progress/` (the learner progress surface) · `src/lib/components/displays/KnowledgeDashboard.svelte` (the display contract) · `src/core/curriculum/LearningAnalytics.ts` (the analytics the dashboard renders)
 
 ---
 

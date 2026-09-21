@@ -16,6 +16,7 @@
 > - **The sub-octave closure — the Violet event** (L8 Turquoise completed) **≈ our octave's contributions** — the Light-Law fully operative across all substrate layers; this is the Yellow→Green harvest into D4 (06 §5.1, 19 §9.6), not a "D4+" density and not a playable level.
 >
 > This Law-correspondence is the metaphysical grounding for Mysterium's Stage semantics. Each Stage's content should express its corresponding Law's phenomenology.
+> **Satisfied by:** `src/core/domain/Stage.ts` (the eight-altitude ladder, its ordinals and its names) · `src/core/domain/StageQuality.ts` (§5's per-altitude quality — emergent order, per-quadrant integrity and pathology markers, identity band)
 
 ## 1. Purpose
 
