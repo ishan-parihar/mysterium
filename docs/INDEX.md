@@ -25,7 +25,7 @@
 | `kernel` | `docs/system/sub-systems/kernel/AGENTS.md` | `src/core/engines`, `src/core/assessments`, `src/core/registries`, `src/core/domain`, `src/core/logic`, `src/core/usecases` |
 | `catalyst` | `docs/system/sub-systems/catalyst/AGENTS.md` | `src/core/practice`, `src/core/healing`, `src/core/braingame`, `src/core/GameLoop.ts` |
 | `curriculum` | `docs/system/sub-systems/curriculum/AGENTS.md` | `src/core/curriculum`, `src/core/packs`, `src/core/training` |
-| `profiling` | `docs/system/sub-systems/profiling/AGENTS.md` | `src/core/domain`, `src/infra/profiles` |
+| `profiling` | `docs/system/sub-systems/profiling/AGENTS.md` | `src/core/domain`, `src/infra/profiles`, `src/core/personalization` |
 | `orchestration` | `docs/system/sub-systems/orchestration/AGENTS.md` | `src/core/orchestration`, `src/core/agent`, `src/core/fallback`, `src/infra/llm` |
 | `world` | `docs/system/sub-systems/world/AGENTS.md` | `src/core/world`, `src/core/world/encounters-red` |
 | `onboarding` | `docs/system/sub-systems/onboarding/AGENTS.md` | `src/core/onboarding`, `src/core/adaptive` |

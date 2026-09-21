@@ -175,6 +175,7 @@ organs:
     code:
     - src/core/domain
     - src/infra/profiles
+    - src/core/personalization
     status: active
     note: No architecture doc existed before this plan (audit gap G5).
   orchestration:
