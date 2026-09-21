@@ -27,10 +27,13 @@
 
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { createRequire } from 'node:module';
 
 const ROOT = resolve(process.cwd());
 const CORPUS = join(ROOT, 'docs/concept-drafts');
 const OUT_FACETS = join(ROOT, 'src/core/world/facets/facets.json');
+const require = createRequire(import.meta.url);
+const polarityOntologyModule = require(join(ROOT, 'src/core/data/PolarityOntology.ts'));
 const OUT_INDEX = join(ROOT, 'src/core/data/concept-drafts.json');
 
 // ── Corpus directory grammar: {line-dir}/{NN-stage}/ ──
@@ -348,6 +351,80 @@ function extractModalityFacets(md: string, modality: string): { voice: unknown; 
   };
 }
 
+
+// ── extraction for the remaining characteristics (46 §2.1 rows 3, 5, 6, 9, 10) ──
+
+/** `polarity-texture` — grounded in doc 23's 64-cell catalogue (the same data the ContextPipeline
+ *  renders as [POLARITY TEXTURES]); compiled INTO the store so composition sees it. */
+function extractPolarityTexture(line: string, stage: string): unknown {
+  const { DEFAULT_POLARITY_ONTOLOGY, getTexture } = polarityOntologyModule as {
+    DEFAULT_POLARITY_ONTOLOGY: Record<string, { sto: string; sts: string; exploratory: string }>;
+    getTexture: (o: unknown, l: string, s: string) => { sto: string; sts: string; exploratory: string } | undefined;
+  };
+  const tex = getTexture(DEFAULT_POLARITY_ONTOLOGY, line, stage);
+  if (!tex) return { kind: 'polarity-texture', modes: [] };
+  return { kind: 'polarity-texture', modes: [tex.sto, tex.sts, tex.exploratory] };
+}
+
+/** `stake` — what the cell wants and can lose (46 §2.1 row 6, grounded in 19). Extracted from the
+ *  module-spec's Healing Vectors (what growth gains/risks) and the Integration criteria. */
+function extractStake(spec: string, modalityFiles: { modality: string; text: string }[]): unknown {
+  const healSec = sectionBetween(spec, /^## \d*\.?\s*Healing Vectors[^\n]*\n/m, /^## \d/m);
+  const gain = clean(/(?:integrat\w*|heal\w*)[^.\n]*?([A-Z][^.\n]{30,180}\.)/.exec(healSec)?.[1]) ||
+    clean(/healthy expression[^.\n]*\.?/.exec(healSec)?.[0]);
+  const modTitle = clean(/\*\*Title:\*\*\s*"?([^"\n]+)"?/.exec(modalityFiles[0]?.text ?? '')?.[1]);
+  const mechanic = clean(/\*\*Core mechanic:\*\*\s*([\s\S]*?)(?=\n-|\n\*\*|$)/.exec(modalityFiles[0]?.text ?? '')?.[1]);
+  return {
+    kind: 'stake',
+    wants: (modTitle || gain || 'progress at this cell').slice(0, 200),
+    canLose: (mechanic || gain || 'the growth this cell carries').slice(0, 200),
+  };
+}
+
+/** `role-archetype` — narrative function (46 §2.1 row 5, grounded in 18 §2). Derived from the
+ *  shadow archetype names of the DOMINANT quadrant — the entity's function is its relation to its
+ *  own shadow. */
+function extractRoleArchetype(sh: { quadrants: ShadowExpr[] }, spec: string): unknown {
+  const dominant = sh.quadrants[0];
+  const capacity = clean(/^##\s+\d*\.?\s*([A-Z][^\n]{5,80})$/m.exec(spec)?.[1]) || 'capacity-holder';
+  return {
+    kind: 'role-archetype',
+    archetype: dominant ? dominant.name : capacity,
+    narrativeFunction: dominant
+      ? `presents the ${dominant.quadrant} face of this cell: ${dominant.corePattern}`.slice(0, 240)
+      : 'holds the cell’s capacity in narrative space'.slice(0, 240),
+  };
+}
+
+/** `relationship-pattern` — how it binds to other holons (46 §2.1 row 9, grounded in 18 §2.9).
+ *  The module-spec's §6 SUPPORT/FEED tables are exactly this data. */
+function extractRelationshipPattern(spec: string): unknown {
+  const supports = /\|\s*([A-Za-z]+\/[A-Za-z]+)\s*\|/.exec(
+    sectionBetween(spec, /Modules that [\w/]+ SUPPORTS?\b[^\n]*\n/m, /^###?\s|^##\s/m),
+  )?.[1];
+  const feeds = /\|\s*([A-Za-z]+\/[A-Za-z]+)\s*\|/.exec(
+    sectionBetween(spec, /Shadows that FEED this module[^\n]*\n/m, /^##\s/m),
+  )?.[1];
+  const binding = [
+    supports ? `supports ${supports}` : '',
+    feeds ? `fed by the shadow of ${feeds}` : '',
+  ].filter(Boolean).join('; ');
+  return { kind: 'relationship-pattern', binding: binding || 'binds by shared stage altitude (18 §2.9)' };
+}
+
+/** `memory-schema` — what it records about itself and the player (46 §2.1 row 10; MY-AD-0009,
+ *  22 §7.4). The Shadow Surfacing Sequence's progressive revelation IS the memory contract. */
+function extractMemorySchema(spec: string): unknown {
+  const seq = sectionBetween(spec, /Progressive revelation[^\n]*\n/m, /^###?\s+Per-modality|^##\s/m);
+  const phases = [...seq.matchAll(/\d\.\s+\*\*(\w[^:*]{2,40})\*\*/g)].map((m) => m[1]);
+  return {
+    kind: 'memory-schema',
+    records: phases.length > 0
+      ? `progressive surfacing: ${phases.join(' \u2192 ')}; remembers which phase the player reached`
+      : 'remembers surfaced quadrants and their resolution state (22 §7.4)',
+  };
+}
+
 // ── main ────────────────────────────────────────────────────────────────────
 function main(): number {
   const facets: RawFacet[] = [];
@@ -370,14 +447,24 @@ function main(): number {
       // facet resolves through the tag store (invariant 4) and byTags() can pool over them (§5).
       const charTags = (characteristic: string): string[] =>
         INITIAL_TAG_IDS.filter((t) => (TAG_AFFINITY[t]?.[characteristic] ?? 0) > 0);
-      const put = (characteristic: string, payload: unknown, extraTags: string[] = []) => {
-        const key = `${line}:${stage}:${characteristic}`;
+      // `variant` disambiguates multi-instance characteristics: the 7 modality files each yield a
+      // voice/surface/lever facet, so the key carries the modality (46 §8: "tagged by modality").
+      // Without it, later modality files silently OVERWRITE earlier ones — the exact silent-loss
+      // failure class RT-CORPUS-RECONCILE exists for.
+      const put = (characteristic: string, payload: unknown, extraTags: string[] = [], variant?: string) => {
+        const key = variant
+          ? `${line}:${stage}:${characteristic}@${variant}`
+          : `${line}:${stage}:${characteristic}`;
         facetKeys.push(key);
         const tags = [...new Set([...charTags(characteristic), ...extraTags])];
         const tagAffinity: Record<string, number> = {};
         for (const t of tags) tagAffinity[t] = TAG_AFFINITY[t]?.[characteristic] ?? 0.5;
         facets.push({ key, tags, tagAffinity, payload, source: 'corpus' });
       };
+
+      const modalityTexts = Object.entries(MODALITY_FILES)
+        .filter(([file]) => existsSync(join(cellDir, file)))
+        .map(([file, modality]) => ({ modality, text: readFileSync(join(cellDir, file), 'utf-8') }));
 
       const sh = extractShadows(spec);
       if (sh.quadrants.length < 4) {
@@ -394,13 +481,20 @@ function main(): number {
         put('drive-profile', { kind: 'drive-profile', rows: dr.rows });
       }
 
+      // 46 §2.1 rows 3, 5, 6, 9, 10 — the full 10-characteristic set per cell (640 base facets).
+      put('polarity-texture', extractPolarityTexture(line, stage));
+      put('stake', extractStake(spec, modalityTexts));
+      put('role-archetype', extractRoleArchetype(sh, spec));
+      put('relationship-pattern', extractRelationshipPattern(spec));
+      put('memory-schema', extractMemorySchema(spec));
+
       for (const [file, modality] of Object.entries(MODALITY_FILES)) {
         const p = join(cellDir, file);
         if (!existsSync(p)) { errors.push(`${line}/${stage}: modality file ${file} missing`); continue; }
         const { voice, aesthetic, lever } = extractModalityFacets(readFileSync(p, 'utf-8'), modality);
-        put('voice-register', voice);
-        put('surface-aesthetic', aesthetic);
-        put('pressure-lever', lever);
+        put('voice-register', voice, [], modality);
+        put('surface-aesthetic', aesthetic, [], modality);
+        put('pressure-lever', lever, [], modality);
       }
 
       // Index keys follow DG21's derived format `{line-dir}:{stage-lower}` so the corpus

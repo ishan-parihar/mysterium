@@ -13,6 +13,20 @@ import {
 import type { Drive } from '../domain/Drive.js';
 import type { DriveDirectionality, ShadowQuadrant, EnergeticDirection, Modality } from '../domain/enums.js';
 import { buildContext } from '../../infra/llm/ContextPipeline.js';
+import { composeWorldTexture } from '../personalization/runtimeBridge.js';
+import { createFacetStore, type FacetStore } from '../world/facets/FacetStore.js';
+import { INITIAL_TAGS } from '../world/tags/initialTags.js';
+import facetsJson from '../world/facets/facets.json';
+
+// PLAN-IMPLEMENT runtime wiring: the compiled facet store, loaded once per process (pure data).
+let facetStoreSingleton: FacetStore | null = null;
+function getFacetStore(): FacetStore {
+  if (!facetStoreSingleton) {
+    const tagIds = new Set(INITIAL_TAGS.map((t) => t.id));
+    facetStoreSingleton = createFacetStore(tagIds, (facetsJson as unknown as { facets: never }).facets as never);
+  }
+  return facetStoreSingleton;
+}
 import { queryLLMWithTools, queryLLMStream } from '../../infra/llm/LLMClient.js';
 import { parseConsequence } from '../../infra/llm/ConsequenceParser.js';
 import { toQualitativeFeedback } from '../../infra/llm/QualitativeFeedback.js';
@@ -496,6 +510,20 @@ export class AgenticOrchestrator {
       // QUALITY-WIRING (MY-AD-0030): the per-altitude agenda aims catalyst at the player's actual
       // work (Eros edge + Agape undercurrents) rather than at the encounter's nominal stage.
       ...(this.developmentalAgenda ? { developmentalAgenda: this.developmentalAgenda } : {}),
+      // PLAN-IMPLEMENT (46 §7 step 6): the composed world texture from the facet store — the LLM
+      // plays an entity composed from canon facets rather than improvising one. Absent cell →
+      // undefined → the prompt falls back to the holon registry alone.
+      ...(() => {
+        try {
+          return { composedWorld: composeWorldTexture({
+            line: this.encounter.targetLines[0] ?? 'Cognitive',
+            stage: this.encounter.stage,
+            modality: this.encounter.modality,
+            facets: getFacetStore(),
+            shadowQuadrant: this.encounter.shadowTarget ?? null,
+          }) };
+        } catch { return {}; }
+      })(),
     };
     const context = buildContext(contextInput);
 
@@ -792,6 +820,18 @@ export class AgenticOrchestrator {
       ...(knowledgeState ? { knowledgeState } : {}),
       ...(polarityTextures.length > 0 ? { polarityTextures } : {}),
       ...(this.developmentalAgenda ? { developmentalAgenda: this.developmentalAgenda } : {}),
+      // PLAN-IMPLEMENT (46 §7 step 6): composed world texture, same contract as the main path.
+      ...(() => {
+        try {
+          return { composedWorld: composeWorldTexture({
+            line: this.encounter.targetLines[0] ?? line,
+            stage: this.encounter.stage,
+            modality: this.encounter.modality,
+            facets: getFacetStore(),
+            shadowQuadrant: this.encounter.shadowTarget ?? null,
+          }) };
+        } catch { return {}; }
+      })(),
     };
     const context = buildContext(contextInput);
     const assessmentContext = this.module ? this.buildAssessmentContext(this.module) : '';

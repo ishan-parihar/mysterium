@@ -13,16 +13,30 @@ export function facetKeyOf(line: Line, stage: Stage, characteristic: Characteris
   return `${line}:${stage}:${characteristic}`;
 }
 
-export function parseFacetKey(key: FacetKey): { line: Line; stage: Stage; characteristic: Characteristic } {
+/** Split a `characteristic` (optionally `characteristic@Variant`) into its base name + variant. */
+export function splitCharacteristic(raw: string): { characteristic: Characteristic; variant?: string } {
+  const at = raw.indexOf('@');
+  if (at === -1) return { characteristic: raw as Characteristic };
+  const base = raw.slice(0, at);
+  const variant = raw.slice(at + 1);
+  if (!CHARACTERISTICS.includes(base as Characteristic)) {
+    throw new Error(`unknown characteristic in facet key '${raw}'`);
+  }
+  return { characteristic: base as Characteristic, variant };
+}
+
+export function parseFacetKey(key: FacetKey): { line: Line; stage: Stage; characteristic: Characteristic; variant?: string } {
   const parts = key.split(':');
   if (parts.length !== 3) throw new Error(`malformed facet key '${key}'`);
-  const [line, stage, characteristic] = parts;
+  const [line, stage, rawCharacteristic] = parts;
   if (!ALL_LINES.includes(line as Line)) throw new Error(`unknown line in facet key '${key}'`);
   if (!ALL_STAGES.includes(stage as Stage)) throw new Error(`unknown stage in facet key '${key}'`);
-  if (!CHARACTERISTICS.includes(characteristic as Characteristic)) {
+  const { characteristic, variant } = splitCharacteristic(rawCharacteristic);
+  // splitCharacteristic only validates @-forms; a bare characteristic must be checked here too.
+  if (variant === undefined && !CHARACTERISTICS.includes(rawCharacteristic as Characteristic)) {
     throw new Error(`unknown characteristic in facet key '${key}'`);
   }
-  return { line: line as Line, stage: stage as Stage, characteristic: characteristic as Characteristic };
+  return { line: line as Line, stage: stage as Stage, characteristic, variant };
 }
 
 /** Serialisation shape — payloads survive as plain data; the store rehydrates them. */
@@ -51,7 +65,7 @@ export function createFacetStore(
 ): FacetStore {
   const facets = new Map<FacetKey, Facet>();
   for (const r of raw) {
-    const { line, stage, characteristic } = parseFacetKey(r.key); // throws on malformed keys
+    const { line, stage, characteristic } = parseFacetKey(r.key); // throws on malformed keys (incl. @variant)
     // 46 §11 invariant 4: a facet whose tags do not resolve in the tag store is a compile error.
     const unresolved = r.tags.filter((t) => !tagIds.has(t));
     if (unresolved.length > 0) {

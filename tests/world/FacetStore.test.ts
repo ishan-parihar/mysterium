@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createFacetStore, facetKeyOf, parseFacetKey } from '../../src/core/world/facets/FacetStore.js';
 import { CHARACTERISTICS } from '../../src/core/world/tags/types.js';
+import { ALL_MODALITIES } from '../../src/core/domain/enums.js';
 import { INITIAL_TAGS } from '../../src/core/world/tags/initialTags.js';
 import { ALL_LINES } from '../../src/core/domain/Line.js';
 import { ALL_STAGES } from '../../src/core/domain/Stage.js';
@@ -16,10 +17,17 @@ describe('facet store (46 §2/§6/§8)', () => {
         for (const c of ['shadow-expression', 'drive-profile'] as const) {
           expect(store.byKey(facetKeyOf(line, stage, c)), `${line}:${stage}:${c}`).toBeDefined();
         }
-        // each modality file emitted voice/surface/lever × 7 modalities
-        expect(store.byKey(facetKeyOf(line, stage, 'voice-register'))).toBeDefined();
-        expect(store.byKey(facetKeyOf(line, stage, 'surface-aesthetic'))).toBeDefined();
-        expect(store.byKey(facetKeyOf(line, stage, 'pressure-lever'))).toBeDefined();
+        // modality variants carry @Modality keys (46 §8 tagged by modality)
+        for (const m of ALL_MODALITIES) {
+          expect(store.byKey(`${facetKeyOf(line, stage, 'voice-register')}@${m}`), `${line}:${stage}:voice@${m}`).toBeDefined();
+          expect(store.byKey(`${facetKeyOf(line, stage, 'surface-aesthetic')}@${m}`)).toBeDefined();
+          expect(store.byKey(`${facetKeyOf(line, stage, 'pressure-lever')}@${m}`)).toBeDefined();
+        }
+        // the full 10-characteristic base set (46 §2.1)
+        for (const c of CHARACTERISTICS) {
+          if (['voice-register', 'surface-aesthetic', 'pressure-lever'].includes(c)) continue; // variant-keyed
+          expect(store.byKey(facetKeyOf(line, stage, c)), `${line}:${stage}:${c}`).toBeDefined();
+        }
       }
     }
   });
@@ -57,10 +65,21 @@ describe('facet store (46 §2/§6/§8)', () => {
     }
   });
 
-  it('per-modality facets record which modality they came from (46 §8 tagged by modality)', () => {
-    const f = store.byKey(facetKeyOf('Cognitive', 'Red', 'voice-register'))!;
+  it('per-modality facets are keyed by @Modality and record it in the payload (46 §8)', () => {
+    const f = store.byKey(`${facetKeyOf('Cognitive', 'Red', 'voice-register')}@ImmersiveRPG`)!;
     const payload = f.payload as unknown as { modality: string };
     expect(payload.modality).toBe('ImmersiveRPG');
+  });
+
+  it('the store has no duplicate keys — modality variants are distinct facets (RT-CORPUS-RECONCILE)', () => {
+    const seen = new Set<string>();
+    for (const f of store.facets.values()) {
+      expect(seen.has(f.key), `duplicate facet key ${f.key}`).toBe(false);
+      seen.add(f.key);
+    }
+    // per cell: 7 base characteristics + 3 modality-keyed × 7 modalities = 28 (46 §2.1's set,
+    // with voice/surface/lever living as @Modality variants rather than base keys)
+    expect(seen.size).toBe(64 * 28);
   });
 
   it('byTags returns only facets tagged with a known tag', () => {
@@ -78,6 +97,7 @@ describe('facet store (46 §2/§6/§8)', () => {
     expect(() => parseFacetKey('Nope:Red:stake')).toThrowError(/unknown line/);
     expect(() => parseFacetKey('Cognitive:Nope:stake')).toThrowError(/unknown stage/);
     expect(() => parseFacetKey('Cognitive:Red:nope')).toThrowError(/unknown characteristic/);
+    expect(() => parseFacetKey('Cognitive:Red:nope@ImmersiveRPG')).toThrowError(/unknown characteristic/);
   });
 
   it('every one of the 10 characteristics is present in CHARACTERISTICS (46 §2.1)', () => {

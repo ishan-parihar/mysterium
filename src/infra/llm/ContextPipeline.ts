@@ -92,6 +92,25 @@ export interface ContextPipelineInput {
    * facing — this is LLM-conditioning context only.
    */
   readonly developmentalAgenda?: DevelopmentalAgenda;
+  /**
+   * PLAN-IMPLEMENT (46 §7 step 6 → 45 §6): the composed world texture for this encounter, produced
+   * by the personalization module's composition pipeline over the facet store. Veil-safe by
+   * construction (facet prose is canon text; no C1/C2 fields, no scores). Absent → the prompt
+   * falls back to the holon registry alone.
+   */
+  readonly composedWorld?: ComposedWorldTexture;
+}
+
+/** The composed-facet prose blocks the prompt may carry (46 §7 step 5's applied facets). */
+export interface ComposedWorldTexture {
+  readonly role: string;
+  readonly stake: string;
+  readonly lever: string;
+  readonly voice: string;
+  readonly aesthetic: string;
+  readonly polarity: string;
+  readonly relationship: string;
+  readonly memory: string;
 }
 
 export interface ContextPipelineOutput {
@@ -312,6 +331,7 @@ function assembleSystemPrompt(
   knowledgeState?: { readonly conceptCount: number; readonly avgRetention: number; readonly reviewCandidates: ReadonlyArray<{ readonly conceptId: string; readonly urgency: number }> },
   polarityTextures?: ReadonlyArray<{ readonly line: Line; readonly stage: Stage; readonly texture: PolarityTexture }>,
   developmentalAgenda?: DevelopmentalAgenda,
+  composedWorld?: ComposedWorldTexture,
 ): string {
   const holonDescriptions = formatHolonDescriptions(holonSelection);
   const playerStateSignals = formatPlayerState(veilFilteredSig);
@@ -334,6 +354,10 @@ function assembleSystemPrompt(
   // taxonomy labels. Absent when a caller has nothing to add; the block must NEVER appear for a
   // player-facing surface, which the format below enforces by carrying only qualitative prose.
   const agendaBlock = developmentalAgenda ? formatDevelopmentalAgenda(developmentalAgenda) : '';
+  // PLAN-IMPLEMENT: the composed world texture — facet prose applied in dependency order, so the
+  // LLM plays an entity composed from the store rather than improvising one. Veil-safe: facet
+  // payloads are corpus-derived canon text carrying no developmental numbers.
+  const composedBlock = composedWorld ? formatComposedWorld(composedWorld) : '';
 
   return `[ROLE] You are the manifestation layer of Mysterium.
 [COSMOLOGY] Third Density constraints. Veil enforced. Free will absolute.
@@ -343,9 +367,26 @@ ${frequencySpec.crossAltitudeDirective}
 [ENCOUNTER] lines=${encounterContext.lines.join(',')}; stage=${encounterContext.stage}; modality=${encounterContext.modality}; purpose=${encounterContext.catalyticPurpose}; module=${encounterContext.moduleRef}
 [MODALITY] ${modalityRubric}
 [CONTINUITY] ${consequenceContext}
-[PLAYER STATE] ${playerStateSignals}${synthesisBlock}${cognitiveBlock}${knowledgeBlock}${polarityBlock}${agendaBlock}
+[PLAYER STATE] ${playerStateSignals}${synthesisBlock}${cognitiveBlock}${knowledgeBlock}${polarityBlock}${agendaBlock}${composedBlock}
 [OUTPUT FORMAT] ${outputFormat}
 [RULES] No Veil violations. No clinical language. No scoring references. No frame-breaking. Stay in frequency. Scale cognitive complexity to the player's altitude, not the encounter's stage.`;
+}
+
+// PLAN-IMPLEMENT (46 §7 step 6): the composed world texture rendered for LLM conditioning. Each
+// line is one applied facet's prose; empty facets collapse out so partial compositions degrade
+// gracefully rather than printing blanks.
+function formatComposedWorld(w: ComposedWorldTexture): string {
+  const parts: string[] = [];
+  if (w.role.trim()) parts.push(`role=${w.role}`);
+  if (w.stake.trim()) parts.push(`stake=${w.stake}`);
+  if (w.lever.trim()) parts.push(`pressure=${w.lever}`);
+  if (w.voice.trim()) parts.push(`voice=${w.voice}`);
+  if (w.aesthetic.trim()) parts.push(`aesthetic=${w.aesthetic}`);
+  if (w.polarity.trim()) parts.push(`polarity=${w.polarity}`);
+  if (w.relationship.trim()) parts.push(`binds=${w.relationship}`);
+  if (w.memory.trim()) parts.push(`memory=${w.memory}`);
+  if (parts.length === 0) return '';
+  return `\n[COMPOSED WORLD] ${parts.join('; ')}`;
 }
 
 // QUALITY-WIRING (MY-AD-0030): the developmental agenda rendered for LLM conditioning.
@@ -549,6 +590,7 @@ export function buildContext(input: ContextPipelineInput): ContextPipelineOutput
     input.knowledgeState,
     input.polarityTextures,
     input.developmentalAgenda,
+    input.composedWorld,
   );
 
   // Collect selected holons for output
