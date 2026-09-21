@@ -323,3 +323,48 @@ export function erosScan(
     calledToward: ALL_STAGES[cog + 1],
   };
 }
+
+// ---------------------------------------------------------------------------
+// QUALITY-WIRING (MY-AD-0030) — the runtime reader the quality data was missing.
+// ---------------------------------------------------------------------------
+
+/**
+ * The developmental agenda at a centre of gravity — BOTH vectors of AGENTS.md §5.3 in one
+ * record, computed rather than declared.
+ *
+ * This is the structure the LLM-conditioning path consumes (`ContextPipelineInput.developmental-
+ * Agenda`): it exists so catalyst can be aimed at the player's actual work — the threshold the
+ * centre of gravity is being pulled across, and the lower altitudes whose pathology content is
+ * still live — instead of at the encounter's nominal stage. Marker prose is the only payload:
+ * Veil-safe by construction (no scores, no taxonomy labels), which is why this record may feed a
+ * prompt but never a player-facing surface.
+ */
+export interface DevelopmentalAgenda {
+  /** The centre of gravity the agenda was computed at. */
+  readonly centreOfGravity: Stage;
+  /** Eros: what this altitude's threshold markers name as the attractor. */
+  readonly eros: { thresholdMarkers: string; calledToward: Stage | null } | null;
+  /**
+   * Agape: the per-quadrant pathology content still live BELOW the centre of gravity. One entry
+   * per (altitude, quadrant) whose marker text is non-empty; empty only at the bottom of the
+   * ladder, where there is nothing below to heal.
+   */
+  readonly agape: ReadonlyArray<{ stage: Stage; quadrant: Quadrant; marker: string }>;
+}
+
+/**
+ * Compute the agenda for a centre of gravity. Deterministic and pure: same altitudes in, same
+ * agenda out. The healing layers' targeting and the LLM conditioning path both read this, which
+ * is what makes the two vectors of AGENTS.md §5.3 ONE computation instead of two conventions.
+ */
+export function buildDevelopmentalAgenda(centreOfGravity: Stage): DevelopmentalAgenda {
+  return {
+    centreOfGravity,
+    eros: erosScan(centreOfGravity)
+      ? { thresholdMarkers: erosScan(centreOfGravity)!.thresholdMarkers, calledToward: erosScan(centreOfGravity)!.calledToward }
+      : null,
+    agape: agapeScan(centreOfGravity).flatMap(stage =>
+      QUADRANTS.map(quadrant => ({ stage, quadrant, marker: pathologyIn(stage, quadrant) })),
+    ),
+  };
+}

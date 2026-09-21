@@ -6,6 +6,10 @@ import type { ConsequenceRecord } from '../domain/ConsequenceRecord.js';
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
 import { stageOrdinal } from '../domain/Stage.js';
+import {
+  buildDevelopmentalAgenda,
+  type DevelopmentalAgenda,
+} from '../domain/StageQuality.js';
 import type { Drive } from '../domain/Drive.js';
 import type { DriveDirectionality, ShadowQuadrant, EnergeticDirection, Modality } from '../domain/enums.js';
 import { buildContext } from '../../infra/llm/ContextPipeline.js';
@@ -199,6 +203,13 @@ export class AgenticOrchestrator {
   private _trainingSignal: AbortSignal | undefined;
   private unifiedProfile: UnifiedProfileServices | null = null;
 
+  /**
+   * QUALITY-WIRING (MY-AD-0030): the developmental agenda for the current significator, computed
+   * once per session start and refreshed when the significator is replaced. Derived from the
+   * ratified StageQuality — this is where `agapeScan`/`erosScan` finally reach a runtime consumer.
+   */
+  private developmentalAgenda: DevelopmentalAgenda | null = null;
+
   // ponytail: E — shadow keywords extracted to src/core/data/shadowKeywords.json (shared data, not code).
   private static readonly SHADOW_KEYWORDS = SHADOW_KEYWORDS_DATA as Readonly<Record<string, readonly string[]>>;
 
@@ -272,6 +283,17 @@ export class AgenticOrchestrator {
     this.agentSynthesis = params.agentSynthesis;
     this.training = params.training ?? null;
     this.unifiedProfile = params.unifiedProfile ?? null;
+    // QUALITY-WIRING (MY-AD-0030): compute the agenda once at construction; refreshed by
+    // `refreshAgenda` whenever the significator's altitudes change materially.
+    this.developmentalAgenda = buildDevelopmentalAgenda(this.significator.currentStage);
+  }
+
+  /**
+   * Recompute the developmental agenda after a significator update (altitude shifts, stage
+   * transitions). Cheap (pure, in-memory); called at the points where altitudes can move.
+   */
+  private refreshAgenda(): void {
+    this.developmentalAgenda = buildDevelopmentalAgenda(this.significator.currentStage);
   }
 
   /**
@@ -471,6 +493,9 @@ export class AgenticOrchestrator {
       ...(cognitiveSnapshot ? { cognitiveSnapshot } : {}),
       ...(knowledgeState ? { knowledgeState } : {}),
       ...(polarityTextures.length > 0 ? { polarityTextures } : {}),
+      // QUALITY-WIRING (MY-AD-0030): the per-altitude agenda aims catalyst at the player's actual
+      // work (Eros edge + Agape undercurrents) rather than at the encounter's nominal stage.
+      ...(this.developmentalAgenda ? { developmentalAgenda: this.developmentalAgenda } : {}),
     };
     const context = buildContext(contextInput);
 
@@ -766,6 +791,7 @@ export class AgenticOrchestrator {
       ...(cognitiveSnapshot ? { cognitiveSnapshot } : {}),
       ...(knowledgeState ? { knowledgeState } : {}),
       ...(polarityTextures.length > 0 ? { polarityTextures } : {}),
+      ...(this.developmentalAgenda ? { developmentalAgenda: this.developmentalAgenda } : {}),
     };
     const context = buildContext(contextInput);
     const assessmentContext = this.module ? this.buildAssessmentContext(this.module) : '';
@@ -1568,6 +1594,9 @@ INSTRUCTIONS:
           finalSig = { ...finalSig, currentStage: nextStage };
         }
       }
+      // An altitude moved, so the agenda may have changed (a new Eros edge, one fewer Agape
+      // altitude). QUALITY-WIRING (MY-AD-0030).
+      this.refreshAgenda();
     }
 
     // G.12: PESTLE correlation — map encounter content to dimensions

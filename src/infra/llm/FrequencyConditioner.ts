@@ -13,6 +13,8 @@ import type { Line } from '../../core/domain/Line.js';
 import type { Stage } from '../../core/domain/Stage.js';
 import type { Modality } from '../../core/domain/enums.js';
 import { stageOrdinal } from '../../core/domain/Stage.js';
+import { RAY_LENS } from '../../core/domain/Ray.js';
+import { qualityOf } from '../../core/domain/StageQuality.js';
 
 export interface FrequencySpec {
   readonly playerFrequency: { readonly line: Line; readonly stage: Stage };
@@ -27,6 +29,18 @@ export interface FrequencySpec {
   readonly complexityRegister: string;
   /** Structured directive telling the LLM how to handle cross-altitude framing. */
   readonly crossAltitudeDirective: string;
+  /**
+   * QUALITY-WIRING (MY-AD-0030 / MY-AD-0029): the RAY_LENS read of the holon's position — what
+   * this ray position DOES (`rayFunction`) and the subtle vehicle it works through
+   * (`subtleBody`) — plus the altitude's own emergent-order prose. The voice table above says
+   * HOW to speak at an altitude; this says WHAT is being worked at it, from the two ratified
+   * lenses rather than from a third hand-maintained table.
+   */
+  readonly lensRead: {
+    readonly rayFunction: string;
+    readonly subtleBody: string;
+    readonly emergentOrder: string;
+  };
 }
 
 interface StageVoice {
@@ -181,5 +195,13 @@ export function generateFrequencySpec(
     crossAltitudeDynamic,
     complexityRegister: playerVoice.complexityRegister,
     crossAltitudeDirective,
+    // The lens read of the holon's position: what this ray position does, the vehicle it works
+    // through, and what emerges at this altitude. One consumer each for `RAY_LENS`'s unread
+    // `rayFunction`/`subtleBody` fields and for StageQuality's emergent order (MY-AD-0030).
+    lensRead: {
+      rayFunction: RAY_LENS[holonStage].rayFunction,
+      subtleBody: RAY_LENS[holonStage].subtleBody,
+      emergentOrder: qualityOf(holonStage).emergentOrder,
+    },
   };
 }

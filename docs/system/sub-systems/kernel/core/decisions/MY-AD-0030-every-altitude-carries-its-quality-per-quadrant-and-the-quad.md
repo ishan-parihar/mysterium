@@ -7,8 +7,7 @@ Organ: kernel
 Source: "foundations/02-eight-stages-overview §3, foundations/44 §3 axis A"
 Description: "StageQuality ingested from KosmOS stages/altitude.md gives each altitude an emergent order, per-quadrant integrity and pathology markers, threshold markers and identity band. This is what distinguishes two altitudes that share a ray (Teal gateway opens vs Turquoise gateway traversed), and because the markers are already per-quadrant it closes the AQAL deferral of AGENTS.md §6 with ratified ontology rather than new theory. agapeScan/erosScan make the dual vectors of AGENTS.md §5.3 computable."
 Related: [MY-AD-0029, MY-AD-0017, MY-AD-0021]
-Consumer: "`src/core/domain/StageQuality.ts`, `tests/core/domain/StageLadder.test.ts`"
-Deferral: QUALITY-WIRING
+Consumer: "`src/core/domain/StageQuality.ts` (buildDevelopmentalAgenda), `src/infra/llm/ContextPipeline.ts` (the agenda block), `src/infra/llm/FrequencyConditioner.ts` (lensRead), `src/core/engines/ShadowContentGenerator.ts` (pathologyIn via LINE_QUADRANT); fixture `tests/core/domain/QualityWiring.test.ts`"
 ---
 
 ## Context
@@ -68,10 +67,19 @@ architecture. They needed the existing one ingested.
 - Positive: one ingestion answered three previously separate questions (the quality axis, the AQAL
   deferral, and computable dual vectors), which is the expected payoff when a divergence is closed by
   adopting the governing ontology instead of deciding locally.
-- Negative / accepted: **nothing consumes the markers yet.** The assessment, healing and scaffold
-  layers still read the bare `Stage`, so the quality model is data with a test and no runtime reader.
-  Tracked as `_org.yaml → pending → QUALITY-WIRING`; the escalation path is real (it will move
-  assessment targeting), which is why it is a declared deferral rather than an undocumented gap.
+- Resolved (2026-09-21, `QUALITY-WIRING` discharged): the markers have three runtime readers.
+  **(1)** `buildDevelopmentalAgenda` computes AGENTS.md §5.3's BOTH vectors in one pure record and
+  the `ContextPipeline` renders it as a Veil-safe `[DEVELOPMENTAL AGENDA]` block — Eros names the
+  threshold the centre of gravity is being pulled across, Agape names the lower altitudes' live
+  pathology content. **(2)** `generateFrequencySpec().lensRead` gives `RAY_LENS`'s
+  `rayFunction`/`subtleBody` (and the emergent order) their consumer in frequency conditioning, so
+  the LLM knows WHAT an altitude works, not only HOW to speak at it (also closes the unread-fields
+  half of `MY-AD-0029`). **(3)** `buildShadowPromptSuffix` grounds shadow encounters in
+  `pathologyIn(stage, LINE_QUADRANT[line])` — doc 10's shadow model now reads the ratified markers,
+  selected through the *line's* AQAL quadrant, never the shadow quadrant (they are different axes;
+  `10 §12`). Still true by design: assessment *scoring* is untouched — the wiring aims catalyst and
+  conditions prompts; it does not move measurement, so the escalation-to-assessment-targeting path
+  remains open for Phase 10's personalization work (`45`), where it belongs.
 - Neutral: `stub: true` remains on the registry entries. The registry holds presentation concerns
   (palette, audio, gravity); quality is a different lateral, and merging them would recreate the
   redundancy `MY-RG-0025` is about.

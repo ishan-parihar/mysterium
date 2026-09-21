@@ -3,6 +3,16 @@ import type { Drive } from '../domain/Drive.js';
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
 import { driveForLine } from '../domain/Drive.js';
+// QUALITY-WIRING (MY-AD-0030): a shadow encounter is an encounter WITH an altitude's pathology
+// content, so it should name that content from the ratified per-quadrant model rather than from
+// the quadrant label alone. The pathology model is indexed by AQAL quadrant (`StageQuality`),
+// so the shadow quadrant is grounded through the LINE the encounter targets — the line's AQAL
+// quadrant (`LINE_QUADRANT`) selects which of the altitude's four pathology markers is the live
+// material. Shadow quadrants and AQAL quadrants are DIFFERENT axes (10 §12: every shadow
+// quadrant manifests across all four AQAL quadrants); conflating them was the bug this
+// import-order comment exists to prevent.
+import { pathologyIn } from '../domain/StageQuality.js';
+import { LINE_QUADRANT } from '../domain/Line.js';
 
 /**
  * Shadow encounter content: narrative prompt, evaluation rubric, and drive focus.
@@ -10,6 +20,8 @@ import { driveForLine } from '../domain/Drive.js';
 export interface ShadowEncounterContent {
   /** Narrative introduction tailored to the shadow quadrant */
   readonly narrativeIntro: string;
+  /** The shadow quadrant this content was generated for. */
+  readonly quadrant: ShadowQuadrant;
   /** The drive to probe during this shadow encounter */
   readonly targetDrive: Drive;
   /** Specific prompts for the LLM to use during the encounter */
@@ -235,6 +247,7 @@ export function generateShadowContent(
 
   return {
     narrativeIntro,
+    quadrant,
     targetDrive: drive,
     prompts,
     evaluationCriteria: evalCriteria,
@@ -250,12 +263,22 @@ export function generateShadowContent(
 export function buildShadowPromptSuffix(
   content: ShadowEncounterContent,
   line: Line,
-  _stage: Stage,
+  stage: Stage,
   unresolvedCount: number,
 ): string {
+  // QUALITY-WIRING (MY-AD-0030): ground the encounter in the altitude's actual pathology content
+  // for the targeted quadrant (KosmOS `_Ontology/stages/altitude.md`, the same fourfold model doc
+  // 10 builds on). Read per-quadrant: a Dark-Addiction encounter at Red works the UL marker, not
+  // an invented one. The `_stage` parameter becomes live here; marker prose is already felt-sense,
+  // so no Veil translation is needed — but it is LLM-facing, never player-facing.
+  // The line's AQAL quadrant, not the shadow quadrant: the pathology model describes how the
+  // altitude's blockage manifests per AQAL quadrant, and the encounter happens on a line.
+  const quadrantText = pathologyIn(stage, LINE_QUADRANT[line]);
   return `
 [SHADOW WORK MODE — CRITICAL INSTRUCTIONS]
 This is a SHADOW ENCOUNTER, not a capacity encounter. The player has ${unresolvedCount} unresolved shadows in ${line}.
+
+[THE MATERIAL ITSELF] What this shadow looks like when it is live: ${quadrantText}
 
 RULES FOR SHADOW ENCOUNTERS:
 1. Do NOT measure capacity. This encounter is about shadow INTEGRATION, not skill assessment.
