@@ -194,7 +194,8 @@ owner, 16 §11.5/§11.6), plus every cross-reference to "White" as a stage. Trac
 doc pass.
 
 **Ownership:** this doc owns the density/ray vocabulary and the ladder's cosmology; 19 §9.6
-owns eligibility vs. event; 16 owns the lifecycle; 02 §4 owns the substrate-layer table.
+owns eligibility vs. event; 16 owns the lifecycle; 02 §4 owns the law-band table (renamed from
+"substrate-layer" 2026-09-21 — `44` axis E).
 Related sources: HoloOS `04_VIBGYOR_Density_Functions.md`, `01.4_Scalar_Metric.md` §2.5,
 `08.8.7_Primal_Distortion_Genesis_Theorem.md` §6.5, `RD_Density_Ray_Dissonance_Audit.md`;
 KosmOS `docs/foundations/02-eight-stages-overview.md`, `stages.md`, `lenses/rays.md`, `docs/foundations/06-law-of-one-correspondence.md`,

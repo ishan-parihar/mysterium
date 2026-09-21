@@ -58,7 +58,7 @@ summed, or used as proxies for one another.
 | **B** — **Stage number** | within-altitude resolution | `02 §2.3` (MHC/Kegan spans) | *how* the ascent differentiates — MHC Orders 0–16, Kegan 0–5+. |
 | **C** — **Ray / density lens** | the Law-of-One overlay | `06 §5.1`, `06 §8` | **a lens, never a place.** 9 sub-octave positions (Blue 5a/5b, **Indigo 6a/6b**), and position count (9) exceeds ray count (7) precisely so two altitudes can share a ray. Teal and Turquoise BOTH read Indigo; the Violet (7th) position is the **closure event**. Horizon vocabulary. |
 | **D** — **Framework-density** | the *knowledge* axis | `31` (DepthLevel), `42` (depth rungs) | concept → concrete-op → formal-op → vision-logic → beyond. A different question entirely. |
-| **E** — **Intra-holonic vertical** | the consciousness topography | `13` | the 5 substrate layers *inside* a holon — not stages, not densities. |
+| **E** — **Intra-holonic vertical** | the consciousness topography | `13` | the 5 substrate layers *inside* a holon — not stages, not densities. **`Substrate layer` means THIS and only this** (2026-09-21 ruling): the D3 law-bands of `02 §4` were renamed *law-bands*, so the word has exactly one axis. |
 
 **Firewall laws (each has a gate or a documented failure it prevents):**
 

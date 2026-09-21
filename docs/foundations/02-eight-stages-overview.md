@@ -3,17 +3,18 @@
 > **Status:** canonical-hypothesis (Wilber synthesis + Law-of-One Ra material + Primal Distortion Genesis Theorem correspondence).
 >
 > HoloOS anchor: `_THEORY/02_Ontology/08.8.7_Primal_Distortion_Genesis_Theorem.md` (canonical-hypothesis). The Primal Distortion Genesis Theorem establishes that each Stage corresponds to an established Primal Law:
-> **Vocabulary correction (2026-09-20, canon home = 06 §5.1):** the bands below are **substrate layers within D3** (the density of the Choice), **not densities**. Densities are VIBGYOR — D1 Red, D2 Orange, **D3 Yellow**, D4 Green … D7 Violet, with the 8th as the octave-closure — and Mysterium's stage names (Infrared … Turquoise) are Spiral-Dynamics colours. Each integrated substrate layer carries one of the three established Laws; Mysterium's eight stages traverse the **D3 sub-octave**, whose closure is the **Violet event** (L10 — an event, not a stage; `01.4` §2.5.2, 06 §5.1).
+> **Vocabulary correction (2026-09-20, canon home = 06 §5.1; renamed 2026-09-21 per VOCAB-SUBSTRATE ruling):** the bands below are **law-bands within D3** (the density of the Choice), **not densities**. Densities are VIBGYOR — D1 Red, D2 Orange, **D3 Yellow**, D4 Green … D7 Violet, with the 8th as the octave-closure — and Mysterium's stage names (Infrared … Turquoise) are Spiral-Dynamics colours. Each integrated substrate layer carries one of the three established Laws; Mysterium's eight stages traverse the **D3 sub-octave**, whose closure is the **Violet event** (L10 — an event, not a stage; `01.4` §2.5.2, 06 §5.1).
 >
-> **Term scope.** *Substrate layer* here means a law-band **of the D3 sub-octave** (Free Will / Love /
-> Light / the octave's contributions). It is **not** the intra-holonic compositional vertical — the
-> substrate→core→emergent stratum stack that `13` owns and `44` axis E names. Two different axes
-> borrowed one word; the collision is tracked as `VOCAB-SUBSTRATE` (`_org.yaml → pending`).
+> **Term scope (2026-09-21, user-ratified).** These bands are **law-bands** — a band of the D3
+> sub-octave carrying one of the established Laws (Free Will / Love / Light / the octave's
+> contributions). The word ***substrate layer*** is retired for this sense and now means ONLY the
+> intra-holonic compositional vertical — the substrate→core→emergent stratum stack that `13` owns
+> and `44` axis E names. One word, one axis (`MY-RG-0026`'s rule); the collision is closed.
 >
-> - **Substrate layer 1 — Infrared/Magenta ≈ Free Will** (First Distortion, established by Octave N-3's complete D1→D7 harvest). Encounters about choice as such; quantum-like superposition of possibilities.
-> - **Substrate layer 2 — Red/Amber ≈ Love / Logos** (Second Distortion, established by Octave N-2). Directed growth, Logos-focusing, the principle of unity-attracting.
-> - **Substrate layer 3 — Orange/Green/Teal ≈ Light** (Third Distortion, established by Octave N-1). Self-reflective choice within archetypal form; manifestation.
-> - **The sub-octave closure — the Violet event** (L8 Turquoise completed) **≈ our octave's contributions** — the Light-Law fully operative across all substrate layers; this is the Yellow→Green harvest into D4 (06 §5.1, 19 §9.6), not a "D4+" density and not a playable level.
+> - **Law-band 1 — Infrared/Magenta ≈ Free Will** (First Distortion, established by Octave N-3's complete D1→D7 harvest). Encounters about choice as such; quantum-like superposition of possibilities.
+> - **Law-band 2 — Red/Amber ≈ Love / Logos** (Second Distortion, established by Octave N-2). Directed growth, Logos-focusing, the principle of unity-attracting.
+> - **Law-band 3 — Orange/Green/Teal ≈ Light** (Third Distortion, established by Octave N-1). Self-reflective choice within archetypal form; manifestation.
+> - **The sub-octave closure — the Violet event** (L8 Turquoise completed) **≈ our octave's contributions** — the Light-Law fully operative across all law-bands; this is the Yellow→Green harvest into D4 (06 §5.1, 19 §9.6), not a "D4+" density and not a playable level.
 >
 > This Law-correspondence is the metaphysical grounding for Mysterium's Stage semantics. Each Stage's content should express its corresponding Law's phenomenology.
 > **Satisfied by:** `src/core/domain/Stage.ts` (the eight-altitude ladder, its ordinals and its names) · `src/core/domain/StageQuality.ts` (§5's per-altitude quality — emergent order, per-quadrant integrity and pathology markers, identity band)
@@ -48,18 +49,18 @@ disambiguated in per-stage docs.
 
 ### The summary table
 
-| # | Stage | Defining capacity | Cognitive (Piaget) | Moral (Kohlberg) | Population* | Substrate layer / Law (within D3) |
+| # | Stage | Defining capacity | Cognitive (Piaget) | Moral (Kohlberg) | Population* | Law-band (within D3) |
 |:-:|---|---|---|---|---|---|
-| 1 | **Infrared / Archaic** | Survival; sensori-motor | Sensorimotor | Pre-moral (S0) | <2% adults | layer 1 — Free Will (First Distortion) |
-| 2 | **Magenta / Magic** | Symbol; magical agency | Pre-operational early | Stage 1 (early) | 5–10% | layer 1 — Free Will (superposition of possibilities) |
-| 3 | **Red / Power** | Ego; will; conquest | Pre-operational late / Concrete early | Stage 1–2 (egocentric) | 15–20% | layer 2 — Love / Logos (directed growth, focusing) |
-| 4 | **Amber / Mythic** | Belonging; rule-and-role | Concrete operational | Stage 3–4 (conformist) | 25–30% | layer 2 — Love / Logos (unity-attracting) |
-| 5 | **Orange / Rational** | Reason; achievement; objectivity | Formal operational | Stage 5 (post-conventional, social-contract) | 30–40% | layer 3 — Light (self-reflective choice in form) |
-| 6 | **Green / Pluralistic** | Sensitivity; multi-perspective | Late formal / early post-formal | Stage 6 (universal-ethical, relativistic) | 15–20% | layer 3 — Light (multi-perspective illumination) |
-| 7 | **Teal / Integral** | Vision-logic; integration | Post-formal vision-logic | Stage 7 (universal-systemic) | ~5% | layer 3 — Light (integral vision) |
-| 8 | **Turquoise / Super-Integral** | Non-dual; unity | Trans-rational | Stage 7–8 (universal-systemic → trans-systemic) | <1% | layer 3 fully operative — **closure readiness** |
+| 1 | **Infrared / Archaic** | Survival; sensori-motor | Sensorimotor | Pre-moral (S0) | <2% adults | band 1 — Free Will (First Distortion) |
+| 2 | **Magenta / Magic** | Symbol; magical agency | Pre-operational early | Stage 1 (early) | 5–10% | band 1 — Free Will (superposition of possibilities) |
+| 3 | **Red / Power** | Ego; will; conquest | Pre-operational late / Concrete early | Stage 1–2 (egocentric) | 15–20% | band 2 — Love / Logos (directed growth, focusing) |
+| 4 | **Amber / Mythic** | Belonging; rule-and-role | Concrete operational | Stage 3–4 (conformist) | 25–30% | band 2 — Love / Logos (unity-attracting) |
+| 5 | **Orange / Rational** | Reason; achievement; objectivity | Formal operational | Stage 5 (post-conventional, social-contract) | 30–40% | band 3 — Light (self-reflective choice in form) |
+| 6 | **Green / Pluralistic** | Sensitivity; multi-perspective | Late formal / early post-formal | Stage 6 (universal-ethical, relativistic) | 15–20% | band 3 — Light (multi-perspective illumination) |
+| 7 | **Teal / Integral** | Vision-logic; integration | Post-formal vision-logic | Stage 7 (universal-systemic) | ~5% | band 3 — Light (integral vision) |
+| 8 | **Turquoise / Super-Integral** | Non-dual; unity | Trans-rational | Stage 7–8 (universal-systemic → trans-systemic) | <1% | band 3 fully operative — **closure readiness** |
 
-The **`Substrate layer / Law`** column names Laws operating at substrate layers *inside* D3 — never
+The **`Law-band`** column names Laws operating in law-bands *inside* D3 — never
 densities one travels through. The closure (the harvest) is the D3→D4 transition itself, not row 8
 (06 §5.1).
 

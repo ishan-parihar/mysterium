@@ -15,7 +15,7 @@
 | Joint | Resolution | Mysterium Implementation | Status |
 |---|---|---|---|
 | J-INV-5 | First octave / modelable boundary (08.8.7) | Mysterium is single-octave (3rd density); first octave out of scope | ✅ N/A |
-| J-INV-7 | Substrate-layer asymmetry (08.8.7 §6.2) | `SUBSTRATE_LAYER_LAW` constant in GreaterCycleEngine.ts | ✅ Implemented |
+| J-INV-7 | Substrate-layer asymmetry (08.8.7 §6.2) | `LAW_BANDS_D3` constant in GreaterCycleEngine.ts (renamed from `SUBSTRATE_LAYER_LAW` 2026-09-21 — the D3 bands are law-bands; *substrate layer* is reserved for 13's compositional vertical) | ✅ Implemented |
 | J-HUS-1 | D3-experiential annotation policy (08.8.18) | Mysterium uses universal terms in player-facing output; `--dev` flag for system-terms | ✅ Implemented |
 | J-HUS-2 | CLI language policy (08.8.18) | `mysterium status` uses felt-sense language; `--dev` flag exposes system-terms | ✅ Implemented |
 | J-HUS-7 | Provenance policy (08.8.18) | Mysterium docs retain original language with status-ladder tags | ✅ Implemented |

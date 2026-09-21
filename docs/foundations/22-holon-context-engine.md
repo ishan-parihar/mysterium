@@ -473,7 +473,8 @@ Orchestrator ── dispatch_menial ──► owner worker(holonId)   ← the ON
   hot-set) is a **proposal** ratified through L4 — the world may write itself, but it may not
   unilaterally write the player.
 - **Layer-stack (fractal grounding).** HoloOS `01.4 §2.5.3`: a holon at density n runs n
-  concurrent lesser cycles, one per integrated substrate-layer. A Great-Way collective holon is
+  concurrent lesser cycles, one per integrated law-band (renamed from "substrate-layer" per the
+  2026-09-21 `VOCAB-SUBSTRATE` ruling — these are D3's law-bands, not `13`'s compositional layers). A Great-Way collective holon is
   a nested stack of lesser cycles, so one worker per holon-layer IS the ontology's own
   architecture — 18 §2's taxonomy (individual → dyadic → group → … → cosmic) is the layer stack.
 - **Scale.** Workers are dispatched for the hot-set only, are concurrency-capped and budgeted

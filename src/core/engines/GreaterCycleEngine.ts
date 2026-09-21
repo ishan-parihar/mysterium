@@ -419,18 +419,22 @@ function clamp01(x: number): number {
 // ---------------------------------------------------------------------------
 
 /** Substrate-Law mapping per HoloOS 08.8.7 Primal Distortion Genesis Theorem. */
-export const SUBSTRATE_LAYER_LAW: readonly { readonly density: number; readonly law: string; readonly stage: string }[] = [
-  { density: 1, law: 'Free Will', stage: 'Infrared/Magenta' },
-  { density: 2, law: 'Love', stage: 'Red/Amber' },
-  { density: 3, law: 'Light', stage: 'Orange/Green/Teal' },
+// Renamed from SUBSTRATE_LAYER_LAW (2026-09-21, user-ratified VOCAB-SUBSTRATE ruling): the word
+// *substrate layer* now means ONLY the intra-holonic compositional vertical (13's
+// substrate→core→emergent stack). These rows are D3's LAW-BANDS — the Free Will / Love / Light
+// bands of the D3 sub-octave (02 §4, 06 §5.1).
+export const LAW_BANDS_D3: readonly { readonly band: number; readonly law: string; readonly stage: string }[] = [
+  { band: 1, law: 'Free Will', stage: 'Infrared/Magenta' },
+  { band: 2, law: 'Love', stage: 'Red/Amber' },
+  { band: 3, law: 'Light', stage: 'Orange/Green/Teal' },
   // NOT a stage. Canon 02: "The sub-octave closure — the Violet event (L8 Turquoise completed)
   // ≈ our octave's contributions". The row previously read `'White'`, which named the retired
   // stage 8 — the same conflation of the ladder's top with the closure EVENT that gave stage 8
   // the Violet ray (see domain/Ray.ts CLOSURE_BINDING). There is no D4 stage in Mysterium.
-  { density: 4, law: 'Our octave contributions', stage: 'Violet event (closure — not a stage)' },
+  { band: 4, law: 'Our octave contributions', stage: 'Violet event (closure — not a stage)' },
 ];
 
-/** Involution-ground block: 3 prior octaves, each contributing a substrate-layer. */
+/** Involution-ground block: 3 prior octaves, each contributing a law-band (VOCAB-SUBSTRATE renaming). */
 export const INVOLUTION_GROUND = {
   priorOctaves: [
     { octave: 'N-3', law: 'Free Will', substrateContribution: 'D1 layer' },
