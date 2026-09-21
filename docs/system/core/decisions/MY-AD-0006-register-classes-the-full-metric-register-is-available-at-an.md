@@ -7,7 +7,7 @@ Organ: profiling
 Source: "foundations/20-veil-of-forgetting §11"
 Description: "Open vs closed register classes, with the HoloOS D3-Veil divergence recorded and its compensation specified."
 Related: [MY-AD-0007, MY-AD-0003]
-Deferral: ARTICULATION-LAYER
+Consumer: "`src/core/domain/articulationLadder.ts`"
 ---
 
 ## Context
@@ -25,3 +25,5 @@ compensation** rather than silently absorbed.
 - Pattern: this is the model for every future divergence (AGENTS.md §2.0).
 
 <!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->
+
+<!-- 2026-09-21: Deferral discharged 2026-09-21: the register-class render path exists at src/core/domain/articulationLadder.ts (ARTICULATION-LAYER) (recon recon_id: fadd534b29) -->

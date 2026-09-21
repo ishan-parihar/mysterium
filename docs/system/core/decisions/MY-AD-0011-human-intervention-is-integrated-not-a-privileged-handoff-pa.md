@@ -8,7 +8,6 @@ Source: "foundations/43-agentic-orchestration-architecture §4.7"
 Description: "No separate handoff policy: the platform stays one integrated system for user and auditor alike, with no privilege tiers."
 Related: [MY-AD-0010, MY-AD-0007]
 Consumer: "`src/core/orchestration/delegate.ts` (the ordinary path every intervention must enter)"
-Deferral: ARTICULATION-LAYER
 ---
 
 ## Context
@@ -26,3 +25,5 @@ has, and adverse events surface through the observers that already exist.
   safety organ rather than assumed from a handoff protocol.
 
 <!-- 2026-09-20: DG19: declare where this law is consumed, or the pending key that will consume it (recon 2b4849c6b7) -->
+
+<!-- 2026-09-21: Deferral discharged 2026-09-21: the no-privilege access model is implemented — one ladder, consented traversal, no identity class (src/core/domain/articulationLadder.ts); a human auditor enters through it exactly like the self (AL1) (recon recon_id: b9ece22f08) -->
