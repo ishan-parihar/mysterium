@@ -47,5 +47,17 @@ export type {
   AnalogicalBridge,
 } from './scenarioContext.js';
 
+export {
+  INTEREST_MODES, DEPTH_LADDER, depthToLadderRange, isPriorLive,
+  createInterestRecord, isStructuralPoleAllowed,
+} from './interestRecord.js';
+export type { InterestRecord, InterestMode, InterestAim, InterestProvenance, InterestDepth, ArchetypePrior } from './interestRecord.js';
+
+export {
+  RV_DIMENSIONS, MAX_PROBES_PER_SESSION, createProbeLedger, canOfferProbe,
+  recordProbePlay, recordProbeDecline, instrumentIsRVValidated,
+} from './probeSet.js';
+export type { Probe, ProbeReading, ProbeLedger, RVDimension } from './probeSet.js';
+
 export { createEngagementRegister, FORBIDDEN_MECHANISMS } from './engagementRegister.js';
 export type { EngagementRegister, MechanismRecord, EngagementMechanismId } from './engagementRegister.js';

@@ -47,9 +47,13 @@ describe('Validation benchmark (CI tier)', () => {
     }
     // The count is deliberately literal: adding or removing a gate must be a conscious edit here,
     // not a silent change to what the benchmark certifies. 21 → 22 with G26 (priority-formula
-    // closure, `24 §3.2.9` / `MY-AD-0025`).
-    expect(suite.results.length).toBe(22);
+    // closure, `24 §3.2.9` / `MY-AD-0025`); 22 → 26 with the Phase 10 gates (G22 composition
+    // integrity, G23 tier gate, G24 scaffold integrity, G25 inference write firewall — 46/47).
+    expect(suite.results.length).toBe(26);
     expect(suite.results.map((r) => r.gate).some((g) => g.startsWith('G26'))).toBe(true);
+    for (const g of ['G22', 'G23', 'G24', 'G25']) {
+      expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
+    }
     expect(new Set(suite.results.map((r) => r.gate)).size).toBe(suite.results.length);
   });
 });

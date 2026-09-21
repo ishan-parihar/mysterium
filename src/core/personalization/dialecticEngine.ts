@@ -18,6 +18,7 @@
 import type { Tag, TagId } from '../world/tags/types.js';
 import { selectableStructurally } from '../world/tags/types.js';
 import type { TagStore } from '../world/tags/dialectic.js';
+import { isStructuralPoleAllowed, type InterestRecord } from './interestRecord.js';
 
 /** Canonical pair key for a reconciliation-polarity — unordered, so the map cannot disagree with itself. */
 export function pairKeyOf(a: TagId, b: TagId): string {
@@ -52,6 +53,8 @@ export interface DialecticEngineInput {
   readonly aversions: readonly string[];
   /** The per-player reconciliation-state map (46 §5.2). */
   readonly states: PolarityStateMap;
+  /** 47 §5.3 — the interest record set; a load-bearing domain is never the structural pole (check 7). */
+  readonly interests?: readonly InterestRecord[];
   /** Exposures per dominant tag id — the rotation floor's counter (46 §5.2). */
   readonly exposures?: Readonly<Record<TagId, number>>;
   /** Minimum interval between two encounters sharing a dominant tag (46 §5.2). Default 3. */
@@ -89,8 +92,18 @@ export function expansionBudget(
 }
 
 /** Is the PAIR (fluent tag, its opposite) selectable as a structural arrangement (46 §5.3)? */
-function pairEligible(a: Tag, b: Tag, states: PolarityStateMap, aversions: readonly string[]): boolean {
+function pairEligible(
+  a: Tag,
+  b: Tag,
+  states: PolarityStateMap,
+  aversions: readonly string[],
+  interests?: readonly InterestRecord[],
+): boolean {
   if (aversions.includes(a.id) || aversions.includes(b.id)) return false;
+  // 47 §5.3 / §9 check 7 — a load-bearing domain is never the structural pole: the spiral maps
+  // difficult structure onto the opposite pole, and that work must not degrade the domain that
+  // carries the player's identity.
+  if (interests && !isStructuralPoleAllowed(b.id, interests)) return false;
   const state = states[pairKeyOf(a.id, b.id)] ?? 'undiscovered';
   // 46 §5.3: the engine may not select on a reconciled pair (nothing left to teach — the
   // saturation guard) or an undiscovered one (bypass, not stretch). Only active-tension teaches.
@@ -147,7 +160,7 @@ export function selectPoles(store: TagStore, input: DialecticEngineInput): PoleS
   for (const t of rotatable.length > 0 ? rotatable : fluent) {
     const opposite = store.opposite(t.id); // symmetric + total by construction (46 §4.2)
     if (opposite.id === t.id) continue; // reflexive-safe: origin tags carry no structural payload
-    if (!pairEligible(t, opposite, input.states, input.aversions)) continue;
+    if (!pairEligible(t, opposite, input.states, input.aversions, input.interests)) continue;
     attempts.push({ surface: t, structure: opposite });
   }
 
