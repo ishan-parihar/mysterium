@@ -295,6 +295,25 @@ content** (`ui-styling` 98, `ui-ux-pro-max` 35, `design-taste-frontend` 1 — fo
 `LICENSE.txt`). Nothing distinguishes them, so "the house utilities" is not a decidable set from the
 tree alone, and third-party code is committed as though it were ours.
 
+**RESOLVED 2026-09-21 (`KB-SKILLS-PROVENANCE`).** `skills/PROVENANCE.yaml` is now the single
+canonical declaration (`kind: house | vendored`, plus `source`/`author`/`license`/`license_file` for
+vendored and `spec` for house). **DG22** keeps it total over `skills/*/` in both directions
+(undeclared directory fails; declared directory that is gone fails), corroborates a `house` claim
+against upstream artifacts (third-party `license`/`metadata.author` frontmatter, or a `LICENSE*`
+file), requires `license_file: none` to carry a `note`, and is proven to fail on injection
+(`arch fixtures`, 22/22). The question is answerable from the CLI rather than only from the gate:
+`arch skills [--kind house|vendored]`, and `arch route skills/<name>` resolves a skill to its
+provenance.
+
+**Limit, stated rather than implied** (the audit's own discipline, `MY-RG-0014`): two of the three
+vendored entries (`ui-ux-pro-max`, `design-taste-frontend`) were stripped of their upstream
+frontmatter before vendoring and carry no license file, so nothing in the tree distinguishes them
+from a house skill. For those, the gate corroborates that the declaration is *complete*, not that
+its `kind` is *true*; the fixture therefore injects onto `ui-styling`, whose artifacts exist, so the
+proof exercises the corroboration branch rather than only the coverage branch. Fixing that residue
+means re-vendoring those two from upstream with their frontmatter intact — a decision for the
+operator, not a gate.
+
 ---
 
 ### UT-10 · S3 — validation is full-scan-per-gate and produces no machine-readable output
@@ -356,16 +375,20 @@ router listed its contents from a declaration instead of discovering them.
 | UT-3 | **`arch.py related <path\|ID>`** — outbound + structural + **backlinks**, joining 5 edge sources and 5 citation styles | `related docs/foundations/19-…` → 5 inbound (44, the `catalyst` organ, 2 records, the router); previously the question was unanswerable |
 | UT-4 | **`arch.py doc add --organ O --title T`** — template or `--file`, ledger receipt, no registry edit | round-tripped into `safety` (an organ with zero docs): immediately reachable via `context`, findable via `search`, gate-green after `emit` |
 | UT-5 | **DG13** organ integrity — `code:` paths and `contract_docs` must resolve, organ must declare code and have a router | proven to fail on both injections (bogus code path; bogus contract doc) |
+| UT-7 | **DG20** script provenance — every `scripts/` file declares `@script-status`; a `wired` claim is corroborated | proven to fail on injection (a `probe` relabelled `wired`) |
+| UT-9 | **DG22** skill provenance — `skills/PROVENANCE.yaml` is total over `skills/*/`, and a `house` claim is rejected when upstream artifacts are present | proven to fail on injection (vendored relabelled `house`); `arch skills` + `arch route skills/<name>` |
+| UT-10 | **`validate --json`/`--out`** with per-gate structured results and explicit `skipped` accounting; shared per-pass read index | — |
 | UT-8 | `README.md` rung table reconciled with `AGENTS.md`; the six query verbs documented | — |
 | — | `activate the graph`: 1.4 s `validate`, 0.3 s `search` at 642 documents | — |
 
-**Still open, declared in `_org.yaml → pending`:** `KB-ORPHAN-TRIAGE` (UT-7), `KB-ORGAN-DOCS`
-(UT-6 — the 6 empty organs), `KB-SKILLS-PROVENANCE` (UT-9), `KB-VALIDATE-JSON` (UT-10),
-`KB-FOUNDATIONS-INGEST` (UT-11).
+**Still open, declared in `_org.yaml → pending`:** `KB-ORGAN-DOCS` (UT-6 — the 6 empty organs) and
+`KB-FOUNDATIONS-INGEST` (UT-11). Closed since this audit: `KB-ORPHAN-TRIAGE` (UT-7), `KB-VALIDATE-JSON`
+(UT-10), `KB-SKILLS-PROVENANCE` (UT-9), and the RT-2 corpus divergence it did not cover
+(`RT-CORPUS-RECONCILE`, gate `DG21`).
 
-**Not a defect:** the four linters (`arch.py` DG1–DG13, `workspace-lint`, `check-invariants.ts`,
-`validation/gates.ts` G1–G21) are genuinely disjoint — doc governance, file hygiene, static structure,
-runtime behaviour. Their overlap is zero and they should stay separate.
+**Not a defect:** the four linters (`arch.py` DG1–DG22, `workspace-lint`, `check-invariants.ts`,
+`validation/gates.ts` G1–G26 — 22 gates) are genuinely disjoint — doc governance, file hygiene, static
+structure, runtime behaviour. Their overlap is zero and they should stay separate.
 
 **One thing this pass could not fix by construction:** `doc add` gives an agent the *mechanism* to
 document an organ; it does not give it the *knowledge*. The six empty organs (UT-6) need someone who

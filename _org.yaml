@@ -237,6 +237,7 @@ gates:
   dg19_law_consumer:      {enabled: true}
   dg20_script_provenance: {enabled: true}
   dg21_corpus_reconcile:  {enabled: true}
+  dg22_skill_provenance:  {enabled: true, manifest: skills/PROVENANCE.yaml}
 
 # GENERATED SURFACES — derived from `_org.yaml` + the records by `arch.py emit`. Never
 # hand-edited; DG11 fails when one is stale. `route` reports them as generated.
@@ -267,6 +268,7 @@ completed:
   P5: "23 records seeded with ledger receipts (seed-2026-09-20.yaml)"
   P6: "docs/historical/ quarantine + generated INDEX + README demoted to pointer"
   P7: "CHOICE-CLOSURE discharged: checkChoiceEligibility computes the condition, subOctaveClosureReached the arrival, evaluateChoice the only producer of the harvest EVENT (eligibility AND arrival) with rainbow distinctness per lenses/rays.md; `Exploring -> Harvesting` removed from VALID_TRANSITIONS and the enum's licence withdrawn by canHarvest; 19 section 9.6, 44's citation and 06 section 8's note resolved; MY-RG-0030 + tests/engines/ChoiceClosure.test.ts guard the class"
+  P8: "KB-SKILLS-PROVENANCE discharged: skills/PROVENANCE.yaml is the single decidable declaration of house vs vendored, DG22 keeps it total over skills/*/ and corroborates a `house` claim against upstream artifacts, `arch skills`/`arch route skills/<name>` answer the question from the CLI, and the two-vendored-entries-without-artifacts limit is stated in the gate rather than implied"
 
 pending:
   RT-ARCHIVE-MIGRATIONS: "archive the three one-way stage migrations once the tree has settled: scripts/doc-stage-reindex.py, scripts/doc-path-reindex.py and scripts/code-stage-reindex.py. Each encodes a one-way mapping that is otherwise unverifiable from the tree, and the code half additionally rewrites identifiers across ~87 files (red-team RT-11). They now declare `@script-status: historical|one-shot` (DG20), so the archive is a move, not a judgement call"
@@ -279,5 +281,4 @@ pending:
   WORLD-STORE-MOVE: "create src/core/world/ (store, facets, tags, compose, libraries) and move the world content into it: domain/Holon.ts, data/HolonRegistry.ts, data/{stage-holons,red-layer-holons}.json, data/RedPESTLE.ts, data/encounters/ (46 section 10). Correct organs.world.code (currently cohort pods) and remove src/core/data from platform. This is what makes 18/21/22/45/46 reachable from the code they govern (KB-FOUNDATIONS-INGEST)"
   FACET-COMPILER: "compile the 512 concept-drafts into the facet store (46 section 8) so the corpus stays prose-for-humans and the store stays data-for-the-engine; the compiler is the only path, which is what keeps them from diverging (RT-CORPUS-RECONCILE)"
   TAG-ONTOLOGY: "author the initial tag set with axis positions and the curated dialectic pairs (46 section 4); a tag without a resolvable opposite is a compile error"
-  KB-SKILLS-PROVENANCE: "mark which skills/ entries are house governance (workspace-lint, curriculum-linter) vs vendored third-party (134 tracked files: ui-styling, ui-ux-pro-max, design-taste-frontend) (KB audit UT-9)"
   KB-FOUNDATIONS-INGEST: "no mechanical link exists between a foundation doc's contract and the code that must satisfy it, beyond contract_docs pointers — the reason RT-9 and MY-RG-0005 can exist (KB audit UT-11)"

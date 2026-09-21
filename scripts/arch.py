@@ -77,6 +77,7 @@ GATE_CONFIG_KEY = {
     "DG19": "dg19_law_consumer",
     "DG20": "dg20_script_provenance",
     "DG21": "dg21_corpus_reconcile",
+    "DG22": "dg22_skill_provenance",
 }
 
 # KB-ORPHAN-TRIAGE (KB audit UT-7): 11 of 15 scripts were unreferenced by package.json, CI,
@@ -446,6 +447,7 @@ class Gate:
             ("DG19", self.dg19_law_consumer),
             ("DG20", self.dg20_script_provenance),
             ("DG21", self.dg21_corpus_reconcile),
+            ("DG22", self.dg22_skill_provenance),
         ]
         for name, fn in gates:
             if only and name != only:
@@ -1160,6 +1162,9 @@ class Gate:
     # cannot diverge without a gate saying so.
     CORPUS_DIR = "docs/concept-drafts"
     CORPUS_INDEX = "src/core/data/concept-drafts.json"
+    SKILLS_DIR = "skills"
+    SKILLS_MANIFEST = "skills/PROVENANCE.yaml"
+
     CORPUS_MODALITIES = (
         ("deterministic.md", "Deterministic"),
         ("strategic-planning.md", "Strategic"),
@@ -1225,6 +1230,102 @@ class Gate:
                     f"{self.CORPUS_INDEX} `{key}` title does not match {self.CORPUS_DIR}/"
                     f"{key.split(':')[0]}/{key.split(':')[1]}/module-spec.md",
                 )
+        self.checked[g] = n
+
+    # DG22 — skill provenance (KB-SKILLS-PROVENANCE, KB audit UT-9).
+    #
+    # `skills/` is two different things sharing one namespace: HOUSE governance that this project
+    # owns and must maintain, and VENDORED third-party content that arrives as a copy and must stay
+    # byte-identical to upstream so it can be re-synced. Nothing distinguished them, so "the house
+    # utilities" was not a decidable set from the tree — and third-party code sat committed as
+    # though it were ours.
+    #
+    # The declaration lives in a single root manifest (not a marker inside each skill) precisely
+    # BECAUSE vendored directories must stay pristine: adding a file to each of them is the drift
+    # this exists to prevent. Coverage stays total and fail-closed — an undeclared directory fails,
+    # a declared directory that is gone fails — so the manifest cannot rot into a stale list
+    # (MY-RG-0015's class).
+    #
+    # The check that makes it *provenance* rather than a label: the declaration must agree with the
+    # content. A `house` claim is REJECTED when upstream artifacts are present (third-party
+    # `license`/`metadata.author` frontmatter, or a `LICENSE*` file); a `vendored` entry must carry
+    # `source`/`author`/`license`/`license_file`, and `license_file: none` must explain itself.
+    #
+    # LIMIT, stated rather than implied (MY-RG-0014): for a skill carrying NO upstream artifact the
+    # gate corroborates only that the entry is complete, never that its `kind` is true — two of the
+    # three vendored entries here (`ui-ux-pro-max`, `design-taste-frontend`) were stripped of their
+    # upstream frontmatter before vendoring, so nothing in the tree distinguishes them from a house
+    # skill. The fixture therefore injects onto `ui-styling`, the entry whose artifacts exist, so the
+    # proof exercises the corroboration branch and not merely the coverage branch.
+    HOUSE_KINDS = ("house", "vendored")
+
+    def dg22_skill_provenance(self, g: str) -> None:
+        d = ROOT / self.SKILLS_DIR
+        man = ROOT / self.SKILLS_MANIFEST
+        if not d.is_dir():
+            self.checked[g] = 0
+            return
+        if not man.is_file():
+            self.err(g, f"{self.SKILLS_MANIFEST} is missing — {self.SKILLS_DIR}/ provenance is undeclared")
+            self.checked[g] = 0
+            return
+        try:
+            declared = (yaml.safe_load(read_text_cached(man)) or {}).get("skills") or {}
+        except yaml.YAMLError as exc:
+            self.err(g, f"{self.SKILLS_MANIFEST} is not valid YAML: {exc}")
+            self.checked[g] = 0
+            return
+        present = sorted(p.name for p in d.iterdir() if p.is_dir())
+        n = 0
+        for name in sorted(set(present) - set(declared)):
+            self.err(
+                g,
+                f"{self.SKILLS_DIR}/{name}/ is undeclared in {self.SKILLS_MANIFEST} — declare it "
+                f"`house` or `vendored`, or the house set is not decidable from the tree",
+            )
+        for name in sorted(set(declared) - set(present)):
+            self.err(g, f"{self.SKILLS_MANIFEST} declares `{name}` with no {self.SKILLS_DIR}/{name}/ directory")
+        for name in sorted(set(declared) & set(present)):
+            n += 1
+            entry = declared[name] or {}
+            kind = str(entry.get("kind") or "")
+            if kind not in self.HOUSE_KINDS:
+                self.err(
+                    g,
+                    f"{self.SKILLS_MANIFEST} `{name}.kind` is `{kind or '(missing)'}` — must be one "
+                    f"of {', '.join(self.HOUSE_KINDS)}",
+                )
+                continue
+            spec = str(entry.get("spec") or "")
+            if spec and not (ROOT / spec).is_file():
+                self.err(g, f"{self.SKILLS_MANIFEST} `{name}.spec` names `{spec}` which does not resolve")
+            skill_md = d / name / "SKILL.md"
+            head = read_text_cached(skill_md) if skill_md.is_file() else ""
+            has_upstream_fm = bool(re.search(r"(?m)^(license|metadata):", head))
+            lic_files = sorted(p.name for p in (d / name).glob("LICENSE*"))
+            if kind == "house":
+                if not spec:
+                    self.err(g, f"{self.SKILLS_MANIFEST} `{name}` is `house` but declares no `spec` path")
+                if has_upstream_fm or lic_files:
+                    self.err(
+                        g,
+                        f"{self.SKILLS_MANIFEST} claims `{name}` is `house`, but the directory carries "
+                        f"upstream artifacts ({'frontmatter ' if has_upstream_fm else ''}"
+                        f"{', '.join(lic_files)}) — it is vendored, or the artifacts must go",
+                    )
+            else:
+                for field in ("source", "author", "license", "license_file"):
+                    if not entry.get(field):
+                        self.err(g, f"{self.SKILLS_MANIFEST} `{name}` is `vendored` but declares no `{field}`")
+                lf = str(entry.get("license_file") or "")
+                if lf and lf != "none" and not (ROOT / lf).is_file():
+                    self.err(g, f"{self.SKILLS_MANIFEST} `{name}.license_file` names `{lf}` which does not resolve")
+                if lf == "none" and not entry.get("note"):
+                    self.err(
+                        g,
+                        f"{self.SKILLS_MANIFEST} `{name}` declares `license_file: none` without a "
+                        f"`note` saying so — an unexplained absence is indistinguishable from an omission",
+                    )
         self.checked[g] = n
 
     # DG18 — router coverage. A rung's router (`rungs.<name>.router`) is the only door into that
@@ -1483,6 +1584,32 @@ def cmd_route(args: argparse.Namespace) -> int:
             if r == c or r.startswith(c.rstrip("/") + "/"):
                 print(organ_block(cfg, organ, o, via=c))
                 return 0
+    # SKILLS -> PROVENANCE: `skills/` is not a rung (it is not documentation) and is not an organ
+    # (it owns no contract). It is, however, a namespace an agent must be able to ask about — and the
+    # audit's finding was that "the house utilities" was undecidable from the tree. Route answers from
+    # the one declaration DG22 keeps total, so the question has one answer on both surfaces.
+    if r == Gate.SKILLS_DIR or r.startswith(Gate.SKILLS_DIR + "/"):
+        name = r[len(Gate.SKILLS_DIR) + 1 :].split("/")[0]
+        man = ROOT / Gate.SKILLS_MANIFEST
+        entry = None
+        if man.is_file():
+            entry = ((yaml.safe_load(read_text_cached(man)) or {}).get("skills") or {}).get(name)
+        if entry:
+            kind = entry.get("kind")
+            origin = entry.get("source") or entry.get("spec") or "—"
+            print(
+                f"skill:  {Gate.SKILLS_DIR}/{name}\n"
+                f"kind:   {kind} ({'ours — maintained here' if kind == 'house' else 'third-party — consume, do not edit'})\n"
+                f"source: {origin}\n"
+                f"declared in: {Gate.SKILLS_MANIFEST} (gate DG22)"
+            )
+            return 0
+        if man.is_file():
+            print(
+                f"skill:  {Gate.SKILLS_DIR}/{name} (or the manifest root)\n"
+                f"declared in: {Gate.SKILLS_MANIFEST} — `python3 scripts/arch.py skills` for the set"
+            )
+            return 0
     print(f"rung:   (unclaimed)\n{cfg['project']['name']}: this path is not declared in _org.yaml")
     return 1
 
@@ -2303,6 +2430,14 @@ GATE_FIXTURES: dict[str, tuple[str, str, str]] = {
     "DG20": ("scripts/tdg-probe.ts", "@script-status: probe", "@script-status: wired"),
     # DG21: desynchronise the generated corpus index from the corpus it is generated from.
     "DG21": ("src/core/data/concept-drafts.json", '"Deterministic"', '"NoSuchModality"'),
+    # DG22: claim a vendored skill is `house`, with a resolving `spec` so the fixture reaches the
+    # CORROBORATION branch and not the missing-field branch — the point of the gate is that the
+    # declaration must agree with the content (a wrong provenance that passes is no provenance).
+    "DG22": (
+        "skills/PROVENANCE.yaml",
+        "  ui-styling:\n    kind: vendored",
+        "  ui-styling:\n    kind: house\n    spec: skills/ui-styling/SKILL.md",
+    ),
 }
 
 
@@ -2381,6 +2516,33 @@ def cmd_fixtures(args: argparse.Namespace) -> int:
         f"\narch fixtures — {len(order) - len(unproven)}/{len(order)} gates proven to fail on injection"
     )
     return 1 if broken else 0
+
+
+def cmd_skills(args: argparse.Namespace) -> int:
+    """Answer "what are the house utilities?" from the tree (KB audit UT-9).
+
+    The manifest is the single declaration; DG22 keeps it total over `skills/*/` and corroborates
+    every claim the tree can corroborate. This verb exists so an agent does not have to read YAML to
+    get the answer — the audit's finding was that the set was not decidable *from the tree*, and a
+    decidable set that only one gate can read is only half a fix (AD-056: one surface, named verbs).
+    """
+    man = ROOT / Gate.SKILLS_MANIFEST
+    if not man.is_file():
+        print(f"{Gate.SKILLS_MANIFEST} is missing — see DG22")
+        return 1
+    manifest = (yaml.safe_load(read_text_cached(man)) or {}).get("skills") or {}
+    want = None if args.kind == "all" else args.kind
+    rows = [(n, e) for n, e in sorted(manifest.items()) if want is None or (e or {}).get("kind") == want]
+    for name, entry in rows:
+        entry = entry or {}
+        kind = entry.get("kind")
+        detail = entry.get("source") or entry.get("spec") or ""
+        print(f"{kind:8s}  skills/{name:<22s}  {detail}")
+        note = re.sub(r"\s+", " ", str(entry.get("purpose") or entry.get("note") or "")).strip()
+        if note:
+            print(f"          {'':22s}  {note[:110]}{'…' if len(note) > 110 else ''}")
+    print(f"\n{len(rows)} skill(s) [{args.kind}] — manifest {Gate.SKILLS_MANIFEST}, gate DG22")
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -2482,6 +2644,13 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("fixtures", help="prove every gate fails on an injected violation")
     p.set_defaults(fn=cmd_fixtures)
+
+    p = sub.add_parser(
+        "skills",
+        help="list skills by provenance — house (ours, maintained here) vs vendored (third-party)",
+    )
+    p.add_argument("--kind", choices=["house", "vendored", "all"], default="all")
+    p.set_defaults(fn=cmd_skills)
 
     args = ap.parse_args(argv)
     # One command = one pass over the tree. The index is per-pass by design; a persisted cache is a

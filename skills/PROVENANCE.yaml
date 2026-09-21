@@ -1,0 +1,68 @@
+# skills/PROVENANCE.yaml — house vs vendored, in one decidable place
+#
+# Why this file exists (KB audit UT-9): `skills/` held 2 house governance skills and five
+# directories of third-party content with nothing distinguishing them, so "the house utilities" was
+# not a decidable set from the tree — and third-party code was committed as though it were ours.
+#
+# It is a ROOT manifest rather than a marker file inside each skill because vendored directories
+# must stay byte-identical to upstream so they can be re-synced; adding a file to each of them is
+# exactly the drift this exists to prevent. Coverage is still total and still fail-closed: DG22
+# fails when a `skills/*/` directory is undeclared, and when a declared directory is gone.
+#
+# Invariants DG22 enforces:
+#   kind: house     → owned here; must declare `spec` (a path that resolves) and must NOT carry
+#                     third-party `license`/`metadata.author` frontmatter or an upstream LICENSE file.
+#   kind: vendored  → must declare `source` (a resolvable URL), `license`, `author` and
+#                     `license_file` (a path in the directory, or the literal `none` with `note`).
+#
+# Query it: `python3 scripts/arch.py skills` (house | vendored | all).
+
+version: 1
+
+skills:
+  # ── House governance — authored and maintained in this repository (ADR/MY-AD owned) ──
+  workspace-lint:
+    kind: house
+    purpose: >-
+      Structural file-placement enforcement. Reads workspace-lint.yaml and is the linter step of
+      the mandatory iteration protocol (AGENTS.md §7.5).
+    spec: skills/workspace-lint/SKILL.md
+    validator: skills/workspace-lint/scripts/workspace_lint.py
+
+  curriculum-linter:
+    kind: house
+    purpose: >-
+      Validates curriculum modules against meta-learning principles, holonic structure, depth
+      requirements and engine integration (docs/foundations/37).
+    spec: skills/curriculum-linter/SKILL.md
+
+  # ── Vendored third-party — NOT house utilities; consume, do not edit ──
+  ui-styling:
+    kind: vendored
+    source: https://github.com/claudekit/claudekit
+    author: claudekit
+    license: MIT
+    license_file: skills/ui-styling/LICENSE.txt
+    note: >-
+      shadcn/ui + Tailwind + canvas styling references. Consumed by the WebUI surface only; no
+      Mysterium contract depends on it.
+
+  ui-ux-pro-max:
+    kind: vendored
+    source: https://github.com/claudekit/claudekit
+    author: claudekit
+    license: MIT
+    license_file: none
+    note: >-
+      Declares no license file of its own; redistributed under the upstream repository's MIT
+      license. Design-intelligence reference database (styles, palettes, font pairings).
+
+  design-taste-frontend:
+    kind: vendored
+    source: https://github.com/claudekit/claudekit
+    author: claudekit
+    license: MIT
+    license_file: none
+    note: >-
+      Anti-slop frontend heuristics. Declares no license file of its own; redistributed under the
+      upstream repository's MIT license.

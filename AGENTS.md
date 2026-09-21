@@ -308,7 +308,7 @@ R&D Documentation (refined theory + design)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All nine build phases** (1 Delegation Kernel → 9 Credentialing) are **implemented and
-gated** — kernel gates G1–G21 green, the post-plan frontier closed. **There is no *current* phase
+gated** — the kernel gate suite (22 gates, `G1–G26`) green, the post-plan frontier closed. **There is no *current* phase
 number** — work is selected by the record layer. **One phase is ratified and unbuilt: Phase 10**
 (Generative World & Personalization, from `45` / `46` / `47`; gates G22–G25) — its order and gates are
 in `docs/DEVELOPMENT-PLAN.md §4`, and it is the only outstanding build work. Cite this section and the
