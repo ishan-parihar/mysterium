@@ -182,7 +182,7 @@ parent sequence). This keeps one sequence and one ledger for a single-repo syste
 
 | Finding | Disposition in the new architecture |
 |---|---|
-| **D1** stale stage vocabulary (~150 refs) | **P1** — run `scripts/doc-stage-reindex.py` dry → hand-review `23`/`25` → apply; DG5 prevents recurrence |
+| **D1** stale stage vocabulary (~150 refs) | **P1** — run `scripts/migrations/doc-stage-reindex.py` dry → hand-review `23`/`25` → apply; DG5 prevents recurrence |
 | **D2** density labels as developmental states | **P1** — sweep 42/38/32/28/21/REQUIREMENTS/INDEX; DG5 owns the blacklist; the class is recorded as **RG-0001** |
 | **D3** competing authority claims | **P3** — `architecture/01` → `docs/system/AGENTS.md` (router, no authority claim); red-team doc → `docs/historical/audits/` + stamp; DG4 enforces; **RG-0002** |
 | **D4** ATB combat residue in `architecture/10` | **P1** — purge Part VIII + Part XIV; the class is **RG-0003** (forbidden-token check in `validate`) |
@@ -320,7 +320,7 @@ Removed from the live architecture (not deleted — stamped and moved):
 
 ## 12. Incident 1 — the non-idempotent migration (2026-09-20, P1)
 
-**What happened.** `scripts/doc-stage-reindex.py` was run with `--apply` **twice in one command**
+**What happened.** `scripts/migrations/doc-stage-reindex.py` was run with `--apply` **twice in one command**
 (once to print the head of the report, once for the HELD section). The first pass was correct; the
 second pass took the *correctly migrated* stage-8 name `Turquoise` and mapped it to `Teal`
 (stage 7's new name is the same token family). 194 files were corrupted; the stage-8 concept-draft

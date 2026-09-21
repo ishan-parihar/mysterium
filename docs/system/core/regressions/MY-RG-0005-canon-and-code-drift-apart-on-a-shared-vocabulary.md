@@ -28,4 +28,4 @@ plus a test asserting the computed criteria match `foundations/24 §3.2`.
 - Where a term is also a code identifier, docs **hold** the rename and annotate it
   `CODE-PASS PENDING` until the code pass lands atomically with its tests.
 - Every such held span is listed in the sweep report
-  (`python3 scripts/doc-stage-reindex.py`).
+  (`python3 scripts/migrations/doc-stage-reindex.py`).

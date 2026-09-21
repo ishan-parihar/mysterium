@@ -1,0 +1,9 @@
+{
+  "tool": "doc-stage-reindex",
+  "one_way": true,
+  "note": "Re-running maps the CORRECT stage-8 name `Turquoise` to `Teal` and corrupts the tree (incident 2026-09-20). The guard exists because the mapping is not idempotent.",
+  "applied_at": "2026-09-20T13:54:31",
+  "base_rev": "5eea5f0",
+  "files_changed": 193,
+  "lines_changed": 543
+}

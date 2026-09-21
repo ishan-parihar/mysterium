@@ -41,16 +41,16 @@ exactly the token the script maps to `Teal` (stage 7's new name). A second pass 
 tool is one-way: a receipt is written on --apply and a re-run refuses unless --force.
 
 Usage:
-    python3 scripts/doc-stage-reindex.py            # dry run: report only
-    python3 scripts/doc-stage-reindex.py --apply    # write changes (once)
-    python3 scripts/doc-stage-reindex.py --force    # override the receipt guard (dangerous)
+    python3 scripts/migrations/doc-stage-reindex.py            # dry run: report only
+    python3 scripts/migrations/doc-stage-reindex.py --apply    # write changes (once)
+    python3 scripts/migrations/doc-stage-reindex.py --force    # override the receipt guard (dangerous)
 
 POST-RECEIPT CORRECTIONS (--only):
     A file deliberately excluded from the main sweep (because it needed hand-review) is corrected
     with `--only <path>`, which applies the same single pass to that file alone and is exempt from
     the receipt guard. Hand-review it FIRST: the transformation is still one-way, so a file already
     reading Teal/Turquoise must not be passed here.
-        python3 scripts/doc-stage-reindex.py --only docs/foundations/23-polarity-ontology.md
+        python3 scripts/migrations/doc-stage-reindex.py --only docs/foundations/23-polarity-ontology.md
 """
 # @script-status: historical — the DOC half of the 2026-09-20 ladder re-index; already applied to
 #                              active canon. The mapping is NOT idempotent (a second pass corrupts
@@ -63,15 +63,22 @@ POST-RECEIPT CORRECTIONS (--only):
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+# `scripts/migrations/` is one level deeper than `scripts/` was: parents[0] is this
+# directory, parents[1] is `scripts/`, parents[2] is the repository root.
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
 DOCS = ROOT / "docs"
 
-# One-way receipt: proves a pass already happened, so a re-run cannot silently corrupt.
-RECEIPT = DOCS / ".doc-stage-reindex.applied"
+# One-way receipt: proves a pass already happened, so a re-run cannot silently corrupt. It lives
+# beside the tool under `receipts/`, not inside `docs/` — a governance artefact about a migration is
+# not a document of the documentation set, and as a `docs/` dotfile it was invisible to every index
+# and to DG1 (RT-ARCHIVE-MIGRATIONS, 2026-09-21).
+RECEIPT = HERE / "receipts" / "doc-stage-reindex.json"
 
 # --- active canon -------------------------------------------------------------------
 INCLUDE_DIRS = [
@@ -287,12 +294,25 @@ def _run(files: list[Path], args: argparse.Namespace) -> int:
             ).stdout.strip() or "unknown"
         except OSError:
             rev = "unknown"
+        RECEIPT.parent.mkdir(parents=True, exist_ok=True)
         RECEIPT.write_text(
-            f"# doc-stage-reindex receipt — ONE-WAY migration, do not re-run\n"
-            f"applied_at: {__import__('datetime').datetime.now().isoformat(timespec='seconds')}\n"
-            f"base_rev: {rev}\n"
-            f"files_changed: {len(changed)}\n"
-            f"lines_changed: {total}\n",
+            json.dumps(
+                {
+                    "tool": "doc-stage-reindex",
+                    "one_way": True,
+                    "note": (
+                        "Re-running maps the CORRECT stage-8 name `Turquoise` to `Teal` and corrupts "
+                        "the tree (incident 2026-09-20). The guard exists because the mapping is not "
+                        "idempotent."
+                    ),
+                    "applied_at": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
+                    "base_rev": rev,
+                    "files_changed": len(changed),
+                    "lines_changed": total,
+                },
+                indent=2,
+            )
+            + "\n",
             encoding="utf-8",
         )
 

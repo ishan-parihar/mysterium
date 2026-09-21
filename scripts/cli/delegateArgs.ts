@@ -1,6 +1,9 @@
 /**
  * Delegate-command flag parsing (doc 43 CLI smoke surface).
  *
+ * @script-status: wired — imported by `scripts/cli-game.ts` at runtime (`import('./cli/delegateArgs.js')`
+ *                 inside the delegate subcommand), which `npm run cli` executes. Not standalone.
+ *
  * BUG-FIX regression extract: the delegate subcommand reads its flags from the
  * raw argv tail (program.args), NOT from commander's option store. That means
  * any flag whose NAME is also declared on the ROOT program (--json, the old

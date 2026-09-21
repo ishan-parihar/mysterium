@@ -38,9 +38,9 @@ Not idempotent, for the same reason as the doc half: after a correct pass, stage
 A receipt is written on --apply and a re-run refuses unless --force.
 
 Usage:
-    python3 scripts/code-stage-reindex.py            # dry run: report only
-    python3 scripts/code-stage-reindex.py --apply    # write changes (once)
-    python3 scripts/code-stage-reindex.py --force    # override the receipt guard (dangerous)
+    python3 scripts/migrations/code-stage-reindex.py            # dry run: report only
+    python3 scripts/migrations/code-stage-reindex.py --apply    # write changes (once)
+    python3 scripts/migrations/code-stage-reindex.py --force    # override the receipt guard (dangerous)
 """
 # @script-status: one-shot — the CODE half of the 2026-09-20 ladder re-index (`doc-stage-reindex.py`
 #                            holds the doc half). It rewrites stage identifiers across src/ and
@@ -56,8 +56,11 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-RECEIPT = ROOT / "docs" / "system" / "logs" / "code-stage-reindex.receipt.json"
+# `scripts/migrations/` is one level deeper than `scripts/` was: parents[0] is this
+# directory, parents[1] is `scripts/`, parents[2] is the repository root.
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+RECEIPT = HERE / "receipts" / "code-stage-reindex.json"
 
 TEXT_ROOTS = [ROOT / "src", ROOT / "tests"]
 SUFFIXES = {".ts", ".svelte", ".js", ".json"}

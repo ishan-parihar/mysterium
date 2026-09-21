@@ -47,7 +47,7 @@ former `08 White` (Super-Integral) → **Turquoise**; the harvest becomes the **
 `21` (9), `12` (9), `18` (7), `16` (7), `02` (6), `lines/*` (5 each), `progression/00`,
 `narrative/00`, `INDEX.md`, `02-glossary.md`, and the 512 concept-draft files' headers
 (`**Module:** <line> / White`).
-**Tool:** `scripts/doc-stage-reindex.py` (allowlisted, dry-run by default; excludes historical
+**Tool:** `scripts/migrations/doc-stage-reindex.py` (archived there 2026-09-21) (allowlisted, dry-run by default; excludes historical
 records and `foundations/06`, which *defines* the migration).
 **Manual review required (not scripted):** `foundations/23` — the 64-cell catalogue's stage rows
 carry unique texture names per cell and must be read, not swapped blindly; and
@@ -167,7 +167,7 @@ Keep 43 docs; **create 1**; all consults go through the grammar doc.
 
 ## 6. Execution queue (in order)
 
-1. **Vocabulary sweep** — run `scripts/doc-stage-reindex.py` (dry run → review → apply);
+1. **Vocabulary sweep** — run `scripts/migrations/doc-stage-reindex.py` (dry run → review → apply);
    hand-review `23` and `25`; purge `architecture/10`'s combat parts. *(in progress)*
 2. **Create `44-system-ontology-and-vocabulary.md`**; extend `02` (G2) and `AGENTS.md` (G4);
    propagate the objective to `00-vision`/`01-first-principles` (G3).

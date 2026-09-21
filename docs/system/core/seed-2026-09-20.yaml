@@ -338,17 +338,17 @@ records:
       so a second invocation (used to print a different section of the report) ran live.
 
       ## What happened — Incident 1 (2026-09-20)
-      `python3 scripts/doc-stage-reindex.py --apply | sed -n 1,3p` followed by
-      `python3 scripts/doc-stage-reindex.py --apply | sed -n '/HELD/,$p'` in one shell command.
+      `python3 scripts/migrations/doc-stage-reindex.py --apply | sed -n 1,3p` followed by
+      `python3 scripts/migrations/doc-stage-reindex.py --apply | sed -n '/HELD/,$p'` in one shell command.
       The first pass was correct; the second corrupted 194 files. Recovery: `git checkout -- docs/`,
       re-apply hand edits, re-run once.
 
       ## Detection
       `grep -rn "L8 Teal\|Teal→Teal" docs/` — any hit is corruption. The script itself now refuses:
-      `python3 scripts/doc-stage-reindex.py` exits 2 when a receipt exists.
+      `python3 scripts/migrations/doc-stage-reindex.py` exits 2 when a receipt exists.
 
       ## Prevention
-      - `scripts/doc-stage-reindex.py` writes `docs/.doc-stage-reindex.applied` on `--apply` and
+      - `scripts/migrations/doc-stage-reindex.py` writes `scripts/migrations/receipts/doc-stage-reindex.json` on `--apply` and
         **refuses to re-run** (`--force` overrides, documented as dangerous).
       - The one-way nature is stated in the script's first docstring paragraph.
       - Class rule: a migration whose correctness depends on how many times it has run must ship with a
@@ -462,7 +462,7 @@ records:
       - Where a term is also a code identifier, docs **hold** the rename and annotate it
         `CODE-PASS PENDING` until the code pass lands atomically with its tests.
       - Every such held span is listed in the sweep report
-        (`python3 scripts/doc-stage-reindex.py`).
+        (`python3 scripts/migrations/doc-stage-reindex.py`).
 
   - id: MY-RG-0006
     type: rg

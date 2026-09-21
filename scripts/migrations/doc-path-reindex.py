@@ -14,8 +14,8 @@ class of silent corruption.
 Historical records are NOT rewritten: they describe where a file lived at a date.
 
 Usage:
-    python3 scripts/doc-path-reindex.py            # dry run: report only
-    python3 scripts/doc-path-reindex.py --apply    # write changes
+    python3 scripts/migrations/doc-path-reindex.py            # dry run: report only
+    python3 scripts/migrations/doc-path-reindex.py --apply    # write changes
 
 The map has TWO tables: `PATH_MAP` (bare whole-path rewrites from the P3 move) and `SHORT_MAP`
 (backtick-anchored rewrites of the short citation forms — `combat/02`, `validation/02`,
@@ -31,13 +31,17 @@ for why its keys are anchored.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+# `scripts/migrations/` is one level deeper than `scripts/` was: parents[0] is this
+# directory, parents[1] is `scripts/`, parents[2] is the repository root.
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
 DOCS = ROOT / "docs"
-RECEIPT = DOCS / ".doc-path-reindex.applied"
+RECEIPT = HERE / "receipts" / "doc-path-reindex.json"
 
 # Old path -> new path. Longer/more specific entries first.
 PATH_MAP: list[tuple[str, str]] = [
@@ -218,8 +222,23 @@ def main() -> int:
     for rel, n in changed:
         print(f"  {n:>4}  {rel}")
     if args.apply:
+        RECEIPT.parent.mkdir(parents=True, exist_ok=True)
         RECEIPT.write_text(
-            "doc-path-reindex applied 2026-09-20 (structural move P3/P6); idempotent mapping\n",
+            json.dumps(
+                {
+                    "tool": "doc-path-reindex",
+                    "one_way": False,
+                    "note": (
+                        "Mapping is idempotent (no new path contains an old path as a substring), so a "
+                        "second pass is a no-op; the guard is kept because the cost of being wrong is "
+                        "the same class."
+                    ),
+                    "applied_at": __import__("datetime").datetime.now().date().isoformat(),
+                    "scope": "structural move P3/P6 (docs/architecture -> docs/system/sub-systems)",
+                },
+                indent=2,
+            )
+            + "\n",
             encoding="utf-8",
         )
     elif changed:

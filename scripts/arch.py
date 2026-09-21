@@ -1088,6 +1088,13 @@ class Gate:
     # workflow, `install.sh`, or a live router. A script that says `wired` and is invoked by nothing
     # is the false-compliance class (MY-RG-008) in its cheapest form.
     SCRIPT_DIR = "scripts"
+    # `scripts/` is scanned RECURSIVELY. It was a flat `iterdir()` until a migration was archived
+    # into `scripts/migrations/` and this gate's coverage silently dropped by exactly the number of
+    # files that moved (16 -> 14, 2026-09-21). That is the scaffolder-vs-linter failure the house
+    # already has a name for: introducing a new directory SHAPE is a change to every gate whose
+    # scope is expressed as "the files in scripts/". A recursive walk means a future
+    # `scripts/<anything>/` cannot fall outside the gate.
+    SCRIPT_SUFFIXES = (".py", ".ts", ".sh", ".mjs", ".js")
 
     def dg20_script_provenance(self, g: str) -> None:
         d = ROOT / self.SCRIPT_DIR
@@ -1105,8 +1112,8 @@ class Gate:
                 wiring += read_text_cached(p)
         scripts = [
             p
-            for p in sorted(d.iterdir())
-            if p.is_file() and p.suffix in (".py", ".ts", ".sh", ".mjs", ".js")
+            for p in sorted(d.rglob("*"))
+            if p.is_file() and p.suffix in self.SCRIPT_SUFFIXES and "__pycache__" not in p.parts
         ]
         texts = {p: read_text_cached(p) for p in scripts}
         n = 0

@@ -427,7 +427,7 @@ in the project:
 
 1. **Ratify the sense** — the user's understanding is authoritative on theory (`AGENTS.md §3.1`).
 2. **Sweep active canon** — every affected document, mechanical parts scripted with a
-   **receipt-guarded, one-way migration** (see `scripts/doc-stage-reindex.py` and plan §12: a
+   **receipt-guarded, one-way migration** (see `scripts/migrations/doc-stage-reindex.py` and plan §12: a
    non-idempotent sweep was applied twice and corrupted 194 files).
 3. **Add the blacklist entry** (§9) with its `exempt_in` list.
 4. **Record the decision** as an AD (`docs/system/core/decisions/`) citing this document.

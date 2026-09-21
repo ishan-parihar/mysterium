@@ -1,0 +1,7 @@
+{
+  "tool": "doc-path-reindex",
+  "one_way": false,
+  "note": "Mapping is idempotent (no new path contains an old path as a substring), so a second pass is a no-op; the guard is kept because the cost of being wrong is the same class.",
+  "applied_at": "2026-09-20",
+  "scope": "structural move P3/P6 (docs/architecture -> docs/system/sub-systems)"
+}

@@ -22,8 +22,8 @@ idempotent: after a correct pass, the newly-correct `Turquoise` is exactly the t
 so a second invocation (used to print a different section of the report) ran live.
 
 ## What happened — Incident 1 (2026-09-20)
-`python3 scripts/doc-stage-reindex.py --apply | sed -n 1,3p` followed by
-`python3 scripts/doc-stage-reindex.py --apply | sed -n '/HELD/,$p'` in one shell command.      The first pass was correct; the second corrupted 194 files. Recovery: `git checkout -- docs/`,
+`python3 scripts/migrations/doc-stage-reindex.py --apply | sed -n 1,3p` followed by
+`python3 scripts/migrations/doc-stage-reindex.py --apply | sed -n '/HELD/,$p'` in one shell command.      The first pass was correct; the second corrupted 194 files. Recovery: `git checkout -- docs/`,
       re-apply hand edits, re-run once.
 
       ## What happened — Incident 2 (2026-09-20, same day, other direction)
@@ -41,10 +41,10 @@ so a second invocation (used to print a different section of the report) ran liv
 
 ## Detection
 `grep -rn "L8 Teal\|Teal→Teal" docs/` — any hit is corruption. The script itself now refuses:
-`python3 scripts/doc-stage-reindex.py` exits 2 when a receipt exists.
+`python3 scripts/migrations/doc-stage-reindex.py` exits 2 when a receipt exists.
 
 ## Prevention
-- `scripts/doc-stage-reindex.py` writes `docs/.doc-stage-reindex.applied` on `--apply` and
+- `scripts/migrations/doc-stage-reindex.py` writes `scripts/migrations/receipts/doc-stage-reindex.json` on `--apply` and
   **refuses to re-run** (`--force` overrides, documented as dangerous).
 - The one-way nature is stated in the script's first docstring paragraph.      - Class rule: a migration whose correctness depends on how many times it has run must ship with a
         receipt, and its report section must never be produced by re-running the migration.
@@ -53,6 +53,6 @@ so a second invocation (used to print a different section of the report) ran liv
         migration's target tokens entirely (as the closure-sense edits now do — they name the *event*,
         "the Violet closure", not a stage token).
       - Files deliberately excluded from a sweep (hand-review pending) are corrected afterwards with an
-        explicit single-file mode: `python3 scripts/doc-stage-reindex.py --only <path>`.
+        explicit single-file mode: `python3 scripts/migrations/doc-stage-reindex.py --only <path>`.
 
 <!-- 2026-09-20: recorded Incident 2 (pre-sweep hand edits re-mapped by the chained renaming) (recon f8731f5aa2) -->
