@@ -113,6 +113,12 @@ export interface ContextPipelineInput {
    * block (a cold holon has no history; that is correct, not an error).
    */
   readonly holonProfileBlock?: readonly string[];
+  /**
+   * RuntimeLoop (46 §2 × 11 via sessionRuntime): the cell's AUTHORED contextual seed bound to the
+   * encounter's modality — the canonical situation the scenario-catalyst renders. Stage-coherent
+   * by construction (scenarioSeeds + G27); absent when the cell has no authored seed.
+   */
+  readonly scenarioSeedBlock?: string;
 }
 
 /** The composed-facet prose blocks the prompt may carry (46 §7 step 5's applied facets). */
@@ -348,6 +354,7 @@ function assembleSystemPrompt(
   composedWorld?: ComposedWorldTexture,
   personalizationBlock?: PersonalizationBlock,
   holonProfileBlock?: readonly string[],
+  scenarioSeedBlock?: string,
 ): string {
   const holonDescriptions = formatHolonDescriptions(holonSelection);
   const playerStateSignals = formatPlayerState(veilFilteredSig);
@@ -389,6 +396,10 @@ function assembleSystemPrompt(
   const holonProfileStr = holonProfileBlock && holonProfileBlock.length > 0
     ? `\n[HOLON MEMORY] ${holonProfileBlock.join('; ')}`
     : '';
+  // RuntimeLoop: the authored canonical situation for this cell — the ground the scene stands on.
+  const scenarioSeedStr = scenarioSeedBlock && scenarioSeedBlock.trim()
+    ? `\n[SCENARIO SEED] ${scenarioSeedBlock.replace(/\n+/g, ' | ')}`
+    : '';
 
   return `[ROLE] You are the manifestation layer of Mysterium.
 [COSMOLOGY] Third Density constraints. Veil enforced. Free will absolute.
@@ -398,7 +409,7 @@ ${frequencySpec.crossAltitudeDirective}
 [ENCOUNTER] lines=${encounterContext.lines.join(',')}; stage=${encounterContext.stage}; modality=${encounterContext.modality}; purpose=${encounterContext.catalyticPurpose}; module=${encounterContext.moduleRef}
 [MODALITY] ${modalityRubric}
 [CONTINUITY] ${consequenceContext}
-[PLAYER STATE] ${playerStateSignals}${synthesisBlock}${cognitiveBlock}${knowledgeBlock}${polarityBlock}${agendaBlock}${composedBlock}${personalizationBlockStr}${holonProfileStr}
+[PLAYER STATE] ${playerStateSignals}${synthesisBlock}${cognitiveBlock}${knowledgeBlock}${polarityBlock}${agendaBlock}${composedBlock}${personalizationBlockStr}${holonProfileStr}${scenarioSeedStr}
 [OUTPUT FORMAT] ${outputFormat}
 [RULES] No Veil violations. No clinical language. No scoring references. No frame-breaking. Stay in frequency. Scale cognitive complexity to the player's altitude, not the encounter's stage.`;
 }
@@ -624,6 +635,7 @@ export function buildContext(input: ContextPipelineInput): ContextPipelineOutput
     input.composedWorld,
     input.personalizationBlock,
     input.holonProfileBlock,
+    input.scenarioSeedBlock,
   );
 
   // Collect selected holons for output

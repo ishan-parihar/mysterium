@@ -26,7 +26,7 @@ import { createTagStore } from '../world/tags/dialectic.js';
 import { INITIAL_TAGS } from '../world/tags/initialTags.js';
 import { createOwnerWorkerPoolState, drain, hotSet, type OwnerWorkerPoolState } from '../world/ownerWorkerPool.js';
 import type { OwnerProposal } from '../world/ownerWorker.js';
-import { appendOwnerWorkerEntry, appendSessionEntry, type ReportingFeed } from '../orchestration/feedBridge.js';
+import { appendOwnerWorkerEntry, appendInsightEntry, appendSessionEntry, appendVerdictEntry, type ReportingFeed } from '../orchestration/feedBridge.js';
 import { createReportingFeed } from '../orchestration/reportingFeed.js';
 import type { LogRef, Proposal, SessionSignals } from '../orchestration/types.js';
 import { projectUdv } from './udv.js';
@@ -35,6 +35,9 @@ import type { PoolCandidate } from './pooling.js';
 import { buildScenarioContext, type ScenarioContext, type PooledRefs } from './scenarioContext.js';
 import { initialTopicTagResolver, seedCandidateLibrary, deriveNpcCandidates } from './candidateLibrary.js';
 import type { PolarityStateMap } from './dialecticEngine.js';
+import { SCENARIO_SEEDS, type ScenarioSeed } from './scenarioSeeds.js';
+import { contextualSeed } from './scenarioSeedVariants.js';
+import { checkCoherence, type CoherenceDefect } from './stageCoherence.js';
 import { createFacetStore } from '../world/facets/FacetStore.js';
 import facetsJson from '../world/facets/facets.json';
 
@@ -123,9 +126,16 @@ export function buildEnvelope(
   purpose: string,
   veiled: readonly string[],
   now: number,
+  /** The encounter's holonSource, when the encounter names one — coherence-checked here. */
+  holonSource: string | null = null,
 ): {
   readonly context: ScenarioContext | null;
   readonly block: PersonalizationBlock | null;
+  /** The authored contextual seed text for this (cell × modality), or null when unauthored. */
+  readonly seedText: string | null;
+  /** The runtime coherence verdict: `blocked` means the holon was routed OUT of the prompt. */
+  readonly coherenceBlocked: boolean;
+  readonly coherenceDefects: readonly CoherenceDefect[];
 } {
   // Consent-checked usable fields — the projector re-checks, but the caller declares the set.
   const usableFields = new Set(identity?.usable ?? []);
@@ -169,8 +179,22 @@ export function buildEnvelope(
   const pooledRefs: PooledRefs = {
     world: result.ranked.filter((c) => c.id.startsWith('world:')).map((c) => c.id),
     npcs: result.ranked.filter((c) => c.id.startsWith('npc:')).map((c) => c.id),
-    scenarios: result.ranked.filter((c) => c.id.startsWith('scenario:')).map((c) => c.id),
+    // Both the derived skeleton (`scenario:`) and the authored seed (`scenario-authored:`) are
+    // scenario-tier renderings — the authored one ranks FIRST when tags tie because its situation
+    // text is the cell's canon (the ranking bias applies within the tier).
+    scenarios: result.ranked
+      .filter((c) => c.id.startsWith('scenario:'))
+      .sort((a, b) => (a.id.startsWith('scenario-authored:') ? -1 : 1) - (b.id.startsWith('scenario-authored:') ? -1 : 1))
+      .map((c) => c.id),
   };
+
+  // The authored contextual seed for this (cell × modality) — the stage-coherent situation text.
+  const seedText = contextualSeedBlock(target.line, target.stage, target.modality);
+
+  // The RUNTIME coherence gate: the encounter's holon is checked against the target cell. A
+  // mismatch blocks the holon's digest from the prompt (routing, not canceling — 45 §5.2.1); the
+  // defects ride the outcome so the caller feeds the dev loop.
+  const coherence = coherenceGate(services, holonSource, target);
 
   const context = buildScenarioContext({
     udv,
@@ -191,10 +215,39 @@ export function buildEnvelope(
     deferredCells: result.deferrals.slice(0, 4).map((d) => `${d.cell.line}:${d.cell.stage}:${d.cell.modality}`),
   };
 
-  return { context, block };
+  return { context, block, seedText, coherenceBlocked: coherence.blocked, coherenceDefects: coherence.defects };
 }
 
 // ── Holon L3 digest block (22 §7.4) ─────────────────────────────────────────────────────────
+
+/**
+ * Coherence-check the encounter's holon against the target cell and return the live defect list.
+ *
+ * This is the RUNTIME half of the stage-coherence gate (46 §11 facet incoherence; 44 altitude
+ * separation): the pool/composition path picks renderings, but the one component the orchestrator
+ * names directly — the encounter's `holonSource` NPC — is checked HERE, at the seam, every
+ * encounter. A mismatch is ROUTED, not canceled (45 §5.2.1): the defect is returned so the caller
+ * can reach the dev loop, and the session proceeds — but the block that would have carried the
+ * misaligned component's voice is withheld, so nothing incoherent reaches the prompt.
+ *
+ * NPC holons authored at a stage are load-bearing for their own cell; when the encounter targets
+ * a different cell with the same holon, that is exactly the deviated-simulation shape the user's
+ * requirement forbids — so the defect surfaces and the digest stays out of the prompt.
+ */
+export function coherenceGate(
+  services: OrchestrationServices,
+  holonId: string | null,
+  target: { readonly line: Line; readonly stage: Stage; readonly modality: Modality },
+): { readonly blocked: boolean; readonly defects: readonly CoherenceDefect[] } {
+  if (!holonId) return { blocked: false, defects: [] };
+  const holon = services.holons.find((h) => h.id === holonId);
+  if (!holon) return { blocked: false, defects: [] }; // unknown holon: nothing to check
+  const verdict = checkCoherence(
+    [{ source: `npc:${holon.id}`, line: holon.line, stage: holon.stage, loadBearing: true }],
+    { line: target.line, stage: target.stage },
+  );
+  return { blocked: !verdict.coherent, defects: verdict.defects };
+}
 
 /**
  * The worker digests for the encounter's holon — what generation consumes so an NPC "remembers"
@@ -217,6 +270,25 @@ export function holonDigestBlock(services: OrchestrationServices, holonId: strin
   if (hot.length > 0) out.push(`disposition shifted: ${hot.join(', ')}`);
   if (patterns.length > 0) out.push(`shared history: ${[...new Set(patterns)].join(', ')}`);
   return out;
+}
+
+// ── The authored contextual seed (46 §2 × 11 — the cell's canonical situation, rendered) ────
+
+/** The authored seed for a cell, or undefined (a cell without an authored seed is a content gap
+ * the calibration harness reports — the runtime degrades rather than fabricates). */
+export function scenarioSeedFor(line: Line, stage: Stage, seeds: readonly ScenarioSeed[] = SCENARIO_SEEDS): ScenarioSeed | undefined {
+  return seeds.find((s) => s.line === line && s.stage === stage);
+}
+
+/**
+ * The contextual seed text for this encounter: the authored seed bound to the modality's angle
+ * (`scenarioSeedVariants.ts`). Null when the cell has no authored seed — the LLM then falls back
+ * to the composed facets alone, which is degradation, never fabrication.
+ */
+export function contextualSeedBlock(line: Line, stage: Stage, modality: Modality): string | null {
+  const seed = scenarioSeedFor(line, stage);
+  if (!seed) return null;
+  return contextualSeed(seed, modality);
 }
 
 // ── Session-end: feed + owner-worker drain ──────────────────────────────────────────────────
@@ -281,6 +353,116 @@ export function sessionEnd(
     workers: drainResult.state,
     feed: services.feed,
   };
+}
+
+// ── The dev loop reads the coherence defects (43 §5.5 W4) ───────────────────────────────────
+
+/**
+ * Record the runtime coherence verdict as an orchestrator insight entry — the defect must be
+ * SEEN by the development loop (46 §11: triage, not the player). The forecast is F4's
+ * self-criticism: if a coherence defect routed a component out of the prompt this session, the
+ * strategy engine expected an aligned rendering, so the deviation is named.
+ *
+ * Idempotent per session (the insight entry id is `insight:{sessionId}`); an all-clear verdict
+ * records nothing — the feed carries findings, not silence.
+ */
+export function recordCoherenceInsight(
+  services: OrchestrationServices,
+  sessionId: string,
+  defects: readonly CoherenceDefect[],
+  at: number,
+): boolean {
+  if (defects.length === 0) return false;
+  appendInsightEntry(services.feed, {
+    sessionId,
+    at,
+    insight: {
+      suspectedCauses: defects.map((d) => `${d.source}: ${d.rule} (${d.componentStage} vs ${d.targetStage})`),
+      evidence: defects.map((d) => d.detail),
+      recommendedPlanDeltas: [
+        're-scope the encounter\'s holonSource to the target cell, or schedule the holon\'s own cell',
+      ],
+    },
+    forecast: {
+      expected: 'all prompt components at the encounter\'s stage (46 §11; 44 altitude separation)',
+      observed: `${defects.length} component(s) off-stage — routed out of the prompt, session proceeded`,
+      deviation: Math.min(1, defects.length * 0.25),
+    },
+  });
+  return true;
+}
+
+// ── Ratification pass-through (43 §5.5 W3) ─────────────────────────────────────────────────
+
+/**
+ * Record an L4 ratification verdict for a session's proposals. The orchestrator may call this
+ * after its ratification step; kept here so the FOUR writers of 43 §5.5 all flow through the one
+ * seam. Idempotent per session id.
+ */
+export function recordRatification(
+  services: OrchestrationServices,
+  sessionId: string,
+  at: number,
+  dispositions: readonly { readonly kind: Proposal['kind']; readonly accepted: boolean; readonly reason: string }[],
+): void {
+  appendVerdictEntry(services.feed, {
+    sessionId,
+    at,
+    dispositions,
+  });
+}
+
+// ── Restore (the checkpoint story: serialize entries + workers, rebuild services) ───────────
+
+/** Serializable checkpoint of the runtime state (feed entries are plain objects by design). */
+export interface RuntimeCheckpoint {
+  readonly feedEntries: readonly {
+    readonly id: string;
+    readonly at: number;
+    readonly source: 'session' | 'worker' | 'ratification' | 'orchestrator';
+    readonly ref: unknown;
+    readonly signals?: SessionSignals;
+    readonly proposals?: readonly Proposal[];
+    readonly proposalsOwnerCommitted?: readonly Proposal[];
+    readonly verdict?: { readonly committed: readonly string[]; readonly rejected: readonly (readonly [string, string])[] };
+    readonly insight?: { readonly suspectedCauses: readonly string[]; readonly evidence: readonly string[]; readonly recommendedPlanDeltas: readonly string[] };
+    readonly forecast?: { readonly expected: string; readonly observed: string; readonly deviation: number };
+  }[];
+  readonly workers: OwnerWorkerPoolState;
+}
+
+/** Capture the current runtime state for persistence. */
+export function captureCheckpoint(services: OrchestrationServices): RuntimeCheckpoint {
+  return {
+    feedEntries: services.feed.entries.map((e) => ({
+      id: e.id,
+      at: e.at,
+      source: e.source,
+      ref: e.ref,
+      ...(e.signals ? { signals: e.signals } : {}),
+      ...(e.proposals.length > 0 ? { proposals: e.proposals } : {}),
+      ...(e.proposalsOwnerCommitted ? { proposalsOwnerCommitted: e.proposalsOwnerCommitted } : {}),
+      ...(e.verdict ? { verdict: e.verdict } : {}),
+      ...(e.insight ? { insight: e.insight } : {}),
+      ...(e.forecast ? { forecast: e.forecast } : {}),
+    })),
+    workers: services.workers,
+  };
+}
+
+/**
+ * Restore services from a checkpoint: a fresh services record with the feed replayed (F3 makes
+ * replay exact — same ids yield the same entries, no duplicates) and the worker pool state
+ * reattached. Unknown/foreign entries are refused (fail-closed) rather than silently dropped.
+ */
+export function restoreCheckpoint(
+  services: OrchestrationServices,
+  checkpoint: RuntimeCheckpoint,
+): void {
+  for (const e of checkpoint.feedEntries) {
+    services.feed.append(e as never); // F3: replaying a known id is a no-op; unknown ids append
+  }
+  (services as { workers: OwnerWorkerPoolState }).workers = checkpoint.workers;
 }
 
 /** Proposals an owner worker emits (re-export for the orchestrator's ratification surface). */

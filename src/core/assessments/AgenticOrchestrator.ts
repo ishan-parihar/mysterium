@@ -28,7 +28,7 @@ function getFacetStore(): FacetStore {
   return facetStoreSingleton;
 }
 import type { OrchestrationServices, PersonalizationBlock } from '../personalization/sessionRuntime.js';
-import { buildEnvelope, holonDigestBlock, sessionEnd } from '../personalization/sessionRuntime.js';
+import { buildEnvelope, holonDigestBlock, recordCoherenceInsight, sessionEnd } from '../personalization/sessionRuntime.js';
 import type { OwnerWorkerPoolState } from '../world/ownerWorkerPool.js';
 import { queryLLMWithTools, queryLLMStream } from '../../infra/llm/LLMClient.js';
 import { parseConsequence } from '../../infra/llm/ConsequenceParser.js';
@@ -562,10 +562,11 @@ export class AgenticOrchestrator {
       // RuntimeLoop (45 §5/§6 + 22 §7.4): the personalization envelope + the holon's memory.
       // Both degrade to absent — never block a session.
       ...(() => {
-        const { block, digest } = this.personalizationContext();
+        const { block, digest, seed } = this.personalizationContext();
         return {
           ...(block ? { personalizationBlock: block } : {}),
           ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
+          ...(seed ? { scenarioSeedBlock: seed } : {}),
         };
       })(),
     };
@@ -880,10 +881,11 @@ export class AgenticOrchestrator {
       })(),
       // RuntimeLoop (45 §5/§6 + 22 §7.4): same envelope + memory as the main path.
       ...(() => {
-        const { block, digest } = this.personalizationContext();
+        const { block, digest, seed } = this.personalizationContext();
         return {
           ...(block ? { personalizationBlock: block } : {}),
           ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
+          ...(seed ? { scenarioSeedBlock: seed } : {}),
         };
       })(),
     };
@@ -2445,11 +2447,12 @@ ${probes}${rubric}
   private personalizationContext(): {
     block: PersonalizationBlock | null;
     digest: readonly string[];
+    seed: string | null;
   } {
-    if (!this.orchestration) return { block: null, digest: [] };
+    if (!this.orchestration) return { block: null, digest: [], seed: null };
     try {
       const [line] = this.encounter.moduleRef.split(':') as [Line, ...unknown[]];
-      const { block } = buildEnvelope(
+      const { block, seedText, coherenceBlocked, coherenceDefects } = buildEnvelope(
         this.orchestration,
         this.significator,
         this.identity,
@@ -2461,10 +2464,25 @@ ${probes}${rubric}
         this.encounter.codexEntry ?? `a ${this.encounter.modality.toLowerCase()} catalyst for ${this.encounter.targetLines[0] ?? line}`, // purpose from the encounter, never the UDV (46 §11 inv 5)
         [], // veiled: the pipeline input is already veil-filtered (20)
         Date.now(),
+        this.encounter.holonSource ?? null,
       );
-      return { block, digest: holonDigestBlock(this.orchestration, this.encounter.holonSource) };
+      // Dev loop: an off-stage holon is a finding for triage, not a player-facing error (46 §11).
+      if (coherenceDefects.length > 0) {
+        recordCoherenceInsight(
+          this.orchestration,
+          `orch:${this.encounter.id}`,
+          coherenceDefects,
+          Date.now(),
+        );
+      }
+      // Routing, not canceling (45 §5.2.1): the session proceeds, but the off-stage holon's
+      // memory is withheld from the prompt so no deviated voice reaches the player.
+      const digest = coherenceBlocked
+        ? []
+        : holonDigestBlock(this.orchestration, this.encounter.holonSource);
+      return { block, digest, seed: seedText };
     } catch {
-      return { block: null, digest: [] };
+      return { block: null, digest: [], seed: null };
     }
   }
 
