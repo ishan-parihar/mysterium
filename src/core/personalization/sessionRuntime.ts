@@ -37,6 +37,7 @@ import { initialTopicTagResolver, seedCandidateLibrary, deriveNpcCandidates } fr
 import type { PolarityStateMap } from './dialecticEngine.js';
 import { SCENARIO_SEEDS, type ScenarioSeed } from './scenarioSeeds.js';
 import { WORLD_SEEDS, type WorldSeed } from './worldSeeds.js';
+import { NPC_SEEDS, type NpcSeed } from './npcSeeds.js';
 import { contextualSeed } from './scenarioSeedVariants.js';
 import { checkCoherence, type CoherenceDefect } from './stageCoherence.js';
 import { createFacetStore } from '../world/facets/FacetStore.js';
@@ -76,10 +77,13 @@ export interface OrchestrationServices {
   readonly holons: readonly Holon[];
 }
 
-/** Build a fresh services record. `holons` seeds NPC derivation; empty is valid (no NPC candidates). */
-export function createOrchestrationServices(holons: readonly Holon[] = []): OrchestrationServices {
+/** Build a fresh services record. `holons` seeds NPC derivation; empty is valid (no NPC candidates).
+ *  `restore` (Phase 11 d1): a checkpoint captured from a previous process — the feed replays
+ *  idempotently (F3), the worker pool and polarity states reattach, so cross-session memory
+ *  survives the restart instead of dying with the process. */
+export function createOrchestrationServices(holons: readonly Holon[] = [], restore?: RuntimeCheckpoint): OrchestrationServices {
   const base = seedCandidateLibrary(sharedFacetStore());
-  return {
+  const services: OrchestrationServices = {
     feed: createReportingFeed(),
     tags: createTagStore(INITIAL_TAGS),
     library: [...base, ...deriveNpcCandidates(holons)],
@@ -87,6 +91,8 @@ export function createOrchestrationServices(holons: readonly Holon[] = []): Orch
     workers: createOwnerWorkerPoolState(),
     holons,
   };
+  if (restore) restoreCheckpoint(services, restore);
+  return services;
 }
 
 // ── Encounter-time: the personalization envelope ────────────────────────────────────────────
@@ -136,6 +142,8 @@ export function buildEnvelope(
   readonly seedText: string | null;
   /** The authored world PLACE text for this cell, or null when unauthored. */
   readonly worldPlace: string | null;
+  /** The authored persona VOICE for this cell (46 §2's NPC library), or null when unauthored. */
+  readonly personaVoice: string | null;
   /** The runtime coherence verdict: `blocked` means the holon was routed OUT of the prompt. */
   readonly coherenceBlocked: boolean;
   readonly coherenceDefects: readonly CoherenceDefect[];
@@ -181,13 +189,18 @@ export function buildEnvelope(
 
   const pooledRefs: PooledRefs = {
     world: result.ranked.filter((c) => c.id.startsWith('world:')).map((c) => c.id),
-    npcs: result.ranked.filter((c) => c.id.startsWith('npc:')).map((c) => c.id),
     // Both the derived skeleton (`scenario:`) and the authored seed (`scenario-authored:`) are
     // scenario-tier renderings — the authored one ranks FIRST when tags tie because its situation
     // text is the cell's canon (the ranking bias applies within the tier).
     scenarios: result.ranked
       .filter((c) => c.id.startsWith('scenario:'))
       .sort((a, b) => (a.id.startsWith('scenario-authored:') ? -1 : 1) - (b.id.startsWith('scenario-authored:') ? -1 : 1))
+      .map((c) => c.id),
+    // Same authored-first bias within the NPC tier: the persona seed's prose is the cell's canon
+    // (Phase 11 d7), the derived-from-holons skeleton fills the rest.
+    npcs: result.ranked
+      .filter((c) => c.id.startsWith('npc:'))
+      .sort((a, b) => (a.id.startsWith('npc-authored:') ? -1 : 1) - (b.id.startsWith('npc-authored:') ? -1 : 1))
       .map((c) => c.id),
   };
 
@@ -197,6 +210,10 @@ export function buildEnvelope(
   // The authored world place for this cell — the stage the situation stands on (46 §2's world
   // library; the authored tier above facet composition).
   const worldPlace = worldPlaceBlock(target.line, target.stage);
+
+  // The authored persona voice for this cell — the canonical figure of the NPC library (46 §2;
+  // Phase 11 d7), the authored tier above the derived-from-holons skeleton.
+  const personaVoice = personaVoiceBlock(target.line, target.stage);
 
   // The RUNTIME coherence gate: the encounter's holon is checked against the target cell. A
   // mismatch blocks the holon's digest from the prompt (routing, not canceling — 45 §5.2.1); the
@@ -222,7 +239,7 @@ export function buildEnvelope(
     deferredCells: result.deferrals.slice(0, 4).map((d) => `${d.cell.line}:${d.cell.stage}:${d.cell.modality}`),
   };
 
-  return { context, block, seedText, worldPlace, coherenceBlocked: coherence.blocked, coherenceDefects: coherence.defects };
+  return { context, block, seedText, worldPlace, personaVoice, coherenceBlocked: coherence.blocked, coherenceDefects: coherence.defects };
 }
 
 // ── Holon L3 digest block (22 §7.4) ─────────────────────────────────────────────────────────
@@ -314,6 +331,23 @@ export function worldPlaceBlock(line: Line, stage: Stage): string | null {
   return `Where: ${w.place} — ${w.texture} Around you: ${w.population} The place asks: ${w.tension}`;
 }
 
+/** The authored persona seed for a cell, or undefined (degradation, never fabrication). */
+export function npcPersonaFor(line: Line, stage: Stage, seeds: readonly NpcSeed[] = NPC_SEEDS): NpcSeed | undefined {
+  return seeds.find((s) => s.line === line && s.stage === stage);
+}
+
+/**
+ * The authored persona VOICE for this cell: the canonical figure of the NPC library (46 §2),
+ * given in stage-register prose — who stands in the situation, how they speak, and the tension
+ * they carry. This is the SIGNIFICATOR's persona voice: how the game's voice toward this player
+ * is registered (16 §2's vessel side). Null when the cell has no authored persona.
+ */
+export function personaVoiceBlock(line: Line, stage: Stage): string | null {
+  const p = npcPersonaFor(line, stage);
+  if (!p) return null;
+  return `${p.name} — ${p.role}. They speak ${p.voice}; ${p.register}. Beneath it: ${p.tension}.`;
+}
+
 // ── Session-end: feed + owner-worker drain ──────────────────────────────────────────────────
 
 export interface SessionEndInput {
@@ -324,6 +358,10 @@ export interface SessionEndInput {
   readonly touchedHolonIds: readonly string[];
   readonly history: readonly ConsequenceRecord[];
   readonly now: number;
+  /** The dialectic pair the composition selected (surface, structure ids) — Phase 11 d5. */
+  readonly dialecticPair?: readonly [string, string] | null;
+  /** The encounter's scored SERVICE-polarity direction (19/23) — the advance signal for d5. */
+  readonly polarityDirection?: 'sto' | 'sts' | 'neutral';
 }
 
 export interface SessionEndOutcome {
@@ -335,12 +373,54 @@ export interface SessionEndOutcome {
   readonly workers: OwnerWorkerPoolState;
   /** The post-append feed — likewise carried/persisted by the caller (serializable entries). */
   readonly feed: ReportingFeed;
+  /** The disposition list recorded for the session's proposals — G30's evidence surface. */
+  readonly verdictRecorded: boolean;
+}
+
+// ── Polarity state advance (Phase 11 d5; 46 §5.2/§5.3 + MY-AD-0031) ────────────────────────
+
+/**
+ * Advance the player's dialectic pair-state map from one session's reconciliation evidence.
+ *
+ * The pair worked is the pair the composition SELECTED (surface ⟷ structure — the pair whose
+ * active tension carried the encounter). The encounter's scored SERVICE-polarity (sto/sts/
+ * neutral — a 19/23 concept, deliberately distinct from the reconciliation-polarity per
+ * MY-AD-0031) is the advance signal:
+ *
+ * - `neutral`  → `undiscovered` pairs become `active-tension` (the work has begun — discovery);
+ * - `sto`      → the pair advances one step further: `active-tension` → `reconciled` (service-
+ *                oriented engagement is the integrative direction; MY-AD-0031's reading);
+ * - `sts`      → no advance (self-serving engagement does not reconcile a dialectic pair).
+ *
+ * Saturation guard (46 §5.3): `reconciled` never regresses here, and a reconciled pair is
+ * thereafter unselectable as a structural pole — the engine re-opens it only on refutation
+ * evidence, which is not this writer's job. Pure function; sessionEnd assigns the result.
+ */
+export function advancePolarityStates(
+  states: PolarityStateMap,
+  pair: readonly [string, string] | null | undefined,
+  direction: 'sto' | 'sts' | 'neutral' | undefined,
+): PolarityStateMap {
+  if (!pair || !direction) return states;
+  const [a, b] = pair;
+  if (a === b) return states; // reflexive-safe: origin tags carry no structural payload
+  const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+  const current = states[key] ?? 'undiscovered';
+  if (current === 'reconciled') return states; // saturation guard
+  if (direction === 'sts') return states;      // no advance on self-serving engagement
+  if (current === 'undiscovered') {
+    // `sto` on an undiscovered pair: the work was integrative from the first encounter — count
+    // it as discovery (active-tension), not instant reconciliation.
+    return { ...states, [key]: 'active-tension' };
+  }
+  // current === 'active-tension', direction sto → reconciled.
+  return { ...states, [key]: 'reconciled' };
 }
 
 /**
  * Session end (43 §4.6 + §5.5 W1/W2): append the session entry, drain the owner-worker pool over
- * the touched holons, and record the drain as a worker entry. Deterministic; replay-safe (both
- * writers are idempotent per unit of work — F3/W4).
+ * the touched holons, advance the polarity state map (Phase 11 d5), and record the drain as a
+ * worker entry. Deterministic; replay-safe (both writers are idempotent per unit of work — F3/W4).
  */
 export function sessionEnd(
   services: OrchestrationServices,
@@ -356,6 +436,15 @@ export function sessionEnd(
   const warm = hotSet(services.holons, input.touchedHolonIds);
   const drainResult = drain(services.workers, warm, input.history, input.touchedHolonIds);
 
+  // Polarity advance (Phase 11 d5): the pair the composition selected moves one step under the
+  // saturation guard; the map is mutated-by-replacement like the worker pool so the caller's
+  // checkpoint and the next envelope both see it.
+  (services as { states: PolarityStateMap }).states = advancePolarityStates(
+    services.states,
+    input.dialecticPair,
+    input.polarityDirection,
+  );
+
   // The drain returns a NEW state; the services record is mutable-by-replacement so the next
   // encounter's envelope and the caller's checkpoint both see the committed profiles.
   (services as { workers: OwnerWorkerPoolState }).workers = drainResult.state;
@@ -370,11 +459,35 @@ export function sessionEnd(
     });
   }
 
+  // Writer 3 (Phase 11 d4 / G30 — verdict completeness): a session whose outcome is recorded on
+  // the feed gets a disposition entry on the SAME feed. Engine-committed effects (processOutcome
+  // / applyConsequences) and owner-committed deltas are the normal accepted classes; a session
+  // with no ratifiable payload records an explicit empty verdict, so "every session has a
+  // disposition" is checkable rather than assumed (F2: the feed is the only channel).
+  // Idempotent per session (entry id is verdict:{sessionId}) — replay-safe like every writer.
+  let verdictRecorded = false;
+  try {
+    const committed = input.proposals.filter((p) => p.kind === 'encounter_record' || p.kind === 'shadow_entry' || p.kind === 'mastery_evidence' || p.kind === 'pack_score');
+    appendVerdictEntry(services.feed, {
+      sessionId: input.logRef.sessionId,
+      at: input.now,
+      dispositions: committed.map((p) => ({
+        kind: p.kind,
+        accepted: true,
+        reason: 'engine-committed via processOutcome/applyConsequences (L4 deterministic path)',
+      })),
+    });
+    verdictRecorded = true;
+  } catch {
+    verdictRecorded = false; // the feed can never break the session (degradation law)
+  }
+
   return {
     ownerCommitted,
     awaitingRatification: input.proposals,
     workers: drainResult.state,
     feed: services.feed,
+    verdictRecorded,
   };
 }
 
@@ -452,6 +565,8 @@ export interface RuntimeCheckpoint {
     readonly forecast?: { readonly expected: string; readonly observed: string; readonly deviation: number };
   }[];
   readonly workers: OwnerWorkerPoolState;
+  /** The dialectic pair-state map (46 §5.2) — rides the checkpoint (Phase 11 d5). */
+  readonly states?: PolarityStateMap;
 }
 
 /** Capture the current runtime state for persistence. */
@@ -463,13 +578,16 @@ export function captureCheckpoint(services: OrchestrationServices): RuntimeCheck
       source: e.source,
       ref: e.ref,
       ...(e.signals ? { signals: e.signals } : {}),
-      ...(e.proposals.length > 0 ? { proposals: e.proposals } : {}),
+      // Always serialize proposals: restore re-appends entries as-is, and a restored entry
+      // without this required field would crash the NEXT captureCheckpoint (W4 round trip).
+      proposals: e.proposals,
       ...(e.proposalsOwnerCommitted ? { proposalsOwnerCommitted: e.proposalsOwnerCommitted } : {}),
       ...(e.verdict ? { verdict: e.verdict } : {}),
       ...(e.insight ? { insight: e.insight } : {}),
       ...(e.forecast ? { forecast: e.forecast } : {}),
     })),
     workers: services.workers,
+    states: services.states,
   };
 }
 
@@ -483,9 +601,15 @@ export function restoreCheckpoint(
   checkpoint: RuntimeCheckpoint,
 ): void {
   for (const e of checkpoint.feedEntries) {
-    services.feed.append(e as never); // F3: replaying a known id is a no-op; unknown ids append
+    // Boundary normalization: a parsed checkpoint (or legacy save) may omit the required
+    // `proposals` field — backfill it so the feed always holds valid entries (fail-closed
+    // against silent corruption, MY-RG-0031 class).
+    services.feed.append({ proposals: [], ...e } as never); // F3: replaying a known id is a no-op; unknown ids append
   }
   (services as { workers: OwnerWorkerPoolState }).workers = checkpoint.workers;
+  if (checkpoint.states) {
+    (services as { states: PolarityStateMap }).states = checkpoint.states;
+  }
 }
 
 /** Proposals an owner worker emits (re-export for the orchestrator's ratification surface). */

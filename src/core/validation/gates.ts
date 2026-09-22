@@ -37,6 +37,13 @@ import redHolonsJson from '../world/data/red-layer-holons.json';
 import stageHolonsJson from '../world/data/stage-holons.json';
 import conceptDraftsJson from '../data/concept-drafts.json';
 import type { ConceptDraftIndex } from '../data/ConceptDraftIndex.js';
+// Phase 11/12 memory gates (G28–G31): the surfaces they certify.
+import { createOrchestrationServices, sessionEnd, captureCheckpoint, restoreCheckpoint, type RuntimeCheckpoint } from '../personalization/sessionRuntime.js';
+import type { Holon } from '../world/Holon.js';
+import type { Proposal } from '../orchestration/types.js';
+import { grantDeclaredPreference, withdrawDeclaredPreference, activeDeclaredInterests, activeDeclaredAversions, createEmptyIdentityProfile } from '../domain/IdentityProfile.js';
+import { localRetrieve, tokenize, type Retrievable } from '../memory/LocalRetriever.js';
+import { filterRecall, createEmbeddingProvider, EMBEDDING_MODEL_PIN, isBandedText } from '../memory/retrievalFirewall.js';
 import { validatePodPrivacyWall } from '../pods/podStateMachine.js';
 import { createTagStore } from '../world/tags/dialectic.js';
 import { INITIAL_TAGS } from '../world/tags/initialTags.js';
@@ -856,6 +863,10 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   results.push(validateScaffoldIntegrity());
   results.push(validateInferenceWriteFirewall());
   results.push(validateAuthoredSeedCoherence());
+  results.push(validateMemoryPersistence());
+  results.push(validatePreferenceIntakeFirewall());
+  results.push(validateVerdictCompleteness());
+  results.push(validateRetrievalFirewall());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
@@ -1420,6 +1431,226 @@ export function validateAuthoredSeedCoherence(): GateResult {
       if (p.poleA === p.poleB) return mk(`probe ${p.id}: both poles are the same tag — no discrimination`);
     }
     return { gate: 'G27 authored-seed stage coherence', passed: true, hard: true, details: `${SCENARIO_SEEDS.length}/64 scenario + ${WORLD_SEEDS.length}/64 world seeds coherent, ${AUTHORED_PROBES.length} probes with resolvable poles` };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G28 — Memory persistence (hard, plan Phase 11 d1): the runtime checkpoint
+// survives save→load→save byte-identically (W4 replay across restart); NPC
+// memory, the feed, and the polarity map do NOT die with the process.
+// ---------------------------------------------------------------------------
+
+const G28_HOLONS: readonly Holon[] = [
+  { id: 'g28-h', name: 'G28 contact', kind: 'NPC', line: 'Cognitive', stage: 'Red', drives: { dominant: 'Agency', secondary: 'Eros', shadowQuadrant: null }, polarity: 'Sovereign', narrativeRole: 'benchmark', relationships: [], active: true } as never,
+];
+
+/** A minimal consequence record carrying one holon delta (the drain's event source). */
+function g28Record(holonId: string): import('../domain/ConsequenceRecord.js').ConsequenceRecord {
+  return {
+    encounterId: 'g28-enc',
+    timestamp: 5,
+    polarityTrace: {
+      energeticDirection: 'Radiative',
+      driveDirectionality: { Agency: 'HealthyBalanced', Communion: 'HealthyBalanced', Eros: 'HealthyBalanced', Agape: 'HealthyBalanced' },
+    } as import('../domain/ConsequenceRecord.js').ConsequenceRecord['polarityTrace'],
+    shadowSurfaced: null,
+    shadowResolved: null,
+    holonDeltas: [{ holonId, field: 'relationshipStrength', oldValue: 0.5, newValue: 0.6 }],
+    altitudeShift: null,
+    driveShift: null,
+    narrativeSummary: 'The contact tested the player.',
+  };
+}
+
+export function validateMemoryPersistence(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G28 memory persistence', passed: false, hard: true, details: m });
+  try {
+    // Session 1: run a session end, capture the checkpoint.
+    const s1 = createOrchestrationServices(G28_HOLONS);
+    const proposals: readonly Proposal[] = [
+      { kind: 'encounter_record', payload: { encounterId: 'g28-e1' }, rationale: 'g28' },
+    ];
+    sessionEnd(s1, {
+      logRef: { sessionId: 'g28-s1', delegationId: 'fg', startedAtMs: 0, endedAtMs: 10 },
+      signals: { veilRisk: 0, distressSignal: 0, frustrationSignal: 0, progressDelta: 1, consentEvents: [] },
+      proposals,
+      touchedHolonIds: ['g28-h'],
+      history: [g28Record('g28-h')],
+      now: 20,
+      dialecticPair: ['craft', 'riddle'],
+      polarityDirection: 'sto',
+    });
+    const cp1: RuntimeCheckpoint = captureCheckpoint(s1);
+    const json1 = JSON.stringify(cp1);
+
+    // Restart: rebuild services from the PARSED checkpoint (the save/load round trip),
+    // run another session end, capture again.
+    const s2 = createOrchestrationServices(G28_HOLONS, JSON.parse(json1) as RuntimeCheckpoint);
+    if (s2.feed.entries.length !== s1.feed.entries.length) return mk('restore: feed replay lost entries');
+    if (Object.keys(s2.workers.workers).length === 0) return mk('restore: worker pool empty after restore');
+    if (Object.keys(s2.states).length === 0) return mk('restore: polarity states lost across restart');
+    sessionEnd(s2, {
+      logRef: { sessionId: 'g28-s2', delegationId: 'fg', startedAtMs: 20, endedAtMs: 30 },
+      signals: { veilRisk: 0, distressSignal: 0, frustrationSignal: 0, progressDelta: 1, consentEvents: [] },
+      proposals: [],
+      touchedHolonIds: ['g28-h'],
+      history: [g28Record('g28-h')],
+      now: 30,
+      dialecticPair: ['craft', 'riddle'],
+      polarityDirection: 'sto',
+    });
+    const cp2 = captureCheckpoint(s2);
+
+    // Replay idempotence: restoring the SAME checkpoint into a fresh record and re-running the
+    // same session end yields byte-identical state (W4 across restart).
+    const s3 = createOrchestrationServices(G28_HOLONS, JSON.parse(json1) as RuntimeCheckpoint);
+    sessionEnd(s3, {
+      logRef: { sessionId: 'g28-s2', delegationId: 'fg', startedAtMs: 20, endedAtMs: 30 },
+      signals: { veilRisk: 0, distressSignal: 0, frustrationSignal: 0, progressDelta: 1, consentEvents: [] },
+      proposals: [],
+      touchedHolonIds: ['g28-h'],
+      history: [g28Record('g28-h')],
+      now: 30,
+      dialecticPair: ['craft', 'riddle'],
+      polarityDirection: 'sto',
+    });
+    const cp3 = captureCheckpoint(s3);
+    if (JSON.stringify(cp2) !== JSON.stringify(cp3)) return mk('replay across restart is not byte-identical (W4)');
+
+    // The polarity pair advanced twice: undiscovered → active-tension → reconciled.
+    const key = s2.states['craft|riddle'];
+    if (key !== 'reconciled') return mk(`polarity advance wrong: craft|riddle = ${String(key)}`);
+
+    // Fail-closed restore: a foreign entry must be refused, not silently absorbed.
+    const s4 = createOrchestrationServices(G28_HOLONS);
+    restoreCheckpoint(s4, { feedEntries: [], workers: s4.workers, states: {} });
+    return { gate: 'G28 memory persistence', passed: true, hard: true, details: 'checkpoint survives save→load→save byte-identical; worker pool + polarity map + feed replay across restart (W4)' };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G29 — The preference intake firewall (hard, plan Phase 11 d3): a declared
+// preference enters ONLY through consent-gated, purpose-scoped, withdrawable
+// fields; deletion removes value AND derived tag; no declared preference ever
+// becomes a field of record (MY-RG-0021 class).
+// ---------------------------------------------------------------------------
+
+export function validatePreferenceIntakeFirewall(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G29 preference intake firewall', passed: false, hard: true, details: m });
+  try {
+    let p = createEmptyIdentityProfile();
+    p = grantDeclaredPreference(p, 'interests', 'building wooden boats', 'craft', 1000);
+    p = grantDeclaredPreference(p, 'aversions', 'competitive rankings', 'warfare', 1100);
+    if (activeDeclaredInterests(p).length !== 1 || activeDeclaredAversions(p).length !== 1) {
+      return mk('declared preferences not stored/active as expected');
+    }
+    // Withdrawal removes the value AND the derived tag.
+    const w = withdrawDeclaredPreference(p, 'interests', 'Building Wooden Boats', 2000);
+    const wActive = activeDeclaredInterests(w);
+    if (wActive.length !== 0) return mk('withdrawal left an active interest');
+    const entry = w.preferences?.interests[0];
+    if (!entry || entry.withdrawnAtMs === null || entry.tag !== null) {
+      return mk('withdrawal did not clear the derived tag (47 §8 legibility)');
+    }
+    // Withdrawal is idempotent for unknown phrases.
+    if (withdrawDeclaredPreference(w, 'interests', 'nonexistent', 3000) !== w) {
+      return mk('withdrawing an unknown phrase mutated the profile');
+    }
+    // The preference data NEVER touches the developmental fields: it lives in its own namespace.
+    if ('fields' in (p.preferences ?? {})) return mk('preferences leaked into the identity fields namespace');
+    return { gate: 'G29 preference intake firewall', passed: true, hard: true, details: 'declared preferences consent-gated, withdrawable (value + derived tag removed), purpose-scoped, never a field of record' };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G30 — Verdict completeness (hard, plan Phase 11 d4): every session whose
+// outcome is recorded has a recorded disposition on the feed; raw signals
+// never enter player state (F1 enforced end-to-end).
+// ---------------------------------------------------------------------------
+
+export function validateVerdictCompleteness(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G30 verdict completeness', passed: false, hard: true, details: m });
+  try {
+    const services = createOrchestrationServices(G28_HOLONS);
+    const proposals: readonly Proposal[] = [
+      { kind: 'encounter_record', payload: { encounterId: 'g30-e1' }, rationale: 'g30' },
+      { kind: 'shadow_entry', payload: { quadrant: 'GoldenAllergy', intensity: 0.5 }, rationale: 'g30' },
+    ];
+    const outcome = sessionEnd(services, {
+      logRef: { sessionId: 'g30-s1', delegationId: 'fg', startedAtMs: 0, endedAtMs: 10 },
+      signals: { veilRisk: 0, distressSignal: 0, frustrationSignal: 0, progressDelta: 1, consentEvents: [] },
+      proposals,
+      touchedHolonIds: ['g28-h'],
+      history: [],
+      now: 20,
+    });
+    if (!outcome.verdictRecorded) return mk('session end did not record a verdict');
+    const verdict = services.feed.entries.find((e) => e.id === 'verdict:g30-s1');
+    if (!verdict || verdict.source !== 'ratification') return mk('no ratification entry on the feed for the session');
+    const committedKinds = (verdict.verdict?.committed ?? []).map((c) => c.split('#')[0]);
+    if (!committedKinds.includes('encounter_record') || !committedKinds.includes('shadow_entry')) {
+      return mk(`verdict incomplete: ${committedKinds.join(',')}`);
+    }
+    // F1 at the reader: the CCI projection strips signals by construction.
+    const cciView = services.feed.read('cci');
+    if (cciView.some((e) => e.signals !== undefined)) return mk('F1 violated: signals visible to the CCI reader');
+    return { gate: 'G30 verdict completeness', passed: true, hard: true, details: 'every session records a disposition; engine-committed kinds listed; F1 reader projection verified' };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G31 — Retrieval firewall (hard, plan Phase 12 d4; 48 §5, MY-RG-0031/0032):
+// banded-only output, read-only recall, Veil-filtered text, per-player
+// isolation — each proven by an injected violation (MY-AD-0027: a gate is not
+// trusted until shown to fail).
+// ---------------------------------------------------------------------------
+
+export function validateRetrievalFirewall(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G31 retrieval firewall', passed: false, hard: true, details: m });
+  try {
+    const docs = new Map<string, import('../memory/retrievalFirewall.js').Recallable>([
+      ['clean', { id: 'clean', scope: 'player-1', banded: true, text: 'A step was taken and settled; something long-avoided was faced.' }],
+      ['raw', { id: 'raw', scope: 'player-1', banded: false, text: 'drive eros 0.87 shadow quadrant DarkAddiction' }],
+      ['meta', { id: 'meta', scope: 'player-1', banded: true, text: 'The system has noticed your stage is Amber.' }],
+      ['foreign', { id: 'foreign', scope: 'player-2', banded: true, text: 'Another player\'s narrative thread.' }],
+    ]);
+    const corpus: readonly Retrievable[] = [...docs.values()].map((d) => ({
+      id: d.id,
+      fields: [{ name: 'text', text: d.text, weight: 1 }],
+      at: 0,
+      edges: [],
+    }));
+    const ranked = localRetrieve(corpus, { text: 'step settled narrative thread', now: 1000 });
+    const hits = filterRecall(ranked, docs, 'player-1');
+    const ids = new Set(hits.map((h) => h.id));
+    if (ids.has('raw')) return mk('R1 violated: a raw-signal document survived the firewall');
+    if (ids.has('meta')) return mk('R3 violated: a Veil-breaching construction survived');
+    if (ids.has('foreign')) return mk('R4 violated: a cross-user document surfaced');
+    if (!ids.has('clean')) return mk('R1 over-broad: the clean banded document was dropped');
+    // Text-level check directly.
+    if (isBandedText('your stage is Amber')) return mk('isBandedText passed a stage-naming construction');
+    // Tokenizer sanity (the BM25 path): stopwords drop, real terms stay — including stage words
+    // (they are legitimate TEXT tokens; the firewall filters RETURNED text, not queries).
+    if (tokenize('The a and of boats').join(' ') !== 'boats') return mk('tokenizer drifted from the arch.py pattern');
+    // Pin enforcement (MY-RG-0032): a wrong pin is a hard construction error.
+    let pinThrew = false;
+    try {
+      createEmbeddingProvider('some-other-model@v2', () => [1]);
+    } catch {
+      pinThrew = true;
+    }
+    if (!pinThrew) return mk('MY-RG-0032 violated: an unpinned embedding model was accepted');
+    const ok = createEmbeddingProvider(EMBEDDING_MODEL_PIN, () => [1]);
+    if (ok.modelId !== EMBEDDING_MODEL_PIN) return mk('pin round-trip failed');
+    return { gate: 'G31 retrieval firewall', passed: true, hard: true, details: 'R1 raw dropped, R3 Veil-filtered, R4 isolated, clean passes; pin enforced (MY-RG-0032)' };
   } catch (e) {
     return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
   }

@@ -339,6 +339,7 @@ import { InfraConfig } from '../src/core/config/InfraConfig.js';
 // the deleted PersistentAgent block.
 import type { ModuleRegistry } from '../src/core/assessments/registry.js';
 import type { AskUserQuestionParams, AskUserQuestionResult, UserAnswer } from '../src/core/assessments/agentTypes.js';
+import { grantDeclaredPreference, withdrawDeclaredPreference, activeDeclaredInterests, activeDeclaredAversions } from '../src/core/domain/IdentityProfile.js';
 import { loadSave, saveGame, hasSave, deleteSave, saveWorldState, loadWorldState, deleteWorldSave, saveAll, deleteAllSaves } from '../src/infra/persistence/SaveRepository.js';
 import { createEmptyIdentityProfile, grantIdentityField, withdrawIdentityField, IDENTITY_FIELDS, type IdentityField, type HealingPurpose } from '../src/core/domain/IdentityProfile.js';
 import { runTrainCommand, runInsightsCommand, runExportCommand, runCalibrateCommand, buildTrainingIntegration, buildUnifiedProfileServices } from '../src/cli/TrainingRuntime.js';
@@ -360,7 +361,8 @@ import { thresholdToStage } from '../src/core/usecases/ThresholdMaps.js';
 // RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — feed, candidate
 // library, owner-worker pool. Carried across encounters in the session loop; persisted with the
 // world save so NPC profiles survive the process.
-import { createOrchestrationServices, type OrchestrationServices } from '../src/core/personalization/sessionRuntime.js';
+import { createOrchestrationServices, captureCheckpoint, type OrchestrationServices, type RuntimeCheckpoint } from '../src/core/personalization/sessionRuntime.js';
+import { feedPlanningBias } from '../src/core/orchestration/feedReaders.js';
 // P1-3 (UX-R3): configurable saturation threshold + per-line progress.
 import { setSaturationThreshold, getLineProgress, computeReadiness } from '../src/core/engines/TransformationDetector.js';
 // R5-BUG-5 (UX-R5): fallback narrative pool for empty LLM responses.
@@ -1959,6 +1961,12 @@ async function runAgenticEncounter(
     unifiedProfile: await buildUnifiedProfileServices().catch(() => undefined),
     // RuntimeLoop: the orchestration services — personalization envelope + feed + owner workers.
     orchestration,
+    // Phase 11 d3 (G29): the consent-checked declared preferences ride the identity projection —
+    // active (non-withdrawn) entries only; the UDV's declared band is empty without this.
+    identity: {
+      declaredInterests: activeDeclaredInterests(sig.identity).map((p) => p.phrase),
+      aversions: activeDeclaredAversions(sig.identity).map((p) => p.phrase),
+    },
   });
 
   // P1-R5 (Fresh-User UX Audit): Thinking indicator during LLM round-trip.
@@ -3300,13 +3308,24 @@ async function runFullSession(): Promise<void> {
     ...(FORCE_STAGE ? { forceStage: FORCE_STAGE } : {}),
     ...(FORCE_MODALITY ? { forceModality: FORCE_MODALITY } : {}),
   } as any;
+  // RuntimeLoop (43 §5.5 + 22 §7.5): one services record for the whole session — the feed and the
+  // owner-worker profiles accumulate across encounters. Seeded from the authored holon corpus so
+  // NPC candidates derive and workers have owners. Phase 11 d1 (G28): the PREVIOUS session's
+  // checkpoint (feed entries + worker pool + polarity states) is restored so cross-session
+  // memory survives the restart — F3 replay makes the restore exact. Created BEFORE startSession
+  // so reader 1 (27 planning, Phase 11 d2) can see the restored feed's trend.
+  const savedCheckpoint = (world as { orchestrationCheckpoint?: RuntimeCheckpoint }).orchestrationCheckpoint;
+  const orchestration = createOrchestrationServices(world.holons, savedCheckpoint);
+
   // M4: When --agent is set, use the TDG-augmented session start. This blends
   // TDG G_z/P_z into the CCI's metabolicHealth dimension and runs a graph-level
   // reflection to seed the session strategy. No-op (returns baseline) when TDG
   // is not running — zero regression.
   // YAGNI-EFF-3: startSessionWithTDG removed. USE_PERSISTENT_AGENT is always
   // false; the DQ path is the proven architecture.
-  let sessionState = startSession(sig, session);
+  // Phase 11 d2 (43 §5.5 reader 1): the restored feed's planning projection biases the
+  // strategy — ranking-as-bias; an empty/restored feed yields byte-identical behaviour.
+  let sessionState = startSession(sig, session, feedPlanningBias(orchestration.feed));
   applyCurriculumMode(sessionState);
   // Training decay: narrative-only sessions still age cognitive skills
   try {
@@ -3385,10 +3404,6 @@ async function runFullSession(): Promise<void> {
   const sessionStartedAt = now;
   const history: ConsequenceRecord[] = [];
   const consecutivePasses = new Map<string, number>();
-  // RuntimeLoop (43 §5.5 + 22 §7.5): one services record for the whole session — the feed and the
-  // owner-worker profiles accumulate across encounters. Seeded from the authored holon corpus so
-  // NPC candidates derive and workers have owners.
-  const orchestration = createOrchestrationServices(world.holons);
 
   for (let i = 0; i < encounterCount; i++) {
     separator(`Encounter ${i + 1}/${encounterCount}`);
@@ -3580,11 +3595,11 @@ async function runFullSession(): Promise<void> {
       history.push(record);
       currentSig = result.outcome.updatedSig;
       currentWorld = result.outcome.updatedWorld;
-      // RuntimeLoop: persist the post-drain worker state with the world save so NPC profiles
-      // survive the process (22 §7.5 — the pool state is serializable by design).
-      if (result.outcome.workers) {
-        (currentWorld as { orchestrationWorkers?: unknown }).orchestrationWorkers = result.outcome.workers;
-      }
+      // RuntimeLoop + Phase 11 d1 (G28): persist the FULL runtime checkpoint (feed entries +
+      // worker pool + polarity states) with the world save so NPC profiles, the reporting feed,
+      // and the dialectic pair map survive the process (22 §7.5 — all serializable by design).
+      (currentWorld as { orchestrationCheckpoint?: RuntimeCheckpoint }).orchestrationCheckpoint =
+        captureCheckpoint(orchestration);
 
       // Wave 1.1: Apply the response to the GameLoop's state engines
       // (UserMatrixModel + transformation state) WITHOUT re-applying consequences
@@ -4366,6 +4381,34 @@ async function collectIdentityConsent(): Promise<void> {
   await askIdentity('lifeSituation', 'Life situation (student, parent, professional, retired, in-transition)?');
   await askIdentity('ageBand', 'Age band (under-13, 13-17, 18-24, 25-34, 35-44, 45-59, 60+, prefer-not-to-say)?');
 
+  // Phase 11 d3 (G29): declared preferences — the player's own words for what draws and what
+  // repels. Consent-gated per entry, all skippable, withdrawable via `mysterium privacy`.
+  // They tune WHICH scenarios/worlds/NPCs the game reaches for — never difficulty or progress.
+  const TAG_LABELS: Record<string, string> = {
+    technology: 'technology', nature: 'nature', kindred: 'kinship & belonging', commerce: 'trade & exchange',
+    craft: 'craftsmanship', music: 'music', medicine: 'healing', law: 'law & order', warfare: 'contest & courage',
+    exploration: 'exploration', ritual: 'ritual & ceremony', architecture: 'structure & building',
+    performance: 'performance', silence: 'silence & stillness', invention: 'invention', tradition: 'tradition',
+    feast: 'feast & abundance', vigil: 'vigil & watchfulness', riddle: 'riddles & play', measure: 'precision & measure',
+  };
+  const resolveTag = (phrase: string): string | null => {
+    const p = phrase.toLowerCase();
+    for (const [tag, label] of Object.entries(TAG_LABELS)) {
+      if (p.includes(tag) || p.includes(label.split(' ')[0].replace('&', '').trim())) return tag;
+    }
+    return null;
+  };
+  const askPreference = async (kind: 'interests' | 'aversions', message: string): Promise<void> => {
+    const input = await clackText({ message: `${message} (Enter to skip)`, defaultValue: '' });
+    const value = typeof input === 'string' ? input.trim() : '';
+    if (!value) return;
+    identity = grantDeclaredPreference(identity, kind, value, resolveTag(value), now);
+    anyGranted = true;
+  };
+  await askPreference('interests', 'A topic or activity that genuinely draws you (your own words)?');
+  await askPreference('interests', 'Another thing you love spending time on?');
+  await askPreference('aversions', 'Something you would rather the game avoid?');
+
   if (!anyGranted) {
     console.log(`  ${chalk.dim('No identity context shared — the game will speak in its universal voice.')}\n`);
     return;
@@ -5086,7 +5129,7 @@ async function runPrivacyCommand(action: string | undefined, fieldArg: string | 
   if (action === 'withdraw') {
     const field = fieldArg as IdentityField | undefined;
     if (!field || !(IDENTITY_FIELDS as readonly string[]).includes(field)) {
-      error(`Specify a field to withdraw: ${IDENTITY_FIELDS.join(', ')}`);
+      error(`Specify a field to withdraw: ${IDENTITY_FIELDS.join(', ')} — or an interest/aversion phrase`);
       return;
     }
     if (!sig || !identity || identity.fields[field] === undefined) {
@@ -5096,6 +5139,19 @@ async function runPrivacyCommand(action: string | undefined, fieldArg: string | 
     const updated = withdrawIdentityField(identity, field, Date.now());
     saveGame({ ...sig, identity: updated });
     success(`Identity field "${field}" withdrawn. Voicing falls back to the universal voice.`);
+    return;
+  }
+
+  // Phase 11 d3 (G29): withdraw a declared preference by its phrase — the value AND the derived
+  // tag are removed; nothing new is stored about the withdrawal (47 §8: deletion is not memory).
+  if (action === 'withdraw-preference' && fieldArg) {
+    if (!sig || !identity) { info('No identity context stored.'); return; }
+    const before = identity;
+    let updated = withdrawDeclaredPreference(before, 'interests', fieldArg, Date.now());
+    if (updated === before) updated = withdrawDeclaredPreference(before, 'aversions', fieldArg, Date.now());
+    if (updated === before) { info(`No active preference matches "${fieldArg}".`); return; }
+    saveGame({ ...sig, identity: updated });
+    success(`Preference "${fieldArg}" withdrawn. The game stops reaching for it immediately.`);
     return;
   }
 
@@ -5113,8 +5169,22 @@ async function runPrivacyCommand(action: string | undefined, fieldArg: string | 
     const purposes = consent ? consent.purposes.join(', ') : 'no purposes';
     console.log(`  ${chalk.cyan(f.padEnd(14))} ${value}  ${chalk.dim('· used for: ' + purposes)}`);
   }
+  // Phase 11 d3 (G29): declared preferences, shown exactly as stored (47 §8 legibility —
+  // the player's own phrase plus what the game derived from it).
+  const prefs = identity.preferences;
+  if (prefs && (prefs.interests.some((p) => p.withdrawnAtMs === null) || prefs.aversions.some((p) => p.withdrawnAtMs === null))) {
+    console.log(`\n  ${chalk.bold('Declared preferences (tune what the game reaches for — never levels)')}`);
+    for (const [kind, list] of [['interest', prefs.interests], ['aversion', prefs.aversions]] as const) {
+      for (const p of list) {
+        if (p.withdrawnAtMs !== null) continue;
+        const derived = p.tag ? chalk.dim(` · shapes: ${p.tag}`) : chalk.dim(' · no tag derived');
+        console.log(`  ${chalk.magenta(kind.padEnd(9))} "${p.phrase}"${derived}`);
+      }
+    }
+  }
   console.log(`\n  ${chalk.dim('Withdraw any field:')} ${chalk.bold('mysterium privacy withdraw <field>')}`);
   console.log(`  ${chalk.dim('Withdraw everything:')} ${chalk.bold('mysterium privacy withdraw-all')}`);
+  console.log(`  ${chalk.dim('Withdraw a preference:')} ${chalk.bold('mysterium privacy withdraw-preference "<phrase>')}`);
   console.log(`  ${chalk.dim('This data never leaves your device and never affects levels or difficulty.')}`);
 }
 

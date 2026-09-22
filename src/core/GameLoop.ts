@@ -28,6 +28,8 @@ import {
   type SessionStrategyAdjustment,
   type RecentEncounter,
 } from './engines/AutoModeStrategy.js';
+import { composeBiases } from './orchestration/feedReaders.js';
+import type { PriorityBias } from './engines/PriorityComputation.js';
 import { DEFAULT_WEIGHTS, type PriorityWeights } from './engines/PriorityComputation.js';
 import { runModeAwareAssessment } from './assessments/engine.js';
 import type { AssessmentResult, ShadowAssessmentResult, StageAssessment, TrialResult, ModuleExecutionMode } from './assessments/types.js';
@@ -252,7 +254,7 @@ export interface SessionState {
  * cross-session transformation continuity — if the player was mid-crucible
  * when they last exited, they resume mid-crucible instead of resetting to idle.
  */
-export function startSession(sig: Significator, session: SessionContext): SessionState {
+export function startSession(sig: Significator, session: SessionContext, planningBias?: PriorityBias): SessionState {
   // Curriculum expansion: seed the registry with curriculum data if not already done.
   // This is idempotent — safe to call on every session start.
   seedCurriculumRegistry();
@@ -303,6 +305,13 @@ export function startSession(sig: Significator, session: SessionContext): Sessio
   // P1-15: Pass sig so CCI delegates G_z/P_z to GreaterCycleEngine.
   const cci = computeCCI(snapshot, migratedSig);
   let strategy = generateSessionStrategy(cci, session, null, migratedSig.knowledge);
+  // Phase 11 d2 (43 §5.5 reader 1 — 27 planning): the reporting feed's trend biases the
+  // strategy as a RANKING BIAS, never a filter. Undefined/empty fragment → byte-identical
+  // behaviour (the degradation law); the composition path stays `composeBiases` →
+  // `applyCanonicalWeightBias` (one normalisation path, MY-RG-0023).
+  if (planningBias && Object.keys(planningBias).length > 0) {
+    strategy = { ...strategy, weightBias: composeBiases(strategy.weightBias, planningBias) };
+  }
 
   // WIRE-BRIDGE: If the previous session's curriculum probe flagged shouldIntervene,
   // force the consolidation theme for this session. The flag is persisted to sig

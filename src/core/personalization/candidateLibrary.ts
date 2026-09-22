@@ -24,6 +24,7 @@ import { ALL_MODALITIES } from '../domain/enums.js';
 import type { PoolCandidate } from './pooling.js';
 import type { FacetStore } from '../world/facets/FacetStore.js';
 import { INITIAL_TAGS } from '../world/tags/initialTags.js';
+import { NPC_SEEDS, type NpcSeed } from './npcSeeds.js';
 import type { TagId } from '../world/tags/types.js';
 import { SCENARIO_SEEDS } from './scenarioSeeds.js';
 import type { ScenarioSeed } from './scenarioSeeds.js';
@@ -170,6 +171,29 @@ export function seedWorldCandidates(seeds: readonly WorldSeed[] = WORLD_SEEDS): 
 }
 
 /**
+ * The AUTHORED NPC renderings (46 §2's NPC library; Phase 11 d7) — the authored PERSONA tier:
+ * one canonical figure per cell (`npcSeeds.ts`), registered per modality like the scenario and
+ * world tiers. Ranks ahead of the derived-from-holons `npc:` skeleton within the tier when tags
+ * tie (the persona prose is the cell's canon).
+ */
+export function seedNpcCandidates(seeds: readonly NpcSeed[] = NPC_SEEDS): readonly PoolCandidate[] {
+  const out: PoolCandidate[] = [];
+  for (const s of seeds) {
+    for (const modality of ALL_MODALITIES) {
+      out.push({
+        id: `npc-authored:${s.line}:${s.stage}:${modality}`,
+        cell: { line: s.line, stage: s.stage, modality },
+        tags: [...s.tags],
+        stratum: BASE_STRATUM,
+        depthFloor: BASE_DEPTH_FLOOR,
+        landsIn: [...s.tags],
+      });
+    }
+  }
+  return out;
+}
+
+/**
  * The full seeded library: 64 cells × 7 modalities × 2 derived renderings (world + skeleton
  * scenario) + the 64×7 authored scenario-seed registrations + the 64×7 authored world-seed
  * registrations + NPC derivations from the authored corpus. Deterministic; safe to rebuild per
@@ -186,5 +210,6 @@ export function seedCandidateLibrary(store: FacetStore): readonly PoolCandidate[
   }
   out.push(...seedScenarioCandidates());
   out.push(...seedWorldCandidates());
+  out.push(...seedNpcCandidates());
   return out;
 }

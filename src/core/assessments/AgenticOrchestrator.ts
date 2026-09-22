@@ -234,6 +234,10 @@ export class AgenticOrchestrator {
   private orchestration: OrchestrationServices | null = null;
   /** RuntimeLoop: consent-checked identity projection for this session. */
   private identity: { usable?: readonly string[]; declaredInterests?: readonly string[]; aversions?: readonly string[] } | undefined;
+  /** Phase 11 d5: the pair the last composition worked + the encounter's scored direction —
+   *  stashed by personalizationContext/finalizeEncounter, consumed by recordSessionEnd. */
+  private lastDialecticPair: readonly [string, string] | null = null;
+  private lastPolarityDirection: 'sto' | 'sts' | 'neutral' | undefined;
 
   /**
    * QUALITY-WIRING (MY-AD-0030): the developmental agenda for the current significator, computed
@@ -2451,11 +2455,14 @@ ${probes}${rubric}
     digest: readonly string[];
     seed: string | null;
     worldPlace: string | null;
+    personaVoice: string | null;
+    /** The dialectic pair the composition selected — carried to session end for the d5 writer. */
+    dialecticPair: readonly [string, string] | null;
   } {
-    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null };
+    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null };
     try {
       const [line] = this.encounter.moduleRef.split(':') as [Line, ...unknown[]];
-      const { block, seedText, worldPlace, coherenceBlocked, coherenceDefects } = buildEnvelope(
+      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context } = buildEnvelope(
         this.orchestration,
         this.significator,
         this.identity,
@@ -2483,9 +2490,16 @@ ${probes}${rubric}
       const digest = coherenceBlocked
         ? []
         : holonDigestBlock(this.orchestration, this.encounter.holonSource);
-      return { block, digest, seed: seedText, worldPlace };
+      // The pair the composition worked — (surface, structure) tag ids from the poles (46 §5.1).
+      // Stashed as instance state so session end can advance the pair map (Phase 11 d5) without
+      // threading through every result path.
+      const dialecticPair: readonly [string, string] | null = context?.poles
+        ? [context.poles.surface.id, context.poles.structure.id]
+        : null;
+      this.lastDialecticPair = dialecticPair;
+      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair };
     } catch {
-      return { block: null, digest: [], seed: null, worldPlace: null };
+      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null };
     }
   }
 
@@ -2517,6 +2531,9 @@ ${probes}${rubric}
         touchedHolonIds: this.encounter.holonSource ? [this.encounter.holonSource] : [],
         history: [record],
         now,
+        // Phase 11 d5: the pair the composition worked + the encounter's scored direction.
+        dialecticPair: this.lastDialecticPair,
+        polarityDirection: this.lastPolarityDirection,
       });
       return { workers: outcome.workers, ownerCommitted: outcome.ownerCommitted };
     } catch {
@@ -2543,6 +2560,10 @@ ${probes}${rubric}
     let energeticDirection: EnergeticDirection = 'Diffuse';
     if (params.polarityDirection === 'sto') energeticDirection = 'Radiative';
     else if (params.polarityDirection === 'sts') energeticDirection = 'Absorptive';
+
+    // Phase 11 d5: stash the encounter's scored service-polarity for session end (the pair
+    // itself was stashed by personalizationContext at composition time).
+    this.lastPolarityDirection = params.polarityDirection;
 
     // Map LLM-provided drive signals to DriveDirectionality enum.
     // If the LLM provided explicit per-drive signals, use them directly.

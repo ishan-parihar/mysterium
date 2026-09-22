@@ -15,6 +15,88 @@ import type { Tag, TagId } from './types.js';
 
 export const INITIAL_TAGS: readonly Tag[] = [
   {
+    id: 'performance',
+    label: 'Performance',
+    erosAgape: 0.7,
+    agencyCommunion: -0.5,
+    facetAffinity: { 'voice-register': 0.9, 'surface-aesthetic': 0.7, 'role-archetype': 0.5 },
+    dialecticPair: 'silence',
+    culturalNotes:
+      'Display before an audience carries radically different status meanings across cultures — revered, necessary, or shameful; who may perform, and for whom, is never universal. Do not assume the stage is a place of freedom.',
+  },
+  {
+    id: 'silence',
+    label: 'Silence',
+    erosAgape: -0.7,
+    agencyCommunion: -0.3,
+    facetAffinity: { 'voice-register': 0.8, 'memory-schema': 0.5, 'stake': 0.3 },
+    dialecticPair: 'performance',
+    culturalNotes:
+      'Silence is communicative in most of the world — deference, grief, assent, refusal — and its meanings are locally specific; treating it as absence or awkwardness is an outsider reading.',
+  },
+  {
+    id: 'invention',
+    label: 'Invention',
+    erosAgape: 0.9,
+    agencyCommunion: 0.7,
+    facetAffinity: { 'pressure-lever': 0.8, 'drive-profile': 0.5, 'surface-aesthetic': 0.4 },
+    dialecticPair: 'tradition',
+    culturalNotes:
+      'Novelty is not neutral: where it reads as progress in one locality it reads as hubris or extraction in another; the inventor and the thief are distinguished differently across legal and moral regimes.',
+  },
+  {
+    id: 'tradition',
+    label: 'Tradition',
+    erosAgape: -0.5,
+    agencyCommunion: -0.7,
+    facetAffinity: { 'role-archetype': 0.8, 'memory-schema': 0.7, 'relationship-pattern': 0.4 },
+    dialecticPair: 'invention',
+    culturalNotes:
+      'The inherited way is load-bearing, not decorative: tradition can name continuity, obligation, or resistance depending on who is speaking; do not frame it as mere backwardness or mere comfort.',
+  },
+  {
+    id: 'feast',
+    label: 'Feast',
+    erosAgape: 0.5,
+    agencyCommunion: -0.8,
+    facetAffinity: { 'stake': 0.7, 'relationship-pattern': 0.6, 'surface-aesthetic': 0.5 },
+    dialecticPair: 'vigil',
+    culturalNotes:
+      'Shared abundance — who eats first, who serves, what is owed to the table — is one of the oldest moral technologies; fasting and feasting are often the same calendar, not opposites, in many traditions.',
+  },
+  {
+    id: 'vigil',
+    label: 'Vigil',
+    erosAgape: -0.6,
+    agencyCommunion: 0.4,
+    facetAffinity: { 'stake': 0.8, 'memory-schema': 0.5, 'voice-register': 0.3 },
+    dialecticPair: 'feast',
+    culturalNotes:
+      'The keeping of watch — solitary, nightly, unpaid — appears everywhere from religious practice to caregiving to sentry duty; romanticizing it erases the labour, pathologizing it erases the devotion.',
+  },
+  {
+    id: 'riddle',
+    label: 'Riddle',
+    erosAgape: 0.6,
+    agencyCommunion: 0.2,
+    facetAffinity: { 'pressure-lever': 0.7, 'voice-register': 0.6, 'memory-schema': 0.4 },
+    dialecticPair: 'measure',
+    culturalNotes:
+      'Play with uncertainty — riddling contests, koans, trickster questions — is a teaching form in most cultures with its own etiquette; a riddle asked to the wrong audience in the wrong register is an insult, not a game.',
+  },
+  {
+    id: 'measure',
+    label: 'Measure',
+    erosAgape: -0.2,
+    agencyCommunion: 0.8,
+    facetAffinity: { 'pressure-lever': 0.6, 'memory-schema': 0.6, 'stake': 0.4 },
+    dialecticPair: 'riddle',
+    culturalNotes:
+      'Quantification and exactness carry authority in some registers and deadness in others; measurement is also a language of control — who measures, and what counts, is a political question.',
+  },
+
+  // The 12-tag core set (46 §4's opening list) — kept verbatim below.
+  {
     id: 'technology',
     label: 'Technology',
     erosAgape: 0.8,

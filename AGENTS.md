@@ -304,28 +304,23 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: all build phases are BUILT; Phase 10 (Generative World & Personalization) is closed
+### 4.2 Current state: Phases 1–12 all BUILT; memory infrastructure live (G28–G31)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
-**DONE**. **All nine build phases** (1 Delegation Kernel → 9 Credentialing) are **implemented and
-gated** — the kernel gate suite (27 gates, `G1–G27`) green, the post-plan frontier closed.
-**Phase 10** (Generative World & Personalization, from `45` / `46` / `47`; gates G22–G27) was ratified
-2026-09-20, **built 2026-09-21**, and its **live runtime loop closed 2026-09-22** — the personalization
-envelope, the reporting feed, the owner-worker pool, the coherence gate, and the authored
-[scenario | world] seed tiers are all wired into `AgenticOrchestrator` and both user surfaces.
-**The ratified current phase is Phase 11 — Closed-Loop Memory & Preference Intake** (gates G28–G30;
-ratified 2026-09-22): checkpoint restore, feed readers (27/25), preference intake, ratification
-verdicts, polarity state writers, probe RV harness, NPC persona seeds, tag expansion tranche 2. Its
-scope, deliverables and gates live in `docs/DEVELOPMENT-PLAN.md §4` (Phase 11); the verified evidence
-for why it exists lives in `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7. Cite the plan and the
-audit, never a phase number spoken from memory.
-
-**Phase 12 — Semantic Memory Tier** is ratified behind it (`MY-AD-0032` +
-`foundations/48-memory-architecture`, 2026-09-22; plan §4): the standing MemoryPage (48 §3), the
-MemoryRetriever seam (48 §4 — LocalRetriever default, EmbeddingRetriever optional + pinned), and
-the retrieval firewall (48 §5, gate G31, records `MY-RG-0031`/`MY-RG-0032`). Patterns adopted from
-the agentmemory/Hindsight study; machinery rejected — write-path law collisions (`MY-AD-0022`,
-F1), layer law, and G14 determinism. Phase 12 depends on Phase 11's checkpoint restore.
+**DONE**. **All build phases through 12** are **implemented and gated** — the kernel gate suite
+(31 gates, `G1–G31`) green. **Phase 10** (Generative World & Personalization; gates G22–G27) was
+ratified 2026-09-20, **built 2026-09-21**, and its **live runtime loop closed 2026-09-22**.
+**Phase 11 — Closed-Loop Memory & Preference Intake (G28–G30)** and **Phase 12 — Semantic Memory
+Tier (G31)** were ratified and **built 2026-09-22 in the same development pass**: checkpoint
+restore with production callers (NPC memory survives restart), feed readers (27 planning bias /
+25 committed-only), consented preference intake with dashboard withdrawal, ratification verdicts,
+polarity pair-state writers, the probe RV harness, 64 authored NPC persona seeds (the authored
+triad complete), tag tranche 2 (12→20), the standing MemoryPage (`[CONTINUITY]` head), the
+deterministic LocalRetriever (BM25+recency+graph, RRF-fused) with the pinned-embedding seam, and
+the retrieval firewall (48 §5, `MY-RG-0031`/`MY-RG-0032`). Build records live in
+`docs/DEVELOPMENT-PLAN.md §4` (Phases 11/12); the evidence for why they existed lives in
+`docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7. Cite the plan and the audit, never a phase
+number spoken from memory. **No phase is ratified-but-unbuilt — there is no current build phase.**
 
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
@@ -347,21 +342,19 @@ were discharged with consumer declarations on 2026-09-22. **When a new law lands
 absence returns.** A law that is Active with no consumer is the normal shape of pending work here.
 When you implement one, record the implementation in the same commit and cite the record it closes.
 2. **Configuration, calibration, and development frontier** (verified against the tree
-   2026-09-22; owned by the plan's record — the detailed evidence table lives in
-   `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md`):
-   - *Configuration (wire what exists):* restore `orchestrationWorkers` + feed checkpoint at session
-     boot (`captureCheckpoint`/`restoreCheckpoint` have no production caller — NPC memory has a
-     one-session half-life at the CLI); feed readers consumed by the orchestrator at session start;
-     identity/consent intake UI so `declaredInterests`/`aversions` reach the UDV; a production
-     ratification caller (`recordRatification`); live writers for the polarity state map
-     (`services.states` is created empty and never updated). GitLab push remains credential-blocked.
-   - *Calibration (needs play data):* RV1–RV7 validation of the 8 authored probes (unlocks the
-     interest tier from log-only); `expansionRatio` and entropy thresholds from observed
-     distributions; per-line saturation thresholds from real progression curves.
-   - *Development:* author the NPC persona tier (the third authored leg of the [world, NPC,
-     scenario] triad — scenarios and worlds are authored 64/64); tag-ontology growth beyond the 12
-     initial tags (`46 §4` corpus change); cohort/pods production runtime (Phase 4's transport
-     adapter exists; no networked deployment).
+   2026-09-22, post-Phase-11+12; owned by the plan's record — the detailed evidence table lives in
+   `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7):
+   - *Configuration:* C6 — GitLab push remains credential-blocked (GitHub current); pods
+     deployment needs a hosting decision (Phase 4's transport adapter exists; no networked
+     deployment). The C1–C5 wiring items (checkpoint restore, feed readers, preference intake,
+     ratification verdicts, polarity writers) are **closed** — landed with Phases 11+12.
+   - *Calibration (needs play data — not phase-able):* real-rater RV1–RV7 thresholds for the 8
+     authored probes (the RV harness runs; thresholds await raters — unlocks the interest tier
+     from log-only); `expansionRatio` and entropy thresholds from observed distributions;
+     per-line saturation thresholds from real progression curves.
+   - *Development:* tag-ontology growth beyond tranche 2's 20 tags (`46 §4` corpus change,
+     bounded per `46 §13`); embedding-index calibration against real corpora and MemoryPage
+     prose-register tuning per stage (Phase 12 post-phase items).
 
 Standing constraints: workspace-lint → `arch.py validate` (DG1–DG23) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
 

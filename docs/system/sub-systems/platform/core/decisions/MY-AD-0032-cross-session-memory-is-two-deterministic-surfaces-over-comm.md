@@ -7,7 +7,7 @@ Organ: platform
 Source: "foundations/48-memory-architecture sections 1-5"
 Description: "Standing MemoryPage + MemoryRetriever seam (48 §3/§4); patterns adopted from agentmemory/Hindsight, machinery rejected; recall firewalled by G31."
 Related: []
-Deferral: P15
+Consumer: "G31 kernel gate (src/core/validation/gates.ts) + Phase-12 build (_org.yaml → completed: P15, graduated 2026-09-22)"
 ---
 
 ## Context
@@ -57,3 +57,5 @@ auditor-facing projections when pods deploy (48 §6).
 <!-- 2026-09-22: ratified but unbuilt; implementation owned by Phase 12 in DEVELOPMENT-PLAN §4 (recon bb2f6392cf) -->
 
 <!-- 2026-09-22: gate matches deferral tokens against pending keys verbatim; P15 = PHASE-12-MEMORY-TIER (recon bb2f6392cf) -->
+
+<!-- 2026-09-22: Phase 12 memory tier implemented: P15 graduated to completed; the deferral resolves to its built consumer (G31 + the build record). (recon recon_id: af17583bc0) -->

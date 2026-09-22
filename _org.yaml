@@ -339,11 +339,7 @@ authority_map:
   system_architecture: docs/system/AGENTS.md
   vocabulary_and_ownership: docs/foundations/44-system-ontology-and-vocabulary.md
   root_router: AGENTS.md
-pending:
-  P15: 'PHASE-12-MEMORY-TIER: the standing MemoryPage (48 §3) + MemoryRetriever seam (48 §4) +
-    retrieval firewall G31 (48 §5) — ratified 2026-09-22 (foundations/48, MY-AD-0032, plan §4),
-    sequenced after Phase 11 (depends on its checkpoint restore). MY-AD-0032 declares this deferral
-    per MY-AD-0028; implement + graduate this key to completed in the same commit as the build.'
+pending: {}
 
 completed:
   P0: structure declared; 94 paths resolved
@@ -409,3 +405,17 @@ completed:
     64/64 coverage asserted at load, stage-coherence gate enforced at authoring (G27) and runtime
     (coherenceGate routes, never cancels, 45 §5.2.1). Candidate library 1792; calibration harness
     audits both seed tiers; tests/personalization/{Authoring,WorldSeeds,RuntimeLoop*}.test.ts lock.'
+  P15: 'PHASE-12-MEMORY-TIER closed 2026-09-22 (built with Phase 11 in the same development
+    sequence): the cross-session memory lateral implemented — MemoryPage standing page (48 §3,
+    M1 deterministic/M2 bounded/M3 provenance/M4 banded/M5 view-not-store) with [CONTINUITY] head
+    at boot; MemoryRetriever seam (48 §4) — LocalRetriever (BM25 + recency + graph edges,
+    RRF-fused, deterministic, dependency-free) plus the optional pinned-embedding tier
+    (EMBEDDING_MODEL_PIN, MY-RG-0032 hard construction error); retrieval firewall (48 §5) — R1
+    banded-only/R2 read-only/R3 Veil-filtered/R4 scope-isolated, fail-closed per hit. Kernel gates
+    G28 (checkpoint persistence: save→load→save byte-identical, W4 across restart), G29 (preference
+    intake firewall, MY-RG-0021 class), G30 (verdict completeness), G31 (retrieval firewall with
+    injected fixtures) — kernel suite 27→31. Phase 11 deliverables in the same build: D1 checkpoint
+    restore (production callers in cli-game session loop), D2 feed readers (27 planning bias +
+    committed-only accessor), D3 consented preference intake + privacy-dashboard withdrawal,
+    D4 ratification verdicts on every session, D5 polarity pair-state writers, D6 probe RV harness,
+    D7 64 authored NPC persona seeds (library 2240), D8 tag tranche 2 (12→20). Tests 1370→1389.'

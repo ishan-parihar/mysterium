@@ -74,7 +74,30 @@ export interface IdentityProfile {
   readonly fields: Partial<Record<IdentityField, string>>;
   /** Per-field consent records. A field value without consent is unusable. */
   readonly consents: Partial<Record<IdentityField, FieldConsent>>;
+  /**
+   * Declared PREFERENCES (Phase 11 d3 / G29) — what draws and what repels, consent-gated per
+   * entry exactly like the identity fields. ONE purpose ('preferenceVoicing'): declared
+   * preferences tune what scenarios/worlds/NPCs the composition reaches for — NEVER difficulty,
+   * progression, or scoring. They enter the UDV's declared band as ranking BIAS (45 §5: ranking,
+   * not filtering) and pass the legibility contract (47 §8): the stored form is a free-text
+   * phrase + the derived tag, the withdrawal removes the value AND the derived weight, and the
+   * deletion itself is not recorded as a new memory of the preference.
+   */
+  readonly preferences?: {
+    readonly interests: readonly DeclaredPreference[];
+    readonly aversions: readonly DeclaredPreference[];
+  };
   readonly version: 1;
+}
+
+/** One consented preference entry — 47 §8's legible stored form. */
+export interface DeclaredPreference {
+  /** The player's own words (what they typed) — kept verbatim for legibility on the dashboard. */
+  readonly phrase: string;
+  /** The store-resolved tag derived from the phrase (may be empty when nothing resolves). */
+  readonly tag: string | null;
+  readonly grantedAtMs: number;
+  readonly withdrawnAtMs: number | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -82,7 +105,71 @@ export interface IdentityProfile {
 // ---------------------------------------------------------------------------
 
 export function createEmptyIdentityProfile(): IdentityProfile {
-  return { fields: {}, consents: {}, version: 1 };
+  return { fields: {}, consents: {}, preferences: { interests: [], aversions: [] }, version: 1 };
+}
+
+// ---------------------------------------------------------------------------
+// Declared preferences (Phase 11 d3 / G29)
+// ---------------------------------------------------------------------------
+
+/** The ONE purpose a declared preference may serve (G29: never a field of record). */
+export const PREFERENCE_PURPOSE = 'preferenceVoicing' as const;
+
+/**
+ * Grant consent for one declared interest/aversion. The phrase is kept verbatim; the derived tag
+ * is resolved by the caller (the CLI, against the tag store's labels) and stored alongside so the
+ * dashboard shows the player exactly what the game derived. Pure — returns a new profile.
+ */
+export function grantDeclaredPreference(
+  profile: IdentityProfile,
+  kind: 'interests' | 'aversions',
+  phrase: string,
+  tag: string | null,
+  nowMs: number,
+): IdentityProfile {
+  const current = profile.preferences ?? { interests: [], aversions: [] };
+  const entry: DeclaredPreference = { phrase, tag, grantedAtMs: nowMs, withdrawnAtMs: null };
+  return {
+    ...profile,
+    preferences: { ...current, [kind]: [...current[kind], entry] },
+  };
+}
+
+/**
+ * Withdraw one declared preference by phrase (case-insensitive). The value AND its derived tag
+ * are removed; the withdrawal is recorded ONLY as `withdrawnAtMs` on the entry's own slot —
+ * nothing new is learned or stored about the preference (47 §8: the deletion is not a memory).
+ * Pure — returns a new profile. Returns the same profile untouched when no entry matches.
+ */
+export function withdrawDeclaredPreference(
+  profile: IdentityProfile,
+  kind: 'interests' | 'aversions',
+  phrase: string,
+  nowMs: number,
+): IdentityProfile {
+  const current = profile.preferences ?? { interests: [], aversions: [] };
+  const target = phrase.trim().toLowerCase();
+  const list = current[kind];
+  if (!list.some((p) => p.withdrawnAtMs === null && p.phrase.trim().toLowerCase() === target)) return profile;
+  return {
+    ...profile,
+    preferences: {
+      ...current,
+      [kind]: list.map((p) =>
+        p.withdrawnAtMs === null && p.phrase.trim().toLowerCase() === target ? { ...p, withdrawnAtMs: nowMs, tag: null } : p,
+      ),
+    },
+  };
+}
+
+/** Active (non-withdrawn) declared interests — the UDV declared band's only legal source. */
+export function activeDeclaredInterests(profile: IdentityProfile | undefined): readonly DeclaredPreference[] {
+  return (profile?.preferences?.interests ?? []).filter((p) => p.withdrawnAtMs === null);
+}
+
+/** Active (non-withdrawn) declared aversions — the aversion set's declared slice. */
+export function activeDeclaredAversions(profile: IdentityProfile | undefined): readonly DeclaredPreference[] {
+  return (profile?.preferences?.aversions ?? []).filter((p) => p.withdrawnAtMs === null);
 }
 
 /**

@@ -139,6 +139,15 @@ granularity, not by progression logic.
 > by **Phase 12 — Semantic Memory Tier** (plan §4; `MY-AD-0032`, gate G31), which depends on
 > Phase 11's checkpoint restore (C1). This section remains the evidence table that justifies both
 > phases; mark items ✅ here as they land.
+>
+> **✅ Landed 2026-09-22 (Phases 11+12 built in one sequence):** C1–C5 wired (checkpoint restore
+> with production callers; feed readers 27-planning + committed-only accessor; consented preference
+> intake with privacy-dashboard withdrawal; verdict on every session; polarity pair-state writers),
+> K1's harness step (RV harness runs over seeded personas — real-rater thresholds remain open),
+> D1 (64 authored NPC persona seeds), D2 (tag tranche 2, 12→20), and the Phase-12 memory tier
+> (MemoryPage + LocalRetriever + pinned-embedding seam + G31 firewall; `MY-AD-0032` deferral
+> resolved, P15 graduated). Gates G28–G31 added; kernel suite 27→31; tests 1370→1389. Still open:
+> C6 (GitLab sync — credential-blocked), K1's real-rater thresholds, K2, K3, D3 (pods deployment).
 
 **CONFIGURATION — wire what exists (no new architecture):**
 

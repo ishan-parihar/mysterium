@@ -57,14 +57,14 @@ const SIGNALS: SessionSignals = {
 };
 
 describe('candidate library derivation', () => {
-  it('seeds 64 cells × 7 modalities × 2 derived renderings + 64×7 authored scenarios + 64×7 authored worlds, all with store-valid tags', () => {
+  it('seeds 64 cells × 7 modalities × 2 derived renderings + 64×7 authored scenarios + 64×7 authored worlds + 64×7 authored NPCs, all with store-valid tags', () => {
     const lib = seedCandidateLibrary(sharedFacetStore());
-    expect(lib.length).toBe(64 * 7 * 2 + 64 * 7 + 64 * 7); // derived world+scenario skeletons + authored scenarios + authored worlds
+    expect(lib.length).toBe(64 * 7 * 2 + 64 * 7 * 3); // derived world+scenario skeletons + authored scenario/world/NPC tiers
     const ids = new Set(lib.map((c) => c.id));
     expect(ids.size).toBe(lib.length); // no duplicate ids
     // every candidate's tags resolve in the initial tag set (fail-closed upstream guarantees this,
     // but the seed layer must not invent vocabulary)
-    const valid = new Set(['technology', 'nature', 'kindred', 'commerce', 'craft', 'music', 'medicine', 'law', 'warfare', 'exploration', 'ritual', 'architecture', 'communion']);
+    const valid = new Set(['technology', 'nature', 'kindred', 'commerce', 'craft', 'music', 'medicine', 'law', 'warfare', 'exploration', 'ritual', 'architecture', 'communion', 'performance', 'silence', 'invention', 'tradition', 'feast', 'vigil', 'riddle', 'measure']);
     for (const c of lib) {
       for (const t of c.tags) expect(valid.has(t)).toBe(true);
       expect(c.stratum).toBe(0);
@@ -150,10 +150,13 @@ describe('session end', () => {
     expect(Object.keys(outcome.workers.workers)).toContain('conqueror');
     expect(services.workers.workers['conqueror']).toBeDefined(); // services record replaced
     const entries = services.feed.entries;
-    expect(entries.length).toBe(feedLenBefore + 2);
-    expect(entries[entries.length - 2]!.id).toBe('session:s2');
-    expect(entries[entries.length - 1]!.id).toBe('worker:drain:s2');
-    expect(entries[entries.length - 1]!.ref).toMatchObject({ jobKind: 'holon_npc_profile_refresh' });
+    // Phase 11 d4 (G30): session + worker + verdict entries — every session gets a disposition.
+    expect(entries.length).toBe(feedLenBefore + 3);
+    expect(entries[entries.length - 3]!.id).toBe('session:s2');
+    expect(entries[entries.length - 2]!.id).toBe('worker:drain:s2');
+    expect(entries[entries.length - 2]!.ref).toMatchObject({ jobKind: 'holon_npc_profile_refresh' });
+    expect(entries[entries.length - 1]!.id).toBe('verdict:s2');
+    expect(outcome.verdictRecorded).toBe(true);
   });
 
   it('is idempotent per unit of work (F3/W4) — replay adds nothing', () => {
@@ -183,8 +186,10 @@ describe('session end', () => {
       now: 20,
     });
     expect(services.workers.workers['conqueror']).toBeUndefined();
-    // session entry still recorded — the feed never depends on the world moving
-    expect(services.feed.entries[services.feed.entries.length - 1]!.id).toBe('session:s4');
+    // session + verdict entries still recorded — the feed never depends on the world moving
+    // (Phase 11 d4/G30: every session gets a disposition entry, even with no drain).
+    expect(services.feed.entries[services.feed.entries.length - 1]!.id).toBe('verdict:s4');
+    expect(services.feed.entries[services.feed.entries.length - 2]!.id).toBe('session:s4');
   });
 });
 
@@ -196,7 +201,7 @@ describe('orchestrator wiring', () => {
     const { AgenticOrchestrator } = await import('../../src/core/assessments/AgenticOrchestrator.js');
     expect(typeof AgenticOrchestrator).toBe('function');
     const services = createOrchestrationServices(HOlONS);
-    expect(services.library.length).toBe(64 * 7 * 2 + 64 * 7 + 64 * 7 + HOlONS.length * 7);
+    expect(services.library.length).toBe(64 * 7 * 2 + 64 * 7 * 3 + HOlONS.length * 7);
     expect(services.feed.entries.length).toBe(0);
     // sessionEnd through the orchestrator's seam mutates the SAME record the caller holds
     sessionEnd(services, {
@@ -207,7 +212,8 @@ describe('orchestrator wiring', () => {
       history: [mkRecord('conqueror')],
       now: 20,
     });
-    expect(services.feed.entries.length).toBe(2);
+    // Phase 11 d4 (G30): session + worker + verdict entries — replay adds nothing.
+    expect(services.feed.entries.length).toBe(3);
   });
 
   it('personalization block rendering: mode/poles/interests flow into the pipeline input type', async () => {
