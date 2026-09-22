@@ -304,15 +304,18 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: all nine build phases are IMPLEMENTED
+### 4.2 Current state: all build phases are BUILT; Phase 10 (Generative World & Personalization) is closed
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All nine build phases** (1 Delegation Kernel → 9 Credentialing) are **implemented and
-gated** — the kernel gate suite (22 gates, `G1–G26`) green, the post-plan frontier closed. **There is no *current* phase
-number** — work is selected by the record layer. **One phase is ratified and unbuilt: Phase 10**
-(Generative World & Personalization, from `45` / `46` / `47`; gates G22–G25) — its order and gates are
-in `docs/DEVELOPMENT-PLAN.md §4`, and it is the only outstanding build work. Cite this section and the
-plan, never a phase number spoken from memory.
+gated** — the kernel gate suite (27 gates, `G1–G27`) green, the post-plan frontier closed.
+**Phase 10** (Generative World & Personalization, from `45` / `46` / `47`; gates G22–G27) was ratified
+2026-09-20, **built 2026-09-21**, and its **live runtime loop closed 2026-09-22** — the personalization
+envelope, the reporting feed, the owner-worker pool, the coherence gate, and the authored
+[scenario | world] seed tiers are all wired into `AgenticOrchestrator` and both user surfaces. The
+record of that closure lives in `docs/DEVELOPMENT-PLAN.md §4` (Phase 10) and `§9` (revision record),
+not here. There is **no current phase number** — work is selected by the record layer; cite this
+section and the plan, never a phase number spoken from memory.
 
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
@@ -327,25 +330,30 @@ conflict the foundations docs win and the plan is revised.
 **What is actually open** — two lists, both owned by the record layer. Do **not** duplicate their
 contents here; read them where they live:
 
-1. **Ratified laws with no consumer.** Decisions the canon has ratified that no code implements yet:
-   `MY-AD-0006` (register classes), `MY-AD-0007` (one articulation ladder, two registers),
-   `MY-AD-0008` (alignment bias — the seam exists, the consumer does not), `MY-AD-0009` (two-fold
-   world memory + per-holon owner worker), `MY-AD-0010` (background workers), `MY-AD-0011`
-   (integrated human intervention), `MY-AD-0018` (the user-dimensionality vector as retrieval key),
-   `MY-AD-0019` (world/NPC/scenario pooling), `MY-AD-0020` (the ethics and data-privacy classes and
-   projection firewall), `MY-AD-0021` (entities are composed from facets, not stored whole — with
-   the tag/dialectic store), `MY-AD-0022` (preference is inferred under an evidence tier; only the
-   instrumented tier becomes a field of record) and `MY-AD-0023` (delivery structure is selected from
-   a scaffold library and must fade). Plus the Auditor Projection Layer (`16 §2.4/§10.4`).
-   `python3 scripts/arch.py related <ID>` pulls any record's edges.
-2. **Documentation and knowledge-base integrity.** `_org.yaml → pending` — `CODE-PASS`, the `RT-*`
-   gate/ingest items and the `KB-*` items (orphan-script triage, the undocumented organs, skills
-   provenance, `validate --json`, canon→code ingest).
+1. **Ratified laws with no consumer.** Currently **none** — the list that stood here through
+   2026-09-21 (`MY-AD-0006` through `MY-AD-0023`, plus the Auditor Projection Layer) is fully
+discharged: every Active law now declares its consumer (checked by DG19), and the deferral tags
+were discharged with consumer declarations on 2026-09-22. **When a new law lands, this is where its
+absence returns.** A law that is Active with no consumer is the normal shape of pending work here.
+When you implement one, record the implementation in the same commit and cite the record it closes.
+2. **Configuration, calibration, and development frontier** (verified against the tree
+   2026-09-22; owned by the plan's record — the detailed evidence table lives in
+   `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md`):
+   - *Configuration (wire what exists):* restore `orchestrationWorkers` + feed checkpoint at session
+     boot (`captureCheckpoint`/`restoreCheckpoint` have no production caller — NPC memory has a
+     one-session half-life at the CLI); feed readers consumed by the orchestrator at session start;
+     identity/consent intake UI so `declaredInterests`/`aversions` reach the UDV; a production
+     ratification caller (`recordRatification`); live writers for the polarity state map
+     (`services.states` is created empty and never updated). GitLab push remains credential-blocked.
+   - *Calibration (needs play data):* RV1–RV7 validation of the 8 authored probes (unlocks the
+     interest tier from log-only); `expansionRatio` and entropy thresholds from observed
+     distributions; per-line saturation thresholds from real progression curves.
+   - *Development:* author the NPC persona tier (the third authored leg of the [world, NPC,
+     scenario] triad — scenarios and worlds are authored 64/64); tag-ontology growth beyond the 12
+     initial tags (`46 §4` corpus change); cohort/pods production runtime (Phase 4's transport
+     adapter exists; no networked deployment).
 
-**A law that is Active with no consumer is the normal shape of pending work here.** When you
-implement one, record the implementation in the same commit and cite the record it closes.
-
-Standing constraints: workspace-lint → `arch.py validate` (DG1–DG18) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
+Standing constraints: workspace-lint → `arch.py validate` (DG1–DG23) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
 
 ### 4.3 The Grounding Principle
 
@@ -417,11 +425,14 @@ Three things follow, and one is still deferred:
   below the centre of gravity (the heal/evolve agenda, and the mechanism by which §5.6's
   never-outgrown lower stages are actually maintained), and `erosScan(cog)` reads the CoG's own
   threshold markers plus the altitude they are called toward.
-- **STILL DEFERRED — wiring.** How quadrant dynamics *feed the encounter architecture* (which
-  quadrant a generated encounter should stress, and how a macro-catalyst's PESTLE pressure maps onto
-  LR) is unresolved, and nothing at runtime reads the markers yet. Tracked as
-  `_org.yaml → pending → QUALITY-WIRING`. It is now a wiring question, not a missing-model question,
-  which is what the original deferral was waiting for.
+- **Wiring closed 2026-09-21 (`QUALITY-WIRING`, `_org.yaml → completed → P11`).** Three runtime
+  readers landed: `buildDevelopmentalAgenda` (both §5.3 vectors, rendered Veil-safe by the
+  ContextPipeline), `generateFrequencySpec().lensRead` (RAY_LENS consumers), and
+  `buildShadowPromptSuffix` grounding shadow encounters in `pathologyIn` via `LINE_QUADRANT` —
+  runtime quadrant→encounter-content feeding now exists and is locked by
+  `tests/core/domain/QualityWiring.test.ts`. **Residual (narrower than the original deferral):**
+  how a *macro-catalyst's* PESTLE pressure maps onto the LR quadrant inside encounter *selection*
+  remains an open scheduling question, tracked by `MY-AD-0030`'s record rather than a pending key.
 
 Latitude: `LINE_QUADRANT` maps lines to UL/UR/LL and leaves LR to the world-state PESTLE system
 (`TransformationDetector` documents the proxy it uses in the interim).

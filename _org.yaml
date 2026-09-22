@@ -388,23 +388,18 @@ completed:
     SUBSTRATE_LAYER_LAW -> LAW_BANDS_D3 with its `density` field -> `band`. The ''energetic
     substrate (Ra)'' sense in 06 and the various ''theoretical substrate'' usages
     are unrelated compounds and stay'
-pending:
-  PLAN-IMPLEMENT: 'DONE 2026-09-21. src/core/personalization/: udv.ts (UDV projection
-    + REGISTERED_PROJECTIONS firewall, MY-AD-0020 §3 — stage labels downgraded to
-    bands, observed interests stay ranking-weight), dialecticEngine.ts (46 §5: spiral/expand/familiar,
-    pair-keyed PolarityStateMap — reconciliation-polarity states keyed by canonical
-    pairKeyOf, saturation guard, EXPANSION_RATIO_FLOOR, aversion excluded from both
-    poles), composition.ts (46 §3/§6/§7: Situation holon kind, library discriminator,
-    composedOf bindings, dependency-ordered compose, CompositionStore with replay),
-    pooling.ts (45 §5: query bands, constraint filter, veto-as-routing-rule with recorded
-    deferrals §5.2.1, relevance rank), scenarioContext.ts (45 §6/§6.1: envelope +
-    ROLE_SCOPES enforced absence-scoping), engagementRegister.ts (45 §7.3: both tests,
-    forbidden refusals, MY-RG-0017). compile-facets.ts now assigns tags from the authored
-    facetAffinity matrix (46 §4 join). Locked by tests/personalization/PlanImplement.test.ts
-    (25 tests). Remaining deferrals: none structural — LLM-side rendering of the analogical
-    bridge belongs to the scenario-catalyst agent (43).'
-  WORLD-STORE-MOVE: DONE 2026-09-21. Holon.ts, HolonStore.ts, stage-holons.json, red-layer-holons.json,
-    RedPESTLE.ts, and data/encounters/red/ (now world/encounters-red/) all live under
-    src/core/world/; organs.world.code corrected; the three facades (domain/Holon.ts,
-    data/HolonRegistry.ts, data/RedPESTLE.ts) DELETED — all consumers import world/
-    directly. 18/22/36/46 canon citations updated to the resolved paths (DG23 clean).
+  P13: 'RUNTIME-LOOP closed 2026-09-22 (commits 7e6ce01..6024a58): the Phase-10 personalization
+    runtime wired into the LIVE session path — reporting feed (43 §5.5) as code with four idempotent
+    writers (session/worker/ratification/insight, F3), owner-worker pool (22 §7.5, MY-AD-0009
+    consumer) with ±0.3 caps/W4 replay/W5 hot-set concurrency, OrchestrationServices as the ONE
+    orchestrator seam (envelope + holon digest + coherence gate + session end on all five result
+    paths), [PERSONALIZATION]/[HOLON MEMORY]/[SCENARIO SEED] prompt blocks, cli-game + gameEngine
+    carrying services and persisting worker state with the world save. Gate G27 added (authored-seed
+    stage coherence); G26 pre-existed as the priority-formula closure.'
+  P14: 'AUTHORED-SEEDING closed 2026-09-22 (commits 1906ecd, 148e275): the world/NPC/scenario
+    libraries carry authored substance — 64 scenario seeds (46 §2 canonical situations per cell,
+    module-spec provenance) × 7 modality angles, 64 world seeds (canonical places: locus/texture/
+    population/tension), 8 authored pole-probes (47 §7, log-only until RV), all store-valid tags,
+    64/64 coverage asserted at load, stage-coherence gate enforced at authoring (G27) and runtime
+    (coherenceGate routes, never cancels, 45 §5.2.1). Candidate library 1792; calibration harness
+    audits both seed tiers; tests/personalization/{Authoring,WorldSeeds,RuntimeLoop*}.test.ts lock.'
