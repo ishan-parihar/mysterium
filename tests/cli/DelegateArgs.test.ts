@@ -74,6 +74,23 @@ describe('delegate CLI args (collision-free flag handling)', () => {
     expect(parseDelegateArgs(['--budget', '0']).budget).toBe(1);
     expect(parseDelegateArgs(['--budget', '-3']).budget).toBe(1);
   });
+
+  // Phase 13 d12: the state-summoning surface. `--summon` makes the DISPATCHER choose the role.
+  it('parses the summoning flags (--summon / --trigger / --intent)', () => {
+    const quiet = parseDelegateArgs([]);
+    expect(quiet.summon).toBe(false);
+    expect(quiet.trigger).toBeUndefined();
+    expect(quiet.intent).toBe('game');
+
+    const summon = parseDelegateArgs(['--summon', '--trigger', 'crisis', '--intent', 'test']);
+    expect(summon.summon).toBe(true);
+    expect(summon.trigger).toBe('crisis');
+    expect(summon.intent).toBe('test');
+  });
+
+  it('an unknown --intent degrades to game rather than throwing (the dispatcher owns the vocabulary)', () => {
+    expect(parseDelegateArgs(['--intent', 'nonsense']).intent).toBe('game');
+  });
 });
 
 describe('delegate role vocabulary (43 §4.2 council)', () => {

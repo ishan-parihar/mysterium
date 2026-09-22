@@ -27,12 +27,13 @@ import { createEmptyShadowLedger } from '../domain/ShadowLedger.js';
 import {
   ALL_DELEGATED_TOOLS, CELL_BOUND_ROLES, HEALING_PATH_ROLES,
   ROLE_TOOLSETS, TOOL_PROPOSAL_KINDS,
-} from './types.js';
-import {
-  appendToolCall, appendTranscript, closeSessionLog, openSessionLog,
+} from './types.js';import { appendToolCall, appendTranscript, closeSessionLog, openSessionLog,
   toResult,
 } from './sessionLog.js';
+import { isToolAllowedFor } from './types.js';
 import type { SessionLog } from './sessionLog.js';
+import { AGENT_ROLE_COUNCIL, BAND_READ_GRANTS, authorizeBandRead, renderStandingBlock } from './councilStanding.js';
+import type { ScopedEnvelope, UdvBand } from '../personalization/scenarioContext.js';
 import type { SessionSignals } from './types.js';
 import type { AgentRole, DelegationResult, DelegationSpec, Proposal } from './types.js';
 import type { DelegatedTool } from './types.js';
@@ -72,9 +73,11 @@ export function validateSpec(spec: DelegationSpec): SpecViolation | null {
       return { code: 'unknown_tool', detail: `tool '${tool}' is not a delegated tool` };
     }
   }
-  const allow = ROLE_TOOLSETS[spec.role];
   for (const tool of spec.toolset) {
-    if (!allow.includes(tool)) {
+    // 43 §5.6: a role may call its own allowlist PLUS the universal read surface. The act surface
+    // stays role-specific (G15 unchanged in force); knowing one's own mandate and view is not a
+    // privilege, so `read_my_scope`/`read_band` are granted to every role by law.
+    if (!isToolAllowedFor(spec.role, tool)) {
       return { code: 'role_toolset_violation', detail: `tool '${tool}' is not in the ${spec.role} allowlist` };
     }
   }
@@ -189,6 +192,12 @@ export interface DelegationRunContext {
    * ⇒ the deterministic seeded policy — G14's byte-stable path.
    */
   readonly choicePolicy?: import('./choicePolicy.js').ChoicePolicy;
+  /**
+   * 43 §5.6 (Phase 13 d11): the role's SCOPED envelope — `buildEnvelope(...).scopes[bound]` for the
+   * role's `45 §6.1` binding. Rendered into the standing block so the agent always holds its own
+   * view. Omitted ⇒ the block degrades to "envelope unavailable" (45 §5), never to a false claim.
+   */
+  readonly scope?: ScopedEnvelope;
 }
 
 export type DelegationCommit =
@@ -222,7 +231,19 @@ export async function executeDelegatedSession(
   }
 
   const { log: opened } = openSessionLog(spec, seedCfg.seed, seedCfg.sessionIndex, seedCfg.now);
-  let log = opened;
+  // 43 §5.6 (Phase 13 d11): the STANDING BLOCK. Every deployed agent carries its mandate, its
+  // scoped view, its boundaries, its tools and its session in-window for the whole delegation — it
+  // never has to ask who it is, and it can reach further only through the authorized read tools.
+  // The scope arrives on the spec's context (a scoped envelope); absent, the block degrades to
+  // "envelope unavailable" rather than implying the player has no preferences (45 §5).
+  const councilScope = AGENT_ROLE_COUNCIL[spec.role];
+  const standing = renderStandingBlock({
+    role: spec.role,
+    ...(ctx.scope ? { scope: ctx.scope } : {}),
+    sessionId: opened.sessionId,
+    delegationId: opened.delegationId,
+  });
+  let log: SessionLog = { ...opened, standing, ...(councilScope ? { councilScope } : {}) };
   let sig = ctx.sig;
   let world = ctx.world;
   let sessionState = startSession(sig, ctx.session);
@@ -478,6 +499,36 @@ function runAdvisoryMandate(
         };
       }
     }
+  }
+
+  // --- The universal read surface (43 §5.6, Phase 13 d11) -------------------
+  // Exercised LAST so a tight budget still completes the mandate and its proposal (the reads are
+  // additive context, never the work). `read_my_scope` always succeeds — it re-reads the standing
+  // view. `read_band` is where authorization shows: a granted band is read; a withheld one is
+  // REFUSED AND RECORDED, which is the signal that a role's view is being stretched.
+  if (log.budget.toolCallsUsed < spec.budget.toolCallsMax) {
+    log = appendToolCall(log, { t: now, tool: 'read_my_scope', ok: true });
+  }
+  if (log.budget.toolCallsUsed < spec.budget.toolCallsMax) {
+    const grants = BAND_READ_GRANTS[spec.role];
+    // Probe for the first band the role holds beyond its standing view, else probe a band its scope
+    // withholds (choosing a deliberately withheld one makes the refusal the observable outcome for
+    // the roles that legitimately hold nothing — S2/S5).
+    const probe: UdvBand = grants[0] ?? 'interests';
+    const verdict = authorizeBandRead(spec.role, probe);
+    log = appendToolCall(log, {
+      t: now,
+      tool: 'read_band',
+      ok: verdict.granted,
+      ...(verdict.granted ? {} : { note: verdict.reason }),
+    });
+    log = appendTranscript(log, {
+      t: now,
+      who: 'system',
+      text: verdict.granted
+        ? `read_band(${probe}) granted within the ${AGENT_ROLE_COUNCIL[spec.role]} scope`
+        : `read_band(${probe}) refused: ${verdict.reason}`,
+    });
   }
   return log;
 }

@@ -299,6 +299,7 @@ export function buildEnvelope(
     assessment: scopeForRole(context, 'assessment'),
     'curriculum-teacher': scopeForRole(context, 'curriculum-teacher'),
     safety: scopeForRole(context, 'safety'),
+    healing: scopeForRole(context, 'healing'),
   };
 
   return {

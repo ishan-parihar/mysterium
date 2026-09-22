@@ -57,9 +57,19 @@ export interface ScenarioContext {
 // §6.1 Sub-agent alignment — per-role scoped projections
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type CouncilRole = 'scenario-catalyst' | 'narrative-voice' | 'assessment' | 'curriculum-teacher' | 'safety';
+export type CouncilRole =
+  | 'scenario-catalyst' | 'narrative-voice' | 'assessment' | 'curriculum-teacher' | 'safety'
+  /** 
+   * Added 2026-09-24 (council orthogonality audit, O8): the shadow-work pair — the Therapist and
+   * J4 — had no row at all, though they handle the most delicate material. They receive the veto
+   * list, the banded placement and the player's aims as STAKES, and never the interest graph or the
+   * analogy internals: affinities must not be usable as levers in shadow-work.
+   */
+  | 'healing';
 
-type UdvBand = 'preference' | 'analogy' | 'purpose' | 'developmental' | 'interests' | 'aversions' | 'constraints';
+/** The UDV band names (45 §3) as the scope table uses them — exported so the orchestration layer
+ *  can bind agent roles to scopes without re-spelling the vocabulary (`types.ts` re-exports). */
+export type UdvBand = 'preference' | 'analogy' | 'purpose' | 'developmental' | 'interests' | 'aversions' | 'constraints';
 
 export interface RoleScope {
   readonly role: CouncilRole;
@@ -103,6 +113,11 @@ export const ROLE_SCOPES: Readonly<Record<CouncilRole, RoleScope>> = Object.free
     role: 'safety',
     receives: ['aversions'] as const,
     mustNotReceive: ['interest graph', 'analogy'] as const,
+  }),
+  healing: Object.freeze({
+    role: 'healing',
+    receives: ['aversions', 'developmental', 'purpose'] as const,
+    mustNotReceive: ['interest graph', 'analogy internals (affinities must never be levers in shadow-work)'] as const,
   }),
 });
 

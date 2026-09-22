@@ -115,6 +115,38 @@ council presence is part of session strategy (27): a therapy arc opens with the 
 present; a study session opens with the Teacher; a transformation threshold summons the
 whole council. Presence scheduling is deterministic given strategy (kernel-testable).
 
+**The trigger table (canon, built 2026-09-24 — Phase 13 d12).** Presence scheduling is not a
+lookup; it is the **pacing law**. A state change binds to a summoner and to a role, and the same
+player in the same state always summons the same role (no LLM ever chooses who appears). The table
+lives in `src/core/orchestration/dispatcher.ts` (`TRIGGER_TABLE`), evaluated top to bottom; the
+order below **is** the ruling:
+
+| Priority | Trigger | Summoner | Roles summoned | The frame becomes |
+|---|---|---|---|---|
+| 1 | Crisis pattern | bypass (§4.7) | **therapist** (the only bypass) | plainly human — *not a scene* |
+| 2 | Threshold proximity (17) | strategy | **the whole council** (minus the two background roles), Therapist first | the world reorganises; several figures at once |
+| 3 | Shadow-work warranted | strategy | **therapist** proposes → **J4** delivers | a companion sits with the heavy thing |
+| 4 | Placement unknown | strategy | **A4** | a threshold trial |
+| 5 | Pack intake due | strategy | **S1** operates → **A3** judges | an honest instrument, explicitly not the game |
+| 6 | Consent change / "what do you know about me" | player | **S4** | out-of-fiction, plainly consented |
+| 7 | Depth plateau (3+ passes, no movement) | strategy | **T1** then **T2** | a mentor who explains rather than tests |
+| 8 | Retention decay | strategy | **T2** | remembering, with someone |
+| 9 | Reflection written | journal | **A2** | a mirror returns the player's own words |
+| 10 | Loop-health tick | tick | none (background **S5**, **S2**) | nothing — the player never meets it |
+| 11 | Encounter opens (default) | strategy | **J1** / **J2** / **J3** by the cell's intent | the cell's own figure |
+
+Three structural laws hold it together: **the frame-changing triggers outrank the work-changing
+ones** (crisis → threshold → the mandates → the ordinary encounter as the default); **`S2` (who
+assembles envelopes) and `S5` (who keeps the loop healthy) are background on every dispatch and
+never hold the player's frame** — neither holds player bands (`45 §6.1`); and **the whole-council
+moment is reserved for transformation** (17), which is what makes its arrival dramatic. `S2` rides
+every dispatch as background because it is the one who *prepares* the encounter.
+
+The dispatcher is summonable from the live loop through the council tool surface (§4.3),
+`schedulePresence` (§5.6's tooling) orders the presence under the row's strategy, and **G34**
+certifies the table's coherence, its reachability, crisis precedence and dispatch determinism.
+Drilling a state by hand: `mysterium delegate --summon --trigger <name>`.
+
 ### 3.4 Veil compliance across the council
 
 No council member ever tells the player "your Interpersonal line measured 0.42." Each
@@ -267,7 +299,7 @@ the existing 13 unified tools; each sub-agent gets only what its role requires.
 | State read | `get_full_profile`, `get_knowledge_snapshot`, `get_unified_profile` |
 | Action | `recommend_workout`, `recommend_trajectory`, `study_concept`, `set_difficulty_override` |
 | Detection | `detect_shadow_signals` |
-| Orchestration (NEW) | `delegate_session` (§6), `read_session_log`, `analyze_session_logs`, `ratify_proposal`, `schedule_presence` (§3.3), `receive_auditor_request` (2026-09-17: accepts auditor proposals from the 16 §2.4/§10.4 projection layer surfaced by 33 §7's dashboards, and converts them to ordinary DelegationSpecs — auditors (guardians) propose through the same ratification laws as the council, 16 AP5; they never receive write tools, and TL2 applies with full force: auditor reads are the SAME purpose-scoped AuditorProjections as the dashboards, no new data surface) |
+| Orchestration (NEW) | `delegate_session` (§6), `read_session_log`, `analyze_session_logs`, `ratify_proposal`, `schedule_presence` (§3.3), **`summon_council`** (2026-09-24: asks the DISPATCHER who is present and runs each summoned mandate — the model supplies no role, so summoning stays deterministic per §3.3; implemented in `src/core/assessments/councilTools.ts` with rules 12–15: summoning is not yours · role vocabulary is internal · a bypass is not a scene · no measurement ever), `receive_auditor_request` (2026-09-17: accepts auditor proposals from the 16 §2.4/§10.4 projection layer surfaced by 33 §7's dashboards, and converts them to ordinary DelegationSpecs — auditors (guardians) propose through the same ratification laws as the council, 16 AP5; they never receive write tools, and TL2 applies with full force: auditor reads are the SAME purpose-scoped AuditorProjections as the dashboards, no new data surface) |
 | Commit | `process_outcome` (the single-writer edge, L4) |
 
 **Sub-loop toolsets (per council):**
@@ -601,7 +633,14 @@ Every access is read-only, purpose-bound and logged; no access tool writes state
 F1 and `48 §5`'s R2 applied to agents rather than to retrievers). A **refusal is information**: it
 signals that a role's view is being stretched, which is the early warning of exactly the mis-scoping
 `45 §6.1` exists to prevent. Delivery of the standing block and the binding in the delegation path
-is Phase 13 d11 (`docs/DEVELOPMENT-PLAN.md §4`).
+is **built** (Phase 13 d11, 2026-09-24): `buildEnvelope` returns all five scopes plus `healing`,
+`AGENT_ROLE_COUNCIL` binds all 18 roles (S2/S5 explicitly to none), `renderStandingBlock` renders
+the block Veil-guarded line by line (an encounter's stage label never renders — the block names the
+line and the modality and leaves the register to the encounter block), `authorizeBandRead` fails
+closed with a recorded reason, and `delegateSession` records both the binding and the block on the
+session log. **G32** was extended to certify the binding's totality, the standing block's
+completeness and the read authorization; **G34** certifies that no trigger can summon a role that
+holds no player bands.
 
 ## 6. The delegation contract (types)
 

@@ -39,6 +39,10 @@ import conceptDraftsJson from '../data/concept-drafts.json';
 import type { ConceptDraftIndex } from '../data/ConceptDraftIndex.js';
 // Phase 11/12 memory gates (G28–G31): the surfaces they certify.
 import { createOrchestrationServices, sessionEnd, captureCheckpoint, restoreCheckpoint, buildEnvelope, scopeContractViolations, assessmentScopeLine, type RuntimeCheckpoint } from '../personalization/sessionRuntime.js';
+import { AGENT_ROLE_COUNCIL, AGENT_ROLE_SECONDARY_SCOPES, ALL_AGENT_ROLES, authorizeBandRead, renderStandingBlock } from '../orchestration/councilStanding.js';
+// G34 (Phase 13 d12): the dispatch decision and the summoning tool vocabulary.
+import { TRIGGER_TABLE, dispatchCouncil, dispatchTableViolations, type CouncilObservation } from '../orchestration/dispatcher.js';
+import { COUNCIL_TOOLS, councilToolWiringViolations } from '../assessments/councilTools.js';
 import { purposesFromVows, analogyFromInterests, preferenceFromHistory, observedFromEngagement, DEFAULT_PREFERENCE } from '../personalization/bandSources.js';
 import type { Holon } from '../world/Holon.js';
 import type { Proposal } from '../orchestration/types.js';
@@ -870,6 +874,7 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   results.push(validateRetrievalFirewall());
   results.push(validateRoleScopeAlignment());
   results.push(validateUdvBandPopulation());
+  results.push(validateCouncilDispatch());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
@@ -1687,7 +1692,7 @@ export function validateRoleScopeAlignment(): GateResult {
       1000,
       null,
     );
-    const roles = ['scenario-catalyst', 'narrative-voice', 'assessment', 'curriculum-teacher', 'safety'] as const;
+    const roles = ['scenario-catalyst', 'narrative-voice', 'assessment', 'curriculum-teacher', 'safety', 'healing'] as const;
     for (const role of roles) {
       const scope = env.scopes[role];
       if (!scope) return mk(`no scope produced for ${role} — the live seam skipped a council role`);
@@ -1695,6 +1700,41 @@ export function validateRoleScopeAlignment(): GateResult {
       const bad = scopeContractViolations(scope);
       if (bad.length > 0) return mk(`${role} received undeclared band(s): ${bad.join(', ')}`);
     }
+    // The binding (Phase 13 d11): every agent role is bound to a scope or explicitly to none, and
+    // every declared scope has at least one bound agent (a scope row without a consumer is inert).
+    const boundScopes = new Set<string>();
+    for (const [role, scope] of Object.entries(AGENT_ROLE_COUNCIL)) {
+      if (scope !== null) boundScopes.add(scope);
+      if (scope === undefined) return mk(`agent role ${role} has no council binding`);
+      for (const secondary of AGENT_ROLE_SECONDARY_SCOPES[role as keyof typeof AGENT_ROLE_COUNCIL] ?? []) boundScopes.add(secondary);
+    }
+    for (const scope of roles) {
+      if (!boundScopes.has(scope)) return mk(`scope '${scope}' has no bound agent (an inert scope row)`);
+    }
+    // The standing block (43 §5.6): non-empty, Veil-guarded line by line, and honest about a view
+    // that is withheld (S2/S5) or unavailable.
+    for (const role of ['T1', 'A1', 'therapist', 'S2'] as const) {
+      const block = renderStandingBlock({
+        role,
+        ...(AGENT_ROLE_COUNCIL[role] ? { scope: env.scopes[AGENT_ROLE_COUNCIL[role]!] } : {}),
+        sessionId: 'g32-session',
+        delegationId: 'g32-delegation',
+      });
+      if (block.length === 0) return mk(`standing block empty for ${role}`);
+      if (!block.some((l) => l.includes('[MY MANDATE]'))) return mk(`standing block for ${role} lacks a mandate line`);
+      if (!isBandedText(block.join(' '))) return mk(`standing block for ${role} breached the Veil vocabulary`);
+    }
+    if (!renderStandingBlock({ role: 'S2', sessionId: 's', delegationId: 'd' }).some((l) => l.includes('none')))
+      return mk('S2 standing block does not state that it holds no player bands');
+    // Read authorization (43 §5.6): a band the scope withholds is REFUSED — even when the grant
+    // list would otherwise allow it — and a role holding nothing is refused with a reason.
+    if (authorizeBandRead('A1', 'interests').granted) return mk('A1 was granted the interest graph (45 §6.1 violated)');
+    if (authorizeBandRead('therapist', 'analogy').granted) return mk('the therapist was granted analogy internals (healing scope violated)');
+    if (authorizeBandRead('S2', 'developmental').granted) return mk('S2 was granted a player band (it holds none)');
+    const refusal = authorizeBandRead('S2', 'developmental').reason;
+    if (refusal.trim().length === 0) return mk('a refusal carried no reason (a refusal is information)');
+    if (!authorizeBandRead('A1', 'developmental').granted) return mk('A1 was refused its own developmental band');
+    if (!authorizeBandRead('J1', 'interests').granted) return mk('the catalyst was refused a band it holds');
     // The table's own blindness claims, as absences rather than nulls.
     if (env.scopes.assessment.interests !== undefined) return mk('45 §6.1 violated: assessment received the interest graph');
     if (env.scopes.assessment.purpose !== undefined) return mk('45 §6.1 violated: assessment received purpose statements');
@@ -1815,6 +1855,66 @@ export function validateUdvBandPopulation(): GateResult {
     if (bare.context.udv.analogy.fluentDomains.length !== 0) return mk('analogy band did not degrade to empty');
     if (bare.context.udv.constraints.accessibility.length !== 0) return mk('constraints band did not degrade to empty');
     return { gate: 'G33 UDV band population', passed: true, hard: true, details: 'five bands reach the live UDV; declared outranks observed; empty input degrades to ratified defaults' };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G34 — Council dispatch and its live summoning surface (43 §3.3, Phase 13 d12). The council was
+// a complete workforce with no dispatcher (audit O10). This gate proves the trigger table is
+// coherent and the table's decision is deterministic — the same state summons the same roles —
+// that crisis preempts every other trigger, that a threshold assembles the whole foreground
+// council, that the background roles never hold the frame, and that the three summoning tools run
+// exactly the roles the TABLE chose (the model never picks).
+// ---------------------------------------------------------------------------
+
+export function validateCouncilDispatch(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G34 council dispatch', passed: false, hard: true, details: m });
+  try {
+    const tableBad = dispatchTableViolations();
+    if (tableBad.length > 0) return mk(`trigger table incoherent: ${tableBad.join('; ')}`);
+    const toolBad = councilToolWiringViolations();
+    if (toolBad.length > 0) return mk(`council tool surface incoherent: ${toolBad.join('; ')}`);
+
+    const clear: CouncilObservation = {
+      crisis: false, thresholdProximity: false, shadowWorkWarranted: false, placementUnknown: false,
+      packIntakeDue: false, consentChangeRequested: false, depthPlateauTicks: 0, retentionDecay: false,
+      reflectionWritten: false, cellIntent: 'game',
+    };
+
+    // Determinism: the same state twice is the same summons, membership never varies with the seed.
+    const a = dispatchCouncil({ ...clear, seed: 'g34' });
+    const b = dispatchCouncil({ ...clear, seed: 'g34' });
+    if (JSON.stringify(a) !== JSON.stringify(b)) return mk('same state produced two different summons');
+    const c = dispatchCouncil({ ...clear, seed: 'g34-other' });
+    if (c.trigger !== a.trigger) return mk('the seed changed the TRIGGER — ordering may vary, the decision may not');
+    if ([...c.roles].sort().join(',') !== [...a.roles].sort().join(',')) return mk('the seed changed WHICH roles are summoned');
+
+    // Crisis preempts everything and is the only bypass.
+    const crisis = dispatchCouncil({ ...clear, crisis: true, thresholdProximity: true, shadowWorkWarranted: true, depthPlateauTicks: 9, seed: 'g34' });
+    if (crisis.trigger !== 'crisis') return mk(`crisis lost precedence to ${crisis.trigger}`);
+    if (!crisis.bypass) return mk('the crisis dispatch is not flagged as a bypass (43 §4.7)');
+    if (TRIGGER_TABLE.filter((r) => r.bypass === true).length !== 1) return mk('more than one bypass row — "the frame stops being a game" is ambiguous');
+
+    // Threshold: the whole council, minus the two background roles, Therapist first.
+    const threshold = dispatchCouncil({ ...clear, thresholdProximity: true, seed: 'g34' });
+    const expected = ALL_AGENT_ROLES.filter((r) => r !== 'S2' && r !== 'S5');
+    if (threshold.roles.length !== expected.length) return mk(`threshold summoned ${threshold.roles.length} roles, expected ${expected.length}`);
+    if (threshold.roles[0] !== 'therapist') return mk('the threshold moment did not open with the Therapist');
+    if (threshold.roles.includes('S2') || threshold.roles.includes('S5')) return mk('a background role was summoned into the foreground');
+
+    // Every role the ordinary dispatch can summon is bound to a scope (never a band-less role).
+    for (const role of dispatchCouncil({ ...clear, seed: 'g34' }).roles) {
+      if (AGENT_ROLE_COUNCIL[role] === null) return mk(`summoned ${role}, which holds no player bands`);
+    }
+
+    // The tool vocabulary is the table's vocabulary — the three names the suffix instructs on.
+    const toolNames = COUNCIL_TOOLS.map((t) => t.function.name).sort().join(',');
+    if (toolNames !== 'delegate_session,schedule_presence,summon_council') return mk(`council tool vocabulary drifted: ${toolNames}`);
+    // The async behaviour of the tools (which roles actually RUN) is locked by
+    // `tests/orchestration/Dispatcher.test.ts` — a kernel gate stays synchronous.
+    return { gate: 'G34 council dispatch', passed: true, hard: true, details: 'trigger table coherent + reachable; crisis preempts and is the only bypass; threshold assembles the foreground council with the Therapist opening; dispatch deterministic and seed-invariant; background roles never hold the frame; tool vocabulary in step with the rules suffix' };
   } catch (e) {
     return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
   }

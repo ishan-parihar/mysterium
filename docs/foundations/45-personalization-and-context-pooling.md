@@ -266,17 +266,34 @@ The rule behind the table: **the more metric-bearing the role, the less of the U
 Personalization is a rendering concern; measurement must remain blind to it, or relevance leaks into
 assessment.
 
-**The binding (added 2026-09-24).** Each row above is a *scope*; the agents that receive it are
-`43 §4.2`'s council. The mapping is now explicit — J1–J5 → scenario-catalyst; T1–T3 and S3 →
+**The binding (added 2026-09-24; built same day — Phase 13 d11).** Each row above is a *scope*; the
+agents that receive it are `43 §4.2`'s council. The mapping is now explicit **and in code**
+(`src/core/orchestration/councilStanding.ts` — `AGENT_ROLE_COUNCIL`): J1–J5 → scenario-catalyst
+(each with **narrative-voice as a secondary scope**, since the Journey-Guides both run and voice the
+encounter — the voice row without a bound agent is an inert row); T1–T3 and S3 →
 curriculum-teacher; A1–A4 and S1 → assessment; Therapist and J4 → healing; S4 and the crisis path →
 safety; S2 assembles envelopes and holds no player bands; S5 receives none. A scope row without a
-bound agent is inert, and an agent without a binding runs unscoped — both are defects.
+bound agent is inert, and an agent without a binding runs unscoped — both are defects, and both are
+now kernel-checked (**G32**: the binding is total, no scope unbound, no role unscoped).
+
+**The read surface (built 2026-09-24, `43 §5.6`).** Beyond the standing view a role may request one
+band with `read_band`; the grant table (`BAND_READ_GRANTS`) can never widen the scope table — a band
+the scope withholds is refused **even if granted**, and every refusal carries a recorded reason (a
+refusal is information, never silence). Band-less roles (S2/S5) are refused with the reason that
+they hold nothing to read.
+
+**The delivery (built 2026-09-24).** `buildEnvelope` returns `scopes` for every row; the delegation
+path delivers the bound role's scope into the standing block and records both the binding and the
+block on the session log — an auditor can see exactly what an agent was given, not infer it. A
+developed deployment without a scope degrades to "envelope unavailable — behave as unpersonalized"
+(45 §5), never to a fabricated view.
 
 **The contract is four-part, not one-part.** Knowing which bands a role receives is necessary and
 not sufficient; a deployed agent also needs *why* it may use them, *how long* it holds them, and
-*what it may return*. The full four-part table, the summoning trigger table, and the standing-context
-+ envelope-access contract are in `docs/audits/COUNCIL-ORTHOGONALITY-AUDIT-2026-09-24.md` §3–§5;
-they are the delivery form of this section, not a second scoping law.
+*what it may return*. The full four-part table, the summoning trigger table (built — `43 §3.3`), and
+the standing-context + envelope-access contract are in
+docs/audits/COUNCIL-ORTHOGONALITY-AUDIT-2026-09-24.md §3–§5; they are the delivery form of this
+section, not a second scoping law.
 
 ---
 

@@ -32,7 +32,7 @@ import {
 import { veilLeak } from '../../src/core/orchestration/delegate.js';
 import { computeEagerSignals, DISTRESS_THRESHOLD, FRUSTRATION_THRESHOLD } from '../../src/core/orchestration/delegate.js';
 import type { Proposal } from '../../src/core/orchestration/types.js';
-import { ROLE_TOOLSETS, type DelegatedTool, type DelegationSpec } from '../../src/core/orchestration/types.js';
+import { ROLE_TOOLSETS, isToolAllowedFor, type DelegatedTool, type DelegationSpec } from '../../src/core/orchestration/types.js';
 import { createInitialWorldState } from '../../src/core/engines/CandidateGeneration.js';
 import type { ScheduledEncounter } from '../../src/core/domain/EncounterSpecNew.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
@@ -518,9 +518,14 @@ describe('P6: toolset-driven dispatch (43 §4.3 executor conformance)', () => {
     const run = await delegateSession({ spec: specFor('T1'), sig, world, session, seed: 'd1', now: 1_000_000, ledger: emptyLedgerState() });
     expect(run.ok).toBe(true);
     expect(run.log.toolCalls.some((t) => t.tool === 'record_encounter')).toBe(false);
-    // Every logged tool is in the allowlist (the executor itself respects TL1).
-    expect(run.log.toolCalls.every((t) => ROLE_TOOLSETS.T1.includes(t.tool))).toBe(true);
+    // Every logged tool is in the role's allowlist OR the universal read surface (43 §5.6, Phase 13
+    // d11) — the act surface stays role-specific, the read surface is universal by law.
+    expect(run.log.toolCalls.every((t) => isToolAllowedFor('T1', t.tool))).toBe(true);
     expect(run.log.proposals.map((p) => p.kind)).toContain('mastery_evidence');
+    // The standing block + binding ride the log (d11): a deployed agent always knows who it is.
+    expect(run.log.standing?.length ?? 0).toBeGreaterThan(0);
+    expect(run.log.standing?.some((l) => l.includes('[MY MANDATE]'))).toBe(true);
+    expect(run.log.councilScope).toBe('curriculum-teacher');
 
     const rat = ratifyProposalsTool({ proposals: run.result?.proposals ?? [], sig, world, now: 1_100_000 });
     const d = rat.dispositions.find((x) => x.kind === 'mastery_evidence');
@@ -557,7 +562,8 @@ describe('P6: toolset-driven dispatch (43 §4.3 executor conformance)', () => {
     });
     expect(run.ok).toBe(true);
     expect(run.encountersExecuted).toBe(1);
-    expect(run.log.toolCalls.every((t) => ROLE_TOOLSETS.J1.includes(t.tool))).toBe(true);
+    expect(run.log.toolCalls.every((t) => isToolAllowedFor('J1', t.tool))).toBe(true);
+    expect(run.log.councilScope).toBe('scenario-catalyst');
   });
 
   it('G14 shape holds for advisory mandates: same seed ⇒ byte-identical log', async () => {

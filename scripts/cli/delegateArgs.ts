@@ -24,6 +24,16 @@ export interface DelegateArgs {
   readonly stage: string;
   readonly budget: number;
   readonly seed: string;
+  /**
+   * Phase 13 d12: summon by STATE instead of by role. With `--summon`, the council DISPATCHER
+   * decides who appears (43 §3.3) and `--role` is ignored — the CLI reports the summons and runs
+   * each summoned mandate. `--trigger <name>` names the state to simulate (a dev/smoke surface);
+   * absent, the quiet state is used (the ordinary encounter).
+   */
+  readonly summon: boolean;
+  readonly trigger: string | undefined;
+  /** The encounter's intent, which selects the Journey-Guide for an encounter-open summons. */
+  readonly intent: 'game' | 'test' | 'diagnosis';
 }
 
 export const DELEGATE_ROLE_PATTERN =
@@ -56,11 +66,16 @@ export function parseDelegateArgs(argv: readonly string[]): DelegateArgs {
   // NaN/garbage falls back to the default; validateSpec fail-closes on ≤0.
   const budgetRaw = parseInt(get('--budget') ?? String(BUDGET_DEFAULT), 10);
   const budget = Math.max(1, Number.isFinite(budgetRaw) ? budgetRaw : BUDGET_DEFAULT);
+  const intentRaw = get('--intent');
+  const intent: DelegateArgs['intent'] = intentRaw === 'test' || intentRaw === 'diagnosis' ? intentRaw : 'game';
   return {
     role: get('--role') ?? 'J1',
     line: get('--line') ?? 'Cognitive',
     stage: get('--stage') ?? 'Red',
     budget,
     seed: get('--seed') ?? 'cli-delegate',
+    summon: argv.includes('--summon'),
+    trigger: get('--trigger'),
+    intent,
   };
 }

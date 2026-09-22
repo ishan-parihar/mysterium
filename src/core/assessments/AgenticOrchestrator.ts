@@ -60,6 +60,15 @@ import {
   handleUnifiedProfileTool,
   type UnifiedProfileServices,
 } from './unifiedProfileTools.js';
+// Phase 13 d12: the council's live summoning surface. Registered only when a CouncilIntegration is
+// provided, so every existing caller (WebUI included) stays byte-for-byte identical without one.
+import {
+  COUNCIL_TOOLS,
+  COUNCIL_TOOL_NAMES,
+  COUNCIL_RULES_SUFFIX,
+  handleCouncilTool,
+  type CouncilIntegration,
+} from './councilTools.js';
 
 const PESTLE_DIMS: (keyof PESTLETension)[] = ['political', 'economic', 'social', 'technological', 'legal', 'environmental'];
 
@@ -231,6 +240,8 @@ export class AgenticOrchestrator {
   private training: TrainingIntegration | null = null;
   private _trainingSignal: AbortSignal | undefined;
   private unifiedProfile: UnifiedProfileServices | null = null;
+  /** Phase 13 d12: the council integration — null when the summoning surface is not registered. */
+  private council: CouncilIntegration | null = null;
   /** RuntimeLoop: orchestration services (feed/pooling/workers) — null when unwired. */
   private orchestration: OrchestrationServices | null = null;
   /** RuntimeLoop: consent-checked identity projection for this session. */
@@ -331,6 +342,13 @@ export class AgenticOrchestrator {
        *  (observed). Absent bands degrade to their ratified defaults. */
       bands?: UdvBandSources;
     };
+    /**
+     * Phase 13 d12 (43 §3.3): the council integration — when present, the three summoning tools
+     * (`summon_council`, `schedule_presence`, `delegate_session`) are registered and the Game Master
+     * can bring a council member into the encounter. Subject changes are decided by the TRIGGER
+     * TABLE, never by the model. Omitted ⇒ the council surface is absent entirely.
+     */
+    council?: CouncilIntegration;
   }) {
     this.encounter = params.encounter;
     this.significator = params.significator;
@@ -349,6 +367,7 @@ export class AgenticOrchestrator {
     // RuntimeLoop: carry the orchestration services (may be undefined — the degradation law).
     this.orchestration = params.orchestration ?? null;
     this.identity = params.identity;
+    this.council = params.council ?? null;
     // QUALITY-WIRING (MY-AD-0030): compute the agenda once at construction; refreshed by
     // `refreshAgenda` whenever the significator's altitudes change materially.
     this.developmentalAgenda = buildDevelopmentalAgenda(this.significator.currentStage);
@@ -370,7 +389,13 @@ export class AgenticOrchestrator {
     const tools: any[] = [...(TOOLS as unknown as any[])];
     if (this.training) tools.push(...(TRAINING_TOOLS as unknown as any[]));
     if (this.unifiedProfile) tools.push(...(UNIFIED_PROFILE_TOOLS as unknown as any[]));
+    if (this.council) tools.push(...(COUNCIL_TOOLS as unknown as any[]));
     return tools;
+  }
+
+  /** The council tool-handler context (d12) — the integration the orchestrator was given. */
+  private councilContext(): { integration: CouncilIntegration } {
+    return { integration: this.council! };
   }
 
   /** Handler context shared by all training tool calls in one encounter. */
@@ -617,7 +642,7 @@ export class AgenticOrchestrator {
 4. Keep the flow interactive, building upon prior answers.
 5. This encounter has a budget of 4 exchanges. After the player has responded to 4 questions, you MUST call 'complete_encounter'. Do NOT generate more than 4 ask_user_question calls. Each question should probe deeper based on the player's previous answers.
 6. When calling 'complete_encounter', evaluate the player per the DRIVE PROBES section. Score each drive independently. Provide driveScores (0.0-1.0 per drive) and driveSignals (pathology enum per drive).
-7. If RECENT ENCOUNTERS are listed, reference them subtly — the player's journey has continuity.${this.training ? TRAINING_RULES_SUFFIX : ''}${this.unifiedProfile ? UNIFIED_RULES_SUFFIX : ''}`;
+7. If RECENT ENCOUNTERS are listed, reference them subtly — the player's journey has continuity.${this.training ? TRAINING_RULES_SUFFIX : ''}${this.unifiedProfile ? UNIFIED_RULES_SUFFIX : ''}${this.council ? COUNCIL_RULES_SUFFIX : ''}`;
 
     if (this.messages.length === 0) {
       this.messages.push({
@@ -727,6 +752,17 @@ export class AgenticOrchestrator {
             this.messages.push({
               role: 'tool',
               content: JSON.stringify(outcome.ok ? outcome.payload : { error: (outcome.payload as any).error }),
+              toolCallId: tc.id,
+              name: tc.function.name,
+            });
+          } else if (COUNCIL_TOOL_NAMES.has(tc.function.name) && this.council) {
+            // Phase 13 d12: the council summons. The dispatch decision is the TRIGGER TABLE's
+            // (deterministic, from player state); the model only asks and then renders the answer
+            // into the fiction (COUNCIL_RULES_SUFFIX 12–15).
+            const outcome = await handleCouncilTool(tc.function.name, tc.function.arguments, this.councilContext());
+            this.messages.push({
+              role: 'tool',
+              content: JSON.stringify(outcome.ok ? outcome.payload : { error: outcome.payload.error }),
               toolCallId: tc.id,
               name: tc.function.name,
             });
@@ -1028,7 +1064,7 @@ INSTRUCTIONS:
    - Golden-Allergy: resistance to growth, "I'm fine as I am"
 
  6. Keep the response to 2-3 sentences maximum. Be precise and developmental.`;
-    const systemPrompt = `${systemPromptBase}${this.training ? TRAINING_RULES_SUFFIX : ''}${this.unifiedProfile ? UNIFIED_RULES_SUFFIX : ''}`;
+    const systemPrompt = `${systemPromptBase}${this.training ? TRAINING_RULES_SUFFIX : ''}${this.unifiedProfile ? UNIFIED_RULES_SUFFIX : ''}${this.council ? COUNCIL_RULES_SUFFIX : ''}`;
 
     if (this.messages.length === 0) {
       this.messages.push({
@@ -1094,6 +1130,14 @@ INSTRUCTIONS:
             this.messages.push({
               role: 'tool',
               content: JSON.stringify(outcome.ok ? outcome.payload : { error: (outcome.payload as any).error }),
+              toolCallId: tc.id,
+              name: tc.function.name,
+            });
+          } else if (COUNCIL_TOOL_NAMES.has(tc.function.name) && this.council) {
+            const outcome = await handleCouncilTool(tc.function.name, tc.function.arguments, this.councilContext());
+            this.messages.push({
+              role: 'tool',
+              content: JSON.stringify(outcome.ok ? outcome.payload : { error: outcome.payload.error }),
               toolCallId: tc.id,
               name: tc.function.name,
             });

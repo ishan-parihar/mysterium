@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 in progress (d1/d2 built, G32–G33); memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 in progress (d1/d2/d11/d12 built, G32–G34); memory infrastructure live (G28–G31)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All build phases through 12** are **implemented and gated** — the kernel gate suite
@@ -359,10 +359,32 @@ exactly five renderings per cell, so a cell-targeted pool returns the same five 
 player and the bands cannot discriminate — content selection is still decided by the encounter's
 cell. **d10 (candidate multiplicity per cell) is what makes personalization real**, and the phase's
 differential criterion closes with it; the gap is locked in `tests/personalization/Phase13Wiring.test.ts`.
-d3–d10 remain open.
 
-Cite the plan, the three audits, and the ledger — never a phase number spoken from
-memory. **No phase is ratified-but-unbuilt; Phase 13 is planned and not started.**
+**d11 + d12 are BUILT (2026-09-24) with gate G34** (kernel 33 → 34) — the council is now bound,
+standing, and dispatched:
+
+- **d11 — the binding + the standing context** (`43 §4.2` × `45 §6.1`/`§5.6`): `AGENT_ROLE_COUNCIL`
+  binds all 18 roles (S2/S5 explicitly to none; the J-council and therapist carry
+  `narrative-voice` as a secondary scope — the inert voice row G32 caught); `buildEnvelope`
+  returns `scopes` per row plus **`healing`** (O8 closed); the standing block
+  ([MY MANDATE]/[MY VIEW]/[MY BOUNDARIES]/[MY TOOLS]/[MY SESSION]) rides every delegation,
+  Veil-guarded line by line (an encounter's stage label never renders — the block names the line
+  and the modality); `read_my_scope`/`read_band` are universal read tools whose grants can never
+  widen the scope table, and every refusal is recorded with a reason (a refusal is information);
+  `delegateSession` logs the binding + the block, so an auditor sees what an agent was given.
+- **d12 — the dispatcher** (`43 §3.3` as canon): `TRIGGER_TABLE` (11 rows, table order =
+  precedence — crisis is the only bypass and preempts everything; a threshold assembles the whole
+  foreground council with the Therapist first; S2/S5 are background on every dispatch and never
+  hold the frame; determinism is seed-invariant), `observationForTrigger` (the state↔row
+  round-trip), the live tool surface (`councilTools.ts`: `summon_council` / `schedule_presence` /
+  `delegate_session` + prompt rules 12–15 — summoning is not yours · role vocabulary is internal ·
+  a bypass is not a scene · no measurement ever), registered on the orchestrator's loop only when
+  a `CouncilIntegration` is provided (byte-identical without), plus the CLI drill
+  `mysterium delegate --summon --trigger <name>`. **G34** certifies table coherence +
+  reachability, crisis precedence, threshold assembly, determinism, and that no trigger can
+  summon a role that holds no player bands.
+
+d3–d10 remain open (d10 is the gating dependency for the phase's differential criterion).
 
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
@@ -370,6 +392,9 @@ memory. **No phase is ratified-but-unbuilt; Phase 13 is planned and not started.
 > `src/core/validation/gates.ts` since then). An agent obeying the root protocol — this file — would
 > have rebuilt finished work. The stale half was the plan's §2 gap table; both are corrected, and §2
 > now carries the closure evidence per gap.
+
+Cite the plan, the three audits, and the ledger — never a phase number spoken from
+memory. **Phase 13 is in progress: d1/d2/d11/d12 built and gated (G32–G34); d3–d10 open.**
 
 **The binding plan is `docs/DEVELOPMENT-PLAN.md`** (order + gates). It is revised in-place; on
 conflict the foundations docs win and the plan is revised.

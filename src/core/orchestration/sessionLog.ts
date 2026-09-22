@@ -21,6 +21,8 @@ export interface ToolCallRecord {
   readonly t: number;
   readonly tool: DelegatedTool;
   readonly ok: boolean;
+  /** 43 §5.6 — why a call refused (a denied band read). A refusal is INFORMATION, never silent. */
+  readonly note?: string;
 }
 
 export interface SessionLog {
@@ -37,6 +39,14 @@ export interface SessionLog {
   readonly proposals: readonly Proposal[];
   readonly signals: SessionSignals;
   readonly budget: Readonly<{ toolCallsUsed: number; toolCallsMax: number; endedBy: DelegationOutcome }>;
+  /**
+   * 43 §5.6 — the standing block this agent was deployed with (mandate / view / boundaries / tools
+   * / session). Recorded on the log so an auditor can see exactly what the agent was given, rather
+   * than inferring it from the transcript.
+   */
+  readonly standing?: readonly string[];
+  /** 43 §4.2 — the personalization scope this role was bound to (`45 §6.1`); absent for S2/S5. */
+  readonly councilScope?: string;
 }
 
 /** FNV-1a — stable id derivation from the delegation seed. */

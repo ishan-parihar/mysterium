@@ -53,6 +53,12 @@ export interface DelegateSessionArgs {
   readonly ledger?: DelegationLedgerState;
   /** P1-LLM: optional LLM-backed choice policy; omit for the deterministic kernel path. */
   readonly choicePolicy?: import('./choicePolicy.js').ChoicePolicy;
+  /**
+   * 43 §5.6 (Phase 13 d11): the role's SCOPED envelope, delivered as the standing block's view.
+   * The caller takes it from `buildEnvelope(...).scopes[AGENT_ROLE_COUNCIL[spec.role]]`; omitted ⇒
+   * the block degrades to "envelope unavailable" (45 §5), never to a false claim.
+   */
+  readonly scope?: import('../personalization/scenarioContext.js').ScopedEnvelope;
 }
 
 export interface DelegateSessionOutcome {
@@ -91,6 +97,7 @@ export async function delegateSession(args: DelegateSessionArgs): Promise<Delega
   const runCtx: DelegationRunContext = {
     sig: args.sig, world: args.world, session: args.session, virtualNow: args.now,
     ...(args.choicePolicy ? { choicePolicy: args.choicePolicy } : {}),
+    ...(args.scope ? { scope: args.scope } : {}),
   };
   const prior = args.ledger ?? emptyLedgerState();
   const seedCfg = { seed: args.seed, now: args.now, sessionIndex: prior.logs.length };

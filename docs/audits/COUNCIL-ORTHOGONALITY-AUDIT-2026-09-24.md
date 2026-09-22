@@ -216,9 +216,28 @@ Ordered; the first two are small and unblock everything else.
 
 ---
 
-## 8. What this audit does NOT claim
+## 9. Build record (2026-09-24 — same day, Phases 13 d11 + d12 built)
 
-- It does not re-run the battery; the last verified run is recorded in `WIRING-CONTRAST-AUDIT-2026-09-23` §6.
+All five §6 steps are implemented and kernel-gated. The evidence:
+
+| Step | Built as | Verified by |
+|---|---|---|
+| 1. Binding | `councilStanding.ts` — `AGENT_ROLE_COUNCIL` (all 18 roles; S2/S5 → `null`), secondary scopes (J1–J5 + therapist also carry `narrative-voice`) | G32 binding totality; `CouncilStanding.test.ts` |
+| 2. Delivery | `buildEnvelope(...).scopes` per row + `healing`; `delegateSession` records `councilScope` + `standing` on the log; `authorizeBandRead` fails closed with reasons; `read_my_scope`/`read_band` as universal read tools | G32 extended; `CouncilStanding.test.ts` (19 tests: authorization matrix, block content, refusal recording, unscoped degradation) |
+| 3. Rows | `healing` in `ROLE_SCOPES` + the orchestrator's steward row (§4 — everything, never speaks) | G32 scope-contract check over all six scopes |
+| 4. Dispatcher | `dispatcher.ts` — `TRIGGER_TABLE` (11 rows, table order = precedence), `dispatchCouncil`, background law (S2/S5 never foreground), `observationForTrigger` (the state↔row round-trip); live surface `councilTools.ts` (`summon_council` / `schedule_presence` / `delegate_session`, rules 12–15) + orchestrator registration (opt-in, byte-identical without); CLI drill `delegate --summon --trigger <name>` | **G34** (table coherence + reachability, crisis precedence, single bypass, threshold assembles the foreground council with Therapist first, determinism, seed-invariance, no band-less role summoned, tool vocabulary in step); `Dispatcher.test.ts` (21 tests incl. end-to-end crisis summons delivering the healing scope) |
+| 5. d10 | still open — the gating dependency this audit identified is now the only one left | recorded in the plan as Phase 13 d10 |
+
+Kernel suite: **34 gates** (G32 role scope, G33 UDV bands, G34 council dispatch). Decisions D1–D4
+ratified as proposed (D1 own healing row; D2 S1 operates / A3 judges; D4 strategy-driven, no LLM
+summons — D3 remains the phased trajectory, unchanged).
+
+---
+
+## 10. What this audit does NOT claim
+
+- It did not re-run the battery at audit time; the verified runs are recorded in
+  `WIRING-CONTRAST-AUDIT-2026-09-23` §6 and, for the d11/d12 build, in §9 above.
 - It does not design the WebUI surfaces for each role (33 owns the render contract).
 - It does not change any ratified law: every ruling above operates inside `43 §4.1`'s L1–L4 and
   `45 §6.1`'s visibility rule.

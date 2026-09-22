@@ -190,7 +190,11 @@ program
   // zero proposals. `--budget` is collision-free; the default (6) completes the
   // largest advisory allowlist (T1/T2: 2 reads + 1 propose) with headroom.
   .option('--budget <n>', 'tool-call budget for the session', (v) => parseInt(v, 10), 6)
-  .option('--seed <seed>', 'deterministic seed', 'cli-delegate');
+  .option('--seed <seed>', 'deterministic seed', 'cli-delegate')
+  // Phase 13 d12: summon by STATE (43 §3.3). Collision-free names, same rule as --budget.
+  .option('--summon', 'let the council dispatcher decide who appears (ignores --role)')
+  .option('--trigger <name>', 'the state to simulate for a summons drill (crisis, depth-plateau, …)')
+  .option('--intent <kind>', 'the encounter intent: game | test | diagnosis', 'game');
 program
   .command('vow [action] [rest...]')
   .allowUnknownOption()
@@ -5230,7 +5234,7 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
   // Flags are read from the raw argv tail via parseDelegateArgs — see that
   // module for the collision rules this surface must obey (--json comes from
   // the ROOT opts; the budget flag must not share a root flag's name).
-  const { role, line, stage, budget, seed } = parseDelegateArgs(argv);
+  const { role, line, stage, budget, seed, summon, trigger, intent } = parseDelegateArgs(argv);
   const asJson = JSON_MODE;
 
   if (!DELEGATE_ROLE_PATTERN.test(role) || !ALL_LINES.includes(line) || !ALL_STAGES.includes(stage)) {
@@ -5266,6 +5270,107 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
     world = createInitialWorldState([]);
   }
   const session = { targetSessionLength: Math.max(1, budget), encountersSoFar: 0, recentLines: [], sessionDurationMs: 0 };
+
+  // ── Phase 13 d12: `--summon` — the DISPATCHER decides who appears (43 §3.3) ──────────────
+  // The council tools are invoked exactly as the live loop invokes them, so this is a real
+  // dispatch (trigger table → roles → delegated mandates → ratification), not a mock. `--trigger
+  // <name>` names the state to simulate for a drill; absent, the quiet state (the ordinary
+  // encounter) is used with `--intent` selecting its Journey-Guide.
+  if (summon) {
+    const { councilIntegrationFrom, handleCouncilTool } = await import('../src/core/assessments/councilTools.js');
+    const { observationForTrigger, ALL_TRIGGERS, dispatchCouncil } = await import('../src/core/orchestration/dispatcher.js');
+    const { ROLE_TOOLSETS } = await import('../src/core/orchestration/types.js');
+    const { AGENT_ROLE_COUNCIL } = await import('../src/core/orchestration/councilStanding.js');
+    const { createOrchestrationServices, buildEnvelope } = await import('../src/core/personalization/sessionRuntime.js');
+
+    if (trigger !== undefined && !(ALL_TRIGGERS as readonly string[]).includes(trigger)) {
+      const detail = `unknown --trigger '${trigger}' (known: ${ALL_TRIGGERS.join(', ')})`;
+      if (asJson) process.stdout.write(JSON.stringify({ ok: false, violation: { code: 'invalid_argument', detail } }) + '\n');
+      else console.error(detail);
+      process.exitCode = 1;
+      return;
+    }
+
+    const observation = observationForTrigger((trigger ?? 'encounter-open') as never, intent);
+    // The same pure decision the tool will make — printed so the CLI shows the dispatcher's ruling
+    // (presence order and foreground), not merely the list of mandates that ran.
+    const decision = dispatchCouncil({ ...observation, seed });
+    const services = createOrchestrationServices();
+    const env = buildEnvelope(
+      services, sig,
+      { usable: [], declaredInterests: [] },
+      { line, stage, modality: 'ScenarioChoice' as never },
+      `CLI summons (${trigger ?? 'quiet state'})`, [], 1_000_000, null,
+    );
+
+    let curSig = sig;
+    let curWorld = world;
+    let ledger = emptyLedgerState();
+    const proposals: import('../src/core/orchestration/types.js').Proposal[] = [];
+
+    const integration = councilIntegrationFrom({
+      observation,
+      seed,
+      cell: { line: line as never, stage: stage as never },
+      plannedRoles: ['therapist', 'J1', 'J4', 'T1', 'A2'],
+      run: async (summoned) => {
+        const spec: import('../src/core/orchestration/types.js').DelegationSpec = {
+          role: summoned,
+          ...(['J1', 'J2', 'J3', 'J4', 'J5'].includes(summoned) ? { cell: { line: line as never, stage: stage as never } } : {}),
+          purpose: `CLI summons (${trigger ?? 'quiet state'}): ${summoned} mandate`,
+          readProjection: new Set(['corpus.moduleSpec'] as const),
+          toolset: new Set(ROLE_TOOLSETS[summoned]),
+          budget: { toolCallsMax: budget, virtualMsMax: 600_000 },
+        };
+        const binding = AGENT_ROLE_COUNCIL[summoned];
+        const scope = binding ? env.scopes[binding] : undefined;
+        const out = await delegateSession({
+          spec, sig: curSig, world: curWorld, session, seed, now: 1_000_000, ledger,
+          ...(scope ? { scope } : {}),
+        });
+        if (out.ok) {
+          curSig = out.sig;
+          curWorld = out.world;
+          ledger = out.ledger;
+          proposals.push(...(out.result?.proposals ?? []));
+        }
+        return out;
+      },
+    });
+
+    const res = await handleCouncilTool('summon_council', '{}', { integration });
+    const rat = ratifyProposalsTool({ proposals, sig: curSig, world: curWorld, now: 1_100_000 });
+    const sessions = (res.payload.sessions as Record<string, unknown>[] | undefined) ?? [];
+
+    if (asJson) {
+      process.stdout.write(JSON.stringify({
+        ok: res.ok, summon: true, trigger: decision.trigger, strategy: decision.strategy,
+        ...(decision.bypass ? { bypass: true } : {}),
+        presence: decision.roles, foreground: decision.foreground,
+        summons: res.payload.summons, background: decision.background, sessions,
+        ratification: rat.dispositions,
+      }) + '\n');
+    } else {
+      console.log(`\n  ${chalk.bold('Council summons')} — trigger ${chalk.cyan(decision.trigger)} (${decision.strategy})`);
+      console.log(`  presence: ${decision.roles.join(' → ')}${decision.foreground ? chalk.dim(` · foreground ${decision.foreground}`) : ''}`);
+      if (decision.bypass) console.log(`  ${chalk.yellow('⚠ bypass')} — the frame stops being a game; speak plainly.`);
+      for (const s of sessions) {
+        const roleName = String(s.role ?? '?');
+        const outcome = String(s.outcome ?? '?');
+        const reason = s.reason ? chalk.dim(` — ${String(s.reason)}`) : '';
+        const kinds = Array.isArray(s.proposals) && s.proposals.length > 0 ? chalk.dim(` · ${(s.proposals as string[]).join(', ')}`) : '';
+        console.log(`  ${outcome === 'skipped' || outcome === 'refused' ? chalk.yellow('·') : chalk.green('✓')} ${roleName.padEnd(10)} ${outcome}${reason}${kinds}`);
+      }
+      console.log(`  ${chalk.dim(`background: ${decision.background.join(', ') || '—'}`)}`);
+      for (const d of rat.dispositions) {
+        console.log(`  ${d.accepted ? chalk.green('✓') : chalk.yellow('·')} ${d.kind}: ${chalk.dim(d.reason)}`);
+      }
+      if (trigger === undefined) {
+        console.log(`\n  ${chalk.dim('Drill another state:')} ${chalk.bold('mysterium delegate --summon --trigger <crisis|threshold-proximity|depth-plateau|…>')}`);
+      }
+    }
+    return;
+  }
 
   const spec: import('../src/core/orchestration/types.js').DelegationSpec = {
     role,

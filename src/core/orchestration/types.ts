@@ -133,6 +133,9 @@ export const ROLE_TOOLSETS: Readonly<Record<AgentRole, readonly DelegatedTool[]>
 /** All delegated tool names (the union above, derived). */
 export type DelegatedTool = (typeof ALL_DELEGATED_TOOLS)[number];
 
+/** The council visibility scopes (45 §6.1) — re-exported so orchestration can bind roles to them. */
+export type { CouncilRole, UdvBand } from '../personalization/scenarioContext.js';
+
 export const ALL_DELEGATED_TOOLS = [
   'get_concept', 'get_prereq_gaps', 'propose_mastery_evidence',
   'propose_retention_estimate', 'propose_trajectory',
@@ -145,7 +148,24 @@ export const ALL_DELEGATED_TOOLS = [
   'read_identity_consent', 'assemble_healing_context',
   'propose_alignment_adjustment', 'consent_inform',
   'run_benchmark_tier', 'registry_health',
+  // 43 §5.6 (2026-09-24): the universal READ surface. These two are available to EVERY role
+  // regardless of its act-toolset, because knowing one's own mandate and view is not a privilege
+  // — it is the condition of coherent long-running work. They are excluded from ROLE_TOOLSETS on
+  // purpose: the act surface stays role-specific, the read surface is universal.
+  'read_my_scope', 'read_band',
 ] as const;
+
+/**
+ * The universal read tools (43 §5.6) — granted to every role in addition to its own toolset.
+ * Read-only by law: neither tool may write state (F1/R2), and a `read_band` refusal is recorded
+ * rather than silent (a refusal is information — it shows a role's view being stretched).
+ */
+export const UNIVERSAL_READ_TOOLS: readonly DelegatedTool[] = ['read_my_scope', 'read_band'];
+
+/** The tools a role may call: its own allowlist plus the universal read surface (43 §4.3/§5.6). */
+export function isToolAllowedFor(role: AgentRole, tool: DelegatedTool): boolean {
+  return ROLE_TOOLSETS[role].includes(tool) || UNIVERSAL_READ_TOOLS.includes(tool);
+}
 
 /** Proposal kinds each delegated tool may emit (ratification dispatch). */
 export const TOOL_PROPOSAL_KINDS: Readonly<Record<string, Proposal['kind']>> = {
