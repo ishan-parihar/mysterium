@@ -52,7 +52,7 @@ describe('Validation benchmark (CI tier)', () => {
     // 26 → 27 with G27 authored-seed stage coherence (46 §11 / 44 — the authored seeding tier);
     // 27 → 31 with the Phase 11/12 memory gates (G28 checkpoint persistence, G29 preference
     // intake firewall, G30 verdict completeness, G31 retrieval firewall — 22 §7.5, 47 §8, 43 §5.5, 48 §5).
-    expect(suite.results.length).toBe(31);
+    expect(suite.results.length).toBe(33);
     for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }

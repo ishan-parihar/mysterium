@@ -140,6 +140,24 @@ the runtime check organs call; only a test calls it. The register's content and 
 reversal tests are real, but the *enforcement* is a test-time assertion, so a future mechanism
 activated without registration would be caught only if a test happened to enumerate it.
 
+**W11 — The pool is CELL-DETERMINISTIC: the bands reach the UDV but cannot discriminate (High,
+found while building d1).** The candidate library is 2240 candidates over 448 cells — **exactly five
+per cell** (`world`, `scenario`, `scenario-authored`, `world-authored`, `npc-authored`, 448 each). A
+cell-targeted pool therefore returns the same five refs for every player, and the ordering within
+five fixed items does not move: supplying purpose, analogy or a declared interest leaves
+`context.pooled` byte-identical (measured, 2026-09-23). Personalization today reaches the prompt only
+as the interest-echo prose — content *selection* is decided entirely by the encounter's cell.
+
+This is the deeper form of W4/W5 and it is the one finding that blocks the architecture's stated
+purpose (`45 §5`'s "the UDV is the retrieval key"): *a retrieval key that orders a fixed five is not
+a retrieval key.* The cause is content volume, not code: one authored rendering per (cell, tier). The
+fix is **candidate multiplicity per cell** — several renderings per cell, distinguished by domain /
+preference / register, so the UDV's bands decide WHICH rendering the player meets (Phase 13 d10).
+
+The differential criterion of Phase 13 therefore reports honestly as unmet today: the bands are
+wired and gated (G33), and the criterion closes when d10 lands. Locked as a gap in
+`tests/personalization/Phase13Wiring.test.ts` so the change that closes it is visible in CI.
+
 **W10 — No doc names the live seam (Low).** `sessionRuntime.ts` is the canonical envelope builder
 after the memory audit's F0 fix, but no foundation doc identifies it; `envelopeRuntime`'s header
 still claims to be "the missing wiring". A replayed agent would wire the wrong module.
@@ -178,6 +196,7 @@ both are seam work on the same surfaces. Content-adjacent items (d5, d6) are las
 | **d7** | **Resolve the composition engine's status** (W6; 46 §6.1/§7). Either the facet-store compiler is routed through `compose()`/`buildLibraryViews` (a gate asserts the store is the engine's output) or the doc marks them authoring-only. No third option. | `scripts/compile-facets.ts` or `46` | One status, documented and gated — the engine is either load-bearing or declared |
 | **d8** | **Doc status marks** (48 §4, 45 §7.3, 46 §11, plus a note naming `sessionRuntime` as the live seam in 45/48). Status-mark seam-only items in place; the doc⇄code loop runs in the same commit as the code. | foundations 45/46/48 | No present-tense claim in a foundation doc is unbacked by code or explicitly marked as seam/provisional |
 | **d9** | **Memory-audit carry-overs**: MemoryPage render budget cap (P1), sidecar session journal for crash-between-`sessionEnd`-and-save (P3), firewall randomized property sweep (P3). | `memoryPage`, `sessionRuntime`, `retrievalFirewall` | Budget bounded under a maximal synthetic feed; journal replays a killed session; property sweep green over N seeds |
+| **d10** | **Candidate multiplicity per cell (W11 — the finding that makes personalization real).** The library holds one rendering per (cell, tier), so a cell-targeted pool returns a fixed five and the UDV's bands have nothing to order. Author/admit N renderings per cell — variants distinguished by domain, register, modality emphasis and NPC voice — and let the pool rank them by the UDV (interests, purpose, analogy, preference). This is content work plus one ranking rule, not new architecture; it is what makes `45 §5`'s "the UDV is the retrieval key" true. | `candidateLibrary`, authored seed tiers, `pooling.ts` | The Phase 13 differential criterion holds: swapping ONE band changes `context.pooled`; the library is asserted at >5 candidates per cell; gates G27/G33 still green |
 
 **Gates:** G32 (role scope at the live seam), G33 (UDV band population + consent), G34
 (engagement-mechanism fail-closed), plus G31 extended with production recall traffic. Kernel suite

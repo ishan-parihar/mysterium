@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 planned (live-surface wiring); memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 in progress (d1/d2 built, G32–G33); memory infrastructure live (G28–G31)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All build phases through 12** are **implemented and gated** — the kernel gate suite
@@ -334,10 +334,21 @@ traced every ratified personalization / memory / world surface to its production
 carries only **3 of its 8 declared bands** (so purpose, analogy, preference and observed evidence
 change nothing yet) and that the council-role scoping table (`45 §6.1`) never executes. Nothing is
 broken — every dark surface degrades quiet by law — which is why it went unnoticed. **Phase 13
-(`docs/DEVELOPMENT-PLAN.md §4`) is the planned response**: populate the ratified bands, run
-`scopeForRole` at the live seam, put retrieval + telemetry + probes + the engagement register on
-their production paths, and consolidate the stubbed `envelopeRuntime` into the live
-`sessionRuntime`. Gates G32–G34 are defined there.
+(`docs/DEVELOPMENT-PLAN.md §4`) is the response**: populate the ratified bands, run `scopeForRole`
+at the live seam, put retrieval + telemetry + probes + the engagement register on their production
+paths, and consolidate the stubbed `envelopeRuntime` into the live `sessionRuntime`.
+
+**d1 + d2 are BUILT (2026-09-23) with gates G32/G33** (kernel 31 → 33): every remaining UDV band
+now reaches the live UDV from a real store (`bandSources.ts` — vows + profile goals → purpose,
+profile + feed durations → preference, **analogy derived at the seam** so `pooling.ts:69`'s already-live
+reader finally has a producer, engagement evidence → observed), and all five `45 §6.1` council roles
+are scoped on the live path with the assessment role structurally blind (`assessmentScopeLine`).
+**Building it surfaced the audit's most important finding (W11):** the candidate library holds
+exactly five renderings per cell, so a cell-targeted pool returns the same five refs for every
+player and the bands cannot discriminate — content selection is still decided by the encounter's
+cell. **d10 (candidate multiplicity per cell) is what makes personalization real**, and the phase's
+differential criterion closes with it; the gap is locked in `tests/personalization/Phase13Wiring.test.ts`.
+d3–d10 remain open.
 
 Cite the plan, the three audits, and the ledger — never a phase number spoken from
 memory. **No phase is ratified-but-unbuilt; Phase 13 is planned and not started.**

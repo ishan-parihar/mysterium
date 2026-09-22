@@ -24,7 +24,7 @@ import type { Line } from '../domain/Line.js';
 import type { KnowledgeState } from '../curriculum/types.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { createSignificator } from '../domain/Significator.js';
+import { createSignificator, type Significator } from '../domain/Significator.js';
 import { createInitialWorldState } from '../engines/CandidateGeneration.js';
 import { ALL_LINES } from '../domain/Line.js';
 import { ALL_STAGES } from '../domain/Stage.js';
@@ -38,7 +38,8 @@ import stageHolonsJson from '../world/data/stage-holons.json';
 import conceptDraftsJson from '../data/concept-drafts.json';
 import type { ConceptDraftIndex } from '../data/ConceptDraftIndex.js';
 // Phase 11/12 memory gates (G28–G31): the surfaces they certify.
-import { createOrchestrationServices, sessionEnd, captureCheckpoint, restoreCheckpoint, type RuntimeCheckpoint } from '../personalization/sessionRuntime.js';
+import { createOrchestrationServices, sessionEnd, captureCheckpoint, restoreCheckpoint, buildEnvelope, scopeContractViolations, assessmentScopeLine, type RuntimeCheckpoint } from '../personalization/sessionRuntime.js';
+import { purposesFromVows, analogyFromInterests, preferenceFromHistory, observedFromEngagement, DEFAULT_PREFERENCE } from '../personalization/bandSources.js';
 import type { Holon } from '../world/Holon.js';
 import type { Proposal } from '../orchestration/types.js';
 import { grantDeclaredPreference, withdrawDeclaredPreference, activeDeclaredInterests, activeDeclaredAversions, createEmptyIdentityProfile } from '../domain/IdentityProfile.js';
@@ -867,6 +868,8 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   results.push(validatePreferenceIntakeFirewall());
   results.push(validateVerdictCompleteness());
   results.push(validateRetrievalFirewall());
+  results.push(validateRoleScopeAlignment());
+  results.push(validateUdvBandPopulation());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
@@ -1651,6 +1654,167 @@ export function validateRetrievalFirewall(): GateResult {
     const ok = createEmbeddingProvider(EMBEDDING_MODEL_PIN, () => [1]);
     if (ok.modelId !== EMBEDDING_MODEL_PIN) return mk('pin round-trip failed');
     return { gate: 'G31 retrieval firewall', passed: true, hard: true, details: 'R1 raw dropped, R3 Veil-filtered, R4 isolated, clean passes; pin enforced (MY-RG-0032)' };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G32 — Council role scope at the LIVE seam (45 §6.1, Phase 13 d2). The role table is
+// enforced by construction in `scopeForRole`; this gate proves the LIVE envelope produces
+// all five scopes, that each carries exactly its declared bands, and that a scope violating
+// its contract renders as NOTHING rather than as a partial leak (fail-closed).
+// ---------------------------------------------------------------------------
+
+export function validateRoleScopeAlignment(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G32 council role scope', passed: false, hard: true, details: m });
+  try {
+    const services = createOrchestrationServices();
+    const env = buildEnvelope(
+      services,
+      g13Sig(),
+      {
+        usable: ['pronouns'],
+        declaredInterests: ['music'],
+        aversions: ['violence'],
+        // A purpose band distinct from the encounter's purpose: the assessment line must carry the
+        // ENCOUNTER's target (46 §11 inv 5) and never the player's own aim statement.
+        bands: { purposes: [{ kind: 'practice-vow', statement: 'sit for ten minutes each morning' }] },
+      },
+      { line: 'Cognitive', stage: 'Amber', modality: 'ScenarioChoice' as never },
+      'a practice step toward steadiness',
+      [],
+      1000,
+      null,
+    );
+    const roles = ['scenario-catalyst', 'narrative-voice', 'assessment', 'curriculum-teacher', 'safety'] as const;
+    for (const role of roles) {
+      const scope = env.scopes[role];
+      if (!scope) return mk(`no scope produced for ${role} — the live seam skipped a council role`);
+      if (scope.role !== role) return mk(`scope for ${role} reports role ${scope.role}`);
+      const bad = scopeContractViolations(scope);
+      if (bad.length > 0) return mk(`${role} received undeclared band(s): ${bad.join(', ')}`);
+    }
+    // The table's own blindness claims, as absences rather than nulls.
+    if (env.scopes.assessment.interests !== undefined) return mk('45 §6.1 violated: assessment received the interest graph');
+    if (env.scopes.assessment.purpose !== undefined) return mk('45 §6.1 violated: assessment received purpose statements');
+    if (env.scopes.assessment.analogy !== undefined) return mk('45 §6.1 violated: assessment received analogy internals');
+    if (env.scopes.safety.interests !== undefined) return mk('45 §6.1 violated: safety received the interest graph');
+    // The live consumer renders the assessment line, and that line carries no affective vocabulary.
+    const line = assessmentScopeLine(env.scopes.assessment);
+    if (line === null) return mk('the assessment scope rendered no line at all (the scope is lawful)');
+    if (!line.includes('[ASSESSMENT SCOPE]')) return mk('the assessment line lost its scope marker');
+    // The affective/aim vocabulary must be absent; the ENCOUNTER's own target purpose is legitimate
+    // (46 §11 inv 5 — the catalyst's purpose never comes from the UDV).
+    for (const banned of ['music', 'violence', 'sit for ten minutes each morning']) {
+      if (line.includes(banned)) return mk(`assessment line leaked player content ("${banned}")`);
+    }
+    if (!line.includes('a practice step toward steadiness')) return mk('assessment line dropped the encounter target purpose');
+    // A non-assessment role must be REFUSED, not served the same line.
+    if (assessmentScopeLine(env.scopes.safety) !== null) return mk('a non-assessment scope was served the assessment line');
+    // Injection: a hand-assembled scope that carries a band its role must not receive renders as
+    // NOTHING — a violation produces absence, never a partial leak.
+    const injected = { ...env.scopes.assessment, analogy: { fluentDomains: [{ domain: 'music', weight: 1 }], landings: [], repels: [] } } as never;
+    if (scopeContractViolations(injected).length === 0) return mk('injection survived: an undeclared band reported no violation');
+    if (assessmentScopeLine(injected) !== null) return mk('injection survived: a violating scope still rendered an assessment line');
+    return { gate: 'G32 council role scope', passed: true, hard: true, details: 'five roles scoped at the live seam; declared bands exact; violating scope renders null (fail-closed)' };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+/** The gate fixture significator: every line at the encounter's target altitude. */
+function g13Sig(): Significator {
+  const altitudes = Object.fromEntries(ALL_LINES.map((l) => [l, 'Amber' as Stage])) as Record<Line, Stage>;
+  return createSignificator('g13-probe', altitudes, 'Amber');
+}
+
+// ---------------------------------------------------------------------------
+// G33 — UDV band population at the live seam (45 §3, Phase 13 d1). The audit found the live
+// UDV carrying 3 of 8 bands. This gate proves each band reaches the projection, that the
+// declared statement outranks an observation of the same topic (47 §3's field-of-record rule),
+// and that an empty input degrades to the ratified defaults rather than to undefined.
+// ---------------------------------------------------------------------------
+
+export function validateUdvBandPopulation(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G33 UDV band population', passed: false, hard: true, details: m });
+  try {
+    // Band assembly from real sources.
+    const purposes = purposesFromVows([
+      { text: 'sit for ten minutes each morning', kind: 'practice', status: 'active' },
+      { text: 'finished last month', kind: 'learning', status: 'fulfilled' },
+    ]);
+    if (purposes.length !== 1) return mk(`purposesFromVows kept ${purposes.length} purposes (expected 1: a non-active vow is not an aim)`);
+    if (purposes[0]!.kind !== 'practice-vow') return mk('vow kind → purpose kind mapping drifted');
+
+    const declared = [{ topic: 'music', weight: 0.9, depth: 'fluent' as const, source: 'declared' as const }];
+    const analogy = analogyFromInterests(declared, ['violence']);
+    if (analogy.fluentDomains.length !== 1 || analogy.fluentDomains[0]!.domain !== 'music') return mk('the analogy band derived no fluent domain from the interest graph');
+    if (analogy.repels[0] !== 'violence') return mk('the analogy band dropped the aversion veto list');
+
+    const pref = preferenceFromHistory({
+      profile: { metaphorPreference: 'botanical', intensity: 'intense' },
+      sessions: [{ modality: 'ScenarioChoice' as never, durationMs: 40 * 60_000 }, { modality: 'ScenarioChoice' as never, durationMs: 20 * 60_000 }],
+    });
+    if (pref.difficultyAppetite !== 'steep') return mk('declared intensity did not reach the difficulty appetite');
+    if (pref.sessionToleranceMin !== 30) return mk(`median tolerance is ${pref.sessionToleranceMin}, expected 30 (median, not mean)`);
+    if (pref.aestheticLeanings[0] !== 'botanical') return mk('metaphor preference did not reach the aesthetic band');
+    if (pref.modalityMix['ScenarioChoice' as never] !== 1) return mk('modality mix normalization drifted');
+
+    const observed = observedFromEngagement([{ topic: 'music', weight: 0.9 }, { topic: 'gardens', weight: 0.3 }]);
+    if (observed[0]!.source !== 'observed') return mk('observed interests lost their source tag (47 §3)');
+
+    // The live seam must carry them into the projection: declared outranks observation.
+    const services = createOrchestrationServices();
+    const env = buildEnvelope(
+      services,
+      g13Sig(),
+      {
+        usable: ['pronouns'],
+        declaredInterests: ['music'],
+        aversions: ['violence'],
+        bands: {
+          purposes,
+          analogy,
+          preference: pref,
+          constraints: { accessibility: ['dyslexia-friendly'] },
+          observedInterests: observed,
+        },
+      },
+      { line: 'Cognitive', stage: 'Amber', modality: 'ScenarioChoice' as never },
+      'a practice step toward steadiness',
+      [],
+      1000,
+      null,
+    );
+    const context = env.context;
+    if (!context) return mk('no envelope context produced');
+    const udv = context.udv;
+    if (udv.purpose.length !== 1) return mk('the purpose band did not reach the UDV');
+    if (udv.analogy.fluentDomains.length !== 1) return mk('the analogy band did not reach the UDV');
+    if (udv.preference.sessionToleranceMin !== 30) return mk('the preference band did not reach the UDV');
+    if (udv.constraints.accessibility[0] !== 'dyslexia-friendly') return mk('the constraints band did not reach the UDV');
+    const music = udv.interests.filter((i) => i.topic === 'music');
+    if (music.length !== 1) return mk(`declared/observed precedence failed: ${music.length} entries for a topic that is both declared and observed`);
+    if (music[0]!.source !== 'declared') return mk('the observation outranked the declared statement (47 §3 violated)');
+    if (!udv.interests.some((i) => i.topic === 'gardens' && i.source === 'observed')) return mk('the observed-only topic never reached the UDV');
+
+    // Degradation: no bands supplied → ratified defaults, never undefined.
+    const bare = buildEnvelope(
+      services,
+      g13Sig(),
+      undefined,
+      { line: 'Cognitive', stage: 'Amber', modality: 'ScenarioChoice' as never },
+      'a practice step toward steadiness',
+      [],
+      1000,
+      null,
+    );
+    if (!bare.context) return mk('the envelope did not degrade to a valid context with no identity');
+    if (bare.context.udv.preference.sessionToleranceMin !== DEFAULT_PREFERENCE.sessionToleranceMin) return mk('preference band did not degrade to its default');
+    if (bare.context.udv.analogy.fluentDomains.length !== 0) return mk('analogy band did not degrade to empty');
+    if (bare.context.udv.constraints.accessibility.length !== 0) return mk('constraints band did not degrade to empty');
+    return { gate: 'G33 UDV band population', passed: true, hard: true, details: 'five bands reach the live UDV; declared outranks observed; empty input degrades to ratified defaults' };
   } catch (e) {
     return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
   }

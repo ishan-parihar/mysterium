@@ -475,7 +475,40 @@ pooling (designed feature gap, needs evidence-ledger wiring); the embedding tier
 consumer (by design — the local floor is the default).
 
 
-### Phase 13 — Live-Surface Wiring & Council Alignment (planned 2026-09-23) — ⬜ NOT STARTED
+### Phase 13 — Live-Surface Wiring & Council Alignment (planned 2026-09-23) — ◐ d1/d2 BUILT, d3–d10 open
+
+**Build record (2026-09-23, d1+d2).** The two critical-path deliverables landed with gates G32/G33:
+
+- **d1 — UDV band population.** New `personalization/bandSources.ts` assembles every remaining band
+  from a real store: `purposesFromVows` (39's ACTIVE vows only — a fulfilled/lapsed vow is no longer
+  an aim) + `purposesFromGoals` (the profile's self-declared goals, one aim band from two sources),
+  `analogyFromInterests` (**derived at the seam** — this is what turns 45 §5.4's analogical
+  resonance into a live ranking input, since `pooling.ts:69` already consumed it), `preferenceFromHistory`
+  (median session tolerance — median, not mean, so one abandoned 2-minute session cannot redefine
+  tolerance — normalized modality mix, declared intensity → appetite, metaphor taste → aesthetic
+  leanings) and `observedFromEngagement` (weight→depth ladder, tagged `source: 'observed'`).
+  `buildEnvelope` merges the caller's partial declaration OVER the feed-evidenced tolerance (the
+  feed's own session durations are the in-seam source) and passes all five to `projectUdv`. The CLI
+  supplies the vows, profile goals and profile preferences.
+- **d2 — Council role scoping live.** `buildEnvelope` now returns `scopes` — all five 45 §6.1 roles,
+  built by `scopeForRole` — plus `scopeContractViolations` (fail-closed check for hand-assembled
+  scopes) and `assessmentScopeLine`, the live consumer: the assessment role receives its banded
+  placement + the encounter's cell + the encounter's purpose, and **never** the interest graph,
+  purpose statements or analogy internals. The orchestrator appends that line to its
+  assessment-facing prompt section, so the metric-bearing role is structurally blind on the live
+  path rather than by convention (42 §1.1).
+- **Gates:** **G32** (five roles scoped at the live seam; declared bands exact; an injected
+  undeclared band renders as NOTHING) and **G33** (five bands reach the live UDV; declared outranks
+  observed for the same topic; empty input degrades to the ratified defaults). Kernel 31 → 33.
+- **Tests:** `tests/personalization/Phase13Wiring.test.ts` (19). Suite 1401 → 1420.
+
+**The differential criterion did NOT close — and the reason is the audit's most important finding
+(W11).** The candidate library is 2240 over 448 cells: **exactly five per cell**, one per tier. A
+cell-targeted pool therefore returns the same five refs for every player, so supplying purpose,
+analogy or a declared interest leaves `context.pooled` byte-identical (measured). The bands are
+wired and gated, but a retrieval key that orders a fixed five is not yet a retrieval key — content
+selection is still decided by the encounter's cell. **d10 (candidate multiplicity per cell) is what
+closes the criterion**, and the gap is locked in the test file so its closure is visible in CI.
 
 Ratified by `docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md`, which traced every ratified
 personalization / memory / world surface to its production callers and found **nine architected

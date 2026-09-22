@@ -28,7 +28,8 @@ function getFacetStore(): FacetStore {
   return facetStoreSingleton;
 }
 import type { OrchestrationServices, PersonalizationBlock } from '../personalization/sessionRuntime.js';
-import { buildEnvelope, holonDigestBlock, recordCoherenceInsight, sessionEnd } from '../personalization/sessionRuntime.js';
+import { buildEnvelope, holonDigestBlock, recordCoherenceInsight, sessionEnd, assessmentScopeLine } from '../personalization/sessionRuntime.js';
+import type { UdvBandSources } from '../personalization/bandSources.js';
 import type { OwnerWorkerPoolState } from '../world/ownerWorkerPool.js';
 import { queryLLMWithTools, queryLLMStream } from '../../infra/llm/LLMClient.js';
 import { parseConsequence } from '../../infra/llm/ConsequenceParser.js';
@@ -239,6 +240,10 @@ export class AgenticOrchestrator {
   private lastDialecticPair: readonly [string, string] | null = null;
   private lastPolarityDirection: 'sto' | 'sts' | 'neutral' | undefined;
 
+  /** 45 §6.1 (Phase 13 d2): the assessment role's scoped line for this encounter, set by
+   *  `buildContextInput`'s personalization pass and appended to the assessment prompt section. */
+  private assessmentScopeLine: string | null = null;
+
   /**
    * QUALITY-WIRING (MY-AD-0030): the developmental agenda for the current significator, computed
    * once per session start and refreshed when the significator is replaced. Derived from the
@@ -317,7 +322,15 @@ export class AgenticOrchestrator {
      * identity fields are usable and what interests/aversions were declared. Absent → the UDV is
      * empty-but-valid (degradation, never a block).
      */
-    identity?: { usable?: readonly string[]; declaredInterests?: readonly string[]; aversions?: readonly string[] };
+    identity?: {
+      usable?: readonly string[];
+      declaredInterests?: readonly string[];
+      aversions?: readonly string[];
+      /** Phase 13 d1 (45 §3): the remaining UDV bands, assembled by the caller from its own
+       *  stores — active vows (purpose), profile + play history (preference), engagement evidence
+       *  (observed). Absent bands degrade to their ratified defaults. */
+      bands?: UdvBandSources;
+    };
   }) {
     this.encounter = params.encounter;
     this.significator = params.significator;
@@ -566,7 +579,8 @@ export class AgenticOrchestrator {
       // RuntimeLoop (45 §5/§6 + 22 §7.4): the personalization envelope + the holon's memory.
       // Both degrade to absent — never block a session.
       ...(() => {
-        const { block, digest, seed, worldPlace, continuity } = this.personalizationContext();
+        const { block, digest, seed, worldPlace, continuity, assessmentScope } = this.personalizationContext();
+        this.assessmentScopeLine = assessmentScope;
         return {
           ...(block ? { personalizationBlock: block } : {}),
           ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
@@ -578,8 +592,9 @@ export class AgenticOrchestrator {
     };
     const context = buildContext(contextInput);
 
-    // Build assessment module context for the LLM
-    const assessmentContext = this.module ? this.buildAssessmentContext(this.module) : '';
+    // Build assessment module context for the LLM. The scoped line (45 §6.1) is appended here:
+    // the assessment role receives its banded placement + the cell, and never the affective bands.
+    const assessmentContext = `${this.module ? this.buildAssessmentContext(this.module) : ''}${this.assessmentScopeLine ? `\n${this.assessmentScopeLine}\n` : ''}`;
 
     let shadowContext = '';
     if (this.encounter.executionMode === 'shadow') {
@@ -887,7 +902,8 @@ export class AgenticOrchestrator {
       })(),
       // RuntimeLoop (45 §5/§6 + 22 §7.4): same envelope + memory as the main path.
       ...(() => {
-        const { block, digest, seed, worldPlace, continuity } = this.personalizationContext();
+        const { block, digest, seed, worldPlace, continuity, assessmentScope } = this.personalizationContext();
+        this.assessmentScopeLine = assessmentScope;
         return {
           ...(block ? { personalizationBlock: block } : {}),
           ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
@@ -2462,11 +2478,13 @@ ${probes}${rubric}
     dialecticPair: readonly [string, string] | null;
     /** [CROSS-SESSION MEMORY] lines (48 §3) — banded, Veil-filtered at the envelope seam. */
     continuity: readonly string[];
+    /** 45 §6.1 — the assessment role's scoped line (Phase 13 d2). Null when no services/scope. */
+    assessmentScope: string | null;
   } {
-    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [] };
+    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null };
     try {
       const [line] = this.encounter.moduleRef.split(':') as [Line, ...unknown[]];
-      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context, continuity } = buildEnvelope(
+      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context, continuity, scopes } = buildEnvelope(
         this.orchestration,
         this.significator,
         this.identity,
@@ -2501,9 +2519,15 @@ ${probes}${rubric}
         ? [context.poles.surface.id, context.poles.structure.id]
         : null;
       this.lastDialecticPair = dialecticPair;
-      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair, continuity };
+      // 45 §6.1 (Phase 13 d2): this encounter's sub-agents receive their DECLARED band subset.
+      // The scenario-catalyst renders what the player sees; the assessment role gets bands + the
+      // cell ONLY, so the drive probes can never be conditioned on the player's affinities.
+      const assessmentScope = assessmentScopeLine(
+        scopes.assessment,
+      );
+      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair, continuity, assessmentScope };
     } catch {
-      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [] };
+      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null };
     }
   }
 

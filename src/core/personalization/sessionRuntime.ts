@@ -34,7 +34,8 @@ import type { LogRef, Proposal, SessionSignals } from '../orchestration/types.js
 import { projectUdv } from './udv.js';
 import { pool } from './pooling.js';
 import type { PoolCandidate } from './pooling.js';
-import { buildScenarioContext, type ScenarioContext, type PooledRefs } from './scenarioContext.js';
+import { buildScenarioContext, scopeForRole, ROLE_SCOPES, type ScenarioContext, type PooledRefs, type ScopedEnvelope, type CouncilRole } from './scenarioContext.js';
+import { deriveBandSources, sessionDurationsFromFeed, preferenceFromHistory, type UdvBandSources } from './bandSources.js';
 import { initialTopicTagResolver, seedCandidateLibrary, deriveNpcCandidates } from './candidateLibrary.js';
 import type { PolarityStateMap } from './dialecticEngine.js';
 import { SCENARIO_SEEDS, type ScenarioSeed } from './scenarioSeeds.js';
@@ -105,6 +106,14 @@ export interface IdentityProjectionInput {
   readonly usable?: readonly string[];
   readonly declaredInterests?: readonly string[];
   readonly aversions?: readonly string[];
+  /**
+   * The remaining UDV bands (45 §3), assembled by the caller from its own stores — Phase 13 d1.
+   * `purposes` from 39's active vows (`purposesFromVows`), `preference` from the profile +
+   * play history (`preferenceFromHistory`), `observedInterests` from engagement
+   * (`observedFromEngagement`), `constraints` from consented NFRs. Omit any of them and the band
+   * degrades to its ratified default (45 §5); the analogy band is derived at this seam when absent.
+   */
+  readonly bands?: UdvBandSources;
 }
 
 /** The LLM-facing personalization block — qualitative prose only, no numbers, no stage labels. */
@@ -152,6 +161,12 @@ export function buildEnvelope(
   /** The runtime coherence verdict: `blocked` means the holon was routed OUT of the prompt. */
   readonly coherenceBlocked: boolean;
   readonly coherenceDefects: readonly CoherenceDefect[];
+  /**
+   * 45 §6.1 council alignment, per role — Phase 13 d2. Every role receives its DECLARED band
+   * subset and nothing else (structural absence, not nulling). The scenario-catalyst renders the
+   * encounter; the assessment role is blind to interests/purpose/analogy by construction.
+   */
+  readonly scopes: Readonly<Record<CouncilRole, ScopedEnvelope>>;
 } {
   // Consent-checked usable fields — the projector re-checks, but the caller declares the set.
   const usableFields = new Set(identity?.usable ?? []);
@@ -171,6 +186,32 @@ export function buildEnvelope(
     if (st) stageOrdinals[line] = ladder.indexOf(st);
   }
 
+  // Phase 13 d1 — the remaining UDV bands (45 §3). Every source is real engine state:
+  //   purpose      ← 39's active vows, supplied by the caller (`purposesFromVows`)
+  //   preference   ← the caller's profile/history, or the sessions already on the feed
+  //                  (median duration → `sessionToleranceMin`; the in-seam source)
+  //   analogy      ← DERIVED here from the interest graph + aversions (45 §5.4; `pooling` reads it)
+  //   constraints  ← the caller's consented NFRs
+  //   observed     ← the caller's engagement evidence (ranking weight only, 47 §3)
+  // A caller's partial declaration merges OVER the feed-evidenced tolerance: what the player
+  // declared beats what can be inferred, and an omitted field is evidenced rather than defaulted.
+  const feedPreference = preferenceFromHistory({ sessions: sessionDurationsFromFeed(services.feed.read('planning')) });
+  const declaredPreference = identity?.bands?.preference;
+  const bands = deriveBandSources({
+    declaredInterests,
+    aversions: identity?.aversions,
+    purposes: identity?.bands?.purposes,
+    preference: {
+      ...(declaredPreference?.sessionToleranceMin === undefined
+        ? { sessionToleranceMin: feedPreference.sessionToleranceMin }
+        : {}),
+      ...(declaredPreference ?? {}),
+    },
+    constraints: identity?.bands?.constraints,
+    observedInterests: identity?.bands?.observedInterests,
+    analogy: identity?.bands?.analogy,
+  });
+
   const udv = projectUdv({
     usableFields,
     declaredInterests,
@@ -178,7 +219,11 @@ export function buildEnvelope(
       stageOrdinals: stageOrdinals as never,
       activeShadowQuadrants: activeShadows(sig),
     },
-    purpose: [],
+    purpose: bands.purposes ?? [],
+    analogy: bands.analogy,
+    preference: bands.preference,
+    constraints: bands.constraints,
+    observedInterests: bands.observedInterests,
     aversions: identity?.aversions,
   });
 
@@ -244,6 +289,18 @@ export function buildEnvelope(
     deferredCells: result.deferrals.slice(0, 4).map((d) => `${d.cell.line}:${d.cell.stage}:${d.cell.modality}`),
   };
 
+  // 45 §6.1 — the council alignment, computed at the live seam for EVERY role. The scenario-
+  // catalyst renders the encounter (it receives all bands); the assessment role receives the
+  // developmental band and the catalyst target ONLY, so grading can never be conditioned on what
+  // the player cares about (42 §1.1's firewall, now enforced on the live path rather than implied).
+  const scopes: Record<CouncilRole, ScopedEnvelope> = {
+    'scenario-catalyst': scopeForRole(context, 'scenario-catalyst'),
+    'narrative-voice': scopeForRole(context, 'narrative-voice'),
+    assessment: scopeForRole(context, 'assessment'),
+    'curriculum-teacher': scopeForRole(context, 'curriculum-teacher'),
+    safety: scopeForRole(context, 'safety'),
+  };
+
   return {
     context,
     block,
@@ -259,7 +316,59 @@ export function buildEnvelope(
       .filter((line) => isBandedText(line)),
     coherenceBlocked: coherence.blocked,
     coherenceDefects: coherence.defects,
+    scopes,
   };
+}
+
+/**
+ * The fail-closed role-scope contract — 45 §6.1, Phase 13 d2's enforcement teeth.
+ *
+ * `scopeForRole` builds the scopes by construction, so a violation cannot be produced by the
+ * sanctioned path. This check exists for the OTHER paths: a hand-assembled or future scope that
+ * carries a band its role does not receive must fail LOUDLY here rather than leak into a sub-agent
+ * prompt. G32 injects exactly such a scope and requires this to reject it.
+ *
+ * Returns the offending band names (empty = lawful). Never mutates, never throws for a lawful scope.
+ */
+export function scopeContractViolations(scope: ScopedEnvelope): readonly string[] {
+  const contract = ROLE_SCOPES[scope.role];
+  if (!contract) return ['unknown role'];
+  const allowed = new Set<string>(contract.receives as readonly string[]);
+  const present: readonly string[] = [
+    scope.preference !== undefined ? 'preference' : '',
+    scope.analogy !== undefined ? 'analogy' : '',
+    scope.purpose !== undefined ? 'purpose' : '',
+    scope.developmental !== undefined ? 'developmental' : '',
+    scope.interests !== undefined ? 'interests' : '',
+    scope.aversions !== undefined ? 'aversions' : '',
+    scope.constraints !== undefined ? 'constraints' : '',
+  ].filter((b) => b.length > 0);
+  return present.filter((band) => !allowed.has(band));
+}
+
+/**
+ * The assessment-facing line, rendered from the ASSESSMENT scope alone (Phase 13 d2).
+ *
+ * 45 §6.1 gives the assessment role `developmental` + the catalyst target, and nothing else: it
+ * must never see the interest graph, the purpose statements, or the analogy internals, or grading
+ * becomes conditioned on what the player cares about (42 §1.1's evidence-only firewall). This is
+ * the live consumer of that scope — the orchestrator appends the returned line to its
+ * assessment-facing prompt section.
+ *
+ * Fail-closed: a scope that violates its contract (or is not the assessment role) returns null, so
+ * a hand-assembled leak renders as NOTHING rather than as a partial leak.
+ */
+export function assessmentScopeLine(scope: ScopedEnvelope): string | null {
+  if (scope.role !== 'assessment') return null;
+  if (scopeContractViolations(scope).length > 0) return null;
+  const t = scope.catalystTarget;
+  const bands = (scope.developmental?.lineAltitudeBand ?? [])
+    .map((b) => `${b.line}:${b.band}`)
+    .join(', ');
+  // Bands + the encounter's own cell only — never the PLAYER's stage label, never an interest,
+  // never a purpose statement (MY-AD-0020 §3's may-not-include list, applied to the metric-bearing
+  // role; the cell's target stage is the module being assessed, not a claim about the player).
+  return `[ASSESSMENT SCOPE] Banded placement (${bands || 'unplaced'}) · cell ${t.line}/${t.stage}/${t.modality} · target: ${t.purpose}`;
 }
 
 // ── Holon L3 digest block (22 §7.4) ─────────────────────────────────────────────────────────

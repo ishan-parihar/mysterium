@@ -362,6 +362,7 @@ import { thresholdToStage } from '../src/core/usecases/ThresholdMaps.js';
 // library, owner-worker pool. Carried across encounters in the session loop; persisted with the
 // world save so NPC profiles survive the process.
 import { createOrchestrationServices, captureCheckpoint, type OrchestrationServices, type RuntimeCheckpoint } from '../src/core/personalization/sessionRuntime.js';
+import { purposesFromVows, purposesFromGoals, preferenceFromHistory } from '../src/core/personalization/bandSources.js';
 import { feedPlanningBias } from '../src/core/orchestration/feedReaders.js';
 // P1-3 (UX-R3): configurable saturation threshold + per-line progress.
 import { setSaturationThreshold, getLineProgress, computeReadiness } from '../src/core/engines/TransformationDetector.js';
@@ -1963,9 +1964,36 @@ async function runAgenticEncounter(
     orchestration,
     // Phase 11 d3 (G29): the consent-checked declared preferences ride the identity projection —
     // active (non-withdrawn) entries only; the UDV's declared band is empty without this.
+    // Phase 13 d1 (45 §3): the remaining bands, each from a store the player already owns —
+    //   purpose    ← 39's active vows + the profile's self-declared goals (one aim band, two sources)
+    //   preference ← the profile's declared metaphor taste + intensity (the seam adds the
+    //                feed-evidenced session tolerance itself)
+    //   observed   ← no deterministic producer exists yet (see the wiring audit §4 W5); it stays a
+    //                typed input with `observedFromEngagement` ready, rather than a fabricated one
     identity: {
       declaredInterests: activeDeclaredInterests(sig.identity).map((p) => p.phrase),
       aversions: activeDeclaredAversions(sig.identity).map((p) => p.phrase),
+      bands: (() => {
+        const profile = loadProfile()
+        const vowPurposes = purposesFromVows(
+          (loadVowFile().book.vows ?? []) as unknown as Parameters<typeof purposesFromVows>[0],
+        )
+        const goalPurposes = purposesFromGoals(
+          (profile?.goals?.self_declared ?? []) as unknown as string[],
+          vowPurposes,
+        )
+        const prefs = (profile?.preferences ?? {}) as Record<string, unknown>
+        return {
+          purposes: [...vowPurposes, ...goalPurposes],
+          preference: preferenceFromHistory({
+            profile: {
+              metaphorPreference: prefs.metaphor_preference as string | undefined,
+              intensity: prefs.intensity as string | undefined,
+              pacing: prefs.pacing as string | undefined,
+            },
+          }),
+        }
+      })(),
     },
   });
 
