@@ -344,6 +344,67 @@ authored [scenario | world] legs of the 46 §2 triad; candidate library 1792). K
 readers, identity intake, probe RV validation, NPC persona tier, tag growth) is owned by
 `AGENTS.md §4.2` §"what is actually open", not by a new phase.
 
+### Phase 11 — Closed-Loop Memory & Preference Intake (ratified 2026-09-22) — 📋 planned, unbuilt
+
+Phase 10 closed the runtime loop but left its **memory half-life at one session** and its
+**preference voice uncollected** (the C/K/D frontier of the operational audit). This phase closes
+those gaps. Every deliverable wires or authors — no new architecture; each one has an owning law
+that is already canon.
+
+**Deliverables:**
+1. **Checkpoint restore (audit C1; `22 §7.5` single-writer persistence).**
+   `createOrchestrationServices` gains an optional restore input; the CLI session loop and
+   `gameEngine.ts` rebuild `orchestrationWorkers` + feed from the persisted world save at session
+   start (F3 replay makes restore exact). The `captureCheckpoint`/`restoreCheckpoint` API gains its
+   production callers and a save→load→save round-trip test.
+2. **Feed readers (audit C2; `43 §5.5` reader table).** Reader 1 — **27 (planning):**
+   `generateSessionStrategy` consumes `progressDelta` + `forecast.deviation` from the feed when
+   shaping the next session (ranking-as-bias; a feed with no entries behaves exactly as today).
+   Reader 2 — **25 (CCI):** committed evidence only, asserted by test (F1's committed-not-observed
+   becomes a checked edge, not a convention).
+3. **Preference intake (audit C3; `16 §2.1` consent-bound identity + `45 §5.4` analogical
+   resonance).** `collectIdentityConsent` extends with **declared interests and aversions** —
+   consent-gated per field, all skippable, editable and deletable at the `privacy` dashboard
+   (`47 §8` legibility: deletion removes the value AND the derived weight, and the deletion is not
+   itself recorded). Both surfaces pass the identity projection into the orchestrator, so the UDV's
+   declared band finally carries real content.
+4. **Ratification loop (audit C4; `43 §5.5` writer 3 + L4).** The session loop records verdicts
+   (`recordRatification`) after its ratification step, closing the fourth writer's live path —
+   every proposal session now has a disposition on the feed.
+5. **Polarity state writers (audit C5; `46 §5.3` pair states + `MY-AD-0031`).** Session end
+   advances the dialectic pair-state map from the encounter's scored polarity direction
+   (sto/sts/neutral → discovered/active-tension/reconciled transitions), under the saturation
+   guard; the map rides the checkpoint and therefore persists.
+6. **Probe RV harness (audit K1, first step; `12 §5.4` Phase RV-A pattern applied to preference
+   instruments).** A validation harness over seeded personas: known-answer stability,
+   adversarial-resistance, and below-stage discrimination fixtures for the 8 authored probes —
+   making RV validation *runnable*. Probes stay log-only until real-rater thresholds are met; the
+   harness is the instrument that will retire them from log-only.
+7. **NPC persona seeds (audit D1; `46 §2` NPC library).** The third authored leg of the triad:
+   64 canonical personas (name/role/voice/register per cell, module-spec provenance like the
+   scenario and world tiers), registered as `npc-authored:` candidates and surfaced as a persona
+   voice line in the envelope. Coverage asserted 64/64 at load; G27-extended coherence applies.
+8. **Tag expansion, second tranche (audit D2; `46 §4` corpus change, bounded per `46 §13` res. 2).**
+   Grow the vocabulary beyond the initial 12 with full axis positions and derived dialectic pairs
+   (a tag without a resolvable opposite is a compile error); facet-affinity join re-compiled;
+   calibration harness re-run to confirm discrimination actually improves.
+
+**Gates:**
+- **G28 — memory persistence.** Worker state + feed survive save→load→save byte-identical (W4
+  replay across restart); no session start silently discards persisted orchestration state — the
+  failure class is injected and proven caught.
+- **G29 — the preference intake firewall.** A declared interest/aversion enters the UDV only
+  through a consent-granted, purpose-scoped, withdrawable field; deletion removes value + derived
+  weight; no declared preference ever becomes a field of record (`MY-RG-0021` class).
+- **G30 — verdict completeness.** Every session whose proposals exist has a recorded verdict on
+  the feed; raw signals never enter player state (F1 enforced end-to-end).
+- The kernel suite unregressed throughout (27 gates, G1–G27 → 30).
+
+**Duration:** ~2 weeks (deliverables 3, 7, 8 are content-adjacent; 1–5 are pure wiring).
+**Depends:** nothing outstanding — Phase 10 is closed. **Post-phase (data-dependent, not
+phase-able):** real-rater RV thresholds (K1 completion), `expansionRatio`/entropy calibration (K2),
+per-line saturation curves (K3), pods deployment (D3, needs a hosting decision).
+
 ### Current work (post-plan) — not a phase
 
 All nine phases are closed; what remains is listed in §2.1 and owned by the record layer. When
@@ -432,5 +493,6 @@ evidence), a partner institution (assess a portfolio), networked pod hosting
 | 2026-09-21 (same pass) | **The one-way migrations archived (`RT-ARCHIVE-MIGRATIONS` closed, red-team RT-11).** The three stage/path re-index tools moved from `scripts/` to **`scripts/migrations/`** with a README stating what each did, why it is kept executable, and why re-running is refused; their receipts moved beside them and were converted from `docs/.<tool>.applied` dotfiles to JSON under `scripts/migrations/receipts/` — as `docs/` dotfiles they were governance artefacts living inside the documentation set, invisible to every index and to DG1. The move was not free, and that was the finding: **DG20's coverage silently dropped from 16 scripts to 14** because the gate walked `scripts/` with a flat `iterdir()`. A new directory shape had left the gate — the scaffolder-vs-linter triangle the house has a name for, recurring one level down. DG20 now walks recursively (`rglob`, `__pycache__` excluded), which caught `scripts/cli/delegateArgs.ts` declaring no `@script-status` (it was invisible to the flat walk too); both are now gate-checked. The move itself was validated BY the gates: DG10/DG16/DG23 all failed on the stale `scripts/<tool>.py` citations across `44`, two records, two audits and the plan, and each citation was repaired to the new home rather than exempted. `arch fixtures` 23/23 (24 injections), tests 1175 green. |
 | 2026-09-21 (same pass) | **Phase 10 BUILT — Generative World & Personalization.** All eight deliverables: world store complete in the organ (`src/core/world/`, facades retired, encounters moved), 1472-facet store compiled from the 64 module-specs with the authored facetAffinity matrix as the 46 §4 tag join, tag ontology with derived symmetric dialectic, evidence ledger + tier gate (`src/infra/profiles/evidenceLedger.ts`), ten-scaffold library with recorded selections, probe set (`probeSet.ts` — playable-encounter instruments, RV1–RV7 citation, log-only band for unvalidated instruments, declinable-without-trace, session budget), ScenarioContext envelope with `ROLE_SCOPES` enforcing 45 §6.1's blindness table by structural absence, engagement register gating on both tests. New module `src/core/personalization/` (udv, dialecticEngine with pair-keyed reconciliation states, composition with replay determinism, pooling with the §5.2.1 veto-as-routing rule and recorded deferrals, interestRecord with the load-bearing guard, scenarioContext, engagementRegister). Kernel gates **G22–G25** shipped in `runValidationSuite` (22 → 26): composition integrity over the live store, the tier gate (T3 discards under full evidence; partial RV ≠ citation), scaffold integrity (load-bearing domain never the structural pole), and the inference write firewall (module-graph assertion: no write surface outside the UDV projection). Tests 1186 → 1284. |
 | 2026-09-21 (same pass) | **The quality model gained its runtime readers (`QUALITY-WIRING` closed, `MY-AD-0030`'s deferral discharged).** `StageQuality` was data with a test and no consumer — `agapeScan`/`erosScan` had no runtime caller and the per-quadrant pathology markers never reached doc 10's shadow model or the scheduler. Three readers, each at the seam it belongs to. **(1)** `buildDevelopmentalAgenda` computes AGENTS.md §5.3's BOTH vectors in one pure record — Eros (the threshold the centre of gravity is pulled across) and Agape (the lower altitudes' live pathology content) — and the ContextPipeline renders it as a Veil-safe `[DEVELOPMENTAL AGENDA]` prompt block, so catalyst aims at the player's actual work rather than at the encounter's nominal stage. **(2)** `generateFrequencySpec().lensRead` gives `RAY_LENS`'s previously-unread `rayFunction`/`subtleBody` (plus the emergent order) their consumer: the LLM now knows WHAT an altitude works, not only HOW to speak at it — also closing the unread-fields half of `MY-AD-0029`. **(3)** `buildShadowPromptSuffix` grounds shadow encounters in `pathologyIn(stage, LINE_QUADRANT[line])` — doc 10's shadow model now reads the ratified markers, selected through the *line's* AQAL quadrant. That discriminator matters and is tested: shadow quadrants and AQAL quadrants are different axes (`10 §12` — every shadow quadrant manifests across all four AQAL quadrants), and the first implementation conflated them; the type error caught it, which is what types are for. **Deliberately untouched:** assessment *scoring* — the wiring aims catalyst and conditions prompts; moving measurement belongs to Phase 10's personalization work (`45`), where the UDV is the sanctioned write path. `tests/core/domain/QualityWiring.test.ts` locks all three consumers at their own seams plus the Veil invariants (no scores, no AQAL codes in any rendered block). Tests: 1175 → 1186. |
+| 2026-09-22 (plan revision) | **Phase 11 ratified: Closed-Loop Memory & Preference Intake.** Contrasting the operational audit's frontier (`docs/audits/OPERATIONAL-AUDIT-2026-09-22.md`) against the owning laws produced an eight-deliverable wiring-and-authoring phase: checkpoint restore (C1, 22 §7.5), feed readers 27/25 (C2, 43 §5.5), preference intake (C3, 16 §2.1 + 45 §5.4 — declared interests/aversions with 47 §8 legibility), ratification verdicts (C4), polarity state writers (C5, 46 §5.3), probe RV harness (K1 step 1, 12 §5.4), NPC persona seeds (D1, 46 §2 third authored leg), tag expansion tranche 2 (D2, 46 §4). Gates G28 (memory persistence), G29 (preference intake firewall), G30 (verdict completeness) defined; suite 27 → 30. Remaining data-dependent work (real-rater RV, entropy calibration, saturation curves, pods deployment) is post-phase by nature and cannot be phase-able. |
 | 2026-09-22 | **Runtime loop closed + authored seeding tier (`P13`/`P14`).** Phase 10's runtime half landed: the reporting feed as code (four idempotent writers, F3), the owner-worker pool (MY-AD-0009 consumer: ±0.3 caps, W4 replay, W5 concurrency), `OrchestrationServices` as the ONE orchestrator seam (envelope + holon digest + runtime coherence gate + session end on all five result paths; services omitted → byte-identical legacy), prompt blocks `[PERSONALIZATION]`/`[HOLON MEMORY]`/`[SCENARIO SEED]`/`[WORLD PLACE]`, and both surfaces (CLI + WebUI) carrying/persisting services. Then authored substance: 64 scenario seeds × 7 modality angles, 8 pole-probes (log-only until RV), 64 world seeds — library 1792 candidates, coherence enforced at authoring (G27, 26→27 gates) and at runtime (routes-don't-cancel), calibration harness extended to both seed tiers. `MY-AD-0009` deferral discharged with consumer; `_org.yaml → pending` graduated to `completed: P13/P14`; `AGENTS.md §4.2` and plan §2.1 corrected (the laws-without-consumer list fully discharged; the open frontier is configuration/calibration/development, owned by `AGENTS.md §4.2`). Tests: 1284 → 1370. GitLab push remains credential-blocked; GitHub current. |
 | 2026-09-21 (same pass) | **One word, one axis (`VOCAB-SUBSTRATE` closed by user ruling).** The user ratified the proposal on the table: *substrate layer* now means ONLY the intra-holonic compositional vertical — `13`'s substrate→core→emergent stack, named by `44` axis E. The D3 bands (Free Will / Love / Light / the octave's contributions) are renamed **law-bands** across the four documents the key named: `02 §4` (table column + the term-scope note, which now records the retirement), `06`'s ownership pointer, `22`'s layer-stack law (`01.4 §2.5.3`'s "one concurrent lesser cycle per integrated band"), and `28`'s J-INV-7. The code constant followed: `SUBSTRATE_LAYER_LAW` → `LAW_BANDS_D3`, its `density` field → `band` (the rows were never densities — that misnomer was part of the collision). Two unrelated compounds stay: `06 §?`'s "energetic substrate (Ra)" (the ray's felt-tone vs energy-substrate distinction, not the vertical) and the "theoretical substrate" idiom (a metaphor, not a term of art). `MY-RG-0026`'s rule — one word never carries two frameworks — now holds on this axis, and DG23 verifies every citation touched by the rename still resolves. Tests 1186 green, 23 doc gates green. |

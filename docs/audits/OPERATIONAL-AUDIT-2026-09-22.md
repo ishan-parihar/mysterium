@@ -131,6 +131,11 @@ granularity, not by progression logic.
 
 ## 7. The frontier register (the evidence table)
 
+> **Ownership (2026-09-22, same day):** the configuration and first-step calibration items below
+> (C1–C6, K1's harness step, D1, D2) were **claimed by Phase 11 — Closed-Loop Memory & Preference
+> Intake** (`docs/DEVELOPMENT-PLAN.md §4`, gates G28–G30). This section remains the evidence table
+> that justifies them; mark items ✅ here as Phase 11 lands them.
+
 **CONFIGURATION — wire what exists (no new architecture):**
 
 | # | Item | Evidence |

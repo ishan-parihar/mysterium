@@ -312,10 +312,13 @@ gated** — the kernel gate suite (27 gates, `G1–G27`) green, the post-plan fr
 **Phase 10** (Generative World & Personalization, from `45` / `46` / `47`; gates G22–G27) was ratified
 2026-09-20, **built 2026-09-21**, and its **live runtime loop closed 2026-09-22** — the personalization
 envelope, the reporting feed, the owner-worker pool, the coherence gate, and the authored
-[scenario | world] seed tiers are all wired into `AgenticOrchestrator` and both user surfaces. The
-record of that closure lives in `docs/DEVELOPMENT-PLAN.md §4` (Phase 10) and `§9` (revision record),
-not here. There is **no current phase number** — work is selected by the record layer; cite this
-section and the plan, never a phase number spoken from memory.
+[scenario | world] seed tiers are all wired into `AgenticOrchestrator` and both user surfaces.
+**The ratified current phase is Phase 11 — Closed-Loop Memory & Preference Intake** (gates G28–G30;
+ratified 2026-09-22): checkpoint restore, feed readers (27/25), preference intake, ratification
+verdicts, polarity state writers, probe RV harness, NPC persona seeds, tag expansion tranche 2. Its
+scope, deliverables and gates live in `docs/DEVELOPMENT-PLAN.md §4` (Phase 11); the verified evidence
+for why it exists lives in `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7. Cite the plan and the
+audit, never a phase number spoken from memory.
 
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
