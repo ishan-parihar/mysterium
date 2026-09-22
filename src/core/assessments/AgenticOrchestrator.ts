@@ -562,11 +562,12 @@ export class AgenticOrchestrator {
       // RuntimeLoop (45 §5/§6 + 22 §7.4): the personalization envelope + the holon's memory.
       // Both degrade to absent — never block a session.
       ...(() => {
-        const { block, digest, seed } = this.personalizationContext();
+        const { block, digest, seed, worldPlace } = this.personalizationContext();
         return {
           ...(block ? { personalizationBlock: block } : {}),
           ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
           ...(seed ? { scenarioSeedBlock: seed } : {}),
+          ...(worldPlace ? { worldPlaceBlock: worldPlace } : {}),
         };
       })(),
     };
@@ -881,11 +882,12 @@ export class AgenticOrchestrator {
       })(),
       // RuntimeLoop (45 §5/§6 + 22 §7.4): same envelope + memory as the main path.
       ...(() => {
-        const { block, digest, seed } = this.personalizationContext();
+        const { block, digest, seed, worldPlace } = this.personalizationContext();
         return {
           ...(block ? { personalizationBlock: block } : {}),
           ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
           ...(seed ? { scenarioSeedBlock: seed } : {}),
+          ...(worldPlace ? { worldPlaceBlock: worldPlace } : {}),
         };
       })(),
     };
@@ -2448,11 +2450,12 @@ ${probes}${rubric}
     block: PersonalizationBlock | null;
     digest: readonly string[];
     seed: string | null;
+    worldPlace: string | null;
   } {
-    if (!this.orchestration) return { block: null, digest: [], seed: null };
+    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null };
     try {
       const [line] = this.encounter.moduleRef.split(':') as [Line, ...unknown[]];
-      const { block, seedText, coherenceBlocked, coherenceDefects } = buildEnvelope(
+      const { block, seedText, worldPlace, coherenceBlocked, coherenceDefects } = buildEnvelope(
         this.orchestration,
         this.significator,
         this.identity,
@@ -2480,9 +2483,9 @@ ${probes}${rubric}
       const digest = coherenceBlocked
         ? []
         : holonDigestBlock(this.orchestration, this.encounter.holonSource);
-      return { block, digest, seed: seedText };
+      return { block, digest, seed: seedText, worldPlace };
     } catch {
-      return { block: null, digest: [], seed: null };
+      return { block: null, digest: [], seed: null, worldPlace: null };
     }
   }
 

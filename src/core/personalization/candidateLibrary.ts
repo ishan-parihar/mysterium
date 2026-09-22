@@ -27,6 +27,8 @@ import { INITIAL_TAGS } from '../world/tags/initialTags.js';
 import type { TagId } from '../world/tags/types.js';
 import { SCENARIO_SEEDS } from './scenarioSeeds.js';
 import type { ScenarioSeed } from './scenarioSeeds.js';
+import { WORLD_SEEDS } from './worldSeeds.js';
+import type { WorldSeed } from './worldSeeds.js';
 
 /** The 8 stages as authored — the ladder the concept-drafts grid by. */
 const STAGES: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'] as const;
@@ -144,9 +146,34 @@ export function seedScenarioCandidates(seeds: readonly ScenarioSeed[] = SCENARIO
 }
 
 /**
+ * The AUTHORED world renderings (46 §2's world library) — the authored PLACE tier that deepens
+ * the world library beyond the derived facet-tag skeletons. One authored place per cell
+ * (`worldSeeds.ts`), registered per modality like the scenario seeds. The authored candidate
+ * ranks ahead of the skeleton within the tier when tags tie (sessionRuntime's prefix sort),
+ * because its place text is the cell's canon.
+ */
+export function seedWorldCandidates(seeds: readonly WorldSeed[] = WORLD_SEEDS): readonly PoolCandidate[] {
+  const out: PoolCandidate[] = [];
+  for (const s of seeds) {
+    for (const modality of ALL_MODALITIES) {
+      out.push({
+        id: `world-authored:${s.line}:${s.stage}:${modality}`,
+        cell: { line: s.line, stage: s.stage, modality },
+        tags: [...s.tags],
+        stratum: BASE_STRATUM,
+        depthFloor: BASE_DEPTH_FLOOR,
+        landsIn: [...s.tags],
+      });
+    }
+  }
+  return out;
+}
+
+/**
  * The full seeded library: 64 cells × 7 modalities × 2 derived renderings (world + skeleton
- * scenario) + the 64×7 authored scenario-seed registrations + NPC derivations from the authored
- * corpus. Deterministic; safe to rebuild per process (pure data, no I/O).
+ * scenario) + the 64×7 authored scenario-seed registrations + the 64×7 authored world-seed
+ * registrations + NPC derivations from the authored corpus. Deterministic; safe to rebuild per
+ * process (pure data, no I/O).
  */
 export function seedCandidateLibrary(store: FacetStore): readonly PoolCandidate[] {
   const out: PoolCandidate[] = [];
@@ -158,5 +185,6 @@ export function seedCandidateLibrary(store: FacetStore): readonly PoolCandidate[
     }
   }
   out.push(...seedScenarioCandidates());
+  out.push(...seedWorldCandidates());
   return out;
 }

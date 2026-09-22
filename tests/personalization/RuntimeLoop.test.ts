@@ -57,9 +57,9 @@ const SIGNALS: SessionSignals = {
 };
 
 describe('candidate library derivation', () => {
-  it('seeds 64 cells × 7 modalities × 2 derived renderings + 64×7 authored scenarios, all with store-valid tags', () => {
+  it('seeds 64 cells × 7 modalities × 2 derived renderings + 64×7 authored scenarios + 64×7 authored worlds, all with store-valid tags', () => {
     const lib = seedCandidateLibrary(sharedFacetStore());
-    expect(lib.length).toBe(64 * 7 * 2 + 64 * 7); // derived world+scenario skeletons + authored seeds
+    expect(lib.length).toBe(64 * 7 * 2 + 64 * 7 + 64 * 7); // derived world+scenario skeletons + authored scenarios + authored worlds
     const ids = new Set(lib.map((c) => c.id));
     expect(ids.size).toBe(lib.length); // no duplicate ids
     // every candidate's tags resolve in the initial tag set (fail-closed upstream guarantees this,
@@ -196,7 +196,7 @@ describe('orchestrator wiring', () => {
     const { AgenticOrchestrator } = await import('../../src/core/assessments/AgenticOrchestrator.js');
     expect(typeof AgenticOrchestrator).toBe('function');
     const services = createOrchestrationServices(HOlONS);
-    expect(services.library.length).toBe(64 * 7 * 2 + 64 * 7 + HOlONS.length * 7);
+    expect(services.library.length).toBe(64 * 7 * 2 + 64 * 7 + 64 * 7 + HOlONS.length * 7);
     expect(services.feed.entries.length).toBe(0);
     // sessionEnd through the orchestrator's seam mutates the SAME record the caller holds
     sessionEnd(services, {

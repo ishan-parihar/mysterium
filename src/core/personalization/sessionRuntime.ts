@@ -36,6 +36,7 @@ import { buildScenarioContext, type ScenarioContext, type PooledRefs } from './s
 import { initialTopicTagResolver, seedCandidateLibrary, deriveNpcCandidates } from './candidateLibrary.js';
 import type { PolarityStateMap } from './dialecticEngine.js';
 import { SCENARIO_SEEDS, type ScenarioSeed } from './scenarioSeeds.js';
+import { WORLD_SEEDS, type WorldSeed } from './worldSeeds.js';
 import { contextualSeed } from './scenarioSeedVariants.js';
 import { checkCoherence, type CoherenceDefect } from './stageCoherence.js';
 import { createFacetStore } from '../world/facets/FacetStore.js';
@@ -133,6 +134,8 @@ export function buildEnvelope(
   readonly block: PersonalizationBlock | null;
   /** The authored contextual seed text for this (cell × modality), or null when unauthored. */
   readonly seedText: string | null;
+  /** The authored world PLACE text for this cell, or null when unauthored. */
+  readonly worldPlace: string | null;
   /** The runtime coherence verdict: `blocked` means the holon was routed OUT of the prompt. */
   readonly coherenceBlocked: boolean;
   readonly coherenceDefects: readonly CoherenceDefect[];
@@ -191,6 +194,10 @@ export function buildEnvelope(
   // The authored contextual seed for this (cell × modality) — the stage-coherent situation text.
   const seedText = contextualSeedBlock(target.line, target.stage, target.modality);
 
+  // The authored world place for this cell — the stage the situation stands on (46 §2's world
+  // library; the authored tier above facet composition).
+  const worldPlace = worldPlaceBlock(target.line, target.stage);
+
   // The RUNTIME coherence gate: the encounter's holon is checked against the target cell. A
   // mismatch blocks the holon's digest from the prompt (routing, not canceling — 45 §5.2.1); the
   // defects ride the outcome so the caller feeds the dev loop.
@@ -215,7 +222,7 @@ export function buildEnvelope(
     deferredCells: result.deferrals.slice(0, 4).map((d) => `${d.cell.line}:${d.cell.stage}:${d.cell.modality}`),
   };
 
-  return { context, block, seedText, coherenceBlocked: coherence.blocked, coherenceDefects: coherence.defects };
+  return { context, block, seedText, worldPlace, coherenceBlocked: coherence.blocked, coherenceDefects: coherence.defects };
 }
 
 // ── Holon L3 digest block (22 §7.4) ─────────────────────────────────────────────────────────
@@ -289,6 +296,22 @@ export function contextualSeedBlock(line: Line, stage: Stage, modality: Modality
   const seed = scenarioSeedFor(line, stage);
   if (!seed) return null;
   return contextualSeed(seed, modality);
+}
+
+/** The authored world seed for a cell, or undefined (degradation, never fabrication). */
+export function worldSeedFor(line: Line, stage: Stage, seeds: readonly WorldSeed[] = WORLD_SEEDS): WorldSeed | undefined {
+  return seeds.find((s) => s.line === line && s.stage === stage);
+}
+
+/**
+ * The authored world PLACE text for this cell: the stage the situation stands on — locus,
+ * texture, population, and the place's own quiet tension, as one prose block. Null when the
+ * cell has no authored place; the prompt then falls back to the composed facets alone.
+ */
+export function worldPlaceBlock(line: Line, stage: Stage): string | null {
+  const w = worldSeedFor(line, stage);
+  if (!w) return null;
+  return `Where: ${w.place} — ${w.texture} Around you: ${w.population} The place asks: ${w.tension}`;
 }
 
 // ── Session-end: feed + owner-worker drain ──────────────────────────────────────────────────

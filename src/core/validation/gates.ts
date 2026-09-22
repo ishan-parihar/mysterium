@@ -47,6 +47,7 @@ import { compose, createCompositionStore } from '../personalization/composition.
 import { createInterestRecord } from '../personalization/interestRecord.js';
 import { detectScaffoldShareDefects, detectVisibilityCollapse, type CompositionEvent } from '../personalization/diversityMonitor.js';
 import { SCENARIO_SEEDS } from '../personalization/scenarioSeeds.js';
+import { WORLD_SEEDS } from '../personalization/worldSeeds.js';
 import { AUTHORED_PROBES } from '../personalization/probeContent.js';
 import { checkCoherence } from '../personalization/stageCoherence.js';
 import { createEvidenceLedger, META_PROGRAMS } from '../../infra/profiles/evidenceLedger.js';
@@ -1392,6 +1393,24 @@ export function validateAuthoredSeedCoherence(): GateResult {
       );
       if (!verdict.coherent) return mk(`seed ${s.id}: ${verdict.defects.map((d) => d.rule).join(', ')}`);
     }
+    // The authored WORLD tier: same 64/64 coverage + store-valid tags + self-coherence contract.
+    const worldByCell = new Map<string, number>();
+    for (const w of WORLD_SEEDS) worldByCell.set(`${w.line}:${w.stage}`, (worldByCell.get(`${w.line}:${w.stage}`) ?? 0) + 1);
+    for (const [cell, n] of worldByCell) {
+      if (n > 1) return mk(`duplicate world seeds for ${cell} (${n})`);
+    }
+    for (const line of ALL_LINES) {
+      for (const stage of ALL_STAGES) {
+        if (!worldByCell.has(`${line}:${stage}`)) return mk(`world seed missing for cell ${line}:${stage}`);
+      }
+    }
+    for (const w of WORLD_SEEDS) {
+      const verdict = checkCoherence(
+        [{ source: w.id, line: w.line, stage: w.stage, loadBearing: true }],
+        { line: w.line, stage: w.stage },
+      );
+      if (!verdict.coherent) return mk(`world seed ${w.id}: ${verdict.defects.map((d) => d.rule).join(', ')}`);
+    }
     // Probe poles resolve in the tag store (the store throws on unknown ids via probeSet's own
     // check at read time — here we verify at authoring time).
     const tagIds = new Set(INITIAL_TAGS.map((t) => t.id));
@@ -1400,7 +1419,7 @@ export function validateAuthoredSeedCoherence(): GateResult {
       if (!tagIds.has(p.poleB)) return mk(`probe ${p.id}: poleB '${p.poleB}' does not resolve in the tag store`);
       if (p.poleA === p.poleB) return mk(`probe ${p.id}: both poles are the same tag — no discrimination`);
     }
-    return { gate: 'G27 authored-seed stage coherence', passed: true, hard: true, details: `${SCENARIO_SEEDS.length}/64 seeds coherent, ${AUTHORED_PROBES.length} probes with resolvable poles` };
+    return { gate: 'G27 authored-seed stage coherence', passed: true, hard: true, details: `${SCENARIO_SEEDS.length}/64 scenario + ${WORLD_SEEDS.length}/64 world seeds coherent, ${AUTHORED_PROBES.length} probes with resolvable poles` };
   } catch (e) {
     return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
   }
