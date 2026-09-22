@@ -148,6 +148,14 @@ granularity, not by progression logic.
 > (MemoryPage + LocalRetriever + pinned-embedding seam + G31 firewall; `MY-AD-0032` deferral
 > resolved, P15 graduated). Gates G28–G31 added; kernel suite 27→31; tests 1370→1389. Still open:
 > C6 (GitLab sync — credential-blocked), K1's real-rater thresholds, K2, K3, D3 (pods deployment).
+>
+> **✅ Memory infrastructure audited and live-wired 2026-09-22**
+> (`docs/audits/MEMORY-AUDIT-2026-09-22.md`): the exhaustive memory audit closed the loop this
+> table could only describe — the Phase-12 modules had zero production callers (in-vitro green,
+> in-vivo dark) and are now attached at the envelope seam (`[CROSS-SESSION MEMORY]` in every
+> prompt), with 8 further findings fixed and regression-locked (thread closure by verdict, Veil
+> vocabulary lockstep across render and recall, checkpoint feed windowing, Unicode retrieval,
+> vitest forks pool). Tests 1389 → 1401.
 
 **CONFIGURATION — wire what exists (no new architecture):**
 

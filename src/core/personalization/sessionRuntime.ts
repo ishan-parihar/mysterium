@@ -28,6 +28,8 @@ import { createOwnerWorkerPoolState, drain, hotSet, type OwnerWorkerPoolState } 
 import type { OwnerProposal } from '../world/ownerWorker.js';
 import { appendOwnerWorkerEntry, appendInsightEntry, appendSessionEntry, appendVerdictEntry, type ReportingFeed } from '../orchestration/feedBridge.js';
 import { createReportingFeed } from '../orchestration/reportingFeed.js';
+import { buildMemoryPage, memoryPageBlock } from './memoryPage.js';
+import { isBandedText } from '../memory/retrievalFirewall.js';
 import type { LogRef, Proposal, SessionSignals } from '../orchestration/types.js';
 import { projectUdv } from './udv.js';
 import { pool } from './pooling.js';
@@ -144,6 +146,9 @@ export function buildEnvelope(
   readonly worldPlace: string | null;
   /** The authored persona VOICE for this cell (46 §2's NPC library), or null when unauthored. */
   readonly personaVoice: string | null;
+  /** The [CONTINUITY] head (48 §3) — banded cross-session memory lines, Veil-filtered at this seam.
+   *  Empty array on first boot (no history) or when every line fails the guard. */
+  readonly continuity: readonly string[];
   /** The runtime coherence verdict: `blocked` means the holon was routed OUT of the prompt. */
   readonly coherenceBlocked: boolean;
   readonly coherenceDefects: readonly CoherenceDefect[];
@@ -239,7 +244,22 @@ export function buildEnvelope(
     deferredCells: result.deferrals.slice(0, 4).map((d) => `${d.cell.line}:${d.cell.stage}:${d.cell.modality}`),
   };
 
-  return { context, block, seedText, worldPlace, personaVoice, coherenceBlocked: coherence.blocked, coherenceDefects: coherence.defects };
+  return {
+    context,
+    block,
+    seedText,
+    worldPlace,
+    personaVoice,
+    /** [CONTINUITY] head (48 §3): the cross-session standing memory, banded + Veil-guarded at
+     *  this seam so a page built from older/foreign vocabulary can never reach the prompt (M4 —
+     *  the render path carries its own guard; recall-time G31 is the second). Empty history →
+     *  empty array → the pre-memory pipeline is the fallback (45 §5). Deterministic: rebuilt
+     *  from committed feed state on every envelope (M5 view-not-store). */
+    continuity: memoryPageBlock(buildMemoryPage(services.feed, services.workers, services.holons, now))
+      .filter((line) => isBandedText(line)),
+    coherenceBlocked: coherence.blocked,
+    coherenceDefects: coherence.defects,
+  };
 }
 
 // ── Holon L3 digest block (22 §7.4) ─────────────────────────────────────────────────────────
@@ -570,9 +590,20 @@ export interface RuntimeCheckpoint {
 }
 
 /** Capture the current runtime state for persistence. */
+/**
+ * Feed retention cap (48 §2, failure class LM-c — unbounded growth): the checkpoint retains the
+ * most recent window of entries; older entries are not lost — they are COMPACTED into the
+ * MemoryPage (trajectory prose, open threads, holon stances) before they scroll out. F3 replay
+ * exactness holds within the window; the page is the summary of what the window dropped.
+ */
+export const MAX_CHECKPOINT_FEED_ENTRIES = 2000;
+
 export function captureCheckpoint(services: OrchestrationServices): RuntimeCheckpoint {
+  const window = services.feed.entries.length > MAX_CHECKPOINT_FEED_ENTRIES
+    ? services.feed.entries.slice(-MAX_CHECKPOINT_FEED_ENTRIES)
+    : services.feed.entries;
   return {
-    feedEntries: services.feed.entries.map((e) => ({
+    feedEntries: window.map((e) => ({
       id: e.id,
       at: e.at,
       source: e.source,

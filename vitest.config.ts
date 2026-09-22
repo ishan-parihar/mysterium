@@ -54,6 +54,13 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: false,
+    // Forks, not threads: several suites (MigrateLegacySave, profile/save paths) mutate
+    // process.env.HOME and reset the module registry per test. Worker THREADS share
+    // process.env across concurrently running files, so two suites racing on HOME corrupt
+    // each other's save paths (observed as MigrateLegacySave failing only under parallel
+    // load). Processes isolate env by construction. Cost: slightly slower spawn — acceptable
+    // (full suite stays < 15s).
+    pool: 'forks',
     // Deep import chains (engine boot, kernel harness) exceed the default
     // 5s on cold CI runs.
     testTimeout: 20_000,

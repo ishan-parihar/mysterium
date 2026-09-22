@@ -70,6 +70,20 @@ const VERDICT_BANDS: Readonly<Record<string, string>> = {
   consent_inform: 'a boundary was voiced and honoured',
 };
 
+/** Count-aware plural phrasings — appending 's' to a sentence is not pluralization
+ *  ("what was kept was weigheds" is the failure this table exists to prevent). */
+const VERDICT_BANDS_PLURAL: Readonly<Record<string, string>> = {
+  encounter_record: 'steps were taken and settled',
+  shadow_entry: 'long-avoided things were faced',
+  mastery_evidence: 'capabilities were shown to hold',
+  pack_score: 'practices were measured and returned',
+  trajectory: 'directions of travel were named',
+  retention_estimate: 'what was kept was weighed',
+  alignment_adjustment: 'courses were gently corrected',
+  threshold_signal: 'ripenings were named',
+  consent_inform: 'boundaries were voiced and honoured',
+};
+
 /** Build the banded trajectory prose from COMMITTED verdict entries only (M1/M4). */
 function buildTrajectory(feed: ReportingFeed): string {
   const committed = feed.read('cci').filter((e) => e.verdict !== undefined);
@@ -92,7 +106,12 @@ function buildTrajectory(feed: ReportingFeed): string {
     const named = [...kindCounts.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
-      .map(([kind, n]) => `${n} ${VERDICT_BANDS[kind] ?? 'steps were taken'}${n === 1 ? '' : 's'}`);
+      // Count only when plural — "1 a step was taken" is prose garbage; "a step was taken" isn't.
+      .map(([kind, n]) => `${n > 1 ? `${n} ` : ''}${
+        n === 1
+          ? VERDICT_BANDS[kind] ?? 'a step was taken'
+          : VERDICT_BANDS_PLURAL[kind] ?? 'steps were taken'
+      }`);
     parts.push(`Along the way: ${named.join('; ')}.`);
   }
   const prose = parts.join(' ');
@@ -102,8 +121,11 @@ function buildTrajectory(feed: ReportingFeed): string {
 /** Extract open threads from session entries: unresolved proposals become returnable threads. */
 function buildOpenThreads(feed: ReportingFeed): readonly OpenThread[] {
   // Ratified verdicts close their session's threads; sessions without a verdict stay open.
+  // A session is closed when the verdict that ratified its proposals CARRIES the session's id —
+  // the verdict writer's `ref` names the session it disposes (feedBridge appendVerdictEntry).
+  // Open threads never expire on age alone (M2 caps the list; culling is the cap's job, not time).
   const closedSessions = new Set(
-    feed.read('cci').filter((e) => e.verdict !== undefined).map((e) => e.ref as { sessionId?: string }).map((r) => r.sessionId ?? ''),
+    feed.read('cci').filter((e) => e.verdict !== undefined).map((e) => (e.ref as { sessionId?: string }).sessionId ?? ''),
   );
   const sessions = feed.read('planning').filter((e) => e.source === 'session');
   const threads: OpenThread[] = [];
@@ -112,7 +134,9 @@ function buildOpenThreads(feed: ReportingFeed): readonly OpenThread[] {
     const sid = ref.sessionId ?? e.id;
     const pending = e.proposals.filter((p) => p.kind === 'threshold_signal' || p.kind === 'trajectory');
     if (pending.length === 0) continue;
-    if (closedSessions.has(sid) && pending.every((p) => p.kind !== 'threshold_signal')) continue;
+    // A verdict for THIS session closes ALL of its threads — the disposition is the unit of
+    // closure (the ratifying verdict committed the threshold signal, so it has "arrived").
+    if (closedSessions.has(sid)) continue;
     const kind = pending[0]!.kind;
     threads.push({
       ref: e.id,
@@ -183,11 +207,17 @@ export function memoryPageBlock(page: MemoryPage | undefined): readonly string[]
   return out;
 }
 
-/** Veil-guard (M4): the forbidden vocabulary — assessment terms, stage names, drive names. */
-const FORBIDDEN = [
-  'stage', 'infrared', 'magenta', 'amber', 'orange', 'green', 'teal', 'turquoise',
-  'drive', 'eros', 'agape', 'agency', 'communion', 'shadow', 'quadrant', 'cci',
-  'score', 'assessment', 'diagnostic', 'level', 'competence',
+/** Veil-guard (M4): the forbidden vocabulary — assessment terms, stage names, drive names.
+ *  Kept in lockstep with the recall firewall's FORBIDDEN_RECALL_TOKENS (48 §5) — one vocabulary,
+ *  two enforcement points; a drift between them is a MY-RG-0031 class defect. Exported so a test
+ *  can pin the lockstep (MemoryAudit F4). */
+export const FORBIDDEN = [
+  'infrared', 'magenta', 'amber', 'orange', 'green', 'teal', 'turquoise',
+  'eros', 'agape', 'agency', 'communion', 'shadow', 'quadrant',
+  'darkaddiction', 'darkallergy', 'goldenaddiction', 'goldenallergy',
+  'the system has noticed', 'we have observed that you', 'your assessment',
+  'your diagnosis', 'your level', 'your stage', 'cci', 'competence',
+  'drive', 'score', 'assessment', 'diagnostic', 'level',
 ] as const;
 
 /** Audit a page for law violations — the G31-adjacent check the kernel gate reads. */

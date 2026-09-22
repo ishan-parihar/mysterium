@@ -319,8 +319,15 @@ triad complete), tag tranche 2 (12→20), the standing MemoryPage (`[CONTINUITY]
 deterministic LocalRetriever (BM25+recency+graph, RRF-fused) with the pinned-embedding seam, and
 the retrieval firewall (48 §5, `MY-RG-0031`/`MY-RG-0032`). Build records live in
 `docs/DEVELOPMENT-PLAN.md §4` (Phases 11/12); the evidence for why they existed lives in
-`docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7. Cite the plan and the audit, never a phase
-number spoken from memory. **No phase is ratified-but-unbuilt — there is no current build phase.**
+`docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7. **The memory infrastructure was then
+exhaustively audited and live-wired 2026-09-22** (`docs/audits/MEMORY-AUDIT-2026-09-22.md`):
+the audit found the Phase-12 modules had zero production callers (in-vitro green, in-vivo dark)
+and fixed that plus seven further findings — the `[CROSS-SESSION MEMORY]` head now renders into
+every prompt through `buildEnvelope` → `personalizationContext` → ContextPipeline, thread closure
+follows the ratifying verdict, the render/recall Veil vocabularies are in tested lockstep, the
+checkpoint feed is windowed (2000) with the page as its compaction layer, and the retriever is
+Unicode-aware. Cite the plan, the two audits, and the ledger — never a phase number spoken from
+memory. **No phase is ratified-but-unbuilt — there is no current build phase.**
 
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the

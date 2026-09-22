@@ -566,12 +566,13 @@ export class AgenticOrchestrator {
       // RuntimeLoop (45 §5/§6 + 22 §7.4): the personalization envelope + the holon's memory.
       // Both degrade to absent — never block a session.
       ...(() => {
-        const { block, digest, seed, worldPlace } = this.personalizationContext();
+        const { block, digest, seed, worldPlace, continuity } = this.personalizationContext();
         return {
           ...(block ? { personalizationBlock: block } : {}),
           ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
           ...(seed ? { scenarioSeedBlock: seed } : {}),
           ...(worldPlace ? { worldPlaceBlock: worldPlace } : {}),
+          ...(continuity.length > 0 ? { continuityBlock: continuity } : {}),
         };
       })(),
     };
@@ -886,12 +887,13 @@ export class AgenticOrchestrator {
       })(),
       // RuntimeLoop (45 §5/§6 + 22 §7.4): same envelope + memory as the main path.
       ...(() => {
-        const { block, digest, seed, worldPlace } = this.personalizationContext();
+        const { block, digest, seed, worldPlace, continuity } = this.personalizationContext();
         return {
           ...(block ? { personalizationBlock: block } : {}),
           ...(digest.length > 0 ? { holonProfileBlock: digest } : {}),
           ...(seed ? { scenarioSeedBlock: seed } : {}),
           ...(worldPlace ? { worldPlaceBlock: worldPlace } : {}),
+          ...(continuity.length > 0 ? { continuityBlock: continuity } : {}),
         };
       })(),
     };
@@ -2458,11 +2460,13 @@ ${probes}${rubric}
     personaVoice: string | null;
     /** The dialectic pair the composition selected — carried to session end for the d5 writer. */
     dialecticPair: readonly [string, string] | null;
+    /** [CROSS-SESSION MEMORY] lines (48 §3) — banded, Veil-filtered at the envelope seam. */
+    continuity: readonly string[];
   } {
-    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null };
+    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [] };
     try {
       const [line] = this.encounter.moduleRef.split(':') as [Line, ...unknown[]];
-      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context } = buildEnvelope(
+      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context, continuity } = buildEnvelope(
         this.orchestration,
         this.significator,
         this.identity,
@@ -2497,9 +2501,9 @@ ${probes}${rubric}
         ? [context.poles.surface.id, context.poles.structure.id]
         : null;
       this.lastDialecticPair = dialecticPair;
-      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair };
+      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair, continuity };
     } catch {
-      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null };
+      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [] };
     }
   }
 

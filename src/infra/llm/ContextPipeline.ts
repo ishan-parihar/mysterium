@@ -121,6 +121,14 @@ export interface ContextPipelineInput {
   readonly scenarioSeedBlock?: string;
   /** Authored world PLACE text for the cell (RuntimeLoop, 46 §2 world library) — Veil-safe prose. */
   readonly worldPlaceBlock?: string;
+  /**
+   * [CROSS-SESSION MEMORY] (48 §3): the standing MemoryPage lines — banded trajectory prose,
+   * open threads, holon stances — rebuilt from committed feed state at the envelope seam and
+   * Veil-filtered there. Distinct from the in-session [CONTINUITY] block: this one survives the
+   * process (checkpoint-restored feed). Empty/absent → no block (first boot is correct, not an
+   * error).
+   */
+  readonly continuityBlock?: readonly string[];
 }
 
 /** The composed-facet prose blocks the prompt may carry (46 §7 step 5's applied facets). */
@@ -358,6 +366,7 @@ function assembleSystemPrompt(
   holonProfileBlock?: readonly string[],
   scenarioSeedBlock?: string,
   worldPlaceBlock?: string,
+  continuityBlock?: readonly string[],
 ): string {
   const holonDescriptions = formatHolonDescriptions(holonSelection);
   const playerStateSignals = formatPlayerState(veilFilteredSig);
@@ -408,6 +417,12 @@ function assembleSystemPrompt(
   const worldPlaceStr = worldPlaceBlock && worldPlaceBlock.trim()
     ? `\n[WORLD PLACE] ${worldPlaceBlock.replace(/\n+/g, ' | ')}`
     : '';
+  // 48 §3: the standing memory — what the world remembers across sittings (not this session's
+  // [CONTINUITY], which lists recent encounters). Banded prose only; the envelope seam already
+  // Veil-filtered each line, and this renderer re-checks nothing by design (single guard per path).
+  const crossSessionStr = continuityBlock && continuityBlock.length > 0
+    ? `\n[CROSS-SESSION MEMORY] ${continuityBlock.join(' | ')}`
+    : '';
 
   return `[ROLE] You are the manifestation layer of Mysterium.
 [COSMOLOGY] Third Density constraints. Veil enforced. Free will absolute.
@@ -417,7 +432,7 @@ ${frequencySpec.crossAltitudeDirective}
 [ENCOUNTER] lines=${encounterContext.lines.join(',')}; stage=${encounterContext.stage}; modality=${encounterContext.modality}; purpose=${encounterContext.catalyticPurpose}; module=${encounterContext.moduleRef}
 [MODALITY] ${modalityRubric}
 [CONTINUITY] ${consequenceContext}
-[PLAYER STATE] ${playerStateSignals}${synthesisBlock}${cognitiveBlock}${knowledgeBlock}${polarityBlock}${agendaBlock}${composedBlock}${personalizationBlockStr}${holonProfileStr}${scenarioSeedStr}${worldPlaceStr}
+[PLAYER STATE] ${playerStateSignals}${synthesisBlock}${cognitiveBlock}${knowledgeBlock}${polarityBlock}${agendaBlock}${composedBlock}${personalizationBlockStr}${holonProfileStr}${scenarioSeedStr}${worldPlaceStr}${crossSessionStr}
 [OUTPUT FORMAT] ${outputFormat}
 [RULES] No Veil violations. No clinical language. No scoring references. No frame-breaking. Stay in frequency. Scale cognitive complexity to the player's altitude, not the encounter's stage.`;
 }
@@ -645,6 +660,7 @@ export function buildContext(input: ContextPipelineInput): ContextPipelineOutput
     input.holonProfileBlock,
     input.scenarioSeedBlock,
     input.worldPlaceBlock,
+    input.continuityBlock,
   );
 
   // Collect selected holons for output

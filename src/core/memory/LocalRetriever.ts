@@ -42,9 +42,15 @@ export type Ranked = readonly { readonly id: string; readonly score: number }[];
 const STOPWORDS = new Set(['the', 'a', 'an', 'and', 'or', 'of', 'to', 'in', 'on', 'for', 'is', 'are', 'was', 'were', 'it', 'that', 'this', 'with', 'as', 'at', 'by']);
 
 export function tokenize(text: string): readonly string[] {
+  // Unicode-aware word extraction (48 §2 audit): the arch.py ASCII pattern silently drops every
+  // non-Latin token, so a Cyrillic/Devanagari/CJK interest could never match a candidate. This
+  // keeps the arch.py semantics for ASCII (case-fold, split on non-alphanumerics, stopword-light)
+  // while indexing any script with letters or numbers, NFKD-folded so 'café' and 'cafe' agree.
   return text
     .toLowerCase()
-    .split(/[^a-z0-9]+/)
+    .normalize('NFKD')
+    .split(/[^\p{L}\p{N}]+/u)
+    .map((t) => t.replace(/[\u0300-\u036f]/g, ''))
     .filter((t) => t.length > 1 && !STOPWORDS.has(t));
 }
 
