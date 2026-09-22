@@ -37,7 +37,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (61)
+## Records (64)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -93,6 +93,7 @@
 | `MY-AD-0024` | AD | platform | Active | A rung's router must name every document in its rung |
 | `MY-AD-0027` | AD | platform | Active | A gate is not trusted until it has been shown to fail |
 | `MY-AD-0028` | AD | platform | Active | A ratified law declares its consumer or a tracked deferral |
+| `MY-AD-0032` | AD | platform | Active | Cross-session memory is two deterministic surfaces over committed state |
 | `MY-RG-0011` | RG | platform | Active | A generated surface drifts and the commit still looks green |
 | `MY-RG-0012` | RG | platform | Active | A declared rung that no gate reads |
 | `MY-RG-0013` | RG | platform | Active | A verification step mutates the artefact it verifies, or a restore discards unrelated work |
@@ -102,6 +103,8 @@
 | `MY-RG-0022` | RG | platform | Active | A document omitted from its rung router passes every gate |
 | `MY-RG-0024` | RG | platform | Active | A law with no consumer passes every gate |
 | `MY-RG-0028` | RG | platform | Active | A parity harness with a private clock or fixture compares fixtures, not the loop |
+| `MY-RG-0031` | RG | platform | Active | A recall path bypasses the firewalls that guard the render path |
+| `MY-RG-0032` | RG | platform | Active | An embedding model drifts without a pinned version and a rebuild receipt |
 
 ## Generated surfaces (never hand-edited)
 

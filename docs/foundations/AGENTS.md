@@ -31,6 +31,7 @@ defect to fix (`AGENTS.md §3.2`).
 | **Domains** | `37`–`41` | K-12, cohort/multiplayer, action-induction journal, measurement packs, credentialing |
 | **Mechanisms (late)** | `42`–`43` | evidence-only levelling (competence/identity firewall), agentic orchestration (delegation kernel, workers, human intervention) |
 | **Personalization & generation** | `45`–`47` | what the player *prefers* and how it is inferred (`47`), how world entities are *composed* rather than authored (`46`), and how a scenario is *assembled* for one player (`45`) |
+| **Memory** | `48` | how the engine remembers across sessions — the standing page, the retrieval seam, and the retrieval firewall |
 
 `06 §5.1` is the keystone of the substrate: it fixes the three axes, the ladder and the closure.
 `21` is the keystone of the greater cycle: it composes everything into a playable game.
@@ -56,6 +57,7 @@ defect to fix (`AGENTS.md §3.2`).
 | What the player prefers, and how it is inferred | `47` |
 | How a world entity is composed | `46` |
 | How a scenario is assembled for one player | `45` |
+| How the engine remembers across sessions | `48` |
 
 ## 4. Document status conventions
 

@@ -320,6 +320,13 @@ scope, deliverables and gates live in `docs/DEVELOPMENT-PLAN.md §4` (Phase 11);
 for why it exists lives in `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7. Cite the plan and the
 audit, never a phase number spoken from memory.
 
+**Phase 12 — Semantic Memory Tier** is ratified behind it (`MY-AD-0032` +
+`foundations/48-memory-architecture`, 2026-09-22; plan §4): the standing MemoryPage (48 §3), the
+MemoryRetriever seam (48 §4 — LocalRetriever default, EmbeddingRetriever optional + pinned), and
+the retrieval firewall (48 §5, gate G31, records `MY-RG-0031`/`MY-RG-0032`). Patterns adopted from
+the agentmemory/Hindsight study; machinery rejected — write-path law collisions (`MY-AD-0022`,
+F1), layer law, and G14 determinism. Phase 12 depends on Phase 11's checkpoint restore.
+
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
 > five post-plan frontier items closed on 2026-09-17 (`G14`/`G15` have been in

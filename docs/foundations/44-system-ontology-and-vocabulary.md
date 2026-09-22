@@ -269,6 +269,15 @@ owners:
   scaffold-library: foundations/47-preference-inference-and-scaffolding
   scaffold-selection: foundations/47-preference-inference-and-scaffolding
 
+  # memory architecture (added 2026-09-22, MY-AD-0032)
+  memory-architecture: foundations/48-memory-architecture
+  standing-page: foundations/48-memory-architecture
+  memory-page: foundations/48-memory-architecture
+  memory-retriever: foundations/48-memory-architecture
+  retrieval-seam: foundations/48-memory-architecture
+  retrieval-firewall: foundations/48-memory-architecture
+  open-threads: foundations/48-memory-architecture
+
   # curriculum detail
   meta-learning: foundations/29-meta-learning-science
   holonic-curriculum: foundations/30-holonic-curriculum-architecture

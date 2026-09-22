@@ -339,6 +339,12 @@ authority_map:
   system_architecture: docs/system/AGENTS.md
   vocabulary_and_ownership: docs/foundations/44-system-ontology-and-vocabulary.md
   root_router: AGENTS.md
+pending:
+  P15: 'PHASE-12-MEMORY-TIER: the standing MemoryPage (48 §3) + MemoryRetriever seam (48 §4) +
+    retrieval firewall G31 (48 §5) — ratified 2026-09-22 (foundations/48, MY-AD-0032, plan §4),
+    sequenced after Phase 11 (depends on its checkpoint restore). MY-AD-0032 declares this deferral
+    per MY-AD-0028; implement + graduate this key to completed in the same commit as the build.'
+
 completed:
   P0: structure declared; 94 paths resolved
   P1: vocabulary sweep (193 files) + D4 purge + D6 ray ruling

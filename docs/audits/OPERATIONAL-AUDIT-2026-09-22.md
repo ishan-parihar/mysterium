@@ -133,8 +133,12 @@ granularity, not by progression logic.
 
 > **Ownership (2026-09-22, same day):** the configuration and first-step calibration items below
 > (C1–C6, K1's harness step, D1, D2) were **claimed by Phase 11 — Closed-Loop Memory & Preference
-> Intake** (`docs/DEVELOPMENT-PLAN.md §4`, gates G28–G30). This section remains the evidence table
-> that justifies them; mark items ✅ here as Phase 11 lands them.
+> Intake** (`docs/DEVELOPMENT-PLAN.md §4`, gates G28–G30). The red-team memory survey (same day,
+> `foundations/48-memory-architecture` §2) added two frontier items the audit's own survey had not
+> enumerated — the standing page (memory surface #7) and retrieval over the libraries (#8) — owned
+> by **Phase 12 — Semantic Memory Tier** (plan §4; `MY-AD-0032`, gate G31), which depends on
+> Phase 11's checkpoint restore (C1). This section remains the evidence table that justifies both
+> phases; mark items ✅ here as they land.
 
 **CONFIGURATION — wire what exists (no new architecture):**
 

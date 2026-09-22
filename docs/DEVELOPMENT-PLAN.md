@@ -405,12 +405,45 @@ that is already canon.
 phase-able):** real-rater RV thresholds (K1 completion), `expansionRatio`/entropy calibration (K2),
 per-line saturation curves (K3), pods deployment (D3, needs a hosting decision).
 
+### Phase 12 — Semantic Memory Tier (ratified 2026-09-22, `MY-AD-0032` + `foundations/48`) — 📋 planned, unbuilt
+
+Phase 11 gives memory **persistence** (checkpoint restore) and **preference writers**. Phase 12
+gives it a **standing object** and **relevance**: the player-level MemoryPage (48 §3) and the
+MemoryRetriever seam (48 §4) — the two deterministic surfaces `MY-AD-0032` ratified, with the
+retrieval firewall (48 §5) enforced from day one.
+
+**Depends:** Phase 11 deliverable 1 (checkpoint restore) — the page is rebuilt from persisted
+feed state, so a memory that dies at restart has nothing to stand on.
+
+**Deliverables:**
+1. **MemoryPage (48 §3).** Rebuilt at session end from committed deltas only — bounded
+   trajectory prose, open threads with per-line provenance, holon stance mirrors — and read at
+   session boot as the `[CONTINUITY]` head. Template prose (M1), hard budget (M2), provenance
+   required (M3), banded language (M4), a view never a store (M5).
+2. **LocalRetriever (48 §4, default).** BM25 (the `arch.py` tokenizer/field-weighting pattern)
+   + recency weighting + graph edges, RRF-fused; always present, keyless, file-persisted.
+   Serves library ranking enrichment (audit #8), cross-session thread recall, continuity
+   time-slices.
+3. **EmbeddingRetriever (48 §4, optional).** Pinned `all-MiniLM-L6-v2`, local-only via
+   transformers.js/onnxruntime-node; provider absent → LocalRetriever floor (`MY-RG-0032`).
+4. **Retrieval firewall enforcement (48 §5).** G31 lands with the surface, with injected
+   fixtures: banded-only output, read-only recall, Veil-filtered text, per-player isolation.
+
+**Gates:** G31 — retrieval firewall (48 §5, `MY-RG-0031`); `MY-RG-0032` pinning enforced at
+provider construction; MemoryPage replay byte-identical (G28's law extended to the page).
+Kernel suite 27 → 31.
+
+**Duration:** ~1 week (all four deliverables are infra + one content voice). **Post-phase
+(data-dependent):** embedding-index calibration against real corpora; MemoryPage prose-register
+tuning per stage.
+
+
 ### Current work (post-plan) — not a phase
 
-All nine phases are closed; what remains is listed in §2.1 and owned by the record layer. When
-current work is described to an agent, cite `AGENTS.md §4.2` (which now carries the true state)
-and the ledger — never a phase number. **Phase 10 is the exception**: it is a scope'd phase whose
-deliverables were ratified after this plan, and it is the only outstanding build work.
+All phases through 11 are ratified; Phase 11 is the outstanding build work. **Phase 12 —
+Semantic Memory Tier** (standing page + retrieval seam, ratified 2026-09-22 via `MY-AD-0032` and
+`foundations/48`) is planned and follows it. When current work is described to an agent, cite
+`AGENTS.md §4.2` (which carries the true state) and the ledger — never a phase number.
 
 ## 5. Standing work-streams (not phases — continuous)
 
