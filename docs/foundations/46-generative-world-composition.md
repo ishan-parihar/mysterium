@@ -479,7 +479,7 @@ single organ directory is what makes `arch.py context` able to answer "what gove
 | **Dialectical falsification** | the opposite pole distorts the concept | `45 §5.4` structural fidelity, scored on `C` |
 | **Facet incoherence** | composed parts contradict (an Amber voice on a Green stake) | `composedWith` dependency order + coherence check in step 5 |
 | **Corpus divergence** | the facet store drifts from the concept-drafts | compiler-only path (§8), reconciliation gate |
-| **Visibility collapse** | the same 20 facets are seen everywhere | measures the composition's *entropy* per line×stage and flags low-diversity cells |
+| **Visibility collapse** | the same 20 facets are seen everywhere | measures the composition's *entropy* per line×stage and flags low-diversity cells. **Status (2026-09-23):** the monitor exists (`personalization/diversityMonitor.ts`) but only the calibration script records composition events, so the runtime seam is currently **unmonitored** — Phase 13 d4 (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md` §5) |
 
 ---
 

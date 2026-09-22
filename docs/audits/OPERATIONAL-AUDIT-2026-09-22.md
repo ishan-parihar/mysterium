@@ -184,6 +184,12 @@ granularity, not by progression logic.
 | D2 | Tag-ontology growth beyond 12 tags | 46 §4 corpus change, deliberately gated |
 | D3 | Cohort/pods production runtime | `PodTransport` DO adapter exists; no networked deployment |
 
+**Successor audit (2026-09-23):** `docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md` — traced every
+ratified personalization / memory / world surface to its production callers and found nine with
+none (the two largest: the live UDV carries 3 of 8 declared bands, and the `45 §6.1` council-role
+scoping never executes). Its §5 defines **Phase 13** (gates G32–G34). Read it alongside this
+table — the D-items below are content/deployment, Phase 13 is wiring.
+
 **Scale notes:** per-player complexity space is 64 cells × 7 modalities; composition/pooling/
 coherence are O(library) per encounter; worker commits capped at 4 concurrent regardless of holon
 count; every store is per-player/per-browser (one `OrchestrationServices` per client); no

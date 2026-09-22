@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 planned (live-surface wiring); memory infrastructure live (G28–G31)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All build phases through 12** are **implemented and gated** — the kernel gate suite
@@ -326,8 +326,21 @@ and fixed that plus seven further findings — the `[CROSS-SESSION MEMORY]` head
 every prompt through `buildEnvelope` → `personalizationContext` → ContextPipeline, thread closure
 follows the ratifying verdict, the render/recall Veil vocabularies are in tested lockstep, the
 checkpoint feed is windowed (2000) with the page as its compaction layer, and the retriever is
-Unicode-aware. Cite the plan, the two audits, and the ledger — never a phase number spoken from
-memory. **No phase is ratified-but-unbuilt — there is no current build phase.**
+Unicode-aware.
+
+**Then, on 2026-09-23, a live-surface wiring audit** (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md`)
+traced every ratified personalization / memory / world surface to its production callers and found
+**nine architected surfaces with no production caller** — the sharpest being that the live UDV
+carries only **3 of its 8 declared bands** (so purpose, analogy, preference and observed evidence
+change nothing yet) and that the council-role scoping table (`45 §6.1`) never executes. Nothing is
+broken — every dark surface degrades quiet by law — which is why it went unnoticed. **Phase 13
+(`docs/DEVELOPMENT-PLAN.md §4`) is the planned response**: populate the ratified bands, run
+`scopeForRole` at the live seam, put retrieval + telemetry + probes + the engagement register on
+their production paths, and consolidate the stubbed `envelopeRuntime` into the live
+`sessionRuntime`. Gates G32–G34 are defined there.
+
+Cite the plan, the three audits, and the ledger — never a phase number spoken from
+memory. **No phase is ratified-but-unbuilt; Phase 13 is planned and not started.**
 
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
@@ -348,7 +361,12 @@ discharged: every Active law now declares its consumer (checked by DG19), and th
 were discharged with consumer declarations on 2026-09-22. **When a new law lands, this is where its
 absence returns.** A law that is Active with no consumer is the normal shape of pending work here.
 When you implement one, record the implementation in the same commit and cite the record it closes.
-2. **Configuration, calibration, and development frontier** (verified against the tree
+2. **Live-surface wiring** (development, phase-able — newly identified 2026-09-23; the failure
+   class is *a consumer named in the docs that no live seam ever calls*): the nine surfaces in the
+   wiring audit §3–§4, scheduled as **Phase 13** with gates G32–G34. This is distinct from list 1
+   below: those laws have consumers that exist and are gate-covered; what is missing is the call
+   site. When wiring one, add its gate in the same commit.
+3. **Configuration, calibration, and development frontier** (verified against the tree
    2026-09-22, post-Phase-11+12; owned by the plan's record — the detailed evidence table lives in
    `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7):
    - *Configuration:* C6 — GitLab push remains credential-blocked (GitHub current); pods

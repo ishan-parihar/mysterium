@@ -88,6 +88,11 @@ Laws:
 Read path: session boot injects the page as the `[CONTINUITY]` block's head — the orchestrator's
 narrative memory of "you" — before the per-holon `[HOLON MEMORY]` blocks.
 
+**Live seam (2026-09-23):** the canonical builder is `src/core/personalization/sessionRuntime.ts`
+(`buildEnvelope` → `continuity` → `ContextPipeline`'s `[CROSS-SESSION MEMORY]` block). The older
+`personalization/envelopeRuntime.ts` is a pre-Phase-11 stub (its UDV inputs are hardcoded empty);
+Phase 13 d2 consolidates it. Any doc or agent wiring personalization starts from `sessionRuntime`.
+
 ## 4. The retrieval seam (MemoryRetriever)
 
 One interface, two providers, layered per `MY-AD-0002` (core stays pure; the seam is infra):
@@ -103,10 +108,16 @@ interface MemoryRetriever {
   (holon `relationships`, feed refs) fused by **reciprocal-rank fusion**. Deterministic, keyless,
   file-persisted. Serves: library ranking enrichment (#8), cross-session thread recall, continuity
   time-slices ("the Amber arc, three weeks ago").
+  **Status (2026-09-23):** built and gate-validated (G31), but **not yet on a production path** —
+  the candidate-library shortlist is still enumerated, not retrieved. Wiring is Phase 13 d3
+  (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md` §5).
 - **`EmbeddingRetriever` — optional, local-only.** Pinned model (`all-MiniLM-L6-v2`, version
   recorded in the save) via transformers.js (browser) / onnxruntime-node (CLI). Never an API call,
   never a key, never a field of record. Used for semantic candidate matching when the local model
   is present; `LocalRetriever` is the fallback and the floor.
+  **Status (2026-09-23): seam only.** `createEmbeddingProvider` + `EMBEDDING_MODEL_PIN` + `fuseRanks`
+  exist with `MY-RG-0032` enforced; no embedding runtime is installed (a new dependency requiring
+  approval) and no production consumer attaches one. The local floor is the shipped tier.
 
 Fusion and degradation rules:
 

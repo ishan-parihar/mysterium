@@ -475,6 +475,50 @@ pooling (designed feature gap, needs evidence-ledger wiring); the embedding tier
 consumer (by design — the local floor is the default).
 
 
+### Phase 13 — Live-Surface Wiring & Council Alignment (planned 2026-09-23) — ⬜ NOT STARTED
+
+Ratified by `docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md`, which traced every ratified
+personalization / memory / world surface to its production callers and found **nine architected
+surfaces with no production caller** and a live UDV carrying **3 of its 8 declared bands**. Nothing
+is broken — every dark surface fails quiet by the degradation law (`45 §5`), which is why the gap
+went unnoticed — but personalization is shallower than the docs describe. This phase adds no new
+architecture: it populates already-ratified bands, calls already-written functions at the seams they
+were written for, and retires one redundant envelope builder.
+
+**Deliverables** (full detail, evidence and ordering rationale in the audit §5):
+1. **d1 — UDV band population** (`sessionRuntime`): purpose (identity `purposes`), analogy (fluent
+domains from the interest graph), preference (modality mix / difficulty appetite / session
+tolerance / aesthetic leanings), constraints (accessibility), `observedInterests` (evidence-ledger
+`evaluate()`, precedence-guarded) — each degrading to its ratified default.
+2. **d2 — Council role scoping live** (`45 §6.1`): the live envelope exposes `ScopedEnvelope` per
+role via `scopeForRole`; `sessionRuntime` becomes canonical and the stubbed `envelopeRuntime` is
+consolidated into it.
+3. **d3 — Retrieval on the candidate path** (`48 §4`): `localRetrieve` shortlists above a size
+threshold; `filterRecall` guards production recall traffic, not only gate fixtures.
+4. **d4 — Composition telemetry at the runtime seam** (`46 §11`): runtime composition events feed
+the diversity monitors; defect reports reach the dev loop only.
+5. **d5 — Probes reachable + RV harness live** (`47 §7`): offer/decline/record in play (log-only
+band, `MAX_PROBES_PER_SESSION`); `probeValidation.ts` gains a real caller so RV runs are executable.
+6. **d6 — Engagement-register enforcement at the mechanism seam** (`45 §7.3`, `MY-RG-0017`).
+7. **d7 — Composition engine status resolved** (`46 §6.1/§7`): routed through the facet-store
+compiler, or documented authoring-only. No third option.
+8. **d8 — Doc status marks**: no present-tense foundation claim left unbacked (the four known
+overclaims are already marked as of this audit).
+9. **d9 — Memory-audit carry-overs**: MemoryPage render budget cap, crash-sidecar session journal,
+firewall randomized property sweep.
+
+**Gates:** **G32** role scope enforced at the live seam (injected violation fails closed);
+**G33** UDV band population + consent firewall (declared precedence, withdrawal removes the band,
+silent degradation); **G34** engagement-mechanism fail-closed; **G31 extended** with production
+recall traffic. Kernel suite 31 → 34.
+
+**Success criterion:** swapping a single UDV band measurably changes which candidates pool and what
+each council role receives (differential test), proving the personalization stack is load-bearing
+rather than merely present.
+
+**Duration:** ~2 weeks. **Depends:** nothing outstanding — Phases 11–12 are built; d1→d2 is the
+critical path.
+
 ### Current work (post-plan) — not a phase
 
 All phases through 12 are ratified **and built** — the memory infrastructure (Phase 11's
@@ -540,7 +584,16 @@ defered honestly is ALSO IMPLEMENTED (2026-09-17 — see revision record):
 
 What remains is genuinely external: real reliability data (retire ceilings from
 evidence), a partner institution (assess a portfolio), networked pod hosting
-(deploy the DO), and per-line LLM keys for delegated mandates.
+deploy the DO), and per-line LLM keys for delegated mandates.
+
+**Wiring frontier (2026-09-23).** Beyond the external items above, the
+`WIRING-CONTRAST-AUDIT-2026-09-23` found build-complete surfaces that are not yet
+load-bearing — see **Phase 13** (§4). The two that matter most for the product's core
+promise: the live UDV carries only 3 of its 8 declared bands (so purpose, analogy,
+preference and observed evidence change nothing yet), and the council-role scoping
+table (`45 §6.1`) never executes — meaning sub-agents are not yet aligned per role.
+Phase 13 d1→d2 is the critical path for the personalization depth the architecture
+was built for.
 
 ## 9. Revision record
 
@@ -570,3 +623,4 @@ evidence), a partner institution (assess a portfolio), networked pod hosting
 | 2026-09-22 | **Runtime loop closed + authored seeding tier (`P13`/`P14`).** Phase 10's runtime half landed: the reporting feed as code (four idempotent writers, F3), the owner-worker pool (MY-AD-0009 consumer: ±0.3 caps, W4 replay, W5 concurrency), `OrchestrationServices` as the ONE orchestrator seam (envelope + holon digest + runtime coherence gate + session end on all five result paths; services omitted → byte-identical legacy), prompt blocks `[PERSONALIZATION]`/`[HOLON MEMORY]`/`[SCENARIO SEED]`/`[WORLD PLACE]`, and both surfaces (CLI + WebUI) carrying/persisting services. Then authored substance: 64 scenario seeds × 7 modality angles, 8 pole-probes (log-only until RV), 64 world seeds — library 1792 candidates, coherence enforced at authoring (G27, 26→27 gates) and at runtime (routes-don't-cancel), calibration harness extended to both seed tiers. `MY-AD-0009` deferral discharged with consumer; `_org.yaml → pending` graduated to `completed: P13/P14`; `AGENTS.md §4.2` and plan §2.1 corrected (the laws-without-consumer list fully discharged; the open frontier is configuration/calibration/development, owned by `AGENTS.md §4.2`). Tests: 1284 → 1370. GitLab push remains credential-blocked; GitHub current. |
 | 2026-09-22 (same pass) | **Phases 11 + 12 BUILT — the memory infrastructure integrated.** All eleven deliverables across the two phases landed in one development sequence: D1 checkpoint restore with production callers in the CLI loop (G28 proves save→load→save byte-identical across restart); D2 feed readers (`feedReaders.ts` — 27 planning bias at `startSession`, committed-only accessor); D3 consented preference intake (`IdentityProfile` declared interests/aversions, CLI intake + privacy-dashboard withdrawal, G29 firewall); D4 ratification verdicts on every session (G30); D5 polarity pair-state writers under the saturation guard, riding the checkpoint; D6 the probe RV harness (`probeValidation.ts`); D7 64 authored NPC persona seeds (envelope voice line; library 1792 → 2240); D8 tag tranche 2 (12 → 20, 4 curated pairs); P12-1 MemoryPage (M1–M5, `[CONTINUITY]` head, Veil-guarded audit); P12-2 LocalRetriever (BM25+recency+graph, RRF-fused, dependency-free); P12-3 pinned-embedding seam (`EMBEDDING_MODEL_PIN`, `MY-RG-0032` hard error; degradation to the local floor); P12-4 the retrieval firewall (`retrievalFirewall.ts`, R1–R4, fail-closed per hit) enforced by G31 with injected fixtures. Kernel suite 27 → **31**. `_org.yaml → pending` emptied — P15 graduated to `completed` in the same commit as the build. Tests: 1370 → **1389**. GitHub current; GitLab push remains credential-blocked. |
 | 2026-09-21 (same pass) | **One word, one axis (`VOCAB-SUBSTRATE` closed by user ruling).** The user ratified the proposal on the table: *substrate layer* now means ONLY the intra-holonic compositional vertical — `13`'s substrate→core→emergent stack, named by `44` axis E. The D3 bands (Free Will / Love / Light / the octave's contributions) are renamed **law-bands** across the four documents the key named: `02 §4` (table column + the term-scope note, which now records the retirement), `06`'s ownership pointer, `22`'s layer-stack law (`01.4 §2.5.3`'s "one concurrent lesser cycle per integrated band"), and `28`'s J-INV-7. The code constant followed: `SUBSTRATE_LAYER_LAW` → `LAW_BANDS_D3`, its `density` field → `band` (the rows were never densities — that misnomer was part of the collision). Two unrelated compounds stay: `06 §?`'s "energetic substrate (Ra)" (the ray's felt-tone vs energy-substrate distinction, not the vertical) and the "theoretical substrate" idiom (a metaphor, not a term of art). `MY-RG-0026`'s rule — one word never carries two frameworks — now holds on this axis, and DG23 verifies every citation touched by the rename still resolves. Tests 1186 green, 23 doc gates green. |
+| 2026-09-23 | **Live-surface wiring audit + Phase 13 planned (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md`).** Every ratified personalization / memory / world surface was traced to its production callers. Nine have none: `LocalRetriever` + `retrievalFirewall` (gate-fixture traffic only), the stubbed `envelopeRuntime` (its UDV inputs hardcoded empty), `scopeForRole`/`ROLE_SCOPES` (45 §6.1 council alignment never executes), the UDV's own preference band (zero consumers anywhere), `compose()`/`buildLibraryViews` (test-only), `compositionTelemetry` (calibration script only), the probe tier (unreachable; `probeValidation.ts` has zero references — a dead module), and the engagement register (test-only). The live UDV carries 3 of 8 declared bands, so purpose, analogy, preference and observed evidence currently change no ranking. No defect is a crash or a leak — every dark surface degrades quiet by the `45 §5` law, which is why it went unnoticed. **Phase 13 (Live-Surface Wiring & Council Alignment) defined** with nine deliverables (d1 band population, d2 council scoping live + `envelopeRuntime` consolidation, d3 retrieval on the candidate path, d4 runtime composition telemetry, d5 probes reachable + RV harness live, d6 engagement-register enforcement, d7 composition-engine status resolved, d8 doc status marks, d9 memory-audit carry-overs) and gates **G32–G34** (kernel 31 → 34). Four foundation overclaims status-marked in the same commit (48 §4 retriever/embedding, 45 §7.3 register, 46 §11 telemetry) plus the live seam named (`sessionRuntime`) in 48 §3. `AGENTS.md §4.2` gained the third open-work list (live-surface wiring) — the failure class is *a documented consumer that no live seam calls*. |

@@ -314,7 +314,13 @@ Any mechanism that increases return must pass both:
    uncomfortable, the mechanism is out.
 
 Both tests are recorded per mechanism in the implementation's engagement register, and the failure
-class is `MY-RG-0017`.
+class is `MY-RG-0017`. The register exposes `isMechanismAllowed` as the check organs call before
+activating a retention mechanism.
+
+**Status (2026-09-23):** the register and both tests are implemented
+(`personalization/engagementRegister.ts`, all seven mechanisms registered), but the runtime check is
+not yet called by any organ — today it is asserted by a test only. Enforcement at the mechanism seam
+is Phase 13 d6 (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md` §5).
 
 ---
 
