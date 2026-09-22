@@ -246,6 +246,15 @@ S2 and S3 jointly implement the user's requirement that *profile management and
 domain-of-context acquisition — including curriculum alignment context — are agentically
 orchestrated*: no screen edits a profile directly; the Context Steward conducts it.
 
+**The two contracts of one council (added 2026-09-24).** Each role above has two grants: its
+**toolset** (§4.3 — what it may *do*) and its **personalization scope** (`45 §6.1` — what it may
+*see* of the player). The binding is explicit: J1–J5 → scenario-catalyst; T1–T3 and S3 →
+curriculum-teacher; A1–A4 and S1 → assessment; Therapist and J4 → healing; S4 and the crisis path →
+safety; S2 assembles envelopes and holds no player bands; S5 receives none. An agent deployed
+without its scope runs unscoped — a defect, not a default. The orthogonality audit (which pairs
+could collide, and the ruling for each) lives in
+`docs/audits/COUNCIL-ORTHOGONALITY-AUDIT-2026-09-24.md` §2.
+
 ### 4.3 The tool systems
 
 Tool surfaces are **per-agent, minimal, and enumerable**. The orchestrator's loop keeps
@@ -559,6 +568,40 @@ computes from committed evidence, `27` owns the strategy the feed's `progressDel
 owns the projections, `22 §7.4` owns world-side memory. The feed carries; it does not compute.
 
 ---
+
+### 5.6 The standing context contract (added 2026-09-24)
+
+A deployed agent does not receive its context as a per-call argument that must be re-requested; it
+carries a **standing block** in-window for the whole delegation, and reaches further only through
+**authorized access tools**. This is what makes long-running loops (a therapy arc, a study arc, a
+multi-session diagnosis) coherent: the agent always knows its mandate, its view, its boundaries and
+its session ref, and never has to ask who it is.
+
+**The standing block** — injected at deployment, never retrieved:
+
+```
+[MY MANDATE]    role · council · the one thing I do · what I return
+[MY VIEW]       the bands I receive (`45 §6.1`), rendered in banded language · the catalyst target
+[MY BOUNDARIES] what I must not receive, stated explicitly · the Veil: never assert measurement
+[MY TOOLS]      my allowlist (§4.3) · which read tools I hold
+[MY SESSION]    session-log ref · delegation id · long-loop: my prior delegations of this mandate
+```
+
+**The access tools** — for when the standing view is not enough:
+
+| Tool | Purpose | Authorization |
+|---|---|---|
+| `read_my_scope` | re-read own scoped envelope at any point in the session | own scope only |
+| `read_band` | read one band beyond the standing view | per band, per role; a refusal is recorded |
+| `read_session_log` | own prior delegations (eager reading, §5.1) | own role's logs |
+| `analyze_session_logs` | deep analysis across the arc (§5.2) | on warrant, logged |
+| `request_envelope_review` | ask for a fuller projection to audit own mandate | **proposal**; orchestrator ratification (L4) |
+
+Every access is read-only, purpose-bound and logged; no access tool writes state (this is `43 §5.5`'s
+F1 and `48 §5`'s R2 applied to agents rather than to retrievers). A **refusal is information**: it
+signals that a role's view is being stretched, which is the early warning of exactly the mis-scoping
+`45 §6.1` exists to prevent. Delivery of the standing block and the binding in the delegation path
+is Phase 13 d11 (`docs/DEVELOPMENT-PLAN.md §4`).
 
 ## 6. The delegation contract (types)
 

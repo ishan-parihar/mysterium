@@ -259,10 +259,24 @@ projected per role rather than passed whole:
 | Assessment sub-agents | developmental + catalyst target | interest graph, purpose statements (grading is evidence-only, `42 §1.1`) |
 | Curriculum/teacher sub-agents | developmental + depth + purpose (as transfer targets) | analogy internals (they must not teach in the player's domain) |
 | Safety sub-agents | aversions + crisis signals | interest graph, analogy |
+| **Healing sub-agents** (Therapist, J4 — added 2026-09-24) | aversions (veto list) + developmental + purpose (as stakes) | interest graph, analogy internals — affinities must never be usable as levers in shadow-work |
+| **The orchestrator (steward)** | **everything**: all bands **and** the measurement layer | — (it is the only role that sees numbers, and it never speaks them: `43 §3.4`) |
 
 The rule behind the table: **the more metric-bearing the role, the less of the UDV it may see.**
 Personalization is a rendering concern; measurement must remain blind to it, or relevance leaks into
 assessment.
+
+**The binding (added 2026-09-24).** Each row above is a *scope*; the agents that receive it are
+`43 §4.2`'s council. The mapping is now explicit — J1–J5 → scenario-catalyst; T1–T3 and S3 →
+curriculum-teacher; A1–A4 and S1 → assessment; Therapist and J4 → healing; S4 and the crisis path →
+safety; S2 assembles envelopes and holds no player bands; S5 receives none. A scope row without a
+bound agent is inert, and an agent without a binding runs unscoped — both are defects.
+
+**The contract is four-part, not one-part.** Knowing which bands a role receives is necessary and
+not sufficient; a deployed agent also needs *why* it may use them, *how long* it holds them, and
+*what it may return*. The full four-part table, the summoning trigger table, and the standing-context
++ envelope-access contract are in `docs/audits/COUNCIL-ORTHOGONALITY-AUDIT-2026-09-24.md` §3–§5;
+they are the delivery form of this section, not a second scoping law.
 
 ---
 

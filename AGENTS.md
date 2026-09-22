@@ -338,6 +338,17 @@ broken — every dark surface degrades quiet by law — which is why it went unn
 at the live seam, put retrieval + telemetry + probes + the engagement register on their production
 paths, and consolidate the stubbed `envelopeRuntime` into the live `sessionRuntime`.
 
+**Then, on 2026-09-24, a council-orthogonality audit**
+(`docs/audits/COUNCIL-ORTHOGONALITY-AUDIT-2026-09-24.md`) examined the two things called *the
+council* against each other — `43 §4.2`'s 18-role workforce and `45 §6.1`'s 5 visibility scopes —
+and found the binding missing, the **healing and orchestrator scopes absent**, one genuine
+redundancy (**O6**: A3 Validator and S1 Pack Agents hold identical toolsets), and the largest
+gap of all (**O10): the council has no dispatcher** — nothing in the live loop summons a sub-agent,
+so a fully-built workforce can only be invoked by hand. Canon now carries the binding (both docs),
+the `43 §5.6` **standing-context contract** (standing block + authorized access tools), and Phase 13
+**d10** (candidate multiplicity), **d11** (binding + standing block) and **d12** (the dispatcher;
+the trigger table is in the audit §3).
+
 **d1 + d2 are BUILT (2026-09-23) with gates G32/G33** (kernel 31 → 33): every remaining UDV band
 now reaches the live UDV from a real store (`bandSources.ts` — vows + profile goals → purpose,
 profile + feed durations → preference, **analogy derived at the seam** so `pooling.ts:69`'s already-live
