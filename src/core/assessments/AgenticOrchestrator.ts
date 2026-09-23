@@ -42,10 +42,10 @@ import { processOutcome, applyConsequences, type PlayerResponse } from '../engin
 import { accumulateTension, tryTriggerMacroEvent, type PESTLETension } from '../engines/MacroCatalystEngine.js';
 import type { AgentMessage, AskUserQuestionParams, AskUserQuestionResult } from './agentTypes.js';
 import { InfraConfig } from '../config/InfraConfig.js';
+import { detectShadowKeywords, detectWriteInShadow } from './shadowSignals.js';
 import { getRenderer } from './cli/TaskRenderers.js';
 import { computeConfidence } from './engine.js';
 // ponytail: E — shadow keywords loaded from shared data file.
-import { SHADOW_KEYWORDS as SHADOW_KEYWORDS_DATA } from '../data/shadowKeywords.js';
 import {
   TRAINING_TOOLS,
   TRAINING_TOOL_NAMES,
@@ -266,41 +266,6 @@ export class AgenticOrchestrator {
    * ratified StageQuality — this is where `agapeScan`/`erosScan` finally reach a runtime consumer.
    */
   private developmentalAgenda: DevelopmentalAgenda | null = null;
-
-  // ponytail: E — shadow keywords extracted to src/core/data/shadowKeywords.json (shared data, not code).
-  private static readonly SHADOW_KEYWORDS = SHADOW_KEYWORDS_DATA as Readonly<Record<string, readonly string[]>>;
-
-  private static matchesAny(text: string, keywords: readonly string[]): boolean {
-    return keywords.some(kw => text.includes(kw));
-  }
-
-  /** Detect shadow quadrant from text. Returns quadrant name + intensity or null. */
-  private static detectShadowKeywords(text: string): { quadrant: ShadowQuadrant; intensity: number } | null {
-    const lower = text.toLowerCase();
-    if (AgenticOrchestrator.matchesAny(lower, AgenticOrchestrator.SHADOW_KEYWORDS.darkAddiction))
-      return { quadrant: 'DarkAddiction', intensity: Math.min(1, 0.4 + Math.random() * 0.3) };
-    if (AgenticOrchestrator.matchesAny(lower, AgenticOrchestrator.SHADOW_KEYWORDS.darkAversion))
-      return { quadrant: 'DarkAllergy', intensity: Math.min(1, 0.3 + Math.random() * 0.2) };
-    if (AgenticOrchestrator.matchesAny(lower, AgenticOrchestrator.SHADOW_KEYWORDS.goldenAddiction))
-      return { quadrant: 'GoldenAddiction', intensity: Math.min(1, 0.5 + Math.random() * 0.3) };
-    if (AgenticOrchestrator.matchesAny(lower, AgenticOrchestrator.SHADOW_KEYWORDS.goldenAllergy))
-      return { quadrant: 'GoldenAllergy', intensity: Math.min(1, 0.3 + Math.random() * 0.3) };
-    return null;
-  }
-
-  /** Detect shadow drive mapping for write-in evaluation. Returns drive/polarity/shadowKeyword or null. */
-  private static detectWriteInShadow(text: string): { drive: string; polarity: string; shadowKeyword: string | null } | null {
-    const lower = text.toLowerCase();
-    if (AgenticOrchestrator.matchesAny(lower, AgenticOrchestrator.SHADOW_KEYWORDS.darkAddiction))
-      return { drive: 'agency', polarity: 'sts', shadowKeyword: 'DarkAddicted' };
-    if (AgenticOrchestrator.matchesAny(lower, AgenticOrchestrator.SHADOW_KEYWORDS.darkAversion))
-      return { drive: 'communion', polarity: 'sto', shadowKeyword: 'DarkAverted' };
-    if (AgenticOrchestrator.matchesAny(lower, AgenticOrchestrator.SHADOW_KEYWORDS.goldenAddiction))
-      return { drive: 'eros', polarity: 'neutral', shadowKeyword: 'GoldenAddicted' };
-    if (AgenticOrchestrator.matchesAny(lower, AgenticOrchestrator.SHADOW_KEYWORDS.goldenAllergy))
-      return { drive: 'agape', polarity: 'neutral', shadowKeyword: 'GoldenAverted' };
-    return null;
-  }
 
   constructor(params: {
     encounter: ScheduledEncounter;
@@ -1525,7 +1490,7 @@ INSTRUCTIONS:
       // D.9: Use shared shadow keyword detection helper (DRY)
       let writeInDriveDetection: { drive: string; polarity: string; shadowKeyword: string | null } | null = null;
       if (writeIn) {
-        writeInDriveDetection = AgenticOrchestrator.detectWriteInShadow(writeIn);
+        writeInDriveDetection = detectWriteInShadow(writeIn);
       }
 
       // When a write-in is present, its keyword-based detection takes priority over
@@ -1965,7 +1930,7 @@ INSTRUCTIONS:
       null;
 
     // D.9: Use shared shadow keyword detection helper (DRY)
-    const shadowMatch = AgenticOrchestrator.detectShadowKeywords(responseText);
+    const shadowMatch = detectShadowKeywords(responseText);
     const hasShadowAddiction = shadowMatch?.quadrant === 'DarkAddiction';
     const hasShadowAversion = shadowMatch?.quadrant === 'DarkAllergy';
     const hasGoldenAddiction = shadowMatch?.quadrant === 'GoldenAddiction';
@@ -2089,7 +2054,7 @@ INSTRUCTIONS:
     // MCQ option labels should NOT trigger shadow detection — they're structured choices, not expressions.
     if (isWriteIn) {
       // D.9: Use shared shadow keyword detection helper (DRY)
-      return AgenticOrchestrator.detectShadowKeywords(responseText);
+      return detectShadowKeywords(responseText);
     }
 
     return null;
@@ -2397,7 +2362,7 @@ INSTRUCTIONS:
     const depthScore = Math.min(1.0, 0.4 + lengthBonus + densityBonus);
 
     // Shadow detection from write-in
-    const shadow = AgenticOrchestrator.detectShadowKeywords(responseText);
+    const shadow = detectShadowKeywords(responseText);
 
     // Drive detection from semantic content
     const driveKeywords = {
