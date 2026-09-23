@@ -196,7 +196,7 @@ Recorded so the next reader does not "fix" them:
 | # | Item | Band | Status |
 |---|---|---|---|
 | 0 | **Prerequisite: `G37` must land before any split** | — | ✅ **DONE 2026-09-24** (Phase 14 d5) — every production `.ts` is now inside the tsconfig `include`, so a new file cannot escape the graph, and no module may rebuild a canonical set. The *scaffolder↔linter↔indexer* lesson from `KOSMOS-RG-008` applied to this repo's own gate |
-| 1 | `cli-game.ts` split + calibration extraction to `src/core/` | > 1 000 | **OPEN** — this is Phase 14 **d3**; Q10's ruling (extract the calibration block, where F5 lived) stands |
+| 1 | `cli-game.ts` split + calibration extraction to `src/core/` | > 1 000 | **PARTIAL 2026-09-24** — the calibration block landed (Phase 14 **d3**, `InitialAltitudeInference` + `QuickCalibrationScoring`, commit `e5e536f`). **Stage A of the split landed too**: `scripts/cli/` now holds `config.ts` · `data.ts` · `render.ts` (the pure helpers — 613 lines out of the runner, and `tests/cli/RenderHelpers.test.ts` is the first unit test the CLI has ever had). **Remaining stages below** |
 | 2 | `gates.ts` split by family + `index.ts` roster | > 1 000 | ✅ **DONE 2026-09-24** — nine family files under `validation/gates/` (`plumbing` · `roster` · `trajectory` G1–G9 · `veil` G10–G12 · `curriculum` G17–G21 · `orchestration` G14/G15/G26 · `personalization` G22–G25/G27 · `memory` G28–G35 · `surface` G36–G38); `gates.ts` is now a 33-line index whose re-export roster IS the public surface. The landed families are named for the *domain* they assert, not for the list-of-concerns proposed above |
 | 3 | `TaskRenderers.ts` split by renderer group | > 1 000 | ✅ **DONE 2026-09-24** — six files under `assessments/cli/renderers/` (`shared` · `brainGames` · `social` · `reflective` · `probes` · `generic`); `TaskRenderers.ts` is a 127-line index that re-exports the 24 renderers **by name** (not `export *`, so the family files keep their palettes and tables private) and keeps `getRenderer`, whose dispatch table is the one reader of the whole set. A named `TaskRenderer` type replaced the 24 inline repeats of the return shape |
 | 4 | `AgenticOrchestrator` collaborator extraction | > 1 000 | **OPEN** — incremental; the 645-line test is the lock |
@@ -215,6 +215,20 @@ reader can be forced to see it.
 
 **Sequencing note:** item 2 (or any split) should land *after* item 0 — a new file created outside the
 checked graph is unverified at birth, which is the failure this audit exists to prevent.
+
+### The CLI split — remaining stages (item 1, precise)
+
+Stage A (done) extracted what could move *without* touching module state. The next three stages are
+defined by the same boundary, and each one is shippable on its own because the CLI is exercised by
+`G36` (boot, both modes) plus `tests/cli/CliMatrix.test.ts` (the subcommand surface):
+
+| Stage | What moves | Why it is not done yet |
+|---|---|---|
+| **B — flags** | `scripts/cli/flags.ts`: the parsed option state (`HEADLESS`, `JSON_MODE`, `VERBOSE`, `DEV_MODE`, `FORCE_*`, `NEW_GAME`, `SKIP_CALIBRATION`, `encounters`, `USER_ANSWERS`) behind explicit setters, initialised once by the entry after `program.parse`. | Everything currently reads module-level `const`/`let` captured at import time. Until the state has one owner, neither the printers nor the commands can move. **This is the prerequisite for C and D** |
+| **C — printers** | `scripts/cli/output.ts`: `banner` · `info` · `success` · `warn` · `error` · `separator` · `verbose` · `emitEvent` · `emitDevPrimitives` · the session renderers (`renderSessionPosition`, `renderLinesProgress`, `printSignificator`, `printEncounter`, `renderPostSessionSummary`, `renderPrerequisiteGaps`). | These read the flags (do they print, or emit JSON, or stay silent) and the ANSI/Veil helpers — so they follow B, and `render.ts` stays the pure layer beneath them |
+| **D — commands + flows** | `scripts/cli/commands/*.ts` (one module per subcommand: `runProfile`, `runDiagnostic`, `runSingleEncounter`, the `runAgenticEncounter` drill, …) and `scripts/cli/runtime.ts` (the two session flows: `runDirectQuestioningSession`, `runFullSession`). The entry keeps the commander chain and `main()`. | The flows own the checkpoint/journal writes that `G36` asserts; splitting them is the last step because it is the one that can silently change *when* those writes happen |
+
+**How to verify each stage:** `npx tsc --noEmit` (0) · `npx vitest run tests/cli tests/validation` (E `G36` boots both `SESSION_MODES` headless against a throwaway `MYSTERIUM_HOME`) · `npm run build` · `python3 scripts/arch.py validate` · plus a losslessness check against the pre-stage file (the code-line multiset, minus the `export ` prefixes) — the check that caught a whole async function being swallowed when the first pass used a scanner that did not know `async function` starts a declaration.
 
 ---
 
