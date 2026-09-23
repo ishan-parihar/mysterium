@@ -9,19 +9,42 @@
 import { describe, it, expect } from 'vitest';
 import { briefHistory, continuityContext } from '../../../src/core/assessments/promptBlocks.js';
 import type { ConsequenceRecord } from '../../../src/core/domain/ConsequenceRecord.js';
+import type { PolarityTrace } from '../../../src/core/domain/PolarityTrace.js';
+
+/** Every drive healthy — the engine's definition of a passed encounter. */
+const HEALTHY = {
+  Agency: 'HealthyBalanced',
+  Communion: 'HealthyBalanced',
+  Eros: 'HealthyBalanced',
+  Agape: 'HealthyBalanced',
+} as const;
+
+function trace(over: Partial<PolarityTrace> = {}): PolarityTrace {
+  return {
+    encounterId: 'Cognitive:Red:01',
+    timestamp: 0,
+    driveDirectionality: HEALTHY,
+    energeticDirection: 'Radiative',
+    stageOrientation: 'Ascending',
+    sourceOfNourishment: 'Self',
+    ...over,
+  } as PolarityTrace;
+}
 
 function record(over: Partial<ConsequenceRecord> = {}): ConsequenceRecord {
   return {
     encounterId: 'Cognitive:Red:01',
+    timestamp: 0,
+    line: 'Cognitive',
+    polarityTrace: trace(),
+    shadowSurfaced: null,
+    shadowResolved: null,
+    holonDeltas: [],
+    altitudeShift: null,
+    driveShift: null,
     narrativeSummary: 'The player chose to stay with the difficulty instead of deflecting it.',
-    polarityTrace: {
-      driveDirectionality: { agency: 'HealthyBalanced', communion: 'HealthyBalanced', eros: 'HealthyBalanced', agape: 'HealthyBalanced' },
-      energeticDirection: 'Radiative',
-      serviceToOthers: 0.6,
-      serviceToSelf: 0.2,
-    },
     ...over,
-  } as ConsequenceRecord;
+  };
 }
 
 describe('continuityContext', () => {
@@ -41,13 +64,11 @@ describe('continuityContext', () => {
   it('marks a failed encounter and names the shadow that surfaced', () => {
     const failed = record({
       shadowSurfaced: 'GoldenAllergy',
-      polarityTrace: {
-        driveDirectionality: { agency: 'ExcessiveAgency', communion: 'HealthyBalanced', eros: 'HealthyBalanced', agape: 'HealthyBalanced' },
+      polarityTrace: trace({
+        driveDirectionality: { ...HEALTHY, Agency: 'DarkAddicted' },
         energeticDirection: 'Absorptive',
-        serviceToOthers: 0.2,
-        serviceToSelf: 0.7,
-      },
-    } as Partial<ConsequenceRecord>);
+      }),
+    });
     const block = continuityContext([failed]);
     expect(block).toContain('✗ FAILED');
     expect(block).toContain('(STS/absorptive)');
@@ -55,12 +76,12 @@ describe('continuityContext', () => {
   });
 
   it('marks a line advance when one happened', () => {
-    const advanced = record({ altitudeShift: { line: 'Cognitive', from: 'Red', to: 'Amber' } } as Partial<ConsequenceRecord>);
+    const advanced = record({ altitudeShift: { line: 'Cognitive', from: 'Red', to: 'Amber' } });
     expect(continuityContext([advanced])).toContain('LINE ADVANCED: Cognitive Red→Amber.');
   });
 
   it('keeps only the last three encounters, in order', () => {
-    const five = [1, 2, 3, 4, 5].map((n) => record({ narrativeSummary: `encounter number ${n}` } as Partial<ConsequenceRecord>));
+    const five = [1, 2, 3, 4, 5].map((n) => record({ narrativeSummary: `encounter number ${n}` }));
     const block = continuityContext(five);
     expect(block).not.toContain('encounter number 1');
     expect(block).not.toContain('encounter number 2');
@@ -90,7 +111,7 @@ describe('briefHistory', () => {
 
   it('names a surfaced shadow without marking pass or fail', () => {
     // This block is a memory cue, not a scoreboard — the pass state belongs to continuityContext.
-    const block = briefHistory([record({ shadowSurfaced: 'DarkAddiction' } as Partial<ConsequenceRecord>)]);
+    const block = briefHistory([record({ shadowSurfaced: 'DarkAddiction' })]);
     expect(block).toContain('A DarkAddiction pattern surfaced.');
     expect(block).not.toContain('PASSED');
     expect(block).not.toContain('FAILED');
