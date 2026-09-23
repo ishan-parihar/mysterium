@@ -215,6 +215,23 @@ Two consequences that change the engine's behaviour:
    provisional, and re-opens it. **This replaces a monotone coverage counter with a falsifiable
    state** — which is what stops the store from ossifying around what the player once managed.
 
+**The polarity resolution loop (2026-09-24, Phase 13 d10 ratification — this §4.3's states are what
+it reads and writes).** Each encounter closes with a *reading*, not a verdict: a scored position on
+the cell's inclination, altitude and balance toward conscious/light versus unconscious/shadow, with
+a direction of travel — proposed by the local System-1 layer from the session log, ratified or
+vetoed by the orchestrator (`43 §4.1`'s L4; the reading is never a self-committing write). On
+ratification: a confirming reading **strengthens** the pair's hold — `reconciled` is reached only
+by *repeated* confirmations, never in a single sweep (the user's transmutation ruling: hard
+polarities do not reconcile at once; the development is spiral); a disconfirming reading **re-opens**
+the pair to `active-tension` and increments shadow severity on the cell's line (`16`'s Distortion
+Ledger), which raises the next encounter's unfamiliar dosage (`45 §5.4`'s consumer). Every reading
+profile-updates through the background workers (`43 §4.5b`) — the process reveals the player's
+tendencies and feeds them back. **A cell is never closed:** its polarities are probed across the
+index's orthogonal dimensions (the `similar`/`opposite` walk over the axis space), and a cell's
+profiling completes only when read coverage across those dimensions is robust — a coverage
+criterion, never a counter. The plan's Phase 13 d10 owns the mechanics; §4.3's states and the
+invariants of §11 remain the law.
+
 ### 4.4 What the tag store is for
 
 | Consumer | Query | Purpose |

@@ -200,8 +200,12 @@ Ordered; the first two are small and unblock everything else.
 4. **Build the dispatcher** (O10) — the trigger table as strategy: `schedulePresence` gains its
    production caller in the live loop, deterministic per 43 §3.3, with a gate that the same state
    summons the same role.
-5. **Then d10 (candidate multiplicity)** — because until a cell has more than one rendering, all
-   roles receive the same content and scoping differentiates nothing.
+5. **Then d10** — because until a cell has more than one rendering, all
+   roles receive the same content and scoping differentiates nothing. (**Reshaped 2026-09-24 by
+   user ratification into the Polarity Pool** — derived similarity/opposition renderings, the
+   familiar/unfamiliar shadow-scaled polarity, and a spiral resolution reading on the
+   System-1-propose / orchestrator-ratify path; the multiplicity this step needed is now derived
+   rather than authored. See the plan's Phase 13 d10 entry.)
 
 ---
 
@@ -226,7 +230,7 @@ All five §6 steps are implemented and kernel-gated. The evidence:
 | 2. Delivery | `buildEnvelope(...).scopes` per row + `healing`; `delegateSession` records `councilScope` + `standing` on the log; `authorizeBandRead` fails closed with reasons; `read_my_scope`/`read_band` as universal read tools | G32 extended; `CouncilStanding.test.ts` (19 tests: authorization matrix, block content, refusal recording, unscoped degradation) |
 | 3. Rows | `healing` in `ROLE_SCOPES` + the orchestrator's steward row (§4 — everything, never speaks) | G32 scope-contract check over all six scopes |
 | 4. Dispatcher | `dispatcher.ts` — `TRIGGER_TABLE` (11 rows, table order = precedence), `dispatchCouncil`, background law (S2/S5 never foreground), `observationForTrigger` (the state↔row round-trip); live surface `councilTools.ts` (`summon_council` / `schedule_presence` / `delegate_session`, rules 12–15) + orchestrator registration (opt-in, byte-identical without); CLI drill `delegate --summon --trigger <name>` | **G34** (table coherence + reachability, crisis precedence, single bypass, threshold assembles the foreground council with Therapist first, determinism, seed-invariance, no band-less role summoned, tool vocabulary in step); `Dispatcher.test.ts` (21 tests incl. end-to-end crisis summons delivering the healing scope) |
-| 5. d10 | still open — the gating dependency this audit identified is now the only one left | recorded in the plan as Phase 13 d10 |
+| 5. d10 | still open — the gating dependency this audit identified is now the only one left. **Reshaped 2026-09-24 into the Polarity Pool** (user ratification: derived index, shadow-scaled polarity, spiral reading, System-1 layer) — the multiplicity this row awaited is now derived from the axis-space index rather than hand-authored | recorded in the plan as Phase 13 d10 |
 
 Kernel suite: **34 gates** (G32 role scope, G33 UDV bands, G34 council dispatch). Decisions D1–D4
 ratified as proposed (D1 own healing row; D2 S1 operates / A3 judges; D4 strategy-driven, no LLM

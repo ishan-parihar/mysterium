@@ -69,6 +69,18 @@ did it cross the competence/identity firewall, 42 §1.1).
   process; it is the property of a coordinated system of agents and artifacts. The
   orchestrator/council split is distributed cognition made literal — with the addition
   that the artifacts of coordination (logs) are first-class, machine-readable.
+- **The System-1 layer (added 2026-09-24, Phase 13 d10 ratification).** A local, fast,
+  non-autoregressive decision model (reference implementation: Laya, Apache-2.0 — state + typed
+  choice/score/yes-no questions in one forward pass) is the council's reflex arc: it *proposes*
+  cheap judgments (tag resolution for pooling queries, polarity readings from the session log,
+  neighbor prefiltering for the similarity/opposition index walk) and the orchestrator *ratifies or
+  vetoes* (§4.1's L4 — a proposal is never a self-committing write). Three permanent boundaries:
+  it never authors content (authoring stays frontier-LLM + human-audited per `46 §8`'s provenance
+  discipline), it never holds final authority on a ratified decision, and it runs behind an
+  interface with a deterministic fallback so its absence degrades to the pre-System-1 pipeline
+  (same law as `48 §4`'s optional embedder). Whether the model itself stays is decided by
+  RV-style validation; the interfaces stand regardless. Its work is background-class: proposed
+  readings travel the `§4.5b` worker path for ratification, never the foreground loop.
 - **Supervisor–worker patterns from multi-agent systems research.** The orchestrator
   pattern (plan → delegate → wait → synthesize) matches observed best practice in
   LLM agent systems: a controlling agent with tool access delegating bounded tasks to

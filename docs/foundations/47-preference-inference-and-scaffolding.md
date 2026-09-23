@@ -470,6 +470,13 @@ attributed and the player's to read, edit and delete (6).
 - **Decay calibration.** §8's expiry windows and the ≥6/≥3 evidence floor are reasoned, not measured.
   Same standing deferral as `45`'s `noveltyBudget` and `46`'s `expansionRatio`: one play-data
   calibration answers all three.
+- **Evidence–shadow bridge (opened 2026-09-24, Phase 13 d10 ratification).** The polarity pool's
+  disconfirming readings increment `16`'s Distortion Ledger severity, and the ledger's severity in
+  turn doses the unfamiliar pole (`45 §5.4`). This makes the evidence ledger and the shadow ledger
+  coupled surfaces for the first time. Open question: does a *reconciled* polarity pair earn
+  severity *decay* on the corresponding ledger entries (synthesis as healing evidence), and with
+  what burden of proof? Leaning yes, evidence-gated symmetric to re-opening — but it must be
+  ratified as a law before any implementation couples the two ledgers bidirectionally.
 
 ---
 

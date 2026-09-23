@@ -217,6 +217,14 @@ selected object with its own library and fading rule, not a decision re-made per
   instance declares a `noveltyBudget`: the fraction of encounters that must introduce a *new* domain.
   Bridging is a ramp into unfamiliar material, not a wall around familiar material.
 
+**Consumer (2026-09-24, Phase 13 d10 ratification):** `noveltyBudget` has its first live consumer in
+the **polarity pool** — each encounter resolves a polarity decision whose unfamiliar pole (flavour
+facing the player's active shadow on the cell's line) is dosed *shadow-severity-scaled* rather than
+at a flat ratio. Two boundaries are inherited unchanged: the aversion veto is a hard boundary the
+polarity decision never overrides and never selects from (`§5.2.1`), and unfamiliar ≠ aversive.
+The plan (`docs/DEVELOPMENT-PLAN.md` Phase 13 d10) owns the mechanics; this section owns the law:
+rotation is dosage, dosage reads the shadow ledger, and the veto outranks both.
+
 ---
 
 ## 6. The ScenarioContext envelope
@@ -391,7 +399,10 @@ it (6).
   T3 is never persisted. The tier is a property of the *distinction* rather than of the inference
   method, which is what makes it auditable — `47 §9` lists the checks.
 - **Novelty budget calibration.** What fraction of encounters must introduce a new domain before
-  rotation feels disruptive rather than invigorating? Unresolved; needs play data.
+  rotation feels disruptive rather than invigorating? Unresolved; needs play data. The *consumer*
+  is now defined (2026-09-24): the polarity pool's shadow-severity-scaled dosage (`§5.4` refinement
+  above, Phase 13 d10) — calibration remains the shared play-data deferral with `46`'s
+  `expansionRatio` and `47 §8`'s evidence floors.
 - **Scenario template shape enforcement.** §2's invariant needs a linter (a schema gate) before the
   template library can be authored at volume.
 - **Cross-cultural analogy.** Fluency domains are culture-laden; a domain fluent for one player is
