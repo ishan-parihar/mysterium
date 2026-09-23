@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 FULLY COMPLETE (d1–d12, G32–G35; battery 1 507); Phase 14 IN PROGRESS (d1 P0 BUILT); memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 FULLY COMPLETE (d1–d12, G32–G35; battery 1 507); Phase 14 IN PROGRESS (d1 P0 BUILT; d2a/b/c planned); memory infrastructure live (G28–G31)
 
 > **Checked-graph warning (read before trusting a green battery).** The battery is only as wide as
 > its *checked graph*: the files `tsc --noEmit`, the tests, the gates and the linter read. As of
@@ -314,6 +314,20 @@ R&D Documentation (refined theory + design)
 > records the break, the fix, and the deeper finding: the **default and all headless/JSON** modes
 > bypass the orchestration/personalization/memory architecture (`runDirectQuestioningSession`).
 > Treat "the battery is green" as a statement about `src/` + `tests/` until Phase 14 d2/d5 land.
+>
+> **What the hole was hiding (§10 of the same audit, 2026-09-24 third sweep).** Once `scripts/**`
+> was type-checked the errors existed for the first time — **63**, and triaged they are not one
+> class: **2 `ReferenceError`s that make the story/architecture-live branch unable to dispatch an
+> encounter** (`runFullSession`, the dispatch caught by its own `try`), **8 sites that silently
+> falsify user-facing output on the default path** (**every drive-health score is exactly 0.5
+> regardless of the drives**; the post-session summary **always reports "1 aspect explored"**; the
+> vow-fulfilment message never prints), and 53 type-shape-only. And one defect no error count
+> reveals: **the retired stage `White` is still live in four CLI ladders + `check-invariants.ts`**
+> — the canonical ladder ends at `Turquoise` (`Stage.ts`) and `GreaterCycleEngine` records the
+> retirement, but the retirement reached `src/` and **missed `scripts/`**, so calibration **drops
+> `Teal` and appends a stage that does not exist**. Same failure shape as the P0: *a `src/` change
+> that no `scripts/` reader can be forced to notice.* **Before trusting any CLI-surfaced number —
+> calibration stage, drive health, session summary counts — check it against `src/`.**
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All build phases through 12** are **implemented and gated** — the kernel gate suite

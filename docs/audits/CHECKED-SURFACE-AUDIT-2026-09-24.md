@@ -200,3 +200,100 @@ real-rater probe-validation protocol).
 |---|---|---|
 | Q5 | **F2's disposition:** wire the orchestration services into the Direct-Questioning path (making the default + headless modes architecture-live), or invert the default to story mode and keep DQ as a deliberately thin legacy surface? | The architecture is currently dark in the default mode; the user's "no lapses" requirement points at wiring it, but DQ's thinner UX was a deliberate choice. |
 | Q6 | **K1 protocol scope:** does RV1–RV7 run against a recruited rater cohort (external) or is the deliverable the *instrumentation* — the rater-facing administration + agreement-statistics harness that a cohort plugs into? | Decides whether K1 is an engineering deliverable or an external programme. |
+
+---
+
+## 10. The third sweep — the error census after the P0 fix, and what the survivors reveal
+
+Run 2026-09-24 with `scripts/**` now in the tsconfig `include` (so the errors exist for the
+first time). **63 errors remain** — the P0 set (5) plus the two `tdg-probe.ts` errors are retired.
+
+### 10.1 Census
+
+| File | Errors |
+|---|---|
+| `scripts/cli-game.ts` | 60 |
+| `scripts/compile-facets.ts` | 2 |
+| `scripts/check-invariants.ts` | 1 |
+
+| Code | Count | Class |
+|---|---|---|
+| `TS6133` / `TS6192` | 24 | dead declarations (unused imports/locals) |
+| `TS2345` | 9 | argument type drift |
+| `TS2554` | 7 | **arity drift** |
+| `TS2339` | 5 | property does not exist |
+| `TS2322` | 5 | assignment type drift |
+| `TS2551` | 4 | property does not exist (did-you-mean) |
+| `TS2353` | 3 | unknown property in object literal |
+| `TS2352` | 2 | unsafe cast |
+| `TS7053`/`TS6192`/`TS2741`/`TS2552`/`TS18004` | 1 each | mixed |
+
+### 10.2 Severity triage — three tiers, not one
+
+Type errors are erased at runtime, so the *count* is not the risk. The risk is what each one does
+when its line executes. Read site-by-site (each classified by its enclosing function):
+
+| Tier | Meaning | Sites |
+|---|---|---|
+| **T1 — dies or degrades when reached** | `TS18004` `responsesPool` (v3644) and `TS2552` `telemetry` (v3818) are bare names with **no value in scope** → `ReferenceError`. Both sit inside `runFullSession` — the **story/architecture-live** branch — and the 3644 one is inside a `try`, so the encounter dispatch is caught and degrades. **The story branch cannot dispatch an encounter.** | 2 |
+| **T2 — silently falsifies output** | `TS2551` drive casing ×4 (v3150–3153): `driveWeights.agency` → `undefined` → `?? 0` → **every drive health score is exactly 0.5 regardless of the drives**, on the **default (DQ) profile path**. `TS2339` `ConsequenceRecord.line` ×3 (v811/850/980) → `new Set([undefined]).size === 1` → the post-session summary **always reports "1 aspect explored"**. `TS2339` `vowFulfilled` (v5747) → the fulfilment message **never prints**. | 8 |
+| **T3 — type-shape only** | dead declarations, unsafe casts, enum/union mismatches that cannot change behaviour at runtime. | 53 |
+
+**T2 is the serious class.** A crash is loud and gets fixed; a profile that reports *balanced drives*
+for every player, and a session that reports *one dimension explored* every time, is the failure the
+Veil-compliant design makes hardest to notice — there is no error, only a plausible number. Both sit
+on the path a headless agent drives.
+
+### 10.3 F5 (High) — the retired stage `White` is still live in `scripts/**`
+
+The census surfaced a *semantic* defect that no count would have shown. `src/core/domain/Stage.ts`
+defines the canonical ladder as **8 stages ending at `Turquoise`** (with `Teal` as stage 7), and
+`src/core/engines/GreaterCycleEngine.ts` records the retirement explicitly:
+
+> *"The row previously read `'White'`, which named the retired stage 8 … There is no D4 stage in
+> Mysterium."*
+
+That retirement reached `src/` and **missed `scripts/`** — the same failure shape as P0:
+
+| Site | Ladder in use |
+|---|---|
+| `scripts/cli-game.ts:1122` `CAL_STAGES` | `Infrared…Green, Turquoise, White` |
+| `scripts/cli-game.ts:1164` `stageOrder` | `Red…Turquoise, White` |
+| `scripts/cli-game.ts:1460`, `:1608` `allStages` | `Infrared…Green, Turquoise, White` |
+| `scripts/check-invariants.ts:275` | `Infrared…Green, Turquoise, White` |
+
+The script ladder **drops `Teal` and appends the retired `White`**. Consequences on live surfaces:
+calibration can never report `Teal`; its "highest detected stage" comparison (v1375) orders against
+a ladder containing a stage that does not exist; the stage colour/abbrev tables (v1436–1460) render a
+retired stage and omit a canonical one. This is precisely the *"confusing, or deviated stage
+simulation"* the stage-ladder ratification exists to prevent — and it survived because the CLI is
+outside the checked graph, so a retired literal is never type-rejected.
+
+### 10.4 F6 (Medium) — the ladder is re-declared instead of imported
+
+`domain/Stage.ts` exports both `ALL_STAGES` and `stageOrdinal()`, yet the ladder literal is
+re-declared in **at least 18 modules** (`AgenticOrchestrator`, `SignificatorSnapshot`, `CCIEngine`,
+`FallbackProvider`, `observables`, `gates`, `udv`, `envelopeRuntime`, `candidateLibrary`,
+`scenarioSeeds`, `npcSeeds`, `sessionRuntime`, `LLMClient`, …) and hand-rolled with
+`.indexOf(...)` instead of `stageOrdinal()`. The `src/` copies **agree today** — so this is not a bug,
+it is the *precondition* for one: the `White` leak is what happens when one copy drifts and nothing
+compares them. It is a non-redundancy violation against `AGENTS.md §2.2` with a demonstrated outcome.
+
+### 10.5 What this changes about Phase 14
+
+- **d2 splits into three**: d2a retire the census, **d2b purge the retired ladder from `scripts/**`**
+  (F5 — a correctness fix, not a type fix), d2c make the ladder single-source (F6).
+- **d4 is promoted.** "Wire DQ into the architecture" is joined by "**the story branch cannot
+  dispatch an encounter**" (T1) — the architecture-live mode is not merely non-default, it is
+  broken. G36's boot smoke must exercise **both** modes, not just the default.
+- **G37 gains a second assertion**: not only "is every entry point in the checked graph" but "does
+  any module re-declare a canonical domain constant" — the F6 class made visible.
+
+### 10.6 Open questions from this sweep
+
+| # | Question | Why it matters |
+|---|---|---|
+| Q7 | **Where does `White`'s marker content go?** The CLI carries a real marker list under `White` (`emptiness`, `non-dual`, `witness`, `dissolution`, `formless`, `suchness`, `rigpa`). If `White` is the retired *stage 8*, is this content (a) deleted, (b) folded into `Turquoise` as the sub-octave closure, or (c) relocated to the Violet **closure event** (`Ray.ts CLOSURE_BINDING`, which is explicitly *not* a stage)? | Decides whether a purge loses authored content. |
+| Q8 | **Is `Teal` absent from the CLI's calibration ladder by accident, or was calibration intentionally authored against a different ladder?** | The purge's direction depends on it. |
+| Q9 | **Direction of repair for API drift:** is `src/` canonical (adapt every CLI call site), or does a CLI call site express a genuine feature intent that `src/` should grow (e.g. `CheckInOutcome.vowFulfilled`, which the CLI's message implies should exist)? | A blanket "adapt the CLI" would delete a feature; a blanket "extend src" would legitimise drift. |
+| Q10 | **Does the CLI split (d3) also move domain logic out?** The calibration block (v1100–1700) is a domain algorithm living in a presentation layer — and it is where F5 lives. Split-only, or split + extract to `src/core/`? | The extraction is the structural fix for F5's class, but it is a larger change. |

@@ -736,6 +736,31 @@ but *partial*, and the live architecture had no automated exerciser at all.
 closure · **split the CLI while fixing** · **approve Laya** and wire the real System-1 adapter ·
 **do K1 first** (the probe-validation protocol).
 
+**Ratified 2026-09-24 (second round — the F2 disposition and K1's scope):**
+
+- **Wire Direct Questioning into the architecture.** DQ ceases to be an engine-bypassing path:
+  it creates and passes `OrchestrationServices`, captures the checkpoint and appends the journal.
+  The user's framing: **the headless mode exists so AI agents can test and debug everything**, and
+  **the CLI is the primary interface at this stage** — the WebUI is a later phase, after the CLI is
+  finalised. So a dark surface is not acceptable anywhere an agent may drive: every mode an agent
+  can invoke must exercise the real loop, and anything an agent cannot reach is a blind spot by
+  construction.
+- **K1 = instrumentation plus a synthetic pilot.** The protocol's executable half (rater-facing
+  administration, known-answer / adversarial / below-stage statistics, agreement thresholds, the
+  band-flip retirement condition) lands first, then a pilot over scripted personas establishes
+  **provisional** thresholds, clearly labelled until real raters confirm them.
+
+**Ratified 2026-09-24 (third round — the post-P0 error census, `CHECKED-SURFACE-AUDIT-2026-09-24`
+§10):** with `scripts/**` finally type-checked, the 63 surviving errors triaged into **three tiers,
+not one** — two `ReferenceError`s that make the story branch unable to dispatch an encounter (T1),
+eight sites that **silently falsify** user-facing output on the default path (drive health pinned to
+0.5; "1 aspect explored" always; the vow-fulfilment message never printing) (T2), and 53
+type-shape-only (T3). The census also surfaced a semantic defect no count would show: **the retired
+stage `White` is still live in four CLI ladders and the invariant checker** (F5), and the canonical
+ladder is re-declared in ≥18 modules (F6). d2 therefore split into **d2a/d2b/d2c**, and G37 gained a
+second assertion. **Direction of repair (Q9) and the inspection order (d2b before d2a) are the two
+forks put to the user.**
+
 **Deliverables:**
 1. **d1 — Restore the CLI (P0).** ✅ **BUILT 2026-09-24.** Repointed the two holon-JSON imports at
    `src/core/world/data/` (WORLD-STORE-MOVE missed this consumer); destructured `declineVow` from
@@ -745,36 +770,71 @@ closure · **split the CLI while fixing** · **approve Laya** and wire the real 
    `files` (the shipped CLI reads world data at runtime — the pre-rename path would have published
    a CLI that cannot start). **Verified:** headless session exit 0 · `npm run build:cli` success ·
    bundled `node dist/cli/cli-game.js --version` → 0.1.0 · bundled headless exit 0.
-2. **d2 — Bring `scripts/**` into the checked graph.** Add it to tsconfig's `include` so
-   `npm run build`'s typecheck (and every future one) covers it; then retire all 69 errors
-   (5 functional, 17 API-shape, 16 arity, 24 dead declarations, 7 other). `scripts/cli-game.ts`
-   carries 64.
+2. **d2 — Bring `scripts/**` into the checked graph.** Ratified as three sub-deliverables so the
+   `include` change and the fixes land in **one commit** (the build is never red in history):
+   - **d2a — retire the census.** Add `scripts/**` to tsconfig's `include`, then retire all 63
+     remaining errors (`CHECKED-SURFACE-AUDIT-2026-09-24` §10.1): 24 dead declarations, 7 arity,
+     9 argument-type, 19 property/assignment/shape, 4 other. `scripts/cli-game.ts` carries 60.
+     The T1 and T2 tiers are **correctness** fixes, not type fixes:
+     - **T1 (2 sites):** `responsesPool` (v3644) and `telemetry` (v3818) are bare names with no value
+       in scope — `ReferenceError`s inside `runFullSession`. The v3644 one is inside a `try`, so
+       **the story branch cannot dispatch an encounter**: it degrades where it should run.
+     - **T2 (8 sites):** `driveWeights.agency|communion|eros|agape` → `undefined ?? 0` → **every
+       drive-health score is exactly 0.5 regardless of the drives**, on the **default DQ profile
+       path**; `ConsequenceRecord.line` ×3 → the post-session summary **always reports "1 aspect
+       explored"**; `vowFulfilled` → the fulfilment message never prints. These silently falsify
+       user-facing output — the failure class the Veil-compliant design makes hardest to notice.
+     - **T3 (53 sites):** type-shape only (dead declarations, unsafe casts, union mismatches).
+   - **d2b — purge the retired stage ladder from `scripts/**` (F5, §10.3).** `'White'` was retired
+     canonically (`GreaterCycleEngine.ts`: *"There is no D4 stage in Mysterium"*); the retirement
+     reached `src/` and missed `scripts/`, so four CLI ladders and `check-invariants.ts` still use
+     `Infrared…Green, Turquoise, White` — **dropping `Teal` and appending a stage that does not
+     exist**. Calibration can never report `Teal`; its highest-detected-stage comparison orders
+     against a phantom. Pending **Q7/Q8** (where `White`'s marker content relocates, and whether
+     `Teal`'s absence is accidental).
+   - **d2c — make the ladder single-source (F6, §10.4).** `domain/Stage.ts` already exports
+     `ALL_STAGES` + `stageOrdinal()`, yet the literal is re-declared in ≥18 modules and hand-rolled
+     with `.indexOf(...)`. The copies agree today — which is why this is the *precondition* for the
+     next `White`, not a bug. Import the canonical constants; keep `domain/Stage.ts` the only
+     ladder.
 3. **d3 — Split `scripts/cli-game.ts` (user-ratified: split while fixing).** 5 900 lines in one
    file is itself the drift risk: `parse/` (argv + commander surface), `commands/` (one module per
    subcommand), `runtime/` (services creation, checkpoint + journal persistence, session flows),
    `render/` (output). The split lands WITH the error retirement so the CLI stops being one
    un-reviewable file. No behaviour change — the subcommand matrix is the regression lock.
-4. **d4 — Make the automated surfaces operationally live (the F2 fix; Q5 pending ratification).**
+4. **d4 — Wire Direct Questioning into the architecture (the F2 fix; user-ratified).**
    `runDirectQuestioningSession` bypasses the architecture: create + pass `OrchestrationServices`
    on that path, capture the checkpoint at its save site, and append the journal — so the default
-   and headless modes are `G28`-live rather than dark.
+   and headless modes are `G28`-live rather than dark. Rationale (user): **headless is the surface
+   agents test and debug everything through**, so every agent-reachable mode must exercise the real
+   loop; the CLI is the primary interface until the WebUI phase, which comes after the CLI is
+   finalised.
+   **Extended by the third sweep (§10.2 T1):** the repair is *two-sided*. The checkpoint capture
+   (v3655) and `appendJournalEntry` (v3663) sit inside `runFullSession`'s **story branch** — the
+   same branch whose encounter dispatch throws and is caught. So the architecture-live mode is not
+   merely non-default, it is **broken**: d4 must (a) fix the story branch's dispatch so the loop
+   runs, and (b) carry the checkpoint/journal capture onto the DQ return path, so *both* modes
+   persist. `G36` must therefore smoke **both** modes, and `G28` must assert the checkpoint on
+   both.
 5. **d5 — The class-level gates (so this cannot recur).**
    - **G36 `cli boot`**: boot the CLI headless in a temp profile with N encounters, assert exit 0
      and a completed session — the executable form of "the entry point runs".
    - **G37 `checked graph`**: a source-level assertion (the `G25` pattern applied to build config)
      that no production entry point sits outside the checked graph — a hole becomes a failed gate,
-     not a silent blind spot.
+     not a silent blind spot. **Second assertion (§10.4 F6):** no module re-declares a canonical
+     domain constant — the class that let the retired `White` ladder survive unseen.
    - **`tests/cli/`** grows from one helpers test to the subcommand matrix
      (help/version/status/glossary/delegate/session/calibrate/credential/pod/profile).
 6. **d6 — The System-1 adapter (Laya, user-approved).** All three ratified surfaces behind
    interfaces with the deterministic fallback honoured: tag resolution at `buildQuery`,
    polarity-reading proposal (exists), neighbour prefilter for the index walk; plus the RV-style
    agreement check that decides whether the model stays. Never authoring, never final authority.
-7. **d7 — K1 first: the probe-validation protocol (user-ratified order).** The 8 authored probes
-   are log-only until RV1–RV7 passes. Deliver the instrumentation (`12 §5.4` applied to preference
-   instruments): rater-facing administration, the agreement/known-answer statistics over a cohort,
-   and the retirement condition that flips an instrument's band. Q6 pending: cohort vs.
-   instrumentation-only.
+7. **d7 — K1 first: the probe-validation protocol (user-ratified: instrumentation + synthetic
+   pilot).** The 8 authored probes are log-only until RV1–RV7 passes. Deliver the instrumentation
+   (`12 §5.4` applied to preference instruments): rater-facing administration, the
+   agreement/known-answer statistics over a cohort, the band-flip retirement condition — then a
+   pilot over scripted personas that establishes **provisional** thresholds, labelled as such
+   until real raters confirm them.
 
 **Gates:** **G36** CLI boot smoke · **G37** checked-graph assertion · **G31/G28 extended** to the
 DQ/headless path once d4 lands (the memory loop is exercised on the default surface, not only
@@ -895,3 +955,4 @@ was built for.
 | 2026-09-24 | **Phase 13 d11 + d12 BUILT (`62ded8b` + this commit): the council is bound, standing, and dispatched.** d11: `AGENT_ROLE_COUNCIL` binds all 18 roles (S2/S5 to none; J1–J5 + therapist carry `narrative-voice` as a secondary scope — the inert row G32 caught); `buildEnvelope` returns `scopes` per row plus **`healing`**; the standing block ([MY MANDATE]/[MY VIEW]/[MY BOUNDARIES]/[MY TOOLS]/[MY SESSION]) rides every delegation, Veil-guarded line by line (an encounter's stage label never renders); `read_my_scope`/`read_band` are universal read tools (`43 §5.6`), grants can never widen the scope table, and every refusal is recorded with a reason; `delegateSession` logs the binding + block. d12: the dispatcher (`dispatcher.ts`) — `TRIGGER_TABLE` (11 rows, order = precedence; crisis the only bypass; threshold assembles the foreground council minus S2/S5 with the Therapist first; determinism seed-invariant), `observationForTrigger` (state↔row round-trip), the live tool surface (`councilTools.ts`: `summon_council`/`schedule_presence`/`delegate_session` + rules 12–15, registered on the orchestrator opt-in, byte-identical without), and the CLI drill `delegate --summon --trigger <name>`. **G34** added (kernel 33 → **34**); `Dispatcher.test.ts` (21 tests incl. end-to-end crisis summons delivering the healing scope) + `CouncilStanding.test.ts` (19). Canon updated in place: `43 §3.3` (the trigger table as canon), `43 §4.3` (`summon_council`), `43 §5.6` (status: built), `45 §6.1` (binding + read surface + delivery status), audit §9 (build record). Remaining in Phase 13: d10 (candidate multiplicity) is the gating dependency for the differential criterion; d3–d9 unchanged. |
 | 2026-09-24 | **Council orthogonality audited + the envelope architecture designed (`docs/audits/COUNCIL-ORTHOGONALITY-AUDIT-2026-09-24.md`).** The two things called *the council* were audited against each other: `43 §4.2`'s 18-role workforce and `45 §6.1`'s 5 visibility scopes. Findings: one genuine redundancy (**O6** — A3 Validator and S1 Pack Agents hold identical toolsets and both "administer instruments"; ruling: S1 operates the pack, A3 judges the instrument); two adjacent pairs needing stated boundaries (**O3** A2 Reviewer vs Therapist arc notes; **O5** S2 Context Steward vs S4 Data Warden — S4 alone writes consent, S2 alone assembles projections); a producer/consumer pair to declare rather than merge (**O2** Therapist proposes shadow-work, J4 delivers it); a fidelity split (**O1** A1 owns the evidence contract, J2 is its diegetic delivery); and **two missing rows** (**O8** — no healing scope and no orchestrator scope). The largest operational finding is **O10: the council has no dispatcher** — the only production callers of `delegateSession` are the CLI and the kernel gate, so the loop never summons a sub-agent; the trigger table (audit §3) is designed to fix it. Canon updated: `45 §6.1` gains the **healing** row and the **orchestrator (steward)** row plus the explicit `AgentRole → CouncilRole` binding; `43 §4.2` gains the two-contracts statement (toolset = what I may do, scope = what I may see) and **`43 §5.6` the standing-context contract** (standing block + authorized access tools + "a refusal is information"). Phase 13 gains **d10** (candidate multiplicity per cell — closes the differential criterion), **d11** (binding + standing block in the delegation path) and **d12** (the dispatcher). Open decisions recorded for ratification: D1 healing-scope strictness, D2 the O6 ruling, D3 whether the foreground scoring step becomes a delegated A-role call, D4 summoning stays deterministic. |
 | 2026-09-23 | **Live-surface wiring audit + Phase 13 planned (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md`).** Every ratified personalization / memory / world surface was traced to its production callers. Nine have none: `LocalRetriever` + `retrievalFirewall` (gate-fixture traffic only), the stubbed `envelopeRuntime` (its UDV inputs hardcoded empty), `scopeForRole`/`ROLE_SCOPES` (45 §6.1 council alignment never executes), the UDV's own preference band (zero consumers anywhere), `compose()`/`buildLibraryViews` (test-only), `compositionTelemetry` (calibration script only), the probe tier (unreachable; `probeValidation.ts` has zero references — a dead module), and the engagement register (test-only). The live UDV carries 3 of 8 declared bands, so purpose, analogy, preference and observed evidence currently change no ranking. No defect is a crash or a leak — every dark surface degrades quiet by the `45 §5` law, which is why it went unnoticed. **Phase 13 (Live-Surface Wiring & Council Alignment) defined** with nine deliverables (d1 band population, d2 council scoping live + `envelopeRuntime` consolidation, d3 retrieval on the candidate path, d4 runtime composition telemetry, d5 probes reachable + RV harness live, d6 engagement-register enforcement, d7 composition-engine status resolved, d8 doc status marks, d9 memory-audit carry-overs) and gates **G32–G34** (kernel 31 → 34). Four foundation overclaims status-marked in the same commit (48 §4 retriever/embedding, 45 §7.3 register, 46 §11 telemetry) plus the live seam named (`sessionRuntime`) in 48 §3. `AGENTS.md §4.2` gained the third open-work list (live-surface wiring) — the failure class is *a documented consumer that no live seam calls*. |
+| 2026-09-24 | **Third sweep — the post-P0 error census, and the semantic defect inside it (`docs/audits/CHECKED-SURFACE-AUDIT-2026-09-24.md` §10).** With `scripts/**` finally inside the tsconfig `include`, the errors existed for the first time: **63 survive** (60 `cli-game.ts`, 2 `compile-facets.ts`, 1 `check-invariants.ts`). Type errors erase at runtime, so they were triaged site-by-site by *enclosing function* into **three tiers, not one** — **T1 (2):** `responsesPool` (v3644) and `telemetry` (v3818) are bare names with no value in scope, both inside `runFullSession`; the v3644 one sits inside a `try`, so **the story branch — the architecture-live mode — cannot dispatch an encounter, it degrades where it should run**; **T2 (8):** `driveWeights.agency|communion|eros|agape` → `undefined ?? 0` → **every drive-health score is exactly 0.5 regardless of the drives**, on the **default DQ profile path**, plus `ConsequenceRecord.line` ×3 → the post-session summary **always reports "1 aspect explored"** and `vowFulfilled` → the fulfilment message never prints — silent falsification of user-facing output, the class the Veil-compliant design makes hardest to notice; **T3 (53):** type-shape only. The census also surfaced a semantic defect no count would show — **F5 (High): the retired stage `White` is still live in `scripts/**`.** `src/core/domain/Stage.ts` ends at `Turquoise` and `GreaterCycleEngine` records the retirement (*"the row previously read `'White'`, which named the retired stage 8 … There is no D4 stage in Mysterium"*), but the retirement reached `src/` and **missed `scripts/`**: four CLI ladders (`CAL_STAGES`, `stageOrder`, `allStages` ×2) and `check-invariants.ts` still read `Infrared…Green, Turquoise, White` — **dropping `Teal` and appending a stage that does not exist**, so calibration can never report `Teal` and its highest-detected-stage comparison orders against a phantom. This is the *"confusing, or deviated stage simulation"* the ladder ratification exists to prevent, and it survived for the same reason P0 did: the CLI is outside the checked graph, so a retired literal is never type-rejected. **F6 (Medium):** the canonical ladder is re-declared in ≥18 modules (`ALL_STAGES`/`stageOrdinal` bypassed with hand-rolled `.indexOf`); the `src/` copies agree today, which makes this the *precondition* for the next `White`, not a bug. **Phase 14 d2 split into d2a (retire the census — T1/T2 first, they are correctness not types) · d2b (purge the retired ladder) · d2c (make the ladder single-source)**, d4 extended to both sides (fix the story branch's dispatch **and** carry the checkpoint/journal onto the DQ return path — so `G36` smokes both modes and `G28` asserts the checkpoint on both), and **G37 gained a second assertion** (no module re-declares a canonical domain constant). Open forks put to the user: **Q7** where `White`'s marker content relocates (deleted / folded into `Turquoise` / moved to the Violet closure *event*), **Q8** whether `Teal`'s absence from the CLI ladder is accidental, **Q9** the direction of repair for API drift (`src` canonical → adapt the CLI, vs a call site expressing genuine feature intent `src` should grow), **Q10** whether d3's split also extracts the calibration block (v1100–1700, where F5 lives) from the presentation layer into `src/core/`. |
