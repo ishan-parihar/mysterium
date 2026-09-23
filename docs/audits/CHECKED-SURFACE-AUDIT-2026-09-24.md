@@ -297,3 +297,81 @@ compares them. It is a non-redundancy violation against `AGENTS.md §2.2` with a
 | Q8 | **Is `Teal` absent from the CLI's calibration ladder by accident, or was calibration intentionally authored against a different ladder?** | The purge's direction depends on it. |
 | Q9 | **Direction of repair for API drift:** is `src/` canonical (adapt every CLI call site), or does a CLI call site express a genuine feature intent that `src/` should grow (e.g. `CheckInOutcome.vowFulfilled`, which the CLI's message implies should exist)? | A blanket "adapt the CLI" would delete a feature; a blanket "extend src" would legitimise drift. |
 | Q10 | **Does the CLI split (d3) also move domain logic out?** The calibration block (v1100–1700) is a domain algorithm living in a presentation layer — and it is where F5 lives. Split-only, or split + extract to `src/core/`? | The extraction is the structural fix for F5's class, but it is a larger change. |
+
+---
+
+## 11. Build record — d2a + d2b executed (2026-09-24)
+
+**Ratified by the user before execution:** `White`'s marker content **relocates to the Violet closure
+event** (Q7) · the CLI's missing `Teal` is **accidental — restore the canonical 8** (Q8) · **`src/`
+is canonical, with gated exceptions** documented for a call site expressing genuine feature intent
+(Q9) · d3's split also **extracts the calibration block to `src/core/`** (Q10) · execute **d2a + d2b,
+then verify** (Q11).
+
+### d2b — the retired ladder purged (F5)
+
+| Change | Where |
+|---|---|
+| `CLOSURE_MARKERS` created — the `White` marker list, relocated beside `CLOSURE_BINDING` and documented as the closure's vocabulary, not a stage's | `src/core/domain/Ray.ts` |
+| `CAL_STAGES` deleted; `stageOrdinal` / `ALL_STAGES` used instead | `scripts/cli-game.ts` |
+| `stageMarkers` restored to the canonical 8 — `Teal` (L7, "gateway opens; vision-logic") and `Turquoise` (L8, "gateway traversed") split per `StageQuality`; the closure language deliberately **not** folded in, because inferring an altitude from it would repeat the conflation the retirement corrected | `scripts/cli-game.ts` |
+| `stageOrder` → `Red…Green, Teal, Turquoise`; `stageColor` / `stageAbbr` / `stageAestheticsShort` → `Teal` replaces `White` | `scripts/cli-game.ts` |
+| The two `allStages` literals deleted; the radar chart's `.indexOf` → `stageOrdinal` | `scripts/cli-game.ts` |
+| Leak check now iterates the imported `ALL_STAGES` | `scripts/check-invariants.ts` |
+
+### d2a — the census retired (63 → 0)
+
+**T1 (2) — the story branch could not run.** `responsesPool` (v3644) and the stale `telemetry` flush
+(v3818) were bare names with no value in scope; both sat in `runFullSession`, and the dispatch one
+sat inside its own `try`, so the encounter dispatch failed and was swallowed. Removed (the pool was
+retired in YAGNI-PHASE-4; `cliTelemetry` is the only collector on that path and is flushed one line
+earlier).
+
+**T2 (5) — silent falsification.** Drive keys capitalised so the four health scores stop being
+pinned to 0.5; `ConsequenceRecord.line` added as a required field with **one derivation**
+(`encounterLine()`, now also used by `applyConsequences`) and 7 fixtures updated, so the summary
+stops reporting "1 aspect explored" always; the vow-fulfilment message reads the returned book
+instead of a field that never existed; four single-argument `info()` calls corrected to `warn()`
+(they had been printing `label: undefined`).
+
+**T3 (24) — dead declarations retired.** Including: five **retired clinical renderers**
+(`renderAltitudesChart`, `renderCCIDisplay`, `renderShadows`, `renderDrives`, `renderRadarChart`)
+with `SHADOW_LABELS` and `stageAbbr` — no call sites, and their output is exactly what `profile
+show`'s rewrite removed as Veil-violating, so they are deleted rather than re-wired; a duplicate
+`veilShadowMovement` (verbatim second copy of `describeShadowMovement` — a §2.2 non-redundancy
+violation); and the facet compiler's unwired `QUADRANTS`/`QUADRANT_ALIASES`, replaced with a
+`RETIRED` note because they describe a normalisation step that **never happens**.
+
+**Also landed:** `TelemetryEventType` gained `encounter_started` — the kind the live loop has always
+emitted but could not represent (test 9 → 10); `tsconfig.include` gained `scripts/**`, so the
+`include` change and the fixes land in ONE commit and the build is never red in history.
+
+### F10 (High, new) — the architecture-live mode was unreachable by any agent
+
+`--agent` was removed (YAGNI-EFF-3) and the mode prompt is skipped under `--headless`/`--json`, so
+`gameMode` was hardcoded to `'direct'`: **the story branch could not be driven by an agent at all.**
+That is why both T1 defects — one of which made the mode unable to dispatch an encounter — survived
+invisibly. A `--mode <direct|story>` flag now exists, validated against a single canonical
+`SESSION_MODES` list, so the flag, the prompt and the branch test all read one list.
+
+### Verification (all run after the change)
+
+| Check | Result |
+|---|---|
+| `npx tsc --noEmit` (now covering `scripts/**`) | **0 errors** (was 63) |
+| `npm run build` | 0 errors |
+| `npm test` | **1 507 passed / 1 507** (132 files) |
+| `python3 scripts/arch.py validate` | 0 violations, 23 gates |
+| `workspace_lint.py` | 0 errors / 0 warnings / 0 info |
+| `--headless --mode=direct --encounters=3` | exit 0 |
+| `--headless --mode=story --encounters=3` | **exit 0** — previously threw at dispatch *and* at SESSION END |
+| story-mode persistence | `orchestrationCheckpoint` present in `world.json`; `session-journal.ndjson` written |
+
+### Carried forward (recorded, not fixed — outside the ratified d2 scope)
+
+| # | Finding | Disposition |
+|---|---|---|
+| **F7** | `PlayerResponse.writeInValue` / `questionText` are populated by the orchestrator but **dropped by `processOutcome`** — the fields exist, the doc-comment says `encounter-log.md` needs them, and nothing reads them from a record. | Needs a decision: declare them on `ConsequenceRecord` + wire the encounter-log writer, or retire the fields. |
+| **F9** | The facet compiler's quadrant aliasing is unwired (above) — the §2 Shadow-Archetype heading normalisation does not run. | Re-author with the extraction that consumes it. |
+| **F2 / d4** | The DQ (default) path still returns before the checkpoint/journal capture; the capture sits in the story branch. | Phase 14 d4. |
+| **d5** | `G36` (boot smoke — must cover **both** modes) and `G37` (checked-graph + no-re-declared-constant assertions) remain to be written, so this class is currently fixed but not yet *gated*. | Phase 14 d5. |

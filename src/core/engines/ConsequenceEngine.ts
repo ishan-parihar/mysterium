@@ -54,6 +54,7 @@ export function processOutcome(spec: ScheduledEncounter, response: PlayerRespons
   return {
     encounterId: spec.id,
     timestamp: now,
+    line: encounterLine(spec),
     polarityTrace: trace,
     shadowSurfaced: response.shadowSurfaced,
     shadowResolved: response.shadowResolvedId,
@@ -64,6 +65,18 @@ export function processOutcome(spec: ScheduledEncounter, response: PlayerRespons
   };
 }
 
+/**
+ * The line an encounter is routed into — the ONE derivation of this fact.
+ *
+ * `applyConsequences` below needs the same value (to pick which altitude it may shift), and the
+ * record now carries it for consumers that ask which dimensions a session touched. Two
+ * hand-written fallbacks would be two chances to disagree about what an unrouted encounter
+ * defaults to, so both read this.
+ */
+export function encounterLine(spec: ScheduledEncounter): Line {
+  return spec.targetLines[0] ?? ('Cognitive' as Line);
+}
+
 /** Apply consequences to significator and world state. Returns new immutable copies. */
 export function applyConsequences(
   sig: Significator,
@@ -71,7 +84,7 @@ export function applyConsequences(
   record: ConsequenceRecord,
   encounter: ScheduledEncounter,
 ): { sig: Significator; world: WorldState } {
-  const line = encounter.targetLines[0] ?? 'Cognitive' as Line;
+  const line = encounterLine(encounter);
   const stage = encounter.stage;
 
   // OA-13: Track avoided encounters — when the player avoids, the shadow grows.

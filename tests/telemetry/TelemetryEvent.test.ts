@@ -5,6 +5,7 @@ import type { TelemetryEvent, TelemetryEventType } from '../../src/core/telemetr
 describe('TelemetryEvent', () => {
   it('ALL_TELEMETRY_EVENT_TYPES contains all expected event types', () => {
     const expected: TelemetryEventType[] = [
+      'encounter_started',
       'encounter_completed',
       'encounter_declined',
       'polarity_shift',
@@ -18,8 +19,8 @@ describe('TelemetryEvent', () => {
     expect(ALL_TELEMETRY_EVENT_TYPES).toEqual(expected);
   });
 
-  it('has exactly 9 event types', () => {
-    expect(ALL_TELEMETRY_EVENT_TYPES).toHaveLength(9);
+  it('has exactly 10 event types', () => {
+    expect(ALL_TELEMETRY_EVENT_TYPES).toHaveLength(10);
   });
 
   it('TelemetryEvent interface shape is satisfied by a valid object', () => {

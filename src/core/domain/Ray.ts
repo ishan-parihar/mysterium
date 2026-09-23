@@ -158,6 +158,32 @@ export const CLOSURE_BINDING: RayBinding = {
 };
 
 /**
+ * The closure's recognition vocabulary — the Violet event's own marker list.
+ *
+ * Its home is HERE, beside `CLOSURE_BINDING`, because it names the closure and nothing else. The
+ * list previously lived in the CLI under a `White` key, i.e. it was addressed as the markers of
+ * **stage 8** — the conflation this module's header describes, in which the ladder's top was
+ * given the Violet ray and the closure was mistaken for a rung. `White` was retired
+ * (`06 §5`; `_Ontology/stages/altitude.md`: *"there is no D4 stage"*) and the retirement reached
+ * `src/` but not `scripts/`, so a retired stage kept a live marker list for three days.
+ *
+ * Consumers (the calibration vocabulary scan) read it to recognise closure-adjacent language; the
+ * matched terms are reported as *closure* language, never as a stage label. This is why the list
+ * is a plain vocabulary export rather than a ninth entry in `RAY_LENS`: the ladder has eight
+ * members and the closure is an event (see `RAY_LENS`'s "a lens, never a place").
+ */
+export const CLOSURE_MARKERS: readonly string[] = Object.freeze([
+  'emptiness',
+  'witness',
+  'dissolution',
+  'formless',
+  'awakened',
+  'no-self',
+  'suchness',
+  'rigpa',
+]);
+
+/**
  * Canonical stage → ray correspondence.
  *
  * DERIVED from `RAY_LENS`, never restated: this flat view exists because

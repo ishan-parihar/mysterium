@@ -32,6 +32,7 @@ function mkEvent(holonId: string, field: string, from: number, to: number, summa
   return {
     encounterId: `e${seq}`,
     timestamp: 1_700_000_000_000 + seq,
+    line: 'Cognitive',
     polarityTrace: {
       encounterId: `e${seq}`,
       timestamp: 1_700_000_000_000 + seq,

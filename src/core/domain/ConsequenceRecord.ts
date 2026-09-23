@@ -14,6 +14,18 @@ export interface HolonDelta {
 export interface ConsequenceRecord {
   readonly encounterId: string;
   readonly timestamp: number;
+  /**
+   * The line the encounter was ABOUT — the developmental stream this catalyst was delivered into
+   * (`ScheduledEncounter.targetLines[0]`). Total, not optional: every encounter is routed to a
+   * line, so a record that cannot name one is not a record.
+   *
+   * It is separate from `altitudeShift.line`, which is present only when a shift actually
+   * occurred. Consumers that ask "which dimensions of the inner landscape did this session touch?"
+   * (the post-session summary) need the routed line, not the shifted one — reading the shift would
+   * silently undercount to the encounters that moved an altitude and report a plausible-but-wrong
+   * number, which is exactly the failure this field closes.
+   */
+  readonly line: Line;
   readonly polarityTrace: PolarityTrace;
   readonly shadowSurfaced: ShadowQuadrant | null;
   readonly shadowResolved: string | null;

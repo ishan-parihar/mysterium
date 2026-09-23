@@ -51,12 +51,11 @@ const MODALITY_FILES: Record<string, string> = {
   'language-reflective.md': 'LanguageReflective', 'social-cooperative.md': 'SocialCooperative',
   'immersive-rpg.md': 'ImmersiveRPG',
 };
-const QUADRANTS = ['Dark-Addiction', 'Dark-Allergy', 'Golden-Addiction', 'Golden-Allergy'] as const;
-const QUADRANT_ALIASES: Record<string, string> = {
-  'Dark-Addiction': 'Dark-Addiction', 'Dark-Allergy': 'Dark-Allergy',
-  'Golden-Addiction': 'Golden-Addiction', 'Golden-Allergy': 'Golden-Allergy',
-  'Residual Grasping': 'Dark-Addiction', // Turquoise residual patterns: 2.1→DA 2.2→DAll 2.3→GA 2.4→GAll by order
-};
+// RETIRED (checked-surface audit §10): `QUADRANTS` and `QUADRANT_ALIASES` were declared here and
+// never referenced — the module-spec §2 (Shadow Archetypes) heading normalisation they exist for
+// was never applied, so the aliasing they encode (including the Turquoise `Residual Grasping`
+// mapping) is not in force. Re-author them together with the §2 extraction that consumes them;
+// until then they are not merely unused, they describe a step that does not happen.
 const DRIVES = ['Agency', 'Communion', 'Eros', 'Agape'] as const;
 
 // 46 §4 — the authored facetAffinity matrix, mirrored from src/core/world/tags/initialTags.ts.

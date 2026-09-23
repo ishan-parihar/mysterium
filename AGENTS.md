@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 FULLY COMPLETE (d1–d12, G32–G35; battery 1 507); Phase 14 IN PROGRESS (d1 P0 BUILT; d2a/b/c planned); memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 FULLY COMPLETE (d1–d12, G32–G35; battery 1 507); Phase 14 IN PROGRESS (d1 P0 + d2a/d2b BUILT — `scripts/**` now inside the checked graph; d2c/d3/d4/d5 pending); memory infrastructure live (G28–G31)
 
 > **Checked-graph warning (read before trusting a green battery).** The battery is only as wide as
 > its *checked graph*: the files `tsc --noEmit`, the tests, the gates and the linter read. As of
@@ -313,7 +313,20 @@ R&D Documentation (refined theory + design)
 > stale imports) while `npm run build` reported 0 errors. `docs/audits/CHECKED-SURFACE-AUDIT-2026-09-24.md`
 > records the break, the fix, and the deeper finding: the **default and all headless/JSON** modes
 > bypass the orchestration/personalization/memory architecture (`runDirectQuestioningSession`).
-> Treat "the battery is green" as a statement about `src/` + `tests/` until Phase 14 d2/d5 land.
+> **Update (2026-09-24, d2a/d2b):** `scripts/**` is now in `tsconfig.include`, so `npm run build`
+> type-checks the CLI and its siblings — the 63 errors that had been invisible are retired, and
+> "the battery is green" again covers every production surface. The *class* is not yet gated
+> (`G36`/`G37` are Phase 14 d5), so treat it as fixed-by-repair until then. Two consequences of the
+> sweep worth knowing before driving the CLI:
+> - **Always name the session flow.** `--agent` was removed and the mode prompt is skipped under
+>   `--headless`/`--json`, so the mode used to be hardcoded to `direct` and the **story branch —
+>   the architecture-live path — was unreachable by any agent**. Use `--mode <direct|story>`; the
+>   story branch is the one that captures the orchestration checkpoint and appends the journal.
+> - **A retired constant can outlive its retirement anywhere outside the checked graph.** The
+>   stage `White` was retired in `src/` and stayed live in four `scripts/` ladders; the same shape
+>   produced the non-bootable CLI. When you move or rename anything in `src/`, grep `scripts/` for
+>   the old name — and if a value is derived from a canonical constant, import it rather than
+>   re-declaring it (`ALL_STAGES`, `stageOrdinal`, `CLOSURE_MARKERS`).
 >
 > **What the hole was hiding (§10 of the same audit, 2026-09-24 third sweep).** Once `scripts/**`
 > was type-checked the errors existed for the first time — **63**, and triaged they are not one

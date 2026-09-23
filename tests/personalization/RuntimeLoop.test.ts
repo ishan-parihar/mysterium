@@ -39,6 +39,7 @@ function mkRecord(holonId: string): ConsequenceRecord {
   return {
     encounterId: 'enc-1',
     timestamp: Date.now(),
+    line: 'Cognitive',
     polarityTrace: {
       energeticDirection: 'Radiative',
       driveDirectionality: { Agency: 'HealthyBalanced', Communion: 'HealthyBalanced', Eros: 'HealthyBalanced', Agape: 'HealthyBalanced' },

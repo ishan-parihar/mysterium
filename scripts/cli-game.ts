@@ -61,6 +61,13 @@ const program = new Command()
   // and has never regressed. Story-Driven mode can be rebuilt on top of DQ's
   // proven architecture when needed.
   .option('--new-game', 'Start fresh (delete saved progress)')
+  // Agent-reachable session-flow selection. Without this flag the flow is chosen by an
+  // interactive prompt, which `--headless`/`--json` skip — so `gameMode` was hardcoded to 'direct'
+  // and the story branch (the architecture-live path that captures the orchestration checkpoint
+  // and appends the journal) could not be driven by an agent at all. An unreachable surface is a
+  // blind spot by construction: it is where the retired `responsesPool` ReferenceError and the
+  // stale `telemetry` flush both survived.
+  .option('--mode <mode>', 'Session flow: direct (personality-test style) | story (immersive RPG narrative)')
   .option('-e, --encounters <n>', 'Number of encounters', '20')
   .option('-m, --model <name>', 'Override LLM model name')
   .addOption(new Option('-l, --line <line>', 'Force a specific line (dev)').hideHelp())
@@ -330,6 +337,12 @@ import type { Line } from '../src/core/domain/Line.js';
 import { ALL_LINES } from '../src/core/domain/Line.js';
 import type { Stage } from '../src/core/domain/Stage.js';
 import { ALL_STAGES, stageOrdinal } from '../src/core/domain/Stage.js';
+import type { KnowledgeState } from '../src/core/curriculum/types.js';
+import type { AgentRole } from '../src/core/orchestration/types.js';
+import { ALL_AGENT_ROLES } from '../src/core/orchestration/councilStanding.js';
+import { DEFAULT_CCI_WEIGHTS, type CCIScore } from '../src/core/engines/CCIEngine.js';
+import { generateSessionStrategy } from '../src/core/engines/AutoModeStrategy.js';
+import type { TelemetryEvent } from '../src/core/telemetry/TelemetryEvent.js';
 import type { ScheduledEncounter } from '../src/core/domain/EncounterSpecNew.js';
 import type { PlayerResponse } from '../src/core/engines/ConsequenceEngine.js';
 import type { SessionContext } from '../src/core/engines/PriorityComputation.js';
@@ -350,7 +363,7 @@ import { runTrainCommand, runInsightsCommand, runExportCommand, runCalibrateComm
 // P1-QW3 (Architecture Audit Phase A): CLI telemetry — opt-in only, no behaviour change when off.
 import { buildCLITelemetry, recordCLITelemetry, flushCLITelemetry } from '../src/cli/CLITelemetry.js';
 // R11-R2: use canonical resonance from veilDescriptors instead of duplicated maps.
-import { describeStage, describePersonalResonance } from '../src/core/presentation/veilDescriptors.js';
+import { describePersonalResonance } from '../src/core/presentation/veilDescriptors.js';
 
 // WORLD-STORE-MOVE (c634535): the holon data moved from src/core/data/ to src/core/world/data/
 // (the world organ owns it). These two imports kept pointing at the old path, which made the CLI
@@ -378,7 +391,7 @@ import { getMysteriumProfileDir } from '../src/infra/persistence/mysteriumDir.js
 import { purposesFromVows, purposesFromGoals, preferenceFromHistory } from '../src/core/personalization/bandSources.js';
 import { feedPlanningBias } from '../src/core/orchestration/feedReaders.js';
 // P1-3 (UX-R3): configurable saturation threshold + per-line progress.
-import { setSaturationThreshold, getLineProgress, computeReadiness } from '../src/core/engines/TransformationDetector.js';
+import { getLineProgress, computeReadiness } from '../src/core/engines/TransformationDetector.js';
 // R5-BUG-5 (UX-R5): fallback narrative pool for empty LLM responses.
 import { pickFallbackNarrative } from '../src/core/agent/FallbackNarratives.js';
 // NF-3 (Fresh-User Re-Audit): Cross-session question de-duplication.
@@ -395,7 +408,7 @@ import {
   listProfiles, createProfile, setActiveProfile, deleteProfile,
   loadProfile, buildContextInjection, updateProfileAfterSession,
   appendEncounterLog, agentReadProfileFile, agentWriteProfileFile,
-  getSaveFilePath, getActiveProfileName, getActiveProfileDir, migrateLegacySave,
+  getActiveProfileName, getActiveProfileDir, migrateLegacySave,
   getProfilesDir,
   loadUnlockedTerms, addUnlockedTerms,
 } from '../src/infra/profiles/ProfileManager.js';
@@ -405,15 +418,12 @@ import type { TrialResult } from '../src/core/assessments/types.js';
 // '../src/cli/LayerRenderer.js' — the file was purged in 42078ad but the import
 // survived, breaking `npm run build:cli` (esbuild) while tsx runtime resolution
 // masked it. renderLayers/renderLayersCompact had no remaining call sites.
-import { detectBleedThrough } from '../src/core/engines/ThetaDecay.js';
 import { toSnapshot } from '../src/core/domain/SignificatorSnapshot.js';
 import { computeCCI } from '../src/core/engines/CCIEngine.js';
 import { SessionAgent } from '../src/core/assessments/SessionAgent.js';
 import { getCurriculumRegistry } from '../src/core/curriculum/CurriculumRegistry.js';
 import { seedCurriculumRegistry } from '../src/core/curriculum/CurriculumSeed.js';
 import { seedInitialKnowledge } from '../src/core/curriculum/SeedInitialKnowledge.js';
-import { lintRegistry } from '../src/core/curriculum/CurriculumLinter.js';
-import { depthOrdinal, type DepthLevel } from '../src/core/curriculum/types.js';
 import { probeCurriculum, formatProbeSummary } from '../src/core/curriculum/MetaCognitiveProbe.js';
 
 /**
@@ -444,7 +454,7 @@ function curriculumLabel(conceptId: string | undefined): string {
  */
 function checkPrerequisiteGaps(
   conceptId: string,
-  knowledge: { conceptStates: Map<string, { depthLevel: string }> } | undefined,
+  knowledge: KnowledgeState | undefined,
 ): { id: string; name: string; type: 'same-branch' | 'cross-branch' }[] {
   if (!knowledge) return [];
   try {
@@ -488,7 +498,7 @@ function checkPrerequisiteGaps(
  */
 function renderPrerequisiteGaps(
   conceptId: string,
-  knowledge: { conceptStates: Map<string, { depthLevel: string }> } | undefined,
+  knowledge: KnowledgeState | undefined,
 ): void {
   if (JSON_MODE || !knowledge) return;
   const gaps = checkPrerequisiteGaps(conceptId, knowledge);
@@ -566,8 +576,19 @@ const encounterCount = parseInt(opts.encounters ?? String(fileConfig.session?.de
 const FORCE_LINE = opts.line as Line | undefined;
 const FORCE_STAGE = opts.stage as Stage | undefined;
 const FORCE_MODALITY = opts.modality as Modality | undefined;
+const FORCE_MODE = opts.mode as SessionMode | undefined;
 const FORCE_SHADOW = (opts.forceShadow ?? (opts as any).injectShadowKeyword) as string | undefined;
 // YAGNI-PHASE-4: FORCE_RESPONSES removed — --responses was never in commander spec.
+/**
+ * The two session flows. `direct` is the personality-test style DQ loop; `story` is the
+ * immersive-RPG loop that carries the orchestration services and persists the checkpoint.
+ *
+ * Declared as a canonical pair so the flag validation, the prompt and the branch test all read
+ * ONE list — the class this file keeps re-learning (audit §10.4).
+ */
+const SESSION_MODES = ['direct', 'story'] as const;
+type SessionMode = (typeof SESSION_MODES)[number];
+
 const NEW_GAME = opts.newGame ?? false;
 const SKIP_CALIBRATION = opts.skipCalibration ?? false;
 const CURRICULUM_MODE = opts.curriculum ?? false;
@@ -640,6 +661,7 @@ validateFlag('--line', FORCE_LINE, ALL_LINES, 'lines');
 validateFlag('--stage', FORCE_STAGE, ALL_STAGES, 'stages');
 validateFlag('--modality', FORCE_MODALITY, ALL_MODALITIES, 'modalities');
 validateFlag('--force-shadow', FORCE_SHADOW, VALID_SHADOW_QUADRANTS, 'shadow quadrants');
+validateFlag('--mode', FORCE_MODE, SESSION_MODES, 'session modes');
 
 // ── Helpers ───────────────────────────────────────────────────────────
 // ponytail: chalk auto-resets between calls, no explicit reset needed
@@ -863,7 +885,7 @@ function renderPostSessionSummary(sig: Significator, history: ConsequenceRecord[
   }
 
   // 5. Glossary terms unlocked this session
-  const unlockedThisSession = loadUnlockedTerms();
+  const unlockedThisSession = loadUnlockedTerms(getMysteriumProfileDir());
   if (unlockedThisSession.length > 0) {
     const newTerms = unlockedThisSession.filter(t => !['Line', 'Stage', 'Shadow'].includes(t));
     if (newTerms.length > 0) {
@@ -1119,8 +1141,6 @@ function loadHolons(): WorldState {
 // ponytail: calibration data extracted to src/core/data/calibrationPrompts.ts (shared with WebUI /onboarding).
 import { CALIBRATION_PROMPTS, CHOICE_THRESHOLDS, HOLD_TARGETS } from '../src/core/data/calibrationPrompts.js';
 
-const CAL_STAGES = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'] as const;
-
 // GAP-6 (Efficacy Audit): Infer developmental altitude from user answers.
 // Instead of defaulting all lines to Red, analyze the user's --answer
 // content for stage-specific vocabulary and conceptual complexity.
@@ -1144,9 +1164,17 @@ function inferAltitudesFromAnswers(): Record<Line, Stage> {
     Amber: ['duty', 'rules', 'belong', 'tradition', 'loyalty', 'obligation', 'should', 'order', 'role'],
     Orange: ['achieve', 'system', 'strategy', 'rational', 'analysis', 'compete', 'goal', 'optimize', 'objective', 'merit'],
     Green: ['perspective', 'systemic', 'privilege', 'inclusive', 'interconnected', 'pluralism', 'empathy', 'oppression', 'relativ', 'valid'],
-    Turquoise: ['integral', 'paradigm', 'kosm', 'evolutionary', 'meta', 'emergent', 'holistic', 'dialectic', 'non-dual', 'aqal'],
-    White: ['emptiness', 'non-dual', 'witness', 'dissolution', 'formless', 'awakened', 'no-self', 'suchness', 'rigpa'],
+    // Teal (L7) — "the gateway opens; meta-perspective … vision-logic" (StageQuality).
+    Teal: ['integral', 'meta', 'paradigm', 'holistic', 'dialectic', 'aqal', 'vision', 'paradox'],
+    // Turquoise (L8) — "the gateway is traversed … trans-rational direct knowing" (StageQuality).
+    Turquoise: ['kosm', 'evolutionary', 'emergent', 'non-dual', 'transpersonal', 'unity', 'contemplative', 'planetary'],
   };
+
+  // NOTE: the former `White` entry is NOT folded in here. `White` was a stage name for a rung
+  // that does not exist (Ray.ts: "there is no D4 stage"), so its vocabulary is the *closure*'s,
+  // not an altitude's — it lives at `CLOSURE_MARKERS` (domain/Ray.ts), beside `CLOSURE_BINDING`.
+  // A player writing closure language must not be PLACED by it: the vocabulary names an event,
+  // and inferring an altitude from it would repeat the conflation the retirement corrected.
 
   // Score each stage by marker density
   const stageScores: Record<string, number> = {};
@@ -1161,7 +1189,7 @@ function inferAltitudesFromAnswers(): Record<Line, Stage> {
   const conceptDensity = wordCount > 0 ? uniqueWords / wordCount : 0;
 
   // Find the highest stage with significant marker presence
-  const stageOrder: Stage[] = ['Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'];
+  const stageOrder: Stage[] = ['Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
   let detectedStage: Stage = 'Red';
   for (const stage of stageOrder) {
     if ((stageScores[stage] ?? 0) >= 2) {
@@ -1345,11 +1373,6 @@ async function createDefaultSignificator(): Promise<Significator> {
     if (!JSON_MODE) console.log(`  ${chalk.yellow('↻')} Starting new game (previous save deleted)`);
   }
 
-  const allRed: Record<Line, Stage> = {
-    Cognitive: 'Red', Emotional: 'Red', Moral: 'Red', Intrapersonal: 'Red',
-    Spiritual: 'Red', Somatic: 'Red', Willpower: 'Red', Interpersonal: 'Red',
-  };
-
   // Run quick calibration unless in automated/skip mode
   let altitudes: Record<Line, Stage>;
   if (HEADLESS || SKIP_CALIBRATION || JSON_MODE) {
@@ -1372,7 +1395,7 @@ async function createDefaultSignificator(): Promise<Significator> {
   let dominantStage: Stage = 'Red';
   let maxCount = 0;
   for (const [s, count] of Object.entries(stageCounts)) {
-    if (count > maxCount || (count === maxCount && CAL_STAGES.indexOf(s as typeof CAL_STAGES[number]) > CAL_STAGES.indexOf(dominantStage))) {
+    if (count > maxCount || (count === maxCount && stageOrdinal(s as Stage) > stageOrdinal(dominantStage))) {
       maxCount = count;
       dominantStage = s as Stage;
     }
@@ -1409,13 +1432,12 @@ function emitEvent(type: string, data: Record<string, unknown>): void {
 }
 
 // ── Rendering helpers ────────────────────────────────────────────────
-
-/** Shadow quadrant label map — used by drive display */
-const SHADOW_LABELS: Record<string, string> = {
-  DarkAddicted: 'DkAddict', DarkAverted: 'DkAvert',
-  GoldenAddicted: 'GdAddict', GoldenAverted: 'GdAvert',
-  HealthyBalanced: '',
-};
+// (The clinical dashboard helpers that lived here — an altitude bar chart, a CCI composite bar, a
+// shadow-quadrant list, a drive compass and a radar chart — were retired with `SHADOW_LABELS`.
+// They had no call sites, and their output is exactly what `profile show`'s rewrite removed as
+// Veil-violating: *"categorized bullet lists … read like a therapist's chart … the Veil feels
+// violated"* (see `runProfile`). Restoring them would re-introduce the violation, so they are
+// deleted rather than re-wired.)
 
 // Task 4: Narrative context — map line names to challenge descriptions
 const CHALLENGE_NAMES: Record<string, string> = {
@@ -1439,77 +1461,10 @@ function stageColor(stage: string): (text: string) => string {
     Amber: chalk.hex('#FF8C00'),
     Orange: chalk.hex('#FFA500'),
     Green: chalk.hex('#00C853'),
+    Teal: chalk.hex('#00BFA5'),
     Turquoise: chalk.hex('#00CED1'),
-    White: chalk.hex('#FFFFFF'),
   };
   return colors[stage] ?? chalk.dim;
-}
-
-/** Stage abbreviation for compact display */
-function stageAbbr(stage: string): string {
-  const abb: Record<string, string> = {
-    Infrared: 'IR', Magenta: 'MG', Red: 'RD', Amber: 'AM',
-    Orange: 'OR', Green: 'GR', Turquoise: 'TQ', White: 'WH',
-  };
-  return abb[stage] ?? stage.slice(0, 2).toUpperCase();
-}
-
-/** Render an altitude bar chart showing per-line stage progression */
-function renderAltitudesChart(sig: Significator): void {
-  const orderedLines: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Somatic', 'Willpower', 'Interpersonal'];
-  const allStages = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'] as const;
-  const stageKeys: readonly string[] = allStages;
-
-  for (const line of orderedLines) {
-    const current = sig.altitudes[line] ?? 'Red';
-    const currentIdx = stageKeys.indexOf(current);
-    const color = stageColor(current);
-
-    // Build a horizontal bar: filled squares up to current stage, empty beyond
-    const bars = stageKeys.map((s, i) => {
-      if (i < currentIdx) return chalk.dim('■');  // passed stages
-      if (i === currentIdx) return color('●'); // current stage
-      return chalk.dim('○'); // future stages
-    });
-
-    // Segment label: first 3 stages, current, last 2
-    const segLabels = stageKeys.map((s, i) => {
-      if (i === 0 || i === stageKeys.length - 1 || i === currentIdx) {
-        return i === currentIdx ? color(stageAbbr(s)) : chalk.dim(stageAbbr(s));
-      }
-      return '  '; // skip most labels for compactness
-    });
-
-    // Pad line name to 15 chars for alignment
-    const paddedLine = line.padEnd(14);
-    if (!JSON_MODE) {
-      console.log(`  ${paddedLine} ${bars.join('')} ${chalk.dim(current)}`);
-    }
-  }
-}
-
-/** Render CCI composite with dimension breakdown */
-function renderCCIDisplay(cci: { composite: number; dimensions: Record<string, number> }): void {
-  if (JSON_MODE) return;
-  const pct = (cci.composite * 100).toFixed(1);
-  const barLen = 20;
-  const filled = Math.round(cci.composite * barLen);
-  const bar = '█'.repeat(filled) + '░'.repeat(barLen - filled);
-
-  console.log(`  ${chalk.bold('CCI')}  ${chalk.cyan(bar)} ${chalk.bold(pct + '%')}`);
-
-  // Show dimensions in a compact row
-  const dims = Object.entries(cci.dimensions).map(([k, v]) => {
-    const labels: Record<string, string> = {
-      altitude: 'alt', driveHealth: 'drive', polarity: 'polar',
-      shadowTopology: 'shadow', transformationReadiness: 'xform',
-    };
-    const short = labels[k] ?? k.slice(0, 5);
-    const val = (v * 100).toFixed(0);
-    const color = v > 0.6 ? chalk.green : v > 0.3 ? chalk.yellow : chalk.red;
-    return `${chalk.dim(short + ':')}${color(val + '%')}`;
-  });
-  console.log(`   ${dims.join(' ')}`);
 }
 
 /** Render session arc position with progress bar */
@@ -1533,60 +1488,6 @@ function renderSessionPosition(label: string, position: 'warmup' | 'peak' | 'coo
   console.log(`  ${posLabel} ${bar} ${chalk.dim(label)}`);
 }
 
-/** Render active shadows with quadrant labels */
-function renderShadows(sig: Significator): void {
-  if (JSON_MODE) return;
-  const active = sig.shadows.entries.filter(e => !e.resolvedAt);
-  if (active.length === 0) {
-    info('shadows', `${chalk.green('none active')}`);
-    return;
-  }
-
-  // Group by quadrant
-  const groups: Record<string, typeof active> = {};
-  for (const s of active) {
-    const key = s.quadrant ?? 'Unknown';
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(s);
-  }
-
-  const qColors: Record<string, (text: string) => string> = {
-    DarkAddiction: chalk.hex('#FF0000'),
-    DarkAllergy: chalk.hex('#FF6347'),
-    GoldenAddiction: chalk.hex('#FFD700'),
-    GoldenAllergy: chalk.hex('#808080'),
-  };
-
-  const parts = Object.entries(groups).map(([q, entries]) => {
-    const color = qColors[q] ?? chalk.yellow;
-    const sev = entries.map(e => (e.severity * 100).toFixed(0)).join('/');
-    return color(q + (entries.length > 1 ? '×' + entries.length : '') + '(' + sev + '%)');
-  });
-  // U.3 FIX: Show count clearly instead of misleading CCI dimension percentage
-  console.log(`  ${chalk.yellow('⚠')} shadows [${active.length}]: ${parts.join(' ')}`);
-}
-
-/** Render drive balance compass */
-function renderDrives(sig: Significator): void {
-  if (JSON_MODE) return;
-  const balances = ['Agency', 'Communion', 'Eros', 'Agape'] as const;
-  const vals = balances.map(d => sig.drives.weights[d] ?? 0);
-  const maxVal = Math.max(1, ...vals);
-  const barLen = 8;
-
-  for (let i = 0; i < balances.length; i++) {
-    const d = balances[i];
-    const w = sig.drives.weights[d] ?? 0;
-    const fix = sig.drives.fixationRisk[d] ?? 0;
-    const filled = Math.max(0, Math.round((w / maxVal) * barLen));
-    const bar = '█'.repeat(filled) + '░'.repeat(barLen - filled);
-    const color = fix > 0.5 ? chalk.red : w > 0.3 ? chalk.green : chalk.yellow;
-    const fixIcon = fix > 0.7 ? '⚠' : fix > 0.4 ? '~' : ' ';
-    const dirIcon = w > 0.6 ? '↑' : w < 0.35 ? '↓' : ' ';
-    console.log(`  ${chalk.dim(d.padEnd(10))} ${color(bar)} ${fixIcon}${dirIcon} ${chalk.dim(fix > 0.1 ? `fix:${(fix * 100).toFixed(0)}%` : '')}`);
-  }
-}
-
 /** Render Direct Questioning progress — Veil-compliant (no line names, no stages, no pass/fail counts) */
 function renderLinesProgress(_sig: Significator, history: ConsequenceRecord[]): void {
   if (JSON_MODE) return;
@@ -1598,28 +1499,6 @@ function renderLinesProgress(_sig: Significator, history: ConsequenceRecord[]): 
   const filled = Math.round((totalAnswered / totalQuestions) * barWidth);
   const bar = '█'.repeat(filled) + '░'.repeat(barWidth - filled);
   console.log(`  ${chalk.bold('Progress')}  ${chalk.cyan(bar)} ${totalAnswered}/${totalQuestions}`);
-  console.log('');
-}
-
-/** Render radar chart showing developmental profile across 8 lines */
-function renderRadarChart(sig: Significator): void {
-  if (JSON_MODE) return;
-  const lines: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Somatic', 'Willpower', 'Interpersonal'];
-  const allStages = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'] as const;
-
-  console.log(`\n  ${chalk.bold('Developmental Profile — Radar Chart')}\n`);
-
-  for (const line of lines) {
-    const stage = sig.altitudes[line] ?? 'Red';
-    const stageIdx = allStages.indexOf(stage as typeof allStages[number]);
-    const color = stageColor(stage);
-
-    const barLen = 16;
-    const filled = Math.round((stageIdx / (allStages.length - 1)) * barLen);
-    const bar = '█'.repeat(filled) + '░'.repeat(barLen - filled);
-
-    console.log(`  ${chalk.dim(line.padEnd(14))} ${color(bar)} ${color(stage)}`);
-  }
   console.log('');
 }
 
@@ -2310,7 +2189,7 @@ async function runIntegrationRitual(profileName: string | null): Promise<string 
  * Inspired by Hermes-Agent's background_review pattern: the agent reads what
  * happened and synthesizes it into long-term memory.
  */
-async function synthesizeSessionInsights(profileName: string, encounterCount: number): Promise<void> {
+async function synthesizeSessionInsights(_profileName: string, encounterCount: number): Promise<void> {
   // NF3-1 (Fresh-User Audit 3): Even when LLM is inactive, run the lighter-
   // weight fallback so the Active Focus doesn't go stale. The audit found
   // synthesis succeeds only 25% of the time — and when the LLM is unreachable
@@ -2836,9 +2715,7 @@ async function runDirectQuestioningSession(
         // P1-1 (UX-R3): word-boundary-aware truncation; was slice(0,120)+'...'
         // R5-BUG-5 (UX-R5): If the LLM returned an empty narrative, fall back
         // to the FallbackNarratives pool instead of showing an empty ✦ line.
-        const rawNarrative = result.narrativeSummary?.trim() || pickFallbackNarrative(
-          encounter.id, encounter.modality, Date.now() % 1000,
-        );
+        const rawNarrative = result.narrativeSummary?.trim() || pickFallbackNarrative();
         const briefNarrative = truncateNarrative(rawNarrative, 1000);
         // R11-P5 (Fresh-User UX Audit): The ✦ glyph precedes the narrative
         // and looks like the game is about to say something. When the
@@ -3004,9 +2881,21 @@ async function runDirectQuestioningSession(
       // DQ bypasses tickWithStrategy but should still update UserMatrixModel + transformation state.
       if (result.response) {
         // DQ doesn't have a sessionState from startSession — create a minimal one
+        // The strategy is GENERATED, not hand-written. The literal that stood here had already
+        // drifted from `SessionStrategy` (a `warmup` field that is now `warmupCount`, a
+        // `midSessionAdjustmentThreshold` that never existed, weights missing `knowledgeHealth`,
+        // and no `themeRationale`/`arc`/`modalityBias` at all) — which is what a second copy of a
+        // shape converges on. DQ has no auto-mode arc, so it derives one from the neutral CCI.
+        const dqCci: CCIScore = {
+          composite: 0.5,
+          dimensions: { altitude: 0.3, driveHealth: 0.5, polarity: 0.2, shadowTopology: 0.5, transformationReadiness: 0.2 },
+          weights: DEFAULT_CCI_WEIGHTS,
+          dominantDimension: 'driveHealth',
+          sessionSignals: { recommendedTheme: 'balanced-development', intensityBudget: 0.5, shadowPressure: 'low', transformationProximity: 'distant', driveRebalancingTarget: null, polarityGuidance: { mode: 'exploration', recommendedDiversity: 0.7, temptationFrequency: 0.3 } },
+        };
         const dqSessionState: SessionState = {
-          strategy: { theme: 'balanced-development', weightBias: { thetaUrgency: 1, shadowActivation: 1, polarityAlignment: 1, transformationReadiness: 1, driveCorrection: 1, narrativeCoherence: 1, sessionFit: 1 }, encounterBudget: { totalTarget: 8, warmup: 2, peak: 4, cooldown: 2 }, adjustmentThresholds: { reEvaluationInterval: 5, midSessionAdjustmentThreshold: 0.3 } },
-          cci: { composite: 0.5, dimensions: { altitude: 0.3, driveHealth: 0.5, polarity: 0.2, shadowTopology: 0.5, transformationReadiness: 0.2 }, weights: { altitude: 0.15, driveHealth: 0.25, polarity: 0.15, shadowTopology: 0.25, transformationReadiness: 0.2 }, dominantDimension: 'driveHealth', sessionSignals: { recommendedTheme: 'balanced-development', intensityBudget: 0.5, shadowPressure: 'low', transformationProximity: 'distant', driveRebalancingTarget: null, polarityGuidance: { mode: 'exploration', recommendedDiversity: 0.7, temptationFrequency: 0.3 } } },
+          strategy: generateSessionStrategy(dqCci, { encountersSoFar: i, targetSessionLength: 8, recentLines: [] }, null),
+          cci: dqCci,
           recentOutcomes: [],
           encountersSinceRefresh: i,
           transformationState: { phase: currentSig.transformationPhase ?? 'idle', targetStage: currentSig.transformationTargetStage ?? null, sessionsInPhase: currentSig.transformationSessionsInPhase ?? 0, knotsResolved: currentSig.transformationKnotsResolved ?? 0, totalKnots: currentSig.transformationTotalKnots ?? 0 },
@@ -3147,10 +3036,13 @@ async function runDirectQuestioningSession(
       // For the profile, convert to 0-1 range: 0.5 = balanced, >0.5 = healthy, <0.5 = pathological.
       const driveWeights = currentSig.drives.weights;
       const driveHealthScores = {
-        agency: 0.5 + (driveWeights.agency ?? 0) * 0.5,
-        communion: 0.5 + (driveWeights.communion ?? 0) * 0.5,
-        eros: 0.5 + (driveWeights.eros ?? 0) * 0.5,
-        agape: 0.5 + (driveWeights.agape ?? 0) * 0.5,
+        // The Drive domain's keys are capitalised. These four read lowercase, so every lookup was
+        // `undefined`, `?? 0` absorbed it, and the profile reported 0.5 ("perfectly balanced") for
+        // all four drives regardless of the player's actual state.
+        Agency: 0.5 + (driveWeights.Agency ?? 0) * 0.5,
+        Communion: 0.5 + (driveWeights.Communion ?? 0) * 0.5,
+        Eros: 0.5 + (driveWeights.Eros ?? 0) * 0.5,
+        Agape: 0.5 + (driveWeights.Agape ?? 0) * 0.5,
       };
 
       updateProfileAfterSession(_profileName, {
@@ -3405,9 +3297,11 @@ async function runFullSession(): Promise<void> {
   let currentSig = sig;
   let currentWorld = world;
 
-  // Task 5: Mode selection — player chooses gameplay mode
-  let gameMode: string = 'direct'; // ponytail: default to direct-questioning for cleaner UX
-  if (!HEADLESS && !JSON_MODE && !FORCE_LINE && !FORCE_MODALITY) {
+  // Task 5: Mode selection — player chooses gameplay mode. `--mode` wins; otherwise an interactive
+  // prompt; otherwise the direct flow (the default). The flag is what makes the story branch
+  // reachable from `--headless`/`--json`, where the prompt is skipped.
+  let gameMode: SessionMode = FORCE_MODE ?? 'direct';
+  if (!HEADLESS && !JSON_MODE && !FORCE_LINE && !FORCE_MODALITY && !FORCE_MODE) {
     const modeChoice = await select({
       message: 'Choose your gameplay mode:',
       options: [
@@ -3415,7 +3309,7 @@ async function runFullSession(): Promise<void> {
         { value: 'story', label: 'Story-Driven — Immersive RPG narrative' },
       ],
     });
-    gameMode = String(modeChoice);
+    gameMode = modeChoice === 'story' ? 'story' : 'direct';
   }
   // M1: When --agent is set, auto-switch to Story mode (the PersistentAgent is
   // wired into the Story-Driven encounter loop, not the Direct Questioning flow).
@@ -3640,11 +3534,15 @@ async function runFullSession(): Promise<void> {
     // Run encounter — YAGNI-1 (UX-R3+R4): both DQ and Story now route
     // through the unified executeEncounter dispatch. The routing logic
     // (PersistentAgent vs AgenticOrchestrator) lives in ONE place.
-    try {        const result = await executeEncounter(selectedEncounter, currentSig, currentWorld, history, {
-            responsesPool,
-            consecutivePasses,
-            orchestration,
-          });
+    try {
+      const result = await executeEncounter(selectedEncounter, currentSig, currentWorld, history, {
+        // `responsesPool` is deliberately NOT passed: the forced-response pool was retired
+        // (YAGNI-PHASE-4) and its caller-side local removed. The bare shorthand left here threw
+        // `ReferenceError` on every story-mode encounter — and because the dispatch is wrapped in
+        // this `try`, the failure was caught and the mode degraded quietly instead of running.
+        consecutivePasses,
+        orchestration,
+      });
 
       // Apply consequences from the orchestrator result
       const record = result.outcome.consequenceRecord;
@@ -3658,7 +3556,7 @@ async function runFullSession(): Promise<void> {
         captureCheckpoint(orchestration);
       // Phase 13 d9b: the sidecar journal — one append-only line per checkpoint, so a crash
       // before the next saveAll still leaves this session recoverable at next boot.
-      appendJournalEntry(getMysteriumProfileDir(), (currentWorld as { orchestrationCheckpoint: RuntimeCheckpoint }).orchestrationCheckpoint);
+      appendJournalEntry(getMysteriumProfileDir(), (currentWorld as unknown as { orchestrationCheckpoint: RuntimeCheckpoint }).orchestrationCheckpoint);
       void journalPathFor; // path helper re-exported for diagnostics; the journal lives in the profile dir
 
       // Wave 1.1: Apply the response to the GameLoop's state engines
@@ -3698,14 +3596,9 @@ async function runFullSession(): Promise<void> {
       // The player sees narrative consequence only.
       if (!JSON_MODE) {
         const cr = result.outcome.consequenceRecord;
-        const polarityArrow = cr.polarityTrace.energeticDirection === 'Radiative' ? '↑'
-          : cr.polarityTrace.energeticDirection === 'Absorptive' ? '↓' : '·';
-
         // P1-1 (UX-R3): word-boundary-aware truncation; was slice(0,100)+'...'
         // R5-BUG-5 (UX-R5): Fall back to FallbackNarratives if LLM returned empty.
-        const rawNarrative = result.narrativeSummary?.trim() || pickFallbackNarrative(
-          selectedEncounter.id, selectedEncounter.modality, Date.now() % 1000,
-        );
+        const rawNarrative = result.narrativeSummary?.trim() || pickFallbackNarrative();
         const briefNarrative = truncateNarrative(rawNarrative, 1000);
         // R11-P5 (Fresh-User UX Audit): Same echo-detection as DQ path (line ~1700).
         // Suppress ✦ when the "narrative" is just the player's write-in echoed back.
@@ -3814,8 +3707,10 @@ async function runFullSession(): Promise<void> {
   recordCLITelemetry(cliTelemetry, 'session_ended', { encounterCount, durationMs: Date.now() - sessionStartedAt });
   await flushCLITelemetry(cliTelemetry);
 
-  // P1-QW3 (Architecture Audit Phase A): flush any agentic-encounter telemetry.
-  await flushCLITelemetry(telemetry);
+  // (The "agentic-encounter telemetry" flush that stood here referenced a `telemetry` object
+  // that no longer exists in this scope, so a story-mode session threw `ReferenceError` at
+  // SESSION END — after the player had already played it. `cliTelemetry` is the only collector on
+  // this path and is flushed immediately above.)
 
   banner('SESSION END');
 
@@ -4153,7 +4048,7 @@ async function runProfile(action?: string, profileName?: string): Promise<void> 
     const shadows = profile.shadowLedger?.shadows ?? [];
     if (shadows.length > 0) {
       const surfacing = shadows.filter((s: any) => s.status !== 'integrated');
-      const integrated = shadows.filter((s: any) => s.status === 'integrated');
+      const integrated = shadows.filter((s: any) => s.status === 'integrated') as ReadonlyArray<{ line?: string }>;
 
       if (surfacing.length > 0) {
         // Group by line for a more cohesive narrative
@@ -4175,7 +4070,9 @@ async function runProfile(action?: string, profileName?: string): Promise<void> 
 
       if (integrated.length > 0) {
         const count = integrated.length;
-        const lineNames = [...new Set(integrated.map((s: any) => (s as any).line).filter(Boolean))];
+        const lineNames = [...new Set(
+          integrated.map((s) => s.line).filter((l): l is string => Boolean(l)),
+        )];
         if (lineNames.length === 1) {
           console.log(`  ${chalk.green.dim(`Something in the ${lineNames[0]!.toLowerCase()} dimension has shifted — a movement that was once surfacing has found its way through.`)}`);
         } else {
@@ -4252,28 +4149,6 @@ function extractMdSectionBullets(md: string, sectionName: string): string[] {
 }
 
 /**
- * Translate a clinical shadow-quadrant code into a Veil-compliant qualitative
- * movement description. Used by `profile show` so the player sees a plain
- * English movement ("a pull toward over-reliance on a familiar capacity")
- * instead of the raw code ("DarkAddiction").
- *
- * The four quadrants (per AGENTS.md §5.2):
- *   DarkAddiction  → submergent fixation  (clings to lower capacity)
- *   DarkAllergy    → submergent aversion  (rejects lower capacity)
- *   GoldenAddiction → emergent fixation   (bypasses toward higher without integration)
- *   GoldenAversion → emergent aversion   (refuses the call to grow)
- */
-function veilShadowMovement(quadrant: string | undefined): string {
-  switch (quadrant) {
-    case 'DarkAddiction':  return 'A pull toward over-reliance on a familiar, lower capacity';
-    case 'DarkAllergy':    return 'A rejection of a lower capacity that still has something to offer';
-    case 'GoldenAddiction': return 'A pull to bypass toward higher capacities without integrating the lower';
-    case 'GoldenAversion': return 'A resistance to the call to grow';
-    default:               return 'An unnamed movement';
-  }
-}
-
-/**
  * P1-F10 (Fresh-User UX Audit): Translate a raw session-strategy theme name
  * into a Veil-compliant qualitative hint. The game's session strategy engine
  * silently shifts theme based on the player's surfacing shadows, drive
@@ -4338,7 +4213,9 @@ async function runSetupProfile(): Promise<void> {
       { value: 'other', label: 'Other (type below)' },
     ],
   });
-  let pronouns = typeof pronounChoice === 'string' ? pronounChoice : 'they/them';
+  // `string`, not the option union: the menu offers "Other (type below)", so a custom value is a
+  // supported outcome the union could not express.
+  let pronouns: string = typeof pronounChoice === 'string' ? pronounChoice : 'they/them';
   if (pronouns === 'other') {
     const custom = await clackText({ message: 'Enter your pronouns:', defaultValue: '' });
     if (typeof custom === 'string' && custom.trim()) pronouns = custom.trim();
@@ -4678,7 +4555,6 @@ async function runStatus(): Promise<void> {
   // because the pretty-print helpers (info(), banner()) suppress themselves
   // in JSON mode, while console.log() for headers did not. This made the
   // CLI unscriptable. Now we emit a single structured JSON object.
-  const config = loadConfig();
 
   bootRegistries();
   const moduleRegistry = bootModuleRegistry();
@@ -4698,7 +4574,7 @@ async function runStatus(): Promise<void> {
     // R11-R2: stageAesthetics map removed — use describeStage from veilDescriptors.
     const stageAestheticsShort: Record<string, string> = {
       Infrared: 'primal', Magenta: 'symbolic', Red: 'power', Amber: 'order',
-      Orange: 'reason', Green: 'harmony', Turquoise: 'integral', White: 'unity',
+      Orange: 'reason', Green: 'harmony', Teal: 'vision', Turquoise: 'unity',
     };
     const out: any = {
       type: 'status',
@@ -4867,7 +4743,6 @@ async function runStatus(): Promise<void> {
       // Find the line with the highest progress (the player's current edge)
       let edgeLine: Line | null = null;
       let edgeRatio = 0;
-      let edgeTraces = 0;
       for (const line of ALL_LINES_DISPLAY) {
         const stage = sig.altitudes[line] ?? 'Red';
         const cellKey = `${line}:${stage}`;
@@ -4877,7 +4752,6 @@ async function runStatus(): Promise<void> {
         if (traces > 0 && ratio > edgeRatio) {
           edgeRatio = ratio;
           edgeLine = line;
-          edgeTraces = traces;
         }
       }
       if (edgeLine) {
@@ -5130,11 +5004,11 @@ async function runEvents(args: string[]): Promise<void> {
   // in-memory collector. Each CLI invocation gets a fresh collector; without
   // loading the store, events from prior sessions are invisible.
   const { loadPersistedTelemetry } = await import('../src/cli/CLITelemetry.js');
-  const persisted = await loadPersistedTelemetry().catch(() => []);
+  const persisted: TelemetryEvent[] = await loadPersistedTelemetry().catch(() => []);
   const buffered = telemetry.getCollector().getEvents();
   // Merge: persisted (from prior processes) + buffered (current process not yet flushed), deduped by id
   const seen = new Set<string>();
-  const events: typeof persisted = [];
+  const events: TelemetryEvent[] = [];
   for (const e of [...persisted, ...buffered]) {
     const id = (e as unknown as Record<string, unknown>).id as string | undefined;
     if (id && seen.has(id)) continue;
@@ -5155,16 +5029,6 @@ async function runEvents(args: string[]): Promise<void> {
   console.log('');
 }
 
-// ── Usage help ──────────────────────────────────────────────────────
-function printHelp(): void {
-  // R11-Y5 (Fresh-User UX Audit): removed --force-shadow=Q from the FORCED
-  // ENCOUNTERS section. The flag is now hidden in commander's auto-help and
-  // was a documented source of user confusion. The printHelp() banner should
-  // not duplicate it.
-  console.log(`\n${chalk.bold}${chalk.cyan}Mysterium${chalk.reset} v${VERSION}\n\n${chalk.bold}USAGE${chalk.reset}\n  mysterium                        Start an interactive session\n  mysterium session                Same as above\n  mysterium setup                  Configure LLM and preferences\n  mysterium diagnostic             Show system diagnostics
-  mysterium curriculum             Lint and list curriculum holons\n  mysterium status                 Show current save state\n  mysterium glossary               Show essential + unlocked terms\n  mysterium profile show           See what the game has noticed about you\n  mysterium new-game               Reset progress and start fresh\n\n${chalk.bold}SESSION OPTIONS${chalk.reset}\n  --encounters=N               Number of encounters (default: ${fileConfig.session?.defaultEncounters ?? 20})\n  --headless                   Run without user interaction\n  --json                       Machine-readable JSON output\n\n  --dev                        Developer mode (enables --verbose, shows metrics)\n  --version                    Show version\n\n${chalk.bold}FORCED ENCOUNTERS (for testing)${chalk.reset}\n  --line=LINE                  Force a specific line\n  --stage=STAGE                Force a specific stage\n  --modality=MOD               Force a specific modality\n\n${chalk.bold}CONFIGURATION${chalk.reset}\n  API key:   ~/.mysterium/config.json or OPENCODE_API_KEY env var\n  Model:     ~/.mysterium/config.json or MODEL env var\n  Saves:     ~/.mysterium/profiles/<name>/\n\n${chalk.bold}EXAMPLES${chalk.reset}\n  mysterium                                       # interactive session\n  mysterium --headless --encounters=5             # headless session\n  mysterium setup                                 # configure API key\n  mysterium session --encounters=5 --json         # JSON event stream\n  mysterium glossary                              # learn the terminology\n  mysterium profile show                          # see your synthesized insights\n  mysterium diagnostic                            # system diagnostics\n`);
-}
-
 // ── Main ──────────────────────────────────────────────────────────────
 /**
  * `mysterium privacy` — the player's identity-consent dashboard (doc 16 §2.1).
@@ -5176,7 +5040,7 @@ async function runPrivacyCommand(action: string | undefined, fieldArg: string | 
   const identity = sig?.identity;
 
   if (action === 'withdraw-all') {
-    if (!sig || !identity) { info('No identity context stored.'); return; }
+    if (!sig || !identity) { warn('No identity context stored.'); return; }
     let updated = identity;
     for (const f of IDENTITY_FIELDS) {
       if (identity.fields[f] !== undefined) updated = withdrawIdentityField(updated, f, Date.now());
@@ -5193,7 +5057,7 @@ async function runPrivacyCommand(action: string | undefined, fieldArg: string | 
       return;
     }
     if (!sig || !identity || identity.fields[field] === undefined) {
-      info(`No identity data stored for "${field}".`);
+      warn(`No identity data stored for "${field}".`);
       return;
     }
     const updated = withdrawIdentityField(identity, field, Date.now());
@@ -5205,11 +5069,11 @@ async function runPrivacyCommand(action: string | undefined, fieldArg: string | 
   // Phase 11 d3 (G29): withdraw a declared preference by its phrase — the value AND the derived
   // tag are removed; nothing new is stored about the withdrawal (47 §8: deletion is not memory).
   if (action === 'withdraw-preference' && fieldArg) {
-    if (!sig || !identity) { info('No identity context stored.'); return; }
+    if (!sig || !identity) { warn('No identity context stored.'); return; }
     const before = identity;
     let updated = withdrawDeclaredPreference(before, 'interests', fieldArg, Date.now());
     if (updated === before) updated = withdrawDeclaredPreference(before, 'aversions', fieldArg, Date.now());
-    if (updated === before) { info(`No active preference matches "${fieldArg}".`); return; }
+    if (updated === before) { warn(`No active preference matches "${fieldArg}".`); return; }
     saveGame({ ...sig, identity: updated });
     success(`Preference "${fieldArg}" withdrawn. The game stops reaching for it immediately.`);
     return;
@@ -5254,8 +5118,9 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
   const { delegateSession, emptyLedgerState, ratifyProposalsTool, schedulePresence } = await import('../src/core/orchestration/orchestratorTools.js');
   const { createSignificator } = await import('../src/core/domain/Significator.js');
   const { createInitialWorldState } = await import('../src/core/engines/CandidateGeneration.js');
-  const { ALL_LINES } = await import('../src/core/domain/Line.js');
-  const { ALL_STAGES } = await import('../src/core/domain/Stage.js');
+  // NB: `ALL_LINES` / `ALL_STAGES` are NOT re-imported here. They are module-level imports in
+  // this file, and the local `await import` shadows used to hide that — a second binding for a
+  // canonical constant, which is the class that let a retired stage ladder survive (audit §10.4).
   const { seedCurriculumRegistry } = await import('../src/core/curriculum/CurriculumSeed.js');
   const { parseDelegateArgs, DELEGATE_ROLE_PATTERN } = await import('./cli/delegateArgs.js');
 
@@ -5265,7 +5130,15 @@ async function runDelegateCommand(argv: string[]): Promise<void> {
   const { role, line, stage, budget, seed, summon, trigger, intent } = parseDelegateArgs(argv);
   const asJson = JSON_MODE;
 
-  if (!DELEGATE_ROLE_PATTERN.test(role) || !ALL_LINES.includes(line) || !ALL_STAGES.includes(stage)) {
+  // Narrowing guards. `parseDelegateArgs` returns RAW strings on purpose — the flags come from the
+  // argv tail, so a garbage value must fail closed rather than be cast into a domain type. The
+  // narrowing happens ONCE, here, so every consumer below is typed and needs no casts.
+  const isLineArg = (v: string): v is Line => (ALL_LINES as readonly string[]).includes(v);
+  const isStageArg = (v: string): v is Stage => (ALL_STAGES as readonly string[]).includes(v);
+  const isRoleArg = (v: string): v is AgentRole =>
+    DELEGATE_ROLE_PATTERN.test(v) && (ALL_AGENT_ROLES as readonly string[]).includes(v);
+
+  if (!isRoleArg(role) || !isLineArg(line) || !isStageArg(stage)) {
     if (asJson) {
       process.stdout.write(JSON.stringify({ ok: false, violation: { code: 'invalid_argument', detail: `role/line/stage: ${role}/${line}/${stage}` } }) + '\n');
     } else {
@@ -5744,7 +5617,13 @@ async function runVowCommand(argv: string[]): Promise<void> {
     const out = processCheckIn({ book: lapses.book, sig, world, vow, answers, now, primaryLine: line });
     saveVowFile({ book: out.book });
     console.log(`\n  ${chalk.green('Recorded.')} ${chalk.dim('Held privately — nothing to act on, nothing to perform.')}`);
-    if (out.vowFulfilled) console.log(chalk.green('  The objective feels met — it settles into fulfilled.'));
+    // `vowFulfilled` was never a field of `CheckInOutcome`; fulfilment lives on the vow inside the
+    // RETURNED book. The old property access was always `undefined`, so this line could never
+    // print even when the objective had been met.
+    const settled = vow ? out.book.vows.find((v) => v.text === vow.text) : undefined;
+    if (settled?.fulfilled || settled?.status === 'fulfilled') {
+      console.log(chalk.green('  The objective feels met — it settles into fulfilled.'));
+    }
     return;
   }
 
@@ -5775,7 +5654,7 @@ async function main(): Promise<void> {
   // non-interactive ones (`status`, `glossary`). This is safer than
   // enumerating interactive ones — new subcommands default to safe.
   const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod', 'credential']);
-  const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand) && !HEADLESS && !JSON_MODE;
+  const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand ?? '') && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
     HEADLESS = true;
     process.env.Mysterium_HEADLESS = '1'; // R5-BUG-1: propagate to PersistentAgent

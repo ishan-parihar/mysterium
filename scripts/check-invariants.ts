@@ -11,7 +11,7 @@
 //                          the registries, data indices and enums.
 
 import { bootRegistries } from '../src/core/registries/boot.js';
-import { allModuleKeys, queryByLineStage } from '../src/core/data/ConceptDraftIndex.js';
+import { allModuleKeys } from '../src/core/data/ConceptDraftIndex.js';
 import { createRegistry } from '../src/core/world/store/HolonStore.js';
 import {
   ALL_MODALITIES,
@@ -272,8 +272,10 @@ check('toQualitativeFeedback produces Veil-compliant output', () => {
   const text = formatQualitativeFeedback(fb);
   if (text.length === 0) throw new Error('Empty output');
   // Check no Veil-violating taxonomy leaks
-  const stages = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Turquoise', 'White'];
-  for (const s of stages) {
+  // The canonical ladder, imported — never a hand-copied list. This one previously carried the
+  // retired stage `White`, so the leak check tested for a stage that does not exist while the
+  // authority (domain/Stage.ts) said otherwise. See CHECKED-SURFACE-AUDIT-2026-09-24 §10.3.
+  for (const s of ALL_STAGES) {
     if (text.includes(s)) throw new Error(`Stage label leaked: ${s}`);
   }
   const drives = ['Agency', 'Communion', 'Eros', 'Agape'];

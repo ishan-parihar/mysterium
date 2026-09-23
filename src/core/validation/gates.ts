@@ -1470,6 +1470,7 @@ function g28Record(holonId: string): import('../domain/ConsequenceRecord.js').Co
   return {
     encounterId: 'g28-enc',
     timestamp: 5,
+    line: 'Cognitive',
     polarityTrace: {
       energeticDirection: 'Radiative',
       driveDirectionality: { Agency: 'HealthyBalanced', Communion: 'HealthyBalanced', Eros: 'HealthyBalanced', Agape: 'HealthyBalanced' },

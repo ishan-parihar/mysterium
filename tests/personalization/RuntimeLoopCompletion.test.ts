@@ -52,7 +52,7 @@ const HOLONS: readonly Holon[] = [
 
 function mkRecord(holonId: string): ConsequenceRecord {
   return {
-    encounterId: 'enc-c', timestamp: Date.now(),
+    encounterId: 'enc-c', timestamp: Date.now(), line: 'Cognitive',
     polarityTrace: {
       energeticDirection: 'Radiative',
       driveDirectionality: { Agency: 'HealthyBalanced', Communion: 'HealthyBalanced', Eros: 'HealthyBalanced', Agape: 'HealthyBalanced' },

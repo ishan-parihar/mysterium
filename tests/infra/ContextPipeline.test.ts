@@ -75,6 +75,7 @@ function makeMockConsequences(): ConsequenceRecord[] {
     {
       encounterId: 'enc-prev-1',
       timestamp: 1000,
+      line: 'Moral',
       polarityTrace: {
         encounterId: 'enc-prev-1',
         timestamp: 1000,
@@ -98,6 +99,7 @@ function makeMockConsequences(): ConsequenceRecord[] {
     {
       encounterId: 'enc-prev-2',
       timestamp: 2000,
+      line: 'Moral',
       polarityTrace: {
         encounterId: 'enc-prev-2',
         timestamp: 2000,

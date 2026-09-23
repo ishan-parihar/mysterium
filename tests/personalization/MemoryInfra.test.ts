@@ -40,9 +40,9 @@ function holons(withDirtyName = false) {
   ];
 }
 
-function consequenceRecord(holonId: string) {
+function consequenceRecord(holonId: string): import('../../src/core/domain/ConsequenceRecord.js').ConsequenceRecord {
   return {
-    encounterId: 'enc', timestamp: 5,
+    encounterId: 'enc', timestamp: 5, line: 'Cognitive',
     polarityTrace: {
       energeticDirection: 'Radiative',
       driveDirectionality: { Agency: 'HealthyBalanced', Communion: 'HealthyBalanced', Eros: 'HealthyBalanced', Agape: 'HealthyBalanced' },
