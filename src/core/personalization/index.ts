@@ -70,3 +70,17 @@ export type { EngagementRegister, MechanismRecord, EngagementMechanismId } from 
 export { shortlist, recallGuard, candidateText, SHORTLIST_THRESHOLD, SHORTLIST_LIMIT } from './retrievalShortlist.js';
 export { createProbeRuntime, nextOfferable, recordProbeChoice, declineProbeOffer, harnessReport } from './probeRuntime.js';
 export type { ProbeRuntime } from './probeRuntime.js';
+
+// Phase 14 d7 — the K1 probe-validation protocol's executable half. Three responsibilities, three
+// modules: the synthetic harness (probeValidation), the rater cohort's statistics
+// (probeRaterCohort), and the decision they feed (probeThresholds).
+export { summariseProbe, summariseCohort } from './probeRaterCohort.js';
+export type { RaterAdministration, ProbeAgreementStat, CohortStat } from './probeRaterCohort.js';
+export {
+  PILOT_THRESHOLDS, MIN_RATERS_FOR_CERTIFICATION, adjudicateCohort, adjudicateProbes,
+  detectBandFlips, runProbePilot, describePilot, validatedPole,
+} from './probeThresholds.js';
+export type {
+  ProbeThresholds, ThresholdProvenance, RVVerdict, ProbeAdjudication, CohortAdjudication,
+  BandFlip, PilotRater, PilotReport,
+} from './probeThresholds.js';
