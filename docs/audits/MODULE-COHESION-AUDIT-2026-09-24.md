@@ -202,7 +202,7 @@ Recorded so the next reader does not "fix" them:
 | 4 | `AgenticOrchestrator` collaborator extraction | > 1 000 | **OPEN** — incremental; the 645-line test is the lock |
 | 5 | `FallbackProvider.ts` data extraction | > 1 000 | ✅ **DONE 2026-09-24** — 1 632 → **558** lines. The corpus moved to `fallback/data/` (`schema` + `languageReflective` · `scenarioChoice` · `embodied` · `deterministic` · `generic`, 98 pools); the provider keeps the routing tables, the reframe layers and `getFallback`. `FallbackContent` is re-exported so the public surface is unchanged |
 | 6 | `ContextPipeline.ts` block promotion (M3) | 500–1 000 | ✅ **DONE 2026-09-24** — the 15 builders moved to `infra/llm/contextBlocks.ts`; `buildContext` is now a list of named steps. The split also surfaced a live Veil leak (a shadow label rendered into a prompt block) |
-| 7 | `sessionRuntime.ts` split behind an index re-export | 500–1 000 | **OPEN** — must preserve the single seam (M6) |
+| 7 | `sessionRuntime.ts` split behind an index re-export | 500–1 000 | ✅ **DONE 2026-09-24** — 926 → **56** lines (index) + nine modules under `sessionRuntime/` (`store` · `services` · `envelope` · `scope` · `digest` · `seeds` · `sessionEnd` · `devLoop` · `checkpoint`). The seam survived exactly as `M6` demands: the index is the only import path, and its doc-comment now states the rule ("a seam is an INTERFACE contract, not a file") so the next reader does not mistake the split for a permission to reach past it |
 | 8 | `GameLoop.ts` — revisit only if `SessionState` becomes its own module | 1 000+ | **Not now** (Tier C) |
 
 **What landed with the doctrine (2026-09-24):** item 0, plus the *doctrine itself* — `M1–M10` in
