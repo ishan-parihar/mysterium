@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 /**
  * Mysterium CLI Game Runner — Phase 1
  * Comprehensive headless debugger that runs the full game loop without Phaser.
@@ -19,19 +20,77 @@
  * @script-status: wired — `npm run cli` (and `cli:bundle` for the built copy). The headless runner;
  *                          mutates only the player's own save file, never the tree.
  */
-
 import * as fs from 'fs';
 import * as path from 'path';
 import chalk from 'chalk';
 import { select, text as clackText } from '@clack/prompts';
 import ora from 'ora';
-import boxen from 'boxen';
 import { Command, Option } from 'commander';
-
 import { CONFIG_DIR, CONFIG_FILE, loadConfig, saveConfig } from './cli/config.js';
+import { ACTIVE_MODEL, CURRICULUM_MODE, DEV_MODE, FORCE_LINE, FORCE_MODALITY, FORCE_MODE, FORCE_SHADOW, FORCE_STAGE, HEADLESS, JSON_MODE, LLM_ACTIVE, NEW_GAME, RAW_VERBOSE, SKIP_CALIBRATION, USER_ANSWERS, VERBOSE, apiKey, baseUrl, encounterCount, fileConfig, model, provider, setHeadless, setInvocation, setLlmActive, setProviderState, subcommand } from './cli/flags.js';
+import { banner, info, success, warn, error, separator, verbose, emitEvent, emitDevPrimitives, renderSessionPosition, renderLinesProgress, printSignificator, printEncounter, renderPostSessionSummary, renderPrerequisiteGaps, readActiveFocus } from './cli/output.js';
 import type { MysteriumConfig } from './cli/config.js';
 import { DQ_SCENE_SETTINGS, VALID_SHADOW_QUADRANTS, CHALLENGE_NAMES } from './cli/data.js';
-import { stripAnsi, stageColor, truncateNarrative, truncateAtWordBoundary, cciToFeltSense, saturationToFeltSense, readinessToFeltSense, describeShadowMovement, generatePracticeHint, somaticPracticeHint, curriculumLabel, checkPrerequisiteGaps } from './cli/render.js';
+import { stageColor, truncateNarrative, truncateAtWordBoundary, cciToFeltSense, saturationToFeltSense, readinessToFeltSense, generatePracticeHint, somaticPracticeHint, curriculumLabel } from './cli/render.js';
+import { resolveConfig as resolveLLMConfig, isComplete as isLLMConfigComplete, type LLMConfig } from '../src/infra/llm/ProviderRegistry.js';
+import { getMysteriumDirForScope } from '../src/infra/persistence/mysteriumDir.js';
+import { SESSION_MODES, type SessionMode } from '../src/core/domain/SessionMode.js';
+import { getActiveConfig, invalidateConfigCache, validateModelIfFresh, queryLLM } from '../src/infra/llm/LLMClient.js';
+import { bootRegistries } from '../src/core/registries/boot.js';
+import { bootModuleRegistry } from '../src/core/assessments/bootModules.js';
+import { createSignificator } from '../src/core/domain/Significator.js';
+import { createInitialWorldState, type WorldState } from '../src/core/engines/CandidateGeneration.js';
+import type { Significator } from '../src/core/domain/Significator.js';
+import type { Line } from '../src/core/domain/Line.js';
+import { ALL_LINES } from '../src/core/domain/Line.js';
+import type { Stage } from '../src/core/domain/Stage.js';
+import { ALL_STAGES, stageOrdinal } from '../src/core/domain/Stage.js';
+import type { AgentRole } from '../src/core/orchestration/types.js';
+import { ALL_AGENT_ROLES } from '../src/core/orchestration/councilStanding.js';
+import { DEFAULT_CCI_WEIGHTS, type CCIScore } from '../src/core/engines/CCIEngine.js';
+import { generateSessionStrategy } from '../src/core/engines/AutoModeStrategy.js';
+import { inferAltitudesFromAnswers as inferAltitudesFromAnswersCore } from '../src/core/usecases/InitialAltitudeInference.js';
+import { scoreHoldProbe, scoreChoiceProbe } from '../src/core/usecases/QuickCalibrationScoring.js';
+import type { TelemetryEvent } from '../src/core/telemetry/TelemetryEvent.js';
+import type { ScheduledEncounter } from '../src/core/domain/EncounterSpecNew.js';
+import type { PlayerResponse } from '../src/core/engines/ConsequenceEngine.js';
+import type { SessionContext } from '../src/core/engines/PriorityComputation.js';
+import { startSession, tickWithStrategy, endSession, applyResponseOnly, type SessionState } from '../src/core/GameLoop.js';
+import { createInitialUserMatrixModel } from '../src/core/engines/UserMatrixModel.js';
+import { AgenticOrchestrator, type AgenticUIHandler } from '../src/core/assessments/AgenticOrchestrator.js';
+import type { ModuleRegistry } from '../src/core/assessments/registry.js';
+import type { AskUserQuestionParams, AskUserQuestionResult, UserAnswer } from '../src/core/assessments/agentTypes.js';
+import { grantDeclaredPreference, withdrawDeclaredPreference, activeDeclaredInterests, activeDeclaredAversions } from '../src/core/domain/IdentityProfile.js';
+import { loadSave, saveGame, hasSave, deleteSave, saveWorldState, loadWorldState, deleteWorldSave, saveAll, deleteAllSaves } from '../src/infra/persistence/SaveRepository.js';
+import { createEmptyIdentityProfile, grantIdentityField, withdrawIdentityField, IDENTITY_FIELDS, type IdentityField, type HealingPurpose } from '../src/core/domain/IdentityProfile.js';
+import { runTrainCommand, runInsightsCommand, runExportCommand, runCalibrateCommand, buildTrainingIntegration, buildUnifiedProfileServices } from '../src/cli/TrainingRuntime.js';
+import { buildCLITelemetry, recordCLITelemetry, flushCLITelemetry } from '../src/cli/CLITelemetry.js';
+import { describePersonalResonance } from '../src/core/presentation/veilDescriptors.js';
+import holonsJson from '../src/core/world/data/red-layer-holons.json';
+import stageHolonsJson from '../src/core/world/data/stage-holons.json';
+import { GLOSSARY_TERMS, PLAYER_GLOSSARY_TERMS, ADVANCED_GLOSSARY_TERMS, TIER2_GLOSSARY_TERMS, checkTermUnlocks } from '../src/core/data/glossary.js';
+import type { ConsequenceRecord } from '../src/core/domain/ConsequenceRecord.js';
+import type { Modality } from '../src/core/domain/enums.js';
+import { ALL_MODALITIES } from '../src/core/domain/enums.js';
+import { createOrchestrationServices, captureCheckpoint, type OrchestrationServices, type RuntimeCheckpoint } from '../src/core/personalization/sessionRuntime.js';
+import { appendJournalEntry, replayJournal, journalPathFor } from '../src/infra/persistence/sessionJournal.js';
+import { getMysteriumProfileDir } from '../src/infra/persistence/mysteriumDir.js';
+import { purposesFromVows, purposesFromGoals, preferenceFromHistory } from '../src/core/personalization/bandSources.js';
+import { feedPlanningBias } from '../src/core/orchestration/feedReaders.js';
+import { getLineProgress, computeReadiness } from '../src/core/engines/TransformationDetector.js';
+import { pickFallbackNarrative } from '../src/core/agent/FallbackNarratives.js';
+import { loadAskedPrompts, saveAskedPrompts } from '../src/core/fallback/FallbackProvider.js';
+import { filterOutput } from '../src/infra/llm/VeilFilter.js';
+import { listProfiles, createProfile, setActiveProfile, deleteProfile, loadProfile, buildContextInjection, updateProfileAfterSession, appendEncounterLog, agentReadProfileFile, agentWriteProfileFile, getActiveProfileName, getActiveProfileDir, migrateLegacySave, getProfilesDir, loadUnlockedTerms, addUnlockedTerms } from '../src/infra/profiles/ProfileManager.js';
+import { toSnapshot } from '../src/core/domain/SignificatorSnapshot.js';
+import { computeCCI } from '../src/core/engines/CCIEngine.js';
+import { SessionAgent } from '../src/core/assessments/SessionAgent.js';
+import { seedCurriculumRegistry } from '../src/core/curriculum/CurriculumSeed.js';
+import { seedInitialKnowledge } from '../src/core/curriculum/SeedInitialKnowledge.js';
+import { CALIBRATION_PROMPTS, HOLD_TARGETS } from '../src/core/data/calibrationPrompts.js';
+import { listProfiles as listProviderProfiles, getProfile as getProviderProfile, getModels as getProviderModels, clearModelCache, type LLMConfig as DynamicLLMConfig, type DiscoveredModel, type ProviderProfile } from '../src/infra/llm/ProviderRegistry.js';
+import { runCurriculum } from './CurriculumCommands.js';
+
 
 const VERSION = '0.1.0';
 
@@ -224,6 +283,23 @@ program
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
 
+// ── Full parse with subcommands (after project imports) ──────────────
+// An unrecognised first token is a typo, not a session: name it. Left to itself, commander reports
+// the stray token as "too many arguments" — a rejection, but one that never says which word was
+// wrong, which is exactly what a player with a typo needs to read. Checked before the parse so the
+// message is ours; the rejection itself stays fail-closed (`process.exit(1)`).
+program.showSuggestionAfterError();
+{
+  const known = new Set(program.commands.map((c) => c.name()));
+  const first = process.argv[2];
+  if (first !== undefined && !first.startsWith('-') && !known.has(first)) {
+    console.error(`error: unknown command '${first}'`);
+    console.error(`Run ${chalk.bold('mysterium --help')} to see the available commands.`);
+    process.exit(1);
+  }
+}
+program.parse();
+
 // Early parse for --model flag (before env bootstrap)
 // R8-BUG-5 (UX-R8): Use a SEPARATE Command instance for the early parse
 // to avoid the double-parse bug where variadic flags (like --answer)
@@ -238,7 +314,10 @@ let earlyModelOverride: string | undefined;
 }
 
 // ── Env bootstrap (must come before any project imports) ──────────────
-const fileConfig = loadConfig();
+// The loaded config is handed to the invocation-state owner (`cli/flags.ts`) with the rest of the
+// start-up state, but it has to be READ here: the .env bootstrap and the provider resolution both
+// depend on it, and those are side effects of the runner, not state.
+const configFile = loadConfig();
 try {
   const envPath = path.resolve('.env');
   if (fs.existsSync(envPath)) {
@@ -269,20 +348,22 @@ try {
 // No hardcoded model names anywhere. The default provider is 'opencode'
 // (opencode.ai/zen) — the project's primary gateway — but only fires if
 // OPENCODE_API_KEY / OPENCODE_API is set; otherwise the user must configure.
-import { resolveConfig as resolveLLMConfig, isComplete as isLLMConfigComplete, type LLMConfig } from '../src/infra/llm/ProviderRegistry.js';
-import { getMysteriumDirForScope } from '../src/infra/persistence/mysteriumDir.js';
-import { SESSION_MODES, type SessionMode } from '../src/core/domain/SessionMode.js';
-import { getActiveConfig, invalidateConfigCache, validateModelIfFresh, queryLLM } from '../src/infra/llm/LLMClient.js';
 
 const resolvedLLM: LLMConfig = resolveLLMConfig(
   { model: earlyModelOverride },
-  fileConfig,
+  configFile,
 );
 const llmComplete = isLLMConfigComplete(resolvedLLM);
-const apiKey = resolvedLLM.apiKey || 'sk-placeholder';
-const baseUrl = resolvedLLM.baseUrl;
-const model = resolvedLLM.model;
-const provider = resolvedLLM.providerId;
+// Phase 2 of the start-up state: the provider identity. Resolved before argv parsing because the
+// parse may override the model, and `ACTIVE_MODEL` is what the parse writes on top of this default.
+setProviderState({
+  fileConfig: configFile,
+  apiKey: resolvedLLM.apiKey || 'sk-placeholder',
+  baseUrl: resolvedLLM.baseUrl,
+  model: resolvedLLM.model,
+  provider: resolvedLLM.providerId,
+  llmComplete,
+});
 
 // Seed process.env.VITE_LLM_* for backwards compat with any code that still
 // reads those directly. The LLMClient now reads via getActiveConfig() which
@@ -309,101 +390,40 @@ getActiveConfig(fileConfig);
 };
 
 // ── Project imports (after env bootstrap) ─────────────────────────────
-import { bootRegistries } from '../src/core/registries/boot.js';
-import { bootModuleRegistry } from '../src/core/assessments/bootModules.js';
-import { createSignificator } from '../src/core/domain/Significator.js';
-import { createInitialWorldState, type WorldState } from '../src/core/engines/CandidateGeneration.js';
-import type { Significator } from '../src/core/domain/Significator.js';
-import type { Line } from '../src/core/domain/Line.js';
-import { ALL_LINES } from '../src/core/domain/Line.js';
-import type { Stage } from '../src/core/domain/Stage.js';
-import { ALL_STAGES, stageOrdinal } from '../src/core/domain/Stage.js';
-import type { KnowledgeState } from '../src/core/curriculum/types.js';
-import type { AgentRole } from '../src/core/orchestration/types.js';
-import { ALL_AGENT_ROLES } from '../src/core/orchestration/councilStanding.js';
-import { DEFAULT_CCI_WEIGHTS, type CCIScore } from '../src/core/engines/CCIEngine.js';
-import { generateSessionStrategy } from '../src/core/engines/AutoModeStrategy.js';
-import { inferAltitudesFromAnswers as inferAltitudesFromAnswersCore } from '../src/core/usecases/InitialAltitudeInference.js';
-import { scoreHoldProbe, scoreChoiceProbe } from '../src/core/usecases/QuickCalibrationScoring.js';
-import type { TelemetryEvent } from '../src/core/telemetry/TelemetryEvent.js';
-import type { ScheduledEncounter } from '../src/core/domain/EncounterSpecNew.js';
-import type { PlayerResponse } from '../src/core/engines/ConsequenceEngine.js';
-import type { SessionContext } from '../src/core/engines/PriorityComputation.js';
-import { startSession, tickWithStrategy, endSession, applyResponseOnly, type SessionState } from '../src/core/GameLoop.js';
-import { createInitialUserMatrixModel } from '../src/core/engines/UserMatrixModel.js';
-import { AgenticOrchestrator, type AgenticUIHandler } from '../src/core/assessments/AgenticOrchestrator.js';
 // YAGNI-PHASE-4: PersistentAgent + PersistentAgentBridge imports removed.
 // USE_PERSISTENT_AGENT is always false; the DQ path is the proven architecture.
 // YAGNI-EFF-3: createMysteriumToolRegistry import removed — only used in
 // the deleted PersistentAgent block.
-import type { ModuleRegistry } from '../src/core/assessments/registry.js';
-import type { AskUserQuestionParams, AskUserQuestionResult, UserAnswer } from '../src/core/assessments/agentTypes.js';
-import { grantDeclaredPreference, withdrawDeclaredPreference, activeDeclaredInterests, activeDeclaredAversions } from '../src/core/domain/IdentityProfile.js';
-import { loadSave, saveGame, hasSave, deleteSave, saveWorldState, loadWorldState, deleteWorldSave, saveAll, deleteAllSaves } from '../src/infra/persistence/SaveRepository.js';
-import { createEmptyIdentityProfile, grantIdentityField, withdrawIdentityField, IDENTITY_FIELDS, type IdentityField, type HealingPurpose } from '../src/core/domain/IdentityProfile.js';
-import { runTrainCommand, runInsightsCommand, runExportCommand, runCalibrateCommand, buildTrainingIntegration, buildUnifiedProfileServices } from '../src/cli/TrainingRuntime.js';
 // P1-QW3 (Architecture Audit Phase A): CLI telemetry — opt-in only, no behaviour change when off.
-import { buildCLITelemetry, recordCLITelemetry, flushCLITelemetry } from '../src/cli/CLITelemetry.js';
 // R11-R2: use canonical resonance from veilDescriptors instead of duplicated maps.
-import { describePersonalResonance } from '../src/core/presentation/veilDescriptors.js';
 
 // WORLD-STORE-MOVE (c634535): the holon data moved from src/core/data/ to src/core/world/data/
 // (the world organ owns it). These two imports kept pointing at the old path, which made the CLI
 // fail at IMPORT TIME — invisible for three days because tsconfig never included scripts/
 // (CHECKED-SURFACE-AUDIT-2026-09-24, P0-1/P0-2).
-import holonsJson from '../src/core/world/data/red-layer-holons.json';
 // P3-FIX (Full-Development Audit 2026-09-15): all 8 stages now have authored
 // holons (8 per stage, one per line). Previously only Red had world content,
 // so higher-stage scheduling relied entirely on module items + LLM generation.
-import stageHolonsJson from '../src/core/world/data/stage-holons.json';
-import { GLOSSARY_TERMS, PLAYER_GLOSSARY_TERMS, ADVANCED_GLOSSARY_TERMS, TIER2_GLOSSARY_TERMS, checkTermUnlocks } from '../src/core/data/glossary.js';
-import type { ConsequenceRecord } from '../src/core/domain/ConsequenceRecord.js';
-import type { Modality } from '../src/core/domain/enums.js';
-import { ALL_MODALITIES } from '../src/core/domain/enums.js';
 // RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — feed, candidate
 // library, owner-worker pool. Carried across encounters in the session loop; persisted with the
 // world save so NPC profiles survive the process.
-import { createOrchestrationServices, captureCheckpoint, type OrchestrationServices, type RuntimeCheckpoint } from '../src/core/personalization/sessionRuntime.js';
 // Phase 13 d9b (memory-audit P3): the crash-sidecar journal — appended at every checkpoint
 // capture, replayed before the restored checkpoint is trusted, closing the crash window
 // between sessionEnd and saveAll (the last session otherwise dies with the process).
-import { appendJournalEntry, replayJournal, journalPathFor } from '../src/infra/persistence/sessionJournal.js';
-import { getMysteriumProfileDir } from '../src/infra/persistence/mysteriumDir.js';
-import { purposesFromVows, purposesFromGoals, preferenceFromHistory } from '../src/core/personalization/bandSources.js';
-import { feedPlanningBias } from '../src/core/orchestration/feedReaders.js';
 // P1-3 (UX-R3): configurable saturation threshold + per-line progress.
-import { getLineProgress, computeReadiness } from '../src/core/engines/TransformationDetector.js';
 // R5-BUG-5 (UX-R5): fallback narrative pool for empty LLM responses.
-import { pickFallbackNarrative } from '../src/core/agent/FallbackNarratives.js';
 // NF-3 (Fresh-User Re-Audit): Cross-session question de-duplication.
 // loadAskedPrompts / saveAskedPrompts persist the asked-prompts set to
 // the profile directory so Session N doesn't repeat questions from
 // Sessions 1..N-1.
-import { loadAskedPrompts, saveAskedPrompts } from '../src/core/fallback/FallbackProvider.js';
 // NF-5 (Fresh-User Re-Audit): Route verbose feedback through VeilFilter so
 // clinical labels (DarkAllergy, DarkAverted, etc.) and metrics (93% conceptual
 // density) don't leak through --verbose. The Veil principle applies to all
 // user-facing output, not just the normal path.
-import { filterOutput } from '../src/infra/llm/VeilFilter.js';
-import {
-  listProfiles, createProfile, setActiveProfile, deleteProfile,
-  loadProfile, buildContextInjection, updateProfileAfterSession,
-  appendEncounterLog, agentReadProfileFile, agentWriteProfileFile,
-  getActiveProfileName, getActiveProfileDir, migrateLegacySave,
-  getProfilesDir,
-  loadUnlockedTerms, addUnlockedTerms,
-} from '../src/infra/profiles/ProfileManager.js';
 // BUILD-FIX (Full-Development Audit 2026-09-15): removed the dead import of
 // '../src/cli/LayerRenderer.js' — the file was purged in 42078ad but the import
 // survived, breaking `npm run build:cli` (esbuild) while tsx runtime resolution
 // masked it. renderLayers/renderLayersCompact had no remaining call sites.
-import { toSnapshot } from '../src/core/domain/SignificatorSnapshot.js';
-import { computeCCI } from '../src/core/engines/CCIEngine.js';
-import { SessionAgent } from '../src/core/assessments/SessionAgent.js';
-import { getCurriculumRegistry } from '../src/core/curriculum/CurriculumRegistry.js';
-import { seedCurriculumRegistry } from '../src/core/curriculum/CurriculumSeed.js';
-import { seedInitialKnowledge } from '../src/core/curriculum/SeedInitialKnowledge.js';
-import { probeCurriculum, formatProbeSummary } from '../src/core/curriculum/MetaCognitiveProbe.js';
 
 /**
  * --curriculum flag: force curriculum encounters by injecting slots.
@@ -416,48 +436,29 @@ function applyCurriculumMode(sessionState: { strategy: any }): void {
   }
 }
 
-/**
- * P3-4: Render prerequisite gap feedback for a curriculum encounter.
- * Shows what material needs review before this concept can be studied.
- */
-function renderPrerequisiteGaps(
-  conceptId: string,
-  knowledge: KnowledgeState | undefined,
-): void {
-  if (JSON_MODE || !knowledge) return;
-  const gaps = checkPrerequisiteGaps(conceptId, knowledge);
-  if (gaps.length === 0) return;
-
-  console.log(`  ${chalk.yellow('⚠')} Before studying this, review:`);
-  for (const gap of gaps) {
-    const tag = gap.type === 'cross-branch' ? chalk.magenta('[cross-branch]') : '';
-    console.log(`    ${chalk.dim('•')} ${chalk.bold(gap.name)} ${tag}`);
-  }
-  console.log('');
-}
-
-// ── Full parse with subcommands (after project imports) ──────────────
-// An unrecognised first token is a typo, not a session: name it. Left to itself, commander reports
-// the stray token as "too many arguments" — a rejection, but one that never says which word was
-// wrong, which is exactly what a player with a typo needs to read. Checked before the parse so the
-// message is ours; the rejection itself stays fail-closed (`process.exit(1)`).
-program.showSuggestionAfterError();
-{
-  const known = new Set(program.commands.map((c) => c.name()));
-  const first = process.argv[2];
-  if (first !== undefined && !first.startsWith('-') && !known.has(first)) {
-    console.error(`error: unknown command '${first}'`);
-    console.error(`Run ${chalk.bold('mysterium --help')} to see the available commands.`);
-    process.exit(1);
-  }
-}
-program.parse();
 const opts = program.opts();
-const subcommand = program.args[0] as string | undefined;
+const parsedSubcommand = program.args[0] as string | undefined;
 
-// P0-4 (UX-R3): HEADLESS is mutable so the non-TTY guard in main() can
-// auto-enable it when stdin isn't a TTY. All other flag constants remain const.
-let HEADLESS = opts.headless ?? false;
+// Phase 3 of the start-up state: the parsed invocation. The values live in `cli/flags.ts` and are
+// read from there by every function in this file — that is what lets the printers and the commands
+// move out of it (audit item 1, stages C and D).
+setInvocation({
+  subcommand: parsedSubcommand,
+  headless: opts.headless ?? false,
+  rawVerbose: opts.verbose ?? false,
+  devMode: (opts as any).dev ?? false,
+  jsonMode: opts.json ?? false,
+  activeModel: opts.model ?? model,
+  encounters: parseInt(opts.encounters ?? String(configFile.session?.defaultEncounters ?? 20), 10),
+  line: opts.line as Line | undefined,
+  stage: opts.stage as Stage | undefined,
+  modality: opts.modality as Modality | undefined,
+  mode: opts.mode as SessionMode | undefined,
+  forceShadow: (opts.forceShadow ?? (opts as any).injectShadowKeyword) as string | undefined,
+  newGame: opts.newGame ?? false,
+  skipCalibration: opts.skipCalibration ?? false,
+  curriculum: opts.curriculum ?? false,
+});
 // R5-BUG-1 (UX-R5): Propagate headless state to the PersistentAgent so it
 // can lower its maxLoops budget. Without this, --agent + LLM hangs because
 // the agent makes up to 30 sequential LLM calls (30×20s = 600s).
@@ -466,14 +467,12 @@ if (HEADLESS) process.env.Mysterium_HEADLESS = '1';
 // that --verbose exposes the entire machinery (XP bars, drive distortion
 // mappings, line×stage coordinates, arc counters) which breaks the Veil
 // principle. A curious user who tries --verbose without --dev now gets a
-// warning and verbose is silently downgraded to false.
-const RAW_VERBOSE = opts.verbose ?? false;
-const DEV_MODE = (opts as any).dev ?? false;
-const VERBOSE = RAW_VERBOSE && DEV_MODE;
+// warning and verbose is silently downgraded to false — the downgrade lives in
+// `setInvocation` (`VERBOSE = rawVerbose && devMode`); the warning is a side
+// effect and stays here.
 if (RAW_VERBOSE && !DEV_MODE) {
   console.error(`${chalk.yellow('⚠ --verbose requires --dev')}: --verbose exposes internal metrics that break the contemplative frame (Veil principle). Use --dev --verbose together for debugging. Continuing without --verbose.`);
 }
-const JSON_MODE = opts.json ?? false;
 // R11-Y1 (Fresh-User UX Audit): --dev surfaces internal metrics (G_z, P_z,
 // CCI, rayProfile, phase position) that violate the Veil principle
 // (AGENTS.md §5.4: "The game is NEVER diagnostic to the user"). Engineers
@@ -500,37 +499,19 @@ if (DEV_MODE && !JSON_MODE) {
 // R8-BUG-3 (UX-R8): Propagate DEV_MODE to LLMClient so VeilFilter logs
 // are gated behind --dev and don't leak into normal output.
 if (DEV_MODE) process.env.Mysterium_DEV = '1';
-// LLM_ACTIVE uses the resolved config's completeness check, which
-// accounts for the provider-specific env vars (OPENCODE_API_KEY, etc.).
-// The system requires an LLM to operate — there is no offline mode.
-let LLM_ACTIVE = llmComplete;
-const ACTIVE_MODEL = opts.model ?? model;
 /** YAGNI-EFF-3 (Efficacy Audit): --agent path removed. USE_PERSISTENT_AGENT
  * is always false. The PersistentAgent / Story-Driven mode code stays in
  * src/core/agent/ for reference, but the CLI never activates it. */
-
-const encounterCount = parseInt(opts.encounters ?? String(fileConfig.session?.defaultEncounters ?? 20), 10);
-
-const FORCE_LINE = opts.line as Line | undefined;
-const FORCE_STAGE = opts.stage as Stage | undefined;
-const FORCE_MODALITY = opts.modality as Modality | undefined;
-const FORCE_MODE = opts.mode as SessionMode | undefined;
-const FORCE_SHADOW = (opts.forceShadow ?? (opts as any).injectShadowKeyword) as string | undefined;
 // YAGNI-PHASE-4: FORCE_RESPONSES removed — --responses was never in commander spec.
 // The two session flows live in `src/core/domain/SessionMode.ts` — the CLI reads the canonical
 // list rather than re-declaring it (the class this file keeps re-learning, audit §10.4). G36
 // boots every member, so a mode cannot exist without being reachable.
-
-const NEW_GAME = opts.newGame ?? false;
-const SKIP_CALIBRATION = opts.skipCalibration ?? false;
-const CURRICULUM_MODE = opts.curriculum ?? false;
 
 // R5-CRITICAL (UX-R5): Headless input mechanism. Load user-provided answers
 // from --answers <file> (one per line) and/or --answer <text> (repeatable).
 // These feed the writeInValue that the LLM actually sees, instead of the
 // LLM hallucinating user answers in --headless mode.
 // Priority: --answer flags first (in order), then --answers file (remaining lines).
-const USER_ANSWERS: string[] = [];
 {
   const inlineAnswers = Array.isArray((opts as any).answer) ? (opts as any).answer as string[]
     : typeof (opts as any).answer === 'string' ? [(opts as any).answer as string]
@@ -589,176 +570,6 @@ validateFlag('--modality', FORCE_MODALITY, ALL_MODALITIES, 'modalities');
 validateFlag('--force-shadow', FORCE_SHADOW, VALID_SHADOW_QUADRANTS, 'shadow quadrants');
 validateFlag('--mode', FORCE_MODE, SESSION_MODES, 'session modes');
 
-// ── Helpers ───────────────────────────────────────────────────────────
-// ponytail: chalk auto-resets between calls, no explicit reset needed
-
-function banner(text: string): void {
-  if (!JSON_MODE) console.log(`\n${chalk.bold.cyan(`═══ ${text} ═══`)}`);
-}
-
-function info(label: string, value: string): void {
-  if (!JSON_MODE) console.log(`  ${chalk.dim(label + ':')} ${value}`);
-}
-
-function success(text: string): void {
-  if (!JSON_MODE) console.log(`  ${chalk.green('✓')} ${text}`);
-}
-
-function warn(text: string): void {
-  if (!JSON_MODE) console.log(`  ${chalk.yellow('⚠')} ${text}`);
-}
-
-function error(text: string): void {
-  if (!JSON_MODE) console.log(`  ${chalk.red('✗')} ${text}`);
-}
-
-function separator(label: string): void {
-  if (!JSON_MODE) console.log(boxen(chalk.bold(label), {
-    padding: { left: 1, right: 1 },
-    borderStyle: 'round',
-    borderColor: 'cyan',
-    margin: { top: 1, bottom: 0 },
-  }));
-}
-
-function verbose(label: string, value: string): void {
-  if (VERBOSE && !JSON_MODE) console.log(`  ${chalk.magenta(label + ':')} ${value}`);
-}
-
-// P0-2 (UX-R3): Emit holistic dev primitives when --dev is set, so the
-// --help promise ("show holistic primitives (G_z/P_z, rayProfile, phase
-// position)") is honored during sessions, not just in `status`.
-// Called from both encounter loops (DQ + Story-Driven) after each encounter.
-function emitDevPrimitives(sig: Significator, label: string): void {
-  if (!DEV_MODE) return;
-  try {
-    const snapshot = toSnapshot(sig);
-    const cci = computeCCI(snapshot);
-    const mh = cci.metabolicHealth;
-    if (JSON_MODE) {
-      emitEvent('dev_primitives', {
-        label,
-        gz: mh?.gz ?? null,
-        pz: mh?.pz ?? null,
-        metabolicTotal: mh?.total ?? null,
-        interpretation: mh?.interpretation ?? null,
-        cci: cci.composite,
-        transformationPhase: sig.transformationPhase ?? 'idle',
-        rayProfile: sig.rayProfile,
-        transformationTargetStage: sig.transformationTargetStage ?? null,
-        sessionsInPhase: sig.transformationSessionsInPhase ?? 0,
-        knotsResolved: sig.transformationKnotsResolved ?? 0,
-        internalizedHolons: sig.internalizedHolons?.length ?? 0,
-        greatWayDirection: sig.greatWayDirection ?? null,
-      });
-    } else {
-      info('dev', `${label} → G_z=${mh?.gz?.toFixed(4) ?? 'n/a'} P_z=${mh?.pz?.toFixed(4) ?? 'n/a'} CCI=${cci.composite.toFixed(4)} phase=${sig.transformationPhase ?? 'idle'}`);
-    }
-  } catch {
-    // Best-effort — dev mode should never break a session.
-  }
-}
-
-/**
- * P0-3 (Fresh-User UX Audit): Post-session summary.
- * Displays what emerged during the session without breaking the Veil.
- * Shows: shadows surfaced, patterns identified, suggested focus,
- * and glossary terms unlocked. All in felt-sense language.
- */
-function renderPostSessionSummary(sig: Significator, history: ConsequenceRecord[], audit?: boolean): void {
-  if (JSON_MODE) return;
-
-  console.log(`\n  ${chalk.bold.cyan('═══ Session Complete ═══')}`);
-
-  // 1. What happened: lines explored (Veil-compliant — just count, not names)
-  const linesExplored = new Set(history.map(h => h.line)).size;
-  if (linesExplored > 0) {
-    info('explored', `${linesExplored} aspect${linesExplored !== 1 ? 's' : ''} of your inner landscape`);
-  }
-
-  // 2. Shadows surfaced: group by quadrant and describe qualitatively
-  const activeShadows = sig.shadows.entries.filter(e => !e.resolvedAt);
-  if (activeShadows.length > 0) {
-    const quadrantCounts: Record<string, number> = {};
-    for (const s of activeShadows) {
-      const q = s.quadrant ?? 'Unknown';
-      quadrantCounts[q] = (quadrantCounts[q] ?? 0) + 1;
-    }
-    info('surfaced', `${activeShadows.length} pattern${activeShadows.length !== 1 ? 's' : ''} that want attention`);      // P1-SUMMARY (Fresh-User Re-Audit): Show qualitative shadow descriptions
-      // always, not just in VERBOSE mode. The old code gated this behind VERBOSE
-      // which meant normal players never saw what patterns the game detected.
-      // Showing the movements (in Veil-compliant language) helps the player
-      // understand what the game "saw" in them.
-      const lineDescs: Record<string, Set<string>> = {};
-      for (const s of activeShadows) {
-        const line = s.line ?? 'Unknown';
-        if (!lineDescs[line]) lineDescs[line] = new Set();
-        lineDescs[line].add(describeShadowMovement(s.quadrant ?? 'Unknown'));
-      }
-      const shadowDesc = Object.entries(lineDescs)
-        .map(([line, descs]) => {
-          const desc = [...descs].join(' / ');
-          return `${line} — ${desc}`;
-        })
-        .join(', ');
-      if (shadowDesc) {
-        console.log(`    ${chalk.dim(shadowDesc)}`);
-      }
-  } else {
-    info('shadows', `${chalk.green('none surfacing right now — the field is clear')}`);
-  }
-
-  // 3. Lines touched: show which developmental dimensions were engaged
-  if (history.length > 0) {
-    const lineNames = [...new Set(history.map(h => h.line))];
-    console.log(`  ${chalk.dim('dimensions:')} ${lineNames.join(', ')}`);
-  }
-
-  // 4. Knowledge state: if curriculum data exists, show a brief summary
-  if (sig.knowledge && sig.knowledge.conceptStates.size > 0) {
-    const conceptCount = sig.knowledge.conceptStates.size;
-    const avgRetention = [...sig.knowledge.conceptStates.values()]
-      .reduce((sum, cs) => sum + cs.retention, 0) / conceptCount;
-    const retentionDesc = avgRetention > 0.7 ? 'well-held'
-      : avgRetention > 0.4 ? 'developing'
-      : 'fading';
-    info('knowledge', `${conceptCount} concept${conceptCount !== 1 ? 's' : ''} studied, ${retentionDesc}`);
-  }
-
-  // 5. Glossary terms unlocked this session
-  const unlockedThisSession = loadUnlockedTerms(getMysteriumProfileDir());
-  if (unlockedThisSession.length > 0) {
-    const newTerms = unlockedThisSession.filter(t => !['Line', 'Stage', 'Shadow'].includes(t));
-    if (newTerms.length > 0) {
-      info('unlocked', `${newTerms.length} new term${newTerms.length !== 1 ? 's' : ''}: ${newTerms.slice(0, 3).join(', ')}${newTerms.length > 3 ? '…' : ''}`);
-    }
-  }
-
-  // 6. Suggested focus for next session (from goals.yaml active_focus)
-  const activeFocus = readActiveFocus();
-  if (activeFocus && activeFocus.length > 5) {
-    console.log(`\n  ${chalk.dim('For next time:')}`);
-    console.log(`  ${chalk.italic(activeFocus)}`);
-  }
-
-  // META-PROBE: Show curriculum health when --audit flag is set.
-  // This gives the agentic loop or developer a comprehensive health check
-  // of progression, rubric calibration, and content linting.
-  if (audit && sig.knowledge && sig.knowledge.conceptStates.size > 0) {
-    try {
-      const registry = getCurriculumRegistry();
-      if (registry.count() > 0) {
-        const probe = probeCurriculum(sig.knowledge, registry, Date.now());
-        console.log(formatProbeSummary(probe));
-      }
-    } catch {
-      // Curriculum probe unavailable — skip silently
-    }
-  }
-
-  console.log('');
-}
-
 /**
  * P0-R2 helper: Update the active_focus field in goals.yaml with a new focus snippet.
  * Extracted from duplicated code in DQ and Story session paths.
@@ -780,22 +591,6 @@ function updateGoalsActiveFocus(focusText: string): void {
   } catch { /* best-effort — never break the session */ }
 }
 
-/**
- * P0-R2 follow-up: Read the active_focus field from goals.yaml.
- * Extracted from duplicated code in renderPostSessionSummary and session start.
- * Best-effort — returns null on any error or if no focus is set.
- */
-function readActiveFocus(): string | null {
-  try {
-    const profileDir = getActiveProfileDir();
-    if (!profileDir) return null;
-    const goalsPath = path.join(profileDir, 'goals.yaml');
-    if (!fs.existsSync(goalsPath)) return null;
-    const goalsContent = fs.readFileSync(goalsPath, 'utf8');
-    const focusMatch = goalsContent.match(/active_focus:\s*"([^"]+)"/);
-    return focusMatch?.[1] ?? null;
-  } catch { return null; }
-}
 
 // Interactive prompt helper — uses @clack/prompts for beautiful UI
 async function ask(q: string): Promise<string> {
@@ -889,7 +684,6 @@ function loadHolons(): WorldState {
 
 // ── Quick Calibration ────────────────────────────────────────────────
 // ponytail: calibration data extracted to src/core/data/calibrationPrompts.ts (shared with WebUI /onboarding).
-import { CALIBRATION_PROMPTS, HOLD_TARGETS } from '../src/core/data/calibrationPrompts.js';
 
 // GAP-6 (Efficacy Audit): Infer developmental altitude from user answers.
 // Instead of defaulting all lines to Red, analyze the user's --answer
@@ -1058,103 +852,6 @@ async function createDefaultSignificator(): Promise<Significator> {
     return { ...sig, knowledge: initialKnowledge };
   }
   return sig;
-}
-
-function emitEvent(type: string, data: Record<string, unknown>): void {
-  if (JSON_MODE) {
-    const cleaned: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(data)) {
-      cleaned[k] = typeof v === 'string' ? stripAnsi(v) : v;
-    }
-    process.stdout.write(JSON.stringify({ type, ts: Date.now(), ...cleaned }) + '\n');
-  }
-}
-
-/** Render session arc position with progress bar */
-function renderSessionPosition(label: string, position: 'warmup' | 'peak' | 'cooldown', progress: number): void {
-  if (JSON_MODE) return;
-  const barLen = 12;
-  const pos = Math.round(progress * barLen);
-  let bar = '';
-  for (let i = 0; i < barLen; i++) {
-    if (position === 'warmup') {
-      bar += i <= pos ? chalk.blue('▰') : chalk.dim('▱');
-    } else if (position === 'peak') {
-      bar += i <= pos ? chalk.magenta('▰') : chalk.dim('▱');
-    } else {
-      bar += i <= pos ? chalk.green('▰') : chalk.dim('▱');
-    }
-  }
-  const posLabel = position === 'warmup' ? chalk.blue('WARMUP')
-    : position === 'peak' ? chalk.magenta('PEAK')
-    : chalk.green('COOLDOWN');
-  console.log(`  ${posLabel} ${bar} ${chalk.dim(label)}`);
-}
-
-/** Render Direct Questioning progress — Veil-compliant (no line names, no stages, no pass/fail counts) */
-function renderLinesProgress(_sig: Significator, history: ConsequenceRecord[]): void {
-  if (JSON_MODE) return;
-  // Veil compliance: show only the count of questions answered so far,
-  // not which lines, not their stages, not pass/fail counts.
-  const totalAnswered = history.length;
-  const totalQuestions = 8;
-  const barWidth = 16;
-  const filled = Math.round((totalAnswered / totalQuestions) * barWidth);
-  const bar = '█'.repeat(filled) + '░'.repeat(barWidth - filled);
-  console.log(`  ${chalk.bold('Progress')}  ${chalk.cyan(bar)} ${totalAnswered}/${totalQuestions}`);
-  console.log('');
-}
-
-// ── Print state ───────────────────────────────────────────────────────
-function printSignificator(sig: Significator): void {
-  // T-3.4 (Veil compliance): printSignificator is only called from
-  // diagnostic/verbose paths. Show only id + qualitative state.
-  // R11-R2: use describePersonalResonance for player-responsive resonance.
-  info('id', sig.id);
-  // NF-9 (Fresh-User Re-Audit): Add inline gloss so a new user doesn't think
-  // 'fortress-sharp, weapon-walls' is a bug. The gloss explains it's the
-  // poetic aesthetic of the current stage + shadow state.
-  const resonance = describePersonalResonance(sig);
-  info('resonance', `${resonance}  ${chalk.dim('(the poetic texture of your current stage)')}`);
-}
-
-function printEncounter(enc: ScheduledEncounter, world?: WorldState): void {
-  const isShadow = enc.executionMode === 'shadow';
-  const posColor = enc.sessionPosition === 'warmup' ? chalk.blue
-    : enc.sessionPosition === 'cooldown' ? chalk.green : chalk.magenta;
-  const posTag = enc.sessionPosition === 'warmup' ? 'WARMUP'
-    : enc.sessionPosition === 'cooldown' ? 'COOLDOWN' : 'PEAK';
-
-  if (isShadow && !JSON_MODE) {
-    console.log(`  ${chalk.bgRed.white.bold(' ◆ SHADOW-WORK ')} ${chalk.dim('— accumulated shadows exceed threshold')}`);
-  }
-
-  // Veil compliance: no holonSource ID, no shadowTarget quadrant name, no executionMode label.
-  // Show only the arc position (warmup/peak/cooldown) which is structural, not developmental.
-  info('arc', `${posColor(posTag)}`);
-
-  // P1-2 (UX-R3): Surface the NPC name + narrative role so the user knows
-  // WHO they're engaging with. Previously the encounter header showed only
-  // 'arc: PEAK' and the user never met the 16 named NPCs (The Conqueror,
-  // Bloodfury, Elder Ashmark, etc.) that the encounter was actually with.
-  // Veil is preserved: we show name + narrativeRole (atmospheric), not
-  // shadowQuadrant or drives (clinical).
-  if (world && !JSON_MODE) {
-    const holon = world.holons.find(h => h.id === enc.holonSource);
-    if (holon && holon.kind === 'NPC') {
-      const roleLabel = holon.narrativeRole
-        ? holon.narrativeRole.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-        : 'presence';
-      info('encounter', `${chalk.cyan(holon.name)} ${chalk.dim(`· ${roleLabel}`)}`);
-    } else if (holon && holon.kind === 'Location') {
-      info('place', `${chalk.cyan(holon.name)}`);
-    }
-  }
-
-  if (isShadow) {
-    // No quadrant name — just the shadow-work indicator
-    info('mode', `${chalk.bgRed.white(' shadow ')}`);
-  }
 }
 
 // ── Unified encounter execution dispatch (YAGNI-1 / UX-R3+R4) ────────
@@ -2768,7 +2465,7 @@ async function runFullSession(): Promise<void> {
   if (LLM_ACTIVE) {
     const llmUp = await checkLLMAvailability(baseUrl, apiKey);
     if (!llmUp) {
-      LLM_ACTIVE = false;
+      setLlmActive(false);
       s2?.warn('LLM unreachable — please check your connection and configuration.');
       // UX-P0-3: Emit LLM-unavailable warning in JSON mode too
       if (JSON_MODE) {
@@ -3190,7 +2887,6 @@ async function runFullSession(): Promise<void> {
       // the weightBias, the agent saw a different ranking than the scheduler.          // YAGNI-EFF-3: PersistentAgent state sync removed.
 
 
-
       verbose('narrative', result.narrativeSummary);
 
       // ── Per-encounter state display (Veil-compliant) ──
@@ -3379,15 +3075,6 @@ async function runFullSession(): Promise<void> {
 // only the immutable bits (baseUrl, authStyle, env var name). The model list
 // is fetched dynamically from each provider's /models endpoint, with
 // models.dev as a fallback catalog. This mirrors opencode's architecture.
-import {
-  listProfiles as listProviderProfiles,
-  getProfile as getProviderProfile,
-  getModels as getProviderModels,
-  clearModelCache,
-  type LLMConfig as DynamicLLMConfig,
-  type DiscoveredModel,
-  type ProviderProfile,
-} from '../src/infra/llm/ProviderRegistry.js';
 
 /**
  * Verify a provider connection by fetching /models (OpenAI-compat) or
@@ -4579,7 +4266,6 @@ function runGlossary(showFull = false): void {
 // ── Curriculum management ─────────────────────────────────────────
 // P1-C3 (Architecture Audit Phase C): runCurriculum extracted to
 // scripts/CurriculumCommands.ts as part of the cli-game.ts modular split.
-import { runCurriculum } from './CurriculumCommands.js';
 
 // P1-QW3 (Architecture Audit Phase A): CLI telemetry inspector.
 // Reads the persisted telemetry events from the active profile directory and
@@ -5256,7 +4942,7 @@ async function main(): Promise<void> {
   const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod', 'credential']);
   const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand ?? '') && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
-    HEADLESS = true;
+    setHeadless(true);
     process.env.Mysterium_HEADLESS = '1'; // R5-BUG-1: propagate to PersistentAgent
     if (!JSON_MODE) {
       console.error(`${chalk.yellow('⚠')} Non-interactive terminal detected (stdin is not a TTY).`);
