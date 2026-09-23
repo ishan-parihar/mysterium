@@ -534,3 +534,12 @@ question.
 data — and it is the *same* calibration as `45`'s `noveltyBudget` and `47 §8`'s evidence floors. One
 measurement answers all three; until then the floors are reasoned, not measured, and are recorded as
 deferrals rather than as settled values.
+
+**7. Cross-cell synthesis — deferred by ratification (2026-09-24, the Polarity Pool ruling).**
+The Polarity Pool plan (Phase 13 d10 in `docs/DEVELOPMENT-PLAN.md`) derives renderings within a cell
+from the similarity/opposition index over the axis space. The next expansion — a rendering whose
+flavour carries TWO cells' domains (e.g. a music-flavoured Cognitive×Amber situation that also
+carries an Interpersonal×Amber stake) — is **documented here and deliberately not built**: it
+requires the per-cell polarity resolution loop (d10's L3) to be live first, otherwise the
+synthesis multiplies ambiguity the reading loop cannot yet attribute. The index walk (`similar`/
+`opposite`) is the seam it will extend; nothing in this document's stores needs reshaping for it.

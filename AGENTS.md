@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 in progress (d1/d2/d11/d12 built, G32–G34); memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 in progress (d1/d2/d11/d12 built G32–G34; d10 — the Polarity Pool — reshaped and pending, the sole remaining Phase-13 deliverable); memory infrastructure live (G28–G31)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All build phases through 12** are **implemented and gated** — the kernel gate suite
@@ -346,8 +346,11 @@ redundancy (**O6**: A3 Validator and S1 Pack Agents hold identical toolsets), an
 gap of all (**O10): the council has no dispatcher** — nothing in the live loop summons a sub-agent,
 so a fully-built workforce can only be invoked by hand. Canon now carries the binding (both docs),
 the `43 §5.6` **standing-context contract** (standing block + authorized access tools), and Phase 13
-**d10** (candidate multiplicity), **d11** (binding + standing block) and **d12** (the dispatcher;
-the trigger table is in the audit §3).
+**d10** — reshaped 2026-09-24 by user ratification into **the Polarity Pool** (derived
+similarity/opposition renderings, familiar/unfamiliar shadow-scaled polarity, a spiral resolution
+reading proposed by the local System-1 layer and ratified by the orchestrator; see the plan's d10
+entry) — plus **d11** (binding + standing block) and **d12** (the dispatcher; the trigger table is
+in the audit §3).
 
 **d1 + d2 are BUILT (2026-09-23) with gates G32/G33** (kernel 31 → 33): every remaining UDV band
 now reaches the live UDV from a real store (`bandSources.ts` — vows + profile goals → purpose,
@@ -357,7 +360,7 @@ are scoped on the live path with the assessment role structurally blind (`assess
 **Building it surfaced the audit's most important finding (W11):** the candidate library holds
 exactly five renderings per cell, so a cell-targeted pool returns the same five refs for every
 player and the bands cannot discriminate — content selection is still decided by the encounter's
-cell. **d10 (candidate multiplicity per cell) is what makes personalization real**, and the phase's
+cell. **d10 (the Polarity Pool) is what makes personalization real**, and the phase's
 differential criterion closes with it; the gap is locked in `tests/personalization/Phase13Wiring.test.ts`.
 
 **d11 + d12 are BUILT (2026-09-24) with gate G34** (kernel 33 → 34) — the council is now bound,
@@ -394,7 +397,8 @@ d3–d10 remain open (d10 is the gating dependency for the phase's differential 
 > now carries the closure evidence per gap.
 
 Cite the plan, the three audits, and the ledger — never a phase number spoken from
-memory. **Phase 13 is in progress: d1/d2/d11/d12 built and gated (G32–G34); d3–d10 open.**
+memory. **Phase 13 is in progress: d1/d2/d11/d12 built and gated (G32–G34); d10 — the Polarity
+Pool — is the sole remaining Phase-13 deliverable; d3–d9 are post-phase calibration work.**
 
 **The binding plan is `docs/DEVELOPMENT-PLAN.md`** (order + gates). It is revised in-place; on
 conflict the foundations docs win and the plan is revised.

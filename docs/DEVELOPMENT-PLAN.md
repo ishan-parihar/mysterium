@@ -475,7 +475,7 @@ pooling (designed feature gap, needs evidence-ledger wiring); the embedding tier
 consumer (by design — the local floor is the default).
 
 
-### Phase 13 — Live-Surface Wiring & Council Alignment (planned 2026-09-23) — ◐ d1/d2 BUILT, d3–d10 open
+### Phase 13 — Live-Surface Wiring & Council Alignment (planned 2026-09-23) — ◐ d1/d2/d11/d12 BUILT, d10 RESHAPED — the only remaining Phase-13 deliverable
 
 **Build record (2026-09-23, d1+d2).** The two critical-path deliverables landed with gates G32/G33:
 
@@ -539,11 +539,61 @@ compiler, or documented authoring-only. No third option.
 overclaims are already marked as of this audit).
 9. **d9 — Memory-audit carry-overs**: MemoryPage render budget cap, crash-sidecar session journal,
 firewall randomized property sweep.
-10. **d10 — Candidate multiplicity per cell** (the audit's W11; the finding that makes
-personalization real). One rendering per (cell, tier) means a cell-targeted pool returns a fixed
-five, so the UDV's bands have nothing to order. Author N renderings per cell — distinguished by
-domain, register, modality emphasis and voice — and let the pool rank them by the UDV. Closes the
-phase's differential criterion.
+10. **d10 — The Polarity Pool** (the audit's W11; the finding that makes personalization real).
+**Reshaped 2026-09-24 by user ratification** — no longer a fixed-N authoring task; variants are
+*derived* from the existing library through a similarity/opposition index, and the pool gains a
+closing resolution loop. Four layers:
+
+    **L1 — The similarity/opposition index (derived, never authored — MY-RG-0015).** Each item's
+tags → a point in the tag-ontology's axis space (Eros↔Agape × Agency↔Communion,
+`initialTags.ts`); `similar(item)` = tag-overlap + axis-proximity (deepens familiarity);
+`opposite(item)` = the store's own `reflect`/`dialecticPair` geometry (`46 §4.2` — total and
+symmetric by construction) (polarity challenge). Variant count is DYNAMIC: rich library texture
+synthesizes more renderings; **G35 becomes a floor** (≥2 per cell: one familiar-capable, one
+unfamiliar-capable), not a fixed N. Cross-cell synthesis: documented annex in `46`, deferred.
+
+    **L2 — Familiar/unfamiliar polarity (the shadow upgrade).** Each encounter resolves a polarity
+decision: the FAMILIAR pole renders in the player's fluent/interest domains (the hook); the
+UNFAMILIAR pole faces the player's active shadow on the cell's line (Distortion Ledger
+`quadrant/line/stage/severity`). Hard boundaries carried over: the aversion veto is never
+overridden and never selected from (`45 §5.2.1`); unfamiliar ≠ aversive. **Dosage is
+shadow-severity-scaled** — the unfamiliar pole becomes `noveltyBudget`'s first real consumer.
+
+    **L3 — The resolution loop (NOT a binary verdict — the user's transmutation ruling).** A
+polarity decision resolves as a **reading, not a toggle**: a scored position on the cell's
+inclination/altitude/balance toward conscious/light vs unconscious/shadow, with a direction of
+travel. The local System-1 layer (Laya-shaped decision model behind an interface) PROPOSES the
+reading from the session log; the orchestrator RATIFIES or vetoes it (43's L4). Effects on
+ratification: (a) approve strengthens the pair's hold toward `reconciled` — reached only by
+*repeated* confirming readings, per `46 §4.3`'s falsifiable-state law ("a synthesis that later
+fails re-opens"); (b) disapprove **re-opens the pair + increments shadow severity** on that
+cell's line, so the next encounter's unfamiliar dosage scales up automatically — the loop
+tightens; (c) every reading updates the profile through the background workers (S2/S5, already
+dispatched by d12) — the process reveals the player's tendencies and feeds them back. **The cell
+is never closed**: its infinite polarities are probed across orthogonal dimensions (the index's
+opposite-walk), and profiling of a cell completes only when the read is robust (probe-coverage
+gate, not a counter).
+
+    **L4 — Selection + prompt surface (user-ratified).** Pooled refs gain `primary` + `pole`
+(`familiar | unfamiliar | shadow-facing`) + named alternates; **top-1 primary reaches the
+scenario-catalyst's prompt with the pole named; alternates stay hidden** (authorized reads and
+audit telemetry only) — the calibration loop sees the polarity balance over time, the Veil
+surface stays tight.
+
+    **The System-1 layer (user-ratified: wire it).** Laya (convaiinnovations/laya, Apache-2.0,
+421M non-autoregressive decision model: state + typed choice/score/yes-no questions → one
+forward pass) is wired as the project's local System-1 classifier behind an interface with a
+deterministic fallback: (i) tag resolution (`TopicTagResolver` at `buildQuery`), (ii)
+polarity-reading proposal (L3), (iii) neighbor prefilter for the index walk. **Never** for
+content authoring (that stays frontier-LLM + human-audited, 46 §8's provenance discipline) and
+never as final authority (43's L4). RV-style validation decides whether Laya stays; the
+interfaces stand regardless. Broader integration surfaces to be audited in build (candidate:
+assessment item pre-scoring, journal reflection triage for A2, pod-transport message
+classification).
+
+    Closes the phase's differential criterion: swapping a UDV band must change WHICH rendering
+the player meets, and a disapprove must measurably raise the next encounter's unfamiliar dosage.
+Both assertions locked as tests before build.
 11. **d11 — Bind the two councils + standing context** (`43 §4.2`/`§5.6`, `45 §6.1`;
 `docs/audits/COUNCIL-ORTHOGONALITY-AUDIT-2026-09-24.md` §4–§6). ✅ **Built 2026-09-24.**
 `AGENT_ROLE_COUNCIL` binds all 18 roles (S2/S5 explicitly to none; J1–J5 carry narrative-voice as a
@@ -680,6 +730,7 @@ was built for.
 | 2026-09-22 | **Runtime loop closed + authored seeding tier (`P13`/`P14`).** Phase 10's runtime half landed: the reporting feed as code (four idempotent writers, F3), the owner-worker pool (MY-AD-0009 consumer: ±0.3 caps, W4 replay, W5 concurrency), `OrchestrationServices` as the ONE orchestrator seam (envelope + holon digest + runtime coherence gate + session end on all five result paths; services omitted → byte-identical legacy), prompt blocks `[PERSONALIZATION]`/`[HOLON MEMORY]`/`[SCENARIO SEED]`/`[WORLD PLACE]`, and both surfaces (CLI + WebUI) carrying/persisting services. Then authored substance: 64 scenario seeds × 7 modality angles, 8 pole-probes (log-only until RV), 64 world seeds — library 1792 candidates, coherence enforced at authoring (G27, 26→27 gates) and at runtime (routes-don't-cancel), calibration harness extended to both seed tiers. `MY-AD-0009` deferral discharged with consumer; `_org.yaml → pending` graduated to `completed: P13/P14`; `AGENTS.md §4.2` and plan §2.1 corrected (the laws-without-consumer list fully discharged; the open frontier is configuration/calibration/development, owned by `AGENTS.md §4.2`). Tests: 1284 → 1370. GitLab push remains credential-blocked; GitHub current. |
 | 2026-09-22 (same pass) | **Phases 11 + 12 BUILT — the memory infrastructure integrated.** All eleven deliverables across the two phases landed in one development sequence: D1 checkpoint restore with production callers in the CLI loop (G28 proves save→load→save byte-identical across restart); D2 feed readers (`feedReaders.ts` — 27 planning bias at `startSession`, committed-only accessor); D3 consented preference intake (`IdentityProfile` declared interests/aversions, CLI intake + privacy-dashboard withdrawal, G29 firewall); D4 ratification verdicts on every session (G30); D5 polarity pair-state writers under the saturation guard, riding the checkpoint; D6 the probe RV harness (`probeValidation.ts`); D7 64 authored NPC persona seeds (envelope voice line; library 1792 → 2240); D8 tag tranche 2 (12 → 20, 4 curated pairs); P12-1 MemoryPage (M1–M5, `[CONTINUITY]` head, Veil-guarded audit); P12-2 LocalRetriever (BM25+recency+graph, RRF-fused, dependency-free); P12-3 pinned-embedding seam (`EMBEDDING_MODEL_PIN`, `MY-RG-0032` hard error; degradation to the local floor); P12-4 the retrieval firewall (`retrievalFirewall.ts`, R1–R4, fail-closed per hit) enforced by G31 with injected fixtures. Kernel suite 27 → **31**. `_org.yaml → pending` emptied — P15 graduated to `completed` in the same commit as the build. Tests: 1370 → **1389**. GitHub current; GitLab push remains credential-blocked. |
 | 2026-09-21 (same pass) | **One word, one axis (`VOCAB-SUBSTRATE` closed by user ruling).** The user ratified the proposal on the table: *substrate layer* now means ONLY the intra-holonic compositional vertical — `13`'s substrate→core→emergent stack, named by `44` axis E. The D3 bands (Free Will / Love / Light / the octave's contributions) are renamed **law-bands** across the four documents the key named: `02 §4` (table column + the term-scope note, which now records the retirement), `06`'s ownership pointer, `22`'s layer-stack law (`01.4 §2.5.3`'s "one concurrent lesser cycle per integrated band"), and `28`'s J-INV-7. The code constant followed: `SUBSTRATE_LAYER_LAW` → `LAW_BANDS_D3`, its `density` field → `band` (the rows were never densities — that misnomer was part of the collision). Two unrelated compounds stay: `06 §?`'s "energetic substrate (Ra)" (the ray's felt-tone vs energy-substrate distinction, not the vertical) and the "theoretical substrate" idiom (a metaphor, not a term of art). `MY-RG-0026`'s rule — one word never carries two frameworks — now holds on this axis, and DG23 verifies every citation touched by the rename still resolves. Tests 1186 green, 23 doc gates green. |
+| 2026-09-24 | **d10 RESHAPED by user ratification into the Polarity Pool (four rulings + a transmutation principle).** The W11 blocker (2240 candidates = 448 cells × exactly 5, identical tags per cell → pooling byte-identical for every player) now closes by *derivation* instead of authoring: a similarity/opposition index over the tag-ontology axis space (similar = tag-overlap + axis-proximity; opposite = the store's own reflect/dialecticPair geometry) synthesizes renderings dynamically, G35 becomes a per-cell floor (≥2: one familiar-capable, one unfamiliar-capable), cross-cell synthesis documented in 46 as a deferred annex. The familiar/unfamiliar polarity integrates the Distortion Ledger: unfamiliar flavour faces the cell's active shadow, dosage shadow-severity-scaled (noveltyBudget's first real consumer), aversion veto untouched. The resolution loop is a READING not a toggle (user: "hard polarities do not reconcile in a single sweep — the development is spiral"): the System-1 layer (Laya, user-ratified: wire it — tag resolution + reading-proposal + neighbor prefilter, behind interfaces with deterministic fallback, never authoring, never final authority) proposes the conscious/shadow reading, the orchestrator ratifies (L4); approve strengthens toward reconciled only via repeated confirmations (46 §4.3's falsifiable state), disapprove re-opens the pair + increments shadow severity (the loop tightens), every reading profile-updates through the background workers, and a cell is never closed — orthogonal-dimension probe coverage gates profiling completion. Prompt surface: top-1 primary + pole named, alternates hidden (user-ratified). Phase 13 heading updated: d10 is now the only remaining Phase-13 deliverable (d3–d9 remain post-phase calibration work). |
 | 2026-09-24 | **Phase 13 d11 + d12 BUILT (`62ded8b` + this commit): the council is bound, standing, and dispatched.** d11: `AGENT_ROLE_COUNCIL` binds all 18 roles (S2/S5 to none; J1–J5 + therapist carry `narrative-voice` as a secondary scope — the inert row G32 caught); `buildEnvelope` returns `scopes` per row plus **`healing`**; the standing block ([MY MANDATE]/[MY VIEW]/[MY BOUNDARIES]/[MY TOOLS]/[MY SESSION]) rides every delegation, Veil-guarded line by line (an encounter's stage label never renders); `read_my_scope`/`read_band` are universal read tools (`43 §5.6`), grants can never widen the scope table, and every refusal is recorded with a reason; `delegateSession` logs the binding + block. d12: the dispatcher (`dispatcher.ts`) — `TRIGGER_TABLE` (11 rows, order = precedence; crisis the only bypass; threshold assembles the foreground council minus S2/S5 with the Therapist first; determinism seed-invariant), `observationForTrigger` (state↔row round-trip), the live tool surface (`councilTools.ts`: `summon_council`/`schedule_presence`/`delegate_session` + rules 12–15, registered on the orchestrator opt-in, byte-identical without), and the CLI drill `delegate --summon --trigger <name>`. **G34** added (kernel 33 → **34**); `Dispatcher.test.ts` (21 tests incl. end-to-end crisis summons delivering the healing scope) + `CouncilStanding.test.ts` (19). Canon updated in place: `43 §3.3` (the trigger table as canon), `43 §4.3` (`summon_council`), `43 §5.6` (status: built), `45 §6.1` (binding + read surface + delivery status), audit §9 (build record). Remaining in Phase 13: d10 (candidate multiplicity) is the gating dependency for the differential criterion; d3–d9 unchanged. |
 | 2026-09-24 | **Council orthogonality audited + the envelope architecture designed (`docs/audits/COUNCIL-ORTHOGONALITY-AUDIT-2026-09-24.md`).** The two things called *the council* were audited against each other: `43 §4.2`'s 18-role workforce and `45 §6.1`'s 5 visibility scopes. Findings: one genuine redundancy (**O6** — A3 Validator and S1 Pack Agents hold identical toolsets and both "administer instruments"; ruling: S1 operates the pack, A3 judges the instrument); two adjacent pairs needing stated boundaries (**O3** A2 Reviewer vs Therapist arc notes; **O5** S2 Context Steward vs S4 Data Warden — S4 alone writes consent, S2 alone assembles projections); a producer/consumer pair to declare rather than merge (**O2** Therapist proposes shadow-work, J4 delivers it); a fidelity split (**O1** A1 owns the evidence contract, J2 is its diegetic delivery); and **two missing rows** (**O8** — no healing scope and no orchestrator scope). The largest operational finding is **O10: the council has no dispatcher** — the only production callers of `delegateSession` are the CLI and the kernel gate, so the loop never summons a sub-agent; the trigger table (audit §3) is designed to fix it. Canon updated: `45 §6.1` gains the **healing** row and the **orchestrator (steward)** row plus the explicit `AgentRole → CouncilRole` binding; `43 §4.2` gains the two-contracts statement (toolset = what I may do, scope = what I may see) and **`43 §5.6` the standing-context contract** (standing block + authorized access tools + "a refusal is information"). Phase 13 gains **d10** (candidate multiplicity per cell — closes the differential criterion), **d11** (binding + standing block in the delegation path) and **d12** (the dispatcher). Open decisions recorded for ratification: D1 healing-scope strictness, D2 the O6 ruling, D3 whether the foreground scoring step becomes a delegated A-role call, D4 summoning stays deterministic. |
 | 2026-09-23 | **Live-surface wiring audit + Phase 13 planned (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md`).** Every ratified personalization / memory / world surface was traced to its production callers. Nine have none: `LocalRetriever` + `retrievalFirewall` (gate-fixture traffic only), the stubbed `envelopeRuntime` (its UDV inputs hardcoded empty), `scopeForRole`/`ROLE_SCOPES` (45 §6.1 council alignment never executes), the UDV's own preference band (zero consumers anywhere), `compose()`/`buildLibraryViews` (test-only), `compositionTelemetry` (calibration script only), the probe tier (unreachable; `probeValidation.ts` has zero references — a dead module), and the engagement register (test-only). The live UDV carries 3 of 8 declared bands, so purpose, analogy, preference and observed evidence currently change no ranking. No defect is a crash or a leak — every dark surface degrades quiet by the `45 §5` law, which is why it went unnoticed. **Phase 13 (Live-Surface Wiring & Council Alignment) defined** with nine deliverables (d1 band population, d2 council scoping live + `envelopeRuntime` consolidation, d3 retrieval on the candidate path, d4 runtime composition telemetry, d5 probes reachable + RV harness live, d6 engagement-register enforcement, d7 composition-engine status resolved, d8 doc status marks, d9 memory-audit carry-overs) and gates **G32–G34** (kernel 31 → 34). Four foundation overclaims status-marked in the same commit (48 §4 retriever/embedding, 45 §7.3 register, 46 §11 telemetry) plus the live seam named (`sessionRuntime`) in 48 §3. `AGENTS.md §4.2` gained the third open-work list (live-surface wiring) — the failure class is *a documented consumer that no live seam calls*. |
