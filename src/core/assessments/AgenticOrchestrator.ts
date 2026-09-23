@@ -1,4 +1,4 @@
-import type { AssessmentResult, ShadowAssessmentResult, MeasureDimension, StageAssessment, AssessmentTask, TaskType, TrialResult } from './types.js';
+import type { AssessmentResult, ShadowAssessmentResult, MeasureDimension, StageAssessment, AssessmentTask, TrialResult } from './types.js';
 import type { ScheduledEncounter } from '../domain/EncounterSpecNew.js';
 import type { Significator } from '../domain/Significator.js';
 import type { WorldState } from '../engines/CandidateGeneration.js';
@@ -33,6 +33,7 @@ import { buildEnvelope, holonDigestBlock, recordCoherenceInsight, sessionEnd, as
 import type { UdvBandSources } from '../personalization/bandSources.js';
 import type { OwnerWorkerPoolState } from '../world/ownerWorkerPool.js';
 import { queryLLMWithTools, queryLLMStream } from '../../infra/llm/LLMClient.js';
+import { selectTaskForModality, presentModuleTask, rendererEvaluate, taskStartTime } from './taskPresenters.js';
 import { parseConsequence } from '../../infra/llm/ConsequenceParser.js';
 import { toQualitativeFeedback } from '../../infra/llm/QualitativeFeedback.js';
 import { modalityOpenerTemplate, moduleSummaryTemplate, responseOptionsTemplate } from '../../infra/llm/templates.js';
@@ -43,9 +44,8 @@ import { accumulateTension, tryTriggerMacroEvent, type PESTLETension } from '../
 import type { AgentMessage, AskUserQuestionParams, AskUserQuestionResult } from './agentTypes.js';
 import { InfraConfig } from '../config/InfraConfig.js';
 import { detectShadowKeywords, detectWriteInShadow } from './shadowSignals.js';
-import { briefHistory, continuityContext } from './promptBlocks.js';
+import { continuityContext } from './promptBlocks.js';
 import { buildFallbackNarrative } from './fallbackNarrative.js';
-import { getRenderer } from './cli/TaskRenderers.js';
 import { computeConfidence } from './engine.js';
 // ponytail: E — shadow keywords loaded from shared data file.
 import {
@@ -233,8 +233,6 @@ export class AgenticOrchestrator {
   private messages: AgentMessage[] = [];
   private noLlm: boolean;
   private forceShadow: string | undefined;
-  private _currentRendererEvaluate: ((answer: string, startMs: number, endMs: number) => any) | null = null;
-  private _currentTaskStartTime: number = 0;
   private _currentPresentedTask: AssessmentTask | null = null;
   private _consecutivePasses: Map<string, number>;
   private agentSynthesis: string | undefined;
@@ -1371,12 +1369,12 @@ INSTRUCTIONS:
     const currentModality = this.encounter.modality;
 
     // 1. Select the best task from the module based on modality
-    const task = this.selectTaskForModality(module, currentModality);
+    const task = selectTaskForModality(module, currentModality);
     // Track the actual presented task for narrative building (fix B.2)
     this._currentPresentedTask = task;
 
     // 2. Present the task as a narrative challenge via uiHandler
-    const askResult = await this.presentModuleTask(module, task, currentModality, holonName);
+    const askResult = await presentModuleTask(module, task, currentModality, holonName, this.history, this.uiHandler);
     const answer = askResult.answers[0];
     const rawLabel = answer?.selectedLabels[0] ?? '';
     const writeIn = answer?.writeInValue;
@@ -1394,9 +1392,10 @@ INSTRUCTIONS:
     };
     let trialResult: TrialResult | null = null;
 
-    if (this._currentRendererEvaluate) {
+    const currentEvaluate = rendererEvaluate();
+    if (currentEvaluate) {
       // Use the TaskRenderer's evaluate function for real scoring
-      trialResult = this._currentRendererEvaluate(playerResponseText, this._currentTaskStartTime, endTimeMs);
+      trialResult = currentEvaluate(playerResponseText, taskStartTime(), endTimeMs);
 
       // Extract drive metadata from the trial's rawResponse (set by TaskRenderers)
       const rawResp = trialResult?.rawResponse as any;
@@ -1546,7 +1545,7 @@ INSTRUCTIONS:
       : null);
 
     // If forceShadow is active, propagate to drive signals AND force-fail the encounter
-    if (forcedQuadrant && this._currentRendererEvaluate) {
+    if (forcedQuadrant && rendererEvaluate()) {
       const forcedDrive = forcedQuadrant === 'DarkAddiction' ? 'agency'
         : forcedQuadrant === 'DarkAllergy' ? 'communion'
         : forcedQuadrant === 'GoldenAddiction' ? 'eros'
@@ -1691,137 +1690,6 @@ INSTRUCTIONS:
       messages: this.messages,
       ...this.recordSessionEnd(updatedRecord, evaluation.passed, now),
     };
-  }
-
-  /**
-   * Select the best assessment task from the module based on encounter modality.
-   */
-  private selectTaskForModality(module: StageAssessment, modality: Modality): AssessmentTask {
-    // All task types supported by TaskRenderers
-    const ALL_RENDERABLE: readonly TaskType[] = [
-      'n_back', 'stroop', 'go_no_go', 'hold', 'pattern_prediction',
-      'emotion_identification', 'dilemma', 'scenario', 'self_report',
-      'value_ranking', 'reaction_time', 'rhythm', 'cooperation', 'imitation',
-    ];
-
-    // Modality-specific preference order (first match wins)
-    const modalityPreference: Record<string, readonly TaskType[]> = {
-      Deterministic: ['n_back', 'stroop', 'go_no_go', 'hold', 'reaction_time', 'rhythm', 'pattern_prediction'],
-      LanguageReflective: ['llm_dialogue', 'self_report', 'emotion_identification', 'scenario', 'dilemma'],
-      ScenarioChoice: ['dilemma', 'scenario', 'emotion_identification', 'self_report'],
-      Embodied: ['hold', 'rhythm', 'imitation', 'reaction_time', 'go_no_go'],
-      Strategic: ['pattern_prediction', 'value_ranking', 'n_back', 'stroop'],
-      SocialCooperative: ['cooperation', 'dilemma', 'emotion_identification', 'scenario', 'self_report'],
-      ImmersiveRPG: ['scenario', 'dilemma', 'llm_dialogue', 'emotion_identification', 'self_report'],
-    };
-
-    const preferred = modalityPreference[modality] ?? ALL_RENDERABLE;
-
-    // G.1: Try preferred types first, then fall back to any renderable type in the module
-    for (const prefType of [...preferred, ...ALL_RENDERABLE]) {
-      const match = module.tasks.find(t => t.type === prefType);
-      if (match) return match;
-    }
-
-    // Last resort: generate a modality-appropriate task
-    return this.generateModalityFallbackTask(modality, module);
-  }
-
-  /**
-   * Generate a generic task appropriate for the modality when the module
-   * doesn't have any of the preferred task types. This ensures ScenarioChoice
-   * always shows a dilemma, ImmersiveRPG always shows a scenario, etc.
-   */
-  private generateModalityFallbackTask(modality: Modality, module: StageAssessment): AssessmentTask {
-    const prefix = `${module.line.toLowerCase()}-${module.stage.toLowerCase()}`;
-    // Inject stage into all generated task parameters so TaskRenderers can use it for difficulty scaling
-    const stage = module.stage;
-    switch (modality) {
-      case 'ScenarioChoice':
-      case 'ImmersiveRPG':
-        return {
-          id: `generic-dilemma-${prefix}`,
-          type: 'dilemma',
-          description: `A developmental dilemma at the ${module.stage} stage of ${module.line} development`,
-          parameters: { dilemmaType: 'developmental', choices: 4, stage, line: module.line },
-          measures: ['depth', 'coherence'],
-        };
-      case 'LanguageReflective':
-        return {
-          id: `generic-self-report-${prefix}`,
-          type: 'self_report',
-          description: `Self-inquiry reflection at the ${module.stage} stage of ${module.line} development`,
-          parameters: { stage },
-          measures: ['depth', 'metacognition'],
-        };
-      case 'SocialCooperative':
-        return {
-          id: `generic-cooperation-${prefix}`,
-          type: 'cooperation',
-          description: `Cooperative dynamics at the ${module.stage} stage of ${module.line} development`,
-          parameters: { stage },
-          measures: ['depth', 'coherence'],
-        };
-      case 'Embodied':
-        return {
-          id: `generic-hold-${prefix}`,
-          type: 'hold',
-          description: `Attentional hold at the ${module.stage} stage of ${module.line} development`,
-          parameters: { items: 3, holdDurationMs: 5000, stage },
-          measures: ['accuracy', 'consistency'],
-        };
-      case 'Strategic':
-        return {
-          id: `generic-pattern-${prefix}`,
-          type: 'pattern_prediction',
-          description: `Pattern recognition at the ${module.stage} stage of ${module.line} development`,
-          parameters: { disks: 3, attempts: 4, stage },
-          measures: ['accuracy', 'complexity_handled'],
-        };
-      case 'Deterministic':
-      default:
-        return module.tasks[0] ?? {
-          id: `generic-nback-${prefix}`,
-          type: 'n_back',
-          description: `Working memory challenge at the ${module.stage} stage of ${module.line} development`,
-          parameters: { n: 2, trials: 12, stage },
-          measures: ['accuracy', 'response_time'],
-        };
-    }
-  }
-
-  /**
-   * Present a module task as a narrative challenge via the UI handler.
-   * Translates the assessment task type to CLI-friendly MCQ options.
-   */
-  private async presentModuleTask(
-    _module: StageAssessment,
-    task: AssessmentTask,
-    _modality: Modality,
-    holonName: string,
-  ): Promise<AskUserQuestionResult> {
-    // Use TaskRenderers to get a real assessment prompt with task-specific options
-    // and a response evaluator that captures TrialResult data (timing, accuracy)
-    // Inject stage AND line into task parameters so TaskRenderers can use stage-specific
-    // difficulty and line-specific dilemma content
-    const taskWithStage = { ...task, parameters: { ...task.parameters, stage: _module.stage, line: _module.line } };
-    const renderer = getRenderer(taskWithStage);
-
-    // Store the renderer's evaluate function so runModuleAssessment can use it
-    this._currentRendererEvaluate = renderer.evaluate;
-    this._currentTaskStartTime = Date.now();
-
-    // Prepend holon-narrative framing to the question with continuity context
-    const historyPrefix = briefHistory(this.history);
-    const enrichedPrompt: AskUserQuestionParams = {
-      questions: renderer.prompt.questions.map(q => ({
-        ...q,
-        question: `${historyPrefix}${holonName} presents a challenge.\n\n${q.question}`,
-        header: q.header, // Keep the renderer's meaningful header
-      })),
-    };
-
-    return this.uiHandler.askUser(enrichedPrompt);
   }
 
   /**
