@@ -55,6 +55,16 @@ import { INITIAL_TAGS } from '../world/tags/initialTags.js';
 import { createFacetStore } from '../world/facets/FacetStore.js';
 import facetsJson from '../world/facets/facets.json';
 import { selectPoles, pairKeyOf } from '../personalization/dialecticEngine.js';
+import { deriveLibraryVariants } from '../personalization/polarityIndex.js';
+import { decidePole, unfamiliarShareFor } from '../personalization/poleDecision.js';
+import {
+  applyReading, deterministicReading, polarityCoverage, auditReadingLog,
+  CONFIRMATIONS_TO_RECONCILE, type ReadingApplication,
+} from '../personalization/polarityResolution.js';
+import { seedCandidateLibrary, initialTopicTagResolver } from '../personalization/candidateLibrary.js';
+import { buildQuery, rankByRelevance } from '../personalization/pooling.js';
+import { sharedFacetStore } from '../personalization/sessionRuntime.js';
+import type { Modality } from '../domain/enums.js';
 import { compose, createCompositionStore } from '../personalization/composition.js';
 import { createInterestRecord } from '../personalization/interestRecord.js';
 import { detectScaffoldShareDefects, detectVisibilityCollapse, type CompositionEvent } from '../personalization/diversityMonitor.js';
@@ -875,6 +885,7 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   results.push(validateRoleScopeAlignment());
   results.push(validateUdvBandPopulation());
   results.push(validateCouncilDispatch());
+  results.push(validatePolarityPool());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
@@ -1926,4 +1937,104 @@ function withExtendedTrajectories(personas: readonly PersonaSpec[]): readonly Pe
       ? p
       : { ...p, trajectory: { ...p.trajectory, sessions: 8, encountersPerSession: 8 } },
   );
+}
+
+// ---------------------------------------------------------------------------
+// G35 — The Polarity Pool (Phase 13 d10, user-ratified 2026-09-24). W11's closer: the
+// candidate library must be DERIVED (per-cell floor: ≥3 renderings with pairwise-distinct
+// tag vectors), the pole decision must obey the dosage law (severity-scaled share, ceiling
+// 0.6, dormant ledger never shadow-facing), the resolution loop must be a SPIRAL (one
+// confirming reading never reconciles; a disconfirming reading re-opens + severity +1;
+// unratified/low-confidence readings move nothing), the rubric audit must catch violations,
+// and the differential criterion must hold — swapping the UDV changes the selected primary.
+// ---------------------------------------------------------------------------
+
+export function validatePolarityPool(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G35 polarity pool', passed: false, hard: true, details: m });
+  try {
+    const store = createTagStore(INITIAL_TAGS);
+    const library = deriveLibraryVariants(seedCandidateLibrary(sharedFacetStore()), store);
+
+    // L1 — the derived per-cell floor: every cell ≥3 distinct tag vectors, and the derivation
+    // is idempotent (re-derivation adds nothing).
+    const byCell = new Map<string, { vectors: Set<string>; n: number }>();
+    for (const c of library) {
+      const key = `${c.cell.line}:${c.cell.stage}:${c.cell.modality}`;
+      const slot = byCell.get(key) ?? { vectors: new Set<string>(), n: 0 };
+      slot.vectors.add(c.tags.join(','));
+      slot.n += 1;
+      byCell.set(key, slot);
+    }
+    const thin = [...byCell.entries()].filter(([, s]) => s.vectors.size < 3);
+    if (thin.length > 0) return mk(`derived library has ${thin.length} cells below the 3-vector floor (first: ${thin[0]![0]})`);
+    const again = deriveLibraryVariants(library, store);
+    if (again.length !== library.length) return mk('library derivation is not idempotent');
+    // Variants never re-altitude: every variant's cell equals a base cell.
+    for (const c of library) {
+      if (!c.id.includes('~sim') && !c.id.includes('~opp')) continue;
+      if (!library.some((b) => b.cell.line === c.cell.line && b.cell.stage === c.cell.stage && b.cell.modality === c.cell.modality && !b.id.includes('~sim') && !b.id.includes('~opp')))
+        return mk(`variant ${c.id} has no base in its cell — altitude drift`);
+    }
+
+    // L2 — the dosage law.
+    if (unfamiliarShareFor(0.25, 0) !== 0.25) return mk('dormant ledger did not preserve the seed budget');
+    if (unfamiliarShareFor(0.5, 1) > 0.6) return mk('unfamiliar share exceeded the 0.6 ceiling');
+    if (unfamiliarShareFor(0.25, 0.9) <= unfamiliarShareFor(0.25, 0.4)) return mk('share did not rise with shadow severity');
+    const inCell = library.filter((c) => c.cell.line === 'Cognitive' && c.cell.stage === 'Amber' && c.cell.modality === 'ScenarioChoice');
+    const dormant = decidePole(store, { candidates: inCell, target: { line: 'Cognitive' }, fluentTags: ['technology'], shadowSeverity: 0, seedNoveltyBudget: 0, draw: 0 });
+    if (dormant?.pole !== 'familiar') return mk('a dormant ledger produced a non-familiar pole at zero budget');
+    const hot = decidePole(store, { candidates: inCell, target: { line: 'Cognitive' }, fluentTags: ['technology'], shadowSeverity: 0.9, seedNoveltyBudget: 0.25, draw: 0 });
+    if (!hot || !['unfamiliar', 'shadow-facing'].includes(hot.pole)) return mk('a live ledger failed to dose an unfamiliar/shadow-facing pole');
+    if (hot.pole === 'shadow-facing' && !hot.reason.includes('45')) return mk('shadow-facing decision did not cite its law');
+
+    // L3 — the spiral: one confirmation never reconciles; disconfirmation re-opens + severity +1;
+    // unratified and low-confidence readings move nothing.
+    const pair = pairKeyOf('technology', 'nature');
+    const states: Record<string, 'reconciled' | 'active-tension' | 'undiscovered'> = { [pair]: 'active-tension' };
+    const tallies: Record<string, number> = {};
+    const record = (at: number, hold: number, evidence: string[]) => ({
+      cell: { line: 'Cognitive' as Line, stage: 'Amber' as Stage, modality: 'ScenarioChoice' as Modality },
+      pairKey: pair, poleServed: 'unfamiliar' as const,
+      pairHoldQuality: hold, evidence, at,
+    });
+    const r1 = applyReading({ reading: deterministicReading(record(1, 0.9, ['e1', 'e2', 'e3'])), ratified: true, states, tallies, shadows: [] });
+    if (r1.stateAfter !== 'active-tension' || r1.confirmations !== 1) return mk('a single confirming reading moved the pair — the spiral collapsed into a toggle');
+    const unratified = applyReading({ reading: deterministicReading(record(2, 0.9, ['e1', 'e2', 'e3'])), ratified: false, states, tallies, shadows: [] });
+    if (unratified.applied) return mk('an unratified (L4) reading was applied');
+    const lowConf = applyReading({ reading: deterministicReading(record(3, 0.9, ['only'])), ratified: true, states, tallies, shadows: [] });
+    if (lowConf.applied) return mk('a below-floor confidence reading was applied');
+    for (let i = 0; i < CONFIRMATIONS_TO_RECONCILE - 1; i++) {
+      applyReading({ reading: deterministicReading(record(10 + i, 0.9, ['e1', 'e2', 'e3'])), ratified: true, states, tallies, shadows: [] });
+    }
+    if (states[pair] !== 'reconciled') return mk(`${CONFIRMATIONS_TO_RECONCILE} confirmations did not reconcile the pair`);
+    const relapse = applyReading({ reading: deterministicReading(record(20, 0.1, ['e1', 'e2', 'e3'])), ratified: true, states, tallies, shadows: [{ id: 's1', line: 'Cognitive' as Line, resolvedAt: null }] });
+    if (relapse.stateAfter !== 'active-tension' || relapse.severityDelta !== 1) return mk('a disconfirming reading neither re-opened the pair nor raised severity');
+
+    // The rubric audit catches an evidence-less reading and an out-of-bounds severity delta.
+    const badReadings = [{ ...deterministicReading(record(30, 0.9, ['e1'])), evidence: [] }];
+    const badApps = [{ applied: true, reason: 'x', stateBefore: 'active-tension', stateAfter: 'active-tension', severityDelta: 5, confirmations: 0 } as unknown as ReadingApplication];
+    const violations = auditReadingLog(badReadings, badApps);
+    if (!violations.some((v) => v.rule === 'evidence-cited') || !violations.some((v) => v.rule === 'bounded-severity')) return mk('the rubric audit missed a synthetic violation');
+
+    // Coverage is a per-cell orthogonal-dimension judgment — one dimension is never robust.
+    const oneDim = polarityCoverage([deterministicReading(record(40, 0.9, ['e1', 'e2', 'e3']))]);
+    if (oneDim[0]?.robust !== false) return mk('a single-dimension cell reported robust profiling — the cell closed');
+
+    // The differential criterion at the kernel level: the UDV's fluent domain changes the
+    // pool's rank order (the retrieval key is real).
+    const mkUdv = (domain: string) => ({
+      developmental: { lineAltitudeBand: [], activeShadows: [] },
+      preference: { modalityMix: {}, difficultyAppetite: 'steady', sessionToleranceMin: 25, aestheticLeanings: [] },
+      interests: [{ topic: domain, weight: 0.9, depth: 'fluent', source: 'declared' }],
+      purpose: [], analogy: { fluentDomains: [{ domain, weight: 1 }], landings: [domain], repels: [] },
+      aversions: [], constraints: { accessibility: [] },
+    } as never);
+    const a = rankByRelevance(inCell, buildQuery(store, mkUdv('music'), initialTopicTagResolver)).slice(0, 4).map((c) => c.id).join('|');
+    const b = rankByRelevance(inCell, buildQuery(store, mkUdv('law'), initialTopicTagResolver)).slice(0, 4).map((c) => c.id).join('|');
+    if (a === b) return mk('swapping the UDV fluent domain did not reorder the pool — W11 persists');
+
+    return { gate: 'G35 polarity pool', passed: true, hard: true, details: `derived library (${library.length} candidates, every cell ≥3 distinct vectors, idempotent); dosage severity-scaled with 0.6 ceiling; spiral holds (no single sweep, re-open + severity on failure, unratified/low-confidence inert); rubric audit detects violations; coverage open by default; UDV swap reorders the pool` };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
 }

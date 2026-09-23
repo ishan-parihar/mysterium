@@ -28,6 +28,7 @@ function getFacetStore(): FacetStore {
   return facetStoreSingleton;
 }
 import type { OrchestrationServices, PersonalizationBlock } from '../personalization/sessionRuntime.js';
+import { polarityPromptLine } from '../personalization/scenarioContext.js';
 import { buildEnvelope, holonDigestBlock, recordCoherenceInsight, sessionEnd, assessmentScopeLine } from '../personalization/sessionRuntime.js';
 import type { UdvBandSources } from '../personalization/bandSources.js';
 import type { OwnerWorkerPoolState } from '../world/ownerWorkerPool.js';
@@ -250,6 +251,10 @@ export class AgenticOrchestrator {
    *  stashed by personalizationContext/finalizeEncounter, consumed by recordSessionEnd. */
   private lastDialecticPair: readonly [string, string] | null = null;
   private lastPolarityDirection: 'sto' | 'sts' | 'neutral' | undefined;
+  /** Phase 13 d10 L3: the pole the last composition SERVED + the polarities' pair key — stashed
+   *  at composition time, consumed by recordSessionEnd to build the reading's EncounterRecord. */
+  private lastPoleServed: 'familiar' | 'unfamiliar' | 'shadow-facing' | null = null;
+  private lastPairKey: string | null = null;
 
   /** 45 §6.1 (Phase 13 d2): the assessment role's scoped line for this encounter, set by
    *  `buildContextInput`'s personalization pass and appended to the assessment prompt section. */
@@ -604,7 +609,7 @@ export class AgenticOrchestrator {
       // RuntimeLoop (45 §5/§6 + 22 §7.4): the personalization envelope + the holon's memory.
       // Both degrade to absent — never block a session.
       ...(() => {
-        const { block, digest, seed, worldPlace, continuity, assessmentScope } = this.personalizationContext();
+        const { block, digest, seed, worldPlace, continuity, assessmentScope, polarityLine } = this.personalizationContext();
         this.assessmentScopeLine = assessmentScope;
         return {
           ...(block ? { personalizationBlock: block } : {}),
@@ -612,6 +617,7 @@ export class AgenticOrchestrator {
           ...(seed ? { scenarioSeedBlock: seed } : {}),
           ...(worldPlace ? { worldPlaceBlock: worldPlace } : {}),
           ...(continuity.length > 0 ? { continuityBlock: continuity } : {}),
+          ...(polarityLine ? { polarityBlock: polarityLine } : {}),
         };
       })(),
     };
@@ -938,7 +944,7 @@ export class AgenticOrchestrator {
       })(),
       // RuntimeLoop (45 §5/§6 + 22 §7.4): same envelope + memory as the main path.
       ...(() => {
-        const { block, digest, seed, worldPlace, continuity, assessmentScope } = this.personalizationContext();
+        const { block, digest, seed, worldPlace, continuity, assessmentScope, polarityLine } = this.personalizationContext();
         this.assessmentScopeLine = assessmentScope;
         return {
           ...(block ? { personalizationBlock: block } : {}),
@@ -946,6 +952,7 @@ export class AgenticOrchestrator {
           ...(seed ? { scenarioSeedBlock: seed } : {}),
           ...(worldPlace ? { worldPlaceBlock: worldPlace } : {}),
           ...(continuity.length > 0 ? { continuityBlock: continuity } : {}),
+          ...(polarityLine ? { polarityBlock: polarityLine } : {}),
         };
       })(),
     };
@@ -2524,11 +2531,13 @@ ${probes}${rubric}
     continuity: readonly string[];
     /** 45 §6.1 — the assessment role's scoped line (Phase 13 d2). Null when no services/scope. */
     assessmentScope: string | null;
+    /** Phase 13 d10 L4 — the [POLARITY] prompt line (top-1 primary + named pole). */
+    polarityLine: string | null;
   } {
-    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null };
+    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null, polarityLine: null };
     try {
       const [line] = this.encounter.moduleRef.split(':') as [Line, ...unknown[]];
-      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context, continuity, scopes } = buildEnvelope(
+      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context, continuity, scopes } = buildEnvelope(  // context carries the d10 polarity selection
         this.orchestration,
         this.significator,
         this.identity,
@@ -2563,15 +2572,26 @@ ${probes}${rubric}
         ? [context.poles.surface.id, context.poles.structure.id]
         : null;
       this.lastDialecticPair = dialecticPair;
+      // Phase 13 d10 L3: stash the pole served + the pair key the reading will reference. When
+      // the dialectic engine deferred (no eligible pole), the pair key falls back to the POOL's
+      // selected pair — the reading is still captured (coverage is per-CELL), it just cites the
+      // composition's own poles.
+      this.lastPoleServed = context?.polarity?.pole ?? null;
+      this.lastPairKey = context?.polarity && dialecticPair
+        ? `${dialecticPair[0] < dialecticPair[1] ? dialecticPair[0] : dialecticPair[1]}|${dialecticPair[0] < dialecticPair[1] ? dialecticPair[1] : dialecticPair[0]}`
+        : null;
       // 45 §6.1 (Phase 13 d2): this encounter's sub-agents receive their DECLARED band subset.
       // The scenario-catalyst renders what the player sees; the assessment role gets bands + the
       // cell ONLY, so the drive probes can never be conditioned on the player's affinities.
       const assessmentScope = assessmentScopeLine(
         scopes.assessment,
       );
-      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair, continuity, assessmentScope };
+      // Phase 13 d10 L4 (user-ratified surface): the prompt conditions on the ONE primary
+      // rendering and the pole's NAME — alternates, reason and any score stay out of the prompt.
+      const polarityLine = polarityPromptLine(context?.polarity ?? null);
+      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair, continuity, assessmentScope, polarityLine };
     } catch {
-      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null };
+      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null, polarityLine: null };
     }
   }
 
@@ -2606,6 +2626,25 @@ ${probes}${rubric}
         // Phase 11 d5: the pair the composition worked + the encounter's scored direction.
         dialecticPair: this.lastDialecticPair,
         polarityDirection: this.lastPolarityDirection,
+        // Phase 13 d10 L3: the encounter's observable record → the System-1 layer (or the
+        // deterministic fallback) proposes a polarity READING. Recorded always; the pair-hold
+        // quality maps from the encounter's own outcome (passed ⇒ held both poles). The READING
+        // is ratified only through the orchestrator's explicit ratification path — never here.
+        encounterRecord: this.lastPairKey
+          ? {
+              cell: {
+                line: this.encounter.targetLines[0] ?? (this.encounter.moduleRef.split(':')[0] as Line),
+                stage: this.encounter.stage,
+                modality: this.encounter.modality,
+              },
+              pairKey: this.lastPairKey,
+              poleServed: this.lastPoleServed ?? 'familiar',
+              pairHoldQuality: passed ? 0.85 : 0.3,
+              evidence: [`encounter:${this.encounter.id}`, `outcome:${passed ? 'passed' : 'failed'}`, `pole:${this.lastPoleServed ?? 'familiar'}`],
+              at: now,
+            }
+          : undefined,
+        ratifyReading: false, // recordings are proposals; L4 ratification is a separate, explicit step
       });
       return { workers: outcome.workers, ownerCommitted: outcome.ownerCommitted };
     } catch {

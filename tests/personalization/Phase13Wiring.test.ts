@@ -151,34 +151,31 @@ describe('Phase 13 d1 — UDV band sources', () => {
     expect(udv.constraints.accessibility).toHaveLength(0);
   });
 
-  it('DIFFERENTIAL GAP LOCK: the bands reach the UDV but the pool is CELL-DETERMINISTIC', () => {
-    // The phase's success criterion is that swapping a band changes what pools. It does NOT yet,
-    // and the reason is structural, not a wiring defect: the candidate library holds exactly five
-    // renderings per cell (one per tier — world / scenario / scenario-authored / world-authored /
-    // npc-authored), so a cell-targeted pool returns the same five refs for every player and the
-    // UDV's ranking inputs have nothing to order. Recorded as W11 in
-    // `docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md`; the fix is candidate MULTIPLICITY per cell
-    // (Phase 13 d10). This test locks today's truth so the change that closes it is visible.
+  it('DIFFERENTIAL CRITERION (W11 CLOSED by d10): swapping the UDV changes the POLARITY SELECTION', () => {
+    // Flipped 2026-09-24 (Phase 13 d10 L1+L2): the library is DERIVED (every cell carries
+    // familiar-capable and unfamiliar-capable recolourings with distinct tag vectors) and the
+    // pole decision selects the primary by fluent-overlap — so the UDV's declared interests
+    // genuinely change WHICH rendering the player meets. This was the gap-lock test; its
+    // assertions now run the OTHER way. The pooled-refs LIST still spans the whole cell (by
+    // design: the refs are the candidate set, the POLARITY selects the primary — 45 §5.3's law
+    // that relevance is a bias on the candidate set, never a hard filter).
     const services = createOrchestrationServices();
-    const run = (bands: UdvBandSources | undefined) => {
+    const run = (declared: string[]) => {
       const e = buildEnvelope(
         services, sig(),
-        { usable: [], declaredInterests: [], bands },
+        { usable: [], declaredInterests: declared },
         TARGET, 'a practice step toward steadiness', [], 1000, null,
       );
-      return JSON.stringify(e.context?.pooled);
+      return e;
     };
-    const plain = run(undefined);
-    const withPurpose = run({ purposes: [{ kind: 'learning-quest', statement: 'music' }] });
-    const withAnalogy = run({ analogy: analogyFromInterests([{ topic: 'music', weight: 1, depth: 'fluent', source: 'declared' }]) });
-    expect(withPurpose).toBe(plain);
-    expect(withAnalogy).toBe(plain);
-
-    // ...and the cause, asserted directly: five candidates per cell, one per tier.
-    const byPrefix = new Map<string, number>();
-    for (const c of services.library) byPrefix.set(c.id.split(':')[0]!, (byPrefix.get(c.id.split(':')[0]!) ?? 0) + 1);
-    expect(services.library.length).toBe(2240);
-    expect([...byPrefix.entries()].every(([, n]) => n === 448)).toBe(true);
+    const music = run(['music']);
+    const law = run(['law']);
+    // THE differential: the UDV changes the primary the player meets.
+    expect(music.context?.polarity?.primary).not.toBe(law.context?.polarity?.primary);
+    // The band reached the UDV (the retrieval key is populated).
+    expect(music.context?.udv.interests.map((i) => i.topic)).toContain('music');
+    // ...and the pole decision is live on the envelope: the selection names its pole + primary.
+    expect(['familiar', 'unfamiliar', 'shadow-facing']).toContain(music.context?.polarity?.pole);
   });
 });
 

@@ -150,19 +150,38 @@ export function routeWithVeto(
   return [];
 }
 
-/** 45 §5.3 — relevance-to-UDV as a RANK, the bias `24` multiplies by; never a selection. */
+/** 45 §5.3 — relevance-to-UDV as a RANK, the bias `24` multiplies by; never a selection.
+ *
+ * Normalized (Phase 13 d10): raw tag-sum scores rewarded BROAD vectors (a candidate carrying 12
+ * tags including the fluent one outranked the candidate carrying EXACTLY the fluent flavour),
+ * which silently re-flattened the derived library's distinctions. The score is now the weighted
+ * term mass as a FRACTION of the vector, plus a small breadth prior so equal coverage still
+ * prefers the fuller rendering. This is what makes the UDV's fluent domain the retrieval key:
+ * a music-fluent player meets the music-recoloured variant, not whichever candidate happens to
+ * be biggest. */
 export function rankByRelevance(candidates: readonly PoolCandidate[], query: PoolQuery): readonly PoolCandidate[] {
   const weights = new Map<TagId, number>();
   for (const t of query.interestTerms) weights.set(t.tag, (weights.get(t.tag) ?? 0) + t.weight);
   for (const t of query.analogyTerms) weights.set(t.tag, (weights.get(t.tag) ?? 0) + t.weight);
   for (const t of query.purposeTerms) weights.set(t.tag, (weights.get(t.tag) ?? 0) + t.weight);
+  const anyTerm = weights.size > 0;
 
-  return [...candidates].sort((a, b) => score(b) - score(a));
+  return [...candidates].sort((a, b) => score(b) - score(a) || a.id.localeCompare(b.id));
   function score(c: PoolCandidate): number {
-    let s = 0;
-    for (const t of c.tags) s += weights.get(t) ?? 0;
-    for (const l of c.landsIn) s += (weights.get(l as TagId) ?? 0) * 0.5;
-    return s;
+    if (!anyTerm) return 0; // no query ⇒ no bias: library order stands (45 §5.3's degradation)
+    let mass = 0;
+    let total = 0;
+    for (const t of c.tags) {
+      const w = weights.get(t);
+      total += 1;
+      if (w !== undefined) mass += w;
+    }
+    for (const l of c.landsIn) {
+      const w = weights.get(l as TagId);
+      if (w !== undefined) mass += w * 0.5;
+    }
+    const breadth = Math.min(1, c.tags.length / 12) * 0.05; // small prior; never decides alone
+    return total > 0 ? mass / total + breadth : breadth;
   }
 }
 

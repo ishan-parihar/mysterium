@@ -27,6 +27,7 @@ import { INITIAL_TAGS } from '../world/tags/initialTags.js';
 import { createOwnerWorkerPoolState, drain, hotSet, type OwnerWorkerPoolState } from '../world/ownerWorkerPool.js';
 import type { OwnerProposal } from '../world/ownerWorker.js';
 import { appendOwnerWorkerEntry, appendInsightEntry, appendSessionEntry, appendVerdictEntry, type ReportingFeed } from '../orchestration/feedBridge.js';
+import { shadowSeverityForLine } from './poleDecision.js';
 import { createReportingFeed } from '../orchestration/reportingFeed.js';
 import { buildMemoryPage, memoryPageBlock } from './memoryPage.js';
 import { isBandedText } from '../memory/retrievalFirewall.js';
@@ -43,6 +44,13 @@ import { WORLD_SEEDS, type WorldSeed } from './worldSeeds.js';
 import { NPC_SEEDS, type NpcSeed } from './npcSeeds.js';
 import { contextualSeed } from './scenarioSeedVariants.js';
 import { checkCoherence, type CoherenceDefect } from './stageCoherence.js';
+import { deriveLibraryVariants } from './polarityIndex.js';
+import { decidePole } from './poleDecision.js';
+import {
+  applyReading, deterministicReading, polarityCoverage,
+  type EncounterRecord, type PolarityReading, type ReadingApplication, type ConfirmationTally,
+  type System1Reader,
+} from './polarityResolution.js';
 import { createFacetStore } from '../world/facets/FacetStore.js';
 import facetsJson from '../world/facets/facets.json';
 
@@ -70,7 +78,8 @@ export interface OrchestrationServices {
   readonly feed: ReportingFeed;
   /** The tag store (46 §4) — the dialectic vocabulary. */
   readonly tags: TagStore;
-  /** The candidate library (45 §5) — derived from the facet store; see candidateLibrary.ts. */
+  /** The candidate library (45 §5) — derived from the facet store; see candidateLibrary.ts.
+   *  Phase 13 d10 L1: carries the derived polarity variants (~sim / ~opp recolourings). */
   readonly library: readonly PoolCandidate[];
   /** Long-lived dialectic pair-state memory (46 §5) — the reconciliations already made. */
   readonly states: PolarityStateMap;
@@ -78,6 +87,13 @@ export interface OrchestrationServices {
   readonly workers: OwnerWorkerPoolState;
   /** The authored holon corpus — what workers own and what NPC candidates derive from. */
   readonly holons: readonly Holon[];
+  /** Phase 13 d10 L3 — the ratified polarity-reading log (the coverage query's input). Read-only
+   *  in practice: only `recordPolarityReading` appends, by replacement. */
+  readonly readings: readonly PolarityReading[];
+  /** The confirmation tallies behind the spiral's long way to `reconciled`. */
+  readonly tallies: ConfirmationTally;
+  /** The optional System-1 reader (43 §2) — when absent, the deterministic fallback proposes. */
+  readonly system1?: System1Reader;
 }
 
 /** Build a fresh services record. `holons` seeds NPC derivation; empty is valid (no NPC candidates).
@@ -86,13 +102,18 @@ export interface OrchestrationServices {
  *  survives the restart instead of dying with the process. */
 export function createOrchestrationServices(holons: readonly Holon[] = [], restore?: RuntimeCheckpoint): OrchestrationServices {
   const base = seedCandidateLibrary(sharedFacetStore());
+  const tags = createTagStore(INITIAL_TAGS);
   const services: OrchestrationServices = {
     feed: createReportingFeed(),
-    tags: createTagStore(INITIAL_TAGS),
-    library: [...base, ...deriveNpcCandidates(holons)],
+    tags,
+    // Phase 13 d10 L1: the library is DERIVED — every cell gains familiar-capable and
+    // unfamiliar-capable recolourings so the UDV's bands have something to order (W11's fix).
+    library: deriveLibraryVariants([...base, ...deriveNpcCandidates(holons)], tags),
     states: {},
     workers: createOwnerWorkerPoolState(),
     holons,
+    readings: [],
+    tallies: {},
   };
   if (restore) restoreCheckpoint(services, restore);
   return services;
@@ -124,6 +145,8 @@ export interface PersonalizationBlock {
   readonly interestEcho: readonly string[];
   readonly pooledCount: number;
   readonly deferredCells: readonly string[];
+  /** Phase 13 d10 L4: which pole this encounter serves — the register the rendering speaks in. */
+  readonly pole: 'familiar' | 'unfamiliar' | 'shadow-facing' | null;
 }
 
 /** Extract the active shadow quadrants from the significator's Distortion Ledger (16). */
@@ -237,6 +260,26 @@ export function buildEnvelope(
     now,
   });
 
+  // Phase 13 d10 L2 — the pole decision. The UDV's analogy band is the fluent set; the shadow
+  // severity reads the significator's Distortion Ledger for the target line; the bridge's seed
+  // budget is the unfamiliar floor (45 §5.4's consumer). The draw is derived from the encounter
+  // target so the dosage is deterministic (43 §3.3: the seed reorders, never chooses).
+  const severity = shadowSeverityForLine(
+    sig.shadows.entries.map((e) => ({ line: e.line, resolvedAt: e.resolvedAt, severity: e.severity })),
+    target.line,
+  );
+  const fluentIds = udv.analogy.fluentDomains.map((d) => d.domain).map(initialTopicTagResolver).filter((t): t is NonNullable<typeof t> => t !== undefined);
+  const drawSeed = `${target.line}:${target.stage}:${target.modality}`;
+  const draw = (([...drawSeed].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % 1000) / 1000);
+  const decision = decidePole(services.tags, {
+    candidates: result.ranked,
+    target: { line: target.line },
+    fluentTags: fluentIds,
+    shadowSeverity: severity,
+    seedNoveltyBudget: 0.25, // 45 §5.4's seed floor; play-data calibration is the shared deferral
+    draw,
+  });
+
   const pooledRefs: PooledRefs = {
     world: result.ranked.filter((c) => c.id.startsWith('world:')).map((c) => c.id),
     // Both the derived skeleton (`scenario:`) and the authored seed (`scenario-authored:`) are
@@ -278,6 +321,15 @@ export function buildEnvelope(
     veiled,
     poles: result.poles,
     entity: null,
+    polarity: decision
+      ? {
+          pole: decision.pole,
+          primary: decision.primary.id,
+          alternates: decision.alternates.map((a) => a.id),
+          reason: decision.reason,
+        }
+      : null,
+    resolution: null, // stamped by recordPolarityReading at session end (d10 L3)
   });
 
   const block: PersonalizationBlock = {
@@ -287,6 +339,7 @@ export function buildEnvelope(
     interestEcho: udv.interests.slice(0, 4).map((i) => i.topic),
     pooledCount: result.ranked.length,
     deferredCells: result.deferrals.slice(0, 4).map((d) => `${d.cell.line}:${d.cell.stage}:${d.cell.modality}`),
+    pole: decision?.pole ?? null,
   };
 
   // 45 §6.1 — the council alignment, computed at the live seam for EVERY role. The scenario-
@@ -492,6 +545,13 @@ export interface SessionEndInput {
   readonly dialecticPair?: readonly [string, string] | null;
   /** The encounter's scored SERVICE-polarity direction (19/23) — the advance signal for d5. */
   readonly polarityDirection?: 'sto' | 'sts' | 'neutral';
+  /** Phase 13 d10 L3 — the encounter's observable record for the polarity READING. When
+   *  supplied (and a pair was selected), the System-1 layer (or the deterministic fallback)
+   *  proposes a reading; it is RATIFIED here only when the caller says so (`ratifyReading`),
+   *  and only a ratified reading moves state (46 §4.3's falsifiable state, L4 discipline). */
+  readonly encounterRecord?: EncounterRecord;
+  /** Ratify the proposed reading? Default false — a reading is recorded, never self-applied. */
+  readonly ratifyReading?: boolean;
 }
 
 export interface SessionEndOutcome {
@@ -505,6 +565,10 @@ export interface SessionEndOutcome {
   readonly feed: ReportingFeed;
   /** The disposition list recorded for the session's proposals — G30's evidence surface. */
   readonly verdictRecorded: boolean;
+  /** Phase 13 d10 L3 — the reading this session produced (proposed always when a record was
+   *  supplied; applied only when ratified). Null when no record was supplied. */
+  readonly polarityReading: PolarityReading | null;
+  readonly polarityApplication: ReadingApplication | null;
 }
 
 // ── Polarity state advance (Phase 11 d5; 46 §5.2/§5.3 + MY-AD-0031) ────────────────────────
@@ -575,11 +639,39 @@ export function sessionEnd(
     input.polarityDirection,
   );
 
+  // Phase 13 d10 L3 — the polarity READING. The System-1 layer (services.system1) proposes from
+  // the encounter record; absent a reader, the deterministic fallback proposes. The reading is
+  // ALWAYS recorded (it is the coverage query's input and the background workers' evidence);
+  // it moves state only when the caller ratified it AND it passes the confidence floor.
+  let reading: PolarityReading | null = null;
+  let application: ReadingApplication | null = null;
+  if (input.encounterRecord && input.dialecticPair) {
+    const proposed = services.system1
+      ? services.system1.proposeReading(input.encounterRecord)
+      : deterministicReading(input.encounterRecord);
+    if (proposed) {
+      reading = proposed;
+      const tallies = { ...services.tallies };
+      const states = { ...services.states };
+      application = applyReading({
+        reading: proposed,
+        ratified: input.ratifyReading === true,
+        states,
+        tallies,
+        shadows: [], // severity deltas land on the ledger via the caller's persistence path
+      });
+      (services as { tallies: ConfirmationTally }).tallies = tallies;
+      (services as { states: PolarityStateMap }).states = states;
+      (services as { readings: readonly PolarityReading[] }).readings = [...services.readings, proposed];
+    }
+  }
+
   // The drain returns a NEW state; the services record is mutable-by-replacement so the next
   // encounter's envelope and the caller's checkpoint both see the committed profiles.
   (services as { workers: OwnerWorkerPoolState }).workers = drainResult.state;
 
   const ownerCommitted = drainResult.proposals.length;
+  void ownerCommitted;
   if (drainResult.proposals.length > 0 || Object.keys(drainResult.state.workers).length > 0) {
     appendOwnerWorkerEntry(services.feed, {
       jobId: `drain:${input.logRef.sessionId}`,
@@ -618,7 +710,20 @@ export function sessionEnd(
     workers: drainResult.state,
     feed: services.feed,
     verdictRecorded,
+    polarityReading: reading,
+    polarityApplication: application,
   };
+}
+
+// ── Phase 13 d10 — the coverage read + the reading log accessor ────────────────────────────
+
+/**
+ * The cell-never-closed query over the ratified reading log (d10 L3). Profiling of a cell is a
+ * coverage judgment across orthogonal dimensions, never a counter — the calibration loop reads
+ * this to see which cells are still open.
+ */
+export function coverageReport(services: OrchestrationServices) {
+  return polarityCoverage(services.readings);
 }
 
 // ── The dev loop reads the coherence defects (43 §5.5 W4) ───────────────────────────────────
@@ -697,6 +802,9 @@ export interface RuntimeCheckpoint {
   readonly workers: OwnerWorkerPoolState;
   /** The dialectic pair-state map (46 §5.2) — rides the checkpoint (Phase 11 d5). */
   readonly states?: PolarityStateMap;
+  /** Phase 13 d10 L3 — the reading log + confirmation tallies ride the checkpoint too. */
+  readonly readings?: readonly PolarityReading[];
+  readonly tallies?: ConfirmationTally;
 }
 
 /** Capture the current runtime state for persistence. */
@@ -729,6 +837,8 @@ export function captureCheckpoint(services: OrchestrationServices): RuntimeCheck
     })),
     workers: services.workers,
     states: services.states,
+    readings: services.readings,
+    tallies: services.tallies,
   };
 }
 
@@ -750,6 +860,12 @@ export function restoreCheckpoint(
   (services as { workers: OwnerWorkerPoolState }).workers = checkpoint.workers;
   if (checkpoint.states) {
     (services as { states: PolarityStateMap }).states = checkpoint.states;
+  }
+  if (checkpoint.readings) {
+    (services as { readings: readonly PolarityReading[] }).readings = checkpoint.readings;
+  }
+  if (checkpoint.tallies) {
+    (services as { tallies: ConfirmationTally }).tallies = checkpoint.tallies;
   }
 }
 

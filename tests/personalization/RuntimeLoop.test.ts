@@ -201,7 +201,13 @@ describe('orchestrator wiring', () => {
     const { AgenticOrchestrator } = await import('../../src/core/assessments/AgenticOrchestrator.js');
     expect(typeof AgenticOrchestrator).toBe('function');
     const services = createOrchestrationServices(HOlONS);
-    expect(services.library.length).toBe(64 * 7 * 2 + 64 * 7 * 3 + HOlONS.length * 7);
+    // Phase 13 d10 L1: the derived library TRIPLES the base (each base gains a ~sim and an ~opp
+    // recolouring); NPC-derived candidates derive variants too. 6720 base → 6720 + 3×(6720+49) ...
+    // the invariant that matters: EVERY candidate resolves to a cell and every cell has ≥3
+    // distinct tag vectors (asserted exhaustively in PolarityPool.test.ts). Here: the derived
+    // floor holds and the base content is still present.
+    expect(services.library.length).toBeGreaterThan(64 * 7 * 2 + 64 * 7 * 3 + HOlONS.length * 7);
+    expect(services.library.filter((c) => c.id.startsWith('scenario-authored:Cognitive:Amber')).length).toBeGreaterThanOrEqual(3);
     expect(services.feed.entries.length).toBe(0);
     // sessionEnd through the orchestrator's seam mutates the SAME record the caller holds
     sessionEnd(services, {

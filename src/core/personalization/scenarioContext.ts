@@ -25,6 +25,32 @@ export interface PooledRefs {
   readonly scenarios: readonly string[];
 }
 
+/**
+ * The polarity pool's selection (Phase 13 d10 L4, user-ratified surface): the TOP-1 primary the
+ * prompt renders, the POLE it serves, and named alternates that stay HIDDEN from the prompt —
+ * present only for authorized reads (`read_band`) and calibration telemetry. The pole is NAMED
+ * to the scenario-catalyst so the rendering knows which flavour register it is speaking in, and
+ * the calibration loop can see the polarity balance over time.
+ */
+export interface PooledSelection {
+  /** Which pole this encounter serves (`poleDecision.ts` — familiar/unfamiliar/shadow-facing). */
+  readonly pole: 'familiar' | 'unfamiliar' | 'shadow-facing';
+  /** The winning candidate id — the ONE rendering the prompt conditions on. */
+  readonly primary: string;
+  /** Hidden alternates (same cell) — audit/telemetry only, never prompt content. */
+  readonly alternates: readonly string[];
+  /** The recorded rationale (replayable decision). */
+  readonly reason: string;
+}
+
+/** The polarity resolution record attached to the envelope when a reading was captured (d10 L3).
+ *  The READING itself never renders (it is a measurement — Veil); only that one was captured. */
+export interface ResolutionStamp {
+  readonly pairKey: string;
+  readonly proposedBy: 'system1' | 'deterministic-fallback';
+  readonly captured: boolean;
+}
+
 /** 45 §6 `analogicalBridge` — the three layers of §5.4, all three required. */
 export interface AnalogicalBridge {
   /** The STRUCTURAL layer: C's structure mapped onto D' — the opposite pole (46 §5.1 refinement). */
@@ -51,6 +77,11 @@ export interface ScenarioContext {
   readonly poles: PoleSelection | null;
   /** The composed entity this envelope instantiates, if composition already ran (46 §7 step 4). */
   readonly entity: ComposedHolon | null;
+  /** The polarity pool's selection (d10 L4) — top-1 primary + named pole + hidden alternates.
+   *  Null when the cell had no candidates at all (degradation, never fabricated). */
+  readonly polarity: PooledSelection | null;
+  /** The resolution stamp (d10 L3) — that a reading was captured, never the reading itself. */
+  readonly resolution: ResolutionStamp | null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -135,12 +166,16 @@ export interface ScopedEnvelope {
   readonly veiled: readonly string[];
   readonly poles: PoleSelection | null;
   readonly entity: ComposedHolon | null;
+  /** The pole name ONLY (d10 L4) — every role may know which register the encounter spoke in;
+   *  the primary/alternates/reason stay with the scenario-catalyst's full envelope. */
+  readonly poleServed?: 'familiar' | 'unfamiliar' | 'shadow-facing';
 }
 
 /**
  * Scope the envelope for one council role (45 §6.1). The receives-list is the enforcement: a band
  * absent from `receives` is absent from the returned object — not flagged, not nulled, ABSENT.
- * `veiled` always passes through: the Veil binds every role (20).
+ * `veiled` always passes through: the Veil binds every role (20). The pole NAME passes through
+ * (d10 L4 — the register the encounter spoke in); the selection internals do not.
  */
 export function scopeForRole(ctx: ScenarioContext, role: CouncilRole): ScopedEnvelope {
   const scope = ROLE_SCOPES[role];
@@ -150,6 +185,7 @@ export function scopeForRole(ctx: ScenarioContext, role: CouncilRole): ScopedEnv
     veiled: ctx.veiled,
     poles: ctx.poles,
     entity: ctx.entity,
+    ...(ctx.polarity ? { poleServed: ctx.polarity.pole } : {}),
   };
   for (const band of scope.receives) {
     switch (band) {
@@ -174,6 +210,22 @@ export function buildScenarioContext(parts: {
   readonly veiled: readonly string[];
   readonly poles: PoleSelection | null;
   readonly entity: ComposedHolon | null;
+  readonly polarity?: PooledSelection | null;
+  readonly resolution?: ResolutionStamp | null;
 }): ScenarioContext {
-  return { ...parts };
+  return {
+    ...parts,
+    polarity: parts.polarity ?? null,
+    resolution: parts.resolution ?? null,
+  };
+}
+
+/**
+ * The L4 prompt line — the ONE rendering plus its named pole (user-ratified surface). Renders
+ * nothing about alternates, scores, or the reading itself; the alternates stay hidden, the
+ * reading stays a measurement. Null when no polarity decision was made (degradation).
+ */
+export function polarityPromptLine(polarity: PooledSelection | null): string | null {
+  if (!polarity) return null;
+  return `[POLARITY] This encounter is rendered as the ${polarity.pole} pole — primary rendering ${polarity.primary}.`;
 }
