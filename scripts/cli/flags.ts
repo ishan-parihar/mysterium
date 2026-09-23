@@ -60,6 +60,11 @@ export let fileConfig: MysteriumConfig = {};
 /** Answers supplied via `--answer` / `--answers`, consumed in order by the encounter loop. */
 export const USER_ANSWERS: string[] = [];
 
+/** `--audit`: print the curriculum meta-cognitive probe after session end (dev). */
+export let AUDIT = false;
+/** `--llm`: enable live LLM in headless mode (headless defaults to FallbackProvider for deterministic CI). */
+export let HEADLESS_LLM = false;
+
 /**
  * Phase 2 init: the provider identity, resolved from the config file, the environment and any early
  * `--model` override. Called BEFORE argv parsing, because the resolved model is a default the parse
@@ -98,6 +103,8 @@ export function setInvocation(inv: {
   readonly newGame: boolean;
   readonly skipCalibration: boolean;
   readonly curriculum: boolean;
+  readonly audit: boolean;
+  readonly headlessLlm: boolean;
 }): void {
   subcommand = inv.subcommand;
   HEADLESS = inv.headless;
@@ -114,6 +121,8 @@ export function setInvocation(inv: {
   NEW_GAME = inv.newGame;
   SKIP_CALIBRATION = inv.skipCalibration;
   CURRICULUM_MODE = inv.curriculum;
+  AUDIT = inv.audit;
+  HEADLESS_LLM = inv.headlessLlm;
   VERBOSE = inv.rawVerbose && inv.devMode;
 }
 

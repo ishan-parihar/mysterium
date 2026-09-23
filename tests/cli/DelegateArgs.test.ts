@@ -133,11 +133,11 @@ describe('advisory budget floor (the starvation defect)', () => {
 });
 
 describe('source-level collision guard (the defect CLASS)', () => {
+  // runDelegateCommand moved to scripts/cli/delegateCmd.ts (cohesion item 1, stage D);
+  // the commander declaration chain stays in the entry. Read both surfaces.
   const cliSource = readFileSync(new URL('../../scripts/cli-game.ts', import.meta.url), 'utf8');
-  const delegateBody = cliSource.slice(
-    cliSource.indexOf('async function runDelegateCommand'),
-    cliSource.indexOf('// ── Practice objectives'),
-  );
+  const cmdSource = readFileSync(new URL('../../scripts/cli/delegateCmd.ts', import.meta.url), 'utf8');
+  const delegateBody = cmdSource;
 
   it('delegate declaration declares no root-shared flag names', () => {
     // Extract the .command('delegate') declaration block up to the next .command(.
