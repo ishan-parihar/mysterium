@@ -43,6 +43,7 @@ import { accumulateTension, tryTriggerMacroEvent, type PESTLETension } from '../
 import type { AgentMessage, AskUserQuestionParams, AskUserQuestionResult } from './agentTypes.js';
 import { InfraConfig } from '../config/InfraConfig.js';
 import { detectShadowKeywords, detectWriteInShadow } from './shadowSignals.js';
+import { briefHistory, continuityContext } from './promptBlocks.js';
 import { getRenderer } from './cli/TaskRenderers.js';
 import { computeConfidence } from './engine.js';
 // ponytail: E — shadow keywords loaded from shared data file.
@@ -435,47 +436,6 @@ export class AgenticOrchestrator {
    * Build a narrative continuity context from the last 3 encounters.
    * Injected into both LLM system prompt and fallback task framing.
    */
-  private buildContinuityContext(): string {
-    if (this.history.length === 0) return '';
-    const recent = this.history.slice(-3);
-    const lines = recent.map((r, i) => {
-      const passed = Object.values(r.polarityTrace.driveDirectionality).every(d => d === 'HealthyBalanced');
-      const shadow = r.shadowSurfaced ? ` Shadow surfaced: ${r.shadowSurfaced}.` : '';
-      const altShift = r.altitudeShift ? ` LINE ADVANCED: ${r.altitudeShift.line} ${r.altitudeShift.from}→${r.altitudeShift.to}.` : '';
-      const polarity = r.polarityTrace.energeticDirection === 'Radiative' ? ' (STO/radiative)' : r.polarityTrace.energeticDirection === 'Absorptive' ? ' (STS/absorptive)' : '';
-      const moduleRef = r.encounterId.split(':')[0] ?? '';
-      return `  ${i + 1}. [${moduleRef}] ${passed ? '✓ PASSED' : '✗ FAILED'}${polarity} — ${r.narrativeSummary.slice(0, 150)}${shadow}${altShift}`;
-    });
-    const agentCtx = this.agentSynthesis
-      ? `\n[SESSION SYNTHESIS — cross-encounter pattern recognition from the persistent agent. Use this to inform your next question. Reference specific patterns.]\n${this.agentSynthesis}`
-      : '';
-    return `\n[RECENT JOURNEY — the player's developmental arc. Build upon these encounters. Reference specific events from them. The player remembers what happened.]\n${lines.join('\n')}${agentCtx}`;
-  }
-
-  /**
-   * Build a brief history prefix for fallback task framing.
-   * Now includes specific encounter details for narrative continuity.
-   */
-  private buildBriefHistory(): string {
-    if (this.history.length === 0) return '';
-    const last3 = this.history.slice(-3);
-    const parts: string[] = [`You have faced ${this.history.length} challenges before.`];
-    for (const r of last3) {
-      const passed = Object.values(r.polarityTrace.driveDirectionality).every(d => d === 'HealthyBalanced');
-      const shadow = r.shadowSurfaced ? ` A ${r.shadowSurfaced} pattern surfaced.` : '';
-      parts.push(passed
-        ? `Recently: ${r.narrativeSummary.slice(0, 100)}...${shadow}`
-        : `Recently: ${r.narrativeSummary.slice(0, 100)}...${shadow}`);
-    }
-    return parts.join(' ') + ' Now: ';
-  }
-
-  /**
-   * Run the encounter to completion.
-   * ponytail: B9 fix — optional AbortSignal lets the caller cancel the LLM
-   * loop cleanly (e.g. when the player exits the encounter in the WebUI).
-   * When aborted, throws an AbortError.
-   */
   public async run(signal?: AbortSignal): Promise<OrchestratorResult> {
     const [line, stage] = this.encounter.moduleRef.split(':') as [Line, Stage];
     const now = Date.now();
@@ -496,7 +456,7 @@ export class AgenticOrchestrator {
     }
 
     // 1. Build context system prompt
-    const continuityContext = this.buildContinuityContext();
+    const continuityBlock = continuityContext(this.history, this.agentSynthesis);
     // P1-QW6 (Architecture Audit Phase A): Pass cognitive + knowledge state
     // to ContextPipeline so the LLM sees felt-sense summaries of the
     // player's brain-game performance and educational progress. Optional:
@@ -605,7 +565,7 @@ export class AgenticOrchestrator {
       shadowContext = buildShadowPromptSuffix(shadowContent, shadowLine, shadowStage, unresolvedShadows);
     }
 
-    const systemPrompt = `${process.env.Mysterium_PROFILE_CONTEXT || ''}\n${context.systemPrompt}${assessmentContext}${continuityContext}${shadowContext}
+    const systemPrompt = `${process.env.Mysterium_PROFILE_CONTEXT || ''}\n${context.systemPrompt}${assessmentContext}${continuityBlock}${shadowContext}
 [AGENT RULES]
 1. You are the Agentic Game Master driving this developmental encounter.
 2. Present the encounter situationally and narratively. If you need to present stimuli, choices, or ask questions, ALWAYS call the 'ask_user_question' tool. Do not ask questions in raw text responses.
@@ -857,7 +817,7 @@ export class AgenticOrchestrator {
 
   private async runLanguageReflective(line: Line, stage: Stage, now: number): Promise<OrchestratorResult> {
     const isSelfReflection = this.encounter.holonSource === 'self-reflection';
-    const continuityContext = this.buildContinuityContext();
+    const continuityBlock = continuityContext(this.history, this.agentSynthesis);
     // P1-QW6 (Architecture Audit Phase A): include cognitive + knowledge state.
     const cognitiveSnapshot = this.training
       ? this.training.services.index.snapshot(Date.now())
@@ -925,7 +885,7 @@ export class AgenticOrchestrator {
     const assessmentContext = this.module ? this.buildAssessmentContext(this.module) : '';
 
     const systemPromptBase = isSelfReflection
-      ? `${context.systemPrompt}${assessmentContext}${continuityContext}
+      ? `${context.systemPrompt}${assessmentContext}${continuityBlock}
 [DIRECT QUESTIONING — SELF-REFLECTION]
 You are a developmental mirror. The player is exploring their inner landscape across 8 lines of intelligence.
 
@@ -1000,7 +960,7 @@ NEXT-3 DEPTH ENHANCEMENT:
 When you fire catalyst mode, do it ONCE per encounter. Do not lecture. Do not
 repeat the push-back. Name it, then step back. The player needs to feel the
 push, not be pushed.`
-      : `${context.systemPrompt}${assessmentContext}${continuityContext}
+      : `${context.systemPrompt}${assessmentContext}${continuityBlock}
 [LANGUAGE-REFLECTIVE ASSESSMENT]
 You are conducting a deep developmental assessment through open-ended dialogue.
 
@@ -1892,7 +1852,7 @@ INSTRUCTIONS:
     this._currentTaskStartTime = Date.now();
 
     // Prepend holon-narrative framing to the question with continuity context
-    const historyPrefix = this.buildBriefHistory();
+    const historyPrefix = briefHistory(this.history);
     const enrichedPrompt: AskUserQuestionParams = {
       questions: renderer.prompt.questions.map(q => ({
         ...q,
