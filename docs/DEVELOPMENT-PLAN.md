@@ -475,7 +475,7 @@ pooling (designed feature gap, needs evidence-ledger wiring); the embedding tier
 consumer (by design — the local floor is the default).
 
 
-### Phase 13 — Live-Surface Wiring & Council Alignment (planned 2026-09-23) — ✅ COMPLETE: d1/d2/d10/d11/d12 BUILT (d3–d9 are post-phase calibration work)
+### Phase 13 — Live-Surface Wiring & Council Alignment (planned 2026-09-23) — ✅ COMPLETE: ALL deliverables d1–d12 BUILT (d3–d9 closed 2026-09-24)
 
 **Build record (2026-09-23, d1+d2).** The two critical-path deliverables landed with gates G32/G33:
 
@@ -719,6 +719,71 @@ rather than merely present.
 **Duration:** ~2 weeks. **Depends:** nothing outstanding — Phases 11–12 are built; d1→d2 is the
 critical path.
 
+### Phase 14 — Checked-Surface Closure & Operationally-Live Modes (planned 2026-09-24)
+
+**Why this phase exists.** The `CHECKED-SURFACE-AUDIT-2026-09-24` swept every production entry
+point for whether it sits inside the *checked graph* — the files `tsc --noEmit`, the tests, the
+kernel gates and the linter actually read. It found that **`scripts/**` does not**: the CLI, a
+documented ✅-implemented surface, was **non-bootable** (a JSON rename on 2026-09-21 left two
+imports pointing at the pre-move path) and carried **69 type errors**, none of which any gate,
+test, build or lint step could see. With the CLI restored, driving it surfaced the deeper finding:
+**the default and every headless/JSON invocation bypass the entire orchestration / personalization
+/ memory architecture** (`runDirectQuestioningSession` creates no `OrchestrationServices`, passes
+none to the encounter, captures no checkpoint and appends no journal). The green battery was real
+but *partial*, and the live architecture had no automated exerciser at all.
+
+**Ratified 2026-09-24 by user decision:** fix the P0 break immediately, then execute the full
+closure · **split the CLI while fixing** · **approve Laya** and wire the real System-1 adapter ·
+**do K1 first** (the probe-validation protocol).
+
+**Deliverables:**
+1. **d1 — Restore the CLI (P0).** ✅ **BUILT 2026-09-24.** Repointed the two holon-JSON imports at
+   `src/core/world/data/` (WORLD-STORE-MOVE missed this consumer); destructured `declineVow` from
+   `src/core/practice/VowService.ts` (the vow-decline path threw `ReferenceError`); dropped the
+   `responsesPool` reference (branch retired); retired `scripts/tdg-probe.ts` (its module
+   `src/infra/tdg/TDGClient` no longer exists); added `src/core/world/data/` to `package.json`
+   `files` (the shipped CLI reads world data at runtime — the pre-rename path would have published
+   a CLI that cannot start). **Verified:** headless session exit 0 · `npm run build:cli` success ·
+   bundled `node dist/cli/cli-game.js --version` → 0.1.0 · bundled headless exit 0.
+2. **d2 — Bring `scripts/**` into the checked graph.** Add it to tsconfig's `include` so
+   `npm run build`'s typecheck (and every future one) covers it; then retire all 69 errors
+   (5 functional, 17 API-shape, 16 arity, 24 dead declarations, 7 other). `scripts/cli-game.ts`
+   carries 64.
+3. **d3 — Split `scripts/cli-game.ts` (user-ratified: split while fixing).** 5 900 lines in one
+   file is itself the drift risk: `parse/` (argv + commander surface), `commands/` (one module per
+   subcommand), `runtime/` (services creation, checkpoint + journal persistence, session flows),
+   `render/` (output). The split lands WITH the error retirement so the CLI stops being one
+   un-reviewable file. No behaviour change — the subcommand matrix is the regression lock.
+4. **d4 — Make the automated surfaces operationally live (the F2 fix; Q5 pending ratification).**
+   `runDirectQuestioningSession` bypasses the architecture: create + pass `OrchestrationServices`
+   on that path, capture the checkpoint at its save site, and append the journal — so the default
+   and headless modes are `G28`-live rather than dark.
+5. **d5 — The class-level gates (so this cannot recur).**
+   - **G36 `cli boot`**: boot the CLI headless in a temp profile with N encounters, assert exit 0
+     and a completed session — the executable form of "the entry point runs".
+   - **G37 `checked graph`**: a source-level assertion (the `G25` pattern applied to build config)
+     that no production entry point sits outside the checked graph — a hole becomes a failed gate,
+     not a silent blind spot.
+   - **`tests/cli/`** grows from one helpers test to the subcommand matrix
+     (help/version/status/glossary/delegate/session/calibrate/credential/pod/profile).
+6. **d6 — The System-1 adapter (Laya, user-approved).** All three ratified surfaces behind
+   interfaces with the deterministic fallback honoured: tag resolution at `buildQuery`,
+   polarity-reading proposal (exists), neighbour prefilter for the index walk; plus the RV-style
+   agreement check that decides whether the model stays. Never authoring, never final authority.
+7. **d7 — K1 first: the probe-validation protocol (user-ratified order).** The 8 authored probes
+   are log-only until RV1–RV7 passes. Deliver the instrumentation (`12 §5.4` applied to preference
+   instruments): rater-facing administration, the agreement/known-answer statistics over a cohort,
+   and the retirement condition that flips an instrument's band. Q6 pending: cohort vs.
+   instrumentation-only.
+
+**Gates:** **G36** CLI boot smoke · **G37** checked-graph assertion · **G31/G28 extended** to the
+DQ/headless path once d4 lands (the memory loop is exercised on the default surface, not only
+in-process).
+
+**Success criterion:** every production entry point is inside the checked graph; the CLI's
+subcommand matrix passes in CI; a headless session writes a checkpoint and a journal line; the
+System-1 seams degrade deterministically when the model is absent.
+
 ### Current work (post-plan) — not a phase
 
 All phases through 12 are ratified **and built** — the memory infrastructure (Phase 11's
@@ -823,6 +888,7 @@ was built for.
 | 2026-09-22 | **Runtime loop closed + authored seeding tier (`P13`/`P14`).** Phase 10's runtime half landed: the reporting feed as code (four idempotent writers, F3), the owner-worker pool (MY-AD-0009 consumer: ±0.3 caps, W4 replay, W5 concurrency), `OrchestrationServices` as the ONE orchestrator seam (envelope + holon digest + runtime coherence gate + session end on all five result paths; services omitted → byte-identical legacy), prompt blocks `[PERSONALIZATION]`/`[HOLON MEMORY]`/`[SCENARIO SEED]`/`[WORLD PLACE]`, and both surfaces (CLI + WebUI) carrying/persisting services. Then authored substance: 64 scenario seeds × 7 modality angles, 8 pole-probes (log-only until RV), 64 world seeds — library 1792 candidates, coherence enforced at authoring (G27, 26→27 gates) and at runtime (routes-don't-cancel), calibration harness extended to both seed tiers. `MY-AD-0009` deferral discharged with consumer; `_org.yaml → pending` graduated to `completed: P13/P14`; `AGENTS.md §4.2` and plan §2.1 corrected (the laws-without-consumer list fully discharged; the open frontier is configuration/calibration/development, owned by `AGENTS.md §4.2`). Tests: 1284 → 1370. GitLab push remains credential-blocked; GitHub current. |
 | 2026-09-22 (same pass) | **Phases 11 + 12 BUILT — the memory infrastructure integrated.** All eleven deliverables across the two phases landed in one development sequence: D1 checkpoint restore with production callers in the CLI loop (G28 proves save→load→save byte-identical across restart); D2 feed readers (`feedReaders.ts` — 27 planning bias at `startSession`, committed-only accessor); D3 consented preference intake (`IdentityProfile` declared interests/aversions, CLI intake + privacy-dashboard withdrawal, G29 firewall); D4 ratification verdicts on every session (G30); D5 polarity pair-state writers under the saturation guard, riding the checkpoint; D6 the probe RV harness (`probeValidation.ts`); D7 64 authored NPC persona seeds (envelope voice line; library 1792 → 2240); D8 tag tranche 2 (12 → 20, 4 curated pairs); P12-1 MemoryPage (M1–M5, `[CONTINUITY]` head, Veil-guarded audit); P12-2 LocalRetriever (BM25+recency+graph, RRF-fused, dependency-free); P12-3 pinned-embedding seam (`EMBEDDING_MODEL_PIN`, `MY-RG-0032` hard error; degradation to the local floor); P12-4 the retrieval firewall (`retrievalFirewall.ts`, R1–R4, fail-closed per hit) enforced by G31 with injected fixtures. Kernel suite 27 → **31**. `_org.yaml → pending` emptied — P15 graduated to `completed` in the same commit as the build. Tests: 1370 → **1389**. GitHub current; GitLab push remains credential-blocked. |
 | 2026-09-21 (same pass) | **One word, one axis (`VOCAB-SUBSTRATE` closed by user ruling).** The user ratified the proposal on the table: *substrate layer* now means ONLY the intra-holonic compositional vertical — `13`'s substrate→core→emergent stack, named by `44` axis E. The D3 bands (Free Will / Love / Light / the octave's contributions) are renamed **law-bands** across the four documents the key named: `02 §4` (table column + the term-scope note, which now records the retirement), `06`'s ownership pointer, `22`'s layer-stack law (`01.4 §2.5.3`'s "one concurrent lesser cycle per integrated band"), and `28`'s J-INV-7. The code constant followed: `SUBSTRATE_LAYER_LAW` → `LAW_BANDS_D3`, its `density` field → `band` (the rows were never densities — that misnomer was part of the collision). Two unrelated compounds stay: `06 §?`'s "energetic substrate (Ra)" (the ray's felt-tone vs energy-substrate distinction, not the vertical) and the "theoretical substrate" idiom (a metaphor, not a term of art). `MY-RG-0026`'s rule — one word never carries two frameworks — now holds on this axis, and DG23 verifies every citation touched by the rename still resolves. Tests 1186 green, 23 doc gates green. |
+| 2026-09-24 | **Checked-surface audit → the CLI P0 fixed → Phase 14 planned (`docs/audits/CHECKED-SURFACE-AUDIT-2026-09-24.md`).** The audit swept every production entry point for membership in the *checked graph* (the files tsconfig, tests, gates and lint actually read) and found `scripts/**` outside it: **the CLI did not boot at all** — `c634535` (WORLD-STORE-MOVE) renamed `red-layer-holons.json` / `stage-holons.json` into `src/core/world/data/` and left two `scripts/cli-game.ts` imports pointing at the old path, so the entry point failed at import time for three days while `npm run build` reported 0 errors. It also carried **69 type errors** (64 in the CLI), none visible to any step. **P0 fixed and verified** (imports repointed, `declineVow` import restored — the decline path had been throwing, the retired `responsesPool` reference dropped, `scripts/tdg-probe.ts` retired with its removed subject module, `package.json` `files` gained `src/core/world/data/`): headless session exit 0, `npm run build:cli` success, bundled CLI `--version` → 0.1.0. Then the deeper finding, which only surfaced once the CLI could run: **the default and every headless/JSON invocation bypass the whole orchestration/personalization/memory architecture** — `runDirectQuestioningSession` creates no `OrchestrationServices`, passes none to the encounter, captures no checkpoint and appends no journal (verified: a completed headless session leaves no `orchestrationCheckpoint` and no journal file). The Phase 11–13 architecture therefore has **no automated exerciser**: the kernel gates and unit tests are its only live path. **Phase 14 (Checked-Surface Closure & Operationally-Live Modes) defined** — user-ratified shape: fix P0 first then the full closure, split the CLI while fixing, approve Laya for the real System-1 adapter, do K1 first. **Also recorded:** the two-mode structure (`direct` is the default; `story` is architecture-live), and that `--no-llm` (used by `regression-sweep.sh` and several audits) is not a declared flag — the sweep cannot have run since the flag was removed. |
 | 2026-09-24 | **Phase 13 d3–d9 BUILT — the wiring-completion set is closed; Phase 13 is now FULLY complete.** d3: `retrievalShortlist.ts` (shortlist above 500 candidates via `localRetrieve`, `recallGuard` R1/R3 at the pooling seam, enumeration below bit-identical; wired into `pool()`). d4: `services.telemetry` — every `buildEnvelope` records a `CompositionEvent`; defects reach the dev loop only. d5: `probeRuntime.ts` on `services.probes` — budget-paced offers, the validated/log-only band split fail-closed at the seam (flag/evidence drift demotes), readings ride the checkpoint; `harnessReport` is `runProbeRvHarness`'s first production caller. d6: `poleMechanism` maps every pole to its registered mechanism; `decidePole` refuses an unregistered one (MY-RG-0017's teeth live; the default register passes all 8, so behavior is unchanged). d7: ROUTED — `compositionRuntime.ts` runs `compose()` over the compiled store at service creation (the G22 pole shape: technology/nature + craft/music active-tension), the `composed:` tier joins the library, empty pulls degrade. d8: five foundation status marks updated (48 §4 LIVE, 45 §7.3 ENFORCED, 46 §7 ROUTED, 46 §11 LIVE, 47 §7 reachable/log-only). d9a: `memoryPageBlock` render budget (12 lines / 300 chars / 1 400 total — defensive caps independent of M2). d9b: `infra/persistence/sessionJournal.ts` — append-only NDJSON sidecar per checkpoint, `replayJournal` at CLI boot merges pending sessions (crash between sessionEnd and saveAll no longer loses them), consumed lines skip, torn lines drop un-retried; PLACEMENT LESSON: the journal lives in infra, not the inference module graph — G25 correctly failed `fs.writeFileSync` inside `core/personalization`. d9c: randomized property sweep (2 000 docs, zero leaks; page/recall vocabulary lockstep). Tests: `Phase13Closing.test.ts` (24); suite 1 483 → **1 507** (132 files); 35 kernel gates; 23 doc gates; build 0 errors; lint clean. |
 | 2026-09-24 | **Phase 13 d10 BUILT — the Polarity Pool is live and the differential criterion is CLOSED.** L1: `polarityIndex.ts` derives the library (every base gains `~sim`/`~opp` recolourings; cell copied verbatim; idempotent; 2 240 → ~6 720 candidates; every cell ≥3 pairwise-distinct tag vectors; `createOrchestrationServices` builds it). L2: `poleDecision.ts` resolves familiar/unfamiliar/shadow-facing by fluent-overlap rank with axis-distance tiebreak, split at the shadow-severity-scaled share (dormant 0.2, ceiling 0.6), deterministic hash draw, aversion veto untouched; live in `buildEnvelope`. L3: `polarityResolution.ts` — the reading (position/direction/confidence/evidence), the `System1Reader` interface + deterministic fallback, `applyReading`'s bounded effects (unratified/below-floor inert; 3 confirmations to reconcile; disapproval re-opens + severity +1), `polarityCoverage` (≥3 orthogonal dimensions AND ≥6 readings — a cell is never closed by a counter); wired at sessionEnd via the orchestrator's EncounterRecord, readings/tallies checkpointed. L4: `PooledSelection` + `polarityPromptLine` on the envelope — top-1 primary + named pole to the prompt, alternates hidden, scopes carry the pole name only. BUILD DISCOVERY: `rankByRelevance` normalized (raw tag-sum rewarded breadth over exact flavour and would have re-flattened the derived library) — a derived library requires a scale-free rank. **G35** added (kernel 34 → 35): floor + idempotency + no altitude drift + dosage law + spiral + rubric audit + coverage + kernel-level differential. Gap-lock test flipped to discrimination in `Phase13Wiring.test.ts`; `PolarityPool.test.ts` (21 tests); suite 1 462 → 1 483; 23 doc gates; build 0 errors; lint clean. Phase 13 is COMPLETE (d3–d9 remain post-phase calibration work, owned by the audit). |
 | 2026-09-24 | **d10 RESHAPED by user ratification into the Polarity Pool (four rulings + a transmutation principle).** The W11 blocker (2240 candidates = 448 cells × exactly 5, identical tags per cell → pooling byte-identical for every player) now closes by *derivation* instead of authoring: a similarity/opposition index over the tag-ontology axis space (similar = tag-overlap + axis-proximity; opposite = the store's own reflect/dialecticPair geometry) synthesizes renderings dynamically, G35 becomes a per-cell floor (≥2: one familiar-capable, one unfamiliar-capable), cross-cell synthesis documented in 46 as a deferred annex. The familiar/unfamiliar polarity integrates the Distortion Ledger: unfamiliar flavour faces the cell's active shadow, dosage shadow-severity-scaled (noveltyBudget's first real consumer), aversion veto untouched. The resolution loop is a READING not a toggle (user: "hard polarities do not reconcile in a single sweep — the development is spiral"): the System-1 layer (Laya, user-ratified: wire it — tag resolution + reading-proposal + neighbor prefilter, behind interfaces with deterministic fallback, never authoring, never final authority) proposes the conscious/shadow reading, the orchestrator ratifies (L4); approve strengthens toward reconciled only via repeated confirmations (46 §4.3's falsifiable state), disapprove re-opens the pair + increments shadow severity (the loop tightens), every reading profile-updates through the background workers, and a cell is never closed — orthogonal-dimension probe coverage gates profiling completion. Prompt surface: top-1 primary + pole named, alternates hidden (user-ratified). Phase 13 heading updated: d10 is now the only remaining Phase-13 deliverable (d3–d9 remain post-phase calibration work). |

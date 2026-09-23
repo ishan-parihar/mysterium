@@ -304,7 +304,16 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 FULLY COMPLETE (all deliverables d1–d12 built, G32–G35; battery 1 507); memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 FULLY COMPLETE (d1–d12, G32–G35; battery 1 507); Phase 14 IN PROGRESS (d1 P0 BUILT); memory infrastructure live (G28–G31)
+
+> **Checked-graph warning (read before trusting a green battery).** The battery is only as wide as
+> its *checked graph*: the files `tsc --noEmit`, the tests, the gates and the linter read. As of
+> 2026-09-24 that graph was **`src/**` + `tests/**` only** — **`scripts/**`, including the CLI, was
+> outside it**, and the CLI was consequently **non-bootable for three days** (a JSON rename left two
+> stale imports) while `npm run build` reported 0 errors. `docs/audits/CHECKED-SURFACE-AUDIT-2026-09-24.md`
+> records the break, the fix, and the deeper finding: the **default and all headless/JSON** modes
+> bypass the orchestration/personalization/memory architecture (`runDirectQuestioningSession`).
+> Treat "the battery is green" as a statement about `src/` + `tests/` until Phase 14 d2/d5 land.
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All build phases through 12** are **implemented and gated** — the kernel gate suite

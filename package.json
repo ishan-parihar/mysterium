@@ -1,7 +1,7 @@
 {
   "name": "mysterium",
   "version": "0.1.0",
-  "description": "Mysterium — a gamified developmental assessment engine",
+  "description": "Mysterium \u2014 a gamified developmental assessment engine",
   "type": "module",
   "bin": {
     "mysterium": "./dist/cli/cli-game.js"
@@ -9,6 +9,7 @@
   "files": [
     "dist/cli/",
     "src/core/data/",
+    "src/core/world/data/",
     "README.md"
   ],
   "engines": {

@@ -352,11 +352,15 @@ import { buildCLITelemetry, recordCLITelemetry, flushCLITelemetry } from '../src
 // R11-R2: use canonical resonance from veilDescriptors instead of duplicated maps.
 import { describeStage, describePersonalResonance } from '../src/core/presentation/veilDescriptors.js';
 
-import holonsJson from '../src/core/data/red-layer-holons.json';
+// WORLD-STORE-MOVE (c634535): the holon data moved from src/core/data/ to src/core/world/data/
+// (the world organ owns it). These two imports kept pointing at the old path, which made the CLI
+// fail at IMPORT TIME — invisible for three days because tsconfig never included scripts/
+// (CHECKED-SURFACE-AUDIT-2026-09-24, P0-1/P0-2).
+import holonsJson from '../src/core/world/data/red-layer-holons.json';
 // P3-FIX (Full-Development Audit 2026-09-15): all 8 stages now have authored
 // holons (8 per stage, one per line). Previously only Red had world content,
 // so higher-stage scheduling relied entirely on module items + LLM generation.
-import stageHolonsJson from '../src/core/data/stage-holons.json';
+import stageHolonsJson from '../src/core/world/data/stage-holons.json';
 import { GLOSSARY_TERMS, PLAYER_GLOSSARY_TERMS, ADVANCED_GLOSSARY_TERMS, TIER2_GLOSSARY_TERMS, checkTermUnlocks } from '../src/core/data/glossary.js';
 import type { ConsequenceRecord } from '../src/core/domain/ConsequenceRecord.js';
 import type { Modality } from '../src/core/domain/enums.js';
@@ -2195,7 +2199,10 @@ async function runSingleEncounter(): Promise<void> {
   separator('Encounter');
   printEncounter(tickResult.encounter, world);
 
-  const result = await runAgenticEncounter(tickResult.encounter, sig, world, [], responsesPool, new Map());
+  // responsesPool was retired (YAGNI-PHASE-4) and its caller-side local removed; the parameter is
+  // optional in `runAgenticEncounter`, so the reference is dropped rather than revived
+  // (CHECKED-SURFACE-AUDIT-2026-09-24, P0-4).
+  const result = await runAgenticEncounter(tickResult.encounter, sig, world, [], undefined, new Map());
 
   separator('Result');
   info('narrative', result.narrativeSummary);
@@ -5664,7 +5671,11 @@ async function runVowCommand(argv: string[]): Promise<void> {
   const line = (get('--line') ?? 'Intrapersonal') as import('../src/core/domain/Line.js').Line;
 
   const { proposeObjectives, processCheckIn, reviewPractice, detectCrisis } = await import('../src/core/practice/practiceTools.js');
-  const { acceptVow, discoverLapses } = await import('../src/core/practice/VowService.js');
+  // declineVow renders the conversational refusal path ("not this one, not now" — 39 §4.2): it was
+  // used below without being destructured, so the whole decline path threw ReferenceError. The
+  // VowService move (engines/ → practice/) left this consumer stale
+  // (CHECKED-SURFACE-AUDIT-2026-09-24, P0-3).
+  const { acceptVow, declineVow, discoverLapses } = await import('../src/core/practice/VowService.js');
   const { createSignificator } = await import('../src/core/domain/Significator.js');
   const { createInitialWorldState } = await import('../src/core/engines/CandidateGeneration.js');
   const { ALL_LINES } = await import('../src/core/domain/Line.js');
