@@ -895,6 +895,8 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // no other gate can see it); G37 asserts the checked graph itself.
   results.push(await validateCliBoot());
   results.push(validateCheckedGraph());
+  // Phase 14 d6: the System-1 boundary (43 §2).
+  results.push(validateSystem1Boundary());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
@@ -2271,6 +2273,67 @@ function readJsonc(text: string): unknown {
     out += c;
   }
   return JSON.parse(out);
+}
+
+// ---------------------------------------------------------------------------
+// G38 — The System-1 boundary (hard, plan Phase 14 d6).
+//
+// `43 §2` ratified three surfaces a local decision model may inform and no others, and three
+// boundaries it may never cross: it proposes (never commits), it never authors, and it is never the
+// final authority. Those are properties of the WIRING, not of the model — so they are asserted at
+// the module-graph level, the `G25` pattern again:
+//
+//  1. **The core depends on the port, never the adapter.** No file under `src/core/` imports
+//     `LayaSystem1Adapter`; the core holds `System1Port`. That is what makes the adapter
+//     replaceable, and it is the difference between a boundary and a convention.
+//  2. **The adapter has no write surface.** It cannot author, because it cannot persist — no
+//     `writeFileSync`/`appendFileSync`/`localStorage` in the adapter's module.
+//  3. **The fallback is reachable.** `system1Port.ts` must export both the deterministic
+//     implementation and the guard combinator; a fallback nothing constructs is the same as none,
+//     which is the failure this gate exists to make visible.
+// ---------------------------------------------------------------------------
+
+export function validateSystem1Boundary(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G38 system-1 boundary', passed: false, hard: true, details: m });
+  try {
+    const root = process.cwd();
+    const adapterRel = 'src/infra/llm/LayaSystem1Adapter.ts';
+    const adapterPath = path.join(root, adapterRel);
+    if (!fs.existsSync(adapterPath)) return mk(`${adapterRel} is missing — the ratified System-1 adapter does not exist`);
+
+    // 1 — the direction of dependence. An IMPORT, not a MENTION: every one of these files names the
+    // adapter in its doc-comment (which is how a reader learns where it lives), and a substring test
+    // fired on the comments that explain the rule. Match the import syntax so the assertion catches
+    // the dependency it exists to catch.
+    const adapterImport = /(?:from|import)\s*\(?\s*['"][^'"]*LayaSystem1Adapter(?:\.js)?['"]/;
+    const coreFiles: string[] = [];
+    walkProductionTs(path.join(root, 'src/core'), 'src/core', coreFiles);
+    const importers = coreFiles.filter((rel) => adapterImport.test(fs.readFileSync(path.join(root, rel), 'utf-8')));
+    if (importers.length > 0) {
+      return mk(`the core imports the adapter (${importers.slice(0, 3).join(', ')}) — the core must depend on the System1Port, not on one implementation (43 §2)`);
+    }
+
+    // 2 — no write surface in the adapter: proposing is not authoring.
+    const adapterText = fs.readFileSync(adapterPath, 'utf-8');
+    for (const verb of ['writeFileSync', 'appendFileSync', 'localStorage', 'sessionStorage']) {
+      if (adapterText.includes(verb)) return mk(`${adapterRel} contains '${verb}' — a System-1 adapter proposes; it never persists what it proposes`);
+    }
+
+    // 3 — the fallback exists and is constructible.
+    const portPath = path.join(root, 'src/core/personalization/system1Port.ts');
+    if (!fs.existsSync(portPath)) return mk('src/core/personalization/system1Port.ts is missing — the port the adapter implements does not exist');
+    const portText = fs.readFileSync(portPath, 'utf-8');
+    for (const symbol of ['export function createDeterministicSystem1', 'export function withSystem1Fallback', 'export function decideSystem1']) {
+      if (!portText.includes(symbol)) return mk(`system1Port.ts does not export \`${symbol}\` — the degradation path must exist, not merely be documented`);
+    }
+
+    return {
+      gate: 'G38 system-1 boundary', passed: true, hard: true,
+      details: `${coreFiles.length} core files depend on System1Port and none on the adapter; the adapter carries no persistence verb; the deterministic fallback, the vocabulary guard and the agreement decision are all exported`,
+    };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
 }
 
 export function validateCheckedGraph(): GateResult {

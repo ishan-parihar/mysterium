@@ -57,8 +57,10 @@ describe('Validation benchmark (CI tier)', () => {
     // 35 → 37 with Phase 14 d5 (G36 CLI boot smoke — every `SESSION_MODES` member boots headless;
     // G37 checked graph — no production file outside the tsconfig include, no re-declared
     // canonical constant).
-    expect(suite.results.length).toBe(37);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37']) {
+    // 37 → 38 with Phase 14 d6 (G38 system-1 boundary — the core depends on the port and never on
+    // the adapter; the adapter persists nothing; the fallback is exported and therefore reachable).
+    expect(suite.results.length).toBe(38);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

@@ -84,3 +84,17 @@ export type {
   ProbeThresholds, ThresholdProvenance, RVVerdict, ProbeAdjudication, CohortAdjudication,
   BandFlip, PilotRater, PilotReport,
 } from './probeThresholds.js';
+
+// Phase 14 d6 — the System-1 boundary (`43 §2`): the three ratified surfaces, the deterministic
+// fallback, the vocabulary guard, and the agreement check that decides whether a model stays.
+// The reference implementation is `src/infra/llm/LayaSystem1Adapter.ts` — the core depends on the
+// PORT only (G38 asserts this), so the adapter stays replaceable.
+export {
+  createDeterministicSystem1, withSystem1Fallback, evaluateSystem1Agreement, decideSystem1,
+  bindSystem1, SYSTEM1_AGREEMENT_THRESHOLD,
+} from './system1Port.js';
+export type {
+  System1Port, System1Standing, System1Binding, System1Vocabulary, System1GuardReport,
+  System1AgreementCase, System1AgreementRow, System1AgreementResult, System1Decision,
+  NeighbourPrefilter, DeterministicSystem1Deps,
+} from './system1Port.js';
