@@ -197,11 +197,11 @@ Recorded so the next reader does not "fix" them:
 |---|---|---|---|
 | 0 | **Prerequisite: `G37` must land before any split** | — | ✅ **DONE 2026-09-24** (Phase 14 d5) — every production `.ts` is now inside the tsconfig `include`, so a new file cannot escape the graph, and no module may rebuild a canonical set. The *scaffolder↔linter↔indexer* lesson from `KOSMOS-RG-008` applied to this repo's own gate |
 | 1 | `cli-game.ts` split + calibration extraction to `src/core/` | > 1 000 | **OPEN** — this is Phase 14 **d3**; Q10's ruling (extract the calibration block, where F5 lived) stands |
-| 2 | `gates.ts` split by family + `index.ts` roster | > 1 000 | **OPEN** — mechanical, and `G37` (item 0) has now landed, which was its only dependency |
+| 2 | `gates.ts` split by family + `index.ts` roster | > 1 000 | ✅ **DONE 2026-09-24** — nine family files under `validation/gates/` (`plumbing` · `roster` · `trajectory` G1–G9 · `veil` G10–G12 · `curriculum` G17–G21 · `orchestration` G14/G15/G26 · `personalization` G22–G25/G27 · `memory` G28–G35 · `surface` G36–G38); `gates.ts` is now a 33-line index whose re-export roster IS the public surface. The landed families are named for the *domain* they assert, not for the list-of-concerns proposed above |
 | 3 | `TaskRenderers.ts` split by renderer group | > 1 000 | **OPEN** — mechanical |
 | 4 | `AgenticOrchestrator` collaborator extraction | > 1 000 | **OPEN** — incremental; the 645-line test is the lock |
 | 5 | `FallbackProvider.ts` data extraction | > 1 000 | **OPEN** — mechanical (data, not logic) |
-| 6 | `ContextPipeline.ts` block promotion (M3) | 500–1 000 | **OPEN** |
+| 6 | `ContextPipeline.ts` block promotion (M3) | 500–1 000 | ✅ **DONE 2026-09-24** — the 15 builders moved to `infra/llm/contextBlocks.ts`; `buildContext` is now a list of named steps. The split also surfaced a live Veil leak (a shadow label rendered into a prompt block) |
 | 7 | `sessionRuntime.ts` split behind an index re-export | 500–1 000 | **OPEN** — must preserve the single seam (M6) |
 | 8 | `GameLoop.ts` — revisit only if `SessionState` becomes its own module | 1 000+ | **Not now** (Tier C) |
 
