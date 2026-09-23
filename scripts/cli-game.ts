@@ -342,6 +342,8 @@ import type { AgentRole } from '../src/core/orchestration/types.js';
 import { ALL_AGENT_ROLES } from '../src/core/orchestration/councilStanding.js';
 import { DEFAULT_CCI_WEIGHTS, type CCIScore } from '../src/core/engines/CCIEngine.js';
 import { generateSessionStrategy } from '../src/core/engines/AutoModeStrategy.js';
+import { inferAltitudesFromAnswers as inferAltitudesFromAnswersCore } from '../src/core/usecases/InitialAltitudeInference.js';
+import { scoreHoldProbe, scoreChoiceProbe } from '../src/core/usecases/QuickCalibrationScoring.js';
 import type { TelemetryEvent } from '../src/core/telemetry/TelemetryEvent.js';
 import type { ScheduledEncounter } from '../src/core/domain/EncounterSpecNew.js';
 import type { PlayerResponse } from '../src/core/engines/ConsequenceEngine.js';
@@ -378,7 +380,6 @@ import { GLOSSARY_TERMS, PLAYER_GLOSSARY_TERMS, ADVANCED_GLOSSARY_TERMS, TIER2_G
 import type { ConsequenceRecord } from '../src/core/domain/ConsequenceRecord.js';
 import type { Modality } from '../src/core/domain/enums.js';
 import { ALL_MODALITIES } from '../src/core/domain/enums.js';
-import { thresholdToStage } from '../src/core/usecases/ThresholdMaps.js';
 // RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — feed, candidate
 // library, owner-worker pool. Carried across encounters in the session loop; persisted with the
 // world save so NPC profiles survive the process.
@@ -412,8 +413,6 @@ import {
   getProfilesDir,
   loadUnlockedTerms, addUnlockedTerms,
 } from '../src/infra/profiles/ProfileManager.js';
-import { computeConfidence } from '../src/core/assessments/engine.js';
-import type { TrialResult } from '../src/core/assessments/types.js';
 // BUILD-FIX (Full-Development Audit 2026-09-15): removed the dead import of
 // '../src/cli/LayerRenderer.js' — the file was purged in 42078ad but the import
 // survived, breaking `npm run build:cli` (esbuild) while tsx runtime resolution
@@ -1147,7 +1146,7 @@ function loadHolons(): WorldState {
 
 // ── Quick Calibration ────────────────────────────────────────────────
 // ponytail: calibration data extracted to src/core/data/calibrationPrompts.ts (shared with WebUI /onboarding).
-import { CALIBRATION_PROMPTS, CHOICE_THRESHOLDS, HOLD_TARGETS } from '../src/core/data/calibrationPrompts.js';
+import { CALIBRATION_PROMPTS, HOLD_TARGETS } from '../src/core/data/calibrationPrompts.js';
 
 // GAP-6 (Efficacy Audit): Infer developmental altitude from user answers.
 // Instead of defaulting all lines to Red, analyze the user's --answer
@@ -1155,89 +1154,18 @@ import { CALIBRATION_PROMPTS, CHOICE_THRESHOLDS, HOLD_TARGETS } from '../src/cor
 // This is a lightweight binary-search — not a full developmental assessment,
 // but enough to prevent experts from starting at Red.
 function inferAltitudesFromAnswers(): Record<Line, Stage> {
-  const allRed: Record<Line, Stage> = {
-    Cognitive: 'Red', Emotional: 'Red', Moral: 'Red', Intrapersonal: 'Red',
-    Spiritual: 'Red', Somatic: 'Red', Willpower: 'Red', Interpersonal: 'Red',
-  };
-  if (USER_ANSWERS.length === 0) return allRed;
-
-  const combinedText = USER_ANSWERS.join(' ').toLowerCase();
-  const wordCount = combinedText.split(/\s+/).filter(w => w.length > 0).length;
-
-  // Stage markers — vocabulary/concepts that indicate developmental altitude
-  const stageMarkers: Record<Stage, readonly string[]> = {
-    Infrared: [],
-    Magenta: [],
-    Red: ['survival', 'power', 'force', 'fight', 'dominate', 'win', 'fear', 'anger', 'protect'],
-    Amber: ['duty', 'rules', 'belong', 'tradition', 'loyalty', 'obligation', 'should', 'order', 'role'],
-    Orange: ['achieve', 'system', 'strategy', 'rational', 'analysis', 'compete', 'goal', 'optimize', 'objective', 'merit'],
-    Green: ['perspective', 'systemic', 'privilege', 'inclusive', 'interconnected', 'pluralism', 'empathy', 'oppression', 'relativ', 'valid'],
-    // Teal (L7) — "the gateway opens; meta-perspective … vision-logic" (StageQuality).
-    Teal: ['integral', 'meta', 'paradigm', 'holistic', 'dialectic', 'aqal', 'vision', 'paradox'],
-    // Turquoise (L8) — "the gateway is traversed … trans-rational direct knowing" (StageQuality).
-    Turquoise: ['kosm', 'evolutionary', 'emergent', 'non-dual', 'transpersonal', 'unity', 'contemplative', 'planetary'],
-  };
-
-  // NOTE: the former `White` entry is NOT folded in here. `White` was a stage name for a rung
-  // that does not exist (Ray.ts: "there is no D4 stage"), so its vocabulary is the *closure*'s,
-  // not an altitude's — it lives at `CLOSURE_MARKERS` (domain/Ray.ts), beside `CLOSURE_BINDING`.
-  // A player writing closure language must not be PLACED by it: the vocabulary names an event,
-  // and inferring an altitude from it would repeat the conflation the retirement corrected.
-
-  // Score each stage by marker density
-  const stageScores: Record<string, number> = {};
-  for (const [stage, markers] of Object.entries(stageMarkers)) {
-    if (markers.length === 0) continue;
-    const matches = markers.filter(m => combinedText.includes(m)).length;
-    stageScores[stage] = matches;
+  // Phase 14 d3 (Q10): the inference moved to `src/core/usecases/InitialAltitudeInference.ts`.
+  // It sat in this file — outside the checked graph — and carried the retired `White` stage in its
+  // marker table (checked-surface audit F5). The CLI keeps only the sentence it renders.
+  const inference = inferAltitudesFromAnswersCore(USER_ANSWERS);
+  if (!JSON_MODE && !inference.fellBackToFloor) {
+    // P0-F2 (Fresh-User UX Audit): Be honest about WHAT was measured and WHEN. The message must
+    // not fire when there is genuinely nothing to infer from, must say the inference is from the
+    // answers the player brought to the session (not from writing produced during play), and must
+    // stay a rough seed rather than a diagnosis.
+    info('onboarding', `Starting altitude: ${inference.detectedStage} (a rough seed from the answers you brought; encounters will refine it).`);
   }
-
-  // Also consider conceptual density (unique words / total words)
-  const uniqueWords = new Set(combinedText.split(/\s+/).filter(w => w.length > 2)).size;
-  const conceptDensity = wordCount > 0 ? uniqueWords / wordCount : 0;
-
-  // Find the highest stage with significant marker presence
-  const stageOrder: Stage[] = ['Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
-  let detectedStage: Stage = 'Red';
-  for (const stage of stageOrder) {
-    if ((stageScores[stage] ?? 0) >= 2) {
-      detectedStage = stage; // keep going up — highest match wins
-    }
-  }
-
-  // Boost: if the user writes long, dense answers, they're likely above Red
-  if (detectedStage === 'Red' && wordCount > 50 && conceptDensity > 0.6) {
-    detectedStage = 'Orange'; // literate, reflective → at least formal operations
-  }
-  if (detectedStage === 'Red' && wordCount > 100 && conceptDensity > 0.7) {
-    detectedStage = 'Green'; // sophisticated vocabulary → likely pluralistic
-  }
-
-  // Seed all lines at the detected stage (conservative — doesn't differentiate
-  // per-line. The first few encounters will refine via actual assessment.)
-  const altitudes: Record<Line, Stage> = {} as Record<Line, Stage>;
-  for (const line of ALL_LINES) {
-    altitudes[line] = detectedStage;
-  }
-
-  if (!JSON_MODE && detectedStage !== 'Red' && USER_ANSWERS.length > 0) {
-    // P0-F2 (Fresh-User UX Audit): Be honest about WHAT was measured and WHEN.
-    // The previous message ("inferred from your writing style") fired at boot
-    // time, before the player had seen any question — because in --headless
-    // mode the --answer flags are already in USER_ANSWERS. The player's
-    // experiential reality was "I haven't written anything yet" while the
-    // game claimed to have inferred something from their writing. This
-    // destroyed trust in every subsequent claim the game made.
-    //
-    // Fix: (1) gate on USER_ANSWERS.length > 0 so the message never fires
-    // when there's genuinely nothing to infer from; (2) reframe to be
-    // honest that the inference is from the answers the player brought to
-    // the session, not from writing produced during play; (3) soften the
-    // claim — this is a rough seed, not a diagnosis.
-    info('onboarding', `Starting altitude: ${detectedStage} (a rough seed from the answers you brought; encounters will refine it).`);
-  }
-
-  return altitudes;
+  return { ...inference.altitudes };
 }
 
 async function runQuickCalibration(): Promise<Record<Line, Stage>> {
@@ -1248,7 +1176,6 @@ async function runQuickCalibration(): Promise<Record<Line, Stage>> {
   for (const line of ALL_LINES) {
     let stage: Stage = 'Red';
     let confidence = 0.5;
-    let trial: TrialResult;
 
     if (line === 'Somatic' || line === 'Willpower') {
       // ── Hold probe: measure timing accuracy ──
@@ -1263,28 +1190,12 @@ async function runQuickCalibration(): Promise<Record<Line, Stage>> {
       if (typeof answer === 'symbol') { altitudes[line] = 'Red'; continue; }
       const elapsed = Date.now() - startTime;
 
-      const accuracy = Math.max(0, 1 - Math.abs(elapsed - target) / target);
-
-      let threshold: number;
-      if (line === 'Somatic') {
-        // Inverted: lower RT = higher stage (range 200-900)
-        threshold = 900 - accuracy * 700;
-      } else {
-        // Standard: higher = better (range 1-12)
-        threshold = 1 + accuracy * 11;
-      }
-
-      stage = thresholdToStage(line, threshold);
-
-      trial = {
-        taskId: `cal-${line.toLowerCase()}`,
-        timestamp: Date.now(),
-        dimensions: { accuracy, response_time: accuracy },
-        rawResponse: elapsed,
-        durationMs: elapsed,
-      };
-
-      confidence = computeConfidence([trial], 0.5);
+      // Phase 14 d3 (Q10): the arithmetic lives in `QuickCalibrationScoring` — this loop keeps the
+      // asking and the felt-sense rendering.
+      const holdOutcome = scoreHoldProbe(line, elapsed);
+      if (!holdOutcome) { altitudes[line] = 'Red'; continue; }
+      stage = holdOutcome.stage;
+      confidence = holdOutcome.confidence;
 
     } else {
       // ── LLM dialogue probe: multiple choice ──
@@ -1304,23 +1215,10 @@ async function runQuickCalibration(): Promise<Record<Line, Stage>> {
       const choiceIdx = probe.options.indexOf(choice as string);
       const idx = choiceIdx >= 0 ? choiceIdx : 0;
 
-      const thresholds = CHOICE_THRESHOLDS[line]!;
-      const threshold = thresholds[Math.min(idx, 2)];
-
-      stage = thresholdToStage(line, threshold);
-
-      const depthScores = [0.3, 0.6, 0.85];
-      const coherenceScores = [0.4, 0.7, 0.9];
-
-      trial = {
-        taskId: `cal-${line.toLowerCase()}`,
-        timestamp: Date.now(),
-        dimensions: { depth: depthScores[idx], coherence: coherenceScores[idx] },
-        rawResponse: idx,
-        durationMs: 0,
-      };
-
-      confidence = computeConfidence([trial], 0.5);
+      const choiceOutcome = scoreChoiceProbe(line, idx);
+      if (!choiceOutcome) { altitudes[line] = 'Red'; continue; }
+      stage = choiceOutcome.stage;
+      confidence = choiceOutcome.confidence;
     }
 
     altitudes[line] = stage;

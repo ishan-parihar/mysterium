@@ -69,15 +69,21 @@ export const CALIBRATION_PROMPTS: Readonly<Record<Line, CalibrationPrompt>> = {
 };
 
 // Index 0 = Red level, 1 = Amber level, 2 = Orange level
-export const CHOICE_THRESHOLDS: Readonly<Record<Line, readonly [number, number, number]>> = {
+//
+// **Partial on purpose** (`probeKindFor`, `QuickCalibrationScoring.ts`): Somatic and Willpower are
+// probed by TIMING, so they have no choice threshold. This map was total over all 8 lines, and the
+// Somatic entry was not inert — its values are on the 1–12 volitional scale, and the somatic map is
+// INVERTED (200–900 ms, lower is better), so feeding `2` into it saturated at the ceiling. Any
+// caller that scored a choice probe on Somatic placed the player at the top of the ladder from a
+// probe that cannot measure the line — the same saturation class `ThresholdMaps.test.ts` records as
+// "previously produced a spurious 'Turquoise'". The type now makes that path unrepresentable.
+export const CHOICE_THRESHOLDS: Readonly<Partial<Record<Line, readonly [number, number, number]>>> = {
   Cognitive: [1.8, 2.2, 2.8],
   Emotional: [2, 2.5, 3],
   Moral: [2, 2.5, 3],
   Intrapersonal: [2, 2.5, 3],
   Spiritual: [2, 2.5, 3],
   Interpersonal: [2, 2.5, 3],
-  Somatic: [2, 2.5, 3],
-  Willpower: [2, 2.5, 3],
 };
 
 export const HOLD_TARGETS: Readonly<Partial<Record<Line, number>>> = {
