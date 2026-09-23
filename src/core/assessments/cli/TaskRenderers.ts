@@ -15,6 +15,7 @@
  */
 import type { AssessmentTask, TrialResult } from '../types.js';
 import type { AskUserQuestionParams } from '../agentTypes.js';
+import { ALL_LINES } from '../../domain/Line.js';
 import type { Line } from '../../domain/Line.js';
 
 // ── ANSI helpers (must be at top for const hoisting) ──────────────────
@@ -963,11 +964,6 @@ export function renderImitation(task: AssessmentTask): {
 // Each intelligence line has unique interaction mechanics per foundations/12.
 // These wrap the task-type renderers with line-specific options, headers,
 // and evaluation dimensions so each line probes its developmental structure.
-
-const ALL_LINES: readonly Line[] = [
-  'Cognitive', 'Emotional', 'Moral', 'Intrapersonal',
-  'Spiritual', 'Somatic', 'Willpower', 'Interpersonal',
-];
 
 /** Extract the line from task parameters, or null if not specified. */
 function getLine(task: AssessmentTask): Line | null {

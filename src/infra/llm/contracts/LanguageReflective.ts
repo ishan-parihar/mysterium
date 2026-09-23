@@ -4,6 +4,7 @@
  */
 import type { FrequencySpec } from '../FrequencyConditioner.js';
 import type { Line } from '../../../core/domain/Line.js';
+import { ALL_STAGES } from '../../../core/domain/Stage.js';
 import type { Stage } from '../../../core/domain/Stage.js';
 import type { ModalityContract } from './index.js';
 
@@ -95,8 +96,8 @@ export function scoreResponse(
   const wordCount = words.length;
 
   // Stage-aware thresholds
-  const earlyStages: readonly Stage[] = ['Infrared', 'Magenta', 'Red'];
-  const middleStages: readonly Stage[] = ['Amber', 'Orange'];
+  const earlyStages = ALL_STAGES.slice(0, 3);   // Infrared, Magenta, Red
+  const middleStages = ALL_STAGES.slice(3, 5);  // Amber, Orange
   // Later stages: Green, Teal, Turquoise
 
   const isEarly = earlyStages.includes(stage);

@@ -17,7 +17,7 @@ import type { Stage } from '../domain/Stage.js';
 import type { Drive } from '../domain/Drive.js';
 import { ALL_LINES } from '../domain/Line.js';
 import { ALL_DRIVES } from '../domain/Drive.js';
-import { stageOrdinal } from '../domain/Stage.js';
+import { ALL_STAGES, stageOrdinal } from '../domain/Stage.js';
 // P1-15: Import GreaterCycleEngine.computeMetabolicHealth so CCI can delegate
 // G_z/P_z computation to the canonical source instead of duplicating the formula.
 import { computeMetabolicHealth } from './GreaterCycleEngine.js';
@@ -203,9 +203,6 @@ function extractAltitudeInput(sig: SignificatorSnapshot): AltitudeInput {
   const lowestOrdinal = Math.min(...ordinals);
   const highestOrdinal = Math.max(...ordinals);
 
-  const ALL_STAGES: readonly Stage[] = [
-    'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise',
-  ];
   const lowestAltitude = ALL_STAGES[lowestOrdinal] as Stage;
   const highestAltitude = ALL_STAGES[highestOrdinal] as Stage;
 

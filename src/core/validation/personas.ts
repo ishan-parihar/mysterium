@@ -15,6 +15,7 @@
  */
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
+import { ALL_DRIVES } from '../domain/Drive.js';
 import type { Drive } from '../domain/Drive.js';
 import type {
   DriveDirectionality,
@@ -25,8 +26,6 @@ import type {
 } from '../domain/enums.js';
 import type { ScheduledEncounter } from '../domain/EncounterSpecNew.js';
 import type { PlayerResponse } from '../engines/ConsequenceEngine.js';
-
-const ALL_DRIVES: readonly Drive[] = ['Agency', 'Communion', 'Eros', 'Agape'];
 
 // ---------------------------------------------------------------------------
 // Response policy building blocks
@@ -149,8 +148,7 @@ const therapyArcPolicy: ResponsePolicy = (encounter, step) => {
   if (healthy) return policy({ words: 45 })(encounter, step);
   return policy({
     drives: (s) => {
-      const order: Drive[] = ['Agency', 'Communion', 'Eros', 'Agape'];
-      const target = order[s % 4]!;
+      const target = ALL_DRIVES[s % ALL_DRIVES.length]!;
       const out: Partial<Record<Drive, DriveDirectionality>> = {};
       for (const d of ALL_DRIVES) out[d] = d === target ? 'DarkAddicted' : 'HealthyBalanced';
       return out;

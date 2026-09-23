@@ -3,6 +3,7 @@
  * Uses per-line threshold maps from FastStaircase convergence levels.
  */
 import type { Drive } from '../domain/Drive.js';
+import { ALL_LINES } from '../domain/Line.js';
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
 import type { StaircaseState } from '../domain/SharedTypes.js';
@@ -50,11 +51,7 @@ export function calibrate(
     };
   }
 
-  const allLines: Line[] = [
-    'Cognitive', 'Emotional', 'Moral', 'Intrapersonal',
-    'Spiritual', 'Somatic', 'Willpower', 'Interpersonal',
-  ];
-  for (const line of allLines) {
+  for (const line of ALL_LINES) {
     if (!(line in altitudes)) {
       altitudes[line] = 'Infrared';
     }
@@ -68,7 +65,7 @@ export function calibrate(
   };
 
   let minIdx = 7;
-  for (const line of allLines) {
+  for (const line of ALL_LINES) {
     const idx = ALL_STAGES.indexOf(altitudes[line]);
     if (idx < minIdx) minIdx = idx;
   }

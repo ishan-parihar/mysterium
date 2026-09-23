@@ -17,8 +17,9 @@
  * assert on wall-clock-invariant quantities (relative staleness, deltas,
  * orderings, counts) — never on absolute time-derived values.
  */
-import type { Line } from '../domain/Line.js';
+import { ALL_STAGES } from '../domain/Stage.js';
 import type { Stage } from '../domain/Stage.js';
+import { ALL_LINES } from '../domain/Line.js';
 import type { Holon } from '../world/Holon.js';
 import type { Significator } from '../domain/Significator.js';
 import { createSignificator } from '../domain/Significator.js';
@@ -64,10 +65,9 @@ function makeWorld(): WorldState {
  * the loop, and a duplicated fixture is exactly the drift the parity gate exists to catch.
  */
 export function buildBenchWorld(): WorldState {
-  const lines: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Somatic', 'Willpower', 'Interpersonal'];
-  const stages: Stage[] = ['Infrared', 'Magenta', 'Red'];
+  const stages: readonly Stage[] = ALL_STAGES.slice(0, 3);  // the pre-conventional bench band
   const holons: Holon[] = [];
-  for (const line of lines) {
+  for (const line of ALL_LINES) {
     for (const stage of stages) {
       holons.push({
         id: `h-${line}-${stage}`,

@@ -278,8 +278,7 @@ check('toQualitativeFeedback produces Veil-compliant output', () => {
   for (const s of ALL_STAGES) {
     if (text.includes(s)) throw new Error(`Stage label leaked: ${s}`);
   }
-  const drives = ['Agency', 'Communion', 'Eros', 'Agape'];
-  for (const d of drives) {
+  for (const d of ALL_DRIVES) {
     if (new RegExp(`\\b${d}\\b`, 'i').test(text)) throw new Error(`Drive name leaked: ${d}`);
   }
 });

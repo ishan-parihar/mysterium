@@ -14,6 +14,7 @@ import type {
   ScoringRubric,
   MeasureDimension,
 } from './types.js';
+import { ALL_DRIVES } from '../domain/Drive.js';
 
 export interface ScoredTrial extends TrialResult {
   readonly mode: ModuleExecutionMode;
@@ -174,7 +175,7 @@ export function aggregateShadowTrials(
   dominantPathology: { drive: 'Agency' | 'Communion' | 'Eros' | 'Agape'; domain: 'dark' | 'golden'; type: 'addiction' | 'allergy' } | null;
 } {
   const drives = ['agency', 'communion', 'eros', 'agape'] as const;
-  const driveNames = ['Agency', 'Communion', 'Eros', 'Agape'] as const;
+  const driveNames = ALL_DRIVES;
   const result = {} as Record<string, { dark: number; golden: number }>;
 
   for (const drive of drives) {
@@ -197,8 +198,8 @@ export function aggregateShadowTrials(
   let worstScore = 1;
   let worstDriveIdx = 0;
   let worstDomain: 'dark' | 'golden' = 'dark';
-  for (let i = 0; i < 4; i++) {
-    const h = result[drives[i]];
+  for (let i = 0; i < ALL_DRIVES.length; i++) {
+    const h = result[drives[i]!]!;
     if (h.dark < worstScore) { worstScore = h.dark; worstDriveIdx = i; worstDomain = 'dark'; }
     if (h.golden < worstScore) { worstScore = h.golden; worstDriveIdx = i; worstDomain = 'golden'; }
   }

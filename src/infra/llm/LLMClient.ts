@@ -17,6 +17,7 @@
  * No hardcoded model names anywhere — models come from /models or models.dev.
  */
 
+import { ALL_STAGES } from '../../core/domain/Stage.js';
 import type { Stage } from '../../core/domain/Stage.js';
 import type { AgentMessage, ToolCall } from '../../core/assessments/agentTypes.js';
 import { filterInput, filterOutput } from './VeilFilter.js';
@@ -210,7 +211,7 @@ export async function evaluateResponse(
     let inferredStage: Stage | undefined = undefined;
     if (result.inferredStage) {
       const normalized = result.inferredStage.charAt(0).toUpperCase() + result.inferredStage.slice(1).toLowerCase();
-      const stages: string[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
+      const stages: readonly string[] = ALL_STAGES;
       if (stages.includes(normalized)) {
         inferredStage = normalized as Stage;
       }
@@ -270,7 +271,7 @@ export async function evaluateResponse(
     let inferredStage: Stage | undefined = undefined;
     if (parsed.inferredStage) {
       const normalized = parsed.inferredStage.charAt(0).toUpperCase() + parsed.inferredStage.slice(1).toLowerCase();
-      const stages: string[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
+      const stages: readonly string[] = ALL_STAGES;
       if (stages.includes(normalized)) {
         inferredStage = normalized as Stage;
       }

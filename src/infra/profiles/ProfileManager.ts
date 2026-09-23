@@ -18,9 +18,12 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
+import { getMysteriumLegacyDir } from '../persistence/mysteriumDir.js';
+import { ALL_LINES } from '../../core/domain/Line.js';
 
-const Mysterium_DIR = path.join(os.homedir(), '.mysterium');
+// Single source (mysteriumDir.ts): honoring `MYSTERIUM_HOME` here is what lets a gate or a test
+// run against a throwaway state root instead of the developer's real profile.
+const Mysterium_DIR = getMysteriumLegacyDir();
 const PROFILES_DIR = path.join(Mysterium_DIR, 'profiles');
 const ACTIVE_SYMLINK = path.join(PROFILES_DIR, '_active');
 const SAVES_DIR = path.join(Mysterium_DIR, 'saves');
@@ -185,8 +188,7 @@ export function createProfile(name: string, prefs?: Partial<Record<string, any>>
   if (fs.existsSync(profileDir)) throw new Error(`Profile "${name}" already exists.`);
   fs.mkdirSync(profileDir, { recursive: true });
   const now = new Date().toISOString();
-  const allLines = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Interpersonal', 'Somatic', 'Willpower'];
-  const altitudes: Record<string, string> = {}; for (const l of allLines) altitudes[l] = 'Red';
+  const altitudes: Record<string, string> = {}; for (const l of ALL_LINES) altitudes[l] = 'Red';
 
   yamlWrite(path.join(profileDir, 'identity.yaml'), {
     name, created: now, last_active: now, lifecycle: 'Onboarding',

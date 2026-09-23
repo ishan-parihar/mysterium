@@ -5,6 +5,7 @@
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
 import { stageOrdinal } from '../domain/Stage.js';
+import { ALL_MODALITIES } from '../domain/enums.js';
 import type { Modality } from '../domain/enums.js';
 import type { Holon } from '../world/Holon.js';
 import type { Significator } from '../domain/Significator.js';
@@ -112,12 +113,6 @@ export function createInitialWorldState(holons: readonly Holon[]): WorldState {
     activeMacroEvents: [],
   };
 }
-
-/** All 7 modalities available in the system. */
-const ALL_MODALITIES: Modality[] = [
-  'Deterministic', 'Strategic', 'Embodied',
-  'ScenarioChoice', 'LanguageReflective', 'SocialCooperative', 'ImmersiveRPG',
-];
 
 /** Ponytail: task-type sets per modality — modalities whose preferred chain has no match in the module won't be assigned. */
 const MODALITY_TASK_TYPES: Record<Modality, readonly string[]> = {

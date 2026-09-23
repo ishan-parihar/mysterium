@@ -28,6 +28,7 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { createRequire } from 'node:module';
+import { ALL_DRIVES as DRIVES } from '../src/core/domain/Drive.js';
 
 const ROOT = resolve(process.cwd());
 const CORPUS = join(ROOT, 'docs/concept-drafts');
@@ -56,7 +57,7 @@ const MODALITY_FILES: Record<string, string> = {
 // was never applied, so the aliasing they encode (including the Turquoise `Residual Grasping`
 // mapping) is not in force. Re-author them together with the §2 extraction that consumes them;
 // until then they are not merely unused, they describe a step that does not happen.
-const DRIVES = ['Agency', 'Communion', 'Eros', 'Agape'] as const;
+
 
 // 46 §4 — the authored facetAffinity matrix, mirrored from src/core/world/tags/initialTags.ts.
 // The compiler assigns each facet the tags whose affinity for its characteristic is positive, so

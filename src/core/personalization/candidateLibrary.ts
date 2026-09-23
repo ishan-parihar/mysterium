@@ -17,6 +17,7 @@
  */
 
 import type { Line } from '../domain/Line.js';
+import { ALL_STAGES } from '../domain/Stage.js';
 import type { Stage } from '../domain/Stage.js';
 import { ALL_LINES } from '../domain/Line.js';
 import type { Modality } from '../domain/enums.js';
@@ -32,8 +33,6 @@ import { WORLD_SEEDS } from './worldSeeds.js';
 import type { WorldSeed } from './worldSeeds.js';
 
 /** The 8 stages as authored — the ladder the concept-drafts grid by. */
-const STAGES: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'] as const;
-
 /** Strata (18 §5): seeds live in the player-visible base layer. */
 const BASE_STRATUM = 0;
 /** Depth floor (31 §3.5a): seeds carry no depth gate. */
@@ -202,7 +201,7 @@ export function seedNpcCandidates(seeds: readonly NpcSeed[] = NPC_SEEDS): readon
 export function seedCandidateLibrary(store: FacetStore): readonly PoolCandidate[] {
   const out: PoolCandidate[] = [];
   for (const line of ALL_LINES) {
-    for (const stage of STAGES) {
+    for (const stage of ALL_STAGES) {
       for (const modality of ALL_MODALITIES) {
         out.push(...cellCandidates(store, line, stage, modality));
       }

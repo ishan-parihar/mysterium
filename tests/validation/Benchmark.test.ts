@@ -54,8 +54,11 @@ describe('Validation benchmark (CI tier)', () => {
     // intake firewall, G30 verdict completeness, G31 retrieval firewall — 22 §7.5, 47 §8, 43 §5.5, 48 §5).
     // 31 → 35 with Phase 13 (G32 council role scope, G33 UDV band population at the live
     // seam, G34 council dispatch — 45 §6.1, 45 §3, 43 §3.3; G35 the polarity pool — d10).
-    expect(suite.results.length).toBe(35);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35']) {
+    // 35 → 37 with Phase 14 d5 (G36 CLI boot smoke — every `SESSION_MODES` member boots headless;
+    // G37 checked graph — no production file outside the tsconfig include, no re-declared
+    // canonical constant).
+    expect(suite.results.length).toBe(37);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

@@ -13,7 +13,7 @@ import type { PolarityState } from './PolarityCellVector.js';
 import type { ShadowLedger } from './ShadowLedger.js';
 import { ALL_LINES } from './Line.js';
 import { ALL_DRIVES } from './Drive.js';
-import { stageOrdinal } from './Stage.js';
+import { ALL_STAGES, stageOrdinal } from './Stage.js';
 
 export interface CompoundShadow {
   readonly primaryEntry: string;
@@ -155,9 +155,6 @@ function computeTransformationReadiness(sig: Significator): TransformationReadin
   const readinessScore = (linesAtEdge / ALL_LINES.length + catalystSaturation) / 2;
   const pendingTransformation = readinessScore >= readinessThreshold && shadowClearance;
 
-  const ALL_STAGES: readonly Stage[] = [
-    'Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise',
-  ];
   const targetStage = pendingTransformation && currentOrdinal < ALL_STAGES.length - 1
     ? ALL_STAGES[currentOrdinal + 1]
     : null;

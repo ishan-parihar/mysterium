@@ -19,6 +19,7 @@
  * never on absolute values. This keeps all staleness gates reproducible.
  */
 import type { Significator } from '../domain/Significator.js';
+import { ALL_STAGES } from '../domain/Stage.js';
 import type { Stage } from '../domain/Stage.js';
 import { computeCCI } from '../engines/CCIEngine.js';
 import { toSnapshot } from '../domain/SignificatorSnapshot.js';
@@ -46,8 +47,6 @@ export interface Observables {
   readiness: number;
   currentStage: Stage;
 }
-
-const STAGE_ORDER: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
 
 export interface EncounterCounters {
   curriculum: number;
@@ -111,8 +110,8 @@ export function extractObservables(
 
 function safeReadiness(sig: Significator): number {
   try {
-    const idx = STAGE_ORDER.indexOf(sig.currentStage);
-    const next = STAGE_ORDER[Math.min(STAGE_ORDER.length - 1, idx + 1)]!;
+    const idx = ALL_STAGES.indexOf(sig.currentStage);
+    const next = ALL_STAGES[Math.min(ALL_STAGES.length - 1, idx + 1)]!;
     return computeReadiness(sig, next).overall;
   } catch {
     return 0;

@@ -6,6 +6,7 @@
  * ponytail: This is a minimal viable implementation. Pattern detection
  * is keyword-based for now. Sophisticated trajectory analysis is deferred.
  */
+import { ALL_LINES } from '../domain/Line.js';
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
 import type { ShadowQuadrant } from '../domain/enums.js';
@@ -207,8 +208,7 @@ export class SessionAgent {
     if (this.history.length < 2) return null;
 
     const linesExplored = [...new Set(this.history.map(r => r.line))];
-    const allLines: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Interpersonal', 'Somatic', 'Willpower'];
-    const unexplored = allLines.filter(l => !linesExplored.includes(l));
+    const unexplored = ALL_LINES.filter(l => !linesExplored.includes(l));
 
     // If we have unexplored lines, suggest one
     if (unexplored.length > 0) {

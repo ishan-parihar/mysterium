@@ -3,6 +3,7 @@
  * 30 side encounters (from data files), 3 mini-bosses, 1 main boss.
  * All tagged with lines, quadrants, role, ray, taskBinds per blueprint.
  */
+import { ALL_LINES } from '../../domain/Line.js';
 import { EncounterRegistry } from '../index.js';
 import type { EncounterSpec } from '../../domain/Encounter.js';
 import { redEncounterData } from '../../world/encounters-red/index.js';
@@ -57,7 +58,7 @@ const bosses: EncounterSpec[] = [
   // --- 1 Main boss (covers all 4 quadrants) ---
   {
     id: 'red-main-tyrant',
-    lines: ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Somatic', 'Willpower', 'Interpersonal'],
+    lines: [...ALL_LINES],
     stage: 'Red',
     quadrants: ['UL', 'UR', 'LL', 'LR'],
     role: 'main',

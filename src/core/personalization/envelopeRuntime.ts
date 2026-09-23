@@ -15,6 +15,7 @@
 import type { Significator } from '../domain/Significator.js';
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
+import { stageOrdinal } from '../domain/Stage.js';
 import type { Modality, ShadowQuadrant } from '../domain/enums.js';
 import { ALL_LINES } from '../domain/Line.js';
 import { projectUdv, type UserDimensionalityVector } from './udv.js';
@@ -78,7 +79,7 @@ export function buildLiveEnvelope(inputs: EnvelopeInputs): EnvelopeOutcome {
   const stageOrdinals: Partial<Record<Line, number>> = {};
   for (const line of ALL_LINES) {
     const st = sig.altitudes[line];
-    if (st) stageOrdinals[line] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'].indexOf(st);
+    if (st) stageOrdinals[line] = stageOrdinal(st);
   }
 
   const udv = projectUdv({

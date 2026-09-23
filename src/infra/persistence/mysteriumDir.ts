@@ -17,6 +17,12 @@ export function getMysteriumHome(): string {
 }
 
 export function getMysteriumLegacyDir(): string {
+  // `MYSTERIUM_HOME` redirects the entire state root (default `~/.mysterium`). It exists so the
+  // state directory is *addressable*: a gate or a test can boot the system against a throwaway
+  // root instead of mutating the developer's real profile (G36, plan Phase 14 d5). Resolution
+  // stays single-source here — ProfileManager and the CLI both read this function, not `os.homedir()`.
+  const override = process.env.MYSTERIUM_HOME;
+  if (override && override.trim().length > 0) return path.resolve(override);
   return path.join(getMysteriumHome(), '.mysterium');
 }
 

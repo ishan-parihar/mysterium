@@ -43,7 +43,7 @@ import {
   type UserMatrixModel,
 } from './engines/UserMatrixModel.js';
 import { maybeFireHook } from './engines/hooks.js';
-import { stageOrdinal } from './domain/Stage.js';
+import { ALL_STAGES, stageOrdinal } from './domain/Stage.js';
 import type { Line } from './domain/Line.js';
 import type { Stage } from './domain/Stage.js';
 import type { Modality } from './domain/enums.js';
@@ -335,8 +335,7 @@ export function startSession(sig: Significator, session: SessionContext, plannin
   try {
     // Detect readiness for the next stage above currentStage.
     const nextStageOrd = stageOrdinal(migratedSig.currentStage) + 1;
-    const allStages = ['Infrared','Magenta','Red','Amber','Orange','Green','Teal','Turquoise'] as const;
-    const nextStage = allStages[nextStageOrd] as Stage | undefined;
+    const nextStage = ALL_STAGES[nextStageOrd] as Stage | undefined;
     if (nextStage) perLineTransformations = detectPerLineTransformation(migratedSig as any, nextStage);
   } catch { /* best-effort */ }
   return {
@@ -624,8 +623,7 @@ export function tickWithStrategy(
   let perLineTransformations = sessionState.perLineTransformations ?? [];
   try {
     const nextOrd = stageOrdinal(updatedSig.currentStage) + 1;
-    const allStages = ['Infrared','Magenta','Red','Amber','Orange','Green','Teal','Turquoise'] as const;
-    const nextStage = allStages[nextOrd] as Stage | undefined;
+    const nextStage = ALL_STAGES[nextOrd] as Stage | undefined;
     if (nextStage) perLineTransformations = detectPerLineTransformation(updatedSig as any, nextStage);
   } catch { /* best-effort */ }
   const newSessionState: SessionState = {

@@ -23,6 +23,7 @@ import * as fs from 'fs';
 import type { Modality } from '../domain/enums.js';
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
+import { stageOrdinal } from '../domain/Stage.js';
 
 export interface FallbackContent {
   readonly prompt?: string;
@@ -1443,7 +1444,7 @@ function pickFromStageLinePools(
 type AltitudeBand = 'low' | 'mid' | 'high' | 'peak';
 
 function altitudeBand(playerStage: Stage): AltitudeBand {
-  const ord = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'].indexOf(playerStage);
+  const ord = stageOrdinal(playerStage);
   if (ord <= 2) return 'low';    // Infrared, Magenta, Red
   if (ord <= 4) return 'mid';    // Amber, Orange
   if (ord <= 6) return 'high';   // Green, Teal

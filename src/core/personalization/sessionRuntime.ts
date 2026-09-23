@@ -15,6 +15,7 @@
 
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
+import { stageOrdinal } from '../domain/Stage.js';
 import type { Modality, ShadowQuadrant } from '../domain/enums.js';
 import { ALL_LINES } from '../domain/Line.js';
 import type { Significator } from '../domain/Significator.js';
@@ -221,10 +222,9 @@ export function buildEnvelope(
   // Developmental inputs from engine state — stage ordinals per line (downgraded to bands inside
   // the projector; no stage label ever crosses the firewall — MY-AD-0020 §3).
   const stageOrdinals: Record<string, number> = {};
-  const ladder = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
   for (const line of ALL_LINES) {
     const st = sig.altitudes[line];
-    if (st) stageOrdinals[line] = ladder.indexOf(st);
+    if (st) stageOrdinals[line] = stageOrdinal(st);
   }
 
   // Phase 13 d1 — the remaining UDV bands (45 §3). Every source is real engine state:

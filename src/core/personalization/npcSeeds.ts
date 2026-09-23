@@ -16,6 +16,7 @@
  */
 
 import type { Line } from '../domain/Line.js';
+import { ALL_STAGES } from '../domain/Stage.js';
 import type { Stage } from '../domain/Stage.js';
 import type { TagId } from '../world/tags/types.js';
 
@@ -55,7 +56,6 @@ const LINE_NAMES: Record<SeedLine, Line> = {
   spiritual: 'Spiritual',
 };
 
-const STAGE_NAMES = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'] as const;
 
 /** Convenience builder keeping each entry compact and uniformly shaped. */
 function seed(
@@ -329,7 +329,7 @@ export function assertNpcSeedCoverage(): void {
   const have = new Set(NPC_SEEDS.map((s) => `${s.line}:${s.stage}`));
   const missing: string[] = [];
   for (const line of Object.values(LINE_NAMES)) {
-    for (const stage of STAGE_NAMES) {
+    for (const stage of ALL_STAGES) {
       if (!have.has(`${line}:${stage}`)) missing.push(`${line}:${stage}`);
     }
   }

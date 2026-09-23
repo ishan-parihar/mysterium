@@ -22,7 +22,6 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
 import chalk from 'chalk';
 import { select, text as clackText } from '@clack/prompts';
 import ora from 'ora';
@@ -233,7 +232,7 @@ let earlyModelOverride: string | undefined;
   earlyModelOverride = earlyOpts.model as string | undefined;
 }
 
-const CONFIG_DIR = path.join(os.homedir(), '.mysterium');
+const CONFIG_DIR = getMysteriumLegacyDir();
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 
 // ── Config file loading ──────────────────────────────────────────────
@@ -290,7 +289,8 @@ try {
 // (opencode.ai/zen) — the project's primary gateway — but only fires if
 // OPENCODE_API_KEY / OPENCODE_API is set; otherwise the user must configure.
 import { resolveConfig as resolveLLMConfig, isComplete as isLLMConfigComplete, type LLMConfig } from '../src/infra/llm/ProviderRegistry.js';
-import { getMysteriumDirForScope } from '../src/infra/persistence/mysteriumDir.js';
+import { getMysteriumDirForScope, getMysteriumLegacyDir } from '../src/infra/persistence/mysteriumDir.js';
+import { SESSION_MODES, type SessionMode } from '../src/core/domain/SessionMode.js';
 import { getActiveConfig, invalidateConfigCache, validateModelIfFresh, queryLLM } from '../src/infra/llm/LLMClient.js';
 
 const resolvedLLM: LLMConfig = resolveLLMConfig(
@@ -513,6 +513,20 @@ function renderPrerequisiteGaps(
 }
 
 // ── Full parse with subcommands (after project imports) ──────────────
+// An unrecognised first token is a typo, not a session: name it. Left to itself, commander reports
+// the stray token as "too many arguments" — a rejection, but one that never says which word was
+// wrong, which is exactly what a player with a typo needs to read. Checked before the parse so the
+// message is ours; the rejection itself stays fail-closed (`process.exit(1)`).
+program.showSuggestionAfterError();
+{
+  const known = new Set(program.commands.map((c) => c.name()));
+  const first = process.argv[2];
+  if (first !== undefined && !first.startsWith('-') && !known.has(first)) {
+    console.error(`error: unknown command '${first}'`);
+    console.error(`Run ${chalk.bold('mysterium --help')} to see the available commands.`);
+    process.exit(1);
+  }
+}
 program.parse();
 const opts = program.opts();
 const subcommand = program.args[0] as string | undefined;
@@ -579,15 +593,9 @@ const FORCE_MODALITY = opts.modality as Modality | undefined;
 const FORCE_MODE = opts.mode as SessionMode | undefined;
 const FORCE_SHADOW = (opts.forceShadow ?? (opts as any).injectShadowKeyword) as string | undefined;
 // YAGNI-PHASE-4: FORCE_RESPONSES removed — --responses was never in commander spec.
-/**
- * The two session flows. `direct` is the personality-test style DQ loop; `story` is the
- * immersive-RPG loop that carries the orchestration services and persists the checkpoint.
- *
- * Declared as a canonical pair so the flag validation, the prompt and the branch test all read
- * ONE list — the class this file keeps re-learning (audit §10.4).
- */
-const SESSION_MODES = ['direct', 'story'] as const;
-type SessionMode = (typeof SESSION_MODES)[number];
+// The two session flows live in `src/core/domain/SessionMode.ts` — the CLI reads the canonical
+// list rather than re-declaring it (the class this file keeps re-learning, audit §10.4). G36
+// boots every member, so a mode cannot exist without being reachable.
 
 const NEW_GAME = opts.newGame ?? false;
 const SKIP_CALIBRATION = opts.skipCalibration ?? false;
@@ -1208,8 +1216,7 @@ function inferAltitudesFromAnswers(): Record<Line, Stage> {
   // Seed all lines at the detected stage (conservative — doesn't differentiate
   // per-line. The first few encounters will refine via actual assessment.)
   const altitudes: Record<Line, Stage> = {} as Record<Line, Stage>;
-  const allLines: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Interpersonal', 'Somatic', 'Willpower'];
-  for (const line of allLines) {
+  for (const line of ALL_LINES) {
     altitudes[line] = detectedStage;
   }
 
@@ -1235,12 +1242,10 @@ function inferAltitudesFromAnswers(): Record<Line, Stage> {
 
 async function runQuickCalibration(): Promise<Record<Line, Stage>> {
   const altitudes: Partial<Record<Line, Stage>> = {};
-  const lines: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Somatic', 'Willpower', 'Interpersonal'];
-
   banner('Quick Calibration');
   console.log(`  ${chalk.dim('A brief probe of each developmental line to set your starting altitudes.')}\n`);
 
-  for (const line of lines) {
+  for (const line of ALL_LINES) {
     let stage: Stage = 'Red';
     let confidence = 0.5;
     let trial: TrialResult;
@@ -1332,7 +1337,7 @@ async function runQuickCalibration(): Promise<Record<Line, Stage>> {
   }
 
   console.log(`\n  ${chalk.bold('Your starting landscape:')}`);
-  for (const line of lines) {
+  for (const line of ALL_LINES) {
     const s = altitudes[line] ?? 'Red';
     const color = stageColor(s);
     console.log(`    ${line.padEnd(14)} ${color(s)}`);
@@ -2550,7 +2555,6 @@ async function runDirectQuestioningSession(
     console.log(`  ${chalk.dim(`Each encounter takes about 20 seconds. This session will take roughly ${estimateWord}. Take your time between them.`)}\n`);
   }
 
-  const ALL_LINES: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Interpersonal', 'Somatic', 'Willpower'];
   // UX-P0-1: Respect --encounters, --line, --stage flags in DQ mode.
   // Previously these were silently ignored — user asks for 3 encounters, gets 8.
   // Now: if --line is set, run only that line. If --encounters is set and < 8,
@@ -4565,7 +4569,6 @@ async function runStatus(): Promise<void> {
   // Threshold is always 20 (the LLM-calibrated value).
 
   if (JSON_MODE) {
-    const ALL_LINES_FOR_JSON: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Interpersonal', 'Somatic', 'Willpower'];
     const sig = hasSave() ? loadSave() : null;
     // Veil compliance: the JSON output respects the same Veil as the
     // pretty-print path — qualitative aesthetic + milestone, not raw
@@ -4617,7 +4620,7 @@ async function runStatus(): Promise<void> {
         totalEncounters: sig.totalEncounters,
         totalSessions: sig.totalSessions,
         shadowsActive: sig.shadows.activeCount,
-        lines: ALL_LINES_FOR_JSON.map((line) => {
+        lines: ALL_LINES.map((line) => {
           const stage = sig.altitudes[line] ?? 'Red';
           const cellKey = `${line}:${stage}`;
           const traces = sig.polarity.cells[cellKey]?.traceCount ?? 0;
@@ -4738,12 +4741,11 @@ async function runStatus(): Promise<void> {
       // that names the line the player has been working on most. The per-line
       // data remains in the Significator for the engine; the player sees a
       // qualitative pointer to their current edge.
-      const ALL_LINES_DISPLAY: Line[] = ['Cognitive', 'Emotional', 'Moral', 'Intrapersonal', 'Spiritual', 'Interpersonal', 'Somatic', 'Willpower'];
       const progressAll = getLineProgress(sig);
       // Find the line with the highest progress (the player's current edge)
       let edgeLine: Line | null = null;
       let edgeRatio = 0;
-      for (const line of ALL_LINES_DISPLAY) {
+      for (const line of ALL_LINES) {
         const stage = sig.altitudes[line] ?? 'Red';
         const cellKey = `${line}:${stage}`;
         const traces = sig.polarity.cells[cellKey]?.traceCount ?? 0;

@@ -17,6 +17,7 @@
  * sense of the player's response without diagnostic labels.
  */
 import type { DriveDirectionality } from '../../core/domain/enums.js';
+import { ALL_DRIVES } from '../../core/domain/Drive.js';
 import type { Drive } from '../../core/domain/Drive.js';
 import type { ShadowQuadrant } from '../../core/domain/enums.js';
 
@@ -94,8 +95,7 @@ export function toQualitativeFeedback(
   shadowSurfaced: ShadowQuadrant | null,
   passed: boolean,
 ): QualitativeFeedback {
-  const drives: Drive[] = ['Agency', 'Communion', 'Eros', 'Agape'];
-  const signals = drives.map(d => driveDirectionality[d]);
+  const signals = ALL_DRIVES.map(d => driveDirectionality[d]);
 
   const allHealthy = signals.every(s => s === 'HealthyBalanced');
   const anyDarkAddicted = signals.some(s => s === 'DarkAddicted');
@@ -122,8 +122,8 @@ export function toQualitativeFeedback(
   }
 
   // Build gesture (1-2 sentences, weaving 1-2 drive phrases)
-  const notableDrives = drives.filter(d => driveDirectionality[d] !== 'HealthyBalanced');
-  const phrasesToUse = notableDrives.length > 0 ? notableDrives : [drives[0]];
+  const notableDrives = ALL_DRIVES.filter(d => driveDirectionality[d] !== 'HealthyBalanced');
+  const phrasesToUse = notableDrives.length > 0 ? notableDrives : [ALL_DRIVES[0]!];
   const gestureParts = phrasesToUse.slice(0, 2).map(d => drivePhrase(d, driveDirectionality[d]));
   const gesture = gestureParts.length === 1
     ? `You find yourself ${gestureParts[0]}.`

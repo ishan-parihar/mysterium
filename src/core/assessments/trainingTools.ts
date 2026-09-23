@@ -8,6 +8,7 @@
  * WebUI later). Tool results are the ONLY channel back to the model — every
  * player-facing value must already be Veil-safe (felt-sense phrasing).
  */
+import { ALL_LINES } from '../domain/Line.js';
 import type { Line } from '../domain/Line.js';
 import type { GameSummary, NumericParams, TrialRecord } from '../braingame/types.js';
 import { getParadigm } from '../braingame/registry.js';
@@ -93,7 +94,7 @@ export const RECOMMEND_WORKOUT_TOOL = {
       type: 'object',
       properties: {
         minutes: { type: 'integer', minimum: 5, maximum: 45, description: 'Total time budget.' },
-        focusLine: { type: 'string', enum: ['Cognitive','Emotional','Moral','Intrapersonal','Spiritual','Somatic','Willpower','Interpersonal'], description: 'Optional line to bias toward.' }
+        focusLine: { type: 'string', enum: [...ALL_LINES], description: 'Optional line to bias toward.' }
       },
       required: ['minutes']
     }

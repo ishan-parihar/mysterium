@@ -5,7 +5,7 @@ import type { WorldState } from '../engines/CandidateGeneration.js';
 import type { ConsequenceRecord } from '../domain/ConsequenceRecord.js';
 import type { Line } from '../domain/Line.js';
 import type { Stage } from '../domain/Stage.js';
-import { stageOrdinal } from '../domain/Stage.js';
+import { ALL_STAGES, stageOrdinal } from '../domain/Stage.js';
 import {
   buildDevelopmentalAgenda,
   type DevelopmentalAgenda,
@@ -1752,7 +1752,6 @@ INSTRUCTIONS:
     let finalSig = updated.sig;
     if (altitudeShift) {
       const currentOrd = stageOrdinal(altitudeShift.to);
-      const ALL_STAGES: readonly Stage[] = ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'];
       if (currentOrd < ALL_STAGES.length - 1) {
         const nextStage = ALL_STAGES[currentOrd + 1]!;
         finalSig = {

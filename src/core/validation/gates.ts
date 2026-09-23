@@ -23,11 +23,16 @@ import { initAdaptiveState, adapt } from '../adaptive/AdaptiveDifficultyService.
 import type { Line } from '../domain/Line.js';
 import type { KnowledgeState } from '../curriculum/types.js';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { spawn } from 'node:child_process';
 import { createSignificator, type Significator } from '../domain/Significator.js';
 import { createInitialWorldState } from '../engines/CandidateGeneration.js';
 import { ALL_LINES } from '../domain/Line.js';
-import { ALL_STAGES } from '../domain/Stage.js';
+import { ALL_DRIVES } from '../domain/Drive.js';
+import { ALL_MODALITIES } from '../domain/enums.js';
+import { SESSION_MODES } from '../domain/SessionMode.js';
+import { ALL_STAGES, stageOrdinal } from '../domain/Stage.js';
 import { delegateSession, emptyLedgerState } from '../orchestration/orchestratorTools.js';
 import { validateSpec } from '../orchestration/delegate.js';
 import { validatePracticeLoop } from '../practice/practiceTools.js';
@@ -357,7 +362,7 @@ export function validateTransformationGating(personas: readonly PersonaSpec[] = 
       const stage = s.observables.currentStage;
       // Invariant (both tiers): stage changes are exactly +1 — no skips, no demotion.
       if (prevStage !== null && stage !== prevStage) {
-        const stageOrd = (st: string) => ['Infrared', 'Magenta', 'Red', 'Amber', 'Orange', 'Green', 'Teal', 'Turquoise'].indexOf(st);
+        const stageOrd = (st: string) => stageOrdinal(st as Stage);
         if (stageOrd(stage) !== stageOrd(prevStage) + 1) {
           return {
             gate: 'G8-transformation-gating', passed: false, hard: true,
@@ -886,6 +891,10 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   results.push(validateUdvBandPopulation());
   results.push(validateCouncilDispatch());
   results.push(validatePolarityPool());
+  // Phase 14 d5: the class-level gates. G36 boots the entry point (the CLI is not the engine, so
+  // no other gate can see it); G37 asserts the checked graph itself.
+  results.push(await validateCliBoot());
+  results.push(validateCheckedGraph());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
@@ -2035,6 +2044,257 @@ export function validatePolarityPool(): GateResult {
     if (a === b) return mk('swapping the UDV fluent domain did not reorder the pool — W11 persists');
 
     return { gate: 'G35 polarity pool', passed: true, hard: true, details: `derived library (${library.length} candidates, every cell ≥3 distinct vectors, idempotent); dosage severity-scaled with 0.6 ceiling; spiral holds (no single sweep, re-open + severity on failure, unratified/low-confidence inert); rubric audit detects violations; coverage open by default; UDV swap reorders the pool` };
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G36 — CLI boot smoke (hard, plan Phase 14 d5; `CHECKED-SURFACE-AUDIT-2026-09-24` §11 F10).
+//
+// The executable form of "the entry point runs". The CLI was non-bootable for three days and
+// nothing in the battery noticed, because every other gate asserts the ENGINE and the entry point
+// is not the engine. So this gate boots it: one real child process per member of the canonical
+// `SESSION_MODES`, against a throwaway state root (`MYSTERIUM_HOME`), and requires exit 0 and a
+// completed session.
+//
+// Every mode is booted, not just the default — F10 was precisely a mode that no agent could reach:
+// the story branch's encounter dispatch threw, was swallowed by its own `try`, and the failure
+// surfaced nowhere. A mode that cannot be booted is not a mode.
+// ---------------------------------------------------------------------------
+
+interface CliBootProbe {
+  readonly mode: string;
+  readonly exitCode: number | null;
+  readonly ended: boolean;
+  readonly timedOut: boolean;
+  readonly detail: string;
+}
+
+/** Boot the CLI once, headless, against `home`. Never rejects — a failure is probe data. */
+function bootCli(mode: string, home: string, entry: string): Promise<CliBootProbe> {
+  return new Promise((resolve) => {
+    const args = [
+      '--import', 'tsx', entry,
+      '--headless', '--json', '--new-game',
+      '-e', '2',
+      `--mode=${mode}`,
+    ];
+    const child = spawn(process.execPath, args, {
+      cwd: process.cwd(),
+      env: { ...process.env, MYSTERIUM_HOME: home },
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let stdout = '';
+    let stderr = '';
+    let timedOut = false;
+    const timer = setTimeout(() => { timedOut = true; child.kill('SIGKILL'); }, 120_000);
+    child.stdout.on('data', (d: Buffer) => { stdout += d.toString(); });
+    child.stderr.on('data', (d: Buffer) => { stderr += d.toString(); });
+    child.on('error', (e) => {
+      clearTimeout(timer);
+      resolve({ mode, exitCode: null, ended: false, timedOut, detail: `spawn failed: ${e.message}` });
+    });
+    child.on('close', (code) => {
+      clearTimeout(timer);
+      const ended = /"type":\s*"session_ended"/.test(stdout);
+      const tail = stderr.trim().split('\n').filter(Boolean).slice(-2).join(' | ');
+      resolve({
+        mode, exitCode: code, ended, timedOut,
+        detail: timedOut ? 'timed out after 120s'
+          : code !== 0 ? `exit ${code}${tail ? ` — ${tail}` : ''}`
+          : !ended ? 'no session_ended event on stdout — the session did not complete'
+          : `exit 0, session completed`,
+      });
+    });
+  });
+}
+
+export async function validateCliBoot(): Promise<GateResult> {
+  const mk = (m: string): GateResult => ({ gate: 'G36 cli boot', passed: false, hard: true, details: m });
+  try {
+    const root = process.cwd();
+    const entry = path.join(root, 'scripts', 'cli-game.ts');
+    if (!fs.existsSync(entry)) return mk('scripts/cli-game.ts is missing — the documented entry point does not exist (npm run cli)');
+
+    const roots: string[] = [];
+    try {
+      const probes = await Promise.all(SESSION_MODES.map((mode) => {
+        const home = fs.mkdtempSync(path.join(os.tmpdir(), `mysterium-g36-${mode}-`));
+        roots.push(home);
+        return bootCli(mode, home, entry);
+      }));
+      const bad = probes.filter((p) => p.exitCode !== 0 || !p.ended);
+      if (bad.length > 0) {
+        return mk(bad.map((p) => `--mode=${p.mode}: ${p.detail}`).join('; '));
+      }
+      return {
+        gate: 'G36 cli boot', passed: true, hard: true,
+        details: `${probes.length} session modes boot headless against a throwaway state root and complete a session (${probes.map((p) => p.mode).join(', ')}); MYSTERIUM_HOME resolution honoured by the CLI`, };
+    } finally {
+      for (const dir of roots) { try { fs.rmSync(dir, { recursive: true, force: true }); } catch { /* best-effort */ } }
+    }
+  } catch (e) {
+    return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G37 — Checked graph + canonical constants (hard, plan Phase 14 d5; the `G25` pattern applied to
+// build config).
+//
+// Two assertions, both named by the audit.
+//
+//  1. **Checked graph.** Every production `.ts` under `src/` and `scripts/` matches a `tsconfig.json`
+//     `include` pattern. A file outside the graph is unverified BY CONSTRUCTION: `tsc`, the tests,
+//     the linter and every other gate skip it, so it can rot silently — the root cause of both the
+//     non-bootable CLI (`scripts/**` was excluded) and the retired `White` ladder that survived only
+//     in `scripts/**`.
+//  2. **No re-declared canonical constant.** No module outside the canonical owner builds an array
+//     literal containing a complete canonical set (stages / lines / drives / modalities). The `src/`
+//     copies agreed on the day they were measured — which is exactly why this is a precondition
+//     rather than a bug: the next retirement would have to find all of them.
+// ---------------------------------------------------------------------------
+
+/** Directories at or below a production root that the checked graph never contains. */
+const G37_SKIP_DIRS = new Set(['node_modules', 'dist', 'build', 'android', '.svelte-kit', 'coverage', '.wrangler']);
+
+/**
+ * Exemptions to assertion 2, each with the reason it is not a re-declaration. Extending this list
+ * is the conscious act the gate exists to force — a new entry must say why the list is a DIFFERENT
+ * vocabulary rather than a second copy of the canonical one.
+ */
+const G37_CANONICAL_EXEMPT: readonly { readonly file: string; readonly why: string }[] = [
+  {
+    file: 'src/core/personalization/udv.ts',
+    why: "`auditUdv`'s forbidden-token denylist is a superset vocabulary (stage names PLUS the ray/band markers `Indigo`, `Ultraviolet`, `cci`) — it lists tokens to REJECT from a serialized UDV, not an altitude ladder",
+  },
+  {
+    file: 'src/core/presentation/veilDescriptors.ts',
+    why: 'the player-facing descriptor table is keyed BY stage — a stage-indexed record, not a ladder passed to `indexOf`',
+  },
+  {
+    file: 'src/core/personalization/scenarioSeedVariants.ts',
+    why: '`MODALITY_ANGLES` is one AUTHORED angle per modality (46 §2/§6) — a table, not a ladder; adding a modality must add an authored angle, which is the point of the table',
+  },
+];
+
+/** Convert a tsconfig `include` glob to a matcher. Handles the directory-spanning and single-segment star forms used here. */
+function globToRegExp(pattern: string): RegExp {
+  let out = '';
+  for (let i = 0; i < pattern.length; i++) {
+    const c = pattern.charAt(i);
+    if (c === '*') {
+      if (pattern.charAt(i + 1) === '*') {
+        // a star immediately followed by a slash spans directories; a bare double-star spans anything
+        if (pattern.charAt(i + 2) === '/') { out += '(?:.*/)?'; i += 2; } else { out += '.*'; i += 1; }
+      } else {
+        out += '[^/]*';
+      }
+      continue;
+    }
+    out += '.+^$()|{}[]'.includes(c) || c === '?' ? '\\' + c : c;
+  }
+  return new RegExp('^' + out + '$');
+}
+
+/** Every `.ts` file under `dir`, as POSIX relative paths from the repo root. */
+function walkProductionTs(absDir: string, relDir: string, out: string[]): void {
+  let entries: fs.Dirent[];
+  try { entries = fs.readdirSync(absDir, { withFileTypes: true }); } catch { return; }
+  for (const e of entries) {
+    if (G37_SKIP_DIRS.has(e.name)) continue;
+    const rel = `${relDir}/${e.name}`;
+    if (e.isDirectory()) walkProductionTs(path.join(absDir, e.name), rel, out);
+    else if (e.isFile() && e.name.endsWith('.ts')) out.push(rel);
+  }
+}
+
+/**
+ * Parse JSON-with-comments (the form tsconfig files are written in). Tiny scanner rather than a
+ * dependency: strings are copied through so a `//` inside a path is never mistaken for a comment.
+ * Backslash and newline are named via `fromCharCode` so the source carries no escape sequences.
+ */
+function readJsonc(text: string): unknown {
+  const BS = String.fromCharCode(92);
+  const LF = String.fromCharCode(10);
+  let out = '';
+  let inString = false;
+  let quote = '';
+  for (let i = 0; i < text.length; i++) {
+    const c = text.charAt(i);
+    const next = text.charAt(i + 1);
+    if (inString) {
+      out += c;
+      if (c === BS) { out += next; i++; continue; }
+      if (c === quote) inString = false;
+      continue;
+    }
+    if (c === '"' || c === "'") { inString = true; quote = c; out += c; continue; }
+    if (c === '/' && next === '/') {
+      while (i < text.length && text.charAt(i) !== LF) i++;
+      out += LF;
+      continue;
+    }
+    if (c === '/' && next === '*') {
+      i += 2;
+      while (i < text.length && !(text.charAt(i) === '*' && text.charAt(i + 1) === '/')) i++;
+      i++;
+      continue;
+    }
+    out += c;
+  }
+  return JSON.parse(out);
+}
+
+export function validateCheckedGraph(): GateResult {
+  const mk = (m: string): GateResult => ({ gate: 'G37 checked graph', passed: false, hard: true, details: m });
+  try {
+    const root = process.cwd();
+    const configPath = path.join(root, 'tsconfig.json');
+    if (!fs.existsSync(configPath)) return mk('tsconfig.json not found at the repo root');
+    // tsconfig is JSONC: it carries `//` comments. Stripping them is what makes the assertion read
+    // the REAL config rather than a copy of it (a copy would be a second source that can drift).
+    const config = readJsonc(fs.readFileSync(configPath, 'utf-8')) as { include?: string[] };
+    const include = config.include ?? [];
+    if (include.length === 0) return mk('tsconfig.json declares no `include` — the checked graph is empty and nothing is verified');
+    const patterns = include.map(globToRegExp);
+
+    const files: string[] = [];
+    for (const dir of ['src', 'scripts']) walkProductionTs(path.join(root, dir), dir, files);
+    if (files.length === 0) return mk('no production TypeScript found under src/ and scripts/ — the walk is broken');
+
+    const outside = files.filter((rel) => !patterns.some((re) => re.test(rel)));
+    if (outside.length > 0) {
+      return mk(`${outside.length} production file(s) sit outside the checked graph — tsc/the tests/the gates never read them: ${outside.slice(0, 5).join(', ')}${outside.length > 5 ? ` (+${outside.length - 5} more)` : ''}`);
+    }
+
+    const sets: readonly { readonly name: string; readonly owner: string; readonly members: readonly string[] }[] = [
+      { name: 'stages', owner: 'src/core/domain/Stage.ts', members: ALL_STAGES as readonly string[] },
+      { name: 'lines', owner: 'src/core/domain/Line.ts', members: ALL_LINES as readonly string[] },
+      { name: 'drives', owner: 'src/core/domain/Drive.ts', members: ALL_DRIVES as readonly string[] },
+      { name: 'modalities', owner: 'src/core/domain/enums.ts', members: ALL_MODALITIES as readonly string[] },
+    ];
+    const exempt = new Set(G37_CANONICAL_EXEMPT.map((e) => e.file));
+
+    const redeclarations: string[] = [];
+    for (const rel of files) {
+      if (exempt.has(rel) || sets.some((s) => s.owner === rel)) continue;
+      const text = fs.readFileSync(path.join(root, rel), 'utf-8');
+      for (const literal of text.match(/\[[^\[\]]*\]/gs) ?? []) {
+        for (const set of sets) {
+          const present = set.members.filter((m) => literal.includes(`'${m}'`) || literal.includes(`"${m}"`)).length;
+          if (present === set.members.length) redeclarations.push(`${rel} rebuilds the canonical ${set.name} set`);
+        }
+      }
+    }
+    if (redeclarations.length > 0) {
+      return mk(`${redeclarations.length} re-declaration(s) of a canonical domain constant — import it from its owner instead: ${redeclarations.slice(0, 5).join('; ')}${redeclarations.length > 5 ? ` (+${redeclarations.length - 5} more)` : ''}`);
+    }
+
+    return {
+      gate: 'G37 checked graph', passed: true, hard: true,
+      details: `${files.length} production files inside the tsconfig include set (${include.length} patterns); 0 complete re-declarations of the canonical stages/lines/drives/modalities sets across them (${G37_CANONICAL_EXEMPT.length} documented exemptions)`, };
   } catch (e) {
     return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
   }

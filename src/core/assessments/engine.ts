@@ -13,6 +13,7 @@ import type {
   ModuleExecutionMode,
   ShadowAssessmentResult,
 } from './types.js';
+import { ALL_DRIVES } from '../domain/Drive.js';
 import type { Drive } from '../domain/Drive.js';
 
 const ALL_DIMENSIONS: readonly MeasureDimension[] = [
@@ -274,24 +275,23 @@ function computeDriveHealth(
 function identifyDominantPathology(
   driveHealth: DriveHealthScores,
 ): ShadowAssessmentResult['dominantPathology'] {
-  const drives: Drive[] = ['Agency', 'Communion', 'Eros', 'Agape'];
   const driveKeys = ['agency', 'communion', 'eros', 'agape'] as const;
 
   let worstDrive: Drive = 'Agency';
   let worstDomain: 'dark' | 'golden' = 'dark';
   let worstScore = 1;
 
-  for (let i = 0; i < 4; i++) {
-    const key = driveKeys[i];
+  for (let i = 0; i < ALL_DRIVES.length; i++) {
+    const key = driveKeys[i]!;
     const health = driveHealth[key];
     if (health.dark < worstScore) {
       worstScore = health.dark;
-      worstDrive = drives[i];
+      worstDrive = ALL_DRIVES[i]!;
       worstDomain = 'dark';
     }
     if (health.golden < worstScore) {
       worstScore = health.golden;
-      worstDrive = drives[i];
+      worstDrive = ALL_DRIVES[i]!;
       worstDomain = 'golden';
     }
   }

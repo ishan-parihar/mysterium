@@ -2,6 +2,7 @@
  * ConsequenceEngine — processes encounter outcomes into state mutations.
  * Spec: foundations/19 §8, foundations/22 §7
  */
+import { ALL_DRIVES } from '../domain/Drive.js';
 import type { Drive } from '../domain/Drive.js';
 import type { Line } from '../domain/Line.js';
 import { stageOrdinal } from '../domain/Stage.js';
@@ -405,11 +406,10 @@ function updateDriveBalance(
   current: Significator['drives'],
   directionality: Readonly<Record<Drive, DriveDirectionality>>,
 ): Significator['drives'] {
-  const drives: Drive[] = ['Agency', 'Communion', 'Eros', 'Agape'];
   const newWeights = { ...current.weights };
   const newFixation = { ...current.fixationRisk };
 
-  for (const drive of drives) {
+  for (const drive of ALL_DRIVES) {
     const signal = directionality[drive];
     switch (signal) {
       case 'DarkAddicted':
@@ -504,8 +504,7 @@ function updateKnowledgeFromEncounter(
   const driveDirectionality = record.polarityTrace.driveDirectionality;
   const driveScores: Record<string, number> = {};
   const driveSignals: Record<string, string> = {};
-  const drives: Drive[] = ['Agency', 'Communion', 'Eros', 'Agape'];
-  for (const d of drives) {
+  for (const d of ALL_DRIVES) {
     const signal = driveDirectionality[d] ?? 'HealthyBalanced';
     driveSignals[d] = signal;
     // Calibrated defaults for DepthAssessment scoring:

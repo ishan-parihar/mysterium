@@ -9,6 +9,7 @@
  * Veil rule: all player-facing values are felt-sense; raw numbers stay behind --dev/--json.
  * Timing rule: these tools never run a trial loop — they read stores only.
  */
+import { ALL_LINES } from '../domain/Line.js';
 import type { Significator } from '../domain/Significator.js';
 import type { CognitiveIndex } from '../training/CognitiveIndex.js';
 import type { TrialRecordStore } from '../braingame/TrialRecordStore.js';
@@ -69,7 +70,7 @@ export const RECOMMEND_TRAJECTORY_TOOL = {
       type: 'object',
       properties: {
         minutes: { type: 'integer', minimum: 5, maximum: 45, description: 'Time budget for the next arc.' },
-        focusLine: { type: 'string', enum: ['Cognitive','Emotional','Moral','Intrapersonal','Spiritual','Somatic','Willpower','Interpersonal'], description: 'Optional line to bias toward.' },
+        focusLine: { type: 'string', enum: [...ALL_LINES], description: 'Optional line to bias toward.' },
       },
       required: ['minutes'] as string[],
     },
