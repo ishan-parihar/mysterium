@@ -34,8 +34,34 @@ import type { TagStore } from '../world/tags/dialectic.js';
 import { distanceFrom, axisCentroid } from './polarityIndex.js';
 import type { Tag, TagId } from '../world/tags/types.js';
 
+// Phase 13 d6 — engagement-register enforcement at the mechanism seam (45 §7.3, MY-RG-0017).
+// Each pole IS a retention mechanism: the familiar pole is `analogical-resonance` ("the material
+// speaks their language"), the unfamiliar/shadow-facing poles are `curiosity-gap` ("an opened
+// question the player wants to close" — the expansion demand). A mechanism that has not passed
+// BOTH register tests has no legitimate place in the product; the seam refuses to serve it and
+// degrades to the always-lawful pole rather than ship an unregistered hook. The default register
+// here is the SHARED singleton shape (all 8 pre-registered mechanisms pass both tests), so this
+// enforcement is structural teeth, not a behavioral change — a mechanism removed from the
+// register would immediately stop being servable at this seam.
+import { createEngagementRegister, type EngagementRegister } from './engagementRegister.js';
+
 /** Which pole an encounter serves — the plan's ratified vocabulary. */
 export type Pole = 'familiar' | 'unfamiliar' | 'shadow-facing';
+
+/** Pole → the engagement mechanism that pole exercises (45 §7.1's binding). */
+export function poleMechanism(pole: Pole): 'analogical-resonance' | 'curiosity-gap' {
+  return pole === 'familiar' ? 'analogical-resonance' : 'curiosity-gap';
+}
+
+/** The process-wide register the seam consults (the register is a config surface, not per-call state). */
+let mechanismRegister: EngagementRegister | null = null;
+export function setMechanismRegister(r: EngagementRegister): void {
+  mechanismRegister = r;
+}
+function activeRegister(): EngagementRegister {
+  if (!mechanismRegister) mechanismRegister = createEngagementRegister();
+  return mechanismRegister;
+}
 
 export interface PoleDecision {
   readonly pole: Pole;
@@ -161,6 +187,9 @@ export function decidePole(store: TagStore, input: PoleDecisionInput): PoleDecis
   // Pole selection: shadow-facing when the ledger is live on this line and the dose demands it;
   // unfamiliar when the expansion demand beats the draw; familiar otherwise. A pool that would
   // serve an unfamiliar/shadow-facing decision but is EMPTY degrades to familiar (law 3).
+  // d6: a pole whose mechanism is not both-tests-passed in the register is REFUSED — the seam
+  // degrades to familiar rather than serve an unregistered retention mechanism (MY-RG-0017).
+  const register = activeRegister();
   const wantShadow = input.shadowSeverity > 0.2 && share > Math.max(0, input.seedNoveltyBudget) + 1e-9;
   const wantUnfamiliar = share > input.draw;
   let pool: { c: PoolCandidate; d: number }[];
@@ -175,9 +204,13 @@ export function decidePole(store: TagStore, input: PoleDecisionInput): PoleDecis
     pool = familiarPool;
     pole = 'familiar';
   }
-  if (pole !== 'familiar' && pool.length === 0) {
+  if (pole !== 'familiar' && (!register.isMechanismAllowed(poleMechanism(pole)) || pool.length === 0)) {
     pool = familiarPool;
     pole = 'familiar';
+  }
+  if (!register.isMechanismAllowed(poleMechanism(pole))) {
+    // Both mechanisms unregistered: no lawful hook exists — degrade to a mechanism-null decision.
+    return null;
   }
 
   const ordered = withinClass(pool);

@@ -366,6 +366,11 @@ import { thresholdToStage } from '../src/core/usecases/ThresholdMaps.js';
 // library, owner-worker pool. Carried across encounters in the session loop; persisted with the
 // world save so NPC profiles survive the process.
 import { createOrchestrationServices, captureCheckpoint, type OrchestrationServices, type RuntimeCheckpoint } from '../src/core/personalization/sessionRuntime.js';
+// Phase 13 d9b (memory-audit P3): the crash-sidecar journal — appended at every checkpoint
+// capture, replayed before the restored checkpoint is trusted, closing the crash window
+// between sessionEnd and saveAll (the last session otherwise dies with the process).
+import { appendJournalEntry, replayJournal, journalPathFor } from '../src/infra/persistence/sessionJournal.js';
+import { getMysteriumProfileDir } from '../src/infra/persistence/mysteriumDir.js';
 import { purposesFromVows, purposesFromGoals, preferenceFromHistory } from '../src/core/personalization/bandSources.js';
 import { feedPlanningBias } from '../src/core/orchestration/feedReaders.js';
 // P1-3 (UX-R3): configurable saturation threshold + per-line progress.
@@ -3347,7 +3352,19 @@ async function runFullSession(): Promise<void> {
   // memory survives the restart — F3 replay makes the restore exact. Created BEFORE startSession
   // so reader 1 (27 planning, Phase 11 d2) can see the restored feed's trend.
   const savedCheckpoint = (world as { orchestrationCheckpoint?: RuntimeCheckpoint }).orchestrationCheckpoint;
-  const orchestration = createOrchestrationServices(world.holons, savedCheckpoint);
+  // Phase 13 d9b: replay the crash-sidecar journal BEFORE trusting the restored checkpoint — a
+  // session that ended after the last saveAll is pending here. The merged checkpoint seeds the
+  // services; the summary is logged so recovery is never silent (LM-c's countermeasure).
+  const journalReplay = savedCheckpoint
+    ? replayJournal(getMysteriumProfileDir(), savedCheckpoint)
+    : { checkpoint: undefined as unknown as RuntimeCheckpoint, replayed: 0, consumed: 0, droppedTorn: 0 };
+  if (journalReplay.replayed > 0 || journalReplay.droppedTorn > 0) {
+    console.log(
+      `[journal] recovered ${journalReplay.replayed} unsaved session(s)` +
+        `${journalReplay.droppedTorn > 0 ? `, dropped ${journalReplay.droppedTorn} torn line(s)` : ''}`,
+    );
+  }
+  const orchestration = createOrchestrationServices(world.holons, savedCheckpoint ? journalReplay.checkpoint : undefined);
 
   // M4: When --agent is set, use the TDG-augmented session start. This blends
   // TDG G_z/P_z into the CCI's metabolicHealth dimension and runs a graph-level
@@ -3632,6 +3649,10 @@ async function runFullSession(): Promise<void> {
       // and the dialectic pair map survive the process (22 §7.5 — all serializable by design).
       (currentWorld as { orchestrationCheckpoint?: RuntimeCheckpoint }).orchestrationCheckpoint =
         captureCheckpoint(orchestration);
+      // Phase 13 d9b: the sidecar journal — one append-only line per checkpoint, so a crash
+      // before the next saveAll still leaves this session recoverable at next boot.
+      appendJournalEntry(getMysteriumProfileDir(), (currentWorld as { orchestrationCheckpoint: RuntimeCheckpoint }).orchestrationCheckpoint);
+      void journalPathFor; // path helper re-exported for diagnostics; the journal lives in the profile dir
 
       // Wave 1.1: Apply the response to the GameLoop's state engines
       // (UserMatrixModel + transformation state) WITHOUT re-applying consequences

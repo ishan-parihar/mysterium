@@ -108,9 +108,11 @@ interface MemoryRetriever {
   (holon `relationships`, feed refs) fused by **reciprocal-rank fusion**. Deterministic, keyless,
   file-persisted. Serves: library ranking enrichment (#8), cross-session thread recall, continuity
   time-slices ("the Amber arc, three weeks ago").
-  **Status (2026-09-23):** built and gate-validated (G31), but **not yet on a production path** —
-  the candidate-library shortlist is still enumerated, not retrieved. Wiring is Phase 13 d3
-  (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md` §5).
+  **Status (2026-09-24): LIVE on the candidate path.** Phase 13 d3 wired the shortlist into the
+  pooling seam (`retrievalShortlist.ts`): above `SHORTLIST_THRESHOLD` candidates the library is
+  retrieved (BM25+recency+graph RRF), below it enumeration stands bit-identically; `recallGuard`
+  re-checks shortlist text at the same seam (R1/R3). Cross-session thread recall and continuity
+  time-slices remain declared, not wired (they need real play traffic to tune).
 - **`EmbeddingRetriever` — optional, local-only.** Pinned model (`all-MiniLM-L6-v2`, version
   recorded in the save) via transformers.js (browser) / onnxruntime-node (CLI). Never an API call,
   never a key, never a field of record. Used for semantic candidate matching when the local model

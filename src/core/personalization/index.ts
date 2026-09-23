@@ -67,3 +67,6 @@ export type { CompositionEvent, DefectReport } from './diversityMonitor.js';
 
 export { createEngagementRegister, FORBIDDEN_MECHANISMS } from './engagementRegister.js';
 export type { EngagementRegister, MechanismRecord, EngagementMechanismId } from './engagementRegister.js';
+export { shortlist, recallGuard, candidateText, SHORTLIST_THRESHOLD, SHORTLIST_LIMIT } from './retrievalShortlist.js';
+export { createProbeRuntime, nextOfferable, recordProbeChoice, declineProbeOffer, harnessReport } from './probeRuntime.js';
+export type { ProbeRuntime } from './probeRuntime.js';

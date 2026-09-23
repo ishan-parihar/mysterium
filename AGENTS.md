@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 COMPLETE (d1/d2/d10/d11/d12 built, G32–G35; d3–d9 post-phase calibration); memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 FULLY COMPLETE (all deliverables d1–d12 built, G32–G35; battery 1 507); memory infrastructure live (G28–G31)
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. **All build phases through 12** are **implemented and gated** — the kernel gate suite
@@ -397,9 +397,15 @@ d3–d10 remain open (d10 is the gating dependency for the phase's differential 
 > now carries the closure evidence per gap.
 
 Cite the plan, the three audits, and the ledger — never a phase number spoken from
-memory. **Phase 13 is COMPLETE: d1/d2/d10/d11/d12 built and gated (G32–G35; battery 1 483
-tests). The Polarity Pool (d10) closed the differential criterion — the UDV is a real retrieval
-key. d3–d9 are post-phase calibration work, owned by the wiring audit's table.**
+memory. **Phase 13 is COMPLETE — ALL deliverables built and gated (G32–G35; battery 1 507
+tests, 132 files). The Polarity Pool (d10) closed the differential criterion — the UDV is a
+real retrieval key. The wiring-completion set (d3–d9, built 2026-09-24) closed the remaining
+post-phase calibration items: d3 retrieval on the candidate path (shortlist + recallGuard at
+the pooling seam), d4 runtime composition telemetry, d5 probes reachable in play + the RV
+harness live, d6 engagement-register enforcement at the mechanism seam, d7 the composition
+engine ROUTED (`compositionRuntime.ts`, the `composed:` library tier), d8 doc status marks,
+d9a the MemoryPage render budget, d9b the crash-sidecar session journal
+(`infra/persistence/sessionJournal.ts`), d9c the firewall randomized property sweep.**
 
 **The binding plan is `docs/DEVELOPMENT-PLAN.md`** (order + gates). It is revised in-place; on
 conflict the foundations docs win and the plan is revised.

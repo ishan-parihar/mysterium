@@ -386,6 +386,13 @@ UDV and the developmental state; step 5 is constraint-solved, not free-form. LLM
 inside the envelope as `22 §1` specifies, and the authored/generated boundary of `22 §8` is
 unchanged: the *facet stock* is canon, the *composition* is generated.
 
+**Status (2026-09-24): ROUTED.** Phase 13 d7 resolved the composition engine's status (the audit
+found `compose()` test-only). `compositionRuntime.ts` runs steps 1–5 over the compiled facet store
+at service creation: one Situation entity per (cell × modality) with a non-empty, aversion-free
+pull, deterministic from the store, joining the candidate library as the `composed:` tier. Cells
+with empty pulls compose nothing — degradation, never fabrication. Steps 6–7 remain the envelope
+seam's job (`sessionRuntime`).
+
 ### 7.1 Composition determinism
 
 A composition must be **reproducible** for a replayed session (`22 §9`). Each composition records
@@ -496,7 +503,7 @@ single organ directory is what makes `arch.py context` able to answer "what gove
 | **Dialectical falsification** | the opposite pole distorts the concept | `45 §5.4` structural fidelity, scored on `C` |
 | **Facet incoherence** | composed parts contradict (an Amber voice on a Green stake) | `composedWith` dependency order + coherence check in step 5 |
 | **Corpus divergence** | the facet store drifts from the concept-drafts | compiler-only path (§8), reconciliation gate |
-| **Visibility collapse** | the same 20 facets are seen everywhere | measures the composition's *entropy* per line×stage and flags low-diversity cells. **Status (2026-09-23):** the monitor exists (`personalization/diversityMonitor.ts`) but only the calibration script records composition events, so the runtime seam is currently **unmonitored** — Phase 13 d4 (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md` §5) |
+| **Visibility collapse** | the same 20 facets are seen everywhere | measures the composition's *entropy* per line×stage and flags low-diversity cells. **Status (2026-09-24): LIVE** — Phase 13 d4 wired `compositionTelemetry.record` into the envelope seam (`sessionRuntime.buildEnvelope`); every runtime composition is an event, and defect reports reach the dev loop only (`46 §11`: triage, not the player) |
 
 ---
 

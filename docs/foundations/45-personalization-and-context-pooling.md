@@ -356,10 +356,11 @@ Both tests are recorded per mechanism in the implementation's engagement registe
 class is `MY-RG-0017`. The register exposes `isMechanismAllowed` as the check organs call before
 activating a retention mechanism.
 
-**Status (2026-09-23):** the register and both tests are implemented
-(`personalization/engagementRegister.ts`, all seven mechanisms registered), but the runtime check is
-not yet called by any organ — today it is asserted by a test only. Enforcement at the mechanism seam
-is Phase 13 d6 (`docs/audits/WIRING-CONTRAST-AUDIT-2026-09-23.md` §5).
+**Status (2026-09-24): ENFORCED at the mechanism seam.** Phase 13 d6 wired `isMechanismAllowed`
+into the pole decision (`poleDecision.ts`): every pole maps to its registered mechanism
+(familiar → `analogical-resonance`; unfamiliar/shadow-facing → `curiosity-gap`), and a pole whose
+mechanism is not both-tests-passed is refused — the seam degrades to the lawful pole or null
+(MY-RG-0017's teeth, live).
 
 ---
 

@@ -351,6 +351,12 @@ the game is never diagnostic to the user).
 - **Declinable.** A refused probe yields no reading and the refusal is not recorded (§5.2).
 - **Coverage is not required.** Unprobed distinctions simply stay in the weight/ephemeral band; the
   practice works without them.
+- **Status (2026-09-24): reachable in play, log-only.** Phase 13 d5 wired the offer/decline/record
+  path (`probeRuntime.ts` on `sessionRuntime`): budget-paced offers (`MAX_PROBES_PER_SESSION`),
+  readings split by the RV band at the seam (flag/evidence drift demotes to log-only — fail-closed),
+  and the RV harness (`runProbeRvHarness`) is executable from the play path and the calibration
+  script. All authored probes remain LOG-ONLY until a real-rater RV1–RV7 pass — no synthetic run
+  flips `rvPassed`.
 
 ---
 

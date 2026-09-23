@@ -197,13 +197,30 @@ export function buildMemoryPage(
 /**
  * The boot-time prose block — the `[CONTINUITY]` head. Banded language only (M4); an empty page
  * (no history) yields an empty array — the pre-memory pipeline is the fallback (45 §5).
+ *
+ * Render budget (memory-audit P1, d9a): DEFENSIVE caps independent of the M2 build budgets —
+ * the block consumes any MemoryPage-shaped object (older saves, foreign builders), so it cannot
+ * TRUST the budgets held. Line count, per-line length, and total characters are capped here so
+ * a pathological page can never bloat the system prompt, whoever produced it.
  */
+export const MAX_BLOCK_LINES = 12;
+export const MAX_LINE_CHARS = 300;
+export const MAX_BLOCK_CHARS = 1400;
+
 export function memoryPageBlock(page: MemoryPage | undefined): readonly string[] {
   if (!page) return [];
   const out: string[] = [];
-  if (page.trajectory) out.push(page.trajectory);
-  for (const t of page.openThreads.slice(-3)) out.push(`${t.summary} (from an earlier sitting)`);
-  for (const h of page.holonStates.slice(0, 4)) out.push(h.stance);
+  let total = 0;
+  const push = (raw: string) => {
+    if (out.length >= MAX_BLOCK_LINES || total >= MAX_BLOCK_CHARS) return;
+    const line = raw.length > MAX_LINE_CHARS ? `${raw.slice(0, MAX_LINE_CHARS - 1)}…` : raw;
+    const room = MAX_BLOCK_CHARS - total;
+    out.push(line.length > room ? `${line.slice(0, room - 1)}…` : line);
+    total += out[out.length - 1]!.length + 1; // +1: the join separator the renderer pays
+  };
+  if (page.trajectory) push(page.trajectory);
+  for (const t of page.openThreads.slice(-3)) push(`${t.summary} (from an earlier sitting)`);
+  for (const h of page.holonStates.slice(0, 4)) push(h.stance);
   return out;
 }
 

@@ -19,6 +19,7 @@ import type { TagId } from '../world/tags/types.js';
 import type { TagStore } from '../world/tags/dialectic.js';
 import type { UserDimensionalityVector } from './udv.js';
 import { selectPoles, type PoleSelection, type PolarityStateMap, type DialecticMode } from './dialecticEngine.js';
+import { shortlist, recallGuard } from './retrievalShortlist.js';
 
 /** A pooled candidate — one rendering of one catalyst cell (45 §5.2.1's structural claim). */
 export interface PoolCandidate {
@@ -210,7 +211,19 @@ export function pool(
   readonly deferrals: readonly DeferralRecord[];
 } {
   const query = buildQuery(store, udv, opts.resolve);
-  const { primary, texture } = constraintFilter(candidates, {
+
+  // Phase 13 d3 — retrieval on the candidate path (48 §4's scale intent): above the size
+  // threshold the derived library is SHORTLISTED by the LocalRetriever (BM25+recency+graph RRF)
+  // against the query before the pipeline runs; below it (and for empty queries) enumeration
+  // stands — bit-identical behavior, so the threshold is a pure scale measure. The recall guard
+  // then re-checks the shortlist's text at this seam (R1/R3 — the candidate-path site of the
+  // same law the memory recall path enforces). Both steps degrade to enumeration, never block.
+  const queryText = [...query.interestTerms, ...query.analogyTerms, ...query.purposeTerms]
+    .map((t) => t.tag)
+    .join(' ');
+  const considered = recallGuard(shortlist(candidates, queryText, opts.now), 'library-canon');
+
+  const { primary, texture } = constraintFilter(considered, {
     query,
     maxStratum: opts.maxStratum,
     playerDepth: opts.playerDepth,

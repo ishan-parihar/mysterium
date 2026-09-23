@@ -46,6 +46,11 @@ import { contextualSeed } from './scenarioSeedVariants.js';
 import { checkCoherence, type CoherenceDefect } from './stageCoherence.js';
 import { deriveLibraryVariants } from './polarityIndex.js';
 import { decidePole } from './poleDecision.js';
+import { createCompositionTelemetry, type CompositionTelemetry } from './compositionTelemetry.js';
+import { createProbeRuntime, type ProbeRuntime } from './probeRuntime.js';
+import type { ProbeReading } from './probeSet.js';
+import { composeSituationLibrary } from './compositionRuntime.js';
+import { AUTHORED_PROBES } from './probeContent.js';
 import {
   applyReading, deterministicReading, polarityCoverage,
   type EncounterRecord, type PolarityReading, type ReadingApplication, type ConfirmationTally,
@@ -94,6 +99,12 @@ export interface OrchestrationServices {
   readonly tallies: ConfirmationTally;
   /** The optional System-1 reader (43 §2) — when absent, the deterministic fallback proposes. */
   readonly system1?: System1Reader;
+  /** Phase 13 d4 — the composition telemetry (46 §11): runtime composition events recorded at
+   *  the envelope seam, evaluated on demand; defect reports reach the dev loop, never the player. */
+  readonly telemetry: CompositionTelemetry;
+  /** Phase 13 d5 — the probe runtime (47 §7): the offer/decline/record path for the authored
+   *  probe set. Budget-paced per session; readings land in the validated or log-only band. */
+  readonly probes: ProbeRuntime;
 }
 
 /** Build a fresh services record. `holons` seeds NPC derivation; empty is valid (no NPC candidates).
@@ -103,17 +114,24 @@ export interface OrchestrationServices {
 export function createOrchestrationServices(holons: readonly Holon[] = [], restore?: RuntimeCheckpoint): OrchestrationServices {
   const base = seedCandidateLibrary(sharedFacetStore());
   const tags = createTagStore(INITIAL_TAGS);
+  // Phase 13 d7 — the composition engine ROUTED (46 §7): Situation entities are instantiated
+  // from the compiled facet store at service creation and join the scenario tier as the
+  // `composed:` candidates. Cells with empty pulls compose nothing (degradation, never
+  // fabrication); the authored seeds and the derived skeleton still carry them.
+  const composed = composeSituationLibrary(sharedFacetStore(), tags);
   const services: OrchestrationServices = {
     feed: createReportingFeed(),
     tags,
     // Phase 13 d10 L1: the library is DERIVED — every cell gains familiar-capable and
     // unfamiliar-capable recolourings so the UDV's bands have something to order (W11's fix).
-    library: deriveLibraryVariants([...base, ...deriveNpcCandidates(holons)], tags),
+    library: deriveLibraryVariants([...base, ...composed.candidates, ...deriveNpcCandidates(holons)], tags),
     states: {},
     workers: createOwnerWorkerPoolState(),
     holons,
     readings: [],
     tallies: {},
+    telemetry: createCompositionTelemetry({ now: () => Date.now() }),
+    probes: createProbeRuntime(AUTHORED_PROBES),
   };
   if (restore) restoreCheckpoint(services, restore);
   return services;
@@ -341,6 +359,19 @@ export function buildEnvelope(
     deferredCells: result.deferrals.slice(0, 4).map((d) => `${d.cell.line}:${d.cell.stage}:${d.cell.modality}`),
     pole: decision?.pole ?? null,
   };
+
+  // Phase 13 d4 — composition telemetry at the runtime seam (46 §11): the envelope IS a
+  // composition; its facet keys are the pooled scenario tier's renderings. Events are recorded
+  // always (bounded FIFO); the diversity monitors are evaluated lazily by the dev loop, and
+  // defect reports are triaged there — never surfaced to the player.
+  services.telemetry.record({
+    cell: `${target.line}:${target.stage}`,
+    facetKeys: result.ranked
+      .filter((c) => c.id.startsWith('scenario:'))
+      .slice(0, 8)
+      .map((c) => c.id),
+    at: now,
+  });
 
   // 45 §6.1 — the council alignment, computed at the live seam for EVERY role. The scenario-
   // catalyst renders the encounter (it receives all bands); the assessment role receives the
@@ -805,6 +836,9 @@ export interface RuntimeCheckpoint {
   /** Phase 13 d10 L3 — the reading log + confirmation tallies ride the checkpoint too. */
   readonly readings?: readonly PolarityReading[];
   readonly tallies?: ConfirmationTally;
+  /** Phase 13 d5 — the probe readings made this session (validated + log-only), so the
+   *  budget paces across a checkpoint restore correctly. */
+  readonly probeReadings?: { readonly validated: readonly string[]; readonly logOnly: readonly string[] };
 }
 
 /** Capture the current runtime state for persistence. */
@@ -839,6 +873,10 @@ export function captureCheckpoint(services: OrchestrationServices): RuntimeCheck
     states: services.states,
     readings: services.readings,
     tallies: services.tallies,
+    probeReadings: {
+      validated: services.probes.ledger.validatedReadings.map((r) => r.probeId),
+      logOnly: services.probes.ledger.logOnlyReadings.map((r) => r.probeId),
+    },
   };
 }
 
@@ -866,6 +904,20 @@ export function restoreCheckpoint(
   }
   if (checkpoint.tallies) {
     (services as { tallies: ConfirmationTally }).tallies = checkpoint.tallies;
+  }
+  // Phase 13 d5: replay the probe ledger's played set so the per-session budget resumes from
+  // the checkpoint rather than re-offering an already-answered probe.
+  if (checkpoint.probeReadings) {
+    const ledger = services.probes.ledger as unknown as { validatedReadings: ProbeReading[]; logOnlyReadings: ProbeReading[] };
+    const at = Date.now();
+    for (const id of checkpoint.probeReadings.validated) {
+      const p = services.probes.ledger.probes.find((x) => x.id === id);
+      if (p) ledger.validatedReadings.push({ probeId: p.id, pole: p.poleA, at, instrumentValidated: true });
+    }
+    for (const id of checkpoint.probeReadings.logOnly) {
+      const p = services.probes.ledger.probes.find((x) => x.id === id);
+      if (p) ledger.logOnlyReadings.push({ probeId: p.id, pole: p.poleA, at, instrumentValidated: false });
+    }
   }
 }
 
