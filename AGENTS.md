@@ -596,6 +596,23 @@ Latitude: `LINE_QUADRANT` maps lines to UL/UR/LL and leaves LR to the world-stat
 4. Follow the existing architecture (core/infra/game layers, registries)
 5. All code must pass build + tests before being committed
 
+**Module cohesion (normative — full doctrine in `docs/audits/MODULE-COHESION-AUDIT-2026-09-24.md` §2):**
+
+| Rule | In one line |
+|---|---|
+| **M1** | The unit of cohesion is a **responsibility**, not a line count. State what a split separates, never "this file is long". |
+| **M2** | Rule of Three: extract at 3+ uses of the *same decision*; prefer duplication over a wrong abstraction; a **flag parameter** is the smell — use a discriminated union. Unwind a wrong abstraction rather than patching it. |
+| **M3** | A comment narrating *"first… then… then…"* is a split signal: make the steps **named calls**. Highest-yield rule in this repo (its session flows are written as narrated steps). |
+| **M4** | `//` explains **why** (link the authority: `43 §5.5`, `MY-AD-0029`); `/** */` explains **what/how**. A `TODO` must name its owner. A stale comment is worse than none — fix or delete it in the same commit. |
+| **M5** | Types are the primary documentation: literal unions over `string`, `readonly` domain interfaces instead of newtypes, `T | undefined` instead of a sentinel, exhaustive `switch`/`Record<Union, X>`, one discriminated union instead of several booleans. **If a value derives from a canonical constant, import it.** |
+| **M6** | Never `throw` across a seam that must degrade — a seam returns a result union or `undefined` and the caller defaults. Fail-closed is the documented exception (kernel gates, the firewall), and it says so. |
+| **M7** | Tests are **DAMP, not DRY**: share fixtures, keep setup/action/assertions inline. Tests have no tests — logic hidden in a shared helper is untested logic. |
+| **M8** | Import order: stdlib → external → workspace aliases → relative. **Never a second binding for a canonical constant** (a shadowing local `const { ALL_LINES } = await import(...)` beside a module-level import is a defect class). |
+| **M9** | **No file may live outside the checked graph** — enforced by **G37** (`tsconfig` `include` + no re-declared canonical set). A file `tsc`, the tests, the gates and the linter do not read is unverified *by construction*. |
+| **M10** | Advisory bands: ≤300 normal · 300–500 one nameable responsibility · 500–1 000 **justify in the module doc-comment** · >1 000 **split candidate by default** (staying whole requires a documented reason). What is *enforced* is M9 — a line ceiling would manufacture the wrong abstractions M2 warns about. |
+
+Before proposing a split, run the report: `grep -c ''` per file is not the test — **state the responsibilities separated**. The audit's Tier C list records the large files that are deliberately whole (CCI, `delegate.ts`, `GameLoop.ts`), so the next reader does not "fix" them.
+
 ### 7.5 The Iteration Protocol (MANDATORY)
 
 Every development iteration — no exceptions — must follow this sequence:

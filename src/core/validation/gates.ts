@@ -2069,6 +2069,30 @@ interface CliBootProbe {
   readonly ended: boolean;
   readonly timedOut: boolean;
   readonly detail: string;
+  /** Phase 14 d4: did this mode persist the orchestration checkpoint? */
+  readonly persisted: boolean;
+}
+
+/**
+ * Did the boot leave an orchestration checkpoint behind? The default (DQ) surface bypassed the whole
+ * architecture until Phase 14 d4 — this is the assertion that both modes run the REAL loop, not just
+ * that they exit 0 (an exit-0 session that persists nothing is exactly what the audit found).
+ */
+function checkpointPersisted(home: string): boolean {
+  // A first session has no active profile yet, so the save lands at the state root; once a profile
+  // exists it lands under `profiles/<name>/`. Both are legitimate homes for the same file.
+  const dirs = [home];
+  try {
+    for (const name of fs.readdirSync(path.join(home, 'profiles'))) dirs.push(path.join(home, 'profiles', name));
+  } catch { /* no profiles dir yet — the root alone is enough */ }
+  for (const dir of dirs) {
+    for (const file of ['world.json', 'save-all.json', 'save.json']) {
+      try {
+        if (fs.readFileSync(path.join(dir, file), 'utf-8').includes('orchestrationCheckpoint')) return true;
+      } catch { /* absent is expected for most of them */ }
+    }
+  }
+  return false;
 }
 
 /** Boot the CLI once, headless, against `home`. Never rejects — a failure is probe data. */
@@ -2093,18 +2117,20 @@ function bootCli(mode: string, home: string, entry: string): Promise<CliBootProb
     child.stderr.on('data', (d: Buffer) => { stderr += d.toString(); });
     child.on('error', (e) => {
       clearTimeout(timer);
-      resolve({ mode, exitCode: null, ended: false, timedOut, detail: `spawn failed: ${e.message}` });
+      resolve({ mode, exitCode: null, ended: false, timedOut, persisted: false, detail: `spawn failed: ${e.message}` });
     });
     child.on('close', (code) => {
       clearTimeout(timer);
       const ended = /"type":\s*"session_ended"/.test(stdout);
+      const persisted = checkpointPersisted(home);
       const tail = stderr.trim().split('\n').filter(Boolean).slice(-2).join(' | ');
       resolve({
-        mode, exitCode: code, ended, timedOut,
+        mode, exitCode: code, ended, timedOut, persisted,
         detail: timedOut ? 'timed out after 120s'
           : code !== 0 ? `exit ${code}${tail ? ` — ${tail}` : ''}`
           : !ended ? 'no session_ended event on stdout — the session did not complete'
-          : `exit 0, session completed`,
+          : !persisted ? 'session completed but persisted no orchestration checkpoint — the mode runs outside the architecture'
+          : `exit 0, session completed, checkpoint persisted`,
       });
     });
   });
@@ -2124,13 +2150,13 @@ export async function validateCliBoot(): Promise<GateResult> {
         roots.push(home);
         return bootCli(mode, home, entry);
       }));
-      const bad = probes.filter((p) => p.exitCode !== 0 || !p.ended);
+      const bad = probes.filter((p) => p.exitCode !== 0 || !p.ended || !p.persisted);
       if (bad.length > 0) {
         return mk(bad.map((p) => `--mode=${p.mode}: ${p.detail}`).join('; '));
       }
       return {
         gate: 'G36 cli boot', passed: true, hard: true,
-        details: `${probes.length} session modes boot headless against a throwaway state root and complete a session (${probes.map((p) => p.mode).join(', ')}); MYSTERIUM_HOME resolution honoured by the CLI`, };
+        details: `${probes.length} session modes boot headless against a throwaway state root, complete a session and persist the orchestration checkpoint (${probes.map((p) => p.mode).join(', ')}); MYSTERIUM_HOME resolution honoured by the CLI`, };
     } finally {
       for (const dir of roots) { try { fs.rmSync(dir, { recursive: true, force: true }); } catch { /* best-effort */ } }
     }

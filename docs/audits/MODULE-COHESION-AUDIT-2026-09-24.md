@@ -10,8 +10,11 @@ reader — human or agent — holds it in view at once, and therefore where do t
 accumulate? It also ratifies the **doctrine** those splits must follow, so future splitting is
 principled rather than cosmetic.
 
-> **Status of this document.** §2 is **normative** (the doctrine; standing rules also summarised in
-> `AGENTS.md §7.4`). §3–§6 are the **dated findings** for this measurement.
+> **Status of this document.** §2 is **normative** (the doctrine; standing rules are also carried in
+> `AGENTS.md §7.4` as `M1–M10`). §3–§6 are the **dated findings** for this measurement. **Landing
+> status:** the prerequisite gate (`G37`) and the doctrine landed 2026-09-24 (`MODULE-COHESION` items
+> 0, and §5's two hard gates); the seven splits in §4 remain open and are scheduled — see the plan's
+> Phase 14 d3 and the §4 status column for the honest per-item state.
 
 ---
 
@@ -190,20 +193,28 @@ Recorded so the next reader does not "fix" them:
 
 ## 4. Actionable backlog
 
-| # | Item | Band | Depends on |
+| # | Item | Band | Status |
 |---|---|---|---|
-| 1 | `cli-game.ts` split + calibration extraction to `src/core/` | > 1 000 | doctrine §2; Phase 14 **d3** |
-| 2 | `gates.ts` split by family + `index.ts` roster | > 1 000 | nothing (mechanical; `G37` should land first so the new files can't escape the graph) |
-| 3 | `TaskRenderers.ts` split by renderer group | > 1 000 | item 2's pattern |
-| 4 | `AgenticOrchestrator` collaborator extraction | > 1 000 | incremental; existing 645-line test is the lock |
-| 5 | `FallbackProvider.ts` data extraction | > 1 000 | nothing |
-| 6 | `ContextPipeline.ts` block promotion (M3) | 500–1 000 | nothing |
-| 7 | `sessionRuntime.ts` split behind an index re-export | 500–1 000 | must preserve the single seam (M6) |
-| 8 | `GameLoop.ts` — revisit only if `SessionState` becomes its own module | 1 000+ | not now |
+| 0 | **Prerequisite: `G37` must land before any split** | — | ✅ **DONE 2026-09-24** (Phase 14 d5) — every production `.ts` is now inside the tsconfig `include`, so a new file cannot escape the graph, and no module may rebuild a canonical set. The *scaffolder↔linter↔indexer* lesson from `KOSMOS-RG-008` applied to this repo's own gate |
+| 1 | `cli-game.ts` split + calibration extraction to `src/core/` | > 1 000 | **OPEN** — this is Phase 14 **d3**; Q10's ruling (extract the calibration block, where F5 lived) stands |
+| 2 | `gates.ts` split by family + `index.ts` roster | > 1 000 | **OPEN** — mechanical, and `G37` (item 0) has now landed, which was its only dependency |
+| 3 | `TaskRenderers.ts` split by renderer group | > 1 000 | **OPEN** — mechanical |
+| 4 | `AgenticOrchestrator` collaborator extraction | > 1 000 | **OPEN** — incremental; the 645-line test is the lock |
+| 5 | `FallbackProvider.ts` data extraction | > 1 000 | **OPEN** — mechanical (data, not logic) |
+| 6 | `ContextPipeline.ts` block promotion (M3) | 500–1 000 | **OPEN** |
+| 7 | `sessionRuntime.ts` split behind an index re-export | 500–1 000 | **OPEN** — must preserve the single seam (M6) |
+| 8 | `GameLoop.ts` — revisit only if `SessionState` becomes its own module | 1 000+ | **Not now** (Tier C) |
 
-**Sequencing note:** item 2 should land *after* `G37` (checked graph) so the new files are verifiably
-inside the graph from the moment they exist — the scaffolder↔linter↔indexer lesson from `KOSMOS-RG-008`
-applied to this repo's own gate.
+**What landed with the doctrine (2026-09-24):** item 0, plus the *doctrine itself* — `M1–M10` in
+`AGENTS.md §7.4` and §2 of this document. Two of the ten rules are now enforced rather than advised:
+**M9** by `G37` (no file outside the checked graph) and **M8**'s "never a second binding for a
+canonical constant" by `G37`'s second assertion (which found and closed 25 re-declarations on its
+first run). The enforced rule is the one the check-hard-way class needed: *a large file is a
+decision someone made, not a fact nobody noticed* — and the difference between the two is whether a
+reader can be forced to see it.
+
+**Sequencing note:** item 2 (or any split) should land *after* item 0 — a new file created outside the
+checked graph is unverified at birth, which is the failure this audit exists to prevent.
 
 ---
 
@@ -211,8 +222,9 @@ applied to this repo's own gate.
 
 | Mechanism | Kind | Status |
 |---|---|---|
-| **`G37` checked-graph assertion** (every production `.ts` is inside the `tsconfig` include set) | **hard gate** | not yet built — Phase 14 **d5** |
-| `G37` second assertion (no module re-declares a canonical domain constant) | **hard gate** | not yet built — Phase 14 **d5** |
+| **`G37` checked-graph assertion** (every production `.ts` is inside the `tsconfig` include set) | **hard gate** | ✅ **BUILT** — Phase 14 d5 (`gates.ts`, kernel gate 37) |
+| `G37` second assertion (no module re-declares a canonical domain constant) | **hard gate** | ✅ **BUILT** — found and closed **25** re-declarations on its first run; 3 documented exemptions |
+| `G36` CLI boot smoke (both session modes, exit 0 + completed session + persisted checkpoint) | **hard gate** | ✅ **BUILT** — Phase 14 d5. Not a cohesion gate, but it is what makes a split *verifiable*: the entry point is the surface every split of item 1 must keep honest |
 | Large-file report (`> 500` / `> 1 000` with the module's declared responsibility) | **advisory report** | this document, re-measured per audit |
 | Doc-governance gates (`arch.py validate`, DG1–DG23) | hard gates | green |
 

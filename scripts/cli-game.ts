@@ -2458,6 +2458,7 @@ function extractLastNarrativeAsFocus(encounterLogText: string): string | null {
 async function runDirectQuestioningSession(
   initialSig: Significator,
   initialWorld: WorldState,
+  orchestration?: OrchestrationServices,
 ): Promise<void> {
   banner('DIRECT QUESTIONING');
   if (!JSON_MODE) console.log(`  ${chalk.dim('A series of open questions. Answer each in your own words.')}\n`);
@@ -2673,6 +2674,11 @@ async function runDirectQuestioningSession(
       const encounterPromise = executeEncounter(encounter, currentSig, currentWorld, history, {
         consecutivePasses,
         agentSynthesis: agent.buildSynthesis(),
+        // Phase 14 d4: the default surface runs the REAL loop. Without `orchestration` the whole
+        // Phase 11–13 architecture (feed, owner workers, personalization envelope, memory) had no
+        // exerciser on the path an agent drives headlessly — the failure class the checked-surface
+        // audit called "architecture-dark". `undefined` degrades lawfully (`sessionRuntime` seam).
+        orchestration,
       });
       const timeoutPromise = new Promise<never>((_, reject) => {
         setTimeout(() => reject(new Error('encounter_timeout')), ENCOUNTER_TIMEOUT_MS);
@@ -2987,6 +2993,17 @@ async function runDirectQuestioningSession(
   currentSig = sessionEnd.sig;
   if (sessionEnd.world) {
     currentWorld = sessionEnd.world;
+  }
+
+  // Phase 14 d4 (G28): carry the runtime checkpoint onto the DEFAULT surface. The story branch
+  // persisted it; this one did not, so a DQ session left no orchestration state and every reader
+  // (planning bias, CCI projections, retrieval) saw a fresh feed on the next boot. Same two writes
+  // as the story branch: the checkpoint rides the world save, and the sidecar journal makes it
+  // crash-recoverable before the next saveAll.
+  if (orchestration) {
+    const checkpoint = captureCheckpoint(orchestration);
+    (currentWorld as { orchestrationCheckpoint?: RuntimeCheckpoint }).orchestrationCheckpoint = checkpoint;
+    appendJournalEntry(getMysteriumProfileDir(), checkpoint);
   }
 
   // No decorative closing — the session's per-encounter feedback is sufficient.
@@ -3322,7 +3339,7 @@ async function runFullSession(): Promise<void> {
 
   // ponytail: Direct Questioning gets its own session flow — 8 lines, write-in, no pass/fail
   if (isDirectMode) {
-    await runDirectQuestioningSession(currentSig, currentWorld);
+    await runDirectQuestioningSession(currentSig, currentWorld, orchestration);
     return;
   }
 
