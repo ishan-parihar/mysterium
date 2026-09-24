@@ -245,8 +245,45 @@ zeros, which is a different statement — and both are now *known* rather than u
 1. **The unfamiliar-pole share is below its floor (21 % vs 25 %) and `shadow-facing` is never
    served.** Reproducible. Needs a longer trajectory to separate "the engine under-serves novelty"
    from "4 encounters cannot reach the rotation".
-2. **`driveFixation` is 0 in every configuration.** The second pinned observable; the first was fixed
-   in Phase 14 d2a and the diagnosis pattern is the same.
+2. ~~**`driveFixation` is 0 in every configuration.**~~ **DIAGNOSED 2026-09-24 (Phase 16 d2).** It is
+   **not a pinned observable — it is a starved input.** `driveFixation` reads `sig.drives.fixationRisk`,
+   which only `updateDriveBalance` writes, and only for a drive whose directionality is one of the four
+   pathological signals (`HealthyBalanced` *decrements* it toward 0). The campaign harness never
+   delivers one, for **two independent reasons**:
+
+   - **The persona harness drops the stance it declares.** `personaChoiceHandler`
+     (`src/core/simulation/campaign.ts:170`) reads exactly two things from `persona.policy()` — the
+     option index and `narrativeSummary` — so the `driveDirectionality` the same call computes
+     (`personas.ts:84`, from the authored `options.drives` override) is **never consumed**. The kernel
+     harness can pass it (`runPersonaTrajectory` hands its response object straight to
+     `processOutcome`), but the campaign path cannot: the orchestrator *derives* the evaluation, so the
+     fixture has no seam to declare its stance through. This is the same failure class the campaign
+     keeps finding — **a fixture path that reaches less of the engine than the path it mirrors** — and
+     it is why "with and without a drive tilt authored to fixate" made no difference: the tilt exists,
+     it just never arrives.
+   - **The narratives are filler, so the keyword channel is dead.** `personas.ts:81` generates
+     `narrativeSummary` as 50 tokens of `w${(step*7+i)%50}`. On the fallback/module path a drive signal
+     becomes non-healthy only when `detectWriteInShadow` finds a shadow keyword in the free text — so a
+     write-in of `w0 w1 w2 …` can never fire, and all four signals stay `HealthyBalanced`.
+
+   **The arithmetic confirms it rather than suggesting it:** `HealthyBalanced` adds exactly `+0.01` to
+   the weight and `−0.02` (floored at 0) to the risk, and the measured weights are **0.03 after 3
+   encounters and 0.06 after 6** — 1 × 0.01 per drive per encounter, all four drives, every encounter,
+   for every persona including `golden-bypass` and `constricted`, which are authored to accumulate
+   exactly this. `fixationRisk` is therefore *provably* 0 under the current harness, and the observable
+   is not at fault: hand the same engine a non-healthy signal and G40's predecessor already proves the
+   write moves (`ConsequenceEngine.ts:416`).
+
+   **What this changes about the item:** the fix is not "repair `driveFixation`", it is **"give the
+   campaign a way to declare a drive stance"** — and there are two shapes, which is a decision rather
+   than a repair: **(a)** route the stance through *prose* (real narratives carrying the stance's shadow
+   vocabulary, exercising the keyword detector as production does), or **(b)** add an explicit
+   fixture-only injection seam where the harness hands the orchestrator its declared directionality
+   (`detectWriteInShadow` can express at most ONE drive's signal, so (a) cannot represent "Agency
+   fixated **and** Communion averted" — and the 4-quadrant × 4-drive model is precisely what
+   `driveFixation` is supposed to observe). (a) is more faithful to production; (b) can express the
+   model. Doing (a) alone silently narrows what the observable can ever see, which makes this a
+   **ratification**, not an implementation choice.
 3. **Three lines receive zero encounters across 400.** Scheduler line coverage.
 4. **12.5 % of encounters resolve no candidate id.** Either a new id scheme or a missing stamp.
 5. ~~**`polarityReadings` is 0 because the pair key never resolves.**~~ **DIAGNOSED AND FIXED

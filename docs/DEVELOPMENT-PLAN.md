@@ -1159,6 +1159,100 @@ would be the cosmetic split `M1` forbids).
   with `G39`/`G40` green; the synthetic cohort's size and the real-provider experiential run are
   decided *after* the hermetic results exist, never before. No stochastic number enters a gate.
 
+### Phase 16 — The Diagnostic Sweep: repair the instrument, then calibrate (RATIFIED 2026-09-24)
+
+> **Status.** Proposed 2026-09-24 from the campaign report's open list and **ratified the same day**.
+> Two rulings, both on the conservative option: **(F-4) the novelty floor is NOT decided yet** — the
+> sweep repairs the broken instruments first and re-measures, because a floor calibrated against a
+> broken instrument is the fabricated-zero mistake in another costume; and **(F-5) the real-provider
+> tier is NOT authorised yet** — a cell-focused hermetic run is tried first for the entropy
+> measurement, keeping CI cheap and the two tiers unmixed (`Phase 15`'s one hard constraint).
+
+**Why this phase exists.** Phase 15 built the instrument and its first reading produced seven open
+items (`docs/audits/CAMPAIGN-REPORT-2026-09-24.md` §4.2). One is closed (item 5, with G41). The rest
+share a shape that decides the ORDER: **they are not calibration problems, they are instrument
+problems.** A calibration pass cannot calibrate `decay` against a producer that never writes, and it
+cannot calibrate a floor against a scheduler that gives one line 1 encounter in 432. So the sweep
+repairs producers first, re-measures, and only then touches a threshold.
+
+**Deliverables:**
+
+1. **d1 — the three unmeasured observables get producers.** `memoryPageSize`, `renderBudget` and
+   `engagementRegisterHits` are named in `UNAVAILABLE_OBSERVABLES` with reasons and omitted from every
+   row, so the calibration pass carries three dashes where it should carry three numbers. The reason
+   strings ARE the work tickets: `buildEnvelope` builds the MemoryPage and consumes it via
+   `memoryPageBlock` without returning it; the assembled prompt is private (`this.messages`); the
+   engagement register records MECHANISMS at authoring time and has no runtime accumulator. Each
+   needs a producer that does not invent a number — and where a producer genuinely should not exist
+   (a hit-counter invented for a register that has no hits) the omission is re-justified rather than
+   papered over.
+2. **d2 — item 2: `driveFixation` DIAGNOSED — it is a starved INPUT, not a pinned observable.**
+   `fixationRisk` moves only through `updateDriveBalance`, and only for a drive whose directionality is
+   one of the four pathological signals (`HealthyBalanced` decrements it toward 0). The campaign never
+   delivers one, for two independent reasons, both verified: **the persona harness drops the stance it
+   declares** (`personaChoiceHandler` reads only the option index and `narrativeSummary` from
+   `persona.policy()`, so the `driveDirectionality` that same call computes from the authored
+   `options.drives` is never consumed — the kernel harness can pass it, the campaign cannot, because
+   the orchestrator *derives* the evaluation), and **the narratives are filler** (`personas.ts`
+   generates 50 tokens of `w${(step*7+i)%50}`, so the keyword-gated channel on the module path can
+   never fire). Arithmetic confirmation rather than inference: `HealthyBalanced` is exactly `+0.01`
+   weight and `−0.02` risk per encounter, and the measured weights are **0.03 after 3 encounters, 0.06
+   after 6** — 1 × 0.01 per drive per encounter, all four drives, every persona. **The repair is a
+   ratification, not a fix:** (a) route the stance through real prose (faithful to production, but
+   `detectWriteInShadow` can express at most ONE drive's signal, so it cannot represent the 4-quadrant
+   × 4-drive model the observable exists to watch), or (b) an explicit fixture-only injection seam.
+   The gate follows the ruling.
+3. **d3 — item 3: scheduler line coverage.** Emotional received **1 encounter in 432**; three lines
+   carry 74 %. This is the scheduler's own object of study (`24`'s priority formula), not a persona
+   property — the personas DO differ on stance, they just are not offered the lines. Report the
+   selection reasons, not only the counts: a line under-served by *score* and a line under-served by
+   *candidate supply* are different defects with the same histogram.
+4. **d4 — item 4: 14.6 % of encounters resolve no candidate id.** Either a new id scheme the decoder
+   does not know (`candidateSource`'s "unknown" is deliberately fail-open for reporting) or a missing
+   stamp. The decoder was built to refuse to guess, so the fix is to name what is producing them.
+5. **d5 — item 6/7: reshape the cohort, do not grow it.** Entropy needs ⩾ `MIN_COMPOSITIONS` (8)
+   compositions PER CELL; 11–16 cells composed and **0** measurable at 50 campaigns, so the binding
+   constraint is encounters-per-cell, not cohort size. Deliverable: a cell-focused hermetic mode
+   (few cells × many encounters × longer trajectories) and the honest verdict on whether the entropy
+   floor is reachable hermetically at all — which is the question F-5's escalation would answer.
+6. **d6 — re-measure, then calibrate (F-4's decision point).** With d2–d5 landed, re-run the pass and
+   bring item 1 back with the instrument repaired. Only then decide: raise the dose (engine
+   under-serves), lower the floor (miscalibrated), or neither. Report `shadow-facing`'s dormancy as
+   separately diagnosable — a synthetic cohort whose shadow ledgers stay near-dormant cannot DEMAND a
+   shadow-facing pole, so `0` may be the cohort's stance rather than the engine's ceiling.
+7. **d7 — the second campaign report**, superseding the first's open list with the sweep's findings
+   and the calibration decisions taken.
+
+**Gates:** one per repaired producer (d2–d4), because the failure mode of every item here is *a
+number that reads like health* — and `G41` is the precedent for how a silent zero becomes a gate.
+
+**Success criterion:** every number the calibration pass prints has a producer behind it (no dashes
+for things that should be measurable), item 1 is re-measured against a repaired instrument and decided
+by ruling with the decision recorded, and the report's open list is either closed or explicitly
+reclassified.
+
+**Dependencies:** Phase 15 (the runner, the series, the pass) — built. **Explicitly NOT in this
+phase:** the novelty-floor decision (d6 owns it), the real-provider run (F-5 defers it), WebUI
+parity, corpus growth, and refactoring.
+
+**The rulings (ratified 2026-09-24):**
+
+- **F-4 — the novelty floor: DECIDE AFTER THE SWEEP.** The 19–21 % vs 0.25 breach is reproducible and
+  `shadow-facing` is served never, but the instrument that measured it has a pinned observable
+  (item 2) and a scheduler giving one line 1 encounter in 432 (item 3). Fixing the engine to reach a
+  floor, or moving a floor to match an observation, both write a threshold against a broken
+  measurement. The sweep comes first.
+- **F-5 — the entropy measurement: HERMETIC FIRST, RESHAPED.** Not the real-provider tier yet. The
+  binding constraint is compositions-per-cell, so a cell-focused hermetic run is tried before any
+  escalation, and the escalation is authorised only on a demonstrated impossibility rather than on a
+  wide cohort's thin histogram.
+- **F-6 — d2's repair, PUT TO THE USER (open).** The diagnosis above turned item 2 from a bug hunt
+  into a choice with a real trade-off: prose (faithful to production, but structurally unable to
+  express more than one drive signal per encounter) versus an explicit fixture-only seam (expresses
+  the 4-quadrant × 4-drive model, but adds a test-shaped door to production code). The two are not
+  mutually exclusive and different questions need different ones — a gate on "does a shadow signal move
+  `fixationRisk`" wants (b); a gate on "does the keyword detector work end to end" wants (a).
+
 ### Current work (post-plan) — not a phase
 
 All phases through 12 are ratified **and built** — the memory infrastructure (Phase 11's
@@ -1301,3 +1395,4 @@ project's own agents, at the exact surface the user ruled must be agent-reachabl
 | 2026-09-24 | **Phase 15 d5 BUILT — the campaign is now the kernel's conscience (suite 38 → 40).** `gates/campaign.ts` adds **G39 campaign continuity** and **G40 campaign invariants**, registered in the roster. These are the only two gates that assert over a TRAJECTORY of sessions through the live seam — every other gate either drives the kernel's own loop functions or calls one seam function in isolation — and that is exactly why the d3 gap (`personalizationContext()` never called on the fallback path) was invisible to all 38 of the others: a gate that calls `buildEnvelope` itself cannot see that the orchestrator does not. **G39** asserts both properties the plan names: *determinism* (the same spec against two empty roots yields an identical series over `cci`, `finalized`, `totalEncounters`, shadows, pole mix, candidate mix and composition events — without it every d4 number has an unstated error bar) and *restore at EVERY boundary* (session N's restored byte count and reattached feed-entry count must match session N−1's file exactly, and the feed must GROW across the trajectory, so a restore that reset it cannot pass). **G40** asserts the four invariants: declared neglect is visible in the theta book and only there; the stage does not advance over the trajectory (transformation must not be an artefact of session count); no cell with enough compositions to be measurable has collapsed below the entropy floor; and no session's provenance carries Veil vocabulary. **A correction recorded, because the first reading was wrong and a gate would have been built on it:** d4's first run showed `thetaStaleness` 0.000 on every line, which reads as a second pinned observable. It is not — `observables.ts` deliberately computes the profile against the real `Date.now()` and min-max normalizes across lines so it is *invariant to wall-clock injection*, and a campaign on the VIRTUAL clock saturates every cell until `span === 0` and all lines report 0. The observable does what it documents; it is simply not fit for a virtual-clock campaign. G40 therefore asserts decay over `sig.theta.lastEncounter` directly, and fails explicitly if the theta book holds no cell for a neglected line so the assertion cannot pass vacuously. **Verified:** tsc 0 · **1 657 tests (146 files)** · build 0 · workspace-lint 0 · arch 0 violations (23 gates) · **suite 40/40 gates, G39 and G40 both hard-pass** with non-vacuous details. **Next: d6 (the formal report).** |
 | 2026-09-24 | **Phase 15 d6 BUILT — the report; Phase 15 is COMPLETE (`docs/audits/CAMPAIGN-REPORT-2026-09-24.md`).** 50 campaigns (10 curated + 40 generated) · 100 sessions · **400 finalized encounters**, every number stamped `provisional-simulated-cohort` and reproducible from two commands. **It leads with the three defects the campaign found, not with the numbers**, because a reader has to know what the numbers mean first: (1) **the fallback path was not architecture-live** — `personalizationContext()` was called from `run()` and `runLanguageReflective` only, so on the module-assessment path (what runs with no LLM, AND the hermetic tier that gates CI) the pool never selected, `46 §11`'s monitors read an empty window, the polarity coverage query had no input ever, and no seed/world-place/voice/continuity material was gathered; (2) **F7 was three sites** — the module path and the simple-fallback path set neither `writeInValue` nor `questionText`, i.e. not on the path every production encounter takes; (3) **the encounter log rendered a detached label** (`**Question:**` then a blank line). **The numbers:** unfamiliar-pole share **21.0 % against the 0.25 floor → REJECTED**, and `shadow-facing` served **never** (stable across 78 and 400 encounters, so it is not noise); the recolouring tiers skew 5:1 familiar (`~sim` 13 % vs `~opp` 2.5 %), the same comfort shape at a second layer; **12.5 % of encounters resolve no candidate id**; composition is **unmeasurable** (12 cells composed, 0 with the 8 compositions `MIN_COMPOSITIONS` requires, so the verdict is `insufficient-data` and the earlier 1.099 reading on 2–3 cells is marked encouraging-not-evidence); and the line distribution is **Spiritual 138 / Intrapersonal 86 / Cognitive 73 / Interpersonal 32 / Willpower 10 / Somatic 7 / Moral 3 / Emotional 1** — **74 % of encounters on three lines, one encounter on Emotional across 400**, which makes scheduler line coverage a first-class object of study rather than a persona property. **Two observables are pinned or unfit, and the difference is recorded:** `driveFixation` is 0 in every configuration (pinned — the T2 pattern of Phase 14 d2a in a new location); `thetaStaleness` reads 0.000 everywhere but is **unfit rather than pinned** (it is deliberately normalized against the real `Date.now()` to be wall-clock-invariant, so a virtual-clock campaign saturates every cell until `span === 0`) — which is why G40 asserts decay over `sig.theta.lastEncounter` directly. **§5 states what the report is NOT:** the cohort is a parameter space, not a population, so it can report what the ENGINE does when handed a stance and never what players do, and it certifies nothing; transformation is asserted only where its predicate holds, and what the campaign CAN say is that it does not fire as an artefact of session count. **Seven open items carried in priority order** (novelty floor, `driveFixation`, line coverage, unresolvable candidate ids, the never-resolving pair key, entropy measurability, cohort scale). **Phase 15 d0–d6 COMPLETE. Verified:** tsc 0 · 1 657 tests (146 files) · build 0 · workspace-lint 0 · arch 0 violations (23 gates) · **suite 40/40**. |
 | 2026-09-24 | **Campaign-report item 5 CLOSED — the dialectic loop was UNENTERABLE, and the fix found a second defect underneath it (`docs/audits/CAMPAIGN-REPORT-2026-09-24.md` §4.2 item 5; new gate **G41**, suite 40 → 41).** d6 measured `polarityReadings: 0` and named it a symptom. Following it found three defects stacked on one seam, all invisible to the other 40 gates because each lives in the COMPOSITION of two seam calls over time rather than in either call: **(1) The loop had no entry point.** `sessionEnd`'s state advance is the only `undiscovered` → `active-tension` writer, and its pair came from `AgenticOrchestrator.lastDialecticPair`, built from `context.poles` — the pair the dialectic engine *structurally selected*. But `46 §5.3` forbids selecting on an `undiscovered` pair, and a pair only leaves `undiscovered` through that very advance. Verified on a bench sweep: `poles` null in **24/24** envelopes while `polarity` was non-null in 16/24 — the pool selected a rendering, the engine never had a selectable pole. `lastPairKey` (and so the reading, and so the coverage query) inherited the null. **Fix:** the pair the encounter ENGAGED IN TEXTURE is now exposed on the envelope (`ScenarioContext.engagedPair` = the pool's primary candidate's first store-known tag + its dialectical opposite) and is the discovery writer's input. `46 §4.3`'s table explicitly permits this ("the *familiar* pole may appear as texture; the pair is **not** a structural candidate"), so §5.3 is untouched — texture engagement is not structural selection, and it is the one reading a stage cannot refuse. The orchestrator's comment already *claimed* this fallback; the claim is now implemented. **(2) The advance reconciled in a single sweep.** It mapped `active-tension` → `reconciled` on one `sto` encounter — against `46 §4.3`'s ratified law ("`reconciled` is reached only by *repeated* confirmations, never in a single sweep") and against `polarityResolution.applyReading`, which owns reconciliation through the confirmation tallies. Measured: `nature|technology` went `undiscovered` → `active-tension` → **`reconciled` on its SECOND encounter** with no tally behind it; since a reconciled pair is unselectable as a structural pole (§5.3's saturation guard), the bug permanently removed the player's only edge after two encounters. **Fix:** the advance DISCOVERS and no longer reconciles; reconciliation is solely the reading path's, under ratification. **G28's assertion** ("the polarity pair advanced twice: undiscovered → active-tension → reconciled") encoded the wrong law and was corrected to `active-tension` — its lateral is persistence, so it asserts the state persistence must carry, not a law another writer owns. **(3) The advance took its direction from a stashed field.** `lastPolarityDirection` was set by `finalizeEncounter`, but the **module-assessment path** — the one the hermetic tier and production-with-modules take — calls `recordSessionEnd` *without* `finalizeEncounter`, so the advance ran with `direction === undefined` and returned the map unchanged. Instrumented over 8 advances in a 2-session campaign: 6 had **both** pair and direction missing, 1 had a pair and no direction. This is the **third occurrence of one failure class** (d3's missing composition stamp, F7's missing write-in fields, now this): *a fallback path that stashes less than the path it mirrors.* **Fix that deletes the class rather than documenting it:** `recordSessionEnd` takes `direction` as a **required parameter**, so the ordering invariant three call sites violated no longer exists — the field is gone and the compiler enforces the handoff. **Measured after (50 campaigns / 150 sessions / 627 encounters):** `polarityReadings 243 · pairs discovered 80 · reconciled 0 · distinct pairs 4`, verdict `loop-unenterable` → **`loop-open`**. The unfamiliar-pole share moved only 20.6 % → 21.2 %, still under the 0.25 floor — which **proves report item 1 independent of item 5**; the new reading to watch is `distinct pairs 4` across 627 encounters (the engine's edge is thin), now the leading hypothesis for item 1. The calibration pass gained a `polarity` section for this, because a measure that returns zero for a STRUCTURAL reason must be reported by the instrument that produces it or its silence looks like health. **Documents reconciled:** `46 §4.3`'s loop paragraph gained its status mark + the entry rule (and the `undiscovered` table row now names texture engagement as the state's only exit), `45 §5.4`'s guard, the report's addendum + item 5, and `AGENTS.md §4.2` item 3. **Verified:** tsc 0 · **1 659 tests (146 files, +2)** · build 0 · workspace-lint 0 · arch 0 violations (23 gates) · **suite 41/41**, G41 hard-pass with non-vacuous details. |
+| 2026-09-24 | **Phase 16 RATIFIED and d2 DIAGNOSED — the sweep repairs the instrument before it calibrates.** Two rulings, both conservative: **F-4** the novelty floor is NOT decided yet (fix the instruments, then re-measure — a floor calibrated against a broken instrument is the fabricated-zero mistake in another costume), and **F-5** the real-provider tier is NOT authorised for entropy (reshape the cohort cell-first; escalate only on demonstrated impossibility). Phase 16 written into §4 with d1–d7 and a gate per producer repaired. **d2's finding: `driveFixation` is a starved INPUT, not a pinned observable.** `fixationRisk` moves only in `updateDriveBalance`, and only for a drive carrying one of the four pathological signals — `HealthyBalanced` *decrements* it toward 0. The campaign never delivers one, for two independent reasons: (1) **`personaChoiceHandler` drops the stance it declares** — it reads only the option index and `narrativeSummary` from `persona.policy()`, so the `driveDirectionality` that same call computes from the authored `options.drives` is never consumed (the kernel harness passes it; the campaign cannot, because the orchestrator *derives* the evaluation) — which is why "with and without a drive tilt authored to fixate" made no difference: the tilt exists, it never arrives; (2) **the narratives are filler** (`personas.ts` emits 50 tokens of `w${(step*7+i)%50}`), so the module path's keyword-gated channel (`detectWriteInShadow`) can never fire. **Arithmetic confirmation, not inference:** `HealthyBalanced` is exactly `+0.01` weight / `−0.02` risk, and measured weights are **0.03 after 3 encounters and 0.06 after 6** — 1 × 0.01 per drive per encounter, all four drives, every persona including `golden-bypass` and `constricted`. The fix is thus a **ratification (F-6, open)**: route the stance through real prose (faithful to production, but `detectWriteInShadow` emits at most ONE drive's signal, so it cannot represent the 4-quadrant × 4-drive model the observable exists to watch) versus an explicit fixture-only injection seam — or both, for different gates. **Verified:** the harness defect is in `src/core/simulation/campaign.ts` + `src/core/validation/personas.ts` (fixture-side, no production behaviour changed); tsc 0 · 1 659 tests · arch 0 violations (23 gates) · suite 41/41. **Next: F-6 ruling, then d3 (scheduler line coverage).** |
