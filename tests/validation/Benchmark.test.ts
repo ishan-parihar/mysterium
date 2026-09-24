@@ -59,8 +59,14 @@ describe('Validation benchmark (CI tier)', () => {
     // canonical constant).
     // 37 → 38 with Phase 14 d6 (G38 system-1 boundary — the core depends on the port and never on
     // the adapter; the adapter persists nothing; the fallback is exported and therefore reachable).
-    expect(suite.results.length).toBe(38);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38']) {
+    // 38 → 40 with Phase 15 d5 (G39 campaign continuity — a seeded campaign through the live seam is
+    // deterministic and restores its predecessor's checkpoint at EVERY session boundary; G40 campaign
+    // invariants — declared neglect shows in the theta book and only there, the stage does not advance
+    // by session count, no measurable cell collapses below the entropy floor, no Veil vocabulary in a
+    // session's provenance). These two are the only gates that assert over a trajectory of sessions
+    // THROUGH THE SEAM, which is why the gap d3 found was invisible to the other 38.
+    expect(suite.results.length).toBe(40);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

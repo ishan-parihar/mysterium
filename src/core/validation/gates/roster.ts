@@ -18,6 +18,7 @@ import { validateDelegationDeterminism, validateDelegationToolsetFirewall, valid
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
 import { validateCheckedGraph, validateCliBoot, validateSystem1Boundary } from './surface.js';
+import { validateCampaignContinuity, validateCampaignInvariants } from './campaign.js';
 
 export interface ValidationReport {
   tier: Tier;
@@ -75,6 +76,12 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   results.push(validateCheckedGraph());
   // Phase 14 d6: the System-1 boundary (43 §2).
   results.push(validateSystem1Boundary());
+  // Phase 15 d5: the campaign gates. Every gate above either drives the kernel's own functions or
+  // calls one seam function in isolation; these are the only two that assert over a TRAJECTORY of
+  // sessions through the live seam — which is why the gap d3 found (personalizationContext() never
+  // called on the fallback path) was invisible to all of them.
+  results.push(await validateCampaignContinuity(tier));
+  results.push(await validateCampaignInvariants(tier));
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
