@@ -80,6 +80,16 @@ export interface ScenarioContext {
   /** The polarity pool's selection (d10 L4) — top-1 primary + named pole + hidden alternates.
    *  Null when the cell had no candidates at all (degradation, never fabricated). */
   readonly polarity: PooledSelection | null;
+  /**
+   * The pair this encounter ENGAGED in texture — `[surfaceTag, oppositeTag]` — present even when
+   * `poles` is null (46 §4.3: an `undiscovered` pair may render as texture but is not a structural
+   * candidate, so the dialectic engine defers and this is the only record of the pair worked).
+   * The discovery writer (`undiscovered` → `active-tension`) reads THIS, never `poles`: selecting
+   * structurally requires the pair to be `active-tension` already (46 §5.3), so a loop whose only
+   * input is `poles` has no entry point. Null when no pole decision was made or the tag reflects to
+   * itself (reflexive-safe, `46 §4.2`).
+   */
+  readonly engagedPair: readonly [string, string] | null;
   /** The resolution stamp (d10 L3) — that a reading was captured, never the reading itself. */
   readonly resolution: ResolutionStamp | null;
 }
@@ -212,9 +222,11 @@ export function buildScenarioContext(parts: {
   readonly entity: ComposedHolon | null;
   readonly polarity?: PooledSelection | null;
   readonly resolution?: ResolutionStamp | null;
+  readonly engagedPair?: readonly [string, string] | null;
 }): ScenarioContext {
   return {
     ...parts,
+    engagedPair: parts.engagedPair ?? null,
     polarity: parts.polarity ?? null,
     resolution: parts.resolution ?? null,
   };

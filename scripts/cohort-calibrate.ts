@@ -81,6 +81,19 @@ function printReport(r: CalibrationReport): void {
   for (const [k, v] of cands) console.log(`  ${k.padEnd(20)} ${pct(v)}`);
   console.log('');
 
+  console.log(`Polarity loop (46 §4.3) — verdict ${r.polarity.verdict}`);
+  console.log(
+    `  readings ${r.polarity.readings} · pairs discovered ${r.polarity.pairsDiscovered} · ` +
+    `reconciled ${r.polarity.pairsReconciled} · distinct pairs ${r.polarity.distinctPairs}`,
+  );
+  const proposers = Object.entries(r.polarity.proposedBy).sort((a, b) => b[1] - a[1]);
+  console.log(
+    proposers.length === 0
+      ? '  proposed by: (none — no reading was captured)'
+      : `  proposed by: ${proposers.map(([k, v]) => `${k} ${v}`).join(' · ')}`,
+  );
+  console.log('');
+
   console.log(`Probes: validated ${r.probeStanding.validated} · log-only ${r.probeStanding.logOnly}`);
   console.log(`  ${r.probeStanding.note}`);
   console.log('');

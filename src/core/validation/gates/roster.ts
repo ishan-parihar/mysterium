@@ -18,7 +18,7 @@ import { validateDelegationDeterminism, validateDelegationToolsetFirewall, valid
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
 import { validateCheckedGraph, validateCliBoot, validateSystem1Boundary } from './surface.js';
-import { validateCampaignContinuity, validateCampaignInvariants } from './campaign.js';
+import { validateCampaignContinuity, validateCampaignInvariants, validatePolarityLoopEntry } from './campaign.js';
 
 export interface ValidationReport {
   tier: Tier;
@@ -82,6 +82,11 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // called on the fallback path) was invisible to all of them.
   results.push(await validateCampaignContinuity(tier));
   results.push(await validateCampaignInvariants(tier));
+  // G41 (2026-09-24): the dialectic loop's entry point and its reconciliation law. Both defects it
+  // locks lived in the COMPOSITION of two seam calls over time — an `undiscovered` pair can only be
+  // discovered by a writer the selection path could never reach, and a second writer reconciled a
+  // pair in one `sto` step against §4.3. No single-seam gate could see either.
+  results.push(await validatePolarityLoopEntry(tier));
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

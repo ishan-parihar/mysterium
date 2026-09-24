@@ -112,3 +112,46 @@ describe('the fallback path is architecture-live (the d3 finding)', () => {
     expect(Math.abs(shares - 1)).toBeLessThan(1e-9);
   });
 });
+
+/**
+ * The dialectic loop's ENTRY POINT (2026-09-24, `46 §4.3`/§5.3).
+ *
+ * Two defects on the same seam, both invisible to every gate that builds an envelope by hand:
+ *
+ * 1. **The loop was unenterable.** The only `undiscovered` → `active-tension` writer is the session
+ *    end's state advance, and its input was the pair the dialectic engine SELECTED — but §5.3
+ *    forbids selecting on an `undiscovered` pair, so the first selection could never happen. The
+ *    pair the encounter ENGAGED in texture (`context.engagedPair`) is the legal entry.
+ * 2. **The advance reconciled in one sweep.** It mapped `active-tension` → `reconciled` on a single
+ *    `sto` encounter, against `46 §4.3`'s law (repeated confirmations only) and against
+ *    `applyReading`, the writer that owns reconciliation. Reconciliation is now solely the reading
+ *    path's, under ratification.
+ */
+describe('the polarity loop opens (46 §4.3)', () => {
+  it('discovers pairs and captures readings on the live seam — and never reconciles in one sweep', async () => {
+    const result = await runCampaign({ persona: getPersona('flourishing'), rootDir: root, sessions: 3, encountersPerSession: 4 });
+    const last = result.sessions[result.sessions.length - 1]!.series.polarity;
+
+    // Entry: the loop opened. Before the fix this was 0 readings and an empty pair map, because
+    // `lastPairKey` required a structural selection that could not exist yet.
+    expect(last.readings).toBeGreaterThan(0);
+    expect(last.pairsDiscovered).toBeGreaterThan(0);
+    expect(last.pairKeys.length).toBeGreaterThan(0);
+
+    // Law: no pair reconciles without a ratified reading. The campaign ratifies nothing, so no
+    // pair may be `reconciled` — the single-sweep collapse asserts itself here as `> 0`.
+    expect(last.pairsReconciled).toBe(0);
+    for (const s of result.sessions) expect(s.series.polarity.pairsReconciled).toBe(0);
+  });
+
+  it('keeps a discovered pair open across sessions rather than collapsing it', async () => {
+    const result = await runCampaign({ persona: getPersona('flourishing'), rootDir: root, sessions: 3, encountersPerSession: 4 });
+    const discovered = result.sessions.flatMap((s) => s.series.polarity.pairKeys);
+    expect(new Set(discovered).size).toBeGreaterThan(0);
+    // Every pair key ever seen is still present at the end (nothing was silently dropped) and none
+    // of them is reconciled.
+    const final = result.sessions[result.sessions.length - 1]!.series.polarity;
+    for (const k of new Set(discovered)) expect(final.pairKeys).toContain(k);
+    expect(final.pairsDiscovered).toBe(new Set(discovered).size);
+  });
+});

@@ -73,6 +73,25 @@ export interface CalibrationReport {
     readonly staleness: number;
   }>>;
   readonly candidates: Readonly<Record<string, number>>;
+  /**
+   * The polarity resolution loop's evidence (`46 §4.3`, Phase 13 d10 L3). Added 2026-09-24 with
+   * the loop's entry-point fix: before it, `readings` was structurally 0 (the pair key could never
+   * resolve, so the coverage query had no input) and the pass had no section for it — a measure
+   * that reads zero for a structural reason must be reported, or its silence looks like health.
+   *
+   * `pairsDiscovered` is the pair-STATE map's census: `active-tension` pairs are the dialectic
+   * engine's selectable edges. Zero means the expansion dimension is dormant, not under-served —
+   * a different defect from the `expansion` verdict above, and the diagnosis that distinguishes
+   * them (the state is unenterable vs. the engine under-serves novelty).
+   */
+  readonly polarity: {
+    readonly readings: number;
+    readonly pairsDiscovered: number;
+    readonly pairsReconciled: number;
+    readonly distinctPairs: number;
+    readonly proposedBy: Readonly<Record<string, number>>;
+    readonly verdict: 'loop-open' | 'loop-unenterable';
+  };
   readonly probeStanding: {
     readonly validated: number;
     readonly logOnly: number;
@@ -129,6 +148,24 @@ export function buildCalibrationReport(results: readonly CampaignResult[]): Cali
 
   // ── Candidate provenance, likewise encounter-weighted ─────────────────────────────────────
   const candidateShare = mergeShares(results.map((r) => mergeShares(r.sessions.map((s) => s.series.candidateSourceShare), r.sessions.map(() => 1))), weights);
+
+  // ── The polarity loop's evidence (`46 §4.3`). Each campaign's pair map is cumulative, so the
+  // census is the LAST session's, not a sum (a sum would double-count pairs carried forward).
+  let readings = 0;
+  let pairsDiscovered = 0;
+  let pairsReconciled = 0;
+  const distinctPairs = new Set<string>();
+  const proposedBy: Record<string, number> = {};
+  for (const r of results) {
+    const last = r.sessions[r.sessions.length - 1];
+    if (!last) continue;
+    readings += r.sessions.reduce((n, s) => n + s.series.polarity.readings, 0);
+    proposedBy['system1'] = (proposedBy['system1'] ?? 0) + r.sessions.reduce((n, s) => n + s.series.polarity.proposedBySystem1, 0);
+    proposedBy['deterministic-fallback'] = (proposedBy['deterministic-fallback'] ?? 0) + r.sessions.reduce((n, s) => n + s.series.polarity.proposedByFallback, 0);
+    pairsDiscovered += last.series.polarity.pairsDiscovered;
+    pairsReconciled += last.series.polarity.pairsReconciled;
+    for (const k of last.series.polarity.pairKeys) distinctPairs.add(k);
+  }
 
   // ── Per-line altitude + staleness + encounter counts ───────────────────────────────────────
   const perLine: Record<string, { modalAltitude: Stage | null; encounters: number; staleness: number }> = {};
@@ -187,6 +224,14 @@ export function buildCalibrationReport(results: readonly CampaignResult[]): Cali
     },
     perLine,
     candidates: candidateShare,
+    polarity: {
+      readings,
+      pairsDiscovered,
+      pairsReconciled,
+      distinctPairs: distinctPairs.size,
+      proposedBy,
+      verdict: pairsDiscovered > 0 ? 'loop-open' : 'loop-unenterable',
+    },
     probeStanding: probes,
     memoryPage: {
       status: 'unmeasurable',

@@ -58,19 +58,25 @@ export interface SessionEndOutcome {
 /**
  * Advance the player's dialectic pair-state map from one session's reconciliation evidence.
  *
- * The pair worked is the pair the composition SELECTED (surface ⟷ structure — the pair whose
- * active tension carried the encounter). The encounter's scored SERVICE-polarity (sto/sts/
- * neutral — a 19/23 concept, deliberately distinct from the reconciliation-polarity per
- * MY-AD-0031) is the advance signal:
+ * The pair worked is the pair the encounter ENGAGED — for a structural selection, the poles
+ * (surface ⟷ structure); when the dialectic engine deferred, the texture pair (`engagedPair`,
+ * 46 §4.3). The encounter's scored SERVICE-polarity (sto/sts/neutral — a 19/23 concept,
+ * deliberately distinct from the reconciliation-polarity per MY-AD-0031) is the advance signal:
  *
- * - `neutral`  → `undiscovered` pairs become `active-tension` (the work has begun — discovery);
- * - `sto`      → the pair advances one step further: `active-tension` → `reconciled` (service-
- *                oriented engagement is the integrative direction; MY-AD-0031's reading);
- * - `sts`      → no advance (self-serving engagement does not reconcile a dialectic pair).
+ * - `neutral` | `sto` → `undiscovered` pairs become `active-tension` (the work has begun — discovery);
+ * - `sts`             → no advance (self-serving engagement does not open a dialectic pair).
  *
- * Saturation guard (46 §5.3): `reconciled` never regresses here, and a reconciled pair is
- * thereafter unselectable as a structural pole — the engine re-opens it only on refutation
- * evidence, which is not this writer's job. Pure function; sessionEnd assigns the result.
+ * **This function DISCOVERS; it does not reconcile.** It wrote `active-tension` → `reconciled` in
+ * one `sto` step until 2026-09-24, when the campaign series showed a pair reconciling on its SECOND
+ * encounter — directly against `46 §4.3`'s law ("`reconciled` is reached only by *repeated*
+ * confirmations, never in a single sweep (the user's transmutation ruling)") and against
+ * `polarityResolution.applyReading`, which owns reconciliation through the confirmation tallies.
+ * Two writers, two laws, one map: the tally writer could never reconcile because this one already
+ * had. Reconciliation is now solely `applyReading`'s, under ratification (`43 §4.1` L4).
+ *
+ * Saturation guard (46 §5.3): a `reconciled` pair is unselectable structurally and never regresses
+ * here — re-opening is the reading path's job (a disconfirming reading, 46 §4.3). `undiscovered`
+ * pairs are the ONLY state this writer creates. Pure function; sessionEnd assigns the result.
  */
 export function advancePolarityStates(
   states: PolarityStateMap,
@@ -82,15 +88,9 @@ export function advancePolarityStates(
   if (a === b) return states; // reflexive-safe: origin tags carry no structural payload
   const key = a < b ? `${a}|${b}` : `${b}|${a}`;
   const current = states[key] ?? 'undiscovered';
-  if (current === 'reconciled') return states; // saturation guard
-  if (direction === 'sts') return states;      // no advance on self-serving engagement
-  if (current === 'undiscovered') {
-    // `sto` on an undiscovered pair: the work was integrative from the first encounter — count
-    // it as discovery (active-tension), not instant reconciliation.
-    return { ...states, [key]: 'active-tension' };
-  }
-  // current === 'active-tension', direction sto → reconciled.
-  return { ...states, [key]: 'reconciled' };
+  if (current !== 'undiscovered') return states; // reconciled: saturation guard. active-tension: already open.
+  if (direction === 'sts') return states;        // no discovery on self-serving engagement
+  return { ...states, [key]: 'active-tension' };
 }
 
 /**

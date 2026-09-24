@@ -270,7 +270,6 @@ export class AgenticOrchestrator {
   private lastCandidateId: string | null = null;
   /** Who proposed the polarity reading this encounter — the System-1 layer or the fallback. */
   private lastResolvedBy: 'system1' | 'deterministic-fallback' | null = null;
-  private lastPolarityDirection: 'sto' | 'sts' | 'neutral' | undefined;
   /** Phase 13 d10 L3: the pole the last composition SERVED + the polarities' pair key — stashed
    *  at composition time, consumed by recordSessionEnd to build the reading's EncounterRecord. */
   private lastPoleServed: 'familiar' | 'unfamiliar' | 'shadow-facing' | null = null;
@@ -758,7 +757,7 @@ export class AgenticOrchestrator {
 
             return {
               ...outcome,
-              ...this.recordSessionEnd(outcome.consequenceRecord, params.passed, now),
+              ...this.recordSessionEnd(outcome.consequenceRecord, params.passed, now, scoringParams.polarityDirection),
               finalResult,
               messages: this.messages,
               playerWriteIn: this._lastPlayerWriteIn,
@@ -787,7 +786,7 @@ export class AgenticOrchestrator {
 
     return {
       ...outcome,
-      ...this.recordSessionEnd(outcome.consequenceRecord, fallbackParams.passed, now),
+      ...this.recordSessionEnd(outcome.consequenceRecord, fallbackParams.passed, now, fallbackParams.polarityDirection),
       finalResult,
       messages: this.messages,
     };
@@ -1079,7 +1078,7 @@ INSTRUCTIONS:
 
             return {
               ...outcome,
-              ...this.recordSessionEnd(outcome.consequenceRecord, params.passed, now),
+              ...this.recordSessionEnd(outcome.consequenceRecord, params.passed, now, scoringParams.polarityDirection),
               finalResult,
               messages: this.messages,
               playerWriteIn: this._lastPlayerWriteIn,
@@ -1377,7 +1376,7 @@ INSTRUCTIONS:
 
     return {
       ...outcome,
-      ...this.recordSessionEnd(outcome.consequenceRecord, evaluated.passed, now),
+      ...this.recordSessionEnd(outcome.consequenceRecord, evaluated.passed, now, evaluated.polarityDirection),
       finalResult,
       messages: this.messages,
       playerWriteIn: isSelfReflection ? playerResponseText : undefined,
@@ -1753,7 +1752,7 @@ INSTRUCTIONS:
         pairKey: this.lastPairKey,
         proposedBy: this.lastResolvedBy,
       },
-      ...this.recordSessionEnd(updatedRecord, evaluation.passed, now),
+      ...this.recordSessionEnd(updatedRecord, evaluation.passed, now, evaluation.polarityDirection),
     };
   }
 
@@ -2385,9 +2384,14 @@ ${probes}${rubric}
       // The pair the composition worked — (surface, structure) tag ids from the poles (46 §5.1).
       // Stashed as instance state so session end can advance the pair map (Phase 11 d5) without
       // threading through every result path.
+      // When the dialectic engine deferred (no eligible pole — always true until a pair is
+      // `active-tension`, 46 §5.3), the pair falls back to the one the encounter ENGAGED in texture
+      // (`context.engagedPair`, 46 §4.3). That fallback is what gives the discovery writer its entry
+      // point: the state advance is the only `undiscovered` → `active-tension` writer, and it is
+      // driven by this pair — so without the fallback the loop can never open.
       const dialecticPair: readonly [string, string] | null = context?.poles
         ? [context.poles.surface.id, context.poles.structure.id]
-        : null;
+        : (context?.engagedPair ?? null);
       this.lastDialecticPair = dialecticPair;
       // Phase 13 d10 L3: stash the pole served + the pair key the reading will reference. When
       // the dialectic engine deferred (no eligible pole), the pair key falls back to the POOL's
@@ -2417,8 +2421,22 @@ ${probes}${rubric}
   /**
    * Session end (43 §4.6): record the session entry + drain the owner workers. Returns the
    * post-drain state for the caller to persist, or undefined when unwired. Never throws.
+   *
+   * `direction` is REQUIRED and passed by the caller, not read from stashed instance state. It was
+   * a stashed field (`lastPolarityDirection`, set by `finalizeEncounter`) until 2026-09-24, when the
+   * campaign series showed the pair map never advancing: the module-assessment path calls this
+   * without `finalizeEncounter`, so the advance ran with `direction === undefined` and returned the
+   * state map unchanged — the `undiscovered` → `active-tension` discovery write never happened, so
+   * the dialectic engine had no edge to select on, so no pair was ever worked structurally. Three
+   * call sites lacked what one setter provided: an ordering invariant the type system could not see.
+   * Taking it as a parameter deletes the invariant instead of documenting it.
    */
-  private recordSessionEnd(record: ConsequenceRecord, passed: boolean, now: number): {
+  private recordSessionEnd(
+    record: ConsequenceRecord,
+    passed: boolean,
+    now: number,
+    direction: 'sto' | 'sts' | 'neutral',
+  ): {
     workers?: OwnerWorkerPoolState;
     ownerCommitted?: number;
   } {
@@ -2444,7 +2462,7 @@ ${probes}${rubric}
         now,
         // Phase 11 d5: the pair the composition worked + the encounter's scored direction.
         dialecticPair: this.lastDialecticPair,
-        polarityDirection: this.lastPolarityDirection,
+        polarityDirection: direction,
         // Phase 13 d10 L3: the encounter's observable record → the System-1 layer (or the
         // deterministic fallback) proposes a polarity READING. Recorded always; the pair-hold
         // quality maps from the encounter's own outcome (passed ⇒ held both poles). The READING
@@ -2490,10 +2508,6 @@ ${probes}${rubric}
     let energeticDirection: EnergeticDirection = 'Diffuse';
     if (params.polarityDirection === 'sto') energeticDirection = 'Radiative';
     else if (params.polarityDirection === 'sts') energeticDirection = 'Absorptive';
-
-    // Phase 11 d5: stash the encounter's scored service-polarity for session end (the pair
-    // itself was stashed by personalizationContext at composition time).
-    this.lastPolarityDirection = params.polarityDirection;
 
     // Map LLM-provided drive signals to DriveDirectionality enum.
     // If the LLM provided explicit per-drive signals, use them directly.

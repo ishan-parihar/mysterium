@@ -197,7 +197,7 @@ the tag's geometry:
 
 | State | Meaning for the player | Selection consequence |
 |---|---|---|
-| `undiscovered` | a pole is sensed but not articulated — the pair is below the horizon | the *familiar* pole may appear as texture; the pair is **not** a structural candidate |
+| `undiscovered` | a pole is sensed but not articulated — the pair is below the horizon | the *familiar* pole may appear as texture; the pair is **not** a structural candidate — **and texture engagement is this state's ONLY exit into `active-tension`** (see the loop below): the dialectic engine cannot select it, so an encounter that works it as texture is the discovery |
 | `active-tension` | both poles are known, neither held — **the live frontier** | **the structural pole**. This is the expansion dimension, and the only state that should carry one |
 | `reconciled` | the player holds both poles in synthesis | **stop selecting it structurally** — this is the saturation guard of §5.2, stated as a state instead of a threshold |
 
@@ -216,7 +216,22 @@ Two consequences that change the engine's behaviour:
    state** — which is what stops the store from ossifying around what the player once managed.
 
 **The polarity resolution loop (2026-09-24, Phase 13 d10 ratification — this §4.3's states are what
-it reads and writes).** Each encounter closes with a *reading*, not a verdict: a scored position on
+it reads and writes).** **Status (2026-09-24): LIVE, and its entry point is now specified — the
+campaign series (`docs/audits/CAMPAIGN-REPORT-2026-09-24.md`) measured `polarityReadings: 0` across
+100 sessions and found why: the loop was unenterable by construction.** The only `undiscovered` →
+`active-tension` writer is the session-end state advance, and its input was the pair the dialectic
+engine *selected* — but §5.3 forbids selecting on an `undiscovered` pair (a candidate must already
+be `active-tension`), so the first selection could never occur. **The loop opens on TEXTURE
+engagement:** the pair the encounter rendered as texture — the pool's primary candidate's tag and
+its dialectical opposite (`ScenarioContext.engagedPair`) — is the legal input to discovery. §5.3 is
+untouched (texture is not *structural* selection), and it is the reading the stage cannot refuse.
+Two further laws were resolved in the same pass, because the measurement surfaced them: the state
+advance **discovers and does not reconcile** (it reconciled `active-tension` → `reconciled` in one
+`sto` encounter, against this section's repeated-confirmation law; reconciliation is solely
+`polarityResolution.applyReading`'s, under ratification), and the advance takes its direction as a
+required parameter rather than reading a stashed field — a stashed field let three call sites run the
+advance with `direction === undefined`, which is exactly how the discovery write never happened.
+Each encounter closes with a *reading*, not a verdict: a scored position on
 the cell's inclination, altitude and balance toward conscious/light versus unconscious/shadow, with
 a direction of travel — proposed by the local System-1 layer from the session log, ratified or
 vetoed by the orchestrator (`43 §4.1`'s L4; the reading is never a self-committing write). On

@@ -218,6 +218,29 @@ export function buildEnvelope(
   // defects ride the outcome so the caller feeds the dev loop.
   const coherence = coherenceGate(services, holonSource, target);
 
+  // The pair this encounter ENGAGED, independent of whether the dialectic engine could select a
+  // structural pole (46 §4.3's "the familiar pole may appear as texture" row). When the engine
+  // defers — which is ALWAYS true until a pair is `active-tension`, since §5.3 forbids selecting on
+  // an `undiscovered` pair — the encounter still renders a pole: the pool's primary candidate
+  // carries tags, and its tag's dialectical opposite is the pair the encounter worked in texture.
+  // That pair is the ONLY legal input to the discovery writer (`undiscovered` → `active-tension`,
+  // sessionEnd's advance): the loop cannot open on a structural selection by construction, so it
+  // must open on the texture engagement. See 46 §4.3 / §5.4's loop-entry rule.
+  const engagedPair: readonly [string, string] | null = (() => {
+    if (!decision) return null;
+    // A candidate's tag list mixes vocabularies: some entries are facet CHARACTERISTIC keys
+    // (`drive-profile`, `shadow-expression`) that the dialectic store does not know, and
+    // `store.opposite` fails closed on them (46 §11 invariant 4). The engaged pair is the first
+    // tag the store actually carries — that is the dialectic-bearing tag of the rendering.
+    for (const tag of decision.primary.tags) {
+      if (!services.tags.byId(tag)) continue;
+      const opposite = services.tags.opposite(tag);
+      if (opposite.id === tag) continue; // reflexive-safe: origin tags carry no structural payload
+      return [tag, opposite.id] as const;
+    }
+    return null;
+  })();
+
   const context = buildScenarioContext({
     udv,
     pooled: pooledRefs,
@@ -225,6 +248,7 @@ export function buildEnvelope(
     catalystTarget: { ...target, purpose },
     veiled,
     poles: result.poles,
+    engagedPair,
     entity: null,
     polarity: decision
       ? {

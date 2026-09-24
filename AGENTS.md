@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–14 all BUILT (Phase 14 d1–d7 complete — the checked-graph closure, the CLI split, the System-1 boundary, K1; G36–G38); **Phase 15 COMPLETE — the Simulated Cohort (d0–d6 all BUILT: F7 wired and F9 closed · the campaign runner `npm run cohort` · the parameter-space cohort generator · the campaign time-series plus the fallback-path seam fix · the calibration pass, which REJECTED on a measured defect · G39/G40, suite 38 → 40 · `docs/audits/CAMPAIGN-REPORT-2026-09-24.md`), whose seven open items are carried in the report's §4.2**; memory infrastructure live (G28–G31); kernel 40 gates; battery 1 657
+### 4.2 Current state: Phases 1–14 all BUILT (Phase 14 d1–d7 complete — the checked-graph closure, the CLI split, the System-1 boundary, K1; G36–G38); **Phase 15 COMPLETE — the Simulated Cohort (d0–d6 all BUILT: F7 wired and F9 closed · the campaign runner `npm run cohort` · the parameter-space cohort generator · the campaign time-series plus the fallback-path seam fix · the calibration pass, which REJECTED on a measured defect · G39/G40, suite 38 → 40 · `docs/audits/CAMPAIGN-REPORT-2026-09-24.md`), and its §4.2 item 5 is already CLOSED (the dialectic loop was unenterable — a second defect found and fixed, locked by G41, suite 40 → 41), the remaining six carried in the report's §4.2**; memory infrastructure live (G28–G31); kernel 41 gates; battery 1 659
 
 > **Checked-graph warning (read before trusting a green battery).** The battery is only as wide as
 > its *checked graph*: the files `tsc --noEmit`, the tests, the gates and the linter read. As of
@@ -469,10 +469,21 @@ When you implement one, record the implementation in the same commit and cite th
      deployment needs a hosting decision (Phase 4's transport adapter exists; no networked
      deployment). The C1–C5 wiring items (checkpoint restore, feed readers, preference intake,
      ratification verdicts, polarity writers) are **closed** — landed with Phases 11+12.
-   - *Calibration (needs play data — **now phase-able, see item 4**):* real-rater RV1–RV7
-     thresholds for the 8 authored probes (the RV harness runs; thresholds await raters — unlocks
-     the interest tier from log-only); `expansionRatio` and entropy thresholds from observed
-     distributions; per-line saturation thresholds from real progression curves.
+   - *Calibration (**no longer blocked on play data** — Phase 15 generates it hermetically; every
+     number is `provisional-simulated-cohort` and none of it certifies. The pass runs and its first
+     verdict was a REJECTION, which is what it is for):* real-rater RV1–RV7 thresholds for the 8
+     authored probes (the RV harness runs; the hermetic tier cannot substitute raters — this one
+     still awaits them, so the interest tier stays log-only); `expansionRatio` — **the observed
+     unfamiliar-pole share is 21 % against the 0.25 floor, the first calibration number the project
+     has produced, and it is below threshold**; entropy thresholds — still `insufficient-data`
+     (12 cells composed, 0 with the 8 compositions `MIN_COMPOSITIONS` requires, so entropy
+     measurability is a cohort-SCALE question, not an engine one); per-line saturation thresholds
+     from real progression curves (reported as a distribution on purpose — inventing a threshold
+     before the curves exist is the fabricated-zero mistake in another costume). The campaign's
+     seven open items, in priority order, are carried in
+     `docs/audits/CAMPAIGN-REPORT-2026-09-24.md` §4.2 — **item 5 (the never-resolving pair key) is
+     CLOSED** (2026-09-24: the dialectic loop was unenterable; the fix and its second defect are in
+     that item and locked by **G41**), and item 1 is now provably independent of it.
    - *Development:* tag-ontology growth beyond tranche 2's 20 tags (`46 §4` corpus change,
      bounded per `46 §13`); embedding-index calibration against real corpora and MemoryPage
      prose-register tuning per stage (Phase 12 post-phase items).

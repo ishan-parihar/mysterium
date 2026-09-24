@@ -65,8 +65,12 @@ describe('Validation benchmark (CI tier)', () => {
     // by session count, no measurable cell collapses below the entropy floor, no Veil vocabulary in a
     // session's provenance). These two are the only gates that assert over a trajectory of sessions
     // THROUGH THE SEAM, which is why the gap d3 found was invisible to the other 38.
-    expect(suite.results.length).toBe(40);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40']) {
+    // 40 → 41 with the polarity-loop entry fix (G41 polarity loop entry — the dialectic loop OPENS
+    // on texture engagement, because §5.3 forbids the structural selection its discovery writer was
+    // wired to, and only a ratified reading reconciles). Both defects it locks lived in the
+    // COMPOSITION of two seam calls over time, which is why none of the other 40 could see them.
+    expect(suite.results.length).toBe(41);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

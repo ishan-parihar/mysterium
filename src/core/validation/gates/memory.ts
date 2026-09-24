@@ -117,9 +117,16 @@ export function validateMemoryPersistence(): GateResult {
     const cp3 = captureCheckpoint(s3);
     if (JSON.stringify(cp2) !== JSON.stringify(cp3)) return mk('replay across restart is not byte-identical (W4)');
 
-    // The polarity pair advanced twice: undiscovered → active-tension → reconciled.
+    // The polarity pair's state survived the round trip and the advance performed its ONE write:
+    // `undiscovered` → `active-tension` (discovery). It is NOT `reconciled` — reconciliation
+    // requires repeated confirmations through the reading path (`46 §4.3`'s law, owned by
+    // `polarityResolution.applyReading`), and no reading was ratified here. This assertion read
+    // "→ reconciled" until 2026-09-24, when the campaign series showed the old one-`sto`-step
+    // reconciliation firing on a pair's SECOND encounter — the single-sweep collapse `46 §4.3`
+    // forbids. The gate's lateral is persistence, so it asserts the state that persistence must
+    // carry, not a law another writer owns.
     const key = s2.states['craft|riddle'];
-    if (key !== 'reconciled') return mk(`polarity advance wrong: craft|riddle = ${String(key)}`);
+    if (key !== 'active-tension') return mk(`polarity advance wrong: craft|riddle = ${String(key)}`);
 
     // Fail-closed restore: a foreign entry must be refused, not silently absorbed.
     const s4 = createOrchestrationServices(G28_HOLONS);

@@ -225,6 +225,18 @@ polarity decision never overrides and never selects from (`§5.2.1`), and unfami
 The plan (`docs/DEVELOPMENT-PLAN.md` Phase 13 d10) owns the mechanics; this section owns the law:
 rotation is dosage, dosage reads the shadow ledger, and the veto outranks both.
 
+**Measured (2026-09-24, `docs/audits/CAMPAIGN-REPORT-2026-09-24.md`) — the guard is under-serving at
+this scale, and the table below predicted the shape.** The observed unfamiliar-pole share is **21 %
+against the 0.25 floor**, and `shadow-facing` — the pole the dosage curve exists to reach — is served
+**never** across 400 encounters (stable at 78 and at 400, so it is not noise). The recolouring tiers
+show the same comfort shape one layer down (`~sim` 13 % vs `~opp` 2.5 %). Three things are worth
+separating before acting: the floor is a *floor on the served pole*, the dosage is *severity-scaled*,
+and a synthetic cohort whose shadow ledgers stay near-dormant cannot demand a shadow-facing pole —
+so `shadow-facing 0` may be the cohort's stance rather than the engine's ceiling. What is NOT
+explained by the cohort is the familiar/unfamiliar split, which is `decidePole`'s own curve. This is
+a calibration question with numbers now attached, not a wording problem; the campaign's §4.2 item 1
+owns it.
+
 ---
 
 ## 6. The ScenarioContext envelope
@@ -368,7 +380,7 @@ mechanism is not both-tests-passed is refused — the seam degrades to the lawfu
 
 | Failure | Mechanism | Countermeasure |
 |---|---|---|
-| **Filter bubble** | pooling narrows to the familiar; variety collapses | analogy rotation + `noveltyBudget` (§5.4); `11`'s modality spread |
+| **Filter bubble** | pooling narrows to the familiar; variety collapses | analogy rotation + `noveltyBudget` (§5.4); `11`'s modality spread. **Observed at 21 % unfamiliar vs the 0.25 floor, with `shadow-facing` never served — the guard is present and under-serving (2026-09-24, campaign report §4.2 item 1)** |
 | **Comfort drift** | preference outranks the growth edge | `16 §6.4` growth-edge bias; §7.2's last item |
 | **Analogical falsification** | a pretty analogy teaches the wrong structure | structural fidelity + scoring on `C` (§5.4) |
 | **Consent erosion** | fields accrete from observation until the UDV is a covert profile | §3.1 rules 1 and 3; purpose-scoped projections only |

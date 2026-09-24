@@ -1,5 +1,5 @@
 /**
- * Campaign gates — G39 (campaign continuity) and G40 (campaign invariants).
+ * Campaign gates — G39 (campaign continuity), G40 (campaign invariants) and G41 (polarity loop entry).
  *
  * Split into its own family because these gates are the only ones that assert over a TRAJECTORY of
  * sessions driven through the live seam. Every other gate in the kernel either drives the loop's
@@ -243,6 +243,82 @@ export async function validateCampaignInvariants(tier: Tier = 'ci'): Promise<Gat
     );
   } catch (e) {
     return mk('G40 campaign invariants', `error: ${e instanceof Error ? e.message : String(e)}`, false);
+  } finally {
+    try {		  fs.rmSync(root, { recursive: true, force: true });
+		} catch { /* best-effort */ }
+	}
+}
+
+/**
+ * G41 — the dialectic loop OPENS and obeys `46 §4.3`'s reconciliation law.
+ *
+ * This gate exists because the two defects it locks were invisible to every other gate in the
+ * roster, for a structural reason worth stating: the other thirty-nine either drive the kernel's
+ * functions directly or call ONE seam function in isolation, and both defects lived in the
+ * COMPOSITION of two seam calls over time.
+ *
+ * 1. **The loop was unenterable.** `undiscovered` → `active-tension` is written only by the session
+ *    end's state advance, whose pair came from the dialectic engine's SELECTION — but `46 §5.3`
+ *    forbids selecting on an `undiscovered` pair (a candidate must already be in `active-tension`),
+ *    so the first selection could never occur. The pair the encounter engaged in TEXTURE
+ *    (`context.engagedPair`, §4.3's "the familiar pole may appear as texture") is the legal entry.
+ * 2. **The advance reconciled in a single sweep.** It mapped `active-tension` → `reconciled` on one
+ *    `sto` encounter, against §4.3's law ("reached only by *repeated* confirmations, never in a
+ *    single sweep") and against `polarityResolution.applyReading`, the writer that owns
+ *    reconciliation through the confirmation tallies. Two writers, two laws, one map.
+ *
+ * A gate rather than only a unit test because the failure mode was `polarityReadings: 0` in a
+ * calibration report — a number that reads like a healthy zero.
+ */
+export async function validatePolarityLoopEntry(tier: Tier = 'ci'): Promise<GateResult> {
+  const { sessions, encounters } = scaleFor(tier);
+  const root = tmpRoot('mys-g41-');
+  try {
+    const result = await runCampaign({ persona: getPersona('flourishing'), rootDir: root, sessions, encountersPerSession: encounters });
+    const problems: string[] = [];
+    const rows = result.sessions.map((s) => s.series.polarity);
+    const final = rows[rows.length - 1]!;
+
+    // ── 1. The loop opened: a reading was captured and a pair was discovered ─────────────────
+    if (final.readings === 0) {
+      problems.push('no polarity reading was captured — the pair key never resolved, so §4.3\'s falsifiable state has no evidence and the coverage query has no input');
+    }
+    if (final.pairKeys.length === 0) {
+      problems.push('the pair-state map stayed empty — the dialectic engine has no edge to select on, so the expansion dimension is dormant rather than under-served');
+    }
+
+    // ── 2. Nothing reconciled without a ratified reading ─────────────────────────────────────
+    // The campaign ratifies no reading (`ratifyReading` is never set), so no pair may reach
+    // `reconciled`. This is the assertion that caught the single-sweep collapse: before the fix a
+    // pair reconciled on its SECOND encounter with no confirmation tally behind it.
+    for (const r of rows) {
+      if (r.pairsReconciled > 0) {
+        problems.push(`a pair reconciled with no ratified reading (session census: ${r.pairsReconciled}) — §4.3 forbids reconciliation in a single sweep`);
+        break;
+      }
+    }
+
+    // ── 3. Discovery is monotone: a discovered pair is never silently dropped ────────────────
+    const seen = new Set<string>();
+    for (const r of rows) {
+      for (const k of r.pairKeys) seen.add(k);
+      for (const k of seen) {
+        if (!r.pairKeys.includes(k)) {
+          problems.push(`pair ${k} vanished from the state map — the map lost a discovered pair`);
+          break;
+        }
+      }
+    }
+
+    if (problems.length > 0) return mk('G41 polarity loop entry', `loop: ${problems.join('; ')}`, false);
+    return mk(
+      'G41 polarity loop entry',
+      `${sessions} sessions x ${encounters} encounters: ${final.readings} readings captured, ` +
+      `${final.pairKeys.length} pair(s) discovered (${final.pairKeys.join(', ')}), 0 reconciled — ` +
+      `the loop opens on texture engagement (46 §4.3) and only a ratified reading reconciles`, 
+    );
+  } catch (e) {
+    return mk('G41 polarity loop entry', `error: ${e instanceof Error ? e.message : String(e)}`, false);
   } finally {
     try { fs.rmSync(root, { recursive: true, force: true }); } catch { /* best-effort */ }
   }

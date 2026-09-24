@@ -4,6 +4,16 @@
 (`src/core/simulation/campaign.ts`) over the curated kernel personas plus a generated cohort, through
 the same orchestrator path the CLI uses.
 
+> **Addendum, 2026-09-24 (same day) — §4.2 item 5 was diagnosed and fixed.** The first reading of
+> this report measured `polarityReadings: 0` and named it a symptom. Following it found an
+> **unenterable loop**: the dialectic state advance was fed the pair the engine structurally
+> *selected*, but `46 §5.3` forbids selecting on an `undiscovered` pair — the only state its own
+> writer creates. The loop opens on *texture* engagement instead, and the same pass removed a second
+> writer that reconciled a pair in one `sto` step against `46 §4.3`. **Item 5 is closed; items 1–4
+> remain, and item 1 is now provably independent of item 5** (with the loop open, the unfamiliar
+> share moved only 20.6 % → 21.2 %, still under the 0.25 floor). New gate **G41** (suite 40 → 41)
+> locks both. Read §4.2 item 5 for the mechanism, the fix, and the before/after numbers.
+
 **Provenance of every number below: `provenance: provisional-simulated-cohort`.** The cohort is
 synthetic and the provider is stubbed. This report may **reject** — and it does, once, below. It may
 never **certify**: real raters and real play remain the only certification paths, and nothing here
@@ -239,8 +249,52 @@ zeros, which is a different statement — and both are now *known* rather than u
    in Phase 14 d2a and the diagnosis pattern is the same.
 3. **Three lines receive zero encounters across 400.** Scheduler line coverage.
 4. **12.5 % of encounters resolve no candidate id.** Either a new id scheme or a missing stamp.
-5. **`polarityReadings` is 0 because the pair key never resolves.** The coverage query's input is
-   permanently empty; `46 §4.3`'s falsifiable state has no evidence.
+5. ~~**`polarityReadings` is 0 because the pair key never resolves.**~~ **DIAGNOSED AND FIXED
+   2026-09-24 (same day) — and it was not a missing input, it was an unenterable loop.** The report's
+   first reading was the symptom; the cause is two writers with two laws and one missing parameter:
+
+   - `sessionEnd`'s state advance is the ONLY `undiscovered` → `active-tension` writer, and it is fed
+     `AgenticOrchestrator.lastDialecticPair`, which was built from `context.poles` — the pair the
+     dialectic engine *structurally selected*. But `46 §5.3` forbids selecting on an `undiscovered`
+     pair, and a pair only leaves `undiscovered` through that advance. **The loop had no entry point:
+     `poles` was null for every one of the 400 encounters** (verified: 0/24 envelopes on a bench
+     sweep, with `polarity` non-null in 16/24 — the pool selected a rendering; no dialectic pole was
+     ever selectable). `lastPairKey`, and therefore the reading and the coverage query, inherit that
+     null.
+   - The advance **reconciled a pair in a single sweep**: it mapped `active-tension` → `reconciled`
+     on one `sto` encounter, against `46 §4.3`'s law (*repeated* confirmations only) and against
+     `polarityResolution.applyReading`, the writer that actually owns reconciliation through the
+     confirmation tallies. Measured on a 3-session campaign: `nature|technology` went
+     `undiscovered` → `active-tension` → **`reconciled` on its second encounter**, with no tally
+     behind it — and since a reconciled pair is unselectable as a structural pole (§5.3's saturation
+     guard), the single-sweep bug permanently removes the player's only edge after two encounters.
+   - The advance read its direction from a stashed field (`lastPolarityDirection`, set by
+     `finalizeEncounter`). The **module-assessment path** — the one the hermetic tier and
+     production-with-modules take — calls `recordSessionEnd` *without* `finalizeEncounter`, so the
+     advance ran with `direction === undefined` and returned the map unchanged. Instrumented: of 8
+     advances in a 2-session campaign, 6 had *both* pair and direction missing, 1 had a pair and no
+     direction. This is the **same failure class as the d3 composition-stamp finding and F7**: a
+     fallback path that stashes less than the path it mirrors. Same shape, third occurrence.
+
+   **Fix (3 files):** the engaged pair is now exposed on the envelope (the pool's primary candidate's
+   tag + its dialectical opposite — `ScenarioContext.engagedPair`) and is the discovery writer's
+   input, so the loop opens on texture engagement, exactly as `46 §4.3`'s table allows; the advance
+   now *discovers only* and reconciliation is solely `applyReading`'s; and `recordSessionEnd` takes
+   `direction` as a **required parameter**, so the ordering invariant that three call sites violated
+   no longer exists to violate. Locked by **G41** (suite 40 → 41) plus two campaign-series tests.
+
+   **Measured after (50 campaigns / 150 sessions / 627 encounters):** `polarityReadings 243 · pairs
+   discovered 80 · reconciled 0 · distinct pairs 4` and the pass verdict moves from
+   `loop-unenterable` to **`loop-open`**. The unfamiliar-pole share moves only 20.6 % → 21.2 %
+   (still below the 0.25 floor) — so **the floor breach is NOT explained by the closed loop**, and
+   item 1 stays open as an independent defect. The new reading to watch is `distinct pairs 4` across
+   627 encounters: the engine's edge is thin, which is the next hypothesis for item 1 and the first
+   thing a longer trajectory should test.
+
+   The pass gained a `polarity` section for this. It is worth stating why a section rather than a
+   line in the report: `polarityReadings: 0` read as a healthy zero, and a measure that returns zero
+   for a *structural* reason must be reported by the instrument that produces it, or its silence
+   looks like health.
 6. **Composition entropy is unmeasurable at this cohort size.** Needs more encounters per cell, not
    more cells.
 7. **Scale.** 50 campaigns × 100 sessions is affordable in CI; whether the entropy floor and the

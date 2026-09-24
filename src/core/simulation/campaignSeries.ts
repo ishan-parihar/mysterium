@@ -155,6 +155,12 @@ export interface CampaignSeriesRow {
     readonly inProgress: number;
     readonly proposedBySystem1: number;
     readonly proposedByFallback: number;
+    /** The pair-STATE map's census (`46 §4.3`'s falsifiable state). `discovered` counts
+     *  `active-tension` pairs — the loop's evidence that the dialectic engine has an edge to
+     *  select on. Zero here means the expansion dimension is dormant, not merely under-served. */
+    readonly pairsDiscovered: number;
+    readonly pairsReconciled: number;
+    readonly pairKeys: readonly string[];
   };
   /** Holon relationship strength, so world-side causality is visible in the series. */
   readonly npcRelationships: number;
@@ -206,6 +212,7 @@ export function buildSeriesRow(input: CampaignSeriesInput): CampaignSeriesRow {
   let probes = { offered: 0, validated: 0, logOnly: 0 };
   let polarity: CampaignSeriesRow['polarity'] = {
     readings: 0, reconciled: 0, inProgress: 0, proposedBySystem1: 0, proposedByFallback: 0,
+    pairsDiscovered: 0, pairsReconciled: 0, pairKeys: [],
   };
 
   if (services) {
@@ -249,12 +256,16 @@ export function buildSeriesRow(input: CampaignSeriesInput): CampaignSeriesRow {
       if (n > 0) reconciled++;
       else inProgress++;
     }
+    const stateValues = Object.values(services.states);
     polarity = {
       readings: services.readings.length,
       reconciled,
       inProgress,
       proposedBySystem1: services.readings.filter((r) => r.proposedBy === 'system1').length,
       proposedByFallback: services.readings.filter((r) => r.proposedBy === 'deterministic-fallback').length,
+      pairsDiscovered: stateValues.filter((v) => v === 'active-tension').length,
+      pairsReconciled: stateValues.filter((v) => v === 'reconciled').length,
+      pairKeys: Object.keys(services.states),
     };
   }
 
