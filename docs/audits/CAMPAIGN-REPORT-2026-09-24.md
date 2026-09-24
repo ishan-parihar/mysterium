@@ -274,16 +274,48 @@ zeros, which is a different statement — and both are now *known* rather than u
    is not at fault: hand the same engine a non-healthy signal and G40's predecessor already proves the
    write moves (`ConsequenceEngine.ts:416`).
 
-   **What this changes about the item:** the fix is not "repair `driveFixation`", it is **"give the
-   campaign a way to declare a drive stance"** — and there are two shapes, which is a decision rather
-   than a repair: **(a)** route the stance through *prose* (real narratives carrying the stance's shadow
-   vocabulary, exercising the keyword detector as production does), or **(b)** add an explicit
-   fixture-only injection seam where the harness hands the orchestrator its declared directionality
-   (`detectWriteInShadow` can express at most ONE drive's signal, so (a) cannot represent "Agency
-   fixated **and** Communion averted" — and the 4-quadrant × 4-drive model is precisely what
-   `driveFixation` is supposed to observe). (a) is more faithful to production; (b) can express the
-   model. Doing (a) alone silently narrows what the observable can ever see, which makes this a
-   **ratification**, not an implementation choice.
+   **The repair (F-6, ratified: BOTH, for different questions).** The fix was not "repair
+   `driveFixation`" but **"give the campaign a way to declare a drive stance"** — and the two channels
+   answer different questions, so both are now in place:
+
+   - **(a) Prose, for the end-to-end question.** `personas.ts` gained a `prose` option; the personas
+     with a shadow stance now write in the vocabulary that stance would use, so `detectWriteInShadow`
+     is exercised as production exercises it. Every line is ≥ 40 words, matching the reflective-depth
+     estimator's full-bonus length. The filler default stays for personas with no shadow stance — it
+     keeps the word-count heuristics measurable without injecting vocabulary the other channel reads.
+   - **(b) An explicit fixture-only seam, for the coverage question.** `declaredDirectionality` on the
+     orchestrator (and on `EncounterSessionInput`) replaces the derived directionality. It exists
+     because the derivation can emit at most ONE pathological signal per encounter, so the 4-quadrant
+     × 4-drive model `driveFixation` exists to watch is unreachable from anything a player can produce.
+     **No production caller sets it** — a declared stance in production would assert a player's
+     evaluation instead of measuring it (`43 §4.1` L4) — and `EncounterProvenance.declaredStance`
+     records which channel carried each encounter, so a reading is never attributed to the wrong one.
+
+   **Measured after, both channels firing:** `golden-bypass` surfaces `GoldenAddiction` shadows from
+   its own prose (2 in 4 encounters, 3 in 8) with `Eros` fixation **0.13 → 0.53**; `constricted`
+   reaches **Communion 0.07 → 0.31** through the declaration (its `avoid: true` empties the write-in, so
+   the prose channel cannot serve it — which is precisely why (a) alone was not enough); generated
+   cohort members move their authored drive only. Locked by **G42**, which asserts the stance moves the
+   **declared** drive, **only** that drive, that it **accumulates** across the trajectory, and that
+   every contributing encounter is **attributed** to the channel.
+
+   **A correction the gate itself produced, kept because it is instructive:** G42's first draft asserted
+   `rate × encounters` and FAILED (0.53 observed vs 0.20 expected). The advance runs more times per
+   encounter than the orchestrator's own evaluation — the declaration is delivered per encounter and the
+   matrix/transformation advance applies on top — so the true rate is a fact about the seam's CALL
+   GRAPH, not about `updateDriveBalance`. Pinning it would fail the moment the call graph changed for an
+   unrelated good reason, so the gate asserts the drive, the direction of change and the attribution
+   instead. **A gate that encodes the wrong model of the call graph is the same failure as a fabricated
+   zero, one level up.**
+
+   **One further mismatch found and NOT fixed (new, for Phase 16):** the kernel harness drives personas
+   with a **cumulative** `step`, while the campaign passes a per-question step plus a **session-label
+   hash** as the offset. Any persona whose stance is indexed by step or by session (`therapy-arc`'s
+   "surface in session 1, engage healthily after"; the `s % 3` alternations) therefore resolves
+   DIFFERENTLY in a campaign than in a kernel trajectory — `therapy-arc` declares its surfacing arc and
+   produced **0 shadows and 0 fixation** in a 2-session campaign. Its kernel gate (G4) passes, so this
+   is a campaign-harness fidelity gap, not an engine one, and it belongs to this phase's sweep because
+   item 1's re-measurement inherits it.
 3. **Three lines receive zero encounters across 400.** Scheduler line coverage.
 4. **12.5 % of encounters resolve no candidate id.** Either a new id scheme or a missing stamp.
 5. ~~**`polarityReadings` is 0 because the pair key never resolves.**~~ **DIAGNOSED AND FIXED

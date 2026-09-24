@@ -34,6 +34,8 @@ import type { Significator } from '../domain/Significator.js';
 import type { ConsequenceRecord } from '../domain/ConsequenceRecord.js';
 import type { WorldState } from '../engines/CandidateGeneration.js';
 import type { PlayerResponse } from '../engines/ConsequenceEngine.js';
+import type { DriveDirectionality } from '../domain/enums.js';
+import type { Drive } from '../domain/Drive.js';
 
 /**
  * The consent-checked identity projection for this session (`16 §2.1`). Absent → the UDV is
@@ -60,6 +62,17 @@ export interface EncounterSessionInput {
   /** Suppress the LLM entirely (the hermetic tier and `--headless` without `--llm`). */
   readonly noLlm?: boolean;
   readonly forceShadow?: string;
+  /**
+   * FIXTURE-ONLY — a declared drive directionality replacing the derived one (Phase 16 d2).
+   *
+   * The derivation can emit at most ONE pathological drive signal per encounter, so the 4-quadrant ×
+   * 4-drive model `driveFixation` watches is unreachable from anything a player can produce; a
+   * fixture that declares a stance could not deliver it, because the orchestrator derives the rest.
+   * This is the seam for that. **Production callers must not set it** — a declared stance in
+   * production asserts a player's evaluation instead of measuring it (`43 §4.1` L4). The campaign
+   * records which channel produced each reading (`EncounterProvenance.declaredStance`).
+   */
+  readonly declaredDirectionality?: Readonly<Record<Drive, DriveDirectionality>>;
   readonly consecutivePasses?: Map<string, number>;
   readonly agentSynthesis?: string;
   /** The runtime services. Absent → the pre-personalization pipeline (one of the two ratified modes). */
@@ -86,6 +99,7 @@ export function buildEncounterOrchestrator(input: EncounterSessionInput): Agenti
     module: input.module,
     noLlm: input.noLlm,
     forceShadow: input.forceShadow,
+    declaredDirectionality: input.declaredDirectionality,
     consecutivePasses: input.consecutivePasses,
     agentSynthesis: input.agentSynthesis,
     training: input.training,

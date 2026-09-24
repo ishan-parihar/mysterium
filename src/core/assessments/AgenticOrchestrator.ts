@@ -248,6 +248,8 @@ export class AgenticOrchestrator {
   private messages: AgentMessage[] = [];
   private noLlm: boolean;
   private forceShadow: string | undefined;
+  /** Fixture-only declared stance (`see the constructor param's doc`). Undefined in production. */
+  private declaredDirectionality: Readonly<Record<Drive, DriveDirectionality>> | undefined;
   private _currentPresentedTask: AssessmentTask | null = null;
   private _consecutivePasses: Map<string, number>;
   private agentSynthesis: string | undefined;
@@ -297,6 +299,31 @@ export class AgenticOrchestrator {
     module?: StageAssessment;
     noLlm?: boolean;
     forceShadow?: string;
+    /**
+     * FIXTURE-ONLY — a DECLARED drive directionality that replaces the one the evaluation derives.
+     *
+     * Why this exists (Phase 16 d2, 2026-09-24): `sig.drives.fixationRisk` moves only for a drive
+     * carrying one of the four pathological signals, and the derivation can emit at most ONE such
+     * signal per encounter — the module path routes a shadow quadrant to a single drive via
+     * `detectWriteInShadow`, and the LLM path takes the model's per-drive enum. The 4-quadrant ×
+     * 4-drive model `46 §11`'s `driveFixation` observable exists to watch is therefore unreachable
+     * from any input a player can produce, and a campaign whose personas declare a drive tilt had no
+     * way to deliver it: `personaChoiceHandler` reads the option index and the write-in from
+     * `policy()`, and the orchestrator DERIVES the rest. Measured consequence: every drive signal was
+     * `HealthyBalanced` in every encounter, and `driveWeights` advanced at exactly the HealthyBalanced
+     * rate (+0.01/drive/encounter) while `fixationRisk` sat at 0.
+     *
+     * So the fixture gets a SECOND channel, for the questions the choice channel cannot ask. It is a
+     * different question, not a better one: "does a shadow signal move `fixationRisk`" is this seam;
+     * "does the keyword detector work end to end" is real prose through the write-in. A number the
+     * campaign reports must be attributable to the channel that produced it —
+     * `EncounterProvenance.declaredStance` records which.
+     *
+     * **No production caller may set this.** The CLI, the WebUI engine and the delegate path take the
+     * derived value; a declared stance in production would let a player's evaluation be asserted
+     * rather than measured, which is the one thing `43 §4.1` L4 forbids.
+     */
+    declaredDirectionality?: Readonly<Record<Drive, DriveDirectionality>>;
     consecutivePasses?: Map<string, number>;
     agentSynthesis?: string;
     /**
@@ -349,6 +376,7 @@ export class AgenticOrchestrator {
     this.messages = params.initialMessages ? [...params.initialMessages] : [];
     this.noLlm = params.noLlm ?? false;
     this.forceShadow = params.forceShadow;
+    this.declaredDirectionality = params.declaredDirectionality;
     this._consecutivePasses = params.consecutivePasses ?? new Map();
     this.agentSynthesis = params.agentSynthesis;
     this.training = params.training ?? null;
@@ -1633,12 +1661,17 @@ INSTRUCTIONS:
     };
 
     const baseDir: DriveDirectionality = evaluation.passed ? 'HealthyBalanced' : 'DarkAddicted';
-    const driveDirectionality: Record<Drive, DriveDirectionality> = {
-      Agency: SIGNAL_MAP[evaluation.driveSignals.agency] ?? baseDir,
-      Communion: SIGNAL_MAP[evaluation.driveSignals.communion] ?? baseDir,
-      Eros: SIGNAL_MAP[evaluation.driveSignals.eros] ?? baseDir,
-      Agape: SIGNAL_MAP[evaluation.driveSignals.agape] ?? baseDir,
-    };
+    // The declared stance wins when present — fixture-only, and the ONE place that channel takes
+    // effect (see the constructor param). Production never sets it, so the derived map is the
+    // production path and this branch is dead outside a campaign.
+    const driveDirectionality: Record<Drive, DriveDirectionality> = this.declaredDirectionality
+      ? { ...this.declaredDirectionality }
+      : {
+          Agency: SIGNAL_MAP[evaluation.driveSignals.agency] ?? baseDir,
+          Communion: SIGNAL_MAP[evaluation.driveSignals.communion] ?? baseDir,
+          Eros: SIGNAL_MAP[evaluation.driveSignals.eros] ?? baseDir,
+          Agape: SIGNAL_MAP[evaluation.driveSignals.agape] ?? baseDir,
+        };
 
     const response: PlayerResponse = {
       encounterId: this.encounter.id,

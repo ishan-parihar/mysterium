@@ -18,7 +18,12 @@ import { validateDelegationDeterminism, validateDelegationToolsetFirewall, valid
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
 import { validateCheckedGraph, validateCliBoot, validateSystem1Boundary } from './surface.js';
-import { validateCampaignContinuity, validateCampaignInvariants, validatePolarityLoopEntry } from './campaign.js';
+import {
+  validateCampaignContinuity,
+  validateCampaignInvariants,
+  validatePolarityLoopEntry,
+  validateDeclaredStanceChannel,
+} from './campaign.js';
 
 export interface ValidationReport {
   tier: Tier;
@@ -87,6 +92,12 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // discovered by a writer the selection path could never reach, and a second writer reconciled a
   // pair in one `sto` step against §4.3. No single-seam gate could see either.
   results.push(await validatePolarityLoopEntry(tier));
+  // G42 (Phase 16 d2): `driveFixation` read as a pinned observable; it was a starved input. The
+  // campaign's personas declared a drive tilt that `personaChoiceHandler` discarded, and their
+  // narratives were generated filler so the keyword route could not fire either. This gate asserts
+  // the stance now arrives, on the declared drive and at the declared rate — a reading that moved a
+  // different drive, or the right drive by the wrong amount, means the signal is misrouted.
+  results.push(await validateDeclaredStanceChannel(tier));
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

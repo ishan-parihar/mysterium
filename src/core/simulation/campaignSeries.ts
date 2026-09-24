@@ -73,6 +73,14 @@ export interface EncounterProvenance {
   readonly pole: CompositionStamp['pole'];
   readonly isCurriculum: boolean;
   readonly isTraining: boolean;
+  /**
+   * Which channel carried this encounter's drive stance (Phase 16 d2). `true` when the fixture's
+   * declared-stance seam supplied the directionality, `false` when the orchestrator derived it from
+   * its own evaluation. Recorded so a `driveFixation` reading is never attributed to the wrong
+   * channel: the declaration can express the 4-quadrant × 4-drive model, the derivation cannot
+   * (it emits at most one pathological signal per encounter).
+   */
+  readonly declaredStance: boolean;
 }
 
 export type CandidateSource =

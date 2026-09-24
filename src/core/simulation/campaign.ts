@@ -64,6 +64,9 @@ import type { WorldState } from '../engines/CandidateGeneration.js';
 import type { PlayerResponse } from '../engines/ConsequenceEngine.js';
 import type { ScheduledEncounter } from '../domain/EncounterSpecNew.js';
 import { ALL_LINES } from '../domain/Line.js';
+import { ALL_DRIVES } from '../domain/Drive.js';
+import type { Drive } from '../domain/Drive.js';
+import type { DriveDirectionality } from '../domain/enums.js';
 import { bootModuleRegistry } from '../assessments/bootModules.js';
 import { type ModuleRegistry } from '../assessments/registry.js';
 import {
@@ -167,14 +170,46 @@ function pickOptionIndex(persona: PersonaSpec, question: MCQQuestion, desired: P
  * stance as its opener. `sessionLabel` seeds the rotation so a persona's choice in session 3 differs
  * from its choice in session 1, while staying reproducible for a given campaign.
  */
+/**
+ * The persona's declared drive stance for one encounter — the FIXTURE-ONLY channel (Phase 16 d2).
+ *
+ * `persona.policy()` computes a full stance (drive directionality, energetic direction, shadow
+ * quadrant) and the campaign used to read only two things from it: the option index and the
+ * write-in. So the `drives` override a persona or `cohort.ts` authors was **dead weight** — which is
+ * why the report's "with and without a drive tilt authored to fixate" made no difference. The same
+ * policy call is the source here, so the two channels can never disagree about what the persona is.
+ *
+ * Returns `null` when the persona declares no tilted drive (every drive `HealthyBalanced`), because
+ * injecting a balanced stance would be indistinguishable from the derived one and would make
+ * `declaredStance` in the provenance uninformative.
+ */
+export function declaredStance(
+  persona: PersonaSpec,
+  encounter: ScheduledEncounter,
+  sessionLabel: string,
+): { readonly directionality: Readonly<Record<Drive, DriveDirectionality>>; readonly step: number } | null {
+  const step = seedOffsetOf(sessionLabel);
+  const stance = persona.policy(encounter, step);
+  const directionality = stance.driveDirectionality as Record<Drive, DriveDirectionality>;
+  const tilted = ALL_DRIVES.some((d) => directionality[d] !== 'HealthyBalanced');
+  return tilted ? { directionality, step } : null;
+}
+
+/** The stable per-session step offset — one definition, so the handler and the builder agree. */
+function seedOffsetOf(sessionLabel: string): number {
+  let seedOffset = 0;
+  for (let i = 0; i < sessionLabel.length; i++) seedOffset = (seedOffset * 31 + sessionLabel.charCodeAt(i)) % 1000;
+  return seedOffset;
+}
+
 export function personaChoiceHandler(
   persona: PersonaSpec,
   encounter: ScheduledEncounter,
   sessionLabel: string,
+  startStep?: number,
 ): AgenticUIHandler {
   let step = 0;
-  let seedOffset = 0;
-  for (let i = 0; i < sessionLabel.length; i++) seedOffset = (seedOffset * 31 + sessionLabel.charCodeAt(i)) % 1000;
+  const seedOffset = startStep ?? seedOffsetOf(sessionLabel);
 
   return {
     askUser: async (params: AskUserQuestionParams): Promise<AskUserQuestionResult> => {
@@ -329,15 +364,24 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
       world = tickResult.world;
 
       const [encLine, encStage] = encounter.moduleRef.split(':') as [string, string];
+      const sessionLabel = `${spec.persona.name}/s${s}`;
+      // The SECOND channel (Phase 16 d2). A persona that declares a drive stance delivers it here,
+      // because the choice channel cannot carry it: the orchestrator DERIVES the directionality from
+      // its own evaluation, and that derivation emits at most ONE pathological signal per encounter —
+      // so the 4-quadrant × 4-drive model `driveFixation` watches is unreachable through choice alone.
+      // The declared stance answers a different question than the write-in does, and the provenance
+      // below records which channel carried each encounter so no reading is attributed to the wrong one.
+      const declared = declaredStance(spec.persona, encounter, sessionLabel);
       const orchestrator = buildEncounterOrchestrator({
         encounter,
         significator: sig,
         world,
         history,
-        uiHandler: personaChoiceHandler(spec.persona, encounter, `${spec.persona.name}/s${s}`),
+        uiHandler: personaChoiceHandler(spec.persona, encounter, sessionLabel, declared?.step),
         module: registry.get(encLine as never, encStage as never),
         noLlm,
         orchestration,
+        ...(declared ? { declaredDirectionality: declared.directionality } : {}),
       });
 
       const outcome = await orchestrator.run();
@@ -356,6 +400,7 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
         pole: outcome.composition?.pole ?? null,
         isCurriculum: Boolean(encounter.curriculumConceptId),
         isTraining: Boolean(encounter.isTrainingBeat),
+        declaredStance: Boolean(declared),
       });
       if (record.writeInValue) writeIns.push(record.writeInValue);
       const response = responseFromRecord(encounter, record, outcome.narrativeSummary);

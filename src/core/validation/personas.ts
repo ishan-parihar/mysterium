@@ -47,6 +47,24 @@ export interface PolicyOptions {
   words?: number;
   /** Empty narrative = avoidance in the engine's eyes (isAvoided path). */
   avoid?: boolean;
+  /**
+   * Real prose for the write-in, cycled by step (`Phase 16 d2`).
+   *
+   * The default narrative is 50 generated filler tokens (`w0 w1 w2 …`), which is deliberate: it makes
+   * the reflective-depth estimator's word-count/density heuristics measurable without injecting
+   * vocabulary the OTHER channel reads. But it also means the shadow-KEYWORD channel
+   * (`detectWriteInShadow`, the module path's only route to a non-healthy drive signal) can never
+   * fire in a campaign — so "does the keyword detector work end to end" was untestable, and every
+   * drive signal was `HealthyBalanced` by construction.
+   *
+   * A persona whose stance is a shadow stance carries prose here, in the vocabulary that stance would
+   * actually use. This is not a substitute for `declaredDirectionality` — it answers the opposite
+   * question. Prose exercises the detector as production does (a real player's words, matched by
+   * keyword); the declaration supplies the multi-drive model the detector structurally cannot express
+   * (it emits at most ONE drive's signal). A reading must be attributable to one of them, which is why
+   * `EncounterProvenance.declaredStance` records the channel.
+   */
+  prose?: readonly string[];
 }
 
 export type ResponsePolicy = (encounter: ScheduledEncounter, step: number) => PlayerResponse;
@@ -72,7 +90,9 @@ export function policy(options: PolicyOptions): ResponsePolicy {
     const words = options.words ?? 45;
     const narrative = options.avoid
       ? ''
-      : Array.from({ length: words }, (_, i) => `w${(step * 7 + i) % 50}`).join(' ');
+      : options.prose && options.prose.length > 0
+        ? options.prose[((step % options.prose.length) + options.prose.length) % options.prose.length]!
+        : Array.from({ length: words }, (_, i) => `w${(step * 7 + i) % 50}`).join(' ');
     return {
       encounterId: encounter.id,
       energeticDirection: options.energeticDirection ?? 'Radiative',
@@ -156,9 +176,41 @@ const therapyArcPolicy: ResponsePolicy = (encounter, step) => {
     surfaceShadow: (s) => (s % 2 === 0 ? 'DarkAddiction' : 'DarkAllergy'),
     energeticDirection: 'Absorptive',
     stageOrientation: 'Regressive',
+    // The surfacing sessions speak in the vocabulary their shadow would use — addiction on the even
+    // steps, aversion on the odd ones, matching `surfaceShadow`'s alternation (Phase 16 d2).
+    prose: step % 2 === 0 ? DARK_ADDICTION_PROSE : DARK_AVERSION_PROSE,
     words: 30,
   })(encounter, step);
 };
+
+// ---------------------------------------------------------------------------
+// Prose for the write-in (Phase 16 d2)
+// ---------------------------------------------------------------------------
+//
+// Each set is written in the vocabulary its stance would actually use, so the shadow-KEYWORD channel
+// (`shadowSignals.detectWriteInShadow`, the module path's only route to a non-healthy drive signal) is
+// exercised end to end. The filler default (`w0 w1 …`) stays for personas with no shadow stance: it
+// keeps the reflective-depth estimator's word-count heuristics measurable without injecting
+// vocabulary the OTHER channel reads. Every line here is >= 40 words so the depth estimator's full
+// bonus is reached on all four (the same length the `words: 45` default targets).
+
+/** Agency-clinging: control, dominance, force — `darkAddiction` vocabulary. */
+const DARK_ADDICTION_PROSE: readonly string[] = [
+  'What I felt was the need to take control of the situation before it took control of me, and the only way I could see was to force the issue, dominate the exchange, and prove myself against the person standing in front of me, because anything less felt like being made weak in front of everyone.',
+  'I wanted to win, and I wanted them to know I had won, so I pushed hard, asserted myself, made them pay for the earlier slight, and told myself afterwards that a person who cannot defend their position deserves what they get from someone who can, that this is simply how the world works.',
+];
+
+/** Withdrawal and refusal — `darkAversion` vocabulary. */
+const DARK_AVERSION_PROSE: readonly string[] = [
+  'Honestly I wanted to withdraw from the whole thing, refuse the encounter, and avoid the person entirely, because it did not feel worth the effort and I could not be bothered to open a conversation that would end the same way it always does, with me too tired to keep going and the world as broken as it was before I started.',
+  'My first instinct was to numb out, turn off, and just leave it, since nothing will change and I am not my brother\u2019s responsibility anyway, and when I am overwhelmed like this the only thing that works is to shut down and wait until the feeling passes and the day is over.',
+];
+
+/** Spiritual bypass — `goldenAddiction` vocabulary. */
+const GOLDEN_ADDICTION_PROSE: readonly string[] = [
+  'I did not really engage with the difficulty because I could see it was all part of the process and everything happens for a reason, so there was nothing to work on, only something to transcend, and from that higher self perspective the problem dissolves into pure awareness without needing any action from me at all.',
+  'I would rise above it rather than sit in it, because I am already beyond that kind of reaction and the ego is not who I am, so the honest answer is that I skipped past the feeling and let go, trusting that only love exists and that nothing here is real enough to deserve my attention.',
+];
 
 export const PERSONAS: readonly PersonaSpec[] = [
   {
@@ -191,6 +243,14 @@ export const PERSONAS: readonly PersonaSpec[] = [
     // 4 sessions × 6 encounters: Communion fixation accrues +0.03/encounter →
     // 0.72 by trajectory end, crossing the needs-detector's 0.6 drive_rebalance
     // threshold (calibrated 2026-09-15; see BENCHMARK-ARCHITECTURE.md §7).
+    //
+    // CORRECTED 2026-09-24 (Phase 16 d2): this expectation was UNREACHABLE when it was written.
+    // `avoid: true` makes the write-in empty, and the drive signal reached the engine only through
+    // the derived evaluation — which emits a pathological signal solely from a shadow KEYWORD in the
+    // free text (empty here) or the LLM's per-drive enum (absent in the hermetic tier). So Communion
+    // fixation sat at 0 for this persona, and the comment described a behaviour no harness could
+    // produce. It is reachable now via `declaredDirectionality` (the campaign passes the stance this
+    // policy already computes), which is the channel `cohort.ts`'s authored tilts use.
     trajectory: { sessions: 4, encountersPerSession: 6 },
   },
   {
@@ -214,6 +274,9 @@ export const PERSONAS: readonly PersonaSpec[] = [
       surfaceShadow: (s) => (s % 3 === 0 ? 'GoldenAddiction' : null),
       sourceOfNourishment: 'HigherRealm',
       stageOrientation: 'ReachingHigher',
+      // Success-shaped vocabulary on every step: the golden-addiction signals are what the KEYWORD
+      // channel must find here, so the persona's words must carry them (Phase 16 d2).
+      prose: GOLDEN_ADDICTION_PROSE,
       words: 45,
     }),
     expectations: {},

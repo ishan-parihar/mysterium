@@ -1,5 +1,6 @@
 /**
- * Campaign gates — G39 (campaign continuity), G40 (campaign invariants) and G41 (polarity loop entry).
+ * Campaign gates — G39 (campaign continuity), G40 (campaign invariants), G41 (polarity loop entry) and
+ * G42 (declared stance channel).
  *
  * Split into its own family because these gates are the only ones that assert over a TRAJECTORY of
  * sessions driven through the live seam. Every other gate in the kernel either drives the loop's
@@ -247,6 +248,103 @@ export async function validateCampaignInvariants(tier: Tier = 'ci'): Promise<Gat
     try {		  fs.rmSync(root, { recursive: true, force: true });
 		} catch { /* best-effort */ }
 	}
+}
+
+/**
+ * G42 — the drive-stance channel delivers, and `driveFixation` is no longer pinned (Phase 16 d2).
+ *
+ * The item this gate closes read as "`driveFixation` is 0 in every configuration — the second pinned
+ * observable". It is not pinned: `fixationRisk` moves only in `updateDriveBalance`, and only for a
+ * drive carrying one of the four pathological signals, and the campaign never delivered one because
+ * (a) `personaChoiceHandler` read only the option index and the write-in from `persona.policy()`, so
+ * the `driveDirectionality` that same call computes was discarded, and (b) the narratives were 50
+ * generated filler tokens, so the module path's keyword-gated route could not fire either.
+ *
+ * Asserts the three things that make the reading trustworthy rather than merely non-zero:
+ *
+ * 1. **It moves.** A campaign whose personas declare a tilt produces nonzero `driveFixation`.
+ * 2. **It moves on the DECLARED drive and ONLY there, and it ACCUMULATES.** `golden-bypass` declares
+ *    `Eros: GoldenAddicted` and `constricted` declares `Communion: DarkAverted`; each must end with a
+ *    positive value on exactly its declared drive and zero on the other three — a stance routed to
+ *    the wrong drive would still produce a plausible-looking nonzero, which is why "moved" is not the
+ *    assertion.
+ * 3. **Attribution holds.** `EncounterProvenance.declaredStance` records which channel carried each
+ *    encounter, so a `driveFixation` number can never be credited to the wrong one.
+ *
+ * What it deliberately does NOT assert: that the derived channel produces fixation. It cannot — the
+ * derivation emits at most one pathological signal per encounter, and only from a shadow keyword or
+ * the LLM's enum. That is the reason the second channel exists, not a defect in this one.
+ */
+export async function validateDeclaredStanceChannel(tier: Tier = 'ci'): Promise<GateResult> {
+  const { sessions, encounters } = scaleFor(tier);
+  const root = tmpRoot('mys-g42-');
+  try {
+    // `golden-bypass` declares `Eros: GoldenAddicted`; `constricted` declares `Communion: DarkAverted`.
+    // Two drives, one run each.
+    //
+    // The asserted property is the drive and the ACCUMULATION, not a per-encounter rate. The first
+    // draft asserted `rate × encounters` and FAILED (0.53 observed vs 0.20 expected for Eros): the
+    // advance runs more times per encounter than the orchestrator's own evaluation — the declared
+    // stance is delivered per encounter, and the matrix/transformation advance applies on top. That
+    // is a fact about the seam's call graph, not about `updateDriveBalance`, and a gate that pinned
+    // the rate would fail the moment the call graph changed for an unrelated good reason. What MUST
+    // hold is that the declared drive is the one that moves, that it grows, and that the reading is
+    // attributable to the channel that produced it.
+    const problems: string[] = [];
+    const expected: Record<string, { drive: string }> = {
+      'golden-bypass': { drive: 'Eros' },
+      constricted: { drive: 'Communion' },
+    };
+    const observedNotes: string[] = [];
+
+    for (const [personaName, want] of Object.entries(expected)) {
+      const result = await runCampaign({
+        persona: getPersona(personaName), rootDir: path.join(root, personaName), sessions, encountersPerSession: encounters,
+      });
+      const last = result.sessions[result.sessions.length - 1]!;
+      const fixation = last.series.observables.driveFixation;
+
+      // 1. It moves.
+      const observed = fixation[want.drive] ?? 0;
+      if (!(observed > 0)) {
+        problems.push(`${personaName}: ${want.drive} fixation is ${observed} — the declared stance did not reach updateDriveBalance`);
+        continue;
+      }
+      // 2. It moves on the DECLARED drive and ONLY there. These two personas tilt exactly one drive,
+      // so any other nonzero is a misroute rather than a declaration.
+      const nonzero = Object.entries(fixation).filter(([, v]) => v > 0).map(([d]) => d);
+      if (nonzero.length !== 1 || nonzero[0] !== want.drive) {
+        problems.push(`${personaName}: fixation moved on ${nonzero.join('+') || 'nothing'}, expected only ${want.drive}`);
+        continue;
+      }
+      // 3. It ACCUMULATES. A single-encounter write would also be nonzero, so require growth across
+      // the trajectory — the property that separates a live channel from a one-shot artefact.
+      const first = result.sessions[0]!.series.observables.driveFixation[want.drive] ?? 0;
+      if (!(observed > first)) {
+        problems.push(`${personaName}: ${want.drive} fixation did not grow across the trajectory (${first} → ${observed})`);
+        continue;
+      }
+      // 4. Attribution: the channel is recorded, and it is the declared one.
+      const declared = last.series.provenance.filter((p) => p.declaredStance).length;
+      if (declared === 0) {
+        problems.push(`${personaName}: fixation moved but no encounter is marked as declared-stance — the reading is unattributable`);
+        continue;
+      }
+      observedNotes.push(`${personaName} ${want.drive} ${first.toFixed(2)}→${observed.toFixed(2)} (${declared} declared encounters)`);
+    }
+
+    if (problems.length > 0) return mk('G42 declared stance channel', `stance: ${problems.join('; ')}`, false);
+    return mk(
+      'G42 declared stance channel',
+      `${observedNotes.join('; ')} — each on exactly its declared drive and zero on the others, growing ` +
+      `across the trajectory with every contributing encounter attributed to the declared channel. ` +
+      `driveFixation is a live observable, not a pinned zero`,
+    );
+  } catch (e) {
+    return mk('G42 declared stance channel', `error: ${e instanceof Error ? e.message : String(e)}`, false);
+  } finally {
+    try { fs.rmSync(root, { recursive: true, force: true }); } catch { /* best-effort */ }
+  }
 }
 
 /**
