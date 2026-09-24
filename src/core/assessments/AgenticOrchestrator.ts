@@ -109,6 +109,21 @@ export interface OrchestratorResult {
    */
   readonly driveSignals?: { agency: string; communion: string; eros: string; agape: string };
   /**
+   * Phase 15 d3 — where this encounter's content came from. `pole` is the one the encounter served
+   * (`45 §5.4`'s familiar/unfamiliar/shadow-facing), `candidateId` the pool's winning candidate (its
+   * id carries the provenance: `~sim`/`~opp` recolouring, `composed:`, `npc:`, `scenario-authored:`),
+   * `pairKey` the dialectic pair the reading references, `proposedBy` who proposed the reading.
+   *
+   * Every field is null when no `OrchestrationServices` were supplied — the pre-personalization
+   * pipeline has no pool, and reporting a pole for it would be reporting a decision nobody made.
+   */
+  readonly composition?: {
+    readonly pole: 'familiar' | 'unfamiliar' | 'shadow-facing' | null;
+    readonly candidateId: string | null;
+    readonly pairKey: string | null;
+    readonly proposedBy: 'system1' | 'deterministic-fallback' | null;
+  };
+  /**
    * The full PlayerResponse built by finalizeEncounter — drive directionality,
    * energetic direction, stage orientation, source of nourishment, shadow info.
    * ponytail: B2 fix — exposed so the WebUI gameEngine uses the real response
@@ -250,6 +265,11 @@ export class AgenticOrchestrator {
   /** Phase 11 d5: the pair the last composition worked + the encounter's scored direction —
    *  stashed by personalizationContext/finalizeEncounter, consumed by recordSessionEnd. */
   private lastDialecticPair: readonly [string, string] | null = null;
+  /** The pool's winning candidate id for this encounter (`composed:`/`npc:`/`~sim`/`~opp`/…).
+   *  Stashed beside the pair/pole so the provenance stamp below needs no new plumbing. */
+  private lastCandidateId: string | null = null;
+  /** Who proposed the polarity reading this encounter — the System-1 layer or the fallback. */
+  private lastResolvedBy: 'system1' | 'deterministic-fallback' | null = null;
   private lastPolarityDirection: 'sto' | 'sts' | 'neutral' | undefined;
   /** Phase 13 d10 L3: the pole the last composition SERVED + the polarities' pair key — stashed
    *  at composition time, consumed by recordSessionEnd to build the reading's EncounterRecord. */
@@ -1374,6 +1394,23 @@ INSTRUCTIONS:
    */
   private async runModuleAssessment(_line: Line, stage: Stage, now: number): Promise<OrchestratorResult> {
     const module = this.module!;
+    // Phase 15 d3 — the personalization seam must run on THIS path too, and it did not.
+    //
+    // `personalizationContext()` was called from `run()` and `runLanguageReflective` only, so the
+    // envelope existed exactly when an LLM prompt was being assembled. This path is not an edge case:
+    // it is what runs when no LLM is configured or the call fails, and it is what the hermetic tier —
+    // the tier that gates CI — runs. On it, the pool never selected, the composition telemetry never
+    // recorded a single event, `lastPoleServed`/`lastPairKey` stayed null so `sessionEnd` produced NO
+    // polarity reading, and the [CONTINUITY]/[SCENARIO SEED]/[POLARITY] material was never gathered.
+    // The campaign series measured it in the first run: `candidateSourceShare: {unknown: 1}`,
+    // `compositionEvents: 0`, `polarityReadings: 0`.
+    //
+    // The block is discarded here because this path assembles no LLM prompt — but the SELECTIONS are
+    // not prompt-decoration, they are decisions about what the encounter serves (`45 §5.4`) and what
+    // the reading will cite (`46 §4.3`), so they must happen whether or not a prompt consumes them.
+    // `personalizationContext()` is internally total (returns nulls, never throws) and records the
+    // composition telemetry + coherence insights as a side effect, which is the part this path needs.
+    this.personalizationContext();
     const holon = this.world.holons.find(h => h.id === this.encounter.holonSource);
     const holonName = holon?.name ?? 'A presence';
     const currentModality = this.encounter.modality;
@@ -1705,6 +1742,17 @@ INSTRUCTIONS:
       playerWriteIn: writeIn,
       driveScores: evaluation.driveScores,
       messages: this.messages,
+      // Phase 15 d3: the provenance of this encounter's content — which pole it served, which
+      // candidate rendered it, and who proposed the reading. Exposed so the campaign series can
+      // report composition as it ACTUALLY happened rather than re-deriving it from the encounter
+      // (the re-derivation would be a second opinion about the pool, and the pool's decision is the
+      // one the player received).
+      composition: {
+        pole: this.lastPoleServed,
+        candidateId: this.lastCandidateId,
+        pairKey: this.lastPairKey,
+        proposedBy: this.lastResolvedBy,
+      },
       ...this.recordSessionEnd(updatedRecord, evaluation.passed, now),
     };
   }
@@ -2346,6 +2394,8 @@ ${probes}${rubric}
       // selected pair — the reading is still captured (coverage is per-CELL), it just cites the
       // composition's own poles.
       this.lastPoleServed = context?.polarity?.pole ?? null;
+      this.lastCandidateId = context?.polarity?.primary ?? null;
+      this.lastResolvedBy = context?.resolution?.proposedBy ?? null;
       this.lastPairKey = context?.polarity && dialecticPair
         ? `${dialecticPair[0] < dialecticPair[1] ? dialecticPair[0] : dialecticPair[1]}|${dialecticPair[0] < dialecticPair[1] ? dialecticPair[1] : dialecticPair[0]}`
         : null;

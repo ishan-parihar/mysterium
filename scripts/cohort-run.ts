@@ -109,6 +109,11 @@ function parseAxis(axis: string | undefined): Partial<import('../src/core/simula
  * (what the restore delivered into the services at session start).
  */
 function sessionRow(persona: string, r: CampaignResult['sessions'][number]): Record<string, unknown> {
+  const s = r.series;
+  // Flatten the composition to the three numbers a boundary search reads: how many cells were
+  // composed, how many collapsed below the entropy floor, and the worst cell's entropy. The full
+  // per-cell table stays on the object for a follow-up query rather than bloating every row.
+  const entropies = Object.values(s.composition.perCell).map((c) => c.entropy);
   return {
     persona,
     session: r.session,
@@ -121,12 +126,31 @@ function sessionRow(persona: string, r: CampaignResult['sessions'][number]): Rec
     checkpointsWritten: r.checkpointsWritten,
     cci: r.observables.cci,
     stage: r.sig.currentStage,
+    currentStage: r.sig.currentStage,
     // The drive vector — the T2 defect of Phase 14 d2a is the cautionary tale: four pinned numbers
     // read as a flat curve, not as a bug, so they belong in the series where a flat line is visible.
     driveWeights: r.observables.driveWeights,
     driveFixation: r.observables.driveFixation,
     shadowsSurfaced: r.sig.shadows.entries.length,
     totalEncounters: r.sig.totalEncounters,
+    // ── d3: what the seam DID ────────────────────────────────────────────────────────────────
+    shadowsByQuadrant: s.shadowsByQuadrant,
+    candidateSourceShare: s.candidateSourceShare,
+    poleShare: s.poleShare,
+    composedCells: s.composition.knownCells,
+    compositionEvents: s.composition.eventCount,
+    collapsedCells: s.composition.collapsedCells.length,
+    minCellEntropy: entropies.length > 0 ? Math.min(...entropies) : null,
+    pendingDefects: s.composition.pendingDefects,
+    probeValidated: s.probes.validated,
+    probeLogOnly: s.probes.logOnly,
+    feedTotal: s.feedTotal,
+    feedMix: s.feed,
+    polarityReadings: s.polarity.readings,
+    polarityReconciled: s.polarity.reconciled,
+    npcRelationships: s.npcRelationships,
+    // Named so a report can never read an absent observable as a measured zero.
+    unavailable: Object.keys(s.unavailable),
   };
 }
 

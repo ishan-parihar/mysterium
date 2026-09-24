@@ -75,6 +75,7 @@ import {
 import { feedPlanningBias } from '../orchestration/feedReaders.js';
 import { detectShadowKeywords } from '../assessments/shadowSignals.js';
 import { buildEncounterOrchestrator, responseFromRecord } from '../usecases/EncounterSession.js';
+import { buildSeriesRow, candidateSource, type CampaignSeriesRow, type EncounterProvenance } from './campaignSeries.js';
 import type { AgenticUIHandler } from '../assessments/AgenticOrchestrator.js';
 import type { AskUserQuestionParams, AskUserQuestionResult, MCQQuestion, UserAnswer } from '../assessments/agentTypes.js';
 
@@ -111,6 +112,8 @@ export interface CampaignSessionRecord {
   /** Always 1: one checkpoint per session, written at its end (the CLI's shape). */
   readonly checkpointsWritten: number;
   readonly observables: Observables;
+  /** Phase 15 d3 — the seam-side record around the kernel's observables (see `campaignSeries.ts`). */
+  readonly series: CampaignSeriesRow;
   readonly sig: Significator;
   readonly world: WorldState;
 }
@@ -311,6 +314,7 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
     let finalized = 0;
     let checkpointsWritten = 0;
     const writeIns: string[] = [];
+    const provenance: EncounterProvenance[] = [];
 
     for (let e = 0; e < perSession; e++) {
       const now = virtualNow + e * STEP_MS;
@@ -339,6 +343,20 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
       const outcome = await orchestrator.run();
       const record = outcome.consequenceRecord;
       history.push(record);
+      // d3 provenance: read from the orchestrator's OWN stamp, never re-derived from the encounter.
+      // The pool made a decision and the player received its result; a second opinion formed here
+      // would describe the pool the runner imagines rather than the one that ran.
+      provenance.push({
+        cell: encounter.moduleRef,
+        modality: encounter.modality,
+        tier: encounter.executionMode,
+        executionMode: encounter.executionMode,
+        polarityMode: encounter.polarityMode,
+        candidateSource: candidateSource(outcome.composition?.candidateId ?? null),
+        pole: outcome.composition?.pole ?? null,
+        isCurriculum: Boolean(encounter.curriculumConceptId),
+        isTraining: Boolean(encounter.isTrainingBeat),
+      });
       if (record.writeInValue) writeIns.push(record.writeInValue);
       const response = responseFromRecord(encounter, record, outcome.narrativeSummary);
 
@@ -368,6 +386,7 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
     sig = endResult.sig;
     world = endResult.world ?? world;
 
+    const observables = extractObservables(sig, sessionState, s + 1, counters);
     records.push({
       session: s + 1,
       endedAt: virtualNow + perSession * STEP_MS,
@@ -377,7 +396,16 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
       restoredBytes: raw ? raw.length : 0,
       restoredFeedEntries,
       checkpointsWritten,
-      observables: extractObservables(sig, sessionState, s + 1, counters),
+      observables,
+      series: buildSeriesRow({
+        session: s + 1,
+        persona: spec.persona.name,
+        sig,
+        world,
+        observables,
+        services: orchestration,
+        provenance,
+      }),
       sig,
       world,
     });
