@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–14 all BUILT (Phase 14 d1–d7 complete — the checked-graph closure, the CLI split, the System-1 boundary, K1; G36–G38); **Phase 15 RATIFIED and IN PROGRESS — the Simulated Cohort, d0 BUILT (F7 wired, F9 closed), d1 next**; memory infrastructure live (G28–G31); kernel 38 gates; battery 1 623
+### 4.2 Current state: Phases 1–14 all BUILT (Phase 14 d1–d7 complete — the checked-graph closure, the CLI split, the System-1 boundary, K1; G36–G38); **Phase 15 RATIFIED and IN PROGRESS — the Simulated Cohort, d0 BUILT (F7 wired, F9 closed) and d1 BUILT (the campaign runner + `npm run cohort`, with the first calibration finding recorded), d2 next**; memory infrastructure live (G28–G31); kernel 38 gates; battery 1 630
 
 > **Checked-graph warning (read before trusting a green battery).** The battery is only as wide as
 > its *checked graph*: the files `tsc --noEmit`, the tests, the gates and the linter read. As of
@@ -487,10 +487,12 @@ When you implement one, record the implementation in the same commit and cite th
    gate fixtures; **nothing runs a multi-session campaign through the live seam**, which is why the
    calibration items above have no distributions and the architecture's central claims (adaptation
    to a specific persona, transformation over time, content variety that does not collapse) have no
-   evidence. **Phase 15** (the plan) is the response — ratified 2026-09-24, **d0 built** (F7 wired,
-   F9 closed; the campaign runner d1 is next): agents generate the play data the calibration list is
-   waiting for. Everything an agent cannot reach is a blind spot by construction — the same ruling
-   that produced Phase 14 d4.
+   evidence. **Phase 15** (the plan) is the response — ratified 2026-09-24, **d0 and d1 built**: the
+   campaign runner now drives this exact seam over N sessions (`npm run cohort`), and its first run
+   already produced a finding no gate had (`driveFixation` and `shadowsSurfaced` are 0 for every
+   persona including the ones authored to accumulate them). Agents generate the play data the
+   calibration list is waiting for. Everything an agent cannot reach is a blind spot by
+   construction — the same ruling that produced Phase 14 d4.
 
 Standing constraints: workspace-lint → `arch.py validate` (DG1–DG23) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
 

@@ -33,7 +33,7 @@ import { buildEnvelope, holonDigestBlock, recordCoherenceInsight, sessionEnd, as
 import type { UdvBandSources } from '../personalization/bandSources.js';
 import type { OwnerWorkerPoolState } from '../world/ownerWorkerPool.js';
 import { queryLLMWithTools, queryLLMStream } from '../../infra/llm/LLMClient.js';
-import { selectTaskForModality, presentModuleTask, rendererEvaluate, taskStartTime } from './taskPresenters.js';
+import { selectTaskForModality, presentModuleTask, rendererEvaluate, taskStartTime, presentedQuestionText } from './taskPresenters.js';
 import { parseConsequence } from '../../infra/llm/ConsequenceParser.js';
 import { toQualitativeFeedback } from '../../infra/llm/QualitativeFeedback.js';
 import { modalityOpenerTemplate, moduleSummaryTemplate, responseOptionsTemplate } from '../../infra/llm/templates.js';
@@ -988,11 +988,12 @@ INSTRUCTIONS:
             const params = JSON.parse(tc.function.arguments) as AskUserQuestionParams;
             const result = await this.uiHandler.askUser(params);
 
-            // ponytail: track player's actual write-in for cross-encounter synthesis
+            // The player's actual write-in — assigned UNCONDITIONALLY so an encounter that offers no
+            // write-in CLEARS it. The previous `if (writeInValue)` form kept the last non-empty answer
+            // alive, so an encounter with no free-text response reported an earlier encounter's words
+            // as its own on the consequence record (F7).
             const lastAnswer = result.answers[0];
-            if (lastAnswer?.writeInValue) {
-              this._lastPlayerWriteIn = lastAnswer.writeInValue;
-            }
+            this._lastPlayerWriteIn = lastAnswer?.writeInValue ?? undefined;
 
             this.messages.push({
               role: 'tool',
@@ -1321,8 +1322,13 @@ INSTRUCTIONS:
         allowWriteIn: true,
         multiSelect: false,
       }],
-    };    const result = await this.uiHandler.askUser(askParams);
+    };
+    const result = await this.uiHandler.askUser(askParams);
     const answer = result.answers[0];
+    // The fallback path read the write-in only into `playerResponseText` for the narrative, so in the
+    // HERMETIC tier (no LLM) the field that F7 declared on the record was never populated — the very
+    // path every gate and the cohort harness runs. Same unconditional assignment as the LLM path.
+    this._lastPlayerWriteIn = answer?.writeInValue ?? undefined;
 
     // P0-BUG (Fresh-User UX Audit): The previous line used the player's raw
     // writeInValue as the narrativeSummary. This caused 7/8 encounters in the
@@ -1383,6 +1389,13 @@ INSTRUCTIONS:
     const rawLabel = answer?.selectedLabels[0] ?? '';
     const writeIn = answer?.writeInValue;
     const playerResponseText = writeIn ?? rawLabel;
+    // F7, third and largest site: `runFallback` delegates here whenever a module is present — which
+    // is EVERY production encounter, since the CLI and the registry always supply one — and this
+    // path read the answer into `playerResponseText` only. So the fields declared on the
+    // `ConsequenceRecord` were populated on the LLM tool path and nowhere else: the encounter log,
+    // the campaign series and session synthesis saw no question and no answer for the ordinary run.
+    this._lastPlayerWriteIn = writeIn ?? undefined;
+    this._lastQuestionText = presentedQuestionText();
 
     // 3. Evaluate using the TaskRenderer's evaluate() if available (produces TrialResult with timing/accuracy)
     //    Fall back to drive-probe evaluation if no renderer evaluate is available

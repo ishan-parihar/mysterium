@@ -23,7 +23,7 @@ import { type PlayerResponse } from '../../src/core/engines/ConsequenceEngine.js
 import { type SessionContext } from '../../src/core/engines/PriorityComputation.js';
 import { startSession, tickWithStrategy, endSession, applyResponseOnly, type SessionState } from '../../src/core/GameLoop.js';
 import { createInitialUserMatrixModel } from '../../src/core/engines/UserMatrixModel.js';
-import { AgenticOrchestrator, type AgenticUIHandler } from '../../src/core/assessments/AgenticOrchestrator.js';
+import { type AgenticUIHandler } from '../../src/core/assessments/AgenticOrchestrator.js';
 import { type ModuleRegistry } from '../../src/core/assessments/registry.js';
 import { type AskUserQuestionParams, type AskUserQuestionResult, type UserAnswer } from '../../src/core/assessments/agentTypes.js';
 import { activeDeclaredInterests, activeDeclaredAversions } from '../../src/core/domain/IdentityProfile.js';
@@ -33,6 +33,7 @@ import { buildCLITelemetry, recordCLITelemetry, flushCLITelemetry } from '../../
 import { describePersonalResonance } from '../../src/core/presentation/veilDescriptors.js';
 import { checkTermUnlocks } from '../../src/core/data/glossary.js';
 import { type ConsequenceRecord } from '../../src/core/domain/ConsequenceRecord.js';
+import { buildEncounterOrchestrator, responseFromRecord } from '../../src/core/usecases/EncounterSession.js';
 import { type Modality } from '../../src/core/domain/enums.js';
 import { createOrchestrationServices, captureCheckpoint, type OrchestrationServices, type RuntimeCheckpoint } from '../../src/core/personalization/sessionRuntime.js';
 import { appendJournalEntry, replayJournal, journalPathFor } from '../../src/infra/persistence/sessionJournal.js';
@@ -338,7 +339,11 @@ export async function runAgenticEncounter(
     }
   }
 
-  const  orchestrator = new AgenticOrchestrator({
+  // The construction is shared with every other caller of the live seam (Phase 15 d1's campaign
+  // runner is the second): `buildEncounterOrchestrator` IS this call, so the two callers cannot
+  // drift about which integrations are attached. Only the caller-specific inputs differ — the UI
+  // handler above, the module lookup, the forced-override encounter.
+  const orchestrator = buildEncounterOrchestrator({
     encounter: forcedEncounter,
     significator: sig,
     world,
@@ -420,23 +425,10 @@ export async function runAgenticEncounter(
     if (spinner) spinner.stop();
   }
 
-  // Build a PlayerResponse from the orchestrator's consequence record
-  const cr = outcome.consequenceRecord;
-  const response: PlayerResponse = {
-    encounterId: encounter.id,
-    energeticDirection: cr.polarityTrace.energeticDirection,
-    driveDirectionality: cr.polarityTrace.driveDirectionality,
-    stageOrientation: cr.polarityTrace.stageOrientation,
-    sourceOfNourishment: cr.polarityTrace.sourceOfNourishment,
-    shadowSurfaced: cr.shadowSurfaced,
-    shadowResolvedId: cr.shadowResolved,
-    narrativeSummary: outcome.narrativeSummary,
-    // Both read from the RECORD (F7). They were previously read from `outcome.playerWriteIn` and a
-    // private orchestrator field via `as any` — three sources for one fact, of which the record is
-    // the only one that survives the encounter and the only one the log/series/synthesis consume.
-    writeInValue: cr.writeInValue,
-    questionText: cr.questionText,
-  };
+  // The response is a PROJECTION of the record, derived by the shared wiring — one derivation for
+  // every caller, so a response can never disagree with the record about what happened (F7: the
+  // write-in used to reach the log from a source the record did not have).
+  const response: PlayerResponse = responseFromRecord(encounter, outcome.consequenceRecord, outcome.narrativeSummary);
 
   return { outcome, response, narrativeSummary: outcome.narrativeSummary };
 }

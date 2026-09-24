@@ -20,10 +20,22 @@ import { briefHistory } from './promptBlocks.js';
 /** Wire-backs so the orchestrator's trial evaluator can capture timing + accuracy (see above). */
 let _rendererEvaluate: ((answer: string, startMs: number, endMs: number) => any) | null = null;
 let _taskStartTime = 0;
+/**
+ * The question text this presenter ACTUALLY asked.
+ *
+ * The renderer composes the prompt (the continuity prefix, the holon framing, the task text) and the
+ * orchestrator cannot reconstruct it — so it is reported back here rather than rebuilt, the same way
+ * the evaluator and the start time are. It exists because `F7` declared `questionText` on the
+ * consequence record and the module-assessment path — the one every production encounter takes —
+ * never set it, so the encounter log recorded no question and the campaign series had nothing to
+ * pair an answer with.
+ */
+let _presentedQuestionText: string | undefined = undefined;
 export function setRendererEvaluate(f: ((answer: string, startMs: number, endMs: number) => any) | null): void { _rendererEvaluate = f; }
 export function setTaskStartTime(t: number): void { _taskStartTime = t; }
 export function rendererEvaluate(): ((answer: string, startMs: number, endMs: number) => any) | null { return _rendererEvaluate; }
 export function taskStartTime(): number { return _taskStartTime; }
+export function presentedQuestionText(): string | undefined { return _presentedQuestionText; }
 
   /**
    * Select the best assessment task from the module based on encounter modality.
@@ -156,6 +168,10 @@ export async function presentModuleTask(
       header: q.header, // Keep the renderer's meaningful header
     })),
   };
+
+  // Report back what was asked (see `presentedQuestionText`) — the LAST question is the one the
+  // answer belongs to, matching how the answer is read (`answers[0]` on a single-question prompt).
+  _presentedQuestionText = enrichedPrompt.questions[enrichedPrompt.questions.length - 1]?.question;
 
   return ui.askUser(enrichedPrompt);
 }
