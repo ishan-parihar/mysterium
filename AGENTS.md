@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–14 all BUILT (Phase 14 d1–d7 complete — the checked-graph closure, the CLI split, the System-1 boundary, K1; G36–G38); **Phase 15 RATIFIED and IN PROGRESS — the Simulated Cohort, d0 BUILT (F7 wired, F9 closed), d1 BUILT (the campaign runner + `npm run cohort`) d2 BUILT (the parameter-space cohort generator) and d3 BUILT (the campaign time-series + the fallback-path seam fix), with the first calibration findings recorded; d4 next**; memory infrastructure live (G28–G31); kernel 38 gates; battery 1 650
+### 4.2 Current state: Phases 1–14 all BUILT (Phase 14 d1–d7 complete — the checked-graph closure, the CLI split, the System-1 boundary, K1; G36–G38); **Phase 15 RATIFIED and IN PROGRESS — the Simulated Cohort, d0 BUILT (F7 wired, F9 closed), d1 BUILT (the campaign runner + `npm run cohort`) d2 BUILT (the parameter-space cohort generator) d3 BUILT (the campaign time-series + the fallback-path seam fix) and d4 BUILT (the calibration pass, whose first run rejected on a measured defect), with the calibration findings recorded; d5 next**; memory infrastructure live (G28–G31); kernel 38 gates; battery 1 657
 
 > **Checked-graph warning (read before trusting a green battery).** The battery is only as wide as
 > its *checked graph*: the files `tsc --noEmit`, the tests, the gates and the linter read. As of
