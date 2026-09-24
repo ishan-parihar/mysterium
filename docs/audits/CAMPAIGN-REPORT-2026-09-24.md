@@ -316,7 +316,45 @@ zeros, which is a different statement — and both are now *known* rather than u
    produced **0 shadows and 0 fixation** in a 2-session campaign. Its kernel gate (G4) passes, so this
    is a campaign-harness fidelity gap, not an engine one, and it belongs to this phase's sweep because
    item 1's re-measurement inherits it.
-3. **Three lines receive zero encounters across 400.** Scheduler line coverage.
+3. ~~**Three lines receive zero encounters across 400.**~~ **DIAGNOSED 2026-09-24 (Phase 16 d3) — the
+   tie-break's final key, a hash meant for reproducibility, is deciding line coverage.** Not supply,
+   and not the priority formula:
+
+   - **Supply is symmetric.** The bench world has **3 holons per line, same stages, all active** — so
+     no line is starved of candidates.
+   - **Priorities are effectively identical.** Measured over the first tick's 72 candidates, the
+     per-line mean priority spans **0.145–0.147**, and five of the eight criteria (`thetaUrgency`,
+     `shadowActivation`, `driveCorrection`, `narrativeCoherence`, `masteryAlignment`) are **0.000** at
+     session start. So one tie band holds the entire candidate set (65–72 of 72) and the band's own
+     comparator — not `computePriority` — selects the encounter.
+   - **The comparator's three substantive rules all tie.** Logged per tick: the winner and Emotional's
+     best candidate BOTH carry a modality absent from the last 3, BOTH carry a line absent from the
+     last 2, and (once each line has been touched) BOTH are equally "familiar". Rule 1 ties, rule 2
+     ties, rule 3 ties — and rule 4 is `refHash(moduleRef)`, a **static** function.
+   - **So the hash decides, and it decides the same way every time.** `24 §3.3` names the hash as
+     "deterministic final key — reproducibility" (never a score), and the doc-comment above it even
+     warns about reading the right END of `world.recentEncounters`. Careful reasoning, applied to a
+     fallback that is in practice doing the policy work: the only thing that changes tick to tick is
+     which modalities sit in the 3-encounter recency window, so the rotation cycles through just the
+     lines whose modality offer happens to match the currently-unused set — Spiritual, Intrapersonal
+     and Cognitive — at exactly the 74 % share measured.
+
+   **Why this is not a fixture artefact and cannot be fixed by cohort scale:** the same comparator
+   runs in production (`scheduleNext` → `rankCandidates`), so a real player's line coverage is
+   hash-decided too, and the personas DO differ on stance — they are simply never offered the lines.
+   The report's earlier guess ("a scheduler line-coverage question rather than a persona one") is
+   confirmed, and the object of study is narrower than "the scheduler": it is **the tie-break's key
+   ORDER, and what should outrank the hash**.
+
+   **The repair is a ratification (Phase 16 d3, open).** The canon-compatible shape is a **starvation
+   term** ahead of the hash (how long a line has gone unserved, or its encounter share against the
+   eligible set) — `24 §3.3` already owns variety, and asking a reproducibility key to carry policy is
+   the actual defect. The counter-argument is real and worth stating: the band is defined as "the set
+   of candidates whose developmental value is indistinguishable", so a starvation term is only
+   permissible if line coverage is a *developmental* value rather than an administrative one — which
+   `46 §11`'s visibility-collapse countermeasure and `AGENTS.md`'s holonic-integrity commitment
+   (`§5.6`: lower stages must remain healthy) both argue it is. Measured, for the record: Emotional
+   received **1 encounter in 432** and three lines carried 74 %.
 4. **12.5 % of encounters resolve no candidate id.** Either a new id scheme or a missing stamp.
 5. ~~**`polarityReadings` is 0 because the pair key never resolves.**~~ **DIAGNOSED AND FIXED
    2026-09-24 (same day) — and it was not a missing input, it was an unenterable loop.** The report's
