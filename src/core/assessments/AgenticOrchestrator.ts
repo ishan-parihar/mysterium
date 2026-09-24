@@ -1302,8 +1302,12 @@ INSTRUCTIONS:
 
     const fullPrompt = `${narrativeIntro}\n\n${questionText}`;
 
-    // BUG-7 fix: capture the question text for encounter-log.md
-    this._lastQuestionText = fullPrompt;
+    // The QUESTION, not the composed prompt (F7). It was assigned `fullPrompt`, so the field named
+    // `questionText` held a narrative intro glued to the question — and the encounter log slices it
+    // to 500 characters, so a long intro could push the question itself out of the evidence the log,
+    // the campaign series and session synthesis read. What is ASKED is `fullPrompt` (unchanged);
+    // what is RECORDED is the question the player was answering, which is what the name promises.
+    this._lastQuestionText = questionText;
 
     const askParams: AskUserQuestionParams = {
       questions: [{
@@ -2456,6 +2460,11 @@ ${probes}${rubric}
       shadowSurfaced: params.shadowSignal?.quadrant || null,
       shadowResolvedId: null,
       narrativeSummary: params.narrativeSummary,
+      // Same two fields as the evaluator path above: whichever route finalises the encounter, the
+      // record carries the player's words and the question that prompted them, or the encounter
+      // log has entries whose ``**Question:**`` line is missing depending on which code path ran.
+      writeInValue: this._lastPlayerWriteIn ?? undefined,
+      questionText: this._lastQuestionText ?? undefined,
     };
 
     const record = processOutcome(this.encounter, response, now);

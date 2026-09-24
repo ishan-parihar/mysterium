@@ -52,6 +52,26 @@ describe('ConsequenceEngine', () => {
       const record = processOutcome(mockEncounter, resp, 1000);
       expect(record.shadowSurfaced).toBe('DarkAddiction');
     });
+
+    // F7: the free text is the evidence for the reflective and immersion modalities. It used to be
+    // collected on `PlayerResponse` and dropped here, so only code holding that transient object
+    // could read the player's own words — and nothing could read them off a record.
+    it('carries the player\'s write-in and the question onto the record', () => {
+      const resp = {
+        ...mockResponse,
+        writeInValue: 'I told her the truth even though it cost me the deal.',
+        questionText: 'What would you say if no one were watching?',
+      };
+      const record = processOutcome(mockEncounter, resp, 1000);
+      expect(record.writeInValue).toBe('I told her the truth even though it cost me the deal.');
+      expect(record.questionText).toBe('What would you say if no one were watching?');
+    });
+
+    it('leaves both absent when no write-in was given — they do not imply each other', () => {
+      const record = processOutcome(mockEncounter, mockResponse, 1000);
+      expect(record.writeInValue).toBeUndefined();
+      expect(record.questionText).toBeUndefined();
+    });
   });
 
   describe('applyConsequences', () => {

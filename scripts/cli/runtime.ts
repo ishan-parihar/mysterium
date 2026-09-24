@@ -431,9 +431,11 @@ export async function runAgenticEncounter(
     shadowSurfaced: cr.shadowSurfaced,
     shadowResolvedId: cr.shadowResolved,
     narrativeSummary: outcome.narrativeSummary,
-    // BUG-1/7 fix: pass through user answer + question text for encounter-log.md
-    writeInValue: outcome.playerWriteIn ?? undefined,
-    questionText: (orchestrator as any)._lastQuestionText ?? undefined,
+    // Both read from the RECORD (F7). They were previously read from `outcome.playerWriteIn` and a
+    // private orchestrator field via `as any` — three sources for one fact, of which the record is
+    // the only one that survives the encounter and the only one the log/series/synthesis consume.
+    writeInValue: cr.writeInValue,
+    questionText: cr.questionText,
   };
 
   return { outcome, response, narrativeSummary: outcome.narrativeSummary };
@@ -1262,8 +1264,10 @@ export async function runDirectQuestioningSession(
       const _activeName = getActiveProfileName();
       if (_activeName) {
         try {
-          const userAnswer = result.response?.writeInValue ?? '';
-          const questionText = result.response?.questionText ?? '';
+          // Read from the record, not the derived `response` — the record is what F7 put them on,
+          // so the log and the campaign series describe the same encounter with the same words.
+          const userAnswer = cr.writeInValue ?? '';
+          const questionText = cr.questionText ?? '';
           const npcName = currentWorld.holons.find(h => h.id === encounter.holonSource)?.name;
           appendEncounterLog(_activeName, {
             encounterNum: currentSig.totalEncounters,

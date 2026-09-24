@@ -411,12 +411,17 @@ export function appendEncounterLog(profileName: string, entry: {
     log = `# Encounter Log — ${profileName}\n\nA running record of every encounter: the question asked, the user's answer, the LLM's response.\n\n`;
   }
 
+  // The log's contract is one labelled line per field, and its readers (`support.ts`'s
+  // `extractLastNarrativeAsFocus`) parse the label/value boundary. A value carrying its own
+  // newlines renders as `**Question:**` followed by a blank line and the text — so collapse
+  // whitespace into single spaces, keeping the label attached to the content it labels.
+  const oneLine = (s: string): string => s.replace(/\s+/g, ' ').trim();
   const entry_text = [
     `## Encounter ${entry.encounterNum} — ${entry.timestamp}`,
     `**Line:** ${entry.line} | **Stage:** ${entry.stage}${entry.npc ? ` | **NPC:** ${entry.npc}` : ''}`,
-    entry.question ? `**Question:** ${entry.question}` : '',
-    entry.userAnswer ? `**User's answer:** ${entry.userAnswer}` : '',
-    entry.llmNarrative ? `**LLM narrative:** ${entry.llmNarrative}` : '',
+    entry.question ? `**Question:** ${oneLine(entry.question)}` : '',
+    entry.userAnswer ? `**User's answer:** ${oneLine(entry.userAnswer)}` : '',
+    entry.llmNarrative ? `**LLM narrative:** ${oneLine(entry.llmNarrative)}` : '',
     entry.driveSignal ? `**Drive signal:** ${entry.driveSignal}` : '',
     entry.shadowSurfaced ? `**Shadow surfaced:** Yes` : '',
     '',

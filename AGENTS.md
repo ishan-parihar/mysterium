@@ -304,7 +304,7 @@ Feedback (what works, what doesn't)
 R&D Documentation (refined theory + design)
 ```
 
-### 4.2 Current state: Phases 1–12 all BUILT; Phase 13 FULLY COMPLETE (d1–d12, G32–G35; battery 1 507); Phase 14 IN PROGRESS (d1 P0 + d2a/d2b BUILT — `scripts/**` now inside the checked graph; d2c/d3/d4/d5 pending); memory infrastructure live (G28–G31)
+### 4.2 Current state: Phases 1–14 all BUILT (Phase 14 d1–d7 complete — the checked-graph closure, the CLI split, the System-1 boundary, K1; G36–G38); **Phase 15 RATIFIED and IN PROGRESS — the Simulated Cohort, d0 BUILT (F7 wired, F9 closed), d1 next**; memory infrastructure live (G28–G31); kernel 38 gates; battery 1 623
 
 > **Checked-graph warning (read before trusting a green battery).** The battery is only as wide as
 > its *checked graph*: the files `tsc --noEmit`, the tests, the gates and the linter read. As of
@@ -315,9 +315,10 @@ R&D Documentation (refined theory + design)
 > bypass the orchestration/personalization/memory architecture (`runDirectQuestioningSession`).
 > **Update (2026-09-24, d2a/d2b):** `scripts/**` is now in `tsconfig.include`, so `npm run build`
 > type-checks the CLI and its siblings — the 63 errors that had been invisible are retired, and
-> "the battery is green" again covers every production surface. The *class* is not yet gated
-> (`G36`/`G37` are Phase 14 d5), so treat it as fixed-by-repair until then. Two consequences of the
-> sweep worth knowing before driving the CLI:
+> "the battery is green" again covers every production surface. The *class* is now gated too
+> (**G36** CLI boot smoke, **G37** checked-graph assertion — Phase 14 d5, built 2026-09-24), so the
+> closure is enforced rather than repaired-and-hoped. Two consequences of the sweep worth knowing
+> before driving the CLI:
 > - **Always name the session flow.** `--agent` was removed and the mode prompt is skipped under
 >   `--headless`/`--json`, so the mode used to be hardcoded to `direct` and the **story branch —
 >   the architecture-live path — was unreachable by any agent**. Use `--mode <direct|story>`; the
@@ -423,7 +424,8 @@ standing, and dispatched:
   reachability, crisis precedence, threshold assembly, determinism, and that no trigger can
   summon a role that holds no player bands.
 
-d3–d10 remain open (d10 is the gating dependency for the phase's differential criterion).
+d3–d10 are all **built** (d3–d9 the wiring-completion set, d10 the Polarity Pool, d11/d12 the
+binding + dispatcher), so no Phase-13 deliverable remains open.
 
 > **Corrected 2026-09-20 (`MY-AD-0017`).** Until then this section declared *"The current phase is
 > Phase 1"* while `docs/DEVELOPMENT-PLAN.md §8` recorded all nine phases implemented and §9 logged the
@@ -446,7 +448,7 @@ d9a the MemoryPage render budget, d9b the crash-sidecar session journal
 **The binding plan is `docs/DEVELOPMENT-PLAN.md`** (order + gates). It is revised in-place; on
 conflict the foundations docs win and the plan is revised.
 
-**What is actually open** — two lists, both owned by the record layer. Do **not** duplicate their
+**What is actually open** — four lists, all owned by the record layer. Do **not** duplicate their
 contents here; read them where they live:
 
 1. **Ratified laws with no consumer.** Currently **none** — the list that stood here through
@@ -455,11 +457,11 @@ discharged: every Active law now declares its consumer (checked by DG19), and th
 were discharged with consumer declarations on 2026-09-22. **When a new law lands, this is where its
 absence returns.** A law that is Active with no consumer is the normal shape of pending work here.
 When you implement one, record the implementation in the same commit and cite the record it closes.
-2. **Live-surface wiring** (development, phase-able — newly identified 2026-09-23; the failure
-   class is *a consumer named in the docs that no live seam ever calls*): the nine surfaces in the
-   wiring audit §3–§4, scheduled as **Phase 13** with gates G32–G34. This is distinct from list 1
-   below: those laws have consumers that exist and are gate-covered; what is missing is the call
-   site. When wiring one, add its gate in the same commit.
+2. **Live-surface wiring** (development, phase-able — the failure class is *a consumer named in the
+   docs that no live seam ever calls*): the nine surfaces in `WIRING-CONTRAST-AUDIT-2026-09-23`
+   §3–§4 were **CLOSED by Phase 13** (d1–d12, G32–G35), and the adjacent checked-graph class by
+   **Phase 14** (G36–G38). The list is empty; when a new dark surface is found, it returns here and
+   gets its gate in the same commit that wires it.
 3. **Configuration, calibration, and development frontier** (verified against the tree
    2026-09-22, post-Phase-11+12; owned by the plan's record — the detailed evidence table lives in
    `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7):
@@ -467,13 +469,28 @@ When you implement one, record the implementation in the same commit and cite th
      deployment needs a hosting decision (Phase 4's transport adapter exists; no networked
      deployment). The C1–C5 wiring items (checkpoint restore, feed readers, preference intake,
      ratification verdicts, polarity writers) are **closed** — landed with Phases 11+12.
-   - *Calibration (needs play data — not phase-able):* real-rater RV1–RV7 thresholds for the 8
-     authored probes (the RV harness runs; thresholds await raters — unlocks the interest tier
-     from log-only); `expansionRatio` and entropy thresholds from observed distributions;
-     per-line saturation thresholds from real progression curves.
+   - *Calibration (needs play data — **now phase-able, see item 4**):* real-rater RV1–RV7
+     thresholds for the 8 authored probes (the RV harness runs; thresholds await raters — unlocks
+     the interest tier from log-only); `expansionRatio` and entropy thresholds from observed
+     distributions; per-line saturation thresholds from real progression curves.
    - *Development:* tag-ontology growth beyond tranche 2's 20 tags (`46 §4` corpus change,
      bounded per `46 §13`); embedding-index calibration against real corpora and MemoryPage
      prose-register tuning per stage (Phase 12 post-phase items).
+4. **The live seam has no long-horizon exerciser** (development, phase-able — identified
+   2026-09-24; the failure class is *an architecture whose only test surface is one boot*). Verified
+   against the tree: `createOrchestrationServices` has exactly **two production callers** — the CLI
+   (`scripts/cli/runtime.ts`, `delegateCmd.ts`) and `src/lib/engine/gameEngine.ts` (WebUI) — while
+   `src/core/validation/harness.ts`'s `runPersonaTrajectory` drives `tickWithStrategy` →
+   `processOutcome` → `applyConsequences` → `applyResponseOnly` → `endSession` **directly**, with no
+   services, no envelope, no checkpoint and no journal. So the 10 kernel personas exercise the
+   *kernel* over 2–6-session trajectories and the personalization/memory stack only in isolated
+   gate fixtures; **nothing runs a multi-session campaign through the live seam**, which is why the
+   calibration items above have no distributions and the architecture's central claims (adaptation
+   to a specific persona, transformation over time, content variety that does not collapse) have no
+   evidence. **Phase 15** (the plan) is the response — ratified 2026-09-24, **d0 built** (F7 wired,
+   F9 closed; the campaign runner d1 is next): agents generate the play data the calibration list is
+   waiting for. Everything an agent cannot reach is a blind spot by construction — the same ruling
+   that produced Phase 14 d4.
 
 Standing constraints: workspace-lint → `arch.py validate` (DG1–DG23) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
 

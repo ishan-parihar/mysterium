@@ -63,6 +63,12 @@ export function processOutcome(spec: ScheduledEncounter, response: PlayerRespons
     altitudeShift: null,
     driveShift: null,
     narrativeSummary: response.narrativeSummary,
+    // The player's own words + the question they answered (F7). Carried onto the record so the
+    // encounter log, the campaign time-series and session synthesis all read ONE place — this
+    // used to be captured on `PlayerResponse` and dropped here, so only code holding that
+    // transient object could ever see the free text.
+    writeInValue: response.writeInValue,
+    questionText: response.questionText,
   };
 }
 

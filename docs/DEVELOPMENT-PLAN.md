@@ -805,11 +805,18 @@ forks put to the user.**
      the M8 defect class — is gone. Only two documented exemptions remain (`udv.ts`'s
      forbidden-token denylist, which is a *superset* vocabulary including the ray markers, and
      `scenarioSeedVariants.ts`'s authored per-modality table); G37 holds both.
-3. **d3 — Split `scripts/cli-game.ts` (user-ratified: split while fixing).** 5 900 lines in one
-   file is itself the drift risk: `parse/` (argv + commander surface), `commands/` (one module per
-   subcommand), `runtime/` (services creation, checkpoint + journal persistence, session flows),
-   `render/` (output). The split lands WITH the error retirement so the CLI stops being one
-   un-reviewable file. No behaviour change — the subcommand matrix is the regression lock.
+3. **d3 — Split `scripts/cli-game.ts` (user-ratified: split while fixing). ✅ BUILT 2026-09-24.**
+   Landed as Q10's calibration extraction plus four stages, in dependency order so no cycle could
+   form: **A** `scripts/cli/{config,data,render}.ts` (the pure helpers, now unit-tested by
+   `tests/cli/RenderHelpers.test.ts` — the first CLI unit test in the repo) · **B** `flags.ts` (the
+   parsed invocation state behind setters, with the `VERBOSE` derivation computed once instead of
+   at every reader) · **C** `output.ts` (the flag-READING printers, separated from the pure half) ·
+   **D** `support.ts` · `onboarding.ts` · `profileCmd.ts` · `practiceCmd.ts` · `delegateCmd.ts` ·
+   `runtime.ts` (the commands and the two session flows). The entry is **775 lines** (commander
+   chain, start-up, `main()`); `scripts/cli/` is 5 531 lines across 11 modules. Full record,
+   including the four intentional deltas the losslessness check found (`opts.audit`/`opts.llm`/
+   `llmComplete` were start-up values read outside the flags owner — three flows reaching back into
+   `program.opts()` mid-session), in `MODULE-COHESION-AUDIT-2026-09-24` §4.
 4. **d4 — Wire Direct Questioning into the architecture (the F2 fix; user-ratified).
    ✅ BUILT 2026-09-24.** `runDirectQuestioningSession` now takes the `OrchestrationServices` its
    caller already holds (`runFullSession` creates them for either flow), passes them to
@@ -878,9 +885,17 @@ forks put to the user.**
    `provisional-synthetic-pilot`: it can reject an instrument, never certify one, and never writes
    `rvPassed`. Real-rater thresholds and ≥ 5 distinct raters remain the certification condition.
 
-**Progress 2026-09-24:** **d1 ✅ · d2a ✅ · d2b ✅ · d2c ✅ · d4 ✅ · d5 ✅ · d6 ✅ · d7 ✅.**
-**Remaining: d3 only** — the CLI split + the calibration extraction Q10 attaches a ruling to (the
-largest single item in the phase, and the one the module-cohesion audit lists first). Kernel gates
+**Progress 2026-09-24:** **d1 ✅ · d2a ✅ · d2b ✅ · d2c ✅ · d3 ✅ · d4 ✅ · d5 ✅ · d6 ✅ · d7 ✅ —
+Phase 14 is COMPLETE.** **d3** landed in two parts, both ratified: the calibration extraction (Q10's
+ruling — `InitialAltitudeInference` + `QuickCalibrationScoring` into `src/core/usecases/`, so
+calibration is engine code rather than a presentation-layer ladder) and the four-stage CLI split
+(A `config`/`data`/`render` → B `flags` → C `output` → D `support`/`onboarding`/`profileCmd`/
+`practiceCmd`/`delegateCmd`/`runtime`), moving **5 770 → 775 lines** in the entry and leaving
+`scripts/cli/` as 11 single-responsibility modules. The split was checked for losslessness
+against the pre-stage file at every stage (the check that caught a deleted `async function` and a
+mis-scoped import, neither of which `tsc` can see), and `G36` — boot both `SESSION_MODES` headless
+and require a persisted checkpoint — is its regression lock. The module-cohesion audit's eight-item
+backlog is therefore **all closed** (`MODULE-COHESION-AUDIT-2026-09-24` §4). Kernel gates
 **38** (G36/G37/G38 added; `tests/validation/Benchmark.test.ts` asserts the literal count).
 
 **Gates:** **G36** CLI boot smoke · **G37** checked-graph assertion · **G38** System-1 boundary ·
@@ -891,6 +906,144 @@ in-process).
 **Success criterion:** every production entry point is inside the checked graph; the CLI's
 subcommand matrix passes in CI; a headless session writes a checkpoint and a journal line; the
 System-1 seams degrade deterministically when the model is absent.
+
+### Phase 15 — The Simulated Cohort: long-horizon calibration through the live seam (RATIFIED 2026-09-24)
+
+> **Status.** Proposed from a tree-verified finding on 2026-09-24 and **ratified the same day**: the
+> spine is this phase (not WebUI parity, corpus depth or hosting); **F7** is fixed by declaring the
+> fields on `ConsequenceRecord` and wiring the writer (not by retiring them); and the build proceeds
+> **hermetic-first** — d1–d5 on the deterministic stub tier to green `G39`/`G40`, with cohort scale
+> and the real-provider experiential run decided afterwards on the hermetic results. The three
+> rulings are recorded at the end of this entry; `AGENTS.md §4.2` carries the state.
+
+**Why this phase exists.** Every dev phase through 14 built *architecture*; what has never run is a
+**long-horizon campaign through the live seam**. Verified against the tree 2026-09-24:
+
+- `createOrchestrationServices` has exactly **two production callers** — the CLI
+  (`scripts/cli/runtime.ts`, `scripts/cli/delegateCmd.ts`) and `src/lib/engine/gameEngine.ts`
+  (WebUI).
+- `src/core/validation/harness.ts`'s `runPersonaTrajectory` drives the **kernel** directly
+  (`tickWithStrategy` → `processOutcome` → `applyConsequences` → `applyResponseOnly` → `endSession`)
+  with no services, so no envelope is built, no personalization band is read, no checkpoint is
+  captured, no journal is appended, and no council is ever dispatched.
+- The 10 kernel personas declare **2–6 session** trajectories of 5–6 encounters; the longest
+  "campaign" in the repo is four sessions long.
+
+So `G22`–`G35` exercise the personalization and memory stacks in **isolated gate fixtures**, and
+`G36` boots the CLI **once** and requires a checkpoint. Nothing runs *many sessions, over
+trajectory time, through the live seam* — which is exactly the regime the architecture's central
+claims are about: that the UDV adapts to a specific person, that the Polarity Pool renders
+differently for different players (`G35`'s differential is kernel-level, not cohort-level), that
+theta-decay and transformation fire on schedule across sessions, that composition does not
+**collapse** into the same twenty textures (`46 §11`'s visibility-collapse countermeasure is
+monitored, never *observed*), and that NPC/world memory accumulates without leaking.
+
+Consequence: the calibration list in `AGENTS.md §4.2` is blocked on "real play data" that does not
+exist yet, and the largest untested surface in the project is **the lived experience of the loop**.
+The user's own ruling from Phase 14 settles the method: *the headless mode exists so agents can test
+and debug everything*, and *a dark surface is not acceptable anywhere an agent may drive*. The play
+data this project needs is therefore **generatable by its own agents**, and generating it is the
+cheapest honest way to reach the calibration frontier — cheaper and more truthful than waiting for
+human players to arrive before the system can be evaluated.
+
+**Deliverables.**
+
+0. **d0 — clear the two carried findings first** (`CHECKED-SURFACE-AUDIT-2026-09-24` §11): **F7** —
+   `PlayerResponse.writeInValue`/`questionText` are populated by the orchestrator and **dropped by
+   `processOutcome`**. This is a prerequisite rather than a tidy-up, because a campaign's richest
+   evidence for the reflective/immersion modalities *is* the free-text answer; a cohort harness that
+   cannot see it would calibrate reflective depth against nothing. **F9** — the facet compiler's
+   quadrant aliasing (§2 Shadow-Archetype heading normalisation) is unwired; wire it with the
+   extraction that consumes it, or delete the claim. **BUILT** — both closed, F7 wired per ruling
+   F-1 and F9's claim deleted (the fail-closed all-4-quadrants check is the enforcement). The build
+   also found that `_lastQuestionText` held the composed *prompt* rather than the question, and that
+   the log rendered a bare `**Question:**` label with its content on the next line; both fixed, the
+   log contract locked by `tests/infra/EncounterLog.test.ts`. See the ledger entry.
+1. **d1 — The campaign runner** (new modules, planned: a campaign runner under
+   `src/core/simulation/` plus `scripts/cohort-run.ts` (planned, `@script-status: wired`)). One
+   persona, N sessions, over a **virtual clock** (the harness's
+   `BENCH_EPOCH`/`gapDays` precedent), driving the **live seam**: services created for the persona,
+   encounters executed through the same entry the CLI uses, and between sessions the checkpoint
+   **persisted and restored through a throwaway `MYSTERIUM_HOME`** (d4's `mysteriumDir.ts` makes
+   this hermetic). Restore fidelity therefore stops being a one-shot gate and becomes a per-session
+   property. Writes only under the throwaway root; never touches the tree.
+2. **d2 — The cohort** (planned module: a cohort generator beside the campaign runner). The 10 curated personas stay as the
+   *named* cases; a generator derives **synthetic personas from declared dimensions** — altitude
+   vector per line, drive balance, dominant shadow quadrant, response policy, cadence (sessions per
+   virtual week), neglect pattern (which lines go untouched, to exercise theta-decay) — so the
+   cohort is a *parameter space*, not a list, and a single dimension can be varied to test one claim.
+   Target: the curated 10 plus ≥ 40 generated, seeded and reproducible.
+3. **d3 — The campaign time-series** (planned module: campaign observables, distinct from the
+   kernel's `src/core/validation/observables.ts`). Per session, the
+   observables the architecture actually claims: CCI and its components; per-line altitude/theta;
+   the drive-health vector (the T2 defect of Phase 14 d2a is the cautionary tale — a pinned number
+   looks like a flat curve, not a bug); shadow-quadrant accumulation; polarity readings/tallies and
+   familiar/unfamiliar shares; council dispatches by trigger; encounter provenance
+   (cell × modality × tier × pole × candidate source: base/similar/opposite/composed);
+   **composition entropy per cell**; MemoryPage size and render budget; probe offers and verdicts;
+   engagement-register hits. Emitted as one NDJSON row per session per persona — analysable by
+   `jq`, diffable between runs.
+4. **d4 — The calibration pass** (planned read-only script, `@script-status: probe` — exits
+   non-zero on failure, never mutates the tree). Reads the campaign corpus and
+   produces the numbers the calibration list is waiting for: `expansionRatio`, the composition
+   entropy floor, per-line saturation thresholds, the MemoryPage budget from the *observed*
+   distribution, and provisional probe thresholds over the synthetic rater cohort — every output
+   labelled **`provisional-simulated-cohort`**, in the same discipline as `probe-pilot.ts`: it may
+   reject, it may never certify, and it never writes `rvPassed`. Real raters remain the only
+   certification path.
+5. **d5 — Gates G39/G40** (kernel 38 → 40).
+   - **G39 `campaign continuity`** — a seeded campaign of S sessions through the live seam is
+     **deterministic** (same seed → identical observable series) and **restores on every boot**
+     (per-session checkpoint round-trip, the `G28` contract extended from one restore to a
+     trajectory).
+   - **G40 `campaign invariants`** — over the campaign: theta-decay accumulates on deliberately
+     neglected lines and only there; transformation fires **only** when its threshold predicate
+     holds (never as an artefact of session count); composition entropy stays above the cell floor
+     (the visibility-collapse countermeasure, now measured rather than asserted); **no Veil leak in
+     any prompt built** across every session (the render/recall vocabularies stay in lockstep over
+     N sessions, not one); and **discrimination** — two personas differing in exactly one declared
+     dimension produce measurably different campaigns. That last assertion is the user's
+     "adaptability to unique features" claim turned into a test.
+6. **d6 — The report** (`docs/audits/COHORT-SIMULATION-<date>.md`). The observed distributions and
+   curves, with the honest reading: where adaptation is real, where the loop flattens, which cells
+   collapse, whether transformation occurs at all, and what each threshold now is and why. This is
+   the artifact that answers "to what extent can transformation happen" with evidence instead of
+   architecture.
+
+**Determinism and cost (the phase's one hard constraint).** Two tiers, never mixed: a **hermetic
+run** (deterministic stub provider, large cohort, what `G39`/`G40` and CI use — an
+LLM-dependent number must never gate the kernel, the `G14`/`G1` discipline) and an **experiential
+run** (the real provider, a handful of personas, producing the report's qualitative read). A
+calibration number produced by the experiential tier is labelled as such or discarded; conflating
+the tiers is how a stochastic artefact becomes a threshold.
+
+**Gates:** **G39** campaign continuity · **G40** campaign invariants + discrimination · `G28`/`G31`
+and the Veil gates re-asserted at campaign scale rather than fixture scale.
+
+**Success criterion:** one command produces a reproducible multi-session campaign for a whole
+cohort through the live seam, the two gates hold, the calibration list in `AGENTS.md §4.2` is
+discharged from *observed distributions* (labelled provisional), and the report states — with
+numbers — how much adaptation, variety and transformation the system actually shows.
+
+**Dependencies:** Phase 14 d4 (`MYSTERIUM_HOME`, so a campaign is hermetic) — built; `G36` (the CLI
+path the campaign mirrors) — built. **Explicitly NOT in this phase:** WebUI parity, corpus growth,
+and further refactoring (the module-cohesion backlog is closed; re-opening it without a measurement
+would be the cosmetic split `M1` forbids).
+
+**The rulings (ratified 2026-09-24):**
+
+- **F-1 — F7's disposition: WIRE IT.** `writeInValue`/`questionText` are declared on
+  `ConsequenceRecord` and the encounter-log writer reads them, so the free-text answer becomes
+  evidence the cohort, the encounter log and the player's own journal can all read. Retiring them
+  was rejected: the reflective and immersion modalities are precisely where a free-text answer *is*
+  the data, and Phase 15's reflective-depth reading depends on it.
+- **F-2 — the spine: THE COHORT LEADS.** Not WebUI parity (the CLI is finalised structurally, but
+  parity work would multiply content that has never been measured), not corpus depth (authoring
+  before measuring collapse buys volume, not variety), not hosting. This phase is what tells us
+  *where* depth is needed.
+- **F-3 — cohort scale: HERMETIC FIRST.** d1–d5 are built on the deterministic stub tier and land
+  with `G39`/`G40` green; the synthetic cohort's size and the real-provider experiential run are
+  decided *after* the hermetic results exist, never before. No stochastic number enters a gate.
 
 ### Current work (post-plan) — not a phase
 
@@ -966,7 +1119,20 @@ promise: the live UDV carries only 3 of its 8 declared bands (so purpose, analog
 preference and observed evidence change nothing yet), and the council-role scoping
 table (`45 §6.1`) never executes — meaning sub-agents are not yet aligned per role.
 Phase 13 d1→d2 is the critical path for the personalization depth the architecture
-was built for.
+was built for. **Closed 2026-09-24** — Phase 13 is complete (d1–d12, G32–G35) and
+Phase 14 closed the adjacent checked-surface class (G36–G38).
+
+**Evidence frontier (2026-09-24).** With the wiring closed, the binding constraint is
+no longer architecture but **evidence**: the live seam has no long-horizon exerciser
+(`AGENTS.md §4.2` open list 4), so the calibration items that were classified
+"needs play data — not phase-able" have neither thresholds nor a way to get them, and
+the system's central claims — persona adaptation, transformation over time, content
+variety that does not collapse — have no observed evidence. **Phase 15 (the Simulated
+Cohort, §4)** is the response, and it is the recommended next phase: it converts the
+calibration list from blocked to executable by generating the play data with the
+project's own agents, at the exact surface the user ruled must be agent-reachable
+(Phase 14 d4). Until it is ratified, the honest statement of the frontier is *the
+1–14 architecture is built and gated; its lived behaviour is unmeasured*.
 
 ## 9. Revision record
 
@@ -1011,3 +1177,6 @@ was built for.
 | 2026-09-24 | **Cohesion item 1, stages B + C — the runner's invocation state and its printers have owners (`docs/audits/MODULE-COHESION-AUDIT-2026-09-24.md` §4).** **Stage B (`scripts/cli/flags.ts`, 131 lines):** the parsed option state moved behind explicit setters, and `setInvocation` now computes the `VERBOSE = RAW_VERBOSE && DEV_MODE` relation ONCE instead of at every reader — the scattered derivation was invisible while the state was module-level. `HEADLESS` stays the one deliberate `let` (the non-TTY guard in `main()` flips it) behind `setHeadless`. **Stage C (`scripts/cli/output.ts`, 342 lines):** the 15 flag-READING printers (`banner`/`info`/`success`/`warn`/`error`/`separator`/`verbose`/`emitEvent`/`emitDevPrimitives` + the session renderers) plus `readActiveFocus`, which exists only to be printed and was reached for twice at its two call sites. The runner is **5 770 → 5 483 → 5 199** lines. **The stage's real yield is the seam it makes explicit:** `render.ts` is the PURE half (imports no state, unit-tested by `tests/cli/RenderHelpers.test.ts`), `output.ts` is the flag-reading half (exercised by `tests/cli/CliMatrix.test.ts`) — before this split there was no line between "what to display" and "whether to display it", which is why neither half could be tested. **Two defects were caught by the losslessness check, not by `tsc`:** the block scanner swallowed the trailing `program.parse()` invocation block into the new module — leaving the CLI parsing *nothing* while still type-checking clean — and mis-scoped import pruning dropped `Option` from `commander`, silently resolving it to the DOM global `HTMLOptionElement`. Both are invisible to a compiler at the seam (the moved code compiled, the entry compiled), which is the argument for the check being part of the recorded method rather than an optional extra. **Verified:** tsc 0 · **35 CLI tests (3 files)** · `--help`/unknown-command/`--headless --encounters=1 --json` all exit 0 with `session_ended` · live smoke against a throwaway `MYSTERIUM_HOME` · losslessness: every code line of `output.ts` exists verbatim in the pre-stage runner. |
 | 2026-09-24 | **Cohesion item 1 COMPLETE — Stage D: the commands and the session flows have modules, and the runner entry is 775 lines (`docs/audits/MODULE-COHESION-AUDIT-2026-09-24.md` §4).** The 4 294 remaining lines moved as six leaves in dependency order — `support.ts` (495, the shared bottom of the call graph) → `onboarding.ts` (537, calibration + default significator + `setup`) → `profileCmd.ts` (883) · `practiceCmd.ts` (291) · `delegateCmd.ts` (242) → `runtime.ts` (2 246, `executeEncounter` + the agentic drill + the two session flows) — so no import cycle could form. The flows moved LAST (the audit's sequencing ruling) because they own the checkpoint/journal writes `G36` asserts; the verification is therefore the strongest in the sequence: **G36 boots both modes headless and requires a persisted checkpoint**, `tests/cli` green (38 including the DelegateArgs collision guard, re-pointed at the new module), live smoke of `--headless`/`--mode=story`/`status --json`/`delegate --help` all exit 0. **The depth-normalized losslessness check found 4 intentional deltas, and they are the split's real finding:** the flows read `program.opts().llm`, `opts.audit` and `llmComplete` — three start-up values captured OUTSIDE the flags owner, re-pointed to `HEADLESS_LLM`/`AUDIT`/`LLM_ACTIVE` in `flags.ts` so every module now reads invocation state from exactly one place. Mechanical casualties of the move (all caught and fixed): the block scanner's quote artifacts on generated import lines (fixed line-wise), `clackText`/`DynamicLLMConfig` imports the pruner dropped, `VowFileShape` stranded in the entry while its users moved, and `resolvedLLM` — a start-up local — re-resolved in `profileCmd` from `loadConfig()` rather than exported out of the entry. **The runner is 5 770 → 775 lines; `scripts/cli/` is 5 531 lines across 11 modules, each with one responsibility and a stated seam.** **Verified:** tsc 0 · **1 617 tests (141 files)** · build 0 · workspace-lint 0 · arch 0 violations (23 gates). **Carried:** item 4 collaborators 4+ (task presenters), C6 (GitLab credentials). |
 | 2026-09-24 | **Cohesion item 4 COMPLETE — the AgenticOrchestrator's last collaborators leave the class (`docs/audits/MODULE-COHESION-AUDIT-2026-09-24.md` §4).** `taskPresenters.ts` (161 lines) holds the three presenter methods — the modality→task preference order, the per-modality fallback generator, and the narrative framing that turns a task into the question the player answers. The extraction's design point is the state boundary: `presentModuleTask` now receives `history` and the `uiHandler` as PARAMETERS (the class no longer owns what the presenter reads), while the trial-evaluation wire-back moves to explicit accessors (`setRendererEvaluate`/`rendererEvaluate()`/`taskStartTime()`) so timing+accuracy capture is wired identically but the handoff is greppable rather than a private field two methods happen to share. The forced-shadow path's evaluator guard was captured ONCE (`const currentEvaluate = rendererEvaluate()`) instead of calling twice — the second call could theoretically observe a different evaluator than the first. Transform-normalized losslessness: 6 deltas, all the deliberate transforms (field→accessor, `this.X()`→`X()`). **The orchestrator is 2 878 → 2 629 lines; what remains is the encounter loop itself, which is the class's one responsibility.** **Verified:** tsc 0 · **1 617 tests (141 files)** · build 0 · workspace-lint 0 · arch 0 violations. **Cohesion backlog: all eight items closed.** Carried: C6 (GitLab credentials). |
+| 2026-09-24 | **Phase 14 d3 BUILT — Phase 14 is COMPLETE; the module-cohesion backlog is fully closed (`docs/audits/MODULE-COHESION-AUDIT-2026-09-24.md` §4).** d3 landed as the two ratified halves: Q10's calibration extraction (`src/core/usecases/InitialAltitudeInference.ts` + `QuickCalibrationScoring.ts`, so calibration is engine code, not a CLI ladder) and the four-stage CLI split (A `config`/`data`/`render` → B `flags` → C `output` → D `support`/`onboarding`/`profileCmd`/`practiceCmd`/`delegateCmd`/`runtime`). The entry is **5 770 → 775 lines**; `scripts/cli/` is 5 531 lines across 11 modules. Every stage was verified by a losslessness check against the pre-stage file (the check that caught a swallowed `async function` and a mis-scoped import — neither visible to `tsc`) and locked by **G36**, which boots both `SESSION_MODES` headless and requires a persisted checkpoint. **Verified:** tsc 0 · **1 617 tests (141 files)** · build 0 · workspace-lint 0 · arch 0 violations (23 gates). **Documents reconciled in the same commit:** `AGENTS.md §4.2`'s heading and body still declared Phase 14 "IN PROGRESS … d2c/d3/d4/d5 pending" and `d3–d10 remain open` for Phase 13 — both stale since 2026-09-24 and both corrected here. Carried: C6 (GitLab credentials), F7/F9 (`CHECKED-SURFACE-AUDIT-2026-09-24` §11). |
+| 2026-09-24 | **The evidence frontier identified; Phase 15 (the Simulated Cohort) PROPOSED — awaiting ratification.** A tree-verified finding: the **live seam has no long-horizon exerciser**. `createOrchestrationServices` has exactly two production callers (the CLI and `src/lib/engine/gameEngine.ts`), and `runPersonaTrajectory` drives the *kernel* directly (`tickWithStrategy` → `processOutcome` → `applyConsequences` → `applyResponseOnly` → `endSession`) with no services — no envelope, no bands, no checkpoint, no journal, no council dispatch — over 2–6-session trajectories. So `G22`–`G35` exercise personalization/memory in isolated fixtures and `G36` boots the CLI once; **nothing runs many sessions over trajectory time through the live seam**, which is why the calibration list (RV1–RV7 real-rater thresholds, `expansionRatio`, entropy floors, per-line saturation) has no distributions and why the architecture's central claims — persona adaptation, transformation over time, composition variety that does not collapse — have no evidence. **Phase 15 is written into §4 as PROPOSED** (d0 the carried F7/F9, d1 the campaign runner through the live seam with per-session checkpoint restore, d2 a generated cohort, d3 the campaign time-series, d4 the calibration pass labelled `provisional-simulated-cohort`, d5 gates **G39** continuity + **G40** invariants/discrimination, d6 the report), with one hard constraint: the hermetic (stub-provider) tier gates CI, the experiential (real-provider) tier produces the qualitative read, and the two are never mixed. `AGENTS.md §4.2` gained open-list **item 4** (this finding) and amended items 2–3 (the wiring list is empty — closed by Phases 13/14; calibration is now phase-able). Three forks are put to the user: F-1 F7's disposition, F-2 the spine (cohort vs WebUI parity vs corpus depth), F-3 cohort scale + whether the experiential tier is authorised now. |
+| 2026-09-24 | **Phase 15 d0 BUILT — F7 wired and F9 closed, so the cohort harness will have the free-text evidence it calibrates against.** **F7 (user ruling F-1: wire it):** `writeInValue`/`questionText` are declared on `ConsequenceRecord` with the why-on-the-record doc-comment (an evaluator score reads what the encounter made of the player; these read what the player made of the encounter), carried by `processOutcome`, and set on **both** orchestrator finalise paths. The CLI now reads them from the record (`cr.writeInValue` / `cr.questionText`), replacing two other sources for one fact — `outcome.playerWriteIn` and a private orchestrator field reached through `as any`. **The extraction found a second defect inside the field F7 was about:** `_lastQuestionText` was assigned the composed `fullPrompt`, so the field named `questionText` held a narrative intro glued to the question — and the encounter log slices to 500 characters, so a long intro could push the actual question out of the evidence the log, the campaign series and session synthesis all read. It now holds the question; what is *asked* is still `fullPrompt`. **The live smoke then showed the log rendering `**Question:**` followed by a blank line**, the label detached from its content, so `appendEncounterLog` collapses whitespace per value — the log's one-labelled-line-per-field contract is now locked by `tests/infra/EncounterLog.test.ts`, which also proves the focus extractor can read a question back out of the echo path. **F9: claim deleted, not re-authored.** The `QUADRANTS`/`QUADRANT_ALIASES` declaration was already replaced in d2a by a RETIRED note naming the step that does not happen; re-authoring it would encode a normalisation nothing performs. The §2 extraction keeps its fail-closed all-4-quadrants check, which is the enforcement that actually catches heading-shape drift. **Verified:** tsc 0 · **1 623 tests (142 files, +6)** · build 0 · workspace-lint 0 · arch 0 violations (23 gates) · live `--headless --json --new-game -e 2` exit 0 with clean `**Question:**` lines. **Next: d1 (the campaign runner through the live seam).** |
