@@ -4,6 +4,20 @@
 (`src/core/simulation/campaign.ts`) over the curated kernel personas plus a generated cohort, through
 the same orchestrator path the CLI uses.
 
+> **Addendum, 2026-09-25 — §4.2 items 3 and 4 are implemented; a second dated reading now exists.**
+> The original 1/432 Emotional result, 74% three-line share, and 12.5% unknown-candidate share below
+> remain the historical 2026-09-24 baseline and are not restated. Diagnosis traced the first result to
+> the static reproducibility hash becoming the line-coverage policy after the substantive comparator
+> rules tied. Phase 16 d3 now reserves the first developmental offer for the eligible line with the
+> oldest positive theta timestamp. The reserve may cross a priority band, changes no candidate
+> `priority`, and leaves the non-primary ranked tail unchanged. G43 runs the production campaign path,
+> counts finalized developmental provenance only (excluding curriculum/training), requires all eight
+> canonical lines, and retains the 2% quietest/busiest floor. **d4** closed the `unknown` ambiguity by
+> reading the raw `candidateId` and separating `missing` from `unrecognised`. The follow-up reading is
+> **`docs/audits/CAMPAIGN-REPORT-2026-09-25.md`** — read it for the current numbers; this file remains
+> the record of the original pass. Focused verification on 2026-09-25 passed production-path tests
+> including the CI benchmark; this is synthetic evidence, not certification.
+>
 > **Addendum, 2026-09-24 (same day) — §4.2 item 5 was diagnosed and fixed.** The first reading of
 > this report measured `polarityReadings: 0` and named it a symptom. Following it found an
 > **unenterable loop**: the dialectic state advance was fed the pair the engine structurally
@@ -316,9 +330,10 @@ zeros, which is a different statement — and both are now *known* rather than u
    produced **0 shadows and 0 fixation** in a 2-session campaign. Its kernel gate (G4) passes, so this
    is a campaign-harness fidelity gap, not an engine one, and it belongs to this phase's sweep because
    item 1's re-measurement inherits it.
-3. ~~**Three lines receive zero encounters across 400.**~~ **DIAGNOSED 2026-09-24 (Phase 16 d3) — the
-   tie-break's final key, a hash meant for reproducibility, is deciding line coverage.** Not supply,
-   and not the priority formula:
+3. ~~**Three lines receive zero encounters across 400.**~~ **DIAGNOSED AND IMPLEMENTED 2026-09-25
+   (Phase 16 d3).** The original 2026-09-24 reading remains the evidence that prompted the repair;
+   it is not silently replaced by a post-fix number. Diagnosis: the tie-break's final key, a hash
+   meant for reproducibility, was deciding line coverage. Not supply, and not the priority formula:
 
    - **Supply is symmetric.** The bench world has **3 holons per line, same stages, all active** — so
      no line is starved of candidates.
@@ -346,16 +361,17 @@ zeros, which is a different statement — and both are now *known* rather than u
    confirmed, and the object of study is narrower than "the scheduler": it is **the tie-break's key
    ORDER, and what should outrank the hash**.
 
-   **The repair is a ratification (Phase 16 d3, open).** The canon-compatible shape is a **starvation
-   term** ahead of the hash (how long a line has gone unserved, or its encounter share against the
-   eligible set) — `24 §3.3` already owns variety, and asking a reproducibility key to carry policy is
-   the actual defect. The counter-argument is real and worth stating: the band is defined as "the set
-   of candidates whose developmental value is indistinguishable", so a starvation term is only
-   permissible if line coverage is a *developmental* value rather than an administrative one — which
-   `46 §11`'s visibility-collapse countermeasure and `AGENTS.md`'s holonic-integrity commitment
-   (`§5.6`: lower stages must remain healthy) both argue it is. Measured, for the record: Emotional
-   received **1 encounter in 432** and three lines carried 74 %.
-4. **12.5 % of encounters resolve no candidate id.** Either a new id scheme or a missing stamp.
+   **The repair is implemented and its architecture record is owned by the reserved-primary decision
+   and regression guard.** The first developmental offer reserves the eligible line with the oldest
+   positive theta timestamp; `0` means never served. This is an offer-slot policy, not a ninth score:
+   it may cross a priority band, changes no candidate's `priority`, and leaves the remaining ranked
+   tail in score-and-band order. `24 §3.3` now keeps the five comparator rules explicit, and
+   `24 §3.4` names the reserved primary. G43 counts finalized developmental provenance only and
+   enforces every canonical line plus the 2% quietest/busiest floor. The focused CI benchmark and
+   scheduler regression run passed 12 tests on 2026-09-25; a fresh broad campaign distribution is
+   still required before treating this item's calibration consequences as closed.
+4. **12.5 % of encounters resolve no candidate id.** Still open. The decoder must name the actual
+   production stamp boundary; no unknown ID is guessed or relabelled until d4 traces it.
 5. ~~**`polarityReadings` is 0 because the pair key never resolves.**~~ **DIAGNOSED AND FIXED
    2026-09-24 (same day) — and it was not a missing input, it was an unenterable loop.** The report's
    first reading was the symptom; the cause is two writers with two laws and one missing parameter:

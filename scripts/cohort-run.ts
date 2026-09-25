@@ -42,6 +42,9 @@ interface Args {
   seed: number;
   /** A single-axis hold: `--axis stance:avoiding` generates a cohort with that dimension pinned. */
   axis?: string;
+  /** Phase 16 d5 — pin every developmental offer to one canonical `Line:Stage` cell. Distinct from
+   *  `--axis`, which shapes the COHORT; this shapes the CELL each member is served. */
+  targetCell?: string;
 }
 
 function parseArgs(argv: readonly string[]): Args {
@@ -61,11 +64,13 @@ function parseArgs(argv: readonly string[]): Args {
       case '--generate': args.generate = Number(next()); break;
       case '--seed': args.seed = Number(next()); break;
       case '--axis': args.axis = next(); break;
+      case '--target-cell': args.targetCell = next(); break;
       case '--keep-root': args.keepRoot = true; break;
       case '--json': args.json = true; break;
       case '--llm': args.noLlm = false; break;
       case '--help':
         console.log('usage: cohort-run [--personas a,b] [--generate N] [--seed S] [--axis dim:value] ' +
+          '[--target-cell Line:Stage] ' +
           '[--sessions N] [--encounters N] [--root DIR] [--keep-root] [--json] [--llm]');
         console.log(`  curated personas: ${PERSONAS.map((p) => p.name).join(', ')}`);
         console.log(`  sweep axes:       ${COHORT_AXES.join(', ')}`);
@@ -203,6 +208,7 @@ async function main(): Promise<void> {
         rootDir: path.join(root, label),
         ...(args.sessions !== undefined ? { sessions: args.sessions } : {}),
         ...(args.encounters !== undefined ? { encountersPerSession: args.encounters } : {}),
+        ...(args.targetCell !== undefined ? { targetCell: args.targetCell } : {}),
         noLlm: args.noLlm,
       });
       results.push(result);

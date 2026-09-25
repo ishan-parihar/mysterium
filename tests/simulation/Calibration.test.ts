@@ -35,6 +35,14 @@ describe('calibration report — provenance and thresholds', () => {
     expect(report.note).toMatch(/never certify/);
   });
 
+  it('keeps missing and unrecognised candidate stamps separate in the aggregate report', async () => {
+    const { report } = await smallCohort();
+    const statuses = Object.keys(report.candidateStamps);
+    expect(statuses.every((key) => ['present', 'missing', 'unrecognised'].includes(key))).toBe(true);
+    expect(statuses).not.toContain('unknown');
+    expect(Object.values(report.candidateStamps).reduce((a, b) => a + b, 0)).toBeCloseTo(1, 10);
+  });
+
   it('imports each threshold from its owning module rather than restating it', async () => {
     const { report } = await smallCohort();
     // If these were literals in the calibration module, an engine threshold change would leave the
@@ -74,8 +82,25 @@ describe('calibration report — absence is carried with a reason', () => {
   it('names the unmeasurable observables and their reasons on the report', async () => {
     const { report } = await smallCohort();
     expect(report.unmeasurable).toBe(UNAVAILABLE_OBSERVABLES);
-    expect(report.memoryPage.status).toBe('unmeasurable');
-    expect(report.memoryPage.reason.length).toBeGreaterThan(20);
+    // Every entry must explain itself: a reason is the work ticket, and a reader who cannot tell
+    // WHY an observable is absent has no way to tell a deliberate classification from a gap.
+    for (const reason of Object.values(report.unmeasurable)) {
+      expect(reason.length).toBeGreaterThan(20);
+    }
+  });
+
+  it('reports the MemoryPage as MEASURED, not as an unavailable observable', async () => {
+    const { report } = await smallCohort();
+    // d1's producer is `buildEnvelope` → `memoryPageBlock`. Not every encounter runs that seam —
+    // `runFallback`'s self-reflection (write-in) branch never calls `personalizationContext()` — so
+    // `null` is a real outcome and this cohort merely does not hit it. What the test asserts is the
+    // discrimination: a cohort that DID produce readings reports the denominator honestly rather than
+    // the hard-coded `unmeasurable` status this field used to carry.
+    expect(report.memoryPage).not.toBeNull();
+    expect(report.memoryPage!.sessions).toBeGreaterThan(0);
+    expect(report.memoryPage!.encounters).toBeGreaterThan(0);
+    expect(report.unmeasurable).not.toHaveProperty('memoryPageSize');
+    expect(Object.keys(report.unmeasurable)).toContain('renderBudget');
   });
 });
 

@@ -51,6 +51,9 @@ export interface CalibrationReport {
   readonly provenance: typeof CALIBRATION_PROVENANCE;
   readonly note: string;
   readonly scale: { readonly campaigns: number; readonly sessions: number; readonly encounters: number };
+  /** Phase 16 d5 — one focused cell, when requested. Null preserves the historical wide-cohort
+   * report unchanged. The focused result is a reachability probe, not certification. */
+  readonly focused: { readonly cell: string; readonly compositions: number; readonly entropy: number | null; readonly floor: number; readonly reachable: boolean | null } | null;
   readonly composition: {
     readonly cellsComposed: number;
     readonly cellsMeasurable: number;
@@ -73,6 +76,7 @@ export interface CalibrationReport {
     readonly staleness: number;
   }>>;
   readonly candidates: Readonly<Record<string, number>>;
+  readonly candidateStamps: Readonly<Record<string, number>>;
   /**
    * The polarity resolution loop's evidence (`46 §4.3`, Phase 13 d10 L3). Added 2026-09-24 with
    * the loop's entry-point fix: before it, `readings` was structurally 0 (the pair key could never
@@ -97,7 +101,20 @@ export interface CalibrationReport {
     readonly logOnly: number;
     readonly note: string;
   };
-  readonly memoryPage: { readonly status: 'unmeasurable'; readonly reason: string };
+  /**
+   * Phase 16 d1 — the MemoryPage's real render cost, aggregated across every session that produced
+   * a reading. `encounters` is how many encounters contributed one, so a campaign whose seam did not
+   * run shrinks the denominator rather than contributing a zero; `sessions` is how many sessions
+   * reported at all, and `null` means none did — a different fact from a page of zero lines.
+   */
+  readonly memoryPage: {
+    readonly sessions: number;
+    readonly encounters: number;
+    readonly maxBlockLines: number;
+    readonly maxBlockChars: number;
+    readonly meanBlockChars: number;
+    readonly maxContinuityLines: number;
+  } | null;
   readonly unmeasurable: Readonly<Record<string, string>>;
 }
 
@@ -138,6 +155,19 @@ export function buildCalibrationReport(results: readonly CampaignResult[]): Cali
   const measurable = Object.entries(cellEntropies).filter(([, m]) => m.compositions >= MIN_COMPOSITIONS);
   const collapsed = measurable.filter(([, m]) => m.entropy < ENTROPY_FLOOR).map(([cell]) => cell);
   const minEntropy = measurable.length > 0 ? Math.min(...measurable.map(([, m]) => m.entropy)) : null;
+  const focusedCell = results[0]?.targetCell ?? null;
+  const focused = focusedCell === null ? null : (() => {
+    const m = cellEntropies[focusedCell];
+    const compositions = m?.compositions ?? 0;
+    const entropy = m?.entropy ?? null;
+    return {
+      cell: focusedCell,
+      compositions,
+      entropy,
+      floor: ENTROPY_FLOOR,
+      reachable: compositions >= MIN_COMPOSITIONS && entropy !== null ? entropy >= ENTROPY_FLOOR : null,
+    };
+  })();
 
   // ── Expansion: the observed pole mix, weighted by each campaign's encounter count ──────────
   const weights = results.map((r) => r.sessions.reduce((n, s) => n + s.finalized, 0));
@@ -148,6 +178,7 @@ export function buildCalibrationReport(results: readonly CampaignResult[]): Cali
 
   // ── Candidate provenance, likewise encounter-weighted ─────────────────────────────────────
   const candidateShare = mergeShares(results.map((r) => mergeShares(r.sessions.map((s) => s.series.candidateSourceShare), r.sessions.map(() => 1))), weights);
+  const candidateStampShare = mergeShares(results.map((r) => mergeShares(r.sessions.map((s) => s.series.candidateStampStatusShare), r.sessions.map(() => 1))), weights);
 
   // ── The polarity loop's evidence (`46 §4.3`). Each campaign's pair map is cumulative, so the
   // census is the LAST session's, not a sum (a sum would double-count pairs carried forward).
@@ -195,6 +226,30 @@ export function buildCalibrationReport(results: readonly CampaignResult[]): Cali
     note: 'Probe thresholds are the probe protocol\'s own pilot (`scripts/probe-pilot.ts`); this pass reports the standing and does not re-derive them.',
   };
 
+  // ── MemoryPage render cost (`buildEnvelope` → `memoryPageBlock`, the only place it exists) ────
+  // The report takes the WORST session rather than an average of averages: the render headroom a
+  // reader cares about is the biggest page the campaign actually produced, and averaging session
+  // maxima across campaigns of different lengths would understate it.
+  const pageSessions = sessions.filter((s) => s.series.memoryPage !== null);
+  const memoryPage = pageSessions.length === 0
+    ? null
+    : (() => {
+        const pages = pageSessions.map((s) => s.series.memoryPage!);
+        const encounters = pages.reduce((n, p) => n + p.encounters, 0);
+        return {
+          sessions: pageSessions.length,
+          encounters,
+          maxBlockLines: Math.max(...pages.map((p) => p.maxBlockLines)),
+          maxBlockChars: Math.max(...pages.map((p) => p.maxBlockChars)),
+          // Weight by the reading's own denominator, not by session count: a session with six
+          // measured encounters must not count the same as one with a single encounter.
+          meanBlockChars: encounters > 0
+            ? pages.reduce((n, p) => n + p.meanBlockChars * p.encounters, 0) / encounters
+            : 0,
+          maxContinuityLines: Math.max(...pages.map((p) => p.maxContinuityLines)),
+        };
+      })();
+
   return {
     provenance: CALIBRATION_PROVENANCE,
     note:
@@ -202,6 +257,7 @@ export function buildCalibrationReport(results: readonly CampaignResult[]): Cali
       'threshold, or an observed defect) and may never certify — real raters and real play remain ' +
       'the only certification paths. Thresholds are imported from their owning modules, never restated.',
     scale: { campaigns: results.length, sessions: sessions.length, encounters },
+    focused,
     composition: {
       cellsComposed: Object.keys(cellEntropies).length,
       cellsMeasurable: measurable.length,
@@ -224,6 +280,7 @@ export function buildCalibrationReport(results: readonly CampaignResult[]): Cali
     },
     perLine,
     candidates: candidateShare,
+    candidateStamps: candidateStampShare,
     polarity: {
       readings,
       pairsDiscovered,
@@ -233,10 +290,7 @@ export function buildCalibrationReport(results: readonly CampaignResult[]): Cali
       verdict: pairsDiscovered > 0 ? 'loop-open' : 'loop-unenterable',
     },
     probeStanding: probes,
-    memoryPage: {
-      status: 'unmeasurable',
-      reason: UNAVAILABLE_OBSERVABLES.memoryPageSize!,
-    },
+    memoryPage,
     unmeasurable: UNAVAILABLE_OBSERVABLES,
   };
 }
@@ -248,6 +302,8 @@ export async function calibrateCohort(options: {
   readonly seed: number;
   readonly sessions?: number;
   readonly encountersPerSession?: number;
+  /** Phase 16 d5 — run every campaign against one canonical `Line:Stage` cell. */
+  readonly targetCell?: string;
 }): Promise<{ readonly report: CalibrationReport; readonly results: readonly CampaignResult[] }> {
   const subjects = [
     ...PERSONAS.map((p) => p.name),
@@ -262,6 +318,7 @@ export async function calibrateCohort(options: {
       rootDir: `${options.rootDir}/${name}`,
       sessions: options.sessions ?? persona.trajectory.sessions,
       encountersPerSession: options.encountersPerSession ?? persona.trajectory.encountersPerSession,
+      ...(options.targetCell !== undefined ? { targetCell: options.targetCell } : {}),
     }));
   }
   return { report: buildCalibrationReport(results), results };

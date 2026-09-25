@@ -19,6 +19,7 @@ Structure declaration:      _org.yaml
     python3 scripts/arch.py recon <keyword>              coverage report before creating a record
     python3 scripts/arch.py new --type ad|rg --title T --desc D --organ O --body F --recon R
     python3 scripts/arch.py update <ID> --field Status=Superseded --reason R --recon I
+   python3 scripts/arch.py update <ID> --body FILE --reason R --recon I
     python3 scripts/arch.py log --action A --target T --reason R
     python3 scripts/arch.py emit                         regenerate INDEX.md + organ routers
     python3 scripts/arch.py validate [--gate DG5]        run the doc-governance gates (DG1-DG12)
@@ -2278,6 +2279,17 @@ def cmd_update(args: argparse.Namespace) -> int:
     if not target:
         fail(f"no record with ID {args.id}")
     text = target["text"]
+    if args.body:
+        body_path = Path(args.body)
+        if not body_path.is_file():
+            fail(f"`{body_path}` is not a readable body file")
+        replacement = body_path.read_text(encoding="utf-8")
+        if replacement.startswith("---"):
+            fail("--body must contain the record body without frontmatter")
+        match = re.match(r"---\n.*?\n---\n", text, re.S)
+        if not match:
+            fail(f"{target['rel']}: no frontmatter block to replace body beside")
+        text = match.group(0) + replacement.rstrip() + "\n"
     # `--unset KEY` removes a key from the frontmatter. Needed because a discharged field must GO:
     # `Deferral:` names a `_org.yaml → pending` key, and once the work lands the key is removed from
     # the ledger, so leaving the field behind fails DG19 forever. An empty `--field K=` deliberately
@@ -2783,6 +2795,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("id")
     p.add_argument("--field", action="append", help="Key=Value (repeatable)")
     p.add_argument("--unset", action="append", help="remove a frontmatter key (repeatable)")
+    p.add_argument("--body", help="path to a markdown file holding the replacement body (frontmatter omitted)")
     p.add_argument("--reason", required=True)
     p.add_argument("--recon", required=True)
     p.set_defaults(fn=cmd_update)

@@ -16,6 +16,11 @@
  * cannot mistake an absent number for a measured zero.
  *
  * Run with: npx tsx scripts/cohort-calibrate.ts [--generated 40] [--seed 1] [--sessions N]
+ *          [--encounters N] [--target-cell Line:Stage]
+ *
+ * `--target-cell` is the Phase 16 d5 focused hermetic mode: few cells (one), many encounters, and
+ * checkpoint-replayed telemetry across longer trajectories. Its `focused.reachable` field is an
+ * evidence-reading only; it never certifies the entropy floor.
  *
  * @script-status: probe — read-only calibration diagnostic (plan Phase 15 d4). It runs campaigns
  *   against a throwaway root and prints a report; it never mutates the tree, writes no threshold, and
@@ -54,6 +59,13 @@ function printReport(r: CalibrationReport): void {
     `min entropy ${r.composition.minEntropy === null ? 'n/a' : r.composition.minEntropy.toFixed(3)} · ` +
     `verdict ${r.composition.verdict}`,
   );
+  if (r.focused) {
+    console.log(
+      `  focused ${r.focused.cell}: ${r.focused.compositions} compositions · ` +
+      `entropy ${r.focused.entropy === null ? 'n/a' : r.focused.entropy.toFixed(3)} · ` +
+      `reachability ${r.focused.reachable === null ? 'insufficient-data' : r.focused.reachable ? 'reachable' : 'below-floor'}`,
+    );
+  }
   if (r.composition.collapsedCells.length > 0) {
     console.log(`  collapsed cells: ${r.composition.collapsedCells.join(', ')}`);
   }
@@ -64,8 +76,10 @@ function printReport(r: CalibrationReport): void {
     `  poles served: familiar ${pct(r.expansion.familiarShare)} · unfamiliar ${pct(r.expansion.unfamiliarShare)} · ` +
     `shadow-facing ${pct(r.expansion.shadowFacingShare)} · verdict ${r.expansion.verdict}`,
   );
+  console.log(
+    `  candidate stamps: ${Object.entries(r.candidateStamps).map(([k, v]) => `${k} ${pct(v)}`).join(' · ') || 'n/a'}`,
+  );
   console.log('');
-
   console.log('Per line — altitude distribution and staleness');
   for (const [line, v] of Object.entries(r.perLine)) {
     console.log(
@@ -97,8 +111,17 @@ function printReport(r: CalibrationReport): void {
   console.log(`Probes: validated ${r.probeStanding.validated} · log-only ${r.probeStanding.logOnly}`);
   console.log(`  ${r.probeStanding.note}`);
   console.log('');
-  console.log(`MemoryPage budget: ${r.memoryPage.status}`);
-  console.log(`  ${r.memoryPage.reason}`);
+  console.log('MemoryPage render cost (Phase 16 d1 — measured at the envelope)');
+  if (r.memoryPage === null) {
+    console.log('  no session produced a reading (the personalization seam did not run)');
+  } else {
+    console.log(
+      `  ${r.memoryPage.sessions} sessions · ${r.memoryPage.encounters} encounters measured · ` +
+      `max block ${r.memoryPage.maxBlockLines} lines / ${r.memoryPage.maxBlockChars} chars · ` +
+      `mean ${r.memoryPage.meanBlockChars.toFixed(0)} chars · ` +
+      `max continuity ${r.memoryPage.maxContinuityLines} lines (post-Veil)`,
+    );
+  }
   console.log('');
   console.log('Not measured at this seam (with reasons) — absence is not a zero:');
   for (const [k, why] of Object.entries(r.unmeasurable)) console.log(`  ${k}: ${why}`);
@@ -109,6 +132,11 @@ async function main(): Promise<void> {
   const seed = arg('seed', 1);
   const sessions = process.argv.includes('--sessions') ? arg('sessions', 2) : undefined;
   const encounters = process.argv.includes('--encounters') ? arg('encounters', 4) : undefined;
+  const targetCellIndex = process.argv.indexOf('--target-cell');
+  const targetCell = targetCellIndex >= 0 ? process.argv[targetCellIndex + 1] : undefined;
+  if (targetCellIndex >= 0 && (!targetCell || targetCell.startsWith('--'))) {
+    throw new Error('--target-cell needs a canonical Line:Stage value');
+  }
 
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mysterium-calibrate-'));
   let report: CalibrationReport;
@@ -119,6 +147,7 @@ async function main(): Promise<void> {
       seed,
       ...(sessions !== undefined ? { sessions } : {}),
       ...(encounters !== undefined ? { encountersPerSession: encounters } : {}),
+      ...(targetCell !== undefined ? { targetCell } : {}),
     });
     report = out.report;
   } finally {

@@ -65,6 +65,12 @@ describe('Validation benchmark (CI tier)', () => {
     // by session count, no measurable cell collapses below the entropy floor, no Veil vocabulary in a
     // session's provenance). These two are the only gates that assert over a trajectory of sessions
     // THROUGH THE SEAM, which is why the gap d3 found was invisible to the other 38.
+    // 42 → 43 with Phase 16 d3 (G43 developmental encounter coverage — every canonical line consumed
+    // by a finalized developmental encounter, none starved to effective exclusion. The diagnosis:
+    // supply symmetric, priorities indistinguishable across lines, so the comparator decided; its
+    // substantive rules tied across lines, leaving the reproducibility hash to carry policy. The
+    // reserved developmental primary is locked by unit test; this gate is the histogram the player
+    // would notice, not a claim about every secondary or ambient offer.)
     // 41 → 42 with Phase 16 d2 (G42 declared stance channel — driveFixation read as a pinned
     // observable and was a starved input: the campaign dropped the stance its personas declared, and
     // the narratives were filler so the keyword route could not fire. The gate asserts the stance
@@ -74,8 +80,8 @@ describe('Validation benchmark (CI tier)', () => {
     // on texture engagement, because §5.3 forbids the structural selection its discovery writer was
     // wired to, and only a ratified reading reconciles). Both defects it locks lived in the
     // COMPOSITION of two seam calls over time, which is why none of the other 40 could see them.
-    expect(suite.results.length).toBe(42);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42']) {
+    expect(suite.results.length).toBe(43);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

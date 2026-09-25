@@ -64,6 +64,7 @@ import type { WorldState } from '../engines/CandidateGeneration.js';
 import type { PlayerResponse } from '../engines/ConsequenceEngine.js';
 import type { ScheduledEncounter } from '../domain/EncounterSpecNew.js';
 import { ALL_LINES } from '../domain/Line.js';
+import { ALL_STAGES } from '../domain/Stage.js';
 import { ALL_DRIVES } from '../domain/Drive.js';
 import type { Drive } from '../domain/Drive.js';
 import type { DriveDirectionality } from '../domain/enums.js';
@@ -78,7 +79,7 @@ import {
 import { feedPlanningBias } from '../orchestration/feedReaders.js';
 import { detectShadowKeywords } from '../assessments/shadowSignals.js';
 import { buildEncounterOrchestrator, responseFromRecord } from '../usecases/EncounterSession.js';
-import { buildSeriesRow, candidateSource, type CampaignSeriesRow, type EncounterProvenance } from './campaignSeries.js';
+import { buildSeriesRow, candidateSource, candidateStampStatus, type CampaignSeriesRow, type EncounterProvenance, type EncounterMeasurement } from './campaignSeries.js';
 import type { AgenticUIHandler } from '../assessments/AgenticOrchestrator.js';
 import type { AskUserQuestionParams, AskUserQuestionResult, MCQQuestion, UserAnswer } from '../assessments/agentTypes.js';
 
@@ -96,6 +97,10 @@ export interface CampaignSpec {
   /** Skip the LLM entirely (the hermetic tier). Default true: a campaign that needs a model is the
    *  experiential tier and is never what gates CI. */
   readonly noLlm?: boolean;
+  /** Phase 16 d5 — focus every developmental offer on one canonical `Line:Stage` cell. The focused
+   *  mode is diagnostic only: it forces candidate generation to that cell and fails loudly if the
+   *  first offer does not match, so a thin histogram can never be read as a wide-cohort result. */
+  readonly targetCell?: string;
 }
 
 /** One session of a campaign — what it consumed and what it left behind. */
@@ -125,6 +130,8 @@ export interface CampaignResult {
   readonly persona: string;
   readonly sessions: readonly CampaignSessionRecord[];
   readonly wallTimeMs: number;
+  /** Phase 16 d5 — the focused cell, when this campaign was run in cell-focused mode. */
+  readonly targetCell?: string;
 }
 
 // ── The persona as a UI handler ───────────────────────────────────────────────────────────────
@@ -313,6 +320,20 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
   const history: ConsequenceRecord[] = [];
   const counters = { curriculum: 0, training: 0 };
   let virtualNow = BENCH_EPOCH;
+  const targetParts = spec.targetCell === undefined
+    ? undefined
+    : (() => {
+        const parts = spec.targetCell!.split(':');
+        return parts.length === 2 ? parts as [string, string] : undefined;
+      })();
+  if (
+    spec.targetCell !== undefined &&
+    (!targetParts || targetParts.length !== 2 ||
+      !(ALL_LINES as readonly string[]).includes(targetParts[0]) ||
+      !(ALL_STAGES as readonly string[]).includes(targetParts[1]))
+  ) {
+    throw new Error(`targetCell must be a canonical Line:Stage cell; received ${spec.targetCell}`);
+  }
 
   for (let s = 0; s < sessions; s++) {
     // Inter-session gap: advance the virtual clock BEFORE this session (the kernel harness's rule, so
@@ -342,7 +363,12 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
       targetSessionLength: perSession,
       encountersSoFar: 0,
       recentLines: [] as string[],
+      ...(targetParts ? { forceLine: targetParts[0], forceStage: targetParts[1] } : {}),
     };
+    // Focused mode does NOT zero the strategy's curriculum/training budgets here. The scheduling
+    // seam owns the omission (`GameLoop`'s `forcedCell` guard), because that is the only place a
+    // curriculum or training insert could REPLACE the pinned cell. Zeroing the budget as well
+    // would be a second, redundant suppression of the same seam.
     let sessionState = startSession(sig, sessionCtx as never, feedPlanningBias(orchestration.feed));
 
     let offered = 0;
@@ -350,15 +376,37 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
     let checkpointsWritten = 0;
     const writeIns: string[] = [];
     const provenance: EncounterProvenance[] = [];
+    // Phase 16 d1 — the per-encounter measurements the orchestrator reports, kept in the same order
+    // as `provenance` so a row can say which encounter carried which cost. This is a copy of values
+    // the result already holds, not a second render of the page or a re-measure of the prompt.
+    const observablesMeasured: EncounterMeasurement[] = [];
 
     for (let e = 0; e < perSession; e++) {
       const now = virtualNow + e * STEP_MS;
       const { tickResult, sessionState: s1 } = tickWithStrategy(
         sig, world, sessionCtx as never, sessionState, null, null, now,
       );
-      const encounter: ScheduledEncounter | undefined = tickResult.encounters[0] ?? tickResult.encounter;
-      if (!encounter) break;
-      offered++;
+       // Phase 16 d5 — the WHOLE offer list of every tick is validated, not just the encounter the
+       // campaign goes on to play. The four injection seams (threshold mode, Holonic Return,
+       // curriculum interleave, training weave) are bypassed when a cell is pinned, so slots 2..5
+       // SHOULD all be the target cell — and a foreign entry anywhere in `scheduled` is exactly the
+       // contamination this mode exists to exclude, reported before it can reach the histogram. A
+       // check limited to the played encounter would let a non-target schedule pass silently.
+       const tickOffers: readonly ScheduledEncounter[] = tickResult.encounters.length > 0
+         ? tickResult.encounters
+         : tickResult.encounter ? [tickResult.encounter] : [];
+       if (spec.targetCell !== undefined) {
+         const foreign = tickOffers.find((o) => o.moduleRef !== spec.targetCell);
+         if (foreign) {
+           throw new Error(
+             `focused campaign received non-target offer at position ${tickOffers.indexOf(foreign)}: ` +
+             `${foreign.moduleRef}; targetCell is ${spec.targetCell}`,
+           );
+         }
+       }
+       const encounter: ScheduledEncounter | undefined = tickOffers[0];
+       if (!encounter) break;
+       offered++;
 
       sig = tickResult.sig;
       world = tickResult.world;
@@ -385,6 +433,9 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
       });
 
       const outcome = await orchestrator.run();
+      observablesMeasured.push({
+        ...(outcome.memoryPage ? { memoryPage: outcome.memoryPage } : {}),
+      });
       const record = outcome.consequenceRecord;
       history.push(record);
       // d3 provenance: read from the orchestrator's OWN stamp, never re-derived from the encounter.
@@ -397,6 +448,8 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
         executionMode: encounter.executionMode,
         polarityMode: encounter.polarityMode,
         candidateSource: candidateSource(outcome.composition?.candidateId ?? null),
+        candidateId: outcome.composition?.candidateId ?? null,
+        candidateStamp: candidateStampStatus(outcome.composition?.candidateId ?? null),
         pole: outcome.composition?.pole ?? null,
         isCurriculum: Boolean(encounter.curriculumConceptId),
         isTraining: Boolean(encounter.isTrainingBeat),
@@ -424,7 +477,9 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
     // save site, then the sidecar journal for crash recovery). Writing per ENCOUNTER under a
     // per-session filename would overwrite itself, so each write but the last would be work whose
     // result is never read.
-    writeCheckpoint(spec.rootDir, s, captureCheckpoint(orchestration));
+    writeCheckpoint(spec.rootDir, s, captureCheckpoint(orchestration, {
+      includeCompositionEvents: spec.targetCell !== undefined,
+    }));
     checkpointsWritten++;
 
     const endResult = endSession(sig, sessionState, virtualNow + perSession * STEP_MS, world);
@@ -450,6 +505,7 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
         observables,
         services: orchestration,
         provenance,
+        observablesMeasured,
       }),
       sig,
       world,
@@ -458,7 +514,12 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
     virtualNow += perSession * STEP_MS;
   }
 
-  return { persona: spec.persona.name, sessions: records, wallTimeMs: Date.now() - t0Wall };
+  return {
+    persona: spec.persona.name,
+    sessions: records,
+    wallTimeMs: Date.now() - t0Wall,
+    ...(spec.targetCell !== undefined ? { targetCell: spec.targetCell } : {}),
+  };
 }
 
 /** The lines a campaign's series should be reported over — re-exported so a reporter need not

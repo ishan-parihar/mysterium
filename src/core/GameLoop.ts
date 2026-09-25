@@ -417,8 +417,21 @@ export function tickWithStrategy(
   // instead of the normal session-strategy weights. This activates the 3-phase
   // Crucible that was previously dead code.
   const tsPhase = sessionState.transformationState.phase;
+  // Phase 16 d5 — a FORCED CELL is a diagnostic instrument, so the four injection seams below
+  // (threshold replacement, Holonic Return, curriculum interleave, training weave) must not
+  // substitute a different cell for the one the instrument is measuring. Candidate generation
+  // already filters to the forced cell (`CandidateGeneration`'s `forceLine`/`forceStage`); these
+  // seams are what could otherwise replace that offer with an earlier stage, a curriculum concept
+  // or a brain-game beat, silently turning a per-cell measurement into a mixed-cohort one.
+  //
+  // BOTH axes, never one: `--line Cognitive` on its own is ordinary play (the CLI sets `forceLine`
+  // and `forceStage` independently), and disabling a session's transformation, curriculum and
+  // training behaviour because a player picked a line would be a behavioural change nobody asked
+  // for. Only a fully pinned cell is an instrument. `forceModality` is excluded on purpose — a
+  // modality pin does not pin a cell.
+  const forcedCell = session.forceLine !== undefined && session.forceStage !== undefined;
   let scheduled: ScheduledEncounter[];
-  if (tsPhase === 'unravelling' || tsPhase === 'crucible' || tsPhase === 'emergence') {
+  if (!forcedCell && (tsPhase === 'unravelling' || tsPhase === 'crucible' || tsPhase === 'emergence')) {
     scheduled = scheduleThresholdMode(updatedSig, updatedWorld, session, tsPhase, now);
   } else {
     // GAP-D2-4: pass userMatrixModel to scheduleNext so the scheduler can use
@@ -429,9 +442,9 @@ export function tickWithStrategy(
   }
   // 5. Curriculum expansion: generate curriculum encounters and interleave them.
   let curriculumEncountersConsumed = sessionState.curriculumEncountersThisSession ?? 0;
-  const curriculumEncounters = generateCurriculumEncounters(
-    updatedSig, sessionState, session, now,
-  );
+  const curriculumEncounters = forcedCell
+    ? []
+    : generateCurriculumEncounters(updatedSig, sessionState, session, now);
   // Interleave: take up to 1 curriculum encounter per scheduling tick,
   // placed after the first developmental encounter if slots remain.
   if (curriculumEncounters.length > 0 && scheduled.length > 0) {
@@ -446,12 +459,14 @@ export function tickWithStrategy(
   // computeTrainingWeave() policy so the WebUI binding weaves identically —
   // one definition of the cadence, consumed by both surfaces.
   let trainingEncountersConsumed = sessionState.trainingEncountersThisSession ?? 0;
-  const weave = computeTrainingWeave(
-    sessionState.strategy.trainingSlots ?? 0,
-    trainingEncountersConsumed,
-    encountersSinceRefresh,
-    tsPhase,
-  );
+  const weave = forcedCell
+    ? { shouldWeave: false, paradigmId: null, nextConsumed: trainingEncountersConsumed }
+    : computeTrainingWeave(
+        sessionState.strategy.trainingSlots ?? 0,
+        trainingEncountersConsumed,
+        encountersSinceRefresh,
+        tsPhase,
+      );
   if (weave.shouldWeave && weave.paradigmId !== null && scheduled.length > 0) {
     const beat = makeTrainingBeat(weave.paradigmId, updatedSig, now);
     // Make the training beat the next encounter (primary), with narrative offers behind it.

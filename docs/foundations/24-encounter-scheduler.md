@@ -425,7 +425,7 @@ multiplicative and total-order-preserving; a bonus is neither.
 
 | Input | Owner | How it enters |
 |---|---|---|
-| **Relevance to the UDV** (will this land in the player's vocabulary?) | `45 §5.3` | a multiplicative bias — relevance chooses *among* candidates that the developmental criteria have already ranked; `45 §4` holds the developmental agenda dominant, so the bias may never invert the order of two candidates with materially different developmental scores |
+| **Relevance to the UDV** (will this land in the player's vocabulary?) | `45 §5.3` | a multiplicative bias — relevance chooses *among* candidates that the developmental criteria have already ranked; `45 §4` holds the developmental agenda dominant, so the bias may never invert the order of two candidates with materially different developmental scores **among the non-reserved ranked offers**. The first developmental offer is governed by the explicit reserved-slot policy in `§3.3`; that policy is not a ninth score and does not change any candidate's `priority` value. |
 | **User-Matrix / Potentiator targeting** (random probing → targeted intervention as the user's own unprocessed material crystallises) | `15 §230`, `28` | a multiplicative bias whose magnitude is a function of the `ProfilePhase` (`unmapped` → `crystallized`); in the unmapped phase it *raises diversity*, in the crystallized phase it *narrows* to the mapped pattern |
 
 Neither is a developmental criterion: they say **where to look**, never **what is needed**. The
@@ -471,27 +471,33 @@ eight criteria answer the second question and nothing else may.
 
 ### 3.3 Tie-breaking rules
 
-When multiple candidates score within 0.05 of each other, tie-breaking applies in order:
+After scoring, candidates are ordered by descending `priority`. Within each 0.05 tie band, the
+comparator applies in this order:
+
+1. Prefer the eligible line with the oldest most-recent positive theta timestamp; `0` means never
+   served. Canonical `ALL_LINES` order is only the deterministic all-zero startup tie-break.
+2. Prefer a modality absent from the last three finalized encounters.
+3. Prefer a line absent from the last two finalized encounters.
+4. Prefer a line with no positive theta history (unfamiliar-first).
+5. Use the deterministic encounter-reference hash only as the final reproducibility key.
+
+The comparator is never additive and never changes a candidate's `priority` value. The one explicit
+offer-slot exception follows scoring and ranking: the **first developmental offer** is reserved for
+the eligible line with the oldest positive theta timestamp. This reserved developmental-primary policy
+may cross priority bands; it is a developmental-integrity offer-slot contract, not a ninth criterion
+or a replacement for `priority`. Every remaining offer retains the score-and-band order established
+above, so the reserved line is immediately followed by the strongest non-primary offer. Curriculum
+and training inserts are outside this reserve: they are not developmental primaries.
 
 ```ts
-function breakTie(candidates: ScoredCandidate[], sig: SignificatorSnapshot): ScoredCandidate {
-  // 1. Prefer different modality from last 3 encounters
-  const recentModalities = sig.recentEncounterHistory.slice(0, 3).map(e => e.modality);
-  const novelModality = candidates.filter(c => !recentModalities.includes(c.modality));
-  if (novelModality.length > 0) candidates = novelModality;
-
-  // 2. Prefer different line from last 2 encounters
-  const recentLines = sig.recentEncounterHistory.slice(0, 2).map(e => e.moduleRef.line);
-  const novelLine = candidates.filter(c => !recentLines.includes(c.line));
-  if (novelLine.length > 0) candidates = novelLine;
-
-  // 3. Prefer holons with existing player relationships
-  const withRelationship = candidates.filter(c =>
-    sig.recentEncounterHistory.some(e => e.moduleRef.line === c.line) === false
-  );
-
-  // 4. Final: deterministic selection by encounter ID hash (reproducibility)
-  return candidates.sort((a, b) => hashCompare(a.id, b.id))[0];
+function orderDevelopmentalOffers(
+  ranked: readonly ScoredCandidate[],
+  sig: SignificatorSnapshot,
+): readonly ScoredCandidate[] {
+  const reserve = selectReservedPrimaryByLineCoverage(ranked, sig);
+  return reserve === ranked[0]
+    ? ranked
+    : [reserve, ...ranked.filter(candidate => candidate !== reserve)];
 }
 ```
 
@@ -499,9 +505,11 @@ function breakTie(candidates: ScoredCandidate[], sig: SignificatorSnapshot): Sco
 
 The scheduler produces a **ranked list** of 3–5 candidates, not a single forced encounter. Implementation:
 
-1. Top candidate becomes the **primary offer** (most prominent in the world — glowing shrine, approaching NPC, etc.)
-2. Candidates 2–3 become **secondary offers** (visible but less prominent — distant shrine, NPC in peripheral vision)
-3. Candidates 4–5 become **ambient options** (discoverable through exploration)
+1. The reserved developmental-primary candidate becomes the **primary offer** (most prominent in the world — glowing shrine, approaching NPC, etc.). It is the least-recently-served eligible line under §3.3, and its `priority` value remains visible and unchanged.
+2. The highest-ranked remaining developmental candidates become **secondary offers** (visible but less prominent — distant shrine, NPC in peripheral vision).
+3. Lower-ranked candidates become **ambient options** (discoverable through exploration).
+
+The reserve changes offer prominence, not the closed priority score or the order of the non-reserved tail.
 
 **Avoidance handling:**
 - If the player declines the primary offer, this is recorded as `outcome: 'avoided'`

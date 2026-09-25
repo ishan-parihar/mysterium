@@ -23,6 +23,7 @@ import {
   validateCampaignInvariants,
   validatePolarityLoopEntry,
   validateDeclaredStanceChannel,
+  validateLineCoverage,
 } from './campaign.js';
 
 export interface ValidationReport {
@@ -98,6 +99,13 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // the stance now arrives, on the declared drive and at the declared rate — a reading that moved a
   // different drive, or the right drive by the wrong amount, means the signal is misrouted.
   results.push(await validateDeclaredStanceChannel(tier));
+  // G43 (Phase 16 d3): line coverage was hash-decided — three lines took 74 % of 432 encounters and
+  // Emotional took ONE, because the band's substantive comparator rules tied across lines and the
+  // final reproducibility key then decided identically every time. The reserved developmental primary
+  // is locked by unit test; this gate asserts the consequence a player would notice: every canonical
+  // line is consumed by a finalized developmental encounter, and no line is starved to effective
+  // exclusion. It does not claim that every secondary or ambient offer contains every line.
+  results.push(await validateLineCoverage(tier));
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

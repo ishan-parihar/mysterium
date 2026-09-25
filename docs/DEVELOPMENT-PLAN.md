@@ -1161,12 +1161,38 @@ would be the cosmetic split `M1` forbids).
 
 ### Phase 16 — The Diagnostic Sweep: repair the instrument, then calibrate (RATIFIED 2026-09-24)
 
-> **Status.** Proposed 2026-09-24 from the campaign report's open list and **ratified the same day**.
-> Two rulings, both on the conservative option: **(F-4) the novelty floor is NOT decided yet** — the
-> sweep repairs the broken instruments first and re-measures, because a floor calibrated against a
-> broken instrument is the fabricated-zero mistake in another costume; and **(F-5) the real-provider
-> tier is NOT authorised yet** — a cell-focused hermetic run is tried first for the entropy
-> measurement, keeping CI cheap and the two tiers unmixed (`Phase 15`'s one hard constraint).
+> **Status (2026-09-25).** Phase 16 remains **in progress**. d2 and d3 are built; d1, d4, d5, d6, and
+> d7 are now delivered too, and five items are open. d3 reserves the first developmental offer for the
+> least-recently-served eligible line, leaves candidate `priority` values and the non-primary ranked
+> tail unchanged, and is locked by production-path tests plus **G43** in the 43-gate CI roster. The
+> original campaign figures remain dated baseline evidence, not post-fix measurements.
+>
+> **d1 — one producer, one reclassification, one deliberate absence.** `memoryPage` is measured where
+> the page is built (`buildEnvelope` → `memoryPageBlock`): block lines/chars plus the lines that
+> survived the Veil guard. `renderBudget` was **reclassified, not measured** — the direct path
+> Veil-filters inside `LLMClient`, but the WebUI BFF path returns *before* the filter, so the filtered
+> prompt is knowable on one path and unknowable on the other; a per-request transport counter on both
+> paths is the producer that would close it. The orphan field and both write sites were deleted.
+> `engagementRegisterHits` stays deliberately unmeasured: the register answers a policy question and
+> has no runtime event to count.
+>
+> **d4/d5** — raw `candidateId` provenance separating `missing` from `unrecognised`; a focused
+> campaign pins one `Line:Stage` cell and fails loudly if any finalized encounter leaves it, with the
+> four injection seams bypassed when a cell is pinned by BOTH axes so `--line` alone stays play.
+>
+> **d6/d7** — re-measured wide and focused, **no threshold moved** (F-4 stands), and the second dated
+> report is `docs/audits/CAMPAIGN-REPORT-2026-09-25.md`. Headline: wide entropy is `insufficient-data`
+> by scale while the focused pass produced the first measurable cell (`Cognitive:Red`, 12 compositions,
+> entropy 2.138 vs a 0.5 floor); G43 passes on its own roster (quietest/busiest 1/2) while the
+> 12-campaign cohort leaves `Interpersonal` at 0 — two populations, and the exclusion is open; the
+> polarity loop is enterable but inert (70 readings, 0 reconciled, 100 % fallback). **The focused pass
+> exits 1**, on the unfamiliar-pole check that pinning one cell makes structurally unreachable — the
+> exit is expected and is a property of the tier, not a regression.
+>
+> The original two rulings remain conservative. **(F-4) the novelty floor is NOT decided yet** — the
+> sweep repairs the remaining instruments and re-measures before any threshold moves; and **(F-5) the
+> real-provider tier is NOT authorised yet** — a cell-focused hermetic run is tried first for the
+> entropy measurement, keeping CI cheap and the two tiers unmixed (`Phase 15`'s one hard constraint).
 
 **Why this phase exists.** Phase 15 built the instrument and its first reading produced seven open
 items (`docs/audits/CAMPAIGN-REPORT-2026-09-24.md` §4.2). One is closed (item 5, with G41). The rest
@@ -1202,24 +1228,31 @@ repairs producers first, re-measures, and only then touches a threshold.
    `detectWriteInShadow` can express at most ONE drive's signal, so it cannot represent the 4-quadrant
    × 4-drive model the observable exists to watch), or (b) an explicit fixture-only injection seam.
    The gate follows the ruling.
-3. **d3 — item 3: scheduler line coverage DIAGNOSED — the tie-break's hash is doing policy work.**
-   Emotional received **1 encounter in 432** and three lines carried 74 %. It is NOT supply (the bench
-   world has 3 holons per line, same stages, all active) and NOT the priority formula (measured: the
-   per-line mean priority spans **0.145–0.147**, and five of the eight criteria are 0.000 at session
-   start, so one tie band holds 65–72 of 72 candidates). It is the **comparator inside the band**:
-   logged per tick, the winner and the starved line's best candidate BOTH carry a novel modality, BOTH
-   a novel line, and BOTH equal familiarity — rules 1, 2 and 3 tie, so `refHash(moduleRef)` decides,
-   and a hash is static, so it decides identically every time. `24 §3.3` names that hash as
-   "reproducibility only" (never a score); it is in practice carrying line coverage. The same
-   comparator runs in production (`scheduleNext` → `rankCandidates`), so this is not a fixture artefact
-   and cohort scale cannot fix it. **The repair is a ruling (open):** a **starvation term ahead of the
-   hash** (time since a line was served / its share of the eligible set) — permissible only if line
-   coverage counts as a *developmental* value rather than an administrative one, which `46 §11`'s
-   visibility-collapse countermeasure and `AGENTS.md §5.6`'s holonic-integrity commitment both argue
-   it does. Report the selection reasons in the gate, not only the counts.
-4. **d4 — item 4: 14.6 % of encounters resolve no candidate id.** Either a new id scheme the decoder
-   does not know (`candidateSource`'s "unknown" is deliberately fail-open for reporting) or a missing
-   stamp. The decoder was built to refuse to guess, so the fix is to name what is producing them.
+3. **d3 — item 3: scheduler line coverage BUILT 2026-09-25. The historical baseline was Emotional
+   at 1 encounter in 432 and three lines at 74 %; those numbers remain the diagnosis, not a post-fix
+   campaign reading.** Diagnosis: supply was symmetric, the eight-criterion priority formula was not
+   the cause, and the comparator's substantive novelty rules tied until the static
+   `refHash(moduleRef)` reproducibility key chose the same line repeatedly.
+   The implemented contract in `24 §3.3–§3.4` is: the comparator applies starvation, modality
+   novelty, recent-line novelty, unfamiliar-first, then hash; after ranking, the **first developmental
+   offer** is reserved for the eligible line with the oldest positive theta timestamp (`0` means
+   never served). The reserve may cross a priority band but is not a ninth criterion, changes no
+   candidate's `priority`, and leaves the remaining ranked tail in score-and-band order. Canonical
+   `ALL_LINES` order is only the all-zero startup tie-break. Curriculum/training inserts are outside
+   the developmental reserve. **G43** runs the production campaign path, counts finalized
+   developmental provenance only, requires every canonical line, and retains the 2%
+   quietest/busiest floor; it does not claim every ambient or secondary offer covers every line.
+  Focused verification on 2026-09-25: `Benchmark.test.ts` plus `TieBreakStarvation.test.ts` and
+    `CampaignSeries.test.ts`, 24/24 tests passed, and the benchmark executed the CI roster including
+    G43.
+4. **d4 — item 4: candidate provenance decoder repaired and residual classified 2026-09-25.**
+   `candidateLibrary.ts` emits `npc-authored:` but `candidateSource()` had no branch, so authored NPC
+   renderings were misreported as `unknown`; the decoder and its exhaustive regression test now
+   include `authored-npc`. The campaign series and calibration report now retain the raw candidate id
+   and separate `missing` stamps (`candidateId === null`) from `unrecognised` non-null schemes. A
+   fresh 12-campaign / 24-session / 96-encounter hermetic reading measured **12.5% missing, 87.5%
+   present, 0% unrecognised**; the historical 12.5% `unknown` result remains the dated baseline, not
+   a post-fix rewrite. d4 is repaired and measured; any future unknown scheme remains fail-visible.
 5. **d5 — item 6/7: reshape the cohort, do not grow it.** Entropy needs ⩾ `MIN_COMPOSITIONS` (8)
    compositions PER CELL; 11–16 cells composed and **0** measurable at 50 campaigns, so the binding
    constraint is encounters-per-cell, not cohort size. Deliverable: a cell-focused hermetic mode
@@ -1247,30 +1280,51 @@ parity, corpus growth, and refactoring.
 
 **The rulings (ratified 2026-09-24):**
 
-- **F-4 — the novelty floor: DECIDE AFTER THE SWEEP.** The 19–21 % vs 0.25 breach is reproducible and
-  `shadow-facing` is served never, but the instrument that measured it has a pinned observable
-  (item 2) and a scheduler giving one line 1 encounter in 432 (item 3). Fixing the engine to reach a
-  floor, or moving a floor to match an observation, both write a threshold against a broken
-  measurement. The sweep comes first.
+- **F-4 — the novelty floor: DECIDE ONLY AFTER d1, d4, d5, AND THE RE-MEASUREMENT.** The historical
+  19–21 % vs 0.25 breach and `shadow-facing` dormancy remain a provisional finding against a broken
+  instrument: item 2's starved input and item 3's hash-decided line coverage are now repaired, but
+  the remaining producers and provenance work still precede a valid reading. Moving the floor to match
+  the old observation, or changing engine dosage before the repaired run, would calibrate against
+  evidence known to be structurally invalid. No threshold changes in this revision.
 - **F-5 — the entropy measurement: HERMETIC FIRST, RESHAPED.** Not the real-provider tier yet. The
   binding constraint is compositions-per-cell, so a cell-focused hermetic run is tried before any
   escalation, and the escalation is authorised only on a demonstrated impossibility rather than on a
   wide cohort's thin histogram.
-- **F-6 — d2's repair, PUT TO THE USER (open).** The diagnosis above turned item 2 from a bug hunt
-  into a choice with a real trade-off: prose (faithful to production, but structurally unable to
-  express more than one drive signal per encounter) versus an explicit fixture-only seam (expresses
-  the 4-quadrant × 4-drive model, but adds a test-shaped door to production code). The two are not
-  mutually exclusive and different questions need different ones — a gate on "does a shadow signal move
-  `fixationRisk`" wants (b); a gate on "does the keyword detector work end to end" wants (a).
+- **F-6 — d2's repair: CLOSED 2026-09-25; both channels retained.** Production prose remains the
+  production evaluation path. The campaign also has an explicit fixture-only
+  `declaredDirectionality` seam because one derived player evaluation can express at most one
+  pathological drive signal, while the 4-quadrant × 4-drive model requires more than one to test
+  accumulation. No production caller sets the declared stance. `EncounterProvenance.declaredStance`
+  records which channel carried each encounter, and **G42** asserts drive, direction, accumulation,
+  and attribution. The historical trade-off remains documented; it is no longer an open ruling.
+
+**Phase 16 finalization sequence (binding order; updated 2026-09-25).**
+
+1. Keep the d3 production baseline: reserved developmental primary, unchanged candidate priorities and
+   non-primary tail, production-path tests, and G43 over finalized developmental provenance.
+2. Finish d1 by exposing genuine runtime measurements, or explicitly rejustify each structurally
+   unavailable observable. Never replace a missing producer with a fabricated zero.
+3. Finish d4 by identifying every unresolved candidate-id source at the production stamp boundary;
+   the decoder must continue to refuse guesses.
+4. Finish d5 with a cell-focused hermetic cohort that can reach `MIN_COMPOSITIONS` per cell, then
+   record the measured entropy verdict before considering any real-provider escalation.
+5. Run d6 only after d1, d4, and d5: re-measure the unfamiliar-pole share and diagnose
+   `shadow-facing` dormancy separately. Only then may F-4 decide the novelty-floor ruling.
+6. Publish d7 as a second dated report from the repaired-instrument evidence, without overwriting the
+   2026-09-24 baseline or relabelling synthetic evidence as certification.
+7. Productize only through exercised surfaces: the full build and built-CLI boot are release checks;
+   WebUI parity through `usecases/EncounterSession` remains an explicit follow-up unless separately
+   implemented and verified.
+8. Treat real-rater validation, real-play evidence, networked deployment, and remote synchronization
+   as external certification/release prerequisites. Synthetic evidence may reject; it may not certify.
 
 ### Current work (post-plan) — not a phase
 
-All phases through 12 are ratified **and built** — the memory infrastructure (Phase 11's
-persistence/preference loop + Phase 12's standing page and retrieval seam) is live with gates
-G28–G31 green. The remaining frontier is data-dependent calibration and deployment (audit §7:
-C6 GitLab sync, K1 real-rater thresholds, K2/K3 thresholds, D3 pods). When current work is
-described to an agent, cite `AGENTS.md §4.2` (which carries the true state) and the ledger —
-never a phase number.
+Phases 1–15 are ratified and built. **Phase 16 remains in progress:** d2 and d3 are built and gated
+through G42/G43; d1, d4, d5, d6, and d7 remain open in the order above. The frontier after those
+repairs is external certification and deployment: real-rater thresholds, real-play evidence, partner
+recognition, networked pod hosting, and remote synchronization. When current work is described to an
+agent, cite `AGENTS.md §4.2` and the records — never a phase number from memory.
 
 ## 5. Standing work-streams (not phases — continuous)
 
@@ -1292,7 +1346,7 @@ The system qualifies as the "complete education-system replacement" trajectory w
    delegated councils, maintain vows with reflections, join a pod, take a pack, and
    export a credential — all kernel-gated end-to-end.
 3. CCI/levelling/CCI-adjacent metrics all flow through the evidence-only law (42).
-4. Full battery + 18 kernel gates green on both remotes.
+4. Full battery + 43 kernel gates green in CI; release checks exercised on the built CLI, and both remotes synchronized or the exact external blocker reported.
 
 ## 7. Risks & mitigations
 
@@ -1356,6 +1410,7 @@ project's own agents, at the exact surface the user ruled must be agent-reachabl
 
 | Date | Revision |
 |---|---|
+| 2026-09-25 | **Phase 16 d3 built and the live status reconciled; d4 decoder omission fixed without declaring the residual closed.** `EncounterScheduler` now reserves the first developmental offer for the eligible line with the oldest positive theta timestamp; the reserve may cross a priority band but is not a ninth criterion, changes no candidate `priority`, and leaves the non-primary tail ranked. `24 §3.3–§3.4` owns the contract. G43 runs the production campaign path, counts finalized developmental provenance only, requires all eight canonical lines, and retains the 2% quietest/busiest floor; the kernel roster is now 43 gates. `candidateSource()` now decodes the production `npc-authored:` prefix as `authored-npc`, with a regression test; the historical 12.5% `unknown` measurement remains open pending a fresh campaign classification of residual null stamps. F-6 is closed by the built two-channel d2 repair. d1, the residual d4 measurement, d5, d6, d7, real-rater/real-play certification, and deployment remain open. |
 | 2026-09-16 | Initial binding plan from exhaustive code-vs-docs audit (commits `1c432e9`→`a4c9bfd` era tree). Phases 1–9, gates G14–G18 defined. |
 | 2026-09-16 (same day, full implementation) | **All 9 phases implemented and gated.** G14–G16 (delegation determinism/toolset firewall, practice loop) in Phases 1–2; Phase 3 audit-corrected — stage-holon cells were already 64/64 (red-layer file miscounted in the plan), so G17 became the corpus-integrity gate (cells + relationships + lint-clean registry + 64/64 concept modules) and 4 curriculum branches shipped (bio/chem/hist/geo, 21 holons). G18 renumbered to the pod privacy wall (two-persona pod simulation); Phase 4 delivered the pure pod state machine + CLI. G19: measurement-pack determinism/linter teeth/stream integration + 2 reference packs. G20: placement convergence (binary-search onboarding composite, ≤8 probes). G21: credential evidence chain (E2/E3/E4 teeth, revocation, VC export). Phase 6's parity harness proved browser-binding ≡ kernel loop and caught the offer-consumption + entry-config parity hazards. Gate count: 13 → 21. Tests: 949 → 1028. Deferred honestly to post-plan: LLM-backed choice policies, DO transport adapter, reliability data collection, planned-branch authoring, partner institutions. |
 | 2026-09-17 | **Exhaustive operational verification pass.** Full battery green (lint, build, 1037 tests, 21 kernel gates). Three defects found by exercising the surfaces end-to-end and fixed in the same commit: (1) **Training-beat WebUI parity (WIRE-7)** — Phase 6's parity claim covered the narrative loop only; browser sessions never wove training beats and the new `TrainingBeatRunner` dropped its outcome entirely. Fix: the weave decision is now the exported `computeTrainingWeave()` policy in GameLoop (single definition, consumed by both `tickWithStrategy` and the browser `scheduleEncounters`), and `trainingBridge` + the play route give beats the CLI's exact persistence path (trials/index/calibration/staircase) with no narrative consequence. Contract locked by `tests/engine/TrainingBeatParity.test.ts`. (2) **Delegation CLI smoke was role-broken** — the smoke spec hardcoded a toolset that G15 correctly rejects for all T-roles, so the Phase 1 gate `spec→log→ratify→commit` was only reachable for J-roles; the spec now derives its toolset from `ROLE_TOOLSETS` (verified for T1/therapist/J1). (3) **Onboarding calibrator demo unit mismatch** — `calibrate --onboard` fed a 0–1 threshold to per-line task-unit maps, saturating Somatic to a spurious White; demo thresholds are now per-line task units and the ThresholdMaps contract has its first tests. Command-path note: the Phase 1 smoke lives at `mysterium delegate --role <role>` (not `session --delegate`). Tests: 1028 → 1046. |

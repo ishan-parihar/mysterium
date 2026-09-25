@@ -13,7 +13,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import { runCampaign } from '../../src/core/simulation/campaign.js';
-import { candidateSource, UNAVAILABLE_OBSERVABLES } from '../../src/core/simulation/campaignSeries.js';
+import { candidateSource, candidateStampStatus, UNAVAILABLE_OBSERVABLES } from '../../src/core/simulation/campaignSeries.js';
 import { getPersona } from '../../src/core/validation/personas.js';
 
 let root: string;
@@ -24,9 +24,10 @@ afterEach(() => { try { fs.rmSync(root, { recursive: true, force: true }); } cat
 describe('candidate provenance decode', () => {
   it('decodes every id shape the pool produces', () => {
     // The ids are the pool's vocabulary (`polarityIndex` recolours with ~sim/~opp; `compositionRuntime`
-    // prefixes `composed:`; `candidateLibrary` uses `npc:`/`scenario-authored:`/`world-authored:`/…).
+    // prefixes `composed:`; `candidateLibrary` uses `npc:`/`npc-authored:`/`scenario-authored:`/`world-authored:`/…).
     expect(candidateSource('composed:sit-1')).toBe('composed');
     expect(candidateSource('npc:h-Cognitive-Red:ImmersiveRPG')).toBe('npc');
+    expect(candidateSource('npc-authored:Cognitive:Red:ImmersiveRPG')).toBe('authored-npc');
     expect(candidateSource('scenario-authored:Cognitive:Red:ImmersiveRPG')).toBe('authored-scenario');
     expect(candidateSource('world-authored:Cognitive:Red:ImmersiveRPG')).toBe('authored-world');
     expect(candidateSource('scenario:Cognitive:Red:ImmersiveRPG')).toBe('scenario');
@@ -41,12 +42,20 @@ describe('candidate provenance decode', () => {
     // decoding at one site is that a change here is visible.
     expect(candidateSource('something-new:x')).toBe('unknown');
   });
+
+  it('separates a missing composition stamp from an unrecognised candidate id', () => {
+    expect(candidateStampStatus(null)).toBe('missing');
+    expect(candidateStampStatus('something-new:x')).toBe('unrecognised');
+    expect(candidateStampStatus('npc-authored:Cognitive:Red:ImmersiveRPG')).toBe('present');
+  });
 });
 
 describe('the series names what nothing produces', () => {
   it('carries the unavailable list on every row, with a reason per entry', () => {
-    expect(Object.keys(UNAVAILABLE_OBSERVABLES).sort())
-      .toEqual(['engagementRegisterHits', 'memoryPageSize', 'renderBudget']);
+    // The key list is deliberately NOT pinned: each deliverable either lands a producer (removing a
+    // key) or re-justifies its omission, and a pinned list would turn that into a test edit. The
+    // invariant that must hold is that the list is non-empty and every entry explains itself.
+    expect(Object.keys(UNAVAILABLE_OBSERVABLES).length).toBeGreaterThan(0);
     for (const reason of Object.values(UNAVAILABLE_OBSERVABLES)) {
       expect(reason.length).toBeGreaterThan(20);
     }
@@ -56,9 +65,9 @@ describe('the series names what nothing produces', () => {
     const result = await runCampaign({ persona: getPersona('flourishing'), rootDir: root, sessions: 1, encountersPerSession: 2 });
     const series = result.sessions[0]!.series;
     expect(series.unavailable).toBe(UNAVAILABLE_OBSERVABLES);
-    expect(series).not.toHaveProperty('memoryPageSize');
-    expect(series).not.toHaveProperty('renderBudget');
-    expect(series).not.toHaveProperty('engagementRegisterHits');
+    for (const key of Object.keys(UNAVAILABLE_OBSERVABLES)) {
+      expect(series).not.toHaveProperty(key);
+    }
   });
 });
 
@@ -69,6 +78,17 @@ describe('the series reports the seam, not the kernel', () => {
     // The same object, not a re-derivation — a re-derivation would be a second opinion about the
     // engine's state, and the two could disagree.
     expect(s.series.observables).toBe(s.observables);
+  });
+
+  it('separates missing and unrecognised candidate stamps in the session share', () => {
+    // The production campaign currently has a services-backed stamp on its fallback path; this test
+    // protects the aggregation boundary so a future unpersonalized path cannot hide either case.
+    const result = runCampaign({ persona: getPersona('flourishing'), rootDir: root, sessions: 1, encountersPerSession: 2 });
+    return result.then(({ sessions: [session] }) => {
+      const total = Object.values(session!.series.candidateStampStatusShare).reduce((a, b) => a + b, 0);
+      expect(total).toBe(1);
+      expect(session!.series.candidateStampStatusShare.missing).toBeUndefined();
+    });
   });
 
   it('records feed entries by writer, and the count matches', async () => {

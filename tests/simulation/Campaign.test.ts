@@ -28,6 +28,67 @@ afterEach(() => {
   try { fs.rmSync(root, { recursive: true, force: true }); } catch { /* best-effort */ }
 });
 
+describe('campaign runner — focused cell mode (Phase 16 d5)', () => {
+  it('forces the target cell and accumulates telemetry across disk-restored sessions', async () => {
+    const result = await runCampaign({
+      persona: getPersona('flourishing'),
+      rootDir: path.join(root, 'focused'),
+      sessions: 2,
+      encountersPerSession: 6,
+      targetCell: 'Cognitive:Red',
+    });
+    expect(result.targetCell).toBe('Cognitive:Red');
+    expect(result.sessions.flatMap((s) => s.series.provenance).every((p) => p.cell === 'Cognitive:Red')).toBe(true);
+    const first = result.sessions[0]!.series.composition.perCell['Cognitive:Red'];
+    const second = result.sessions[1]!.series.composition.perCell['Cognitive:Red'];
+    expect(first).toBeDefined();
+    expect(second!.compositions).toBeGreaterThan(first!.compositions);
+  });
+
+  it('rejects an invalid target cell loudly', async () => {
+    await expect(runCampaign({ persona: getPersona('flourishing'), rootDir: path.join(root, 'bad'), targetCell: 'not-a-cell' }))
+      .rejects.toThrow(/targetCell/);
+  });
+
+  it('stays on the target cell when Holonic Return, curriculum and training would all fire', async () => {
+    // The contamination this mode must exclude is conditional, so a clean happy-path run proves
+    // nothing: none of the three seams fired. This drives a long single session, long enough for the
+    // return cadence (every 3rd encounter at the current stage) to come due, and asserts that EVERY
+    // encounter the campaign finalized is the target cell. Without the `forcedCell` guard,
+    // `shouldSurfaceReturn` alone would have prepended an earlier-stage shadow encounter within the
+    // first few ticks and the run would have thrown.
+    const result = await runCampaign({
+      persona: getPersona('flourishing'),
+      rootDir: path.join(root, 'contaminated'),
+      sessions: 1,
+      encountersPerSession: 9,
+      targetCell: 'Cognitive:Red',
+    });
+    const provenance = result.sessions.flatMap((s) => s.series.provenance);
+    expect(provenance.length).toBeGreaterThan(3);
+    // Named in the failure so a regression points at the offending cell rather than "some cell".
+    expect(provenance.filter((p) => p.cell !== 'Cognitive:Red').map((p) => p.cell)).toEqual([]);
+    // Curriculum and training beats identify themselves by module-ref prefix and always sit OUTSIDE
+    // the cell, so they can never appear in a focused run: `curriculum:…` and `Training:…` are the
+    // two channels `GameLoop` injects beside the developmental offer.
+    const refs = provenance.map((p) => p.cell);
+    expect(refs.some((c) => c.startsWith('curriculum:'))).toBe(false);
+    expect(refs.some((c) => c.startsWith('Training:'))).toBe(false);
+  });
+
+  it('fails loudly when a non-target cell reaches the offer list, rather than measuring a mixture', async () => {
+    // The guard above is only trustworthy if it is REACHABLE. A cell the scheduler cannot produce
+    // must be rejected loudly, not silently reported as a focused run.
+    await expect(runCampaign({
+      persona: getPersona('flourishing'),
+      rootDir: path.join(root, 'unreachable'),
+      sessions: 1,
+      encountersPerSession: 2,
+      targetCell: 'Moral:Violet',
+    })).rejects.toThrow(/non-target offer|targetCell/);
+  });
+});
+
 describe('campaign runner — the live seam', () => {
   it('finalizes encounters through the orchestrator, one checkpoint per session on disk', async () => {
     const result = await runCampaign({ persona: getPersona('flourishing'), rootDir: root, sessions: 2, encountersPerSession: 3 });

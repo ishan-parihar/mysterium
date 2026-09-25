@@ -3,6 +3,7 @@
  * Spec: foundations/24 (full)
  */
 import type { PolarityMode, ShadowQuadrant } from '../domain/enums.js';
+import { ALL_LINES, type Line } from '../domain/Line.js';
 import type { ScheduledEncounter } from '../domain/EncounterSpecNew.js';
 import type { Significator } from '../domain/Significator.js';
 import type { ShadowEntry } from '../domain/ShadowLedger.js';
@@ -31,9 +32,47 @@ interface ScoredCandidate {
   readonly priority: number;
 }
 
+/** Latest positive encounter timestamp for a line; initialized zero means unserved. */
+function latestPositiveLineTimestamp(sig: Significator, line: Line): number {
+  let newest = 0;
+  for (const [key, timestamp] of Object.entries(sig.theta.lastEncounter)) {
+    if (key.startsWith(`${line}:`) && timestamp > newest) newest = timestamp;
+  }
+  return newest;
+}
+
+/**
+ * Reserve the one developmental primary slot. This is a developmental integrity policy, not a
+ * priority score: among eligible lines, the least recently served line receives the first
+ * developmental offer. The reserve may cross priority bands; candidate `priority` values remain
+ * unchanged, and the remaining ranked offers retain their existing score order. A fresh
+ * significator has zero for every cell, so canonical `ALL_LINES` order is the deterministic startup
+ * tie-break; it does not claim that one line has greater developmental value. A zero timestamp
+ * means never served; later ticks use the newest positive timestamp.
+ */
+function selectReservedPrimaryByLineCoverage(
+  ranked: readonly ScoredCandidate[],
+  sig: Significator,
+): ScoredCandidate {
+  const eligibleLines = new Set<Line>();
+  for (const item of ranked) eligibleLines.add(item.candidate.line);
+
+  let primary: ScoredCandidate | undefined;
+  let primaryTimestamp = Number.POSITIVE_INFINITY;
+  for (const line of ALL_LINES) {
+    if (!eligibleLines.has(line)) continue;
+    const timestamp = latestPositiveLineTimestamp(sig, line);
+    if (timestamp < primaryTimestamp) {
+      primary = ranked.find(item => item.candidate.line === line);
+      primaryTimestamp = timestamp;
+    }
+  }
+  return primary ?? ranked[0]!;
+}
+
 /**
  * Deterministic final key — FNV-1a over the encounter's module ref. Reproducibility is the point
- * (`24 §3.3` rule 4): two runs over the same state must order identically, and an ordering that
+ * (`24 §3.3` rule 5): two runs over the same state must order identically, and an ordering that
  * depends on `Array.prototype.sort` stability or insertion order is not reproducible when the
  * candidate set changes shape.
  */
@@ -47,7 +86,7 @@ function refHash(ref: string): number {
 }
 
 /**
- * Order candidates within a tie band per `24 §3.3`, rules 1–4 in priority order.
+ * Order candidates within a tie band per `24 §3.3`, rules 1–5 in priority order.
  *
  * Rules 1 and 2 read NOVELTY off the world's recent-encounter trace. They used to be an additive
  * `diversityBonus` inside the score; §3.2.9 moved them here, where canon always had them — a tie
@@ -67,26 +106,58 @@ function compareWithinBand(
   // been doing.
   const trace = world.recentEncounters ?? [];
 
-  // 1. Prefer a modality absent from the last 3 encounters.
+  // 1. Prefer the line that has gone LONGEST without an encounter — the starvation key.
+  //
+  // This must precede novelty. A served line can carry a novel modality or line while an unserved
+  // line does not; if novelty runs first, the served line wins the comparison and the starved line is
+  // never rescued by this key. The key remains a comparator term inside `24 §3.3`'s priority band,
+  // not an additive ninth priority criterion (`MY-AD-0025`).
+  //
+  // A line with NO encountered cell is the most starved of all — 0, older than any timestamp.
+  // Determinism is preserved: the key is total and derived from state, not a clock.
+  const lastServed = (line: string): number => {
+    let newest = 0; // never encountered → oldest possible
+    for (const [key, ts] of Object.entries(sig.theta.lastEncounter)) {
+      if (key.startsWith(`${line}:`) && ts > newest) newest = ts;
+    }
+    return newest;
+  };
+  const aServed = lastServed(a.candidate.line);
+  const bServed = lastServed(b.candidate.line);
+  if (aServed !== bServed) return aServed - bServed; // smaller timestamp = longer starved = first
+
+  // 2. Prefer a modality absent from the last 3 encounters.
   const recentModalities = trace.slice(-3).map(e => e.modality);
   const aNewModality = !recentModalities.includes(a.candidate.modality);
   const bNewModality = !recentModalities.includes(b.candidate.modality);
   if (aNewModality !== bNewModality) return aNewModality ? -1 : 1;
 
-  // 2. Prefer a line absent from the last 2 encounters.
+  // 3. Prefer a line absent from the last 2 encounters.
   const recentLines = trace.slice(-2).map(e => e.line);
   const aNewLine = !recentLines.includes(a.candidate.line);
   const bNewLine = !recentLines.includes(b.candidate.line);
   if (aNewLine !== bNewLine) return aNewLine ? -1 : 1;
 
-  // 3. Prefer holons the player already has a relationship with.
+  // 4. Prefer the line the player has NO relationship with yet (unfamiliar-first).
+  //
+  // Phase 16 d3b (user-ratified 2026-09-24): this rule previously read `bFam - aFam` — familiar
+  // lines win — following the COMMENT in `24 §3.3`, whose own reference code contradicts it by
+  // filtering `some(...) === false` (unfamiliar wins). The measured consequence of the comment
+  // reading: a never-served line is never familiar, so it lost to every ever-served line whenever
+  // rules 1–2 tied — a structural lockout. Across a 10-persona / 120-encounter roster run,
+  // Emotional and Moral were served ZERO times. Rule 4 (starvation) could never rescue them:
+  // it only ranks lines that already reached the comparison. Unfamiliar-first also agrees with
+  // rule 1's own convention (never-served = most starved = wins), so the two rules cannot
+  // disagree about which line is owed an encounter. `24 §3.3` is reconciled in the same commit.
   const familiar = (line: string): number =>
-    Object.keys(sig.theta.lastEncounter).some(k => k.startsWith(`${line}:`)) ? 1 : 0;
+    Object.entries(sig.theta.lastEncounter).some(([k, ts]) => k.startsWith(`${line}:`) && ts > 0) ? 1 : 0;
   const aFam = familiar(a.candidate.line);
   const bFam = familiar(b.candidate.line);
-  if (aFam !== bFam) return bFam - aFam;
+  if (aFam !== bFam) return aFam - bFam;
 
-  // 4. Deterministic final key — reproducibility.
+  // 5. Deterministic final key — reproducibility. Reached now only when two candidates have equal
+  // line recency, equal modality novelty, equal line novelty, and equal familiarity — which is the
+  // case the key was always meant for.
   return refHash(a.candidate.moduleRef) - refHash(b.candidate.moduleRef);
 }
 
@@ -270,7 +341,13 @@ export function scheduleNext(
   // Sort descending by priority, then apply §3.3 tie-breaking inside each 0.05 band. Canon puts
   // variety here — not in the score — because a tie band is the set of candidates whose
   // developmental value is indistinguishable, and a comparator cannot outrank a stronger candidate.
+  // The reserved developmental primary is the single documented exception: it is an offer-slot
+  // policy, not a ninth score, and it leaves every candidate's priority value untouched.
   const ranked = rankCandidates(scored, sig, world);
+  const primary = selectReservedPrimaryByLineCoverage(ranked, sig);
+  const ordered = primary === ranked[0]
+    ? ranked
+    : [primary, ...ranked.filter(item => item !== primary)];
 
   // Determine session position
   const progress = session.encountersSoFar / Math.max(1, session.targetSessionLength);
@@ -295,7 +372,7 @@ export function scheduleNext(
   const lineCounts: Record<string, number> = {};
   const moduleRefs = new Set<string>();
 
-  for (const { candidate, priority } of ranked) {
+  for (const { candidate, priority } of ordered) {
     if (result.length >= count) break;
     const lc = lineCounts[candidate.line] ?? 0;
     if (lc >= 2) continue;
@@ -364,8 +441,12 @@ export function scheduleNextWithHolonicReturn(
 
   // WIRE-1: Check if a Holonic Return should be surfaced
   // encountersAtCurrentStage defaults to session.encountersSoFar if not provided
+  // Phase 16 d5: a FORCED cell is a per-cell diagnostic instrument, so the return cannot prepend an
+  // earlier-stage shadow encounter to it — that would measure two cells and report one. `shouldSurfaceReturn`
+  // still fires and is still recorded elsewhere; it simply does not replace a forced developmental offer.
   const stageEncounters = encountersAtCurrentStage ?? session.encountersSoFar;
-  const returnTarget = shouldSurfaceReturn(sig, stageEncounters);
+  const forcedCell = session.forceLine !== undefined && session.forceStage !== undefined;
+  const returnTarget = forcedCell ? null : shouldSurfaceReturn(sig, stageEncounters);
 
   if (returnTarget) {
     // Inject a shadow-mode return encounter at the HEAD of the list

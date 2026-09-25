@@ -87,6 +87,25 @@ export function buildEnvelope(
   /** The [CONTINUITY] head (48 §3) — banded cross-session memory lines, Veil-filtered at this seam.
    *  Empty array on first boot (no history) or when every line fails the guard. */
   readonly continuity: readonly string[];
+  /**
+   * Phase 16 d1 — what the MemoryPage render ACTUALLY cost, measured here because this is the last
+   * place the page exists: `buildMemoryPage` → `memoryPageBlock` runs inline below and the page
+   * itself never leaves. Three units, deliberately not one number: the capped block is what the
+   * renderer produced, the surviving lines are what the prompt received after the Veil guard, and
+   * the difference between them is a guard working, not a smaller page.
+   *
+   * These are measurements, never the M2 build budgets or the d9a render caps — a page that renders
+   * four lines is four lines whatever `MAX_BLOCK_LINES` says.
+   */
+  readonly memoryPage: {
+    /** Lines `memoryPageBlock` produced, before the Veil guard. */
+    readonly blockLines: number;
+    /** Characters those lines cost, before the Veil guard (the block's own separator accounting). */
+    readonly blockChars: number;
+    /** Lines that survived `isBandedText` — i.e. `continuity.length`, restated so the two readings
+     *  are read from one record rather than correlated across a boundary. */
+    readonly continuityLines: number;
+  };
   /** The runtime coherence verdict: `blocked` means the holon was routed OUT of the prompt. */
   readonly coherenceBlocked: boolean;
   readonly coherenceDefects: readonly CoherenceDefect[];
@@ -284,6 +303,14 @@ export function buildEnvelope(
     at: now,
   });
 
+  // Phase 16 d1 — the page is built and rendered right here, so this is where its cost is measured.
+  // Building it once and reading both the block and its size off the same array is the only honest
+  // reading: measuring the page separately would be a second render of the same input, and a
+  // re-render is free to disagree with the one the player received.
+  const page = buildMemoryPage(services.feed, services.workers, services.holons, now);
+  const continuityBlock = memoryPageBlock(page);
+  const continuity = continuityBlock.filter((line) => isBandedText(line));
+
   // 45 §6.1 — the council alignment, computed at the live seam for EVERY role. The scenario-
   // catalyst renders the encounter (it receives all bands); the assessment role receives the
   // developmental band and the catalyst target ONLY, so grading can never be conditioned on what
@@ -308,8 +335,12 @@ export function buildEnvelope(
      *  the render path carries its own guard; recall-time G31 is the second). Empty history →
      *  empty array → the pre-memory pipeline is the fallback (45 §5). Deterministic: rebuilt
      *  from committed feed state on every envelope (M5 view-not-store). */
-    continuity: memoryPageBlock(buildMemoryPage(services.feed, services.workers, services.holons, now))
-      .filter((line) => isBandedText(line)),
+    continuity,
+    memoryPage: {
+      blockLines: continuityBlock.length,
+      blockChars: continuityBlock.reduce((n, line) => n + line.length, 0),
+      continuityLines: continuity.length,
+    },
     coherenceBlocked: coherence.blocked,
     coherenceDefects: coherence.defects,
     scopes,

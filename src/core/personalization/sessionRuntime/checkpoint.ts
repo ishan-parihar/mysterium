@@ -10,6 +10,7 @@ import type { Proposal, SessionSignals } from '../../orchestration/types.js';
 import type { PolarityStateMap } from '.././dialecticEngine.js';
 import type { ProbeReading } from '.././probeSet.js';
 import { type PolarityReading, type ConfirmationTally } from '.././polarityResolution.js';
+import type { CompositionEvent } from '../diversityMonitor.js';
 import type { OrchestrationServices } from './services.js';
 
 // ── Restore (the checkpoint story: serialize entries + workers, rebuild services) ───────────
@@ -37,6 +38,9 @@ export interface RuntimeCheckpoint {
   /** Phase 13 d5 — the probe readings made this session (validated + log-only), so the
    *  budget paces across a checkpoint restore correctly. */
   readonly probeReadings?: { readonly validated: readonly string[]; readonly logOnly: readonly string[] };
+  /** Composition events retained by the runtime. Replayed on restore so a focused trajectory's
+   *  per-cell entropy is cumulative across disk-restored sessions, not restarted at each session. */
+  readonly compositionEvents?: readonly CompositionEvent[];
 }
 
 /** Capture the current runtime state for persistence. */
@@ -48,7 +52,10 @@ export interface RuntimeCheckpoint {
  */
 export const MAX_CHECKPOINT_FEED_ENTRIES = 2000;
 
-export function captureCheckpoint(services: OrchestrationServices): RuntimeCheckpoint {
+export function captureCheckpoint(
+  services: OrchestrationServices,
+  options: { readonly includeCompositionEvents?: boolean } = {},
+): RuntimeCheckpoint {
   const window = services.feed.entries.length > MAX_CHECKPOINT_FEED_ENTRIES
     ? services.feed.entries.slice(-MAX_CHECKPOINT_FEED_ENTRIES)
     : services.feed.entries;
@@ -75,6 +82,9 @@ export function captureCheckpoint(services: OrchestrationServices): RuntimeCheck
       validated: services.probes.ledger.validatedReadings.map((r) => r.probeId),
       logOnly: services.probes.ledger.logOnlyReadings.map((r) => r.probeId),
     },
+    ...(options.includeCompositionEvents
+      ? { compositionEvents: services.telemetry.events.slice() }
+      : {}),
   };
 }
 
@@ -116,6 +126,9 @@ export function restoreCheckpoint(
       const p = services.probes.ledger.probes.find((x) => x.id === id);
       if (p) ledger.logOnlyReadings.push({ probeId: p.id, pole: p.poleA, at, instrumentValidated: false });
     }
+  }
+  if (checkpoint.compositionEvents) {
+    for (const event of checkpoint.compositionEvents) services.telemetry.record(event);
   }
 }
 

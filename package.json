@@ -37,7 +37,8 @@
     "cap:android": "npm run build && cap sync android && cap open android",
     "cli": "svelte-kit sync && tsx scripts/cli-game.ts",
     "cli:bundle": "node dist/cli/cli-game.js",
-    "prepublishOnly": "npm run build:cli"
+    "verify:release": "npm run build && npm run build:cli && tsx scripts/verify-release.ts",
+    "prepublishOnly": "npm run verify:release"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",

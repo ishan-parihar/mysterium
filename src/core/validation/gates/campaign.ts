@@ -1,6 +1,6 @@
 /**
- * Campaign gates — G39 (campaign continuity), G40 (campaign invariants), G41 (polarity loop entry) and
- * G42 (declared stance channel).
+ * Campaign gates — G39 (campaign continuity), G40 (campaign invariants), G41 (polarity loop entry),
+ * G42 (declared stance channel) and G43 (line coverage).
  *
  * Split into its own family because these gates are the only ones that assert over a TRAJECTORY of
  * sessions driven through the live seam. Every other gate in the kernel either drives the loop's
@@ -248,6 +248,74 @@ export async function validateCampaignInvariants(tier: Tier = 'ci'): Promise<Gat
     try {		  fs.rmSync(root, { recursive: true, force: true });
 		} catch { /* best-effort */ }
 	}
+}
+
+/**
+ * G43 — developmental encounter coverage is a policy, not an accident of a hash (Phase 16 d3).
+ *
+ * The report measured `Emotional: 1 encounter in 432` and three lines carrying 74 %, and named it
+ * "scheduler line coverage". The supply is symmetric (3 holons per line); the eight-criterion
+ * priority remains closed, while the scheduler's comparator and reserved developmental primary
+ * select the first developmental offer. The reserve may cross priority bands, but every
+ * non-primary priority value and the remaining ranked order stay unchanged. This gate measures the
+ * path the campaign actually finalizes: the single primary developmental encounter per tick.
+ * Curriculum and training beats are deliberately excluded because they are educational inserts, not
+ * developmental line coverage.
+ *
+ * The assertion is the consequence a player would notice, not an even histogram: every canonical
+ * line is consumed developmentally, and no line is effectively excluded by a 2% quietest/busiest
+ * floor. The ranked ambient list is a separate offer-level surface and is not represented by the
+ * finalized provenance stream.
+ */
+export async function validateLineCoverage(tier: Tier = 'ci'): Promise<GateResult> {
+  const { sessions, encounters } = scaleFor(tier);
+  const root = tmpRoot('mys-g43-');
+  try {
+    const result = await runCampaign({ persona: getPersona('flourishing'), rootDir: root, sessions, encountersPerSession: encounters });
+
+    // The per-line TOTAL of finalized developmental encounters, not one session's mixed row.
+    // Curriculum/training are explicitly separate surfaces; including their synthetic `Training:*`
+    // or `curriculum:*` cells here would make the gate measure the wrong population.
+    const totals = new Map<string, number>();
+    for (const s of result.sessions) {
+      for (const p of s.series.provenance) {
+        if (p.isCurriculum || p.isTraining) continue;
+        const line = p.cell.split(':')[0]!;
+        totals.set(line, (totals.get(line) ?? 0) + 1);
+      }
+    }
+    const served = ALL_LINES.filter((l) => (totals.get(l) ?? 0) > 0);
+    const busiest = Math.max(...ALL_LINES.map((l) => totals.get(l) ?? 0));
+    const quietest = Math.min(...ALL_LINES.map((l) => totals.get(l) ?? 0));
+    const report = ALL_LINES.map((l) => `${l} ${totals.get(l) ?? 0}`).join(' · ');
+
+    if (served.length !== ALL_LINES.length) {
+      const missing = ALL_LINES.filter((l) => !served.includes(l));
+      return mk(
+        'G43 line coverage',
+        `no developmental encounter was finalized on ${missing.join(', ')} across ${sessions} sessions x ${encounters} encounters — ` +
+        `line coverage is decided by something other than a policy [${report}]`,
+        false,
+      );
+    }
+    // The starved share. Before the fix Emotional held 1/432 against a busiest line of 138 — a ratio
+    // of 0.007. The floor is set at a token 2 % rather than near the observed 0.2 so the gate locks
+    // "a line is not effectively excluded" without pinning a distribution canon never asked for.
+    if (busiest > 0 && quietest / busiest < 0.02) {
+      return mk(
+        'G43 line coverage',
+        `the quietest line holds ${quietest} against the busiest line's ${busiest} (${((quietest / busiest) * 100).toFixed(1)} %) — ` +
+        `that is effective exclusion, not a developmental weighting [${report}]`,
+        false,
+      );
+    }
+
+    return mk('G43 line coverage', `every line offered · quietest/busiest ${quietest}/${busiest} [${report}]`);
+  } catch (e) {
+    return mk('G43 line coverage', `error: ${e instanceof Error ? e.message : String(e)}`, false);
+  } finally {
+    try { fs.rmSync(root, { recursive: true, force: true }); } catch { /* best-effort */ }
+  }
 }
 
 /**

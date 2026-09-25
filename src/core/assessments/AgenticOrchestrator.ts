@@ -130,6 +130,19 @@ export interface OrchestratorResult {
    * instead of hardcoding 'Sovereign'/'Homeostatic'/'Ambivalent'.
    */
   readonly playerResponse?: PlayerResponse;
+  /**
+   * Phase 16 d1 — the MemoryPage's real render cost for this encounter, read from the envelope that
+   * built it. Present only when the personalization seam ran for this encounter — the LLM loop, the
+   * language-reflective path and the module path all call `personalizationContext()`, but
+   * `runFallback`'s self-reflection (write-in) branch does not, so an encounter on that path reports
+   * no page. Never a default 0: no page and an empty page are different facts, and a series row
+   * counts only the encounters that actually contributed a reading.
+   */
+  readonly memoryPage?: {
+    readonly blockLines: number;
+    readonly blockChars: number;
+    readonly continuityLines: number;
+  };
 }
 
 export const ASK_USER_QUESTION_TOOL = {
@@ -276,6 +289,13 @@ export class AgenticOrchestrator {
    *  at composition time, consumed by recordSessionEnd to build the reading's EncounterRecord. */
   private lastPoleServed: 'familiar' | 'unfamiliar' | 'shadow-facing' | null = null;
   private lastPairKey: string | null = null;
+  /**
+   * Phase 16 d1 — the last envelope's MemoryPage render cost and the last LLM request's budget, so
+   * every return path can report them. Both are per-encounter observations, written at the seam that
+   * produces them and read when the result is built; neither is defaulted, so a path that never
+   * reached the seam reports absence rather than a zero.
+   */
+  private lastMemoryPage: OrchestratorResult['memoryPage'] = undefined;
 
   /** 45 §6.1 (Phase 13 d2): the assessment role's scoped line for this encounter, set by
    *  `buildContextInput`'s personalization pass and appended to the assessment prompt section. */
@@ -1785,6 +1805,7 @@ INSTRUCTIONS:
         pairKey: this.lastPairKey,
         proposedBy: this.lastResolvedBy,
       },
+      ...(this.lastMemoryPage ? { memoryPage: this.lastMemoryPage } : {}),
       ...this.recordSessionEnd(updatedRecord, evaluation.passed, now, evaluation.polarityDirection),
     };
   }
@@ -2382,11 +2403,13 @@ ${probes}${rubric}
     assessmentScope: string | null;
     /** Phase 13 d10 L4 — the [POLARITY] prompt line (top-1 primary + named pole). */
     polarityLine: string | null;
+    /** Phase 16 d1 — the MemoryPage render cost, measured where the page is built. */
+    memoryPage: OrchestratorResult['memoryPage'];
   } {
-    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null, polarityLine: null };
+    if (!this.orchestration) return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null, polarityLine: null, memoryPage: undefined };
     try {
       const [line] = this.encounter.moduleRef.split(':') as [Line, ...unknown[]];
-      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context, continuity, scopes } = buildEnvelope(  // context carries the d10 polarity selection
+      const { block, seedText, worldPlace, personaVoice, coherenceBlocked, coherenceDefects, context, continuity, memoryPage, scopes } = buildEnvelope(  // context carries the d10 polarity selection
         this.orchestration,
         this.significator,
         this.identity,
@@ -2445,9 +2468,12 @@ ${probes}${rubric}
       // Phase 13 d10 L4 (user-ratified surface): the prompt conditions on the ONE primary
       // rendering and the pole's NAME — alternates, reason and any score stay out of the prompt.
       const polarityLine = polarityPromptLine(context?.polarity ?? null);
-      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair, continuity, assessmentScope, polarityLine };
+      // Phase 16 d1 — stash the render cost so every return path reports the measurement taken at the
+      // seam that produced it, rather than a number re-derived at the result site.
+      this.lastMemoryPage = memoryPage;
+      return { block, digest, seed: seedText, worldPlace, personaVoice, dialecticPair, continuity, assessmentScope, polarityLine, memoryPage };
     } catch {
-      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null, polarityLine: null };
+      return { block: null, digest: [], seed: null, worldPlace: null, personaVoice: null, dialecticPair: null, continuity: [], assessmentScope: null, polarityLine: null, memoryPage: undefined };
     }
   }
 
@@ -2636,6 +2662,10 @@ ${probes}${rubric}
       // so callers (CLI + WebUI gameEngine) get the honest evaluation.
       driveSignals: params.driveSignals as { agency: string; communion: string; eros: string; agape: string } | undefined,
       playerResponse: response,
+      // Phase 16 d1 — the d1 measurements ride the ONE return every path shares, so no path can
+      // report them and another silently drop them. The page is conditional on its own seam having
+      // run: a hermetic encounter still builds one, an un-personalized one has no page to report.
+      ...(this.lastMemoryPage ? { memoryPage: this.lastMemoryPage } : {}),
     };
   }
 }

@@ -30,4 +30,5 @@ export * from './gates/curriculum.js';
 export * from './gates/orchestration.js';
 export * from './gates/personalization.js';
 export * from './gates/memory.js';
+export * from './gates/campaign.js';
 export * from './gates/surface.js';

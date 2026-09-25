@@ -41,16 +41,27 @@ import { ALL_LINES } from '../domain/Line.js';
  * would be needed — this is the list d4's report should carry forward, not a list of TODOs.
  */
 export const UNAVAILABLE_OBSERVABLES: Readonly<Record<string, string>> = {
-  memoryPageSize:
-    'the MemoryPage is built inside `buildEnvelope` and consumed by `memoryPageBlock`; neither is ' +
-    'returned to the caller, so the campaign cannot read its size. Needs the envelope result to ' +
-    'expose the page (or its block line count).',
   renderBudget:
-    'the render budget is a property of the assembled prompt, which the orchestrator keeps private ' +
-    '(`this.messages`); measuring it needs a prompt-size hook at the LLM seam.',
+    'STRUCTURALLY UNMEASURED, not missing instrumentation. A request budget has no single seam: ' +
+    'the encounter loop sends `queryLLMWithTools` (a multi-turn tool loop, so one encounter is ' +
+    'several requests of growing history), the fallback paths send `queryLLMStream` (single shots), ' +
+    'and the WebUI sends a proxied body. Critically, the filtered prompt is knowable on the DIRECT ' +
+    'path (which Veil-filters inside `LLMClient`) but NOT on the browser path — `queryLLMWithTools` ' +
+    'returns to `proxyQueryLLMWithTools` BEFORE `filterInput` runs — so there is no post-Veil figure ' +
+    'common to both, and any measurement taken at the orchestrator is a PRE-FILTER prompt that the ' +
+    'transport then shrinks. The producer that would close this is a per-request counter in the ' +
+    'transport layer, on both paths. Until then the honest reading is that counter (absent), never ' +
+    'an encounter-count proxy labelled "requests".',
   engagementRegisterHits:
-    'the register (`engagementRegister.ts`) records MECHANISMS at authoring time, not hits at ' +
-    'runtime; there is no runtime accumulator to read, so a hit count would be invented.',
+    'DELIBERATELY UNMEASURED, not missing instrumentation. The register (`engagementRegister.ts`) ' +
+    'holds AUTHORING-TIME mechanism records and answers a policy question (`isMechanismAllowed`); it ' +
+    'has no runtime event to count. The only runtime activity is the pole seam consulting the ' +
+    'register (`poleDecision.ts`), which is policy evaluation — a gate consulted several times per ' +
+    'encounter for one player-visible decision — and `poleShare`/candidate provenance already ' +
+    'report what was actually SERVED. Counting consults would overcount; deriving "hits" from the ' +
+    'pole mix would re-report a number the row already carries. A hit count becomes meaningful when ' +
+    '45 §7.3 defines what a hit IS (a player-visible activation, not an authorization call); until ' +
+    'then a counter here would be a number no reader could trust.',
 };
 
 /** The composition stamp the orchestrator reports for one encounter. */
@@ -70,6 +81,10 @@ export interface EncounterProvenance {
   readonly polarityMode: string;
   /** Where the content came from, decoded from the candidate id (see `candidateSource`). */
   readonly candidateSource: CandidateSource;
+  /** Raw pool id, retained so a missing stamp is distinguishable from an unrecognised scheme. */
+  readonly candidateId: string | null;
+  /** Whether the encounter carried a composition stamp, and whether its id was decodable. */
+  readonly candidateStamp: CandidateStampStatus;
   readonly pole: CompositionStamp['pole'];
   readonly isCurriculum: boolean;
   readonly isTraining: boolean;
@@ -84,15 +99,19 @@ export interface EncounterProvenance {
 }
 
 export type CandidateSource =
-  | 'composed' | 'npc' | 'authored-scenario' | 'authored-world'
+  | 'composed' | 'npc' | 'authored-npc' | 'authored-scenario' | 'authored-world'
   | 'scenario' | 'world' | 'recoloured-similar' | 'recoloured-opposite' | 'unknown';
+
+/** The reason a raw candidate id could not be attributed to a known source scheme. */
+export type CandidateStampStatus = 'present' | 'missing' | 'unrecognised';
 
 /**
  * Decode a pool candidate id into its provenance.
  *
  * The ids are the pool's own vocabulary (`polarityIndex.ts` recolours with `~sim`/`~opp`;
- * `compositionRuntime.ts` prefixes `composed:`; `candidateLibrary.ts` uses `npc:`/`scenario-authored:`
- * /`world-authored:`/`scenario:`/`world:`). Decoding rather than re-deriving keeps the series
+ * `compositionRuntime.ts` prefixes `composed:`; `candidateLibrary.ts` uses
+ * `npc:`/`npc-authored:`/`scenario-authored:`/`world-authored:`/`scenario:`/`world:`. Decoding rather
+ * than re-deriving keeps the series
  * reporting the pool's actual decision — and if `deriveLibraryVariants` ever changes its id scheme,
  * this function is the one place that says so, rather than a report that silently reads `unknown`.
  */
@@ -101,12 +120,28 @@ export function candidateSource(candidateId: string | null): CandidateSource {
   if (candidateId.includes('~sim')) return 'recoloured-similar';
   if (candidateId.includes('~opp')) return 'recoloured-opposite';
   if (candidateId.startsWith('composed:')) return 'composed';
+  if (candidateId.startsWith('npc-authored:')) return 'authored-npc';
   if (candidateId.startsWith('npc:')) return 'npc';
   if (candidateId.startsWith('scenario-authored:')) return 'authored-scenario';
   if (candidateId.startsWith('world-authored:')) return 'authored-world';
   if (candidateId.startsWith('scenario:')) return 'scenario';
   if (candidateId.startsWith('world:')) return 'world';
   return 'unknown';
+}
+
+export function candidateStampStatus(candidateId: string | null): CandidateStampStatus {
+  if (candidateId === null) return 'missing';
+  return candidateSource(candidateId) === 'unknown' ? 'unrecognised' : 'present';
+}
+
+/** One encounter's MemoryPage render cost, as measured at the envelope seam. */
+export interface EncounterMemoryPage {
+  /** Lines `memoryPageBlock` produced, before the Veil guard. */
+  readonly blockLines: number;
+  /** Characters those lines cost, before the Veil guard. */
+  readonly blockChars: number;
+  /** Lines that survived the Veil guard — what the prompt actually received. */
+  readonly continuityLines: number;
 }
 
 export interface CampaignSeriesInput {
@@ -118,6 +153,17 @@ export interface CampaignSeriesInput {
   /** Undefined only if a caller builds a series without the seam — every campaign session has one. */
   readonly services?: OrchestrationServices;
   readonly provenance: readonly EncounterProvenance[];
+  /**
+   * Phase 16 d1 — the per-encounter measurements the orchestrator reported, one entry per finalized
+   * encounter. Read from the result of the encounter that ran, never re-derived here.
+   */
+  readonly observablesMeasured?: readonly EncounterMeasurement[];
+}
+
+/** What ONE encounter actually cost at the two seams that can measure it. */
+export interface EncounterMeasurement {
+  /** The MemoryPage render for this encounter. Absent when the personalization seam did not run. */
+  readonly memoryPage?: EncounterMemoryPage;
 }
 
 /** One session's row. Every field name states the producer it came from. */
@@ -135,6 +181,8 @@ export interface CampaignSeriesRow {
   readonly provenance: readonly EncounterProvenance[];
   /** Share of encounters by candidate source — the composition's variety as the player saw it. */
   readonly candidateSourceShare: Readonly<Record<string, number>>;
+  /** Share of encounters by raw stamp status: present, missing, or unrecognised. */
+  readonly candidateStampStatusShare: Readonly<Record<string, number>>;
   /** Share by pole served (`45 §5.4`) — the familiar/unfamiliar/shadow-facing split. */
   readonly poleShare: Readonly<Record<string, number>>;
   /** Composition entropy per cell plus the visibility-collapse verdict (`46 §11`). */
@@ -172,6 +220,24 @@ export interface CampaignSeriesRow {
   };
   /** Holon relationship strength, so world-side causality is visible in the series. */
   readonly npcRelationships: number;
+  /**
+   * Phase 16 d1 — what the MemoryPage and the LLM request actually cost this session.
+   *
+   * Aggregated, never invented: `encounters` is how many encounters contributed a page reading and
+   * is the denominator for every mean here, so an unmeasured encounter is a smaller denominator
+   * rather than a zero contributor. `maxBlockChars` is the series' standing render-headroom signal.
+   * Null means the personalization seam produced no reading at all, which is a different fact from
+   * a rendered page of zero lines.
+   */
+  readonly memoryPage: {
+    /** How many encounters contributed a reading — the denominator for every mean below. */
+    readonly encounters: number;
+    readonly maxBlockLines: number;
+    readonly maxBlockChars: number;
+    readonly meanBlockChars: number;
+    /** The lines that survived the Veil guard, i.e. what the prompt actually received. */
+    readonly maxContinuityLines: number;
+  } | null;
   /** The observables the plan names with no producer yet — carried so a report cannot mistake
    *  absence for a measured zero. */
   readonly unavailable: Readonly<Record<string, string>>;
@@ -277,6 +343,24 @@ export function buildSeriesRow(input: CampaignSeriesInput): CampaignSeriesRow {
     };
   }
 
+  // ── Phase 16 d1 — aggregate only readings the encounters actually produced ───────────────────
+  // `null` is a load-bearing distinction: a session with no page measurement is not a page of size
+  // zero, and a hermetic session with no LLM request is not a zero-character prompt. The count fields
+  // preserve the denominator so a report can say "2 of 4 encounters reached this seam" rather than
+  // silently averaging only the survivors.
+  const pages = (input.observablesMeasured ?? [])
+    .map((m) => m.memoryPage)
+    .filter((p): p is EncounterMemoryPage => p !== undefined);
+  const memoryPage = pages.length === 0
+    ? null
+    : {
+        encounters: pages.length,
+        maxBlockLines: Math.max(...pages.map((p) => p.blockLines)),
+        maxBlockChars: Math.max(...pages.map((p) => p.blockChars)),
+        meanBlockChars: pages.reduce((n, p) => n + p.blockChars, 0) / pages.length,
+        maxContinuityLines: Math.max(...pages.map((p) => p.continuityLines)),
+      };
+
   return {
     session: input.session,
     persona: input.persona,
@@ -286,6 +370,7 @@ export function buildSeriesRow(input: CampaignSeriesInput): CampaignSeriesRow {
     shadowsUnresolved: observables.shadowsUnresolved,
     provenance,
     candidateSourceShare: share(tally(provenance, (p) => p.candidateSource)),
+    candidateStampStatusShare: share(tally(provenance, (p) => p.candidateStamp)),
     poleShare: share(tally(provenance, (p) => p.pole ?? 'none')),
     composition,
     probes,
@@ -293,6 +378,7 @@ export function buildSeriesRow(input: CampaignSeriesInput): CampaignSeriesRow {
     feedTotal,
     polarity,
     npcRelationships: input.world.npcRelationships.length,
+    memoryPage,
     unavailable: UNAVAILABLE_OBSERVABLES,
   };
 }
