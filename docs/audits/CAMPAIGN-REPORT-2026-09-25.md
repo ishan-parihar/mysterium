@@ -217,9 +217,16 @@ the candidate residual (§3.1) · d1's `memoryPage` and `renderBudget` questions
 **Open, in priority order:**
 
 1. **`Interpersonal` is excluded entirely on the 12-campaign cohort** (0 encounters) while G43 passes
-   on its own single-persona roster (§3.1). The gate is not strong enough to see a population-level
-   exclusion; either the reserve needs to reach this line here, or G43's roster needs to be widened
-   beyond one persona so the class is visible.
+   on its own single-persona roster (§3.1). **The mechanism is d3's tie-break, not a missing reserve.**
+   `selectReservedPrimaryByLineCoverage` (`EncounterScheduler.ts:53-70`) breaks a fresh-significator
+   tie — every cell at zero, so every line "never served" — by canonical `ALL_LINES` order, and
+   `Interpersonal` is **last** in that order (`Line.ts:36`). It is therefore the one line that can
+   never win a tie, while the reserve only ever reorders lines that already produced a candidate
+   (`eligibleLines` is built from `ranked`, so a line filtered out upstream is unreachable — but at
+   t=0 all eight lines *do* produce candidates, which is why the exclusion is state-dependent and not
+   a static filter). The fix is in the tie-break's ordering or its freshness definition, **not** in
+   widening the reserve. Separately, G43's roster should widen beyond one persona so a
+   population-level exclusion is visible to the gate at all.
 2. **The polarity loop is enterable and inert.** 70 readings, 0 reconciled, every proposal from
    `deterministic-fallback` and none from `system1`. The pair key resolves now (item 5), so the next
    step is *why no pair ever reconciles* — a state-machine question, not a measurement one.

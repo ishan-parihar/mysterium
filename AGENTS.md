@@ -348,7 +348,9 @@ one path and unknowable on the other; the orphan field and both write sites were
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
 **DONE**. Phases 1–15 are **implemented and gated**; Phase 16 remains active with **d1–d7 all
 delivered** (2026-09-25) and five open items carried in `docs/audits/CAMPAIGN-REPORT-2026-09-25.md` §4 —
-a population-level `Interpersonal` exclusion G43's single-persona roster cannot see, an inert
+a `Interpersonal` exclusion that is a **d3 tie-break artefact** (the line is last in canonical
+`ALL_LINES`, so it can never win a fresh-significator tie) and a population-level class G43's
+single-persona roster cannot see, an inert
 polarity loop, the wide `shadow-facing` 0.0 %, the real-rater RV1–RV7 thresholds, and per-line
 saturation thresholds awaiting real progression curves. The current
 kernel roster is **43 gates**. **Phase 10** (Generative World & Personalization; gates G22–G27) was
