@@ -119,9 +119,15 @@ ambiguous: **present 87.5 % · missing 12.5 % · unrecognised 0.0 %.** The entir
 different findings and are not to be conflated.
 
 **Per-line coverage — seven of eight, evenly.** Seven lines took exactly 12 encounters each
-(84 of 96) and `Interpersonal` took **0**. Compare the 2026-09-24 baseline, where three lines carried
-74 % and the rest competed for the remainder. d3's reserve is a **clear improvement on that gradient**,
-and the evenness across the seven is the shape it was designed to produce.
+(84 of 96) and `Interpersonal` took **0**. The 84 is not 7×12 line encounters alone: each campaign's
+8th offer is a **training beat** (`Training:n_back`, not a `Line:Stage` cell), so 12 of the 96 rows
+carry no line at all. The reserve's strict forward tie-break (`§4.1` item 1) serves the 8th line 8th,
+and that 8th slot is consumed by the training weave every campaign — hence a clean 7-and-a-gap, not
+a gradient. Compare the 2026-09-24 baseline, where three lines carried
+74 % and the rest competed for the remainder. d3's reserve **is** a clear improvement on that
+gradient, and the evenness across the seven is the shape it was designed to produce — but the gap is
+positional, and the evenness is what a starving reserve looks like when it is only just short of
+reaching the eighth line.
 
 But this is **not** the same claim as the gate's, and the difference must not be blurred. **G43, run
 directly on 2026-09-25, passes**: `every line offered · quietest/busiest 1/2` over its own roster
@@ -217,16 +223,23 @@ the candidate residual (§3.1) · d1's `memoryPage` and `renderBudget` questions
 **Open, in priority order:**
 
 1. **`Interpersonal` is excluded entirely on the 12-campaign cohort** (0 encounters) while G43 passes
-   on its own single-persona roster (§3.1). **The mechanism is d3's tie-break, not a missing reserve.**
-   `selectReservedPrimaryByLineCoverage` (`EncounterScheduler.ts:53-70`) breaks a fresh-significator
-   tie — every cell at zero, so every line "never served" — by canonical `ALL_LINES` order, and
-   `Interpersonal` is **last** in that order (`Line.ts:36`). It is therefore the one line that can
-   never win a tie, while the reserve only ever reorders lines that already produced a candidate
-   (`eligibleLines` is built from `ranked`, so a line filtered out upstream is unreachable — but at
-   t=0 all eight lines *do* produce candidates, which is why the exclusion is state-dependent and not
-   a static filter). The fix is in the tie-break's ordering or its freshness definition, **not** in
-   widening the reserve. Separately, G43's roster should widen beyond one persona so a
-   population-level exclusion is visible to the gate at all.
+   on its own single-persona roster (§3.1). **The mechanism is the reserve's tie-break plus a slot
+   the reserve never sees.** `selectReservedPrimaryByLineCoverage` (`EncounterScheduler.ts:53-70`)
+   breaks a fresh-significator tie with strict `<` while iterating `ALL_LINES` forward, so on a tie
+   the FIRST line in canonical order keeps the developmental slot. That makes it a strict
+   round-robin: each line is served, and the 8th line in canonical order — `Interpersonal`
+   (`Line.ts:36`) — is served **8th**. A campaign's 8th offer is a **training beat**, not a line
+   encounter (`Training:n_back` in provenance, one per campaign × 12 = 12 of the 96), and the reserve
+   only reorders candidates that reached it, so the round-robin never advances to its 8th position
+   within a campaign's length. 7 lines × 12 = the 84 of 96, exactly.
+   **This is a structural deficit, not a missing reserve**, and two fixes follow from it — neither is
+   "widen the reserve":
+   - a **rotating tie-break seed**, so the deficit moves between lines instead of always landing on
+     the 8th; or
+   - a **scale-independent coverage assertion** in G43, since a gate that only passes because its
+     3×4 run is shorter than the round-robin cycle proves nothing at cohort scale.
+   Note the reserve CAN reach `Interpersonal` — once the other seven carry positive timestamps, its
+   zero is the strict minimum. It is starved by position, not by eligibility.
 2. **The polarity loop is enterable and inert.** 70 readings, 0 reconciled, every proposal from
    `deterministic-fallback` and none from `system1`. The pair key resolves now (item 5), so the next
    step is *why no pair ever reconciles* — a state-machine question, not a measurement one.

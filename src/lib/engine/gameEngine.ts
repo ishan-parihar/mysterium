@@ -28,6 +28,7 @@ import { startSession, applyResponseOnly, computeTrainingWeave } from '$core/Gam
 import { scheduleNextWithHolonicReturn } from '$core/engines/EncounterScheduler.js';
 import { createModuleTaskTypesProvider } from '$core/engines/CandidateGeneration.js';
 import { DEFAULT_WEIGHTS } from '$core/engines/PriorityComputation.js';
+import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
 import { AgenticOrchestrator } from '$core/assessments/AgenticOrchestrator.js';
 // RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — one per browser
 // session, held in the engine store so the feed and worker profiles accumulate across encounters.
@@ -117,6 +118,19 @@ export async function bootEngine(): Promise<void> {
 
 /**
  * Start a new session. Computes CCI, generates strategy.
+ *
+ * Phase 16 d8 (2026-09-26) — the session CONTROLS now reach the kernel. `sessionControlStore` was
+ * a write-only surface for its whole life: the settings page wrote `forceLine`/`forceStage`/
+ * `forceModality`/`encounterCount` to localStorage and NO `SessionContext` builder read them, so
+ * four player-facing controls changed nothing. This is the live-surface-wiring class `AGENTS.md` §4.2
+ * item 2 defines, and it was listed there as empty.
+ *
+ * The force fields are threaded through deliberately, INCLUDING their effect on the four injection
+ * seams: `forceLine` AND `forceStage` together make `GameLoop`/`EncounterScheduler` treat the session
+ * as a pinned cell (`forcedCell`) and bypass threshold mode, Holonic Return, curriculum interleave
+ * and training weave. That is correct — a player who pins one cell asked for one cell — and it is why
+ * pinning both axes is the meaningful gesture. A player who sets only `forceLine` keeps every seam
+ * and gets a line preference, which is the `--line` behaviour the CLI already has.
  */
 export function startGameSession(): void {
   const { significator, world } = get(engineStore);
@@ -125,11 +139,15 @@ export function startGameSession(): void {
     return;
   }
 
+  const control = get(sessionControlStore);
   const sessionContext: SessionContext = {
     encountersSoFar: 0,
     sessionDurationMs: 0,
-    targetSessionLength: 5,
+    targetSessionLength: control.encounterCount,
     recentLines: [],
+    forceLine: control.forceLine ?? undefined,
+    forceStage: control.forceStage ?? undefined,
+    forceModality: control.forceModality ?? undefined,
   };
 
   const session = startSession(significator, sessionContext);
@@ -145,14 +163,25 @@ export function scheduleEncounters(): void {
   if (!significator || !world || !session) return;
 
   const now = Date.now();
+  // The force fields must ride BOTH scheduling calls, not just `startGameSession`: a session's
+  // encounters are scheduled in batches of 3, and the first batch is scheduled from inside
+  // `startGameSession`. Pinning a cell that applied only to the first batch would let the second
+  // batch drift off it — the exact class of half-wired surface this closes.
+  const control = get(sessionControlStore);
+  const forceFields = {
+    forceLine: control.forceLine ?? undefined,
+    forceStage: control.forceStage ?? undefined,
+    forceModality: control.forceModality ?? undefined,
+  };
   let encounters = scheduleNextWithHolonicReturn(
     significator,
     world,
     {
       encountersSoFar: session.recentOutcomes.length,
       sessionDurationMs: now - (session.sessionStartMs ?? now),
-      targetSessionLength: 5,
+      targetSessionLength: control.encounterCount,
       recentLines: [],
+      ...forceFields,
     },
     now,
     3,
@@ -167,7 +196,15 @@ export function scheduleEncounters(): void {
   // loop (computeTrainingWeave) after every scheduling pass — exactly where
   // tickWithStrategy applies it for the CLI/harness. Skipped when the queue
   // already carries an unplayed beat (decline/completion re-schedules).
-  if (!encounters.some((e) => e.isTrainingBeat)) {
+  //
+  // Parity correction (Phase 16 d8): the kernel suppresses the weave when the cell is fully pinned
+  // (`GameLoop.ts:462` — `forcedCell` makes it `{shouldWeave: false}`), because a pinned cell is a
+  // diagnostic instrument and a training beat is not a cell. This binding had no such guard, so
+  // wiring the store would have made a pinned cell silently receive training beats here while the
+  // CLI refused it — the exact split the parity surface exists to prevent. One definition of the
+  // rule, same as the cadence.
+  const pinnedCell = control.forceLine !== null && control.forceStage !== null;
+  if (!pinnedCell && !encounters.some((e) => e.isTrainingBeat)) {
     const weave = computeTrainingWeave(
       session.strategy.trainingSlots ?? 0,
       session.trainingEncountersThisSession ?? 0,

@@ -355,3 +355,69 @@ export function validateCheckedGraph(): GateResult {
     return mk(`error: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
+
+/**
+ * The store's CLI-parity fields, paired with the context field each one must reach. A pair whose
+ * context field regresses to a hard-coded literal is the exact shape of the original defect.
+ */
+const SESSION_CONTROL_PARITY_FIELDS: readonly (readonly [string, string])[] = [
+  ['encounterCount', 'targetSessionLength'],
+  ['forceLine', 'forceLine'],
+  ['forceStage', 'forceStage'],
+  ['forceModality', 'forceModality'],
+];
+
+/**
+ * The G44 decision, as a pure function of the engine source, so the gate's FAILURE is testable
+ * without mutating the working tree. `AGENTS.md`'s own rule (`MY-RG-0010`) is that a gate which
+ * cannot fail is decoration; a gate whose only reachable exit is `passed: true` is exactly that,
+ * and the only honest way to prove otherwise is to hand it a source that is genuinely dark.
+ */
+export function evaluateSessionControlWiring(text: string): { passed: boolean; details: string } {
+  if (!/sessionControlStore/.test(text)) {
+    return { passed: false, details: 'gameEngine.ts does not reference sessionControlStore — the settings controls are write-only again' };
+  }
+  if (!/sessionControlStore\.js/.test(text)) {
+    return { passed: false, details: 'gameEngine.ts references sessionControlStore without importing it from its owner module' };
+  }
+  const missing = SESSION_CONTROL_PARITY_FIELDS.filter(([field]) => !new RegExp(`\\b${field}\\b`).test(text));
+  if (missing.length > 0) {
+    return { passed: false, details: `gameEngine.ts no longer reads ${missing.map(([f]) => f).join(', ')} from the store — those settings controls are inert` };
+  }
+  if (!/\bpinnedCell\b/.test(text)) {
+    return { passed: false, details: 'gameEngine.ts has no pinned-cell guard — a pinned cell would receive a training beat the kernel refuses' };
+  }
+  return { passed: true, details: `store reachable from the WebUI engine; ${SESSION_CONTROL_PARITY_FIELDS.length} parity fields read (${SESSION_CONTROL_PARITY_FIELDS.map(([f]) => f).join(', ')}) and the pinned-cell training-weave guard present` };
+}
+
+/**
+ * G44 — the session controls are wired, not write-only (Phase 16 d8, 2026-09-26).
+ *
+ * `src/lib/stores/sessionControlStore.ts` declares itself "Parity with CLI flags: --encounters,
+ * --line, --stage, --modality, --dev", and the settings page renders a control for each. It then had
+ * exactly ONE importer — the settings page — and NO `SessionContext` builder read it: `gameEngine.ts`
+ * hard-coded `targetSessionLength: 5` and passed no force fields at all. Four player-facing controls
+ * persisted to localStorage and changed nothing, while `AGENTS.md` §4.2 item 2 listed the
+ * live-surface-wiring set as EMPTY.
+ *
+ * Why a gate and not a test: the failure mode is ABSENCE. Every runtime assertion still passes with
+ * the store fully dark, because an unread field behaves exactly like an absent one. A test that
+ * exercises play cannot see it; only the module graph can. So this gate reads the graph — the same
+ * technique as G37 — and fails if the store's own fields stop reaching a `SessionContext` builder.
+ *
+ * Deliberately a STATIC assertion. Running the WebUI here would require a browser; the checked graph
+ * is the strongest claim available in a Node gate, and the claim it makes is precisely the one that
+ * was false before.
+ */
+export async function validateSessionControlsWired(): Promise<GateResult> {
+  try {
+    const enginePath = path.join(process.cwd(), 'src/lib/engine/gameEngine.ts');
+    if (!fs.existsSync(enginePath)) {
+      return { gate: 'G44 session controls wired', passed: false, hard: true, details: `error: ${enginePath} not found` };
+    }
+    const verdict = evaluateSessionControlWiring(fs.readFileSync(enginePath, 'utf-8'));
+    return { gate: 'G44 session controls wired', passed: verdict.passed, hard: true, details: verdict.details };
+  } catch (e) {
+    return { gate: 'G44 session controls wired', passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}

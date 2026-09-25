@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSystem1Boundary } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -106,6 +106,12 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // line is consumed by a finalized developmental encounter, and no line is starved to effective
   // exclusion. It does not claim that every secondary or ambient offer contains every line.
   results.push(await validateLineCoverage(tier));
+  // G44 (Phase 16 d8): the session-control store was a write-only surface for its whole life — a
+  // settings control for every field, one importer (the settings page), and no `SessionContext`
+  // builder reading it. The failure is ABSENCE, so no runtime assertion could see it: an unread field
+  // behaves exactly like a missing one. This gate reads the module graph instead, the same technique
+  // as G37, and fails if the parity fields stop reaching the WebUI engine.
+  results.push(await validateSessionControlsWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

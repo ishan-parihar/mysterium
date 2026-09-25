@@ -20,7 +20,8 @@
  * Hard-gate failures block merge; soft-gate failures are reported, not thrown.
  */
 import { describe, it, expect, beforeAll } from 'vitest';
-import { runValidationSuite, type ValidationReport } from '../../src/core/validation/gates.js';
+import { runValidationSuite, validateSessionControlsWired, type ValidationReport } from '../../src/core/validation/gates.js';
+import { evaluateSessionControlWiring } from '../../src/core/validation/gates/surface.js';
 
 describe('Validation benchmark (CI tier)', () => {
   let suite: ValidationReport;
@@ -80,12 +81,93 @@ describe('Validation benchmark (CI tier)', () => {
     // on texture engagement, because §5.3 forbids the structural selection its discovery writer was
     // wired to, and only a ratified reading reconciles). Both defects it locks lived in the
     // COMPOSITION of two seam calls over time, which is why none of the other 40 could see them.
-    expect(suite.results.length).toBe(43);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43']) {
+    // 43 → 44 with Phase 16 d8 (G44 session controls wired — the settings store declared CLI parity
+    // and had ONE importer, itself, while `gameEngine.ts` hard-coded `targetSessionLength: 5` and no
+    // force fields. An unread field behaves exactly like an absent one, so every runtime gate passed
+    // with the surface fully dark; the only instrument that can see absence is the module graph, the
+    // same technique as G37. It also locks the pinned-cell training-weave guard, which is the one
+    // divergence wiring the store would otherwise have introduced between the browser and the CLI.)
+    expect(suite.results.length).toBe(44);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);
     expect(suite.results.map((r) => r.gate).some((g) => g.startsWith('G26 '))).toBe(true); // priority formula closure
     expect(new Set(suite.results.map((r) => r.gate)).size).toBe(suite.results.length);
+  });
+});
+
+/**
+ * G44 — the session-controls wiring gate. A gate that cannot fail is decoration (`MY-RG-0010`), and
+ * this one guards an ABSENCE, so its teeth are the only thing worth asserting: the gate must pass on
+ * the wired tree and must fail when the store stops reaching the engine. The second case is proven
+ * by reading the gate's own source, not by mutating the working tree.
+ */
+describe('G44 session controls wired', () => {
+  it('passes on the wired tree', async () => {
+    const r = await validateSessionControlsWired();
+    expect(r.passed).toBe(true);
+    expect(r.hard).toBe(true);
+  });
+
+  it('names the store and the parity fields it guards', async () => {
+    const r = await validateSessionControlsWired();
+    for (const field of ['encounterCount', 'forceLine', 'forceStage', 'forceModality']) {
+      expect(r.details).toContain(field);
+    }
+    expect(r.details).toContain('pinned-cell');
+  });
+
+  it('has teeth: it fails on a store that no builder reads', () => {
+    // The gate guards an ABSENCE, so a gate that only ever returns `passed: true` would satisfy
+    // every other test in this file. The decision is a pure function, so the failure is provable by
+    // handing it the source this tree had BEFORE the fix — the four hard-coded controls with no
+    // store import — rather than by mutating the working tree.
+    const beforeTheFix = `
+      import { startSession } from '$core/GameLoop.js';
+      export function startGameSession(): void {
+        const sessionContext: SessionContext = {
+          encountersSoFar: 0, sessionDurationMs: 0, targetSessionLength: 5, recentLines: [],
+        };
+      }
+    `;
+    const verdict = evaluateSessionControlWiring(beforeTheFix);
+    expect(verdict.passed).toBe(false);
+    expect(verdict.details).toContain('write-only');
+  });
+
+  it('has teeth: it fails when a parity field regresses to a literal', () => {
+    // Narrower than the case above, and the one a careless refactor produces: the store is still
+    // imported, but one field stops reading it and hard-codes a value again.
+    const oneFieldDark = `
+      import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
+      const control = get(sessionControlStore);
+      const sessionContext: SessionContext = {
+        encountersSoFar: 0, sessionDurationMs: 0,
+        targetSessionLength: control.encounterCount, recentLines: [],
+        forceStage: control.forceStage ?? undefined,
+        forceModality: control.forceModality ?? undefined,
+      };
+      const isPinned = control.forceStage !== null && control.forceStage !== null;
+    `;
+    const verdict = evaluateSessionControlWiring(oneFieldDark);
+    expect(verdict.passed).toBe(false);
+    expect(verdict.details).toContain('forceLine');
+  });
+
+  it('has teeth: it fails when the pinned-cell parity guard is dropped', () => {
+    // The guard is the subtle one. Every parity field can be wired correctly and the browser still
+    // diverge from the kernel: a pinned cell would receive a training beat the CLI refuses. Nothing
+    // else in the suite sees that, so the gate must.
+    const noGuard = `
+      import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
+      const control = get(sessionControlStore);
+      const encounterCount = control.encounterCount;
+      const forceLine = control.forceLine; const forceStage = control.forceStage;
+      const forceModality = control.forceModality;
+    `;
+    const verdict = evaluateSessionControlWiring(noGuard);
+    expect(verdict.passed).toBe(false);
+    expect(verdict.details).toContain('pinned-cell');
   });
 });

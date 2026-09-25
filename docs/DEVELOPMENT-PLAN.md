@@ -1164,8 +1164,18 @@ would be the cosmetic split `M1` forbids).
 > **Status (2026-09-25).** Phase 16 remains **in progress**. d2 and d3 are built; d1, d4, d5, d6, and
 > d7 are now delivered too, and five items are open. d3 reserves the first developmental offer for the
 > least-recently-served eligible line, leaves candidate `priority` values and the non-primary ranked
-> tail unchanged, and is locked by production-path tests plus **G43** in the 43-gate CI roster. The
+> tail unchanged, and is locked by production-path tests plus **G43** in the 44-gate CI roster. The
 > original campaign figures remain dated baseline evidence, not post-fix measurements.
+>
+> **d8 (2026-09-26) — the session controls are no longer write-only.** `sessionControlStore` declared
+> parity with the CLI's `--encounters/--line/--stage/--modality`, and the settings page rendered a
+> control for each, but **nothing read the store**: `gameEngine.ts` hard-coded
+> `targetSessionLength: 5` and passed no force fields, so four player-facing controls persisted and
+> changed nothing. An unread field behaves exactly like an absent one, so every runtime gate passed
+> with the surface fully dark — the only instrument that can see absence is the module graph, which
+> is **G44**. The same change closed a parity hole it would otherwise have opened: a fully pinned
+> cell now suppresses the training weave in the WebUI exactly as the kernel already did
+> (`GameLoop.ts` `forcedCell`). Kernel roster **43 → 44**.
 >
 > **d1 — one producer, one reclassification, one deliberate absence.** `memoryPage` is measured where
 > the page is built (`buildEnvelope` → `memoryPageBlock`): block lines/chars plus the lines that

@@ -346,14 +346,17 @@ one path and unknowable on the other; the orphan field and both write sites were
 > calibration stage, drive health, session summary counts — check it against `src/`.**
 
 Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Legacy removal is
-**DONE**. Phases 1–15 are **implemented and gated**; Phase 16 remains active with **d1–d7 all
-delivered** (2026-09-25) and five open items carried in `docs/audits/CAMPAIGN-REPORT-2026-09-25.md` §4 —
-a `Interpersonal` exclusion that is a **d3 tie-break artefact** (the line is last in canonical
-`ALL_LINES`, so it can never win a fresh-significator tie) and a population-level class G43's
-single-persona roster cannot see, an inert
+**DONE**. Phases 1–15 are **implemented and gated**; Phase 16 remains active with **d1–d7 and d8 all
+delivered** (d1–d7 on 2026-09-25, d8 on 2026-09-26) and five open items carried in
+`docs/audits/CAMPAIGN-REPORT-2026-09-25.md` §4 — an `Interpersonal` exclusion that is a **structural
+slot deficit** (the reserve's strict forward tie-break serves the 8th line 8th, and each campaign's 8th
+offer is a training beat, so the round-robin never reaches it within a campaign) plus a
+population-level class G43's short single-persona run cannot see, an inert
 polarity loop, the wide `shadow-facing` 0.0 %, the real-rater RV1–RV7 thresholds, and per-line
 saturation thresholds awaiting real progression curves. The current
-kernel roster is **43 gates**. **Phase 10** (Generative World & Personalization; gates G22–G27) was
+kernel roster is **44 gates** (43 + **G44**, Phase 16 d8: the session-control store was write-only,
+so the parity fields it declares never reached a `SessionContext` builder — an ABSENCE no runtime
+gate can see, which is why the fix is a module-graph assertion). **Phase 10** (Generative World & Personalization; gates G22–G27) was
 ratified 2026-09-20, **built 2026-09-21**, and its **live runtime loop closed 2026-09-22**.
 **Phase 11 — Closed-Loop Memory & Preference Intake (G28–G30)** and **Phase 12 — Semantic Memory
 Tier (G31)** were ratified and **built 2026-09-22 in the same development pass**: checkpoint
@@ -468,8 +471,19 @@ When you implement one, record the implementation in the same commit and cite th
 2. **Live-surface wiring** (development, phase-able — the failure class is *a consumer named in the
    docs that no live seam ever calls*): the nine surfaces in `WIRING-CONTRAST-AUDIT-2026-09-23`
    §3–§4 were **CLOSED by Phase 13** (d1–d12, G32–G35), and the adjacent checked-graph class by
-   **Phase 14** (G36–G38). The list is empty; when a new dark surface is found, it returns here and
-   gets its gate in the same commit that wires it.
+   **Phase 14** (G36–G38). **The list is NOT empty — one surface was found dark 2026-09-26:**
+   `src/lib/stores/sessionControlStore.ts` is a documented parity surface (`forceLine`, `forceStage`,
+   `forceModality`, `encounterCount`, each with a settings-page control) whose **only importer is
+   `src/routes/settings/+page.svelte`** — and **no `SessionContext` builder read it**
+   (`src/lib/engine/gameEngine.ts` hard-coded `targetSessionLength: 5` and passed no force fields).
+   Four player-facing controls persisted to localStorage and changed nothing. This is verbatim the
+   class item 2 defines, which is why the earlier "the list is empty" claim is corrected here rather
+   than left for the next agent to read and skip. **Now wired and gated (Phase 16 d8, G44):**
+   `startGameSession` and `scheduleEncounters` both read the store, all four parity fields reach
+   `SessionContext`, and G44 reads the module graph to keep them from going dark again — the failure
+   is ABSENCE, so no runtime gate can see it. The same change closed a parity hole the wiring would
+   otherwise have OPENED: a pinned cell now suppresses the training weave in the WebUI exactly as the
+   kernel already did (`GameLoop.ts` `forcedCell`). The list is empty again.
 3. **Configuration, calibration, and development frontier** (verified against the tree
    2026-09-22, post-Phase-11+12; owned by the plan's record — the detailed evidence table lives in
    `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7):
