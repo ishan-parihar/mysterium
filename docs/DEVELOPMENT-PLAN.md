@@ -216,6 +216,10 @@ delegation wraps it, never bypasses the GameLoop.
 **Gates:** G18; DO local dev (wrangler) verified; scope-fence assertions (38's NOT-list)
 as kernel assertions. **Duration:** ~1.5 weeks. **Depends:** Phases 1–2.
 
+**Status:** core built + gated (G18 privacy wall, pod state machine, CLI practice surfaces); the
+M1 transport adapter is built but unwired — zero production importers. Surface half open: no
+WebUI/networked pod surface. See `docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` §4.
+
 ### Phase 5 — Measurement Packs (PG-D)
 
 1. Pack contract types + loader (40 §contract): manifest, instruments, scoring harness,
@@ -228,6 +232,11 @@ as kernel assertions. **Duration:** ~1.5 weeks. **Depends:** Phases 1–2.
 
 **Gates:** G19; both reference packs pass reliability collection scaffolding.
 **Duration:** ~1.5 weeks. **Depends:** Phase 1.
+
+**Status:** core built + gated (G19, the 8-pack §4.3 table, ReliabilityCollector); no live path —
+the engine's registry is test-only in production (`registerPack` has no production caller) and
+pack sessions run only inside `delegateSession` (gate/test/CLI-drill callers). See
+`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` §0/§4.
 
 ### Phase 6 — WebUI Play Parity (PG-2)
 
@@ -273,6 +282,10 @@ trajectory renders K-5 → undergraduate on one branch.
 **Gates:** G21 credential evidence chain (claims trace to pack reliability status);
 consent firewall (identity never in credential payloads).
 **Duration:** ~1.5 weeks. **Depends:** Phase 5.
+
+**Status:** core built + gated (G21, ClaimLedger, `exportRPLPortfolio` CLI); unread in production —
+the ledger's only production importer is the G21 gate itself, and the pack-evidence pipeline has no
+live pack sessions to draw from. See `docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` §0/§4.
 
 ### Phase 10 — Generative World & Personalization (ratified 45 / 46 / 47) — ✅ built (2026-09-21)
 
@@ -1359,22 +1372,30 @@ parity, corpus growth, and refactoring.
 > journal surface is live, the claim chain is complete and G21-gated, the levelling engine is
 > kernel-tested. What is missing is the **system** half, in one consistent shape — every education
 > surface that needs a second party is dark: `PodTransport` has zero production importers; pack
-> sessions run only inside `delegateSession` (gate/test callers only), so no claim ever derives from
+> sessions have no live path (the runner's callers are a gate, tests, and the CLI drill, and the
+> engine's registry is test-only in production), so no claim ever derives from
 > a session a player actually played; `ClaimLedger` is imported in production by exactly one gate;
 > `articulationLadder.ts` is in-vitro; and the three surfaces `33 §7` names — Guardian Mirror,
 > Educator Desk, Therapeutic Pane — have zero implementations. The §8 ✅s above were BUILD
 > completions; three of the five are not WIRING completions.
 >
 > **Track A — education system (dependency order):**
-> 1. **d1 — pack sessions on a live seam**, so reliability data accumulates from real play and
->    claims cite real sessions (absence-class gate in G44's style + integration test).
+> 1. **d1 — pack sessions on a live seam** — first the one-line registry seed (`registerPack` beside
+>    `seedCurriculumRegistry()`, `GameLoop.ts:260`, so the engine's registry stops being test-only),
+>    then a real-session pack path, so reliability data accumulates from real play and claims cite
+>    real sessions (absence-class gate in G44's style + integration test).
 > 2. **d2 — the articulation ladder live**, promoted from in-vitro to its render path (16 §10.5).
 > 3. **d3 — Educator Desk** (33 §7), read-only, from 16 §10.4 projections through d2's ladder.
 >    Guardian Mirror and Therapeutic Pane follow, sequenced after consent/supervision hooks exist.
 > 4. **d4 — pod transport M0** — 38's own KV + polling fallback over declared bindings; M1
 >    (Durable Objects) stays deferred until a hosting decision. Unblocks 40's MP3 cohort machinery.
-> 5. **d5 — canon↔tree repair in 37** — build the promised per-branch minimum-density invariant in
->    `check:invariants`, resolve the phantom `earth-science` row, rule on the four open questions.
+> 5. **d5 — 37 canon↔tree reconciliation + the verifiable-acceptance layer** — not corpus authoring
+>    (10 of 11 branches already ship): reconcile the canon tables to the measured registry (108
+>    holons vs §4.2's stale 56/1,280 row; §4.1's "to add" → what exists; rule `earth-science`),
+>    build the per-branch density check in `check:invariants` that measures against 35 §5.2's
+>    97-holon minimum and can fail on the shipped corpus (reporting-first; hardening to a
+>    battery-failing gate is an owner decision with the numbers on the table), and give the
+>    remaining acceptance criteria a linter check or a canon amendment. Detail: the audit §3/§6.
 >
 > **Track B — production readiness (parallel):** WebUI parity (make `gameEngine.ts` a
 > `tickWithStrategy` caller — prerequisite for d3 being worth a dashboard); the Interpersonal slot
@@ -1386,8 +1407,11 @@ parity, corpus growth, and refactoring.
 
 ### Current work (post-plan) — not a phase
 
-Phases 1–15 are ratified and built. **Phase 16 remains in progress:** d2 and d3 are built and gated
-through G42/G43; d1, d4, d5, d6, and d7 remain open in the order above. The frontier after those
+Phases 1–15 are ratified and built. **Phase 16's diagnostic sweep is delivered — d1–d7 on
+2026-09-25, d8 on 2026-09-26** — and Phase 16 remains active only on its five carried open items
+(`docs/audits/CAMPAIGN-REPORT-2026-09-25.md` §4): the Interpersonal structural slot deficit, the
+inert polarity loop, the wide `shadow-facing` 0.0 %, real-rater RV1–RV7 thresholds, and per-line
+saturation thresholds. The frontier after those
 repairs is external certification and deployment: real-rater thresholds, real-play evidence, partner
 recognition, networked pod hosting, and remote synchronization. When current work is described to an
 agent, cite `AGENTS.md §4.2` and the records — never a phase number from memory.
@@ -1426,7 +1450,9 @@ The system qualifies as the "complete education-system replacement" trajectory w
 
 ## 8. Immediate next actions
 
-All 9 phases are IMPLEMENTED (see revision record). The post-plan frontier each phase
+All 9 phases are IMPLEMENTED (see revision record) — their cores are built and gated. The ✅s
+below mark BUILD completions, and for three of the five (pods transport, packs, credentialing) the
+WIRING half is still dark (`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` §0). The post-plan frontier each phase
 defered honestly is ALSO IMPLEMENTED (2026-09-17 — see revision record):
 
 1. **Delegation (43):** ✅ LLM-backed choice policies behind the role interface
@@ -1446,9 +1472,12 @@ defered honestly is ALSO IMPLEMENTED (2026-09-17 — see revision record):
    `exportRPLPortfolio` + `mysterium credential rpl`; recognition now requires
    institutions, not code.
 
-What remains is genuinely external: real reliability data (retire ceilings from
-evidence), a partner institution (assess a portfolio), networked pod hosting
-deploy the DO), and per-line LLM keys for delegated mandates.
+What remains splits three ways (2026-09-26 correction — `docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md`):
+**external** — real reliability data (retire ceilings from evidence), a partner institution (assess a
+portfolio), the pod hosting decision that deploys the DO, and per-line LLM keys for delegated
+mandates; **wiring** — the education surfaces that need a second party (pack sessions on a live seam,
+the claim ledger's production reader, the articulation ladder's render path, the auditor surfaces);
+**owner decisions** — ratifying Phase 17 (PROPOSED), which carries the wiring half.
 
 **Wiring frontier (2026-09-23).** Beyond the external items above, the
 `WIRING-CONTRAST-AUDIT-2026-09-23` found build-complete surfaces that are not yet
