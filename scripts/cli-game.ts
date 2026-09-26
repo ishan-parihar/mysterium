@@ -41,6 +41,7 @@ import { runCurriculum } from './CurriculumCommands.js';
 import { runSetupProfile, runSetup } from './cli/onboarding.js';
 import { runProfile, runStatus, runGlossary, runEvents, runPrivacyCommand } from './cli/profileCmd.js';
 import { runPodCommand, runCredentialCommand, runVowCommand } from './cli/practiceCmd.js';
+import { runPackCommand } from './cli/packCmd.js';
 import { runDelegateCommand } from './cli/delegateCmd.js';
 import { runDiagnostic, runSingleEncounter, runFullSession } from './cli/runtime.js';
 
@@ -383,6 +384,11 @@ program
   .command('credential [action] [rest...]')
   .allowUnknownOption()
   .description('Claim-based credentials (doc 41): list, draft <domain> <descriptor...>, issue <claimId> <subject>, revoke <claimId>, export <claimId>, rpl --name <chosen-name> [--claims id1,id2]')
+program
+  .command('pack [rest...]')
+  .allowUnknownOption()
+  .description('Measurement-pack session (doc 40): one real S1 pack administration — records reliability data, drafts a pack-evidence claim')
+  .option('--seed <seed>', 'session seed (default: derived from the clock so repeated runs differ)')
 
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
@@ -660,7 +666,7 @@ async function main(): Promise<void> {
   // treat ALL subcommands as potentially interactive EXCEPT the truly
   // non-interactive ones (`status`, `glossary`). This is safer than
   // enumerating interactive ones — new subcommands default to safe.
-  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod', 'credential']);
+  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod', 'credential', 'pack']);
   const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand ?? '') && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
     setHeadless(true);
@@ -696,6 +702,7 @@ async function main(): Promise<void> {
   if (subcommand === 'vow') { await runVowCommand(program.args.slice(1)); return; }
   if (subcommand === 'pod') { await runPodCommand(program.args.slice(1)); return; }
   if (subcommand === 'credential') { await runCredentialCommand(program.args.slice(1)); return; }
+  if (subcommand === 'pack') { await runPackCommand(program.args.slice(1)); return; }
   // P0-5 + P0-6: Use deleteAllSaves (clears sig + world + atomic envelope).
   // P0-6: Also clear TDG graph state if the TDG bridge is running, so a new
   // game doesn't inherit the old player's developmental graph.

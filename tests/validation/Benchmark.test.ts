@@ -91,8 +91,13 @@ describe('Validation benchmark (CI tier)', () => {
     // same technique as G37. It also locks that the browser carries NO instrument-pin logic — the
     // WebUI has no focusedCell producer, so pin logic there is dead code — and that every
     // force-aware CLI builder marks its combined --line/--stage sessions as deliberate pins.)
-    expect(suite.results.length).toBe(44);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44']) {
+    // 44 → 45 with Phase 17 d1 (G45 pack seam wired — the pack engine's registry was test-only in
+    // production: registerPack had no production caller, so delegate.ts's single getPack read was
+    // a fallback-masked always-miss. An unseeded registry behaves exactly like an empty one, so
+    // no runtime gate can see the absence; this is the module-graph technique again, extended to
+    // the CLI pack session, whose teeth are proven by mutation in the gate's own doc-comment.)
+    expect(suite.results.length).toBe(45);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

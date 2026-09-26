@@ -1,6 +1,6 @@
 /**
- * Surface gates — G36–G38, G44: the entry point, the checked graph, the System-1 boundary, and the
- * session-control wiring.
+ * Surface gates — G36–G38, G44–G45: the entry point, the checked graph, the System-1 boundary, the
+ * session-control wiring, and the pack seam.
  *
  * Split out of `gates.ts` (module-cohesion audit item 2). These are the class-level gates: they assert
  * the shape of the BUILD and of the module graph, which no engine-level gate can see.
@@ -502,5 +502,51 @@ export async function validateSessionControlsWired(): Promise<GateResult> {
     };
   } catch (e) {
     return { gate: 'G44 session controls wired', passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G45 — pack seam wired (Phase 17 d1; `EDUCATION-SURFACE-AUDIT-2026-09-26` §0/§6).
+//
+// The pack engine's registry was test-only for its whole life: registerPack had no production
+// caller, so the one production getPack read (pack-score acceptance in delegate.ts) was a
+// fallback-masked always-miss, and no runtime gate could see the absence — an unseeded registry
+// behaves exactly like an empty one. This gate reads the module graph instead (the G37/G44
+// technique) and fails if the seed leaves the boot path or the CLI pack session stops reaching
+// the real delegation, reliability, and claim machinery.
+// ---------------------------------------------------------------------------
+
+export async function validatePackSeamWired(): Promise<GateResult> {
+  const gate = 'G45 pack seam wired';
+  try {
+    // Teeth (MY-RG-0010): match CALLS, never mentions. A commented-out seed or a bare import
+    // still textually contains `seedPackRegistry()`, so every check below runs on comment-stripped
+    // text with call-site anchoring — proven by mutation: comment the seed out, gut the seed
+    // function, or sever the CLI's delegateSession call, and this gate goes red.
+    const stripLineComments = (t: string): string => t.replace(/^\s*\/\/.*$/gm, '');
+    const read = (rel: string): string => {
+      const p = path.join(process.cwd(), rel);
+      if (!fs.existsSync(p)) throw new Error(`${p} not found`);
+      return stripLineComments(fs.readFileSync(p, 'utf-8'));
+    };
+    if (!/^\s*seedPackRegistry\(\);/m.test(read('src/core/GameLoop.ts'))) {
+      return { gate, passed: false, hard: true, details: 'src/core/GameLoop.ts no longer CALLS seedPackRegistry() on the boot path — the pack registry is test-only again, and delegate.ts\'s getPack read reverts to a fallback-masked always-miss' };
+    }
+    if (!/export function seedPackRegistry[\s\S]*?registerPack\(/.test(read('src/core/packs/referencePacks.ts'))) {
+      return { gate, passed: false, hard: true, details: 'seedPackRegistry is on the boot path but no longer registers packs into the engine registry' };
+    }
+    const cmd = read('scripts/cli/packCmd.ts');
+    const missing = ([
+      ['delegateSession', /delegateSession\(/],
+      ['ReliabilityCollector', /ReliabilityCollector/],
+      ['packEvidenceRef', /packEvidenceRef/],
+      ['seedPackRegistry', /seedPackRegistry/],
+    ] as const).filter(([, re]) => !re.test(cmd)).map(([n]) => n);
+    if (missing.length > 0) {
+      return { gate, passed: false, hard: true, details: `scripts/cli/packCmd.ts no longer reaches: ${missing.join(', ')} — the pack session left the live delegation/reliability/claim machinery` };
+    }
+    return { gate, passed: true, hard: true, details: 'pack registry seeded on the boot path; the CLI pack session runs the real delegation machinery, records reliability data, and drafts pack-evidence claims' };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }
 }

@@ -19,7 +19,7 @@
  *     the honest-young-instrument posture; the reliability collection
  *     scaffolding (ReliabilityCollector) is what eventually retires it.
  */
-import type { MeasurementPack, PackForm, PackItem } from './PackEngine.js';
+import { registerPack, type MeasurementPack, type PackForm, type PackItem } from './PackEngine.js';
 
 // ---------------------------------------------------------------------------
 // Shared item fabrication: digit-span items at span-length difficulty
@@ -434,3 +434,13 @@ export const REFERENCE_PACKS: readonly MeasurementPack[] = [
   MEMORY_WORKING_SPAN, MEMORY_SPATIAL, COGNITION_SPEED, COGNITION_CONTROL,
   LANGUAGE_VOCABULARY, LANGUAGE_READING, CODING_FLUENCY, MATH_FLUENCY,
 ];
+
+/**
+ * Phase 17 d1 (EDUCATION-SURFACE-AUDIT-2026-09-26 §0): seed the reference corpus into the
+ * engine's own registry on the boot path. Until this existed, `registerPack` had no production
+ * caller, so the one production `getPack` read (pack-score acceptance in delegate.ts) was a
+ * fallback-masked always-miss. Idempotent — `registry.set` overwrites, safe on every session start.
+ */
+export function seedPackRegistry(): void {
+  for (const p of REFERENCE_PACKS) registerPack(p);
+}

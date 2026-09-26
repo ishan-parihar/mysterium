@@ -1406,6 +1406,13 @@ parity, corpus growth, and refactoring.
 >
 > **User-reserved, not in this phase:** KV namespace/dataset/secret creation, pod hosting decision,
 > real raters (RV1–RV7), partner institutions for 41, DPIA.
+>
+> **Build status:** **d1 ✅ BUILT 2026-09-27** — the registry seed rides the boot path
+> (`seedPackRegistry()` beside `seedCurriculumRegistry()` in `startSession`), `mysterium pack` runs
+> the real S1 delegation end-to-end (administer → ratify → skillTheta → `reliability.json` →
+> pack-evidence claim draft, visible on `mysterium credential list`), and **G45** locks the seam
+> (module-graph assertion, teeth proven by mutation: commented-out seed, gutted seed body, and a
+> severed CLI delegation each go red). Battery: 149 files / 1698 tests.
 
 ### Current work (post-plan) — not a phase
 

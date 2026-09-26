@@ -357,8 +357,14 @@ polarity loop, the wide `shadow-facing` 0.0 %, the real-rater RV1–RV7 threshol
 saturation thresholds awaiting real progression curves. **Phase 17 — the education-system second half —
 was ratified by user directive on 2026-09-27 and is in execution** (packs on a live seam, articulation
 ladder live, Educator Desk, pod transport M0, 37 teeth-first repair; evidence base
-`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md`, plan entry in `DEVELOPMENT-PLAN.md` §4). The current
-kernel roster is **44 gates** (43 + **G44**, Phase 16 d8: the session-control store was write-only,
+`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md`, plan entry in `DEVELOPMENT-PLAN.md` §4). **d1
+(packs on a live seam) is BUILT 2026-09-27**: the pack registry seeds on the boot path, `mysterium
+pack` runs a real S1 delegation end-to-end into reliability data and a pack-evidence claim draft,
+and G45 locks it. The current
+kernel roster is **45 gates** (44 + **G45**, Phase 17 d1: the pack engine's registry was
+production-test-only — an unseeded registry behaves exactly like an empty one, so no runtime gate
+could see the absence; G45 is the module-graph assertion, teeth proven by mutation. Phase 16 d8's
+G44 remains: the session-control store was write-only,
 so the parity fields it declares never reached a `SessionContext` builder — an ABSENCE no runtime
 gate can see, which is why the fix is a module-graph assertion). **Phase 10** (Generative World & Personalization; gates G22–G27) was
 ratified 2026-09-20, **built 2026-09-21**, and its **live runtime loop closed 2026-09-22**.

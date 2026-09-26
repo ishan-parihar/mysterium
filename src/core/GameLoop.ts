@@ -53,6 +53,7 @@ import type { ConceptState, StudyTheme, ForgettingCurve } from './curriculum/typ
 import { generateCurriculumCandidates, type CurriculumCandidate } from './engines/CandidateGeneration.js';
 import { getCurriculumRegistry } from './curriculum/CurriculumRegistry.js';
 import { seedCurriculumRegistry } from './curriculum/CurriculumSeed.js';
+import { seedPackRegistry } from './packs/referencePacks.js';
 import { computeLearningAnalytics } from './curriculum/LearningAnalytics.js';
 import { migrateKnowledgeState } from './curriculum/CurriculumMigration.js';
 import { probeCurriculum } from './curriculum/MetaCognitiveProbe.js';
@@ -258,6 +259,9 @@ export function startSession(sig: Significator, session: SessionContext, plannin
   // Curriculum expansion: seed the registry with curriculum data if not already done.
   // This is idempotent — safe to call on every session start.
   seedCurriculumRegistry();
+  // Phase 17 d1: the pack engine's registry seeds on the same boot path — getPack's production
+  // read (pack-score acceptance in delegate.ts) stops being a fallback-masked always-miss.
+  seedPackRegistry();
 
   // Phase 5B: Migrate knowledge state to current schema version if needed.
   let migratedSig = sig;

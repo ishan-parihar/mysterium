@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -112,6 +112,12 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // behaves exactly like a missing one. This gate reads the module graph instead, the same technique
   // as G37, and fails if the parity fields stop reaching the WebUI engine.
   results.push(await validateSessionControlsWired());
+  // G45 (Phase 17 d1): the pack engine's registry was test-only in production — registerPack had
+  // no production caller, so delegate.ts's single getPack read was a fallback-masked always-miss,
+  // and pack sessions existed only inside gates/tests/CLI-drills of the runner. An unseeded
+  // registry behaves exactly like an empty one, so no runtime gate can see the absence; this is
+  // the same module-graph technique as G37/G44, extended to the CLI pack seam.
+  results.push(await validatePackSeamWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
