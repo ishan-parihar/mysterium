@@ -96,8 +96,12 @@ describe('Validation benchmark (CI tier)', () => {
     // a fallback-masked always-miss. An unseeded registry behaves exactly like an empty one, so
     // no runtime gate can see the absence; this is the module-graph technique again, extended to
     // the CLI pack session, whose teeth are proven by mutation in the gate's own doc-comment.)
-    expect(suite.results.length).toBe(45);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45']) {
+    // 45 → 46 with Phase 17 d2 (G46 articulation ladder wired — the ladder was in-vitro, law-holding
+    // render code with zero importers; the gate requires BOTH the payload bridge and the
+    // law-holder at each consumer, so the ladder can neither go dark nor be bypassed with raw
+    // payloads.)
+    expect(suite.results.length).toBe(46);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

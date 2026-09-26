@@ -1,6 +1,6 @@
 /**
- * Surface gates — G36–G38, G44–G45: the entry point, the checked graph, the System-1 boundary, the
- * session-control wiring, and the pack seam.
+ * Surface gates — G36–G38, G44–G46: the entry point, the checked graph, the System-1 boundary,
+ * the session-control wiring, the pack seam, and the articulation-ladder seam.
  *
  * Split out of `gates.ts` (module-cohesion audit item 2). These are the class-level gates: they assert
  * the shape of the BUILD and of the module graph, which no engine-level gate can see.
@@ -546,6 +546,53 @@ export async function validatePackSeamWired(): Promise<GateResult> {
       return { gate, passed: false, hard: true, details: `scripts/cli/packCmd.ts no longer reaches: ${missing.join(', ')} — the pack session left the live delegation/reliability/claim machinery` };
     }
     return { gate, passed: true, hard: true, details: 'pack registry seeded on the boot path; the CLI pack session runs the real delegation machinery, records reliability data, and drafts pack-evidence claims' };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G46 — articulation ladder wired (Phase 17 d2; `EDUCATION-SURFACE-AUDIT-2026-09-26` §6 d2).
+//
+// The ladder (16 §10.5) was in-vitro for its whole life: law-holding render code with zero
+// importers. The failure is absence again — a bridge that nothing renders through behaves
+// exactly like no bridge — so this gate reads the module graph. It requires BOTH halves of the
+// seam at each consumer: the payload producer (buildLadderPayloads) AND the law-holder
+// (renderLevel). A consumer calling only the bridge would bypass AL1–AL6 (raw payloads, no
+// register discipline); a consumer calling only renderLevel has nothing real to render.
+// ---------------------------------------------------------------------------
+
+export async function validateLadderWired(): Promise<GateResult> {
+  const gate = 'G46 articulation ladder wired';
+  try {
+    const stripLineComments = (t: string): string => t.replace(/^\s*\/\/.*$/gm, '');
+    const read = (rel: string): string => {
+      const p = path.join(process.cwd(), rel);
+      if (!fs.existsSync(p)) throw new Error(`${p} not found`);
+      return stripLineComments(fs.readFileSync(p, 'utf-8'));
+    };
+    const bridge = read('src/core/presentation/ladderProjections.ts');
+    if (!/buildLadderPayloads[\s\S]*?articulationLadder\.js/.test(bridge) && !/from '\.\.\/domain\/articulationLadder\.js'/.test(bridge)) {
+      return { gate, passed: false, hard: true, details: 'ladderProjections no longer derives its payload types from the ladder — the bridge and the law-holder have drifted apart' };
+    }
+    if (!/for \(const spec of LADDER\)/.test(bridge)) {
+      return { gate, passed: false, hard: true, details: 'ladderProjections dropped its every-level completeness contract — a level can go dark silently again' };
+    }
+    const consumers: readonly [string, string][] = [
+      ['scripts/cli/ladderCmd.ts', 'the CLI ladder command'],
+      ['src/routes/profile/+page.svelte', 'the WebUI profile page'],
+    ];
+    for (const [rel, name] of consumers) {
+      const text = read(rel);
+      const missing = ([
+        ['buildLadderPayloads', /buildLadderPayloads\(/],
+        ['renderLevel', /renderLevel\(/],
+      ] as const).filter(([, re]) => !re.test(text)).map(([n]) => n);
+      if (missing.length > 0) {
+        return { gate, passed: false, hard: true, details: `${name} no longer reaches: ${missing.join(', ')} — the ladder ${missing.includes('renderLevel') ? 'is bypassed (raw payloads, no register law)' : 'has no real payload producer'}` };
+      }
+    }
+    return { gate, passed: true, hard: true, details: 'ladder bridge derives every level; both the CLI and the WebUI profile render through the law-holder' };
   } catch (e) {
     return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }

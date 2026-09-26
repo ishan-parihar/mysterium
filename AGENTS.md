@@ -360,8 +360,14 @@ ladder live, Educator Desk, pod transport M0, 37 teeth-first repair; evidence ba
 `docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md`, plan entry in `DEVELOPMENT-PLAN.md` §4). **d1
 (packs on a live seam) is BUILT 2026-09-27**: the pack registry seeds on the boot path, `mysterium
 pack` runs a real S1 delegation end-to-end into reliability data and a pack-evidence claim draft,
-and G45 locks it. The current
-kernel roster is **45 gates** (44 + **G45**, Phase 17 d1: the pack engine's registry was
+and G45 locks it. **d2 (the articulation ladder live) is BUILT 2026-09-27**: `buildLadderPayloads`
+derives every ladder level from the live Significator, `mysterium ladder` renders the self
+register through the law-holder (refusing without a save), and the /profile page carries an
+Articulation card — G46 locks both consumers. The current
+kernel roster is **46 gates** (45 + **G46**, Phase 17 d2: the ladder was in-vitro — law-holding
+render code with zero importers, an absence no runtime gate could see; G46 requires each consumer
+to reach BOTH the payload bridge and `renderLevel`. Phase 17 d1's
+G45 remains: the pack engine's registry was
 production-test-only — an unseeded registry behaves exactly like an empty one, so no runtime gate
 could see the absence; G45 is the module-graph assertion, teeth proven by mutation. Phase 16 d8's
 G44 remains: the session-control store was write-only,

@@ -1413,6 +1413,15 @@ parity, corpus growth, and refactoring.
 > pack-evidence claim draft, visible on `mysterium credential list`), and **G45** locks the seam
 > (module-graph assertion, teeth proven by mutation: commented-out seed, gutted seed body, and a
 > severed CLI delegation each go red). Battery: 149 files / 1698 tests.
+> **d2 ✅ BUILT 2026-09-27** — `buildLadderPayloads` (src/core/presentation/ladderProjections.ts)
+> derives every level's payload from the live Significator (closed levels narrative-only, AL2);
+> `mysterium ladder` renders the self register through `renderLevel` only (refusing without a
+> save — the ladder is a history read, not a fresh-significator narration), the auditor register
+> renders its AL5 refusal until the d3 consent brokerage exists, and the WebUI /profile page gains
+> an Articulation card (L1+L2). **G46** locks the seam — each consumer must reach BOTH the bridge
+> and the law-holder, so the ladder can neither go dark nor be bypassed with raw payloads (teeth
+> proven by mutation: bypass, bridge-less, and dropped-completeness-contract mutations each go
+> red). Battery: 150 files / 1702 tests.
 
 ### Current work (post-plan) — not a phase
 

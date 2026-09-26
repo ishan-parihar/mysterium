@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -118,6 +118,11 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // registry behaves exactly like an empty one, so no runtime gate can see the absence; this is
   // the same module-graph technique as G37/G44, extended to the CLI pack seam.
   results.push(await validatePackSeamWired());
+  // G46 (Phase 17 d2): the articulation ladder was in-vitro — law-holding render code with zero
+  // importers. Same absence class as G45; the gate requires BOTH halves of the seam at each
+  // consumer (the payload bridge AND the law-holder), so the ladder cannot be bypassed with raw
+  // payloads any more than it can go dark.
+  results.push(await validateLadderWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
