@@ -1348,6 +1348,42 @@ parity, corpus growth, and refactoring.
 8. Treat real-rater validation, real-play evidence, networked deployment, and remote synchronization
    as external certification/release prerequisites. Synthetic evidence may reject; it may not certify.
 
+### Phase 17 — The Education-System Second Half (PROPOSED 2026-09-26 — pending ratification)
+
+> **Source:** `docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` — the full-surface + education-dimension
+> audit. That report carries the evidence base and the per-iteration verification criteria; this entry
+> records only the order and the shape.
+>
+> **The finding.** The education canon (37–42) is operational, and its PURE CORES ARE BUILT AND GATED:
+> the K-12 corpus rides every session (`GameLoop.ts:260`), the pod state machine carries G18, the
+> journal surface is live, the claim chain is complete and G21-gated, the levelling engine is
+> kernel-tested. What is missing is the **system** half, in one consistent shape — every education
+> surface that needs a second party is dark: `PodTransport` has zero production importers; pack
+> sessions run only inside `delegateSession` (gate/test callers only), so no claim ever derives from
+> a session a player actually played; `ClaimLedger` is imported in production by exactly one gate;
+> `articulationLadder.ts` is in-vitro; and the three surfaces `33 §7` names — Guardian Mirror,
+> Educator Desk, Therapeutic Pane — have zero implementations. The §8 ✅s above were BUILD
+> completions; three of the five are not WIRING completions.
+>
+> **Track A — education system (dependency order):**
+> 1. **d1 — pack sessions on a live seam**, so reliability data accumulates from real play and
+>    claims cite real sessions (absence-class gate in G44's style + integration test).
+> 2. **d2 — the articulation ladder live**, promoted from in-vitro to its render path (16 §10.5).
+> 3. **d3 — Educator Desk** (33 §7), read-only, from 16 §10.4 projections through d2's ladder.
+>    Guardian Mirror and Therapeutic Pane follow, sequenced after consent/supervision hooks exist.
+> 4. **d4 — pod transport M0** — 38's own KV + polling fallback over declared bindings; M1
+>    (Durable Objects) stays deferred until a hosting decision. Unblocks 40's MP3 cohort machinery.
+> 5. **d5 — canon↔tree repair in 37** — build the promised per-branch minimum-density invariant in
+>    `check:invariants`, resolve the phantom `earth-science` row, rule on the four open questions.
+>
+> **Track B — production readiness (parallel):** WebUI parity (make `gameEngine.ts` a
+> `tickWithStrategy` caller — prerequisite for d3 being worth a dashboard); the Interpersonal slot
+> fix (rotating tie-break seed or seam-priority change, with a scale-independent G43 coverage
+> assertion); a deploy smoke once KV IDs exist.
+>
+> **User-reserved, not in this phase:** KV namespace/dataset/secret creation, pod hosting decision,
+> real raters (RV1–RV7), partner institutions for 41, DPIA.
+
 ### Current work (post-plan) — not a phase
 
 Phases 1–15 are ratified and built. **Phase 16 remains in progress:** d2 and d3 are built and gated
