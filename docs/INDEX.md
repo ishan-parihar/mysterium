@@ -2,7 +2,7 @@
 
 > **GENERATED FILE — do not edit.** Produced by `python3 scripts/arch.py emit` from
 > `_org.yaml` plus the AD/RG records. Edit the source, then re-emit.
-> Generated: 2026-09-25
+> Generated: 2026-09-26
 
 ## Rungs
 
