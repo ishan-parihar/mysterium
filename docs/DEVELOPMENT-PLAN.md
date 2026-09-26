@@ -1369,8 +1369,8 @@ parity, corpus growth, and refactoring.
 > `docs/audits/EDUCATION-CANON-COMPLETION-PLAN-2026-09-27.md` — the missing-docs-context plan
 > with the code→docs reverse mapping (R1–R7) and per-doc outlines (C-A..C-D) for owner
 > alignment; its items attach to the iterations below (C-A with d3, C-C with d5, C-B standalone)
-> and add no new phase. Two of its align points (D-39 journal scheduling, C-A audit-trail depth)
-> await the owner; the density-hardening decision stays the one named in §8.
+> and add no new phase. Two of its align points (D-39 — the journal P1 seam, C-A audit-trail
+> depth) await the owner; the density-hardening decision stays the one named in §8.
 >
 > **The finding.** The education canon (37–42) is operational, and its PURE CORES ARE BUILT AND GATED:
 > the K-12 corpus rides every session (`GameLoop.ts:260`), the pod state machine carries G18, the

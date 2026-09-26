@@ -26,7 +26,7 @@ canon item attaches to an already-ratified iteration or is explicitly marked own
 | 35 complexity mapping | The density instrument (§5.2: 97-holon minimum) | Measured; the invariant itself **not built** — d5 |
 | 37 K-12 expansion | Branch trees, acceptance layer | Built 10/11 trees; **5 verified divergences** (audit §3) — d5 |
 | 38 cohort weave | Pods, transport M0/M1, sync discipline | Spec-only; **§4.2 already owns the M0/M1 transport decision exactly as planned** — d4 implements, no canon work needed |
-| 39 action-induction journal | Objectives, reflection protocol, journal system | **Spec-only, zero production consumers, never scheduled** — silent gap, owner decision below |
+| 39 action-induction journal | Objectives, reflection protocol, journal system | **P0 BUILT + LIVE** — VowService (§3.2 lifecycle), ReflectionEvidence (§3.3 five-prompt protocol + §4.4 P0 heuristic scorer), `/journal` route; the audit called it "the most operationally complete doc in the dimension". **P1 DARK** (LLM rubric scorer + `propose_objective`/`process_checkin` never registered on `/api/llm/tools` — verified by grep); P2 pod-gated (38 M1); P3 (ObjectiveGenerator + therapy-arc gate) dark |
 | 40 measurement packs | Pack registry, administration, reliability infra | Seam **built by d1**; provenance contract absent (C-B below) |
 | 41 credentialing | Claim ledger, issue flow, EU staging | **Built** (ledger, draft≠issue per §4.3); issuance CLI-only by design (§2 staging) |
 | 42 levelling | Evidence-only grading, competence/identity firewall | **Built + gated** |
@@ -67,10 +67,14 @@ closed by d1–d5; not repeated here.
 3. 40 provenance contract (R2/R3) — **C-B**.
 
 **WANT (coherence, schedule with owners):**
-4. 39 status honesty: the spec is sound (objective taxonomy §3.1, reflection pipeline §4.4) but
-   has zero production consumers and no phase assignment — either an implementation phase or an
-   explicit "not scheduled" status line so the next reader doesn't assume it ships with the
-   education half. **Owner decision D-39.**
+4. 39 phase-honesty: P0 ships on the live `/journal` route (this plan's first draft wrongly
+   called the doc spec-only — corrected against the audit's own §1 row and the bytes). What is
+   genuinely dark is the **P1 seam**: no practice tool (`propose_objective`/`process_checkin`)
+   is registered on `/api/llm/tools`, and the §4.4 LLM rubric scorer (with heuristic-degrade
+   reconciliation) is unwired; P2 is pod-gated (38 M1), P3 (ObjectiveGenerator + the therapy-arc
+   validation gate) is dark. Either schedule P1 — small: register the tools, wire the scorer's
+   graceful degrade — or record "P0 ships; P1–P3 spec-held" so the phase table stops silently
+   over-promising. **Owner decision D-39.**
 5. 33 §7.1 Educator Desk row: adequate for d3's cohort-of-one surface; cohort views (multiple
    students) need a §7.x amendment when pods land (d4+ territory) — note, don't write yet.
 
@@ -105,10 +109,13 @@ closed by d1–d5; not repeated here.
    **[ALIGN]** the density-check hardening (report-only → battery-failing) remains the named
    owner decision in plan §8.
 
-### C-D — 39 status line (one paragraph, either form)
-   **[ALIGN — owner decision D-39]:** (a) schedule a phase for the journal system (it is the
-   evidence side of 39→40→41: objectives produce the reflection evidence claims cite), or
-   (b) record "spec-held, not scheduled; revisit after Phase 17" and leave it at that.
+### C-D — 39 phase status (one paragraph, either form)
+   P0 ships; the dark remainder is P1 (tools on `/api/llm/tools` + LLM rubric scorer with
+   heuristic-degrade), P2 (pod-gated), P3 (ObjectiveGenerator + therapy-arc gate).
+   **[ALIGN — owner decision D-39]:** (a) P1 rides Phase 17 as a small item (register the two
+   tools, wire the scorer reconcile — days, not weeks; it is also the evidence side of the
+   39→40→41 chain packs/claims cite), or (b) record "P0 ships; P1–P3 spec-held, revisit after
+   Phase 17 / pods" and leave it at that.
 
 ---
 
@@ -120,13 +127,14 @@ closed by d1–d5; not repeated here.
 | then | **d4** pod transport M0 | none needed (38 §4.2 verified adequate); the 33 §7 cohort note waits |
 | then | **d5** 37 teeth-first repair | C-C (already the plan's text) + C-B if not done standalone |
 | parallel-OK | **C-B standalone** | 10 lines; can land any iteration before d5 |
-| after Phase 17 | **D-39 decision executes** | only on owner ruling |
+| after Phase 17 (or as a Phase 17 add-on — owner's call) | **D-39 P1 seam** (if ruled (a)) | P2/P3 stay pod-gated regardless |
 | unchanged | Track B + Phase 16 carries | none |
 
 ## 6. Owner align points (the complete list)
 
 1. **C-A §2 depth** — audit-trail as first-class now, or deferred to institutional surfaces.
-2. **D-39** — schedule the journal system, or record spec-held status.
+2. **D-39** — the journal P1 seam: register the practice tools + wire the LLM scorer now (rides
+   Phase 17), or record P1–P3 spec-held. P2/P3 are pod-gated either way.
 3. **C-C hardening** — the standing named decision (density gate report-only vs battery-failing).
 4. Confirm C-B needs no alignment (proposed: treat as uncontroversial, land with the next
    iteration unless objected).
