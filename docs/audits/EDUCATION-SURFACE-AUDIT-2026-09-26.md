@@ -304,3 +304,38 @@ decision (M1), real raters for RV1–RV7, partner institutions for 41, DPIA.
 
 All `[scout]` rows from the first pass were re-verified first-hand in the advisory follow-up
 (2026-09-26): the pack-registry and registry-count findings above are now grep/script-verified.
+
+## 8. Execution status (2026-09-27 — post-d1/d2 addendum; §0–§7 remain the 2026-09-26 record)
+
+Phase 17 was ratified by user directive on 2026-09-27 and is executing. Against this report's
+findings, closed so far:
+
+- **§0 pack walls (a)–(c) — CLOSED by d1** (`7bba7b9`): the registry seeds on the boot path
+  (`seedPackRegistry()` beside `seedCurriculumRegistry()`), `mysterium pack` runs the real S1
+  delegation end-to-end (administer → ratify → skillTheta → reliability rows → pack-evidence claim
+  draft visible on `mysterium credential list`), and **G45** locks the seam. Post-commit hardening
+  (`bc2ca8d` + the provenance pass): every mention-hole in the gate closed — mutations #4
+  (collector construction deleted, JSDoc mention surviving) and #6 (seed call deleted, import
+  surviving) both go red — and the synthetic-responder disclosure is now structural: a
+  `RESPONDER_PROVENANCE` const feeds the claim's method/QA strings and the `reliability.json`
+  row's `provenance`/`synthetic` fields from one declaration, so an issued VC from this drill
+  reads as evidence of the machinery, never of a measured person.
+- **§0 articulation ladder in-vitro — CLOSED by d2** (`6b5942a`): `buildLadderPayloads` derives
+  every level from the live Significator (closed levels narrative-only), `mysterium ladder` and
+  the /profile Articulation card render through the law-holder only (no save → honest refusal, not
+  a fabricated profile), AL4 descent provably starts at L1 (L0 grants refused, gapped grants
+  refused, refused sets never leak payloads), and **G46** locks both consumers to the
+  bridge + law-holder pair.
+
+Still open — the remaining ratified plan entries, in dependency order: **d3** the first auditor
+surface (Educator Desk + the consent brokerage whose AL5 refusal is already live), **d4** pod
+transport M0 (KV + polling fallback over declared bindings; deployment waits on the user-reserved
+KV IDs), **d5** 37's teeth-first repair (the per-branch density instrument with `--deny-under`,
+error-severity linter promotion so cs.program's 8/8-empty module cannot lint clean, then
+earth-science, then canon reconciliation), **Track B** WebUI scheduling parity + the
+Interpersonal slot fix. User-reserved as ever: KV namespace/dataset/secret creation, the pod
+hosting decision (M1), real raters (RV1–RV7), partner institutions, DPIA.
+
+Battery state at this writing: **150 files / 1702 tests**, `arch.py validate` 23/23 with fixtures
+proven 23/23, lint 0/0, build green (adapter-cloudflare), gate roster **46** (G45 + G46, teeth
+proven by six mutations total).

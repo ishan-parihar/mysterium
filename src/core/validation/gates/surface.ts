@@ -551,7 +551,7 @@ export async function validatePackSeamWired(): Promise<GateResult> {
       ['delegateSession', /delegateSession\(/],
       ['new ReliabilityCollector()', /new ReliabilityCollector\(/],
       ['packEvidenceRef', /packEvidenceRef\(/],
-      ['seedPackRegistry', /seedPackRegistry/],
+      ['seedPackRegistry()', /seedPackRegistry\(\)/],
     ] as const).filter(([, re]) => !re.test(cmd)).map(([n]) => n);
     if (missing.length > 0) {
       return { gate, passed: false, hard: true, details: `scripts/cli/packCmd.ts no longer reaches: ${missing.join(', ')} — the pack session left the live delegation/reliability/claim machinery` };

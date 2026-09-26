@@ -6,6 +6,16 @@ import type { Stage } from '../../src/core/domain/Stage.js';
 import type { ClaimLedger } from '../../src/core/credential/ClaimLedger.js';
 import { JSON_MODE } from './flags.js';
 
+/**
+ * Single provenance source for every record this command produces. The S1 mandate's responder is
+ * a hash policy (`item.difficulty <= responderPolicy`), not a human's answers, so its records must
+ * never read as measured play. The claim's method string, the draft's QA string, and the
+ * reliability-row marker all derive from this one declaration — they cannot drift apart. A real
+ * player-answer path extends this union, and everything downstream follows it.
+ */
+type ResponderProvenance = 'deterministic-simulated' | 'live-answers';
+const RESPONDER_PROVENANCE: ResponderProvenance = 'deterministic-simulated';
+
 // @script-status: wired — imported by cli-game.ts, which `npm run cli` runs.
 /**
  * The `pack` subcommand — one real measurement-pack session per invocation (doc 40 §1).
@@ -133,8 +143,8 @@ export async function runPackCommand(argv: string[]): Promise<void> {
     competencyDescriptor: `Exercised ${pack.construct} under the ${pack.id} instrument (deterministic drill responder, theta ${payload.record.theta.toFixed(2)}, se ${payload.record.se.toFixed(2)})`,
     domain: pack.id,
     evidence: [evidence],
-    method: 'measurement-pack administration (40 §1), S1 delegated session, ratified pack_score — deterministic simulated responder (hash-derived policy, not a human test-taker); drill evidence of the machinery, not a measured person',
-    qualityAssurance: 'mysterium internal assessment machinery; reliability disclosure travels with the evidence; responder is simulated',
+    method: `measurement-pack administration (40 §1), S1 delegated session, ratified pack_score — responder provenance: ${RESPONDER_PROVENANCE} (hash policy, not a human test-taker); drill evidence of the machinery, not a measured person`,
+    qualityAssurance: `mysterium internal assessment machinery; reliability disclosure travels with the evidence; responder: ${RESPONDER_PROVENANCE}`,
     nowMs: now,
   });
   if (failures.length > 0) {
@@ -147,7 +157,7 @@ export async function runPackCommand(argv: string[]): Promise<void> {
   const priorLedger = loadLedger();
   const ledger: ClaimLedger = { ...priorLedger, claims: [...priorLedger.claims, claim] };
   fs.writeFileSync(credFile, JSON.stringify(ledger, null, 2));
-  fs.writeFileSync(relFile, JSON.stringify([...priorRows, { ...payload.record, packId: pack.id, synthetic: true }], null, 2));
+  fs.writeFileSync(relFile, JSON.stringify([...priorRows, { ...payload.record, packId: pack.id, provenance: RESPONDER_PROVENANCE, synthetic: true }], null, 2));
 
   if (asJson) {
     process.stdout.write(JSON.stringify({
