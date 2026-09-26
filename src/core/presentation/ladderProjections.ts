@@ -105,7 +105,7 @@ export function buildLadderPayloads(sig: Significator, opts: LadderDerivationOpt
   // the self register never receives these payloads at all (renderLevel refuses, 20 §11.1).
   payloads.set('L4', {
     level: 'L4',
-    narrative: `The stance-diagnostics core: ${sig.shadows.activeCount} active shadow pattern(s) hold quadrant structure. Met by the player only as narrative consequence; rendered to a consented auditor with rubric names (16 §10.4).`,
+    narrative: 'The stance-diagnostics core: active shadow patterns hold quadrant structure. Met by the player only as narrative consequence; rendered to a consented auditor with rubric names (16 §10.4).',
   });
   payloads.set('L5', {
     level: 'L5',

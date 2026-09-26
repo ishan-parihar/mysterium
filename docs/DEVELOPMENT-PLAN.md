@@ -1412,7 +1412,13 @@ parity, corpus growth, and refactoring.
 > the real S1 delegation end-to-end (administer → ratify → skillTheta → `reliability.json` →
 > pack-evidence claim draft, visible on `mysterium credential list`), and **G45** locks the seam
 > (module-graph assertion, teeth proven by mutation: commented-out seed, gutted seed body, and a
-> severed CLI delegation each go red). Battery: 149 files / 1698 tests.
+> severed CLI delegation each go red). Battery: 149 files / 1698 tests. Post-commit reviewer
+> hardening (2026-09-27): two honesty gaps closed — the gate's `ReliabilityCollector`/`packEvidenceRef`
+> rows were bare substrings satisfied by the file's own JSDoc (mutation #4: deleting the real
+> construction now goes red), and the S1 mandate's responder is a hash policy
+> (`item.difficulty <= responderPolicy`), not a human's answers, so the claim's method/QA strings,
+> the CLI output, and every `reliability.json` row now carry the synthetic-responder disclosure —
+> an issued VC from this drill reads as evidence of the machinery, never of a measured person.
 > **d2 ✅ BUILT 2026-09-27** — `buildLadderPayloads` (src/core/presentation/ladderProjections.ts)
 > derives every level's payload from the live Significator (closed levels narrative-only, AL2);
 > `mysterium ladder` renders the self register through `renderLevel` only (refusing without a
@@ -1499,7 +1505,10 @@ What remains splits three ways (2026-09-26 correction — `docs/audits/EDUCATION
 portfolio), the pod hosting decision that deploys the DO, and per-line LLM keys for delegated
 mandates; **wiring** — the education surfaces that need a second party (pack sessions on a live seam,
 the claim ledger's production reader, the articulation ladder's render path, the auditor surfaces);
-**owner decisions** — Phase 17 (ratified 2026-09-27), which carries the wiring half.
+**owner decisions** — the one carried d5 ruling: hardening the per-branch density check from
+report-only to a battery-failing gate once the real numbers are on the table (Phase 17, ratified
+2026-09-27, is in execution and carries the wiring half; that specific hardening remains the
+owner's call).
 
 **Wiring frontier (2026-09-23).** Beyond the external items above, the
 `WIRING-CONTRAST-AUDIT-2026-09-23` found build-complete surfaces that are not yet

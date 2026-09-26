@@ -125,12 +125,16 @@ export async function runPackCommand(argv: string[]): Promise<void> {
     ...(pack.provisionalUntil ? { provisionalUntil: pack.provisionalUntil } : {}),
     ...(report.retestR !== undefined ? { retestR: report.retestR } : {}),
   });
+  // Honesty (reviewer catch, 2026-09-27): the S1 mandate scores each trial as
+  // `item.difficulty <= responderPolicy` — a hash-derived policy, not a human's answers. These
+  // drafts are issuable, so the disclosure must travel with the claim itself: an issued VC from
+  // this drill reads as evidence of the MACHINERY working, never as a measured person.
   const { claim, failures } = cred.draftClaim({
-    competencyDescriptor: `Measured ${pack.construct} at assessed level (theta ${payload.record.theta.toFixed(2)}, se ${payload.record.se.toFixed(2)})`,
+    competencyDescriptor: `Exercised ${pack.construct} under the ${pack.id} instrument (deterministic drill responder, theta ${payload.record.theta.toFixed(2)}, se ${payload.record.se.toFixed(2)})`,
     domain: pack.id,
     evidence: [evidence],
-    method: 'measurement-pack administration (40 §1), S1 delegated session, ratified pack_score',
-    qualityAssurance: 'mysterium internal assessment machinery; reliability disclosure travels with the evidence',
+    method: 'measurement-pack administration (40 §1), S1 delegated session, ratified pack_score — deterministic simulated responder (hash-derived policy, not a human test-taker); drill evidence of the machinery, not a measured person',
+    qualityAssurance: 'mysterium internal assessment machinery; reliability disclosure travels with the evidence; responder is simulated',
     nowMs: now,
   });
   if (failures.length > 0) {
@@ -143,7 +147,7 @@ export async function runPackCommand(argv: string[]): Promise<void> {
   const priorLedger = loadLedger();
   const ledger: ClaimLedger = { ...priorLedger, claims: [...priorLedger.claims, claim] };
   fs.writeFileSync(credFile, JSON.stringify(ledger, null, 2));
-  fs.writeFileSync(relFile, JSON.stringify([...priorRows, { ...payload.record, packId: pack.id }], null, 2));
+  fs.writeFileSync(relFile, JSON.stringify([...priorRows, { ...payload.record, packId: pack.id, synthetic: true }], null, 2));
 
   if (asJson) {
     process.stdout.write(JSON.stringify({
@@ -157,6 +161,7 @@ export async function runPackCommand(argv: string[]): Promise<void> {
     console.log(`\n  ${chalk.bold('Pack session')} — ${chalk.cyan(pack.id)} (${pack.construct})`);
     console.log(`  form ${payload.record.formId} · ${payload.record.trials} trials · ${payload.record.correctCount}/${payload.record.trials} correct`);
     console.log(`  theta ${payload.record.theta.toFixed(2)} (se ${payload.record.se.toFixed(2)}) · ratification: ${ratRow?.accepted ? chalk.green('accepted') : chalk.red(String(ratRow?.reason ?? 'no disposition'))}`);
+    console.log(chalk.yellow('  responder: deterministic simulation (hash policy) — drill evidence of the machinery, not a measured person'));
     console.log(`  reliability: ${report.sessionCount} eligible session(s) · gate ${report.gate === 'mature' ? chalk.green('mature') : chalk.yellow(report.gate)}${report.retestR !== undefined ? ` · retest r=${report.retestR.toFixed(2)}` : ''}${intervalOk ? '' : chalk.yellow(' · retest interval violated (recorded, excluded from pairing)')}`);
     console.log(`\n  ${chalk.green('Claim drafted:')} ${claim.id}`);
     console.log(chalk.dim(`  Review it, then: mysterium credential issue ${claim.id} <chosen-name>`));

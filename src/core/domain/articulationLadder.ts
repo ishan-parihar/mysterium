@@ -129,11 +129,12 @@ export function renderLevel(req: RenderRequest, payloads: ReadonlyMap<LadderLeve
   }
   // AL4: auditor descent is progressive — a scope grant to L5 implies the auditor may traverse
   // L1..L5 but the SELF-only levels are the same levels; progressive disclosure is enforced by
-  // requiring the scopes to be contiguous from L1.
+  // requiring the scopes to be a contiguous run STARTING AT L1 (L0 is the player's own
+  // felt-sense surface — an auditor's descent begins above it). Pinned by LadderLive LD3.
   const granted = [...consent.scopes].sort();
   const firstIdx = LADDER_LEVELS.indexOf(granted[0]);
   const lastIdx = LADDER_LEVELS.indexOf(granted[granted.length - 1]);
-  const contiguous = lastIdx - firstIdx === granted.length - 1;
+  const contiguous = lastIdx - firstIdx === granted.length - 1 && firstIdx >= 1;
   const reqIdx = LADDER_LEVELS.indexOf(req.level);
   const belowTop = reqIdx <= LADDER_LEVELS.indexOf(granted[granted.length - 1]);
   if (!contiguous || !belowTop) {

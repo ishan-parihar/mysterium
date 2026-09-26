@@ -75,6 +75,19 @@ describe('Phase 17 d2 — the articulation ladder live', () => {
 
     const revoked: ConsentLink = { grantId: 'g1', scopes: ['L1', 'L2'], revoked: true };
     expect(renderLevel({ register: 'auditor', level: 'L1', playerStage: 'Amber', consent: revoked }, payloads).allowed).toBe(false);
+
+    // AL4 pinning (reviewer catch, 2026-09-27): the descent law the code's own comment names —
+    // contiguous from L1. A non-contiguous in-scope grant is refused; a grant starting at L0
+    // (the player's felt-sense surface) is refused; a refused set never leaks its payload.
+    const gapped: ConsentLink = { grantId: 'g2', scopes: ['L1', 'L3'], revoked: false };
+    const gappedRender = renderLevel({ register: 'auditor', level: 'L3', playerStage: 'Amber', consent: gapped }, payloads);
+    expect(gappedRender.allowed).toBe(false);
+    expect(gappedRender.reason).toContain('progressive');
+    expect(gappedRender.payload).toBeUndefined();
+    const fromL0: ConsentLink = { grantId: 'g3', scopes: ['L0', 'L1', 'L2'], revoked: false };
+    const fromL0Render = renderLevel({ register: 'auditor', level: 'L2', playerStage: 'Amber', consent: fromL0 }, payloads);
+    expect(fromL0Render.allowed).toBe(false);
+    expect(fromL0Render.reason).toContain('progressive');
   });
 
   it('LD4: closed-class payloads carry narrative only — no metric leaves the bridge for L4/L5', () => {

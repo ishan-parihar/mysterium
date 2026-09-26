@@ -24,6 +24,17 @@ import { SESSION_MODES } from '../../domain/SessionMode.js';
 import { ALL_STAGES } from '../../domain/Stage.js';
 import type { GateResult } from './plumbing.js';
 
+/**
+ * Gate-source reader helper: strip line, block, and HTML comments before matching, so a gate can only be satisfied by live code — never by a mention in prose (a JSDoc
+ * block naming `ReliabilityCollector` must not satisfy a wiring check, G45's mutation #4).
+ */
+function stripSourceComments(t: string): string {
+  return t
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/^\s*\/\/.*$/gm, '');
+}
+
 // ---------------------------------------------------------------------------
 // G36 — CLI boot smoke (hard, plan Phase 14 d5; `CHECKED-SURFACE-AUDIT-2026-09-24` §11 F10).
 //
@@ -519,15 +530,15 @@ export async function validateSessionControlsWired(): Promise<GateResult> {
 export async function validatePackSeamWired(): Promise<GateResult> {
   const gate = 'G45 pack seam wired';
   try {
-    // Teeth (MY-RG-0010): match CALLS, never mentions. A commented-out seed or a bare import
-    // still textually contains `seedPackRegistry()`, so every check below runs on comment-stripped
-    // text with call-site anchoring — proven by mutation: comment the seed out, gut the seed
-    // function, or sever the CLI's delegateSession call, and this gate goes red.
-    const stripLineComments = (t: string): string => t.replace(/^\s*\/\/.*$/gm, '');
+    // Teeth (MY-RG-0010): match CALLS, never mentions. A commented-out seed, a bare import, or a
+    // JSDoc mention still textually contains the symbol, so every check below runs on
+    // comment-stripped text (line + block + HTML comments) with call-site anchoring — proven by
+    // mutation: comment the seed out, gut the seed function, sever the CLI's delegateSession
+    // call, or delete the collector construction, and this gate goes red.
     const read = (rel: string): string => {
       const p = path.join(process.cwd(), rel);
       if (!fs.existsSync(p)) throw new Error(`${p} not found`);
-      return stripLineComments(fs.readFileSync(p, 'utf-8'));
+      return stripSourceComments(fs.readFileSync(p, 'utf-8'));
     };
     if (!/^\s*seedPackRegistry\(\);/m.test(read('src/core/GameLoop.ts'))) {
       return { gate, passed: false, hard: true, details: 'src/core/GameLoop.ts no longer CALLS seedPackRegistry() on the boot path — the pack registry is test-only again, and delegate.ts\'s getPack read reverts to a fallback-masked always-miss' };
@@ -538,8 +549,8 @@ export async function validatePackSeamWired(): Promise<GateResult> {
     const cmd = read('scripts/cli/packCmd.ts');
     const missing = ([
       ['delegateSession', /delegateSession\(/],
-      ['ReliabilityCollector', /ReliabilityCollector/],
-      ['packEvidenceRef', /packEvidenceRef/],
+      ['new ReliabilityCollector()', /new ReliabilityCollector\(/],
+      ['packEvidenceRef', /packEvidenceRef\(/],
       ['seedPackRegistry', /seedPackRegistry/],
     ] as const).filter(([, re]) => !re.test(cmd)).map(([n]) => n);
     if (missing.length > 0) {
@@ -565,14 +576,13 @@ export async function validatePackSeamWired(): Promise<GateResult> {
 export async function validateLadderWired(): Promise<GateResult> {
   const gate = 'G46 articulation ladder wired';
   try {
-    const stripLineComments = (t: string): string => t.replace(/^\s*\/\/.*$/gm, '');
     const read = (rel: string): string => {
       const p = path.join(process.cwd(), rel);
       if (!fs.existsSync(p)) throw new Error(`${p} not found`);
-      return stripLineComments(fs.readFileSync(p, 'utf-8'));
+      return stripSourceComments(fs.readFileSync(p, 'utf-8'));
     };
     const bridge = read('src/core/presentation/ladderProjections.ts');
-    if (!/buildLadderPayloads[\s\S]*?articulationLadder\.js/.test(bridge) && !/from '\.\.\/domain\/articulationLadder\.js'/.test(bridge)) {
+    if (!/from '\.\.\/domain\/articulationLadder\.js'/.test(bridge)) {
       return { gate, passed: false, hard: true, details: 'ladderProjections no longer derives its payload types from the ladder — the bridge and the law-holder have drifted apart' };
     }
     if (!/for \(const spec of LADDER\)/.test(bridge)) {

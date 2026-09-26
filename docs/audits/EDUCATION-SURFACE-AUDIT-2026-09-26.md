@@ -168,7 +168,10 @@ the canon never recorded what was built):**
    **clean**, because the only checks that could catch it cannot fail — P-3 ("no practice
    problems") is `warning`, P-4 is `info` (`CurriculumLinter.ts:237-258`), and `overallPassed` is
    `totalErrors === 0` (`:641`). The check ships as a finding precisely because no instrument
-   exists to observe it.
+   exists to observe it. The plan's own PG-1 row recorded "108 curriculum holons, 0 lint errors —
+   ✅ closed": the corpus closed green precisely BECAUSE the only content checks cannot fail —
+   a fully assessment-empty module (cs.program, 8/8) satisfies every error-severity check in the
+   set. That is the divergence's punchline, not a footnote.
 5. **The difficulty-bell acceptance is unimplementable as specified.** `37:136-137`: "Difficulty
    distributions per branch must reproduce the observed bell curve (0.2→0.9, peak ≈ 0.5); branch
    linting (32) rejects otherwise" — but `CurriculumLinter.ts` has no difficulty check, and the
@@ -285,7 +288,7 @@ decision (M1), real raters for RV1–RV7, partner institutions for 41, DPIA.
 | articulationLadder in-vitro | `grep from '.*articulationLadder'` in `src/` — none |
 | delegateSession callers | grep — definition + the G-gate (`gates/orchestration.ts:54`), tests, and the CLI drill (`delegateCmd.ts:136`, `:201`); no player-facing surface |
 | 37 density invariant absent | `grep densit|branch|minimum scripts/check-invariants.ts` — zero |
-| earth-science phantom | `37:123` names it; `ls src/core/curriculum/data/` — 14 subject files, none earth-science |
+| earth-science phantom | `37:123` names it; `ls src/core/curriculum/data/` — 16 data files, none earth-science |
 | wrangler placeholders | `cat wrangler.toml` |
 | WebUI not a `tickWithStrategy` caller | `gameEngine.ts:27-28` import block + caller grep (4, none in `src/lib`) |
 | `/journal` route live | `ls src/routes/journal/` + header read |
