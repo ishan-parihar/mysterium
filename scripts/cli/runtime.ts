@@ -535,6 +535,10 @@ export async function runSingleEncounter(): Promise<void> {
     ...(FORCE_LINE ? { forceLine: FORCE_LINE } : {}),
     ...(FORCE_STAGE ? { forceStage: FORCE_STAGE } : {}),
     ...(FORCE_MODALITY ? { forceModality: FORCE_MODALITY } : {}),
+    // A human typing BOTH --line and --stage is the deliberate instrument pin (the case the old
+    // GameLoop comment named). Without the flag the session would filter candidates to the cell but
+    // keep the four injection seams — a mixed-cohort run the focused-campaign mode forbids.
+    ...(FORCE_LINE && FORCE_STAGE ? { focusedCell: true as const } : {}),
   } as any;
   const sessionState = startSession(sig, session);
   applyCurriculumMode(sessionState);
@@ -1701,6 +1705,10 @@ export async function runFullSession(): Promise<void> {
     ...(FORCE_LINE ? { forceLine: FORCE_LINE } : {}),
     ...(FORCE_STAGE ? { forceStage: FORCE_STAGE } : {}),
     ...(FORCE_MODALITY ? { forceModality: FORCE_MODALITY } : {}),
+    // A human typing BOTH --line and --stage is the deliberate instrument pin (the case the old
+    // GameLoop comment named). Without the flag the session would filter candidates to the cell but
+    // keep the four injection seams — a mixed-cohort run the focused-campaign mode forbids.
+    ...(FORCE_LINE && FORCE_STAGE ? { focusedCell: true as const } : {}),
   } as any;
   // RuntimeLoop (43 §5.5 + 22 §7.5): one services record for the whole session — the feed and the
   // owner-worker profiles accumulate across encounters. Seeded from the authored holon corpus so

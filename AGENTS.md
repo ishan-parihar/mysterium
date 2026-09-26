@@ -482,9 +482,11 @@ When you implement one, record the implementation in the same commit and cite th
    than left for the next agent to read and skip. **Now wired and gated (Phase 16 d8, G44):**
    `startGameSession` and `scheduleEncounters` both read the store, all four parity fields reach
    `SessionContext`, and G44 reads the module graph to keep them from going dark again — the failure
-   is ABSENCE, so no runtime gate can see it. The same change closed a parity hole the wiring would
-   otherwise have OPENED: a pinned cell now suppresses the training weave in the WebUI exactly as the
-   kernel already did (`GameLoop.ts` `forcedCell`). The list is empty again.
+   is ABSENCE, so no runtime gate can see it. d9 then reshaped the suppression semantics this wiring
+   first carried: an incidental settings pin (both axes, no `focusedCell`) keeps every seam in the
+   WebUI exactly as it now does in the kernel; the browser carries no pin logic at all (G44 enforces
+   that — the WebUI is not an instrument), and the CLI's combined `--line`/`--stage` builders are
+   marked as deliberate pins, which is also G44's. The list is empty again.
 3. **Configuration, calibration, and development frontier** (verified against the tree
    2026-09-22, post-Phase-11+12; owned by the plan's record — the detailed evidence table lives in
    `docs/audits/OPERATIONAL-AUDIT-2026-09-22.md` §7):

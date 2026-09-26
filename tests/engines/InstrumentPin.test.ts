@@ -10,8 +10,15 @@
  * could see: before d8 the settings page's force fields never reached a `SessionContext` at all, so
  * the question was moot; wiring them made it live.
  */
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import { isPinnedInstrumentCell, isDeliberateInstrumentPin } from '../../src/core/engines/PriorityComputation.js';
+import { startSession, tickWithStrategy } from '../../src/core/GameLoop.js';
+import { createSignificator } from '../../src/core/domain/Significator.js';
+import type { Line } from '../../src/core/domain/Line.js';
+import type { Stage } from '../../src/core/domain/Stage.js';
+import type { Holon } from '../../src/core/world/Holon.js';
+import type { WorldState } from '../../src/core/engines/CandidateGeneration.js';
 
 describe('isPinnedInstrumentCell', () => {
   it('is true only when BOTH axes are set', () => {
@@ -57,10 +64,51 @@ describe('isDeliberateInstrumentPin', () => {
     expect(isDeliberateInstrumentPin({})).toBe(false);
   });
 
-  it('agrees with the kernel and the scheduler because they call it', () => {
-    // The single-owner claim, asserted rather than assumed: the rule lives in one place, so a
-    // future edit that changes the definition changes all three seams together.
-    const session = { forceLine: 'Moral', forceStage: 'Magenta', focusedCell: true } as const;
-    expect(isDeliberateInstrumentPin(session)).toBe(isPinnedInstrumentCell(session));
+  it('is consulted by both kernel seams, not re-derived', () => {
+    // The single-owner claim, asserted on the module graph (the same technique as G37/G44): the rule
+    // lives in one place and BOTH seam sites call it. A future edit that re-derives the condition
+    // locally at either site — instead of consulting the shared predicate — breaks this test.
+    const gameLoop = readFileSync(new URL('../../src/core/GameLoop.ts', import.meta.url), 'utf8');
+    const scheduler = readFileSync(new URL('../../src/core/engines/EncounterScheduler.ts', import.meta.url), 'utf8');
+    expect(gameLoop).toMatch(/\bisDeliberateInstrumentPin\s*\(/);
+    expect(scheduler).toMatch(/\bisDeliberateInstrumentPin\s*\(/);
+    expect(gameLoop).not.toMatch(/const\s+(?:pinnedCell|instrumentPin)\s*=/);
+    expect(scheduler).not.toMatch(/const\s+(?:pinnedCell|instrumentPin)\s*=/);
+  });
+});
+
+// The player-path half: the predicate's EFFECT, driven through the real loop. A settings-shaped
+// session (both force fields, no `focusedCell`) must keep the training weave; a deliberate pin must
+// lose it. Copied DAMP from `GameLoopTraining.test.ts` — inline fixtures, no shared helper.
+function makeHolon(id: string, line: Line, stage: Stage): Holon {
+  return { id, name: id, kind: 'NPC', line, stage, drives: { dominant: 'Agency', secondary: 'Eros', shadowQuadrant: null }, polarity: 'Sovereign', narrativeRole: 'test', relationships: [], active: true };
+}
+const world: WorldState = {
+  holons: [makeHolon('h1','Cognitive','Red'), makeHolon('h2','Emotional','Red'), makeHolon('h3','Moral','Red'), makeHolon('h4','Somatic','Red'), makeHolon('h5','Willpower','Red'), makeHolon('h6','Interpersonal','Red'), makeHolon('h7','Intrapersonal','Red'), makeHolon('h8','Spiritual','Red')],
+  recentEncounterIds: [], cooldowns: {}, narrativeBeats: [], activeBeatId: null, completedBeatIds: [], factions: [], npcRelationships: [], pestleTension: { political:0, economic:0, social:0, technological:0, legal:0, environmental:0 }, activeMacroEvents: [],
+};
+const altitudes: Record<Line, Stage> = { Cognitive:'Red', Emotional:'Red', Moral:'Red', Intrapersonal:'Red', Spiritual:'Red', Somatic:'Red', Willpower:'Red', Interpersonal:'Red' };
+
+describe('the instrument-pin rule on the real loop', () => {
+  it('keeps the training weave for an incidental settings pin', () => {
+    const sig = createSignificator('pin-keep', altitudes, 'Red');
+    const session = { encountersSoFar: 0, sessionDurationMs: 0, targetSessionLength: 8, recentLines: [] as string[], forceLine: 'Cognitive' as Line, forceStage: 'Red' as Stage };
+    let state = startSession(sig, session as never);
+    let tick = tickWithStrategy(sig, world, session as never, state, null, null, Date.now());
+    state = tick.sessionState;
+    tick = tickWithStrategy(tick.tickResult.sig as never, tick.tickResult.world, session as never, state, null, null, Date.now() + 5000);
+    const hasTraining = tick.tickResult.encounters.some((e: any) => e.isTrainingBeat) || !!tick.tickResult.encounter?.isTrainingBeat;
+    expect(hasTraining).toBe(true);
+  });
+
+  it('suppresses the training weave for a deliberate pin', () => {
+    const sig = createSignificator('pin-drop', altitudes, 'Red');
+    const session = { encountersSoFar: 0, sessionDurationMs: 0, targetSessionLength: 8, recentLines: [] as string[], forceLine: 'Cognitive' as Line, forceStage: 'Red' as Stage, focusedCell: true as const };
+    let state = startSession(sig, session as never);
+    let tick = tickWithStrategy(sig, world, session as never, state, null, null, Date.now());
+    state = tick.sessionState;
+    tick = tickWithStrategy(tick.tickResult.sig as never, tick.tickResult.world, session as never, state, null, null, Date.now() + 5000);
+    const hasTraining = tick.tickResult.encounters.some((e: any) => e.isTrainingBeat) || !!tick.tickResult.encounter?.isTrainingBeat;
+    expect(hasTraining).toBe(false);
   });
 });

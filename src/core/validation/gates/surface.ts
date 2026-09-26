@@ -429,17 +429,33 @@ export function evaluateSessionControlWiring(text: string): { passed: boolean; d
     return { passed: false, details: `no SessionContext builder reads ${missing.map(([f]) => f).join(', ')} from the store — those settings controls are inert (checked inside the context literals, not the whole file)` };
   }
 
-  // The instrument-pin guard, also scoped: `isDeliberateInstrumentPin` is the single owner of that
-  // rule, so a binding that dropped the guard would reintroduce the browser/CLI split on the training
-  // weave. Checked in the scheduling function's own region rather than anywhere in the file.
-  if (!/\bisDeliberateInstrumentPin\s*\(/.test(text)) {
-    return { passed: false, details: 'gameEngine.ts does not consult isDeliberateInstrumentPin — the training-weave guard re-derives the rule instead of sharing its owner' };
-  }
-  if (/const\s+pinnedCell\s*=/.test(text)) {
-    return { passed: false, details: 'gameEngine.ts re-declares a local pinnedCell — a third copy of the rule now owned by isDeliberateInstrumentPin' };
+  // Phase 16 d9 — the browser is not an instrument. The settings store has no `focusedCell`
+  // producer, so ANY pin logic in this file is either dead (a constant false — the shape d8 shipped
+  // and d9 deleted) or a NEW deliberate surface nobody has ratified. Both spellings are rejected:
+  // consulting the shared predicate without a producer, and re-deriving a local copy. When the WebUI
+  // gains an instrument mode, relax this check in the same commit that adds the producer.
+  if (/\bisDeliberateInstrumentPin\s*\(/.test(text) || /const\s+(?:pinnedCell|instrumentPin)\s*=/.test(text)) {
+    return { passed: false, details: 'gameEngine.ts carries pin logic — the browser is not an instrument (no focusedCell producer); the rule lives in the kernel seams, so a pin expression here is dead code or an unratified surface' };
   }
 
-  return { passed: true, details: `store reachable from the WebUI engine; ${SESSION_CONTROL_PARITY_FIELDS.length} parity fields read inside the SessionContext builders and the instrument-pin guard delegated to isDeliberateInstrumentPin` };
+  return { passed: true, details: `store reachable from the WebUI engine; ${SESSION_CONTROL_PARITY_FIELDS.length} parity fields read inside the SessionContext builders; no instrument-pin logic in the browser` };
+}
+
+/**
+ * The CLI half of the same wiring: `scripts/cli/runtime.ts` builds force-aware SessionContexts from
+ * `--line`/`--stage`, and a human typing BOTH flags is the deliberate instrument pin. d9 moved the
+ * seam-suppression rule behind `focusedCell`, which silently unmarked those builders — the CLI kept
+ * the candidate cell filter but regained the four injection seams, a mixed-cohort run. Counting
+ * builders (not mere presence of one mark) is what catches a THIRD builder appearing unmarked — the
+ * same ABSENCE class the store wiring guards.
+ */
+export function evaluateCliInstrumentMarking(text: string): { passed: boolean; details: string } {
+  const builders = (text.match(/\.\.\.\(FORCE_LINE \?/g) ?? []).length;
+  const marks = (text.match(/FORCE_LINE && FORCE_STAGE[^\n]*focusedCell:\s*true/g) ?? []).length;
+  if (marks < builders) {
+    return { passed: false, details: `scripts/cli/runtime.ts has ${builders} force-aware session builder(s) but only ${marks} deliberate-pin mark(s) — an unmarked builder filters candidates to the cell while keeping the four injection seams, a mixed-cohort run` };
+  }
+  return { passed: true, details: `every force-aware CLI builder (${builders}) sets focusedCell: true when both --line and --stage are given` };
 }
 
 /**
@@ -460,6 +476,11 @@ export function evaluateSessionControlWiring(text: string): { passed: boolean; d
  * Deliberately a STATIC assertion. Running the WebUI here would require a browser; the checked graph
  * is the strongest claim available in a Node gate, and the claim it makes is precisely the one that
  * was false before.
+ *
+ * d9 added the CLI half: `scripts/cli/runtime.ts` builds two force-aware SessionContexts, and after
+ * the rule moved behind `focusedCell` both silently lost their seam suppression — the CLI kept the
+ * candidate filter but regained the four injection seams. The gate now counts force-aware builders
+ * and requires a deliberate-pin mark on each, and rejects pin logic in the browser outright.
  */
 export async function validateSessionControlsWired(): Promise<GateResult> {
   try {
@@ -467,8 +488,18 @@ export async function validateSessionControlsWired(): Promise<GateResult> {
     if (!fs.existsSync(enginePath)) {
       return { gate: 'G44 session controls wired', passed: false, hard: true, details: `error: ${enginePath} not found` };
     }
-    const verdict = evaluateSessionControlWiring(fs.readFileSync(enginePath, 'utf-8'));
-    return { gate: 'G44 session controls wired', passed: verdict.passed, hard: true, details: verdict.details };
+    const engineVerdict = evaluateSessionControlWiring(fs.readFileSync(enginePath, 'utf-8'));
+    const cliPath = path.join(process.cwd(), 'scripts/cli/runtime.ts');
+    if (!fs.existsSync(cliPath)) {
+      return { gate: 'G44 session controls wired', passed: false, hard: true, details: `error: ${cliPath} not found` };
+    }
+    const cliVerdict = evaluateCliInstrumentMarking(fs.readFileSync(cliPath, 'utf-8'));
+    return {
+      gate: 'G44 session controls wired',
+      passed: engineVerdict.passed && cliVerdict.passed,
+      hard: true,
+      details: `${engineVerdict.details}; ${cliVerdict.details}`,
+    };
   } catch (e) {
     return { gate: 'G44 session controls wired', passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }

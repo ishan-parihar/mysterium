@@ -24,7 +24,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { runValidationSuite, validateSessionControlsWired, type ValidationReport } from '../../src/core/validation/gates.js';
-import { evaluateSessionControlWiring, sessionContextRegions } from '../../src/core/validation/gates/surface.js';
+import { evaluateSessionControlWiring, evaluateCliInstrumentMarking, sessionContextRegions } from '../../src/core/validation/gates/surface.js';
 
 describe('Validation benchmark (CI tier)', () => {
   let suite: ValidationReport;
@@ -88,8 +88,9 @@ describe('Validation benchmark (CI tier)', () => {
     // and had ONE importer, itself, while `gameEngine.ts` hard-coded `targetSessionLength: 5` and no
     // force fields. An unread field behaves exactly like an absent one, so every runtime gate passed
     // with the surface fully dark; the only instrument that can see absence is the module graph, the
-    // same technique as G37. It also locks the pinned-cell training-weave guard, which is the one
-    // divergence wiring the store would otherwise have introduced between the browser and the CLI.)
+    // same technique as G37. It also locks that the browser carries NO instrument-pin logic — the
+    // WebUI has no focusedCell producer, so pin logic there is dead code — and that every
+    // force-aware CLI builder marks its combined --line/--stage sessions as deliberate pins.)
     expect(suite.results.length).toBe(44);
     for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
@@ -116,7 +117,8 @@ describe('G44 session controls wired', () => {
   it('names the store and the parity fields it guards', async () => {
     const r = await validateSessionControlsWired();
     expect(r.details).toContain('4 parity fields');
-    expect(r.details).toContain('isDeliberateInstrumentPin');
+    expect(r.details).toContain('no instrument-pin logic');
+    expect(r.details).toContain('focusedCell: true');
   });
 
   it('has teeth: it fails on a store that no builder reads', () => {
@@ -176,11 +178,13 @@ describe('G44 session controls wired', () => {
     expect(verdict.details).toContain('forceLine');
   });
 
-  it('has teeth: it fails when the rule is re-derived instead of shared', () => {
-    // Three sites had each grown their own copy, and two disagreed on the VALUE tested. A local
-    // `pinnedCell` re-declaration is that regression returning, so the gate rejects it explicitly
-    // rather than merely looking for the shared predicate.
-    const rederived = `
+  it('has teeth: it fails when pin logic appears in the browser', () => {
+    // d8 shipped a dead guard — a predicate call that could only evaluate false, because the
+    // settings store has no `focusedCell` producer — and d9 deleted it on purpose. This fixture is
+    // that exact shape returning: clean wiring with a pin expression hanging off it. The gate
+    // rejects BOTH spellings (consulting the shared predicate without a producer, re-deriving a
+    // local copy), because in the browser each is dead code that looks load-bearing.
+    const pinLogicReturns = `
       import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
       const control = get(sessionControlStore);
       const sessionContext: SessionContext = {
@@ -195,13 +199,17 @@ describe('G44 session controls wired', () => {
         if (!pinnedCell) { /* weave */ }
       }
     `;
-    const verdict = evaluateSessionControlWiring(rederived);
+    const verdict = evaluateSessionControlWiring(pinLogicReturns);
     expect(verdict.passed).toBe(false);
-    expect(verdict.details).toContain('third copy');
+    expect(verdict.details).toContain('not an instrument');
   });
 
-  it('has teeth: it fails when the guard is dropped entirely', () => {
-    const noGuard = `
+  it('passes a browser that carries no pin logic at all', () => {
+    // d9 deleted the WebUI guard on purpose: with no `focusedCell` producer the predicate was a
+    // constant, so "the guard is dropped" is the CORRECT state, not a regression. This test pins
+    // that direction so the gate cannot quietly re-grow the dead guard — the previous test proves
+    // the gate still fails when the pin logic returns.
+    const cleanBrowser = `
       import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
       const control = get(sessionControlStore);
       const sessionContext: SessionContext = {
@@ -212,9 +220,8 @@ describe('G44 session controls wired', () => {
         forceModality: control.forceModality ?? undefined,
       };
     `;
-    const verdict = evaluateSessionControlWiring(noGuard);
-    expect(verdict.passed).toBe(false);
-    expect(verdict.details).toContain('isDeliberateInstrumentPin');
+    const verdict = evaluateSessionControlWiring(cleanBrowser);
+    expect(verdict.passed).toBe(true);
   });
 
   it('catches a read replaced by a literal (the vacuity a word-match cannot see)', () => {
@@ -236,7 +243,6 @@ describe('G44 session controls wired', () => {
         targetSessionLength: control.encounterCount, recentLines: [],
         ...forceFields,
       };
-      if (isDeliberateInstrumentPin(forceFields)) { /* weave */ }
     `;
     const verdict = evaluateSessionControlWiring(readReplacedByLiteral);
     expect(verdict.passed).toBe(false);
@@ -256,5 +262,21 @@ describe('G44 session controls wired', () => {
     expect(regions).toContain('encounterCount');
     expect(regions).not.toContain('forceLine');
     expect(regions).not.toContain('forceModality');
+  });
+
+  it('has teeth: an unmarked CLI builder is a mixed-cohort run', () => {
+    // d9's own regression, kept as a fixture: when the rule moved behind `focusedCell`, the CLI kept
+    // the candidate cell filter and silently regained the four injection seams. The gate counts
+    // builders, so a third unmarked builder fails it too.
+    const twoBuildersOneMark = `
+      ...(FORCE_LINE ? { forceLine: FORCE_LINE } : {}),
+      ...(FORCE_STAGE ? { forceStage: FORCE_STAGE } : {}),
+      ...(FORCE_LINE && FORCE_STAGE ? { focusedCell: true as const } : {}),
+      ...(FORCE_LINE ? { forceLine: FORCE_LINE } : {}),
+      ...(FORCE_STAGE ? { forceStage: FORCE_STAGE } : {}),
+    `;
+    const verdict = evaluateCliInstrumentMarking(twoBuildersOneMark);
+    expect(verdict.passed).toBe(false);
+    expect(verdict.details).toContain('mixed-cohort');
   });
 });

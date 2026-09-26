@@ -27,7 +27,7 @@ import type { OrchestratorResult, AgenticUIHandler } from '$core/assessments/Age
 import { startSession, applyResponseOnly, computeTrainingWeave } from '$core/GameLoop.js';
 import { scheduleNextWithHolonicReturn } from '$core/engines/EncounterScheduler.js';
 import { createModuleTaskTypesProvider } from '$core/engines/CandidateGeneration.js';
-import { DEFAULT_WEIGHTS, isDeliberateInstrumentPin } from '$core/engines/PriorityComputation.js';
+import { DEFAULT_WEIGHTS } from '$core/engines/PriorityComputation.js';
 import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
 import { AgenticOrchestrator } from '$core/assessments/AgenticOrchestrator.js';
 // RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — one per browser
@@ -125,12 +125,12 @@ export async function bootEngine(): Promise<void> {
  * four player-facing controls changed nothing. This is the live-surface-wiring class `AGENTS.md` §4.2
  * item 2 defines, and it was listed there as empty.
  *
- * The force fields are threaded through deliberately, INCLUDING their effect on the four injection
- * seams: `forceLine` AND `forceStage` together make `GameLoop`/`EncounterScheduler` treat the session
- * as a pinned cell (`forcedCell`) and bypass threshold mode, Holonic Return, curriculum interleave
- * and training weave. That is correct — a player who pins one cell asked for one cell — and it is why
- * pinning both axes is the meaningful gesture. A player who sets only `forceLine` keeps every seam
- * and gets a line preference, which is the `--line` behaviour the CLI already has.
+ * The force fields ride both scheduling calls, and the KERNEL decides their effect: an incidental
+ * settings pin (both axes set, no `focusedCell`) keeps every injection seam — threshold mode, Holonic
+ * Return, curriculum interleave, training weave — because a player picking a line and a stage
+ * expressed a preference, not an instrument run. Only a deliberate pin suppresses them, and the
+ * WebUI has no producer for that mark. A player who sets only `forceLine` gets the same
+ * line-preference behaviour the CLI's `--line` already has.
  */
 export function startGameSession(): void {
   const { significator, world } = get(engineStore);
@@ -197,24 +197,19 @@ export function scheduleEncounters(): void {
   // tickWithStrategy applies it for the CLI/harness. Skipped when the queue
   // already carries an unplayed beat (decline/completion re-schedules).
   //
-  // Phase 16 d8 — this guard now asks the same question the kernel asks, through the same owner
-  // (`isDeliberateInstrumentPin` in `PriorityComputation`). A previous version tested the store's own
-  // fields directly, which was a THIRD spelling of a rule the kernel and the scheduler each carried
-  // too, agreeing only because this binding maps `null → undefined` on the way in.
+  // Phase 16 d9 — NO pin guard here, on purpose. The settings store has no `focusedCell` producer,
+  // so a pin expression in the browser evaluates a constant: d8's guard was exactly that — a dead
+  // `isDeliberateInstrumentPin` call kept "so the surfaces cannot drift" — and it was deleted rather
+  // than left as dead code that looked load-bearing. The browser is not an instrument; the rule lives
+  // in the kernel seams, which the context built above reaches with its force fields but never with
+  // a deliberate-pin mark. If the WebUI ever gains an instrument mode, add the producer and the guard
+  // together, and relax G44's no-pin-logic assertion in the same commit.
   //
-  // Because a settings pin is not an instrument (no `focusedCell`), the answer here is normally
-  // false: a player who picks a line AND a stage keeps the training weave, which is what they
-  // expect. The guard exists for the case where this binding is ever handed a deliberate instrument
-  // pin, and it is kept in the kernel's idiom so the two surfaces cannot drift on the cadence.
-  //
-  // SCOPE, stated plainly because the parity claim is otherwise overstated: this fixes ONE of three
-  // divergences. The kernel also skips threshold mode and curriculum interleave on a pinned cell, and
-  // this binding never runs those seams at all — it calls `scheduleNextWithHolonicReturn` directly
-  // rather than `tickWithStrategy`, so the WebUI is not yet a `tickWithStrategy` caller. That is the
-  // larger parity gap (the WebUI does not drive the orchestrated loop), not something this guard
-  // closes. What this guard does close is the divergence d8's own wiring would have introduced.
-  const instrumentPin = isDeliberateInstrumentPin(forceFields);
-  if (!instrumentPin && !encounters.some((e) => e.isTrainingBeat)) {
+  // SCOPE, stated plainly because the parity claim is otherwise overstated: the WebUI calls
+  // `scheduleNextWithHolonicReturn` directly rather than `tickWithStrategy`, so it never runs the
+  // kernel's threshold-mode or curriculum-interleave seams at all. That is the larger parity gap (the
+  // WebUI does not drive the orchestrated loop), and nothing in this file closes it.
+  if (!encounters.some((e) => e.isTrainingBeat)) {
     const weave = computeTrainingWeave(
       session.strategy.trainingSlots ?? 0,
       session.trainingEncountersThisSession ?? 0,

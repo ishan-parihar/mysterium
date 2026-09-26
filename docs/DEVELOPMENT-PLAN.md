@@ -1175,8 +1175,9 @@ would be the cosmetic split `M1` forbids).
 > with the surface fully dark — the only instrument that can see absence is the module graph, which
 > is **G44**, which reads the module graph and scopes its checks to the `SessionContext` builders —
 > a bare-word match is vacuous, since the field names appear in prose and in the guard expression.
-> The wiring also closed a parity hole it would otherwise have opened: a fully pinned cell now
-> suppresses the training weave in the WebUI as the kernel already did. Kernel roster **43 → 44**.
+> The wiring's first shape (a pinned cell suppressing the training weave in the WebUI) was then
+> corrected by d9: an incidental settings pin suppresses nothing anywhere, and the browser — which
+> has no `focusedCell` producer — carries no pin logic at all. Kernel roster **43 → 44**.
 >
 > The parity fix is deliberately **narrower than it first looked**, and the residue is the larger open
 > item rather than something this change pretended to close: the WebUI calls
@@ -1186,13 +1187,15 @@ would be the cosmetic split `M1` forbids).
 > **d9 — one owner for the instrument-pin rule (2026-09-26).** d8 made the `forcedCell` ambiguity
 > reachable: it had three definitions, and the WebUI's tested the store's `null` while the kernel and
 > scheduler tested the context's `undefined` — agreeing only because the binding maps `null → undefined`
-> on the way in. Two consequences followed, both shipped here. The rule moved to
-> `isDeliberateInstrumentPin` in `PriorityComputation.ts` (next to the fields it reads) and all three
-> sites call it, so the copies cannot drift. And because a settings page setting both force axes is a
+> on the way in. Three consequences followed, all shipped here. The rule moved to
+> `isDeliberateInstrumentPin` in `PriorityComputation.ts` (next to the fields it reads) and both kernel
+> seams call it, so the copies cannot drift. Because a settings page setting both force axes is a
 > PREFERENCE, not an instrument, a new optional `focusedCell` marks the deliberate case: only a
-> focused campaign (`--target-cell`) suppresses the crucible, Holonic Return, curriculum interleave
-> and training weave. Without this, a player choosing a line and a stage in settings would have lost
-> four mechanics with no visible cause.
+> deliberate pin — a focused `--target-cell` campaign or a CLI run given BOTH `--line` and `--stage`
+> — suppresses the crucible, Holonic Return, curriculum interleave and training weave. The WebUI has
+> no producer for that mark and carries no pin logic at all (G44 rejects it); the CLI's two builders
+> set it, which is also G44's. Without the mark, a player choosing a line and a stage in settings
+> would have lost four mechanics with no visible cause.
 >
 > **d1 — one producer, one reclassification, one deliberate absence.** `memoryPage` is measured where
 > the page is built (`buildEnvelope` → `memoryPageBlock`): block lines/chars plus the lines that
