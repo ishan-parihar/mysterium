@@ -1361,7 +1361,7 @@ parity, corpus growth, and refactoring.
 8. Treat real-rater validation, real-play evidence, networked deployment, and remote synchronization
    as external certification/release prerequisites. Synthetic evidence may reject; it may not certify.
 
-### Phase 17 — The Education-System Second Half (PROPOSED 2026-09-26 — pending ratification)
+### Phase 17 — The Education-System Second Half (RATIFIED 2026-09-27 — user directive; execution in progress)
 
 > **Source:** `docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` — the full-surface + education-dimension
 > audit. That report carries the evidence base and the per-iteration verification criteria; this entry
@@ -1389,13 +1389,15 @@ parity, corpus growth, and refactoring.
 >    Guardian Mirror and Therapeutic Pane follow, sequenced after consent/supervision hooks exist.
 > 4. **d4 — pod transport M0** — 38's own KV + polling fallback over declared bindings; M1
 >    (Durable Objects) stays deferred until a hosting decision. Unblocks 40's MP3 cohort machinery.
-> 5. **d5 — 37 canon↔tree reconciliation + the verifiable-acceptance layer** — not corpus authoring
->    (10 of 11 branches already ship): reconcile the canon tables to the measured registry (108
->    holons vs §4.2's stale 56/1,280 row; §4.1's "to add" → what exists; rule `earth-science`),
->    build the per-branch density check in `check:invariants` that measures against 35 §5.2's
->    97-holon minimum and can fail on the shipped corpus (reporting-first; hardening to a
->    battery-failing gate is an owner decision with the numbers on the table), and give the
->    remaining acceptance criteria a linter check or a canon amendment. Detail: the audit §3/§6.
+> 5. **d5 — 37: teeth first, then the missing branch, then canon reconciliation** — content authored
+>    before the teeth lands with the same unverifiable guarantee the audit documents. (i) Teeth:
+>    the per-branch density check in `check:invariants` against 35 §5.2's 97-holon minimum
+>    (per-branch verdict + explicit `--deny-under <N>` threshold, default report-only), and
+>    error-severity checks so an assessment-empty module (`cs.program.json`, 8/8) can no longer
+>    lint clean (P-3 is `warning`, P-4 is `info` today); (ii) author `earth-science` — the one
+>    genuinely missing branch (1 of 11) — under the new teeth; (iii) reconcile the canon tables to
+>    the measured registry (108 holons vs §4.2's stale 56/1,280 row); (iv) linter check or canon
+>    amendment for the remaining acceptance criteria. Detail: the audit §3/§6.
 >
 > **Track B — production readiness (parallel):** WebUI parity (make `gameEngine.ts` a
 > `tickWithStrategy` caller — prerequisite for d3 being worth a dashboard); the Interpersonal slot
@@ -1411,10 +1413,14 @@ Phases 1–15 are ratified and built. **Phase 16's diagnostic sweep is delivered
 2026-09-25, d8 on 2026-09-26** — and Phase 16 remains active only on its five carried open items
 (`docs/audits/CAMPAIGN-REPORT-2026-09-25.md` §4): the Interpersonal structural slot deficit, the
 inert polarity loop, the wide `shadow-facing` 0.0 %, real-rater RV1–RV7 thresholds, and per-line
-saturation thresholds. The frontier after those
-repairs is external certification and deployment: real-rater thresholds, real-play evidence, partner
-recognition, networked pod hosting, and remote synchronization. When current work is described to an
-agent, cite `AGENTS.md §4.2` and the records — never a phase number from memory.
+saturation thresholds. The frontier after those repairs is external certification and deployment:
+real-rater thresholds, real-play evidence, partner recognition, networked pod hosting, and remote
+synchronization. When current work is described to an agent, cite `AGENTS.md §4.2` and the records —
+never a phase number from memory.
+
+**Phase 17 (the education-system second half) was ratified 2026-09-27 by user directive and is in
+execution**; its evidence base and iteration order live in
+`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` and its entry above in §4.
 
 ## 5. Standing work-streams (not phases — continuous)
 
@@ -1452,8 +1458,8 @@ The system qualifies as the "complete education-system replacement" trajectory w
 
 All 9 phases are IMPLEMENTED (see revision record) — their cores are built and gated. The ✅s
 below mark BUILD completions, and for three of the five (pods transport, packs, credentialing) the
-WIRING half is still dark (`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` §0). The post-plan frontier each phase
-defered honestly is ALSO IMPLEMENTED (2026-09-17 — see revision record):
+WIRING half is still dark (`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` §0). The post-plan
+frontier each phase defers honestly is ALSO IMPLEMENTED (2026-09-17 — see revision record):
 
 1. **Delegation (43):** ✅ LLM-backed choice policies behind the role interface
    (`src/core/orchestration/choicePolicy.ts`); the deterministic policies remain the
@@ -1477,7 +1483,7 @@ What remains splits three ways (2026-09-26 correction — `docs/audits/EDUCATION
 portfolio), the pod hosting decision that deploys the DO, and per-line LLM keys for delegated
 mandates; **wiring** — the education surfaces that need a second party (pack sessions on a live seam,
 the claim ledger's production reader, the articulation ladder's render path, the auditor surfaces);
-**owner decisions** — ratifying Phase 17 (PROPOSED), which carries the wiring half.
+**owner decisions** — Phase 17 (ratified 2026-09-27), which carries the wiring half.
 
 **Wiring frontier (2026-09-23).** Beyond the external items above, the
 `WIRING-CONTRAST-AUDIT-2026-09-23` found build-complete surfaces that are not yet

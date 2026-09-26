@@ -354,7 +354,10 @@ offer is a training beat (`Training:<paradigmId>`, not a `Line:Stage` cell), so 
 reaches its first seven lines and never the eighth. The reserve CAN reach the line once the other
 seven carry positive timestamps — it is starved by position, not eligibility. Alongside that: an inert
 polarity loop, the wide `shadow-facing` 0.0 %, the real-rater RV1–RV7 thresholds, and per-line
-saturation thresholds awaiting real progression curves. The current
+saturation thresholds awaiting real progression curves. **Phase 17 — the education-system second half —
+was ratified by user directive on 2026-09-27 and is in execution** (packs on a live seam, articulation
+ladder live, Educator Desk, pod transport M0, 37 teeth-first repair; evidence base
+`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md`, plan entry in `DEVELOPMENT-PLAN.md` §4). The current
 kernel roster is **44 gates** (43 + **G44**, Phase 16 d8: the session-control store was write-only,
 so the parity fields it declares never reached a `SessionContext` builder — an ABSENCE no runtime
 gate can see, which is why the fix is a module-graph assertion). **Phase 10** (Generative World & Personalization; gates G22–G27) was

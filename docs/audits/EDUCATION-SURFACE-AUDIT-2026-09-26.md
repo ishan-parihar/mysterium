@@ -156,12 +156,19 @@ the canon never recorded what was built):**
    matches; the linter's real inventory — 17 checkIds across five categories: structural
    (S-1..S-5, G-CB-MISSING, G-CYCLE), pedagogical (P-1..P-4), developmental (D-1..D-4),
    epistemic (E-1, E-2) — contains **no density, no difficulty, and no drive-probe check**.
-   Measured
-   against 35 §5.2's own minimum-viable bar (**97 holons: 1 branch + 2 subjects + 6 topics +
+   Measured against 35 §5.2's own minimum-viable bar (**97 holons: 1 branch + 2 subjects + 6 topics +
    18 concepts + 36 instances**), every branch is far below it — math/physics richest at 13; the ten
    K1–K3 branches ship 5–6 holons each and are **structurally flat** (branch + concepts, no
-   subject/topic levels at all). Nothing gates any of this: G17 lints dangling references, not
-   density. The check ships as a finding precisely because no instrument exists to observe it.
+   subject/topic levels at all; **instance-level holons do not exist anywhere in the corpus** —
+   `grep '"level": "instance"' src/core/curriculum/data/` → zero files — so the hierarchy bottoms
+   out at concept/unit, ~1/8 of the canon's own minimum). Nothing gates any of this: G17 lints
+   dangling references, not density — and assessment-empty content cannot fail the lint either:
+   `cs.program.json` ships 8/8 holons with zero practice problems AND zero misconceptions
+   (`physics.program.json` 6/6 zero-practice; `math.foundations.json` 13/13 zero-practice) and lints
+   **clean**, because the only checks that could catch it cannot fail — P-3 ("no practice
+   problems") is `warning`, P-4 is `info` (`CurriculumLinter.ts:237-258`), and `overallPassed` is
+   `totalErrors === 0` (`:641`). The check ships as a finding precisely because no instrument
+   exists to observe it.
 5. **The difficulty-bell acceptance is unimplementable as specified.** `37:136-137`: "Difficulty
    distributions per branch must reproduce the observed bell curve (0.2→0.9, peak ≈ 0.5); branch
    linting (32) rejects otherwise" — but `CurriculumLinter.ts` has no difficulty check, and the
@@ -202,7 +209,7 @@ table owns all five (`44:291-295`: k12→37, cohort→38, journal→39, packs→
 3. **The networked half of 38 is dark.** PodTransport built, never wired; every multiplayer
    promise (and 40's MP3 A/B machinery, which needs cohorts) waits on it or its M0 fallback.
 4. **37's acceptance layer was skipped while its corpus shipped.** Ten K1–K3 branches landed with
-   zero gate able to observe their density, shape, or difficulty distribution against the canon's
+   zero gate able to observe their density, shape, assessment content, or difficulty distribution against the canon's
    own acceptance criteria (§3 divergences 3–5); `earth-science` is a phantom row; the canon tables
    were never reconciled to what shipped. This is a *verifiable-acceptance* gap, not a content gap —
    the next phase's deliverable is the instrument, not more branches.
@@ -213,7 +220,7 @@ table owns all five (`44:291-295`: k12→37, cohort→38, journal→39, packs→
    decision) — no code items.
 8. **41's externals are genuine externals** (DPIA, institution, EQAR) — correctly not code.
 
-## 6. Phase 17 (PROPOSED 2026-09-26 — pending ratification) — the education-system second half
+## 6. Phase 17 (RATIFIED 2026-09-27 — user directive; execution in progress) — the education-system second half
 
 The pattern across 1–3 is one class: **the pure cores are built, the second party is missing.**
 Phase 17 closes it in dependency order — each iteration makes the next one's evidence real. Detail
@@ -238,18 +245,20 @@ lives in this report; the plan entry (`DEVELOPMENT-PLAN.md` §4) points here.
 - **d4 — pod transport M0.** 38's own fallback: KV + client polling over the already-declared
   `RECOVERY_KV`-style bindings, driven by `podStateMachine`'s event discipline. M1 (Durable Objects)
   stays deferred until a hosting decision. Unblocks MP3's cohort machinery.
-- **d5 — 37 canon↔tree reconciliation + the verifiable-acceptance layer.** The deliverable is NOT
-  corpus authoring — 10 of 11 branches already ship. It is: (i) reconcile the canon tables to the
-  measured registry (§4.1 "to add" → what exists; §4.2's stale 56/1,280 row → real counts; rule
-  `earth-science` — author it or amend the table); (ii) build the per-branch density check in
-  `check:invariants` that MEASURES against 35 §5.2's 97-holon minimum and shape rules and CAN FAIL
-  on the shipped corpus — it ships reporting-first (per-branch numbers + verdict), and hardening it
-  to a battery-failing gate is an explicit owner decision to take with the numbers on the table,
-  because today every branch is below the bar and a hard gate would red the battery on arrival;
-  (iii) give the remaining acceptance criteria (difficulty bell, drive probes) either a linter
-  check or an explicit canon amendment that retires them — as specified, (c) is unimplementable (no
-  difficulty field exists in the data model). Rule on the four open questions or mark them
-  owned-open.
+- **d5 — 37: teeth first, then the missing branch, then canon reconciliation.** Ordering is the
+  point: content authored before the teeth lands with the same unverifiable guarantee the audit
+  documents. So: (i) give the acceptance layer teeth — the per-branch density check in
+  `check:invariants` measuring against 35 §5.2's 97-holon minimum and shape rules (per-branch
+  verdict emitted; an explicit `--deny-under <N>` threshold, default report-only, so the deficit is
+  visible without waiting on an owner decision — hardening to battery-failing is that owner
+  decision, taken with the numbers on the table); promote P-3/P-4 or add error-severity checks so
+  an assessment-empty module (`cs.program.json`, 8/8) can no longer lint clean; (ii) author
+  `earth-science` — the one genuinely missing branch (1 of 11) — under the new teeth; (iii)
+  reconcile the canon tables to the measured registry (§4.1 "to add" → what exists; §4.2's stale
+  56/1,280 row → real counts); (iv) give the remaining acceptance criteria (difficulty bell,
+  drive probes) a linter check or an explicit canon amendment that retires them — as specified, (c)
+  is unimplementable (no difficulty field exists in the data model). Rule on the four open
+  questions or mark them owned-open.
 
 **Track B — production readiness (carried, in parallel):**
 
@@ -274,7 +283,7 @@ decision (M1), real raters for RV1–RV7, partner institutions for 41, DPIA.
 | ClaimLedger single production import | `grep from '.*ClaimLedger'` — gate + tests only |
 | PodTransport zero importers | `grep from '.*PodTransport'` in `src/` — none |
 | articulationLadder in-vitro | `grep from '.*articulationLadder'` in `src/` — none |
-| delegateSession callers | grep — definition + `gates/orchestration.ts:54` only |
+| delegateSession callers | grep — definition + the G-gate (`gates/orchestration.ts:54`), tests, and the CLI drill (`delegateCmd.ts:136`, `:201`); no player-facing surface |
 | 37 density invariant absent | `grep densit|branch|minimum scripts/check-invariants.ts` — zero |
 | earth-science phantom | `37:123` names it; `ls src/core/curriculum/data/` — 14 subject files, none earth-science |
 | wrangler placeholders | `cat wrangler.toml` |
@@ -282,6 +291,9 @@ decision (M1), real raters for RV1–RV7, partner institutions for 41, DPIA.
 | `/journal` route live | `ls src/routes/journal/` + header read |
 | K-12 corpus on the boot path | `GameLoop.ts:260` (scout, consistent with `CurriculumSeed` imports) |
 | Registry real counts (108 holons / 16 files / per-branch level shape) | node count script over `src/core/curriculum/data/`, this session |
+| Assessment-content emptiness | node count script over `content.practiceProblems` + `misconceptions`: cs.program 8/8 + physics.program 6/6 + math 13/13 zero-practice; arts/civics/health/music/second-language 5/5-6/6 zero-misconception |
+| Empty modules lint clean | P-3 `warning` + P-4 `info` (`CurriculumLinter.ts:237-258`) + `overallPassed: totalErrors === 0` (`:641`) |
+| Instance holons absent corpus-wide | `grep '"level": "instance"' src/core/curriculum/data/` → 0 files |
 | Pack registry test-only in production | grep `registerPack(`/`allPacks(`/`getPack(`: definitions `PackEngine.ts:101-111`; production callers — `getPack` one (`delegate.ts:937`), `registerPack`/`allPacks` none; tests only at `PackEngine.test.ts:38-41` |
 | Council surface never registers in production | grep `CouncilIntegration` in `src/lib/` + `scripts/`: zero constructors; `councilTools.ts:212` shows the council `delegate_session` is a mandate tool, not the pack runner |
 | Linter check inventory (complete) | `CurriculumLinter.ts`: S-1..S-5 + G-CB-MISSING/G-CYCLE (structural), P-1..P-4 (pedagogical — P-3 `warning` practice-problems, P-4 `info` misconception coverage), D-1..D-4 (developmental depth/modality), E-1/E-2 (epistemic description/rubric) — verified none is a density, difficulty, or drive-probe check |
