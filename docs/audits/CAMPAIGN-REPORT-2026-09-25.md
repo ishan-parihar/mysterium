@@ -119,15 +119,15 @@ ambiguous: **present 87.5 % · missing 12.5 % · unrecognised 0.0 %.** The entir
 different findings and are not to be conflated.
 
 **Per-line coverage — seven of eight, evenly.** Seven lines took exactly 12 encounters each
-(84 of 96) and `Interpersonal` took **0**. The 84 is not 7×12 line encounters alone: each campaign's
-8th offer is a **training beat** (`Training:n_back`, not a `Line:Stage` cell), so 12 of the 96 rows
-carry no line at all. The reserve's strict forward tie-break (`§4.1` item 1) serves the 8th line 8th,
-and that 8th slot is consumed by the training weave every campaign — hence a clean 7-and-a-gap, not
-a gradient. Compare the 2026-09-24 baseline, where three lines carried
-74 % and the rest competed for the remainder. d3's reserve **is** a clear improvement on that
-gradient, and the evenness across the seven is the shape it was designed to produce — but the gap is
-positional, and the evenness is what a starving reserve looks like when it is only just short of
-reaching the eighth line.
+(84 of 96) and `Interpersonal` took **0**. The 84 is not 7×12 developmental encounters alone: each
+campaign's 8th offer is a **training beat** (`Training:<paradigmId>`, not a `Line:Stage` cell, so
+`perLine.encounters` — which counts provenance rows by `Line:` prefix — never attributes it), so 12
+of the 96 rows carry no line at all. The reserve's strict forward tie-break (`§4` item 1) serves the
+8th line 8th, and that 8th slot is consumed by the training weave every campaign — hence a clean
+7-and-a-gap, not a gradient. Compare the 2026-09-24 baseline, where three lines carried
+74 % and the rest competed for the remainder: d3's reserve **did** flatten that gradient, and the
+evenness across the seven is the shape it was designed to produce. The gap is positional, and the
+evenness is what a reserve looks like when it falls one slot short of the eighth line.
 
 But this is **not** the same claim as the gate's, and the difference must not be blurred. **G43, run
 directly on 2026-09-25, passes**: `every line offered · quietest/busiest 1/2` over its own roster
@@ -227,19 +227,25 @@ the candidate residual (§3.1) · d1's `memoryPage` and `renderBudget` questions
    the reserve never sees.** `selectReservedPrimaryByLineCoverage` (`EncounterScheduler.ts:53-70`)
    breaks a fresh-significator tie with strict `<` while iterating `ALL_LINES` forward, so on a tie
    the FIRST line in canonical order keeps the developmental slot. That makes it a strict
-   round-robin: each line is served, and the 8th line in canonical order — `Interpersonal`
-   (`Line.ts:36`) — is served **8th**. A campaign's 8th offer is a **training beat**, not a line
-   encounter (`Training:n_back` in provenance, one per campaign × 12 = 12 of the 96), and the reserve
-   only reorders candidates that reached it, so the round-robin never advances to its 8th position
-   within a campaign's length. 7 lines × 12 = the 84 of 96, exactly.
-   **This is a structural deficit, not a missing reserve**, and two fixes follow from it — neither is
-   "widen the reserve":
+   round-robin: each line is served in turn, and the 8th line in canonical order — `Interpersonal`
+   (`Line.ts:36`) — is served **8th**. A campaign's 8th offer is a **training beat**, not a
+   developmental encounter: `moduleRef` is literally `Training:<paradigmId>` (`GameLoop.ts:672`;
+   curriculum is `curriculum:<conceptId>` at `:889`), so it is not a `Line:Stage` cell and the
+   reserve never sees it as a candidate. The round-robin therefore reaches its first seven lines
+   every campaign and never advances to the eighth within a campaign's length. A single-campaign
+   trace shows the shape directly — eight offers yield `Cognitive · Intrapersonal · Moral · Emotional
+   · Somatic · Spiritual · Willpower` plus one `Training:n_back`, the eight lines' first seven in
+   canonical order with the training beat taking the final slot. 7 lines × 12 campaigns = the 84 of 96.
+   **This is a structural deficit, not a missing reserve**, and two fixes follow — neither is "widen
+   the reserve":
    - a **rotating tie-break seed**, so the deficit moves between lines instead of always landing on
      the 8th; or
-   - a **scale-independent coverage assertion** in G43, since a gate that only passes because its
-     3×4 run is shorter than the round-robin cycle proves nothing at cohort scale.
+   - a **seam-priority change**, so the training/curriculum insert does not permanently claim the slot
+     the round-robin needs to reach its last line.
    Note the reserve CAN reach `Interpersonal` — once the other seven carry positive timestamps, its
-   zero is the strict minimum. It is starved by position, not by eligibility.
+   zero is the strict minimum. It is starved by position, not by eligibility. A coverage assertion
+   that only holds because a gate's run is shorter than the round-robin cycle proves nothing at
+   cohort scale, so any fix should be scale-independent.
 2. **The polarity loop is enterable and inert.** 70 readings, 0 reconciled, every proposal from
    `deterministic-fallback` and none from `system1`. The pair key resolves now (item 5), so the next
    step is *why no pair ever reconciles* — a state-machine question, not a measurement one.

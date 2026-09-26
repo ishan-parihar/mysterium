@@ -1161,8 +1161,8 @@ would be the cosmetic split `M1` forbids).
 
 ### Phase 16 — The Diagnostic Sweep: repair the instrument, then calibrate (RATIFIED 2026-09-24)
 
-> **Status (2026-09-25).** Phase 16 remains **in progress**. d2 and d3 are built; d1, d4, d5, d6, and
-> d7 are now delivered too, and five items are open. d3 reserves the first developmental offer for the
+> **Status (2026-09-26).** Phase 16 remains **in progress**. d1–d7 were delivered 2026-09-25 and **d8
+> on 2026-09-26**; five items are open. d3 reserves the first developmental offer for the
 > least-recently-served eligible line, leaves candidate `priority` values and the non-primary ranked
 > tail unchanged, and is locked by production-path tests plus **G43** in the 44-gate CI roster. The
 > original campaign figures remain dated baseline evidence, not post-fix measurements.
@@ -1173,9 +1173,26 @@ would be the cosmetic split `M1` forbids).
 > `targetSessionLength: 5` and passed no force fields, so four player-facing controls persisted and
 > changed nothing. An unread field behaves exactly like an absent one, so every runtime gate passed
 > with the surface fully dark — the only instrument that can see absence is the module graph, which
-> is **G44**. The same change closed a parity hole it would otherwise have opened: a fully pinned
-> cell now suppresses the training weave in the WebUI exactly as the kernel already did
-> (`GameLoop.ts` `forcedCell`). Kernel roster **43 → 44**.
+> is **G44**, which reads the module graph and scopes its checks to the `SessionContext` builders —
+> a bare-word match is vacuous, since the field names appear in prose and in the guard expression.
+> The wiring also closed a parity hole it would otherwise have opened: a fully pinned cell now
+> suppresses the training weave in the WebUI as the kernel already did. Kernel roster **43 → 44**.
+>
+> The parity fix is deliberately **narrower than it first looked**, and the residue is the larger open
+> item rather than something this change pretended to close: the WebUI calls
+> `scheduleNextWithHolonicReturn` directly and never runs `tickWithStrategy`, so it also lacks the
+> kernel's threshold-mode and curriculum-interleave seams. It is not yet a `tickWithStrategy` caller.
+>
+> **d9 — one owner for the instrument-pin rule (2026-09-26).** d8 made the `forcedCell` ambiguity
+> reachable: it had three definitions, and the WebUI's tested the store's `null` while the kernel and
+> scheduler tested the context's `undefined` — agreeing only because the binding maps `null → undefined`
+> on the way in. Two consequences followed, both shipped here. The rule moved to
+> `isDeliberateInstrumentPin` in `PriorityComputation.ts` (next to the fields it reads) and all three
+> sites call it, so the copies cannot drift. And because a settings page setting both force axes is a
+> PREFERENCE, not an instrument, a new optional `focusedCell` marks the deliberate case: only a
+> focused campaign (`--target-cell`) suppresses the crucible, Holonic Return, curriculum interleave
+> and training weave. Without this, a player choosing a line and a stage in settings would have lost
+> four mechanics with no visible cause.
 >
 > **d1 — one producer, one reclassification, one deliberate absence.** `memoryPage` is measured where
 > the page is built (`buildEnvelope` → `memoryPageBlock`): block lines/chars plus the lines that

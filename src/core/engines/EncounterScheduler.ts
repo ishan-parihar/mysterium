@@ -8,7 +8,7 @@ import type { ScheduledEncounter } from '../domain/EncounterSpecNew.js';
 import type { Significator } from '../domain/Significator.js';
 import type { ShadowEntry } from '../domain/ShadowLedger.js';
 import { generateCandidates, type EncounterCandidate, type WorldState } from './CandidateGeneration.js';
-import { computePriority, DEFAULT_WEIGHTS, type SessionContext, type PriorityWeights } from './PriorityComputation.js';
+import { computePriority, DEFAULT_WEIGHTS, isDeliberateInstrumentPin, type SessionContext, type PriorityWeights } from './PriorityComputation.js';
 import type { TransformationPhase } from './TransformationDetector.js';
 import type { UserMatrixModel } from './UserMatrixModel.js';
 // WIRE-1: Import shouldSurfaceReturn to wire Holonic Return into the scheduler
@@ -444,8 +444,12 @@ export function scheduleNextWithHolonicReturn(
   // Phase 16 d5: a FORCED cell is a per-cell diagnostic instrument, so the return cannot prepend an
   // earlier-stage shadow encounter to it — that would measure two cells and report one. `shouldSurfaceReturn`
   // still fires and is still recorded elsewhere; it simply does not replace a forced developmental offer.
+  // Phase 16 d8: this is the second of two sites that had grown their own copy of the rule; it now reads
+  // the single owner in `PriorityComputation` (see `isDeliberateInstrumentPin`) and honours the
+  // `focusedCell` opt-in, so a settings page that sets both force fields no longer suppresses the
+  // Holonic Return for a player who never asked for an instrument.
   const stageEncounters = encountersAtCurrentStage ?? session.encountersSoFar;
-  const forcedCell = session.forceLine !== undefined && session.forceStage !== undefined;
+  const forcedCell = isDeliberateInstrumentPin(session);
   const returnTarget = forcedCell ? null : shouldSurfaceReturn(sig, stageEncounters);
 
   if (returnTarget) {

@@ -30,7 +30,7 @@ import {
 } from './engines/AutoModeStrategy.js';
 import { composeBiases } from './orchestration/feedReaders.js';
 import type { PriorityBias } from './engines/PriorityComputation.js';
-import { DEFAULT_WEIGHTS, type PriorityWeights } from './engines/PriorityComputation.js';
+import { DEFAULT_WEIGHTS, isDeliberateInstrumentPin, type PriorityWeights } from './engines/PriorityComputation.js';
 import { runModeAwareAssessment } from './assessments/engine.js';
 import type { AssessmentResult, ShadowAssessmentResult, StageAssessment, TrialResult, ModuleExecutionMode } from './assessments/types.js';
 import {
@@ -424,12 +424,14 @@ export function tickWithStrategy(
   // seams are what could otherwise replace that offer with an earlier stage, a curriculum concept
   // or a brain-game beat, silently turning a per-cell measurement into a mixed-cohort one.
   //
-  // BOTH axes, never one: `--line Cognitive` on its own is ordinary play (the CLI sets `forceLine`
-  // and `forceStage` independently), and disabling a session's transformation, curriculum and
-  // training behaviour because a player picked a line would be a behavioural change nobody asked
-  // for. Only a fully pinned cell is an instrument. `forceModality` is excluded on purpose — a
-  // modality pin does not pin a cell.
-  const forcedCell = session.forceLine !== undefined && session.forceStage !== undefined;
+  // Phase 16 d8 — the rule moved to `isDeliberateInstrumentPin` (`PriorityComputation.ts`) because
+  // two sites had each grown a copy, and d8 made the ambiguity REACHABLE: `gameEngine.ts` began
+  // threading the settings page's `forceLine`/`forceStage` into the context, so a player choosing
+  // both in settings would have lost the crucible, the curriculum and the training beats for
+  // reasons they could not see. `focusedCell` is the opt-in that separates a deliberate instrument
+  // pin (a focused campaign) from an incidental one, and it is ABSENT by default so every existing
+  // caller keeps ordinary play.
+  const forcedCell = isDeliberateInstrumentPin(session);
   let scheduled: ScheduledEncounter[];
   if (!forcedCell && (tsPhase === 'unravelling' || tsPhase === 'crucible' || tsPhase === 'emergence')) {
     scheduled = scheduleThresholdMode(updatedSig, updatedWorld, session, tsPhase, now);

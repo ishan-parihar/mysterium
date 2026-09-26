@@ -1,10 +1,16 @@
 /**
- * Surface gates — G36–G38: the entry point, the checked graph, and the System-1 boundary.
+ * Surface gates — G36–G38, G44: the entry point, the checked graph, the System-1 boundary, and the
+ * session-control wiring.
  *
  * Split out of `gates.ts` (module-cohesion audit item 2). These are the class-level gates: they assert
  * the shape of the BUILD and of the module graph, which no engine-level gate can see.
  *
- * Spec: docs/validation/BENCHMARK-ARCHITECTURE.md §6.
+ * Spec: the kernel's gate roster is owned by `gates/roster.ts` (`runValidationSuite` IS the order
+ * gates run in) and every gate is documented at its own definition. The historical
+ * `docs/validation/BENCHMARK-ARCHITECTURE.md` §6 was the spec for this roster, but that file is not
+ * in the tree — see `docs/audits/DOC-SET-AUDIT-2026-09-20.md` R6, which records it as complementary to
+ * `foundations/40`. Citations to it are therefore stale pointers, not a live authority; the gate
+ * definitions and the roster are the authority now.
  */
 
 import fs from 'node:fs';
@@ -373,6 +379,32 @@ const SESSION_CONTROL_PARITY_FIELDS: readonly (readonly [string, string])[] = [
  * cannot fail is decoration; a gate whose only reachable exit is `passed: true` is exactly that,
  * and the only honest way to prove otherwise is to hand it a source that is genuinely dark.
  */
+/**
+ * Extract the regions of the engine that actually BUILD a `SessionContext`, so the field checks are
+ * scoped to where the wiring must live rather than to the whole file.
+ *
+ * This exists because a whole-file `/forceLine/.test(text)` is vacuous: the word appears in the
+ * store's import, in the `forceFields` block, and in this file's own prose. A file could drop every
+ * read from its context literals, keep the import for a comment, and pass. G37 already works this
+ * way — it extracts and inspects regions, not whole files — so this is the same idiom rather than a
+ * new one.
+ *
+ * Two shapes are accepted, matching the two builders the WebUI has: an inline
+ * `const … : SessionContext = { … }` literal, and a spread of a named `forceFields` object. The
+ * `targetSessionLength` check is scoped to the literal because that field is set directly from the
+ * store there.
+ */
+export function sessionContextRegions(text: string): string {
+  const literals = [...text.matchAll(/SessionContext\s*=\s*\{([\s\S]*?)\n\s*\};/g)].map((m) => m[1] ?? '');
+  const spreads = [...text.matchAll(/const\s+forceFields\s*=\s*\{([\s\S]*?)\n\s*\};/g)].map((m) => m[1] ?? '');
+  return [...literals, ...spreads].join('\n');
+}
+/**
+ * The G44 decision, as a pure function of the engine source, so the gate's FAILURE is testable
+ * without mutating the working tree. `AGENTS.md`'s own rule (`MY-RG-0010`) is that a gate which
+ * cannot fail is decoration; a gate whose only reachable exit is `passed: true` is exactly that,
+ * and the only honest way to prove otherwise is to hand it a source that is genuinely dark.
+ */
 export function evaluateSessionControlWiring(text: string): { passed: boolean; details: string } {
   if (!/sessionControlStore/.test(text)) {
     return { passed: false, details: 'gameEngine.ts does not reference sessionControlStore — the settings controls are write-only again' };
@@ -380,14 +412,34 @@ export function evaluateSessionControlWiring(text: string): { passed: boolean; d
   if (!/sessionControlStore\.js/.test(text)) {
     return { passed: false, details: 'gameEngine.ts references sessionControlStore without importing it from its owner module' };
   }
-  const missing = SESSION_CONTROL_PARITY_FIELDS.filter(([field]) => !new RegExp(`\\b${field}\\b`).test(text));
+
+  // Scoped to the context builders, NOT the whole file: a mention in a comment is not a read.
+  // And matched as a VALUE (`control.forceLine`), not as a bare word — a mutation that swaps the
+  // read for a literal leaves the word standing in the `forceFields` block, and a word-level check
+  // passes it. This shape was verified by mutating the real file: a bare-word gate returned
+  // `passed: true` on a file that had dropped the read, which is precisely the vacuity being removed.
+  const regions = sessionContextRegions(text);
+  if (regions.length === 0) {
+    return { passed: false, details: 'gameEngine.ts builds no SessionContext literal or forceFields block — the wiring surface moved and this gate must follow it' };
+  }
+  const missing = SESSION_CONTROL_PARITY_FIELDS.filter(
+    ([field]) => !new RegExp(`\\bcontrol\\.${field}\\b`).test(regions),
+  );
   if (missing.length > 0) {
-    return { passed: false, details: `gameEngine.ts no longer reads ${missing.map(([f]) => f).join(', ')} from the store — those settings controls are inert` };
+    return { passed: false, details: `no SessionContext builder reads ${missing.map(([f]) => f).join(', ')} from the store — those settings controls are inert (checked inside the context literals, not the whole file)` };
   }
-  if (!/\bpinnedCell\b/.test(text)) {
-    return { passed: false, details: 'gameEngine.ts has no pinned-cell guard — a pinned cell would receive a training beat the kernel refuses' };
+
+  // The instrument-pin guard, also scoped: `isDeliberateInstrumentPin` is the single owner of that
+  // rule, so a binding that dropped the guard would reintroduce the browser/CLI split on the training
+  // weave. Checked in the scheduling function's own region rather than anywhere in the file.
+  if (!/\bisDeliberateInstrumentPin\s*\(/.test(text)) {
+    return { passed: false, details: 'gameEngine.ts does not consult isDeliberateInstrumentPin — the training-weave guard re-derives the rule instead of sharing its owner' };
   }
-  return { passed: true, details: `store reachable from the WebUI engine; ${SESSION_CONTROL_PARITY_FIELDS.length} parity fields read (${SESSION_CONTROL_PARITY_FIELDS.map(([f]) => f).join(', ')}) and the pinned-cell training-weave guard present` };
+  if (/const\s+pinnedCell\s*=/.test(text)) {
+    return { passed: false, details: 'gameEngine.ts re-declares a local pinnedCell — a third copy of the rule now owned by isDeliberateInstrumentPin' };
+  }
+
+  return { passed: true, details: `store reachable from the WebUI engine; ${SESSION_CONTROL_PARITY_FIELDS.length} parity fields read inside the SessionContext builders and the instrument-pin guard delegated to isDeliberateInstrumentPin` };
 }
 
 /**

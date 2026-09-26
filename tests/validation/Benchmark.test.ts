@@ -1,7 +1,10 @@
 /**
  * CI-tier validation benchmark.
  *
- * Spec: docs/validation/BENCHMARK-ARCHITECTURE.md (§6 gates, §8 tiers).
+ * The roster and every gate's contract are owned by `src/core/validation/gates/` — `roster.ts` is
+ * where a gate is REGISTERED, and each gate documents itself at its definition. The historical
+ * `docs/validation/BENCHMARK-ARCHITECTURE.md` §6 was the spec for this roster but is not in the tree
+ * (`docs/audits/DOC-SET-AUDIT-2026-09-20.md` R6 records it as complementary to `foundations/40`).
  *
  * Runs the full persona matrix through the LIVE production loop and asserts
  * the engine's measurement guarantees:
@@ -21,7 +24,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { runValidationSuite, validateSessionControlsWired, type ValidationReport } from '../../src/core/validation/gates.js';
-import { evaluateSessionControlWiring } from '../../src/core/validation/gates/surface.js';
+import { evaluateSessionControlWiring, sessionContextRegions } from '../../src/core/validation/gates/surface.js';
 
 describe('Validation benchmark (CI tier)', () => {
   let suite: ValidationReport;
@@ -112,10 +115,8 @@ describe('G44 session controls wired', () => {
 
   it('names the store and the parity fields it guards', async () => {
     const r = await validateSessionControlsWired();
-    for (const field of ['encounterCount', 'forceLine', 'forceStage', 'forceModality']) {
-      expect(r.details).toContain(field);
-    }
-    expect(r.details).toContain('pinned-cell');
+    expect(r.details).toContain('4 parity fields');
+    expect(r.details).toContain('isDeliberateInstrumentPin');
   });
 
   it('has teeth: it fails on a store that no builder reads', () => {
@@ -148,26 +149,112 @@ describe('G44 session controls wired', () => {
         forceStage: control.forceStage ?? undefined,
         forceModality: control.forceModality ?? undefined,
       };
-      const isPinned = control.forceStage !== null && control.forceStage !== null;
     `;
     const verdict = evaluateSessionControlWiring(oneFieldDark);
     expect(verdict.passed).toBe(false);
     expect(verdict.details).toContain('forceLine');
   });
 
-  it('has teeth: it fails when the pinned-cell parity guard is dropped', () => {
-    // The guard is the subtle one. Every parity field can be wired correctly and the browser still
-    // diverge from the kernel: a pinned cell would receive a training beat the CLI refuses. Nothing
-    // else in the suite sees that, so the gate must.
+  it('has teeth: a COMMENT naming the field is not a read', () => {
+    // The vacuity a whole-file regex cannot see. The store's own doc comment names every field, and
+    // the guard expression mentions two of them, so a file that has dropped every READ still
+    // contains all four words. This is the exact shape of a real regression — someone keeps the
+    // import for the comment and reverts the literals to constants — and it is why the gate scopes
+    // its checks to the context builders.
+    const commentOnly = `
+      // sessionControlStore — Parity with CLI flags: --encounters, --line, --stage, --modality.
+      // Reads control.forceLine and control.forceStage to decide the instrument pin.
+      import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
+      const sessionContext: SessionContext = {
+        encountersSoFar: 0, sessionDurationMs: 0, targetSessionLength: 5, recentLines: [],
+      };
+      const isPinned = isDeliberateInstrumentPin(forceFields);
+    `;
+    const verdict = evaluateSessionControlWiring(commentOnly);
+    expect(verdict.passed).toBe(false);
+    expect(verdict.details).toContain('encounterCount');
+    expect(verdict.details).toContain('forceLine');
+  });
+
+  it('has teeth: it fails when the rule is re-derived instead of shared', () => {
+    // Three sites had each grown their own copy, and two disagreed on the VALUE tested. A local
+    // `pinnedCell` re-declaration is that regression returning, so the gate rejects it explicitly
+    // rather than merely looking for the shared predicate.
+    const rederived = `
+      import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
+      const control = get(sessionControlStore);
+      const sessionContext: SessionContext = {
+        encountersSoFar: 0, sessionDurationMs: 0,
+        targetSessionLength: control.encounterCount, recentLines: [],
+        forceLine: control.forceLine ?? undefined,
+        forceStage: control.forceStage ?? undefined,
+        forceModality: control.forceModality ?? undefined,
+      };
+      if (isDeliberateInstrumentPin(forceFields)) {
+        const pinnedCell = true;
+        if (!pinnedCell) { /* weave */ }
+      }
+    `;
+    const verdict = evaluateSessionControlWiring(rederived);
+    expect(verdict.passed).toBe(false);
+    expect(verdict.details).toContain('third copy');
+  });
+
+  it('has teeth: it fails when the guard is dropped entirely', () => {
     const noGuard = `
       import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
       const control = get(sessionControlStore);
-      const encounterCount = control.encounterCount;
-      const forceLine = control.forceLine; const forceStage = control.forceStage;
-      const forceModality = control.forceModality;
+      const sessionContext: SessionContext = {
+        encountersSoFar: 0, sessionDurationMs: 0,
+        targetSessionLength: control.encounterCount, recentLines: [],
+        forceLine: control.forceLine ?? undefined,
+        forceStage: control.forceStage ?? undefined,
+        forceModality: control.forceModality ?? undefined,
+      };
     `;
     const verdict = evaluateSessionControlWiring(noGuard);
     expect(verdict.passed).toBe(false);
-    expect(verdict.details).toContain('pinned-cell');
+    expect(verdict.details).toContain('isDeliberateInstrumentPin');
+  });
+
+  it('catches a read replaced by a literal (the vacuity a word-match cannot see)', () => {
+    // Verified by mutation on the REAL file before it was written here: swapping
+    // `forceLine: control.forceLine ?? undefined` for `forceLine: 'Cognitive'` leaves the WORD
+    // `forceLine` standing in the `forceFields` block, and a gate that matched bare words returned
+    // `passed: true` on that file. Scoping to the context regions alone did not fix it either —
+    // `forceFields` IS a context region. Matching the VALUE form is what catches it.
+    const readReplacedByLiteral = `
+      import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
+      const control = get(sessionControlStore);
+      const forceFields = {
+        forceLine: 'Cognitive',
+        forceStage: control.forceStage ?? undefined,
+        forceModality: control.forceModality ?? undefined,
+      };
+      const sessionContext: SessionContext = {
+        encountersSoFar: 0, sessionDurationMs: 0,
+        targetSessionLength: control.encounterCount, recentLines: [],
+        ...forceFields,
+      };
+      if (isDeliberateInstrumentPin(forceFields)) { /* weave */ }
+    `;
+    const verdict = evaluateSessionControlWiring(readReplacedByLiteral);
+    expect(verdict.passed).toBe(false);
+    expect(verdict.details).toContain('forceLine');
+  });
+
+  it('scopes its checks to the context builders', () => {
+    // The extractor is the mechanism that makes the comment case above possible to detect, so it is
+    // worth asserting directly: a field that appears ONLY in prose must not be found.
+    const text = `
+      // forceLine and forceModality are discussed here in a comment.
+      const sessionContext: SessionContext = {
+        targetSessionLength: control.encounterCount,
+      };
+    `;
+    const regions = sessionContextRegions(text);
+    expect(regions).toContain('encounterCount');
+    expect(regions).not.toContain('forceLine');
+    expect(regions).not.toContain('forceModality');
   });
 });

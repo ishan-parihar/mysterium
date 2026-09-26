@@ -2564,7 +2564,11 @@ GATE_FIXTURES: dict[str, FIXTURE_SPEC | list[FIXTURE_SPEC]] = {
     "DG10": (RECORD, "## Context", "## Context\n\nImplemented in `src/core/nonexistent-module.ts`.\n"),
     "DG11": ("docs/INDEX.md", "", ""),  # special-cased: index staleness is proven by appending a line
     "DG12": (CANON, "## 1. Purpose: the world's intelligence", "## 1. Purpose: the world's intelligence\n\nSee [[docs/foundations/99-does-not-exist]]."),
-    "DG13": ("_org.yaml", "    code: [src/core/onboarding, src/core/adaptive]", "    code: [src/core/no-such-organ-code]"),
+    # Re-anchored 2026-09-26: the old anchor was a flow-sequence `[a, b]` that a reformat of
+    # `_org.yaml` made absent, so the fixture could not inject a violation and the gate reported
+    # `passed` on its own failure. The anchor is now a line that exists, in the same block the gate
+    # reads. A stale anchor is a toothless gate, and the fixtures pass is what proves teeth.
+    "DG13": ("_org.yaml", "    - src/core/onboarding", "    - src/core/no-such-organ-code"),
     "DG14": ("docs/foundations/98-fixture-orphan.md", "", "__ORPHAN__"),
     "DG15": (RECORD, 'Source: "foundations/26-unified-core-architecture"', 'Source: "foundations/99-does-not-exist"'),
     "DG16": (CANON, "## 1. Purpose: the world's intelligence", "## 1. Purpose: the world's intelligence\n\nSee `src/core/nonexistent-module.ts`."),
@@ -2572,7 +2576,11 @@ GATE_FIXTURES: dict[str, FIXTURE_SPEC | list[FIXTURE_SPEC]] = {
     "DG18": ("docs/foundations/98-router-fixture.md", "", "__ORPHAN__"),
     "DG19": (RECORD, 'Consumer: "`src/core/assessments/AgenticOrchestrator.ts`, `src/core/GameLoop.ts`"', "ConsumerNote: moved out of the contract"),
     # DG20: claim `wired` on a probe that nothing invokes — the false-compliance case (MY-RG-008).
-    "DG20": ("scripts/tdg-probe.ts", "@script-status: probe", "@script-status: wired"),
+    # Re-anchored 2026-09-26: the original target `scripts/tdg-probe.ts` was deleted, so the fixture
+    # injected into a file that no longer exists and the gate passed on its own violation. The target
+    # must be a script that (a) still exists and (b) genuinely declares `probe` status, so swapping
+    # the claim to `wired` is a real false-compliance injection rather than a no-op.
+    "DG20": ("scripts/cohort-calibrate.ts", "@script-status: probe", "@script-status: wired"),
     # DG21: desynchronise the generated corpus index from the corpus it is generated from.
     "DG21": ("src/core/data/concept-drafts.json", '"Deterministic"', '"NoSuchModality"'),
     # DG23 has two independent branches, so it carries two fixtures — one for each direction of the

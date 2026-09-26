@@ -62,7 +62,61 @@ export interface SessionContext {
   readonly forceLine?: string;
   readonly forceStage?: string;
   readonly forceModality?: string;
+  /**
+   * Phase 16 d8 — the caller DELIBERATELY pinned an instrument cell (`--target-cell` on a focused
+   * campaign). Optional and absent by default, and that default is the whole point: it separates
+   * "both force fields happen to be set" from "this session exists to measure one cell". Only the
+   * deliberate pin suppresses the injection seams, so a player who picks a line AND a stage in the
+   * settings page keeps the crucible, Holonic Return, curriculum interleave and training beats.
+   * The rule has one owner — `isDeliberateInstrumentPin` in this file; do not re-derive it.
+   */
+  readonly focusedCell?: true;
   readonly transformationState?: { phase: string }; // G.20: transformation phase for crucible detection
+}
+
+/**
+ * Is this session a fully pinned cell — a DIAGNOSTIC INSTRUMENT rather than play?
+ *
+ * One owner for the rule, because three call sites had each grown their own copy and the copies
+ * disagreed on the VALUE they tested: the kernel tested `forceLine !== undefined && forceStage !==
+ * undefined` while the WebUI binding tested `control.forceLine !== null && control.forceStage !==
+ * null`. Those agree only while the binding maps `null → undefined` on the way in; a caller passing
+ * any other falsy-but-defined value diverges silently, and nothing would fail. `SessionContext` is
+ * the right home because the predicate reads nothing else.
+ *
+ * BOTH axes, never one — a `forceLine` on its own is ordinary play (the CLI sets the two
+ * independently), and silently disabling a session's transformation, curriculum and training
+ * behaviour because a player picked a line would be a change nobody asked for. `forceModality` is
+ * excluded on purpose: a modality pin does not pin a cell.
+ *
+ * What the caller OWES the player when this returns true: the four injection seams
+ * (`GameLoop`'s threshold replacement, curriculum interleave and training weave, and the
+ * scheduler's Holonic Return) are suppressed, because an instrument measuring one cell must not
+ * have a different cell substituted into it. That is only a fair trade for a caller that deliberately
+ * pinned a cell to measure it — a player picking a line and a stage in settings has not asked for a
+ * diagnostic, and the settings surface must not reach here on its own. See
+ * `isDeliberateInstrumentPin` for the opt-in that keeps the two apart.
+ */
+export function isPinnedInstrumentCell(session: Pick<SessionContext, 'forceLine' | 'forceStage'>): boolean {
+  return session.forceLine !== undefined && session.forceStage !== undefined;
+}
+
+/**
+ * Did a caller DELIBERATELY pin an instrument cell, as opposed to setting both axes incidentally?
+ *
+ * The distinction exists because `isPinnedInstrumentCell` is not safe to honour from a settings UI.
+ * A player choosing a line and a stage in the settings page is expressing a preference, not mounting
+ * an instrument, and suppressing the crucible, Holonic Return, curriculum interleave and training
+ * beats for them is a silent behavioural change with no visible cause. The focused campaign
+ * (`--target-cell`) is the deliberate caller and sets this flag; the settings page must not.
+ *
+ * So the rule is: the seams stay suppressed when the cell is pinned AND the pin was an opt-in.
+ * A caller that wants instrument semantics states them instead of relying on a coincidence.
+ */
+export function isDeliberateInstrumentPin(
+  session: Pick<SessionContext, 'forceLine' | 'forceStage' | 'focusedCell'>,
+): boolean {
+  return session.focusedCell === true && isPinnedInstrumentCell(session);
 }
 
 // ---------------------------------------------------------------------------

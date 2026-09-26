@@ -349,9 +349,10 @@ Concept-drafts are **COMPLETE** (all 512 exist across 64 modules × 8 files). Le
 **DONE**. Phases 1–15 are **implemented and gated**; Phase 16 remains active with **d1–d7 and d8 all
 delivered** (d1–d7 on 2026-09-25, d8 on 2026-09-26) and five open items carried in
 `docs/audits/CAMPAIGN-REPORT-2026-09-25.md` §4 — an `Interpersonal` exclusion that is a **structural
-slot deficit** (the reserve's strict forward tie-break serves the 8th line 8th, and each campaign's 8th
-offer is a training beat, so the round-robin never reaches it within a campaign) plus a
-population-level class G43's short single-persona run cannot see, an inert
+slot deficit**: the reserve's strict forward tie-break serves the 8th line 8th, and each campaign's 8th
+offer is a training beat (`Training:<paradigmId>`, not a `Line:Stage` cell), so the round-robin
+reaches its first seven lines and never the eighth. The reserve CAN reach the line once the other
+seven carry positive timestamps — it is starved by position, not eligibility. Alongside that: an inert
 polarity loop, the wide `shadow-facing` 0.0 %, the real-rater RV1–RV7 thresholds, and per-line
 saturation thresholds awaiting real progression curves. The current
 kernel roster is **44 gates** (43 + **G44**, Phase 16 d8: the session-control store was write-only,

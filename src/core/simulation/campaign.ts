@@ -363,7 +363,11 @@ export async function runCampaign(spec: CampaignSpec): Promise<CampaignResult> {
       targetSessionLength: perSession,
       encountersSoFar: 0,
       recentLines: [] as string[],
-      ...(targetParts ? { forceLine: targetParts[0], forceStage: targetParts[1] } : {}),
+      // Phase 16 d8 — `focusedCell` is what makes this an INSTRUMENT rather than an incidentally
+      // pinned session. The focused campaign is the deliberate caller: it asks for per-cell entropy
+      // and will throw on any foreign offer, so suppressing the injection seams is correct here and
+      // is now stated rather than inferred from the presence of two force fields.
+      ...(targetParts ? { forceLine: targetParts[0], forceStage: targetParts[1], focusedCell: true as const } : {}),
     };
     // Focused mode does NOT zero the strategy's curriculum/training budgets here. The scheduling
     // seam owns the omission (`GameLoop`'s `forcedCell` guard), because that is the only place a

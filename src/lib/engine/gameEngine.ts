@@ -27,7 +27,7 @@ import type { OrchestratorResult, AgenticUIHandler } from '$core/assessments/Age
 import { startSession, applyResponseOnly, computeTrainingWeave } from '$core/GameLoop.js';
 import { scheduleNextWithHolonicReturn } from '$core/engines/EncounterScheduler.js';
 import { createModuleTaskTypesProvider } from '$core/engines/CandidateGeneration.js';
-import { DEFAULT_WEIGHTS } from '$core/engines/PriorityComputation.js';
+import { DEFAULT_WEIGHTS, isDeliberateInstrumentPin } from '$core/engines/PriorityComputation.js';
 import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
 import { AgenticOrchestrator } from '$core/assessments/AgenticOrchestrator.js';
 // RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — one per browser
@@ -197,14 +197,24 @@ export function scheduleEncounters(): void {
   // tickWithStrategy applies it for the CLI/harness. Skipped when the queue
   // already carries an unplayed beat (decline/completion re-schedules).
   //
-  // Parity correction (Phase 16 d8): the kernel suppresses the weave when the cell is fully pinned
-  // (`GameLoop.ts:462` — `forcedCell` makes it `{shouldWeave: false}`), because a pinned cell is a
-  // diagnostic instrument and a training beat is not a cell. This binding had no such guard, so
-  // wiring the store would have made a pinned cell silently receive training beats here while the
-  // CLI refused it — the exact split the parity surface exists to prevent. One definition of the
-  // rule, same as the cadence.
-  const pinnedCell = control.forceLine !== null && control.forceStage !== null;
-  if (!pinnedCell && !encounters.some((e) => e.isTrainingBeat)) {
+  // Phase 16 d8 — this guard now asks the same question the kernel asks, through the same owner
+  // (`isDeliberateInstrumentPin` in `PriorityComputation`). A previous version tested the store's own
+  // fields directly, which was a THIRD spelling of a rule the kernel and the scheduler each carried
+  // too, agreeing only because this binding maps `null → undefined` on the way in.
+  //
+  // Because a settings pin is not an instrument (no `focusedCell`), the answer here is normally
+  // false: a player who picks a line AND a stage keeps the training weave, which is what they
+  // expect. The guard exists for the case where this binding is ever handed a deliberate instrument
+  // pin, and it is kept in the kernel's idiom so the two surfaces cannot drift on the cadence.
+  //
+  // SCOPE, stated plainly because the parity claim is otherwise overstated: this fixes ONE of three
+  // divergences. The kernel also skips threshold mode and curriculum interleave on a pinned cell, and
+  // this binding never runs those seams at all — it calls `scheduleNextWithHolonicReturn` directly
+  // rather than `tickWithStrategy`, so the WebUI is not yet a `tickWithStrategy` caller. That is the
+  // larger parity gap (the WebUI does not drive the orchestrated loop), not something this guard
+  // closes. What this guard does close is the divergence d8's own wiring would have introduced.
+  const instrumentPin = isDeliberateInstrumentPin(forceFields);
+  if (!instrumentPin && !encounters.some((e) => e.isTrainingBeat)) {
     const weave = computeTrainingWeave(
       session.strategy.trainingSlots ?? 0,
       session.trainingEncountersThisSession ?? 0,
