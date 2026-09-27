@@ -5,7 +5,13 @@
     "description": "The foundational concepts of living systems: cells as units of life, evolution as the organizing process, homeostasis as the maintenance of viable conditions, and ecology as the web of interdependence.",
     "level": "branch",
     "parentId": null,
-    "childIds": ["bio.cells", "bio.evolution", "bio.homeostasis", "bio.ecology", "bio.genetics"],
+    "childIds": [
+      "bio.cells",
+      "bio.evolution",
+      "bio.homeostasis",
+      "bio.ecology",
+      "bio.genetics"
+    ],
     "phases": {
       "observation": {
         "question": "What distinguishes a living system from a non-living one?",
@@ -44,13 +50,28 @@
     "prerequisites": [],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Somatic"],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "absent",
-      "targetDepthRange": { "min": "memorized", "max": "transformed" },
-      "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"]
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 86400000,
@@ -97,49 +118,87 @@
       "levels": {
         "memorized": {
           "evidence": "Can state the criteria of life and name the four scale-ideas",
-          "canDo": ["List criteria of life", "Name cell/evolution/homeostasis/ecology"],
-          "cannotDo": ["Apply them to edge cases"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "List criteria of life",
+            "Name cell/evolution/homeostasis/ecology"
+          ],
+          "cannotDo": [
+            "Apply them to edge cases"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain what each scale-idea contributes and how they differ",
-          "canDo": ["Distinguish proximate from ultimate explanation"],
-          "cannotDo": ["Chain the ideas across scales"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Distinguish proximate from ultimate explanation"
+          ],
+          "cannotDo": [
+            "Chain the ideas across scales"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.45
         },
         "applied": {
           "evidence": "Can apply criteria and lenses to novel cases",
-          "canDo": ["Classify edge cases with justified verdicts"],
-          "cannotDo": ["Analyze multi-scale systems"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Classify edge cases with justified verdicts"
+          ],
+          "cannotDo": [
+            "Analyze multi-scale systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.6
         },
         "analyzed": {
           "evidence": "Can trace one phenomenon through multiple scales",
-          "canDo": ["Explain a disease at cell, organism, and population scales"],
-          "cannotDo": ["Evaluate competing frameworks"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Explain a disease at cell, organism, and population scales"
+          ],
+          "cannotDo": [
+            "Evaluate competing frameworks"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.75
         },
         "evaluated": {
           "evidence": "Can weigh competing explanations (design vs selection, equilibrium vs regulation)",
-          "canDo": ["Adjudicate a frameworks dispute with evidence"],
+          "canDo": [
+            "Adjudicate a frameworks dispute with evidence"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Multi-scale biological thinking is habitual — organisms are read as evolved, regulated, ecological systems by default",
-          "canDo": ["Spontaneously apply the four lenses to novel phenomena"],
+          "canDo": [
+            "Spontaneously apply the four lenses to novel phenomena"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "bio.cells",
@@ -183,16 +242,29 @@
         "mappingDescription": "The membrane is homeostasis at the smallest scale — regulation begins at the boundary"
       }
     ],
-    "prerequisites": ["bio.foundations"],
+    "prerequisites": [
+      "bio.foundations"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
       "secondaryLines": [],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -238,49 +310,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can name organelles and their one-line functions",
-          "canDo": ["Label a cell diagram"],
-          "cannotDo": ["Explain compartmentalization's necessity"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Label a cell diagram"
+          ],
+          "cannotDo": [
+            "Explain compartmentalization's necessity"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain why compartments and gradients matter",
-          "canDo": ["Explain selective permeability's role"],
-          "cannotDo": ["Predict perturbation effects"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain selective permeability's role"
+          ],
+          "cannotDo": [
+            "Predict perturbation effects"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can predict toxin/drug effects from mechanism",
-          "canDo": ["Trace a mechanism to a cellular outcome"],
-          "cannotDo": ["Integrate across systems"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Trace a mechanism to a cellular outcome"
+          ],
+          "cannotDo": [
+            "Integrate across systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can trace multi-step failure cascades",
-          "canDo": ["Order a failure cascade with reasons"],
-          "cannotDo": ["Evaluate experimental evidence"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Order a failure cascade with reasons"
+          ],
+          "cannotDo": [
+            "Evaluate experimental evidence"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can judge competing models of early-cell evolution",
-          "canDo": ["Weigh endosymbiotic vs abiotic evidence"],
+          "canDo": [
+            "Weigh endosymbiotic vs abiotic evidence"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Reads all life mechanistically through cellular lenses by default",
-          "canDo": ["Explain any organismic phenomenon cellularly"],
+          "canDo": [
+            "Explain any organismic phenomenon cellularly"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "bio.evolution",
@@ -324,16 +433,32 @@
         "mappingDescription": "Genetic algorithms encode evolution directly: mutation, fitness function, generation loop"
       }
     ],
-    "prerequisites": ["bio.foundations"],
+    "prerequisites": [
+      "bio.foundations"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Moral"],
-      "stageRange": { "min": "Orange", "max": "Teal" }
+      "secondaryLines": [
+        "Moral"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Teal"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "transformed" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated", "transformed"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -380,49 +505,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can state the three ingredients and give one example",
-          "canDo": ["Recall ingredients, examples"],
-          "cannotDo": ["Explain the mechanism"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall ingredients, examples"
+          ],
+          "cannotDo": [
+            "Explain the mechanism"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain cumulative filtering and why design-language misleads",
-          "canDo": ["Explain selection without agency"],
-          "cannotDo": ["Apply to novel pressures"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain selection without agency"
+          ],
+          "cannotDo": [
+            "Apply to novel pressures"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can predict outcomes of specified selection pressures",
-          "canDo": ["Reason resistance, domestication cases"],
-          "cannotDo": ["Analyze trade-offs historically"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Reason resistance, domestication cases"
+          ],
+          "cannotDo": [
+            "Analyze trade-offs historically"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can decompose traits into history, constraint, and trade-off",
-          "canDo": ["Analyze imperfect design as evidence"],
-          "cannotDo": ["Evaluate theory-level critiques"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Analyze imperfect design as evidence"
+          ],
+          "cannotDo": [
+            "Evaluate theory-level critiques"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can adjudicate selection vs drift vs constraint in real cases",
-          "canDo": ["Weigh competing mechanisms with evidence"],
+          "canDo": [
+            "Weigh competing mechanisms with evidence"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Selection thinking generalizes — sees the loop in immunity, markets, culture",
-          "canDo": ["Apply the loop outside biology unprompted"],
+          "canDo": [
+            "Apply the loop outside biology unprompted"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "bio.homeostasis",
@@ -466,16 +628,33 @@
         "mappingDescription": "Psychological self-regulation (emotional, attentional) is homeostasis's structure at the interior scale — same loop, different holon"
       }
     ],
-    "prerequisites": ["bio.foundations", "bio.cells"],
+    "prerequisites": [
+      "bio.foundations",
+      "bio.cells"
+    ],
     "devMapping": {
       "primaryLine": "Somatic",
-      "secondaryLines": ["Cognitive", "Intrapersonal"],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "secondaryLines": [
+        "Cognitive",
+        "Intrapersonal"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -522,49 +701,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can name regulated variables and loop components",
-          "canDo": ["List loop parts"],
-          "cannotDo": ["Assemble the loop"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "List loop parts"
+          ],
+          "cannotDo": [
+            "Assemble the loop"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain negative feedback structure",
-          "canDo": ["Draw and narrate a loop"],
-          "cannotDo": ["Map loops to diseases"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Draw and narrate a loop"
+          ],
+          "cannotDo": [
+            "Map loops to diseases"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can diagnose broken loops in disease cases",
-          "canDo": ["Locate sensor/signal/effector failure"],
-          "cannotDo": ["Analyze chronic dysregulation"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Locate sensor/signal/effector failure"
+          ],
+          "cannotDo": [
+            "Analyze chronic dysregulation"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can trace allostatic load across systems",
-          "canDo": ["Explain stress cascades multi-system"],
-          "cannotDo": ["Evaluate regulation models"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Explain stress cascades multi-system"
+          ],
+          "cannotDo": [
+            "Evaluate regulation models"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can judge reactive vs predictive regulation accounts",
-          "canDo": ["Weigh allostasis vs homeostasis framing"],
+          "canDo": [
+            "Weigh allostasis vs homeostasis framing"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Reads self, body, and habits as regulation loops by default",
-          "canDo": ["Apply loop analysis to personal and clinical cases"],
+          "canDo": [
+            "Apply loop analysis to personal and clinical cases"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Somatic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Somatic"
+    ]
   },
   {
     "id": "bio.ecology",
@@ -608,16 +824,32 @@
         "mappingDescription": "Ecosystems are the exterior-collective quadrant's holarchy — populations as holons in communities"
       }
     ],
-    "prerequisites": ["bio.foundations"],
+    "prerequisites": [
+      "bio.foundations"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Moral", "Naturalist"],
-      "stageRange": { "min": "Orange", "max": "Teal" }
+      "secondaryLines": [
+        "Moral",
+        "Naturalist"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Teal"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -664,49 +896,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can define energy flow, matter cycling, niche",
-          "canDo": ["Recall terms with examples"],
-          "cannotDo": ["Reason cascades"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall terms with examples"
+          ],
+          "cannotDo": [
+            "Reason cascades"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain pyramid narrowing and closed cycles",
-          "canDo": ["Distinguish energy vs matter fate"],
-          "cannotDo": ["Predict perturbations"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Distinguish energy vs matter fate"
+          ],
+          "cannotDo": [
+            "Predict perturbations"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can predict cascade outcomes",
-          "canDo": ["Reason three-level perturbations"],
-          "cannotDo": ["Analyze regime shifts"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Reason three-level perturbations"
+          ],
+          "cannotDo": [
+            "Analyze regime shifts"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can decompose a real ecosystem into flows, cycles, keystones",
-          "canDo": ["Produce a systems analysis of a case"],
-          "cannotDo": ["Evaluate management strategies"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Produce a systems analysis of a case"
+          ],
+          "cannotDo": [
+            "Evaluate management strategies"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can weigh conservation interventions by ecological reasoning",
-          "canDo": ["Adjudicate competing restoration plans"],
+          "canDo": [
+            "Adjudicate competing restoration plans"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Perceives interdependence habitually — no act or organism is read as local",
-          "canDo": ["Apply web-thinking to novel systems, social included"],
+          "canDo": [
+            "Apply web-thinking to novel systems, social included"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "bio.genetics",
@@ -750,16 +1019,33 @@
         "mappingDescription": "Genetic code and machine code are both discrete-symbol instruction sets; genes are data and program at once"
       }
     ],
-    "prerequisites": ["bio.foundations", "bio.cells", "bio.evolution"],
+    "prerequisites": [
+      "bio.foundations",
+      "bio.cells",
+      "bio.evolution"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Moral"],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "secondaryLines": [
+        "Moral"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -806,48 +1092,85 @@
       "levels": {
         "memorized": {
           "evidence": "Can state the central dogma and mendel's ratios",
-          "canDo": ["Recall dogma, solve trivial crosses"],
-          "cannotDo": ["Explain regulation"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall dogma, solve trivial crosses"
+          ],
+          "cannotDo": [
+            "Explain regulation"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain gene→protein→trait chains and their conditionality",
-          "canDo": ["Explain why 'gene for' claims mislead"],
-          "cannotDo": ["Solve multi-gene problems"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain why 'gene for' claims mislead"
+          ],
+          "cannotDo": [
+            "Solve multi-gene problems"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can solve pedigree and probability problems",
-          "canDo": ["Analyze crosses, predict distributions"],
-          "cannotDo": ["Analyze regulation systems"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Analyze crosses, predict distributions"
+          ],
+          "cannotDo": [
+            "Analyze regulation systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can decompose trait causation into genetic and environmental terms",
-          "canDo": ["Analyze gene-environment interplay cases"],
-          "cannotDo": ["Evaluate editing ethics frameworks"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Analyze gene-environment interplay cases"
+          ],
+          "cannotDo": [
+            "Evaluate editing ethics frameworks"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can weigh biotechnology claims and risks critically",
-          "canDo": ["Adjudicate CRISPR/marking debates with mechanism"],
+          "canDo": [
+            "Adjudicate CRISPR/marking debates with mechanism"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Information-flow thinking is habitual — heredity, development, and expression read as one system",
-          "canDo": ["Apply gene-expression reasoning to novel cases"],
+          "canDo": [
+            "Apply gene-expression reasoning to novel cases"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   }
 ]

@@ -239,6 +239,25 @@
       ],
       "corpusStatus": "partial",
       "note": "The SEL inversion (37 §3.1): Mysterium's 64-module developmental engine IS this curriculum"
+    },
+    {
+      "subject": "earth-space-science",
+      "branches": [
+        "earth"
+      ],
+      "primaryLines": [
+        "Cognitive"
+      ],
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "complex": "Mind/Body",
+      "modalityAffinity": [
+        "ScenarioChoice",
+        "ImmersiveRPG"
+      ],
+      "corpusStatus": "present",
+      "note": "Phase 17 d5: the K1 row's one missing branch (37 §3.1 Biology/Earth & space) — authored under the promoted P-3/P-4 teeth"
     }
   ]
 }

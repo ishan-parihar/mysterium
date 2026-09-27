@@ -5,7 +5,12 @@
     "description": "The foundational concepts of historical reasoning: evidence and interpretation, causation across scales, change and continuity, and perspective as constitutive rather than decorative.",
     "level": "branch",
     "parentId": null,
-    "childIds": ["hist.evidence", "hist.causation", "hist.change", "hist.perspective"],
+    "childIds": [
+      "hist.evidence",
+      "hist.causation",
+      "hist.change",
+      "hist.perspective"
+    ],
     "phases": {
       "observation": {
         "question": "What is the difference between the past and history?",
@@ -44,13 +49,29 @@
     "prerequisites": [],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Moral", "Interpersonal"],
-      "stageRange": { "min": "Amber", "max": "Green" }
+      "secondaryLines": [
+        "Moral",
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "absent",
-      "targetDepthRange": { "min": "memorized", "max": "transformed" },
-      "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"]
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 86400000,
@@ -97,49 +118,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can define source, evidence, perspective; recite one dated narrative",
-          "canDo": ["Recall terms and one story"],
-          "cannotDo": ["Distinguish past from history"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall terms and one story"
+          ],
+          "cannotDo": [
+            "Distinguish past from history"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain evidence-constrained interpretation",
-          "canDo": ["Explain why accounts differ without 'anything goes'"],
-          "cannotDo": ["Analyze competing accounts"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain why accounts differ without 'anything goes'"
+          ],
+          "cannotDo": [
+            "Analyze competing accounts"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.45
         },
         "applied": {
           "evidence": "Can source, corroborate, and locate disagreement between accounts",
-          "canDo": ["Compare two accounts of one event"],
-          "cannotDo": ["Weigh multi-scale causes"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Compare two accounts of one event"
+          ],
+          "cannotDo": [
+            "Weigh multi-scale causes"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.6
         },
         "analyzed": {
           "evidence": "Can decompose a narrative into causes at multiple scales",
-          "canDo": ["Layer individual, institutional, structural causes"],
-          "cannotDo": ["Evaluate historiographic frameworks"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Layer individual, institutional, structural causes"
+          ],
+          "cannotDo": [
+            "Evaluate historiographic frameworks"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.75
         },
         "evaluated": {
           "evidence": "Can adjudicate between competing historical interpretations",
-          "canDo": ["Weigh schools of interpretation against evidence"],
+          "canDo": [
+            "Weigh schools of interpretation against evidence"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Historical consciousness is habitual — present claims are automatically source-checked and placed in causal and perspectival context",
-          "canDo": ["Apply the four lenses to contemporary narratives unprompted"],
+          "canDo": [
+            "Apply the four lenses to contemporary narratives unprompted"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "hist.evidence",
@@ -183,16 +241,31 @@
         "mappingDescription": "A source's distortions are its shadow — systematic, interpretable, and diagnostic of the maker's position"
       }
     ],
-    "prerequisites": ["hist.foundations"],
+    "prerequisites": [
+      "hist.foundations"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Intrapersonal"],
-      "stageRange": { "min": "Amber", "max": "Green" }
+      "secondaryLines": [
+        "Intrapersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -239,49 +312,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can define primary/secondary and the three source questions",
-          "canDo": ["Classify sources, recall questions"],
-          "cannotDo": ["Interrogate bias productively"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Classify sources, recall questions"
+          ],
+          "cannotDo": [
+            "Interrogate bias productively"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain with-grain vs against-grain reading",
-          "canDo": ["Explain bias-as-evidence"],
-          "cannotDo": ["Corroborate independently"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain bias-as-evidence"
+          ],
+          "cannotDo": [
+            "Corroborate independently"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can interrogate and corroborate real sources",
-          "canDo": ["Triangulate claims across sources"],
-          "cannotDo": ["Reason from archival silence"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Triangulate claims across sources"
+          ],
+          "cannotDo": [
+            "Reason from archival silence"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can decompose a source's layered interests and audiences",
-          "canDo": ["Analyze compound-source cases"],
-          "cannotDo": ["Evaluate evidentiary frameworks"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Analyze compound-source cases"
+          ],
+          "cannotDo": [
+            "Evaluate evidentiary frameworks"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can adjudicate competing evidentiary weighings",
-          "canDo": ["Defend a claim-weighting against rivals"],
+          "canDo": [
+            "Defend a claim-weighting against rivals"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Source-consciousness is habitual — news, ads, and memos are read provenance-first",
-          "canDo": ["Apply the machinery to contemporary information ecosystems"],
+          "canDo": [
+            "Apply the machinery to contemporary information ecosystems"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "hist.causation",
@@ -325,16 +435,31 @@
         "mappingDescription": "Causes nest like holons: individual events inside institutions inside civilizational trends — each level with its own dynamics"
       }
     ],
-    "prerequisites": ["hist.foundations"],
+    "prerequisites": [
+      "hist.foundations"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Moral"],
-      "stageRange": { "min": "Amber", "max": "Green" }
+      "secondaryLines": [
+        "Moral"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -381,49 +506,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can name the three timescales with one example each",
-          "canDo": ["Recall the bands"],
-          "cannotDo": ["Layer causes independently"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall the bands"
+          ],
+          "cannotDo": [
+            "Layer causes independently"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain why single-cause accounts fail",
-          "canDo": ["Explain spark-vs-keg logic"],
-          "cannotDo": ["Produce layered analyses"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain spark-vs-keg logic"
+          ],
+          "cannotDo": [
+            "Produce layered analyses"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can layer causes for a real event",
-          "canDo": ["Build three-scale accounts"],
-          "cannotDo": ["Weigh contributions rigorously"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Build three-scale accounts"
+          ],
+          "cannotDo": [
+            "Weigh contributions rigorously"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can weigh structure against agency and defend the weighting",
-          "canDo": ["Analyze decision-spaces of past actors"],
-          "cannotDo": ["Evaluate counterfactual discipline"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Analyze decision-spaces of past actors"
+          ],
+          "cannotDo": [
+            "Evaluate counterfactual discipline"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can adjudicate between historians' causal rankings",
-          "canDo": ["Weigh rival causal theses against evidence"],
+          "canDo": [
+            "Weigh rival causal theses against evidence"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Multi-scale causal vision is habitual — present events are automatically read in layered time",
-          "canDo": ["Apply layered causation to news and personal history"],
+          "canDo": [
+            "Apply layered causation to news and personal history"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "hist.change",
@@ -467,16 +629,29 @@
         "mappingDescription": "Punctuated equilibrium: long stability interrupted by rapid shifts — historians and biologists share the pattern language"
       }
     ],
-    "prerequisites": ["hist.foundations"],
+    "prerequisites": [
+      "hist.foundations"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
       "secondaryLines": [],
-      "stageRange": { "min": "Amber", "max": "Green" }
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -523,49 +698,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can give one change and one continuity per period studied",
-          "canDo": ["Pair recall"],
-          "cannotDo": ["Specifying dimensions"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Pair recall"
+          ],
+          "cannotDo": [
+            "Specifying dimensions"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain differential, uneven change",
-          "canDo": ["Explain layered speeds"],
-          "cannotDo": ["Audit a real transformation"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain layered speeds"
+          ],
+          "cannotDo": [
+            "Audit a real transformation"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can specify what changed, for whom, how fast",
-          "canDo": ["Produce change audits on cases"],
-          "cannotDo": ["Analyze competing periodizations"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Produce change audits on cases"
+          ],
+          "cannotDo": [
+            "Analyze competing periodizations"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can trace persistence inside transformation (institutions surviving regimes)",
-          "canDo": ["Analyze continuity-in-change cases"],
-          "cannotDo": ["Evaluate periodization debates"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Analyze continuity-in-change cases"
+          ],
+          "cannotDo": [
+            "Evaluate periodization debates"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can adjudicate rival periodizations and their visibility choices",
-          "canDo": ["Weigh what each periodization makes seen/unseen"],
+          "canDo": [
+            "Weigh what each periodization makes seen/unseen"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Change-literate perception is habitual — 'new eras' claims are automatically audited for depth and distribution",
-          "canDo": ["Apply change audits to contemporary transformations"],
+          "canDo": [
+            "Apply change audits to contemporary transformations"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "hist.perspective",
@@ -609,16 +821,33 @@
         "mappingDescription": "Integral's four quadrants are a perspective discipline: every historical moment has interior-individual, exterior-individual, interior-collective, exterior-collective faces"
       }
     ],
-    "prerequisites": ["hist.foundations", "hist.evidence"],
+    "prerequisites": [
+      "hist.foundations",
+      "hist.evidence"
+    ],
     "devMapping": {
       "primaryLine": "Interpersonal",
-      "secondaryLines": ["Moral", "Cognitive"],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "secondaryLines": [
+        "Moral",
+        "Cognitive"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -665,48 +894,85 @@
       "levels": {
         "memorized": {
           "evidence": "Can state why accounts differ and name perspective types",
-          "canDo": ["Recall the vocabulary"],
-          "cannotDo": ["Reconstruct positions"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall the vocabulary"
+          ],
+          "cannotDo": [
+            "Reconstruct positions"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain visibility asymmetry and disciplined empathy",
-          "canDo": ["Distinguish empathy from endorsement"],
-          "cannotDo": ["Produce multi-position accounts"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Distinguish empathy from endorsement"
+          ],
+          "cannotDo": [
+            "Produce multi-position accounts"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can reconstruct events from multiple positions",
-          "canDo": ["Write defensible positioned accounts"],
-          "cannotDo": ["Recover silenced histories"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Write defensible positioned accounts"
+          ],
+          "cannotDo": [
+            "Recover silenced histories"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can analyze what each perspective structurally cannot see",
-          "canDo": ["Map blind spots as data"],
-          "cannotDo": ["Evaluate reconstruction ethics"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Map blind spots as data"
+          ],
+          "cannotDo": [
+            "Evaluate reconstruction ethics"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can adjudicate contested memorialization with historical reasoning",
-          "canDo": ["Weigh memory-claims against evidence"],
+          "canDo": [
+            "Weigh memory-claims against evidence"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Perspective-discipline is habitual — every narrative is automatically located and multiplicity-seeking",
-          "canDo": ["Apply multi-perspectival method to present conflicts"],
+          "canDo": [
+            "Apply multi-perspectival method to present conflicts"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   }
 ]

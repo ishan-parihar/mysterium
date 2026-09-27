@@ -2,7 +2,7 @@
   {
     "id": "math.foundations",
     "name": "Mathematics Foundations",
-    "description": "The foundational concepts of mathematical thinking: number theory, algebra, and geometry \u2014 the bedrock upon which all mathematics is built.",
+    "description": "The foundational concepts of mathematical thinking: number theory, algebra, and geometry — the bedrock upon which all mathematics is built.",
     "level": "branch",
     "parentId": null,
     "childIds": [
@@ -41,7 +41,7 @@
     },
     "isomorphisms": [
       {
-        "pattern": "axiomatic foundation \u2192 emergent complexity",
+        "pattern": "axiomatic foundation → emergent complexity",
         "targetConceptId": "cs.foundations.logic",
         "targetDomain": "Computer Science",
         "mappingDescription": "Both logic and math build complex systems from simple axioms"
@@ -188,7 +188,7 @@
   {
     "id": "math.number_theory",
     "name": "Number Theory",
-    "description": "The study of integers, divisibility, primes, and modular arithmetic \u2014 the purest branch of mathematics.",
+    "description": "The study of integers, divisibility, primes, and modular arithmetic — the purest branch of mathematics.",
     "level": "subject",
     "parentId": "math.foundations",
     "childIds": [
@@ -274,7 +274,7 @@
         "Linear algebra with real numbers"
       ],
       "analogies": [
-        "Number theory is to mathematics what chemistry is to physics \u2014 examining the fundamental constituents"
+        "Number theory is to mathematics what chemistry is to physics — examining the fundamental constituents"
       ],
       "visuals": [
         "Sieve of Eratosthenes visualization",
@@ -382,7 +382,7 @@
   {
     "id": "math.number_theory.divisibility",
     "name": "Divisibility and Modular Arithmetic",
-    "description": "The structure of divisibility relations and arithmetic on remainders \u2014 foundational to both pure math and computer science.",
+    "description": "The structure of divisibility relations and arithmetic on remainders — foundational to both pure math and computer science.",
     "level": "topic",
     "parentId": "math.number_theory",
     "childIds": [],
@@ -572,7 +572,7 @@
   {
     "id": "math.number_theory.primes",
     "name": "Prime Numbers and Factorization",
-    "description": "The Fundamental Theorem of Arithmetic and the distribution of primes \u2014 the atoms and molecules of number theory.",
+    "description": "The Fundamental Theorem of Arithmetic and the distribution of primes — the atoms and molecules of number theory.",
     "level": "topic",
     "parentId": "math.number_theory",
     "childIds": [],
@@ -647,14 +647,14 @@
       "explanation": "Prime numbers are the irreducible building blocks of all integers.",
       "examples": [
         "2, 3, 5, 7, 11 are primes",
-        "60 = 2\u00b2 \u00d7 3 \u00d7 5"
+        "60 = 2² × 3 × 5"
       ],
       "nonExamples": [
         "Composite numbers",
         "Negative numbers"
       ],
       "analogies": [
-        "Primes are to integers what elements are to chemistry \u2014 irreducible constituents"
+        "Primes are to integers what elements are to chemistry — irreducible constituents"
       ],
       "visuals": [
         "Sieve of Eratosthenes animation",
@@ -667,7 +667,7 @@
         "id": "math.prime.m1",
         "statement": "1 is a prime number",
         "whyItFeelsRight": "1 is divisible only by 1 and itself",
-        "structuralReason": "Including 1 would break unique factorization (60 = 1 \u00d7 60 = 1 \u00d7 1 \u00d7 60...)",
+        "structuralReason": "Including 1 would break unique factorization (60 = 1 × 60 = 1 × 1 × 60...)",
         "diagnosticTaskId": "math.prime.d1"
       }
     ],
@@ -762,7 +762,7 @@
   {
     "id": "math.algebra",
     "name": "Algebra",
-    "description": "The study of mathematical symbols, structures, and the rules for manipulating them \u2014 from basic equations to abstract algebra.",
+    "description": "The study of mathematical symbols, structures, and the rules for manipulating them — from basic equations to abstract algebra.",
     "level": "subject",
     "parentId": "math.foundations",
     "childIds": [
@@ -847,7 +847,7 @@
         "Geometric constructions"
       ],
       "analogies": [
-        "Algebra is to mathematics what grammar is to language \u2014 it provides the structural rules"
+        "Algebra is to mathematics what grammar is to language — it provides the structural rules"
       ],
       "visuals": [
         "Commutative diagrams",
@@ -871,7 +871,7 @@
           "evidence": "Can solve basic equations and manipulate expressions",
           "canDo": [
             "Solve 2x + 3 = 7",
-            "Expand (x+1)\u00b2"
+            "Expand (x+1)²"
           ],
           "cannotDo": [
             "Explain why operations are valid"
@@ -955,7 +955,7 @@
   {
     "id": "math.algebra.linear",
     "name": "Linear Algebra",
-    "description": "The study of vectors, matrices, and linear transformations \u2014 the mathematics of space, dimension, and transformation.",
+    "description": "The study of vectors, matrices, and linear transformations — the mathematics of space, dimension, and transformation.",
     "level": "topic",
     "parentId": "math.algebra",
     "childIds": [],
@@ -1039,7 +1039,7 @@
         "Polynomial factoring"
       ],
       "analogies": [
-        "Linear algebra is the mathematics of dimension \u2014 it tells us what 'space' means"
+        "Linear algebra is the mathematics of dimension — it tells us what 'space' means"
       ],
       "visuals": [
         "Vector field plots",
@@ -1147,7 +1147,7 @@
   {
     "id": "math.algebra.abstract",
     "name": "Abstract Algebra",
-    "description": "The study of algebraic structures \u2014 groups, rings, fields, and their homomorphisms \u2014 the deepest level of algebraic abstraction.",
+    "description": "The study of algebraic structures — groups, rings, fields, and their homomorphisms — the deepest level of algebraic abstraction.",
     "level": "topic",
     "parentId": "math.algebra",
     "childIds": [],
@@ -1222,8 +1222,8 @@
     "content": {
       "explanation": "Abstract algebra studies the general structures underlying all algebraic systems.",
       "examples": [
-        "The group of symmetries of a square (D\u2084)",
-        "The ring of polynomials over \u2124"
+        "The group of symmetries of a square (D₄)",
+        "The ring of polynomials over ℤ"
       ],
       "nonExamples": [
         "Numerical computation",
@@ -1338,7 +1338,7 @@
   {
     "id": "math.geometry",
     "name": "Geometry",
-    "description": "The study of shapes, spaces, and transformations \u2014 from Euclidean constructions to topology and differential geometry.",
+    "description": "The study of shapes, spaces, and transformations — from Euclidean constructions to topology and differential geometry.",
     "level": "subject",
     "parentId": "math.foundations",
     "childIds": [
@@ -1424,7 +1424,7 @@
         "Numerical approximation"
       ],
       "analogies": [
-        "Geometry is the mathematics of space \u2014 it tells us what shape means"
+        "Geometry is the mathematics of space — it tells us what shape means"
       ],
       "visuals": [
         "Tessellation patterns",
@@ -1532,7 +1532,7 @@
   {
     "id": "math.geometry.topology",
     "name": "Topology",
-    "description": "The study of spatial properties preserved under continuous deformations \u2014 rubber-sheet geometry.",
+    "description": "The study of spatial properties preserved under continuous deformations — rubber-sheet geometry.",
     "level": "topic",
     "parentId": "math.geometry",
     "childIds": [],
@@ -1614,7 +1614,7 @@
         "Area and volume (measure theory)"
       ],
       "analogies": [
-        "Topology is geometry without measurement \u2014 it studies shape at the most fundamental level"
+        "Topology is geometry without measurement — it studies shape at the most fundamental level"
       ],
       "visuals": [
         "Klein bottle",
@@ -1723,7 +1723,7 @@
   {
     "id": "math.geometry.differential",
     "name": "Differential Geometry",
-    "description": "The study of curves, surfaces, and manifolds using calculus \u2014 the mathematics of curvature and smooth structure.",
+    "description": "The study of curves, surfaces, and manifolds using calculus — the mathematics of curvature and smooth structure.",
     "level": "topic",
     "parentId": "math.geometry",
     "childIds": [],
@@ -1806,7 +1806,7 @@
         "Metric topology"
       ],
       "analogies": [
-        "Differential geometry is where calculus meets geometry \u2014 it studies how shapes bend and curve"
+        "Differential geometry is where calculus meets geometry — it studies how shapes bend and curve"
       ],
       "visuals": [
         "Curvature tensor diagrams",
@@ -1913,7 +1913,7 @@
   {
     "id": "math.foundations.numbers",
     "name": "Number Systems",
-    "description": "The hierarchy of number systems: naturals, integers, rationals, reals, and complex numbers \u2014 the scaffolding of all mathematics.",
+    "description": "The hierarchy of number systems: naturals, integers, rationals, reals, and complex numbers — the scaffolding of all mathematics.",
     "level": "concept",
     "parentId": "math.foundations",
     "childIds": [],
@@ -1924,7 +1924,7 @@
         "completionEvidence": "Student can describe properties of each number system"
       },
       "principle": {
-        "question": "Why do we need each extension \u2014 what problem does it solve?",
+        "question": "Why do we need each extension — what problem does it solve?",
         "assessmentType": "concept_explanation",
         "completionEvidence": "Student can explain why negative numbers, fractions, irrationals, and complex numbers are needed"
       },
@@ -1984,27 +1984,38 @@
     "content": {
       "explanation": "Number systems form a hierarchy where each extension solves the limitations of its predecessor.",
       "examples": [
-        "\u2124 extends \u2115 to allow subtraction",
-        "\u2102 extends \u211d to allow all polynomial roots"
+        "ℤ extends ℕ to allow subtraction",
+        "ℂ extends ℝ to allow all polynomial roots"
       ],
       "nonExamples": [
         "Sets without algebraic structure",
         "Formal languages"
       ],
       "analogies": [
-        "Number systems are like levels of a video game \u2014 each new level unlocks new capabilities"
+        "Number systems are like levels of a video game — each new level unlocks new capabilities"
       ],
       "visuals": [
-        "Number system inclusion diagram (\u2115 \u2282 \u2124 \u2282 \u211a \u2282 \u211d \u2282 \u2102)"
+        "Number system inclusion diagram (ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ ⊂ ℂ)"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "math.foundations.numbers.p1",
+          "problemText": "Place each number system (ℕ, ℤ, ℚ, ℝ, ℂ) in construction order and name the specific limitation of its predecessor that forced the extension (e.g. which equations become solvable).",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "math.foundations.numbers.p2",
+          "problemText": "Prove √2 is irrational by the well-ordering argument, then explain which property ℚ lacks (ordering? completeness?) that the reals restore, and why ℂ sacrifices ordering deliberately.",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
     "misconceptions": [
       {
         "id": "math.ns.m1",
         "statement": "Complex numbers are imaginary and therefore not real",
         "whyItFeelsRight": "They are called 'imaginary'",
-        "structuralReason": "Complex numbers are as mathematically valid as reals \u2014 'imaginary' is a historical naming artifact",
+        "structuralReason": "Complex numbers are as mathematically valid as reals — 'imaginary' is a historical naming artifact",
         "diagnosticTaskId": "math.ns.d1"
       }
     ],
@@ -2014,7 +2025,7 @@
         "memorized": {
           "evidence": "Can list and describe number systems",
           "canDo": [
-            "List \u2115, \u2124, \u211a, \u211d, \u2102 and their basic properties"
+            "List ℕ, ℤ, ℚ, ℝ, ℂ and their basic properties"
           ],
           "cannotDo": [
             "Explain why extensions are needed"
@@ -2027,7 +2038,7 @@
         "comprehended": {
           "evidence": "Can explain the motivation for each extension",
           "canDo": [
-            "Explain why \u211d is needed (completeness)"
+            "Explain why ℝ is needed (completeness)"
           ],
           "cannotDo": [
             "Apply to novel contexts"
@@ -2098,7 +2109,7 @@
   {
     "id": "math.foundations.proof",
     "name": "Mathematical Proof",
-    "description": "The art and science of rigorous mathematical argumentation \u2014 direct proof, contradiction, induction, and construction.",
+    "description": "The art and science of rigorous mathematical argumentation — direct proof, contradiction, induction, and construction.",
     "level": "concept",
     "parentId": "math.foundations",
     "childIds": [],
@@ -2171,7 +2182,7 @@
     "content": {
       "explanation": "Mathematical proof is the method by which we establish mathematical truth with certainty.",
       "examples": [
-        "Direct proof that \u221a2 is irrational",
+        "Direct proof that √2 is irrational",
         "Induction proof that 1+2+...+n = n(n+1)/2"
       ],
       "nonExamples": [
@@ -2179,20 +2190,31 @@
         "Plausible reasoning"
       ],
       "analogies": [
-        "Proof is to mathematics what experiment is to science \u2014 the ultimate arbiter of truth"
+        "Proof is to mathematics what experiment is to science — the ultimate arbiter of truth"
       ],
       "visuals": [
         "Proof structure diagrams",
         "Decision tree for proof technique selection"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "math.foundations.proof.p1",
+          "problemText": "Prove that the sum of two even integers is even, then name the proof pattern you used and where the definition of even entered.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "math.foundations.proof.p2",
+          "problemText": "Contrast proof by contradiction with proof by contraposition on the statement \"if n² is even then n is even\"; give one further statement where one pattern is natural and the other is clumsy, and say why.",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
     "misconceptions": [
       {
         "id": "math.proof.m1",
         "statement": "Proof by example is valid",
         "whyItFeelsRight": "Examples feel convincing",
-        "structuralReason": "Examples illustrate but cannot prove universal statements \u2014 a single counterexample disproves",
+        "structuralReason": "Examples illustrate but cannot prove universal statements — a single counterexample disproves",
         "diagnosticTaskId": "math.proof.d1"
       }
     ],
@@ -2286,7 +2308,7 @@
   {
     "id": "math.algebra.structures",
     "name": "Algebraic Structures",
-    "description": "Groups, rings, fields, and vector spaces \u2014 the abstract algebraic structures underlying linear and abstract algebra.",
+    "description": "Groups, rings, fields, and vector spaces — the abstract algebraic structures underlying linear and abstract algebra.",
     "level": "unit",
     "parentId": "math.algebra",
     "childIds": [
@@ -2370,9 +2392,28 @@
         "Venn diagram of algebraic structure hierarchy",
         "Cayley tables for small groups"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "math.algebra.structures.p1",
+          "problemText": "Decide whether ℤ under subtraction forms a group: check every axiom (closure, associativity, identity, inverses) explicitly and report the first one that fails.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "math.algebra.structures.p2",
+          "problemText": "Explain why a field can be described as \"two groups sharing one set\" and which field property vector spaces require that rings alone do not supply.",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "math-algebra-structures.mc1",
+        "statement": "A group is just a set with a rule attached",
+        "whyItFeelsRight": "The definition reads like a formality",
+        "structuralReason": "The axioms are load-bearing: associativity failures break composition of transformations, and the identity/inverse pair is what makes equations solvable. Drop one axiom and the entire edifice (Lagrange's theorem, symmetry counting) collapses.",
+        "diagnosticTaskId": "math-algebra-structures.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "math.algebra.structures",
       "levels": {

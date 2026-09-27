@@ -5,33 +5,184 @@
     "description": "The foundational concepts of computational thinking: formal logic, set theory, and recursion — the bedrock upon which all CS is built.",
     "level": "branch",
     "parentId": null,
-    "childIds": ["cs.algorithms", "cs.data_structures", "cs.foundations.logic", "cs.foundations.sets", "cs.foundations.recursion"],
+    "childIds": [
+      "cs.algorithms",
+      "cs.data_structures",
+      "cs.foundations.logic",
+      "cs.foundations.sets",
+      "cs.foundations.recursion"
+    ],
     "phases": {
-      "observation": { "question": "What computational patterns do you notice in the world around you?", "assessmentType": "factual_recall", "completionEvidence": "Student can identify computational thinking in everyday situations" },
-      "principle": { "question": "What are the core abstractions that unify all of computer science?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain how logic, sets, and recursion form the foundation" },
-      "application": { "question": "How do these foundations apply to real software systems?", "assessmentType": "application_problem", "completionEvidence": "Student can identify foundational concepts in software artifacts" },
-      "integration": { "question": "How do these foundations connect to each other and to other disciplines?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can map relationships between foundational concepts" },
-      "creation": { "question": "How can you combine these foundations to solve novel problems?", "assessmentType": "project_based", "completionEvidence": "Student can integrate multiple foundational concepts in a solution" }
+      "observation": {
+        "question": "What computational patterns do you notice in the world around you?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can identify computational thinking in everyday situations"
+      },
+      "principle": {
+        "question": "What are the core abstractions that unify all of computer science?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student can explain how logic, sets, and recursion form the foundation"
+      },
+      "application": {
+        "question": "How do these foundations apply to real software systems?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student can identify foundational concepts in software artifacts"
+      },
+      "integration": {
+        "question": "How do these foundations connect to each other and to other disciplines?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student can map relationships between foundational concepts"
+      },
+      "creation": {
+        "question": "How can you combine these foundations to solve novel problems?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student can integrate multiple foundational concepts in a solution"
+      }
     },
     "isomorphisms": [],
     "prerequisites": [],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": [], "stageRange": { "min": "Amber", "max": "Green" } },
-    "depthMeta": { "requiredPrerequisiteDepth": "absent", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
-    "forgettingParams": { "initialHalfLifeMs": 86400000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
-    "content": { "explanation": "Computer science foundations encompass the core abstractions that make computation possible. Logic provides the language of valid reasoning. Set theory provides the mathematics of collections and relationships. Recursion provides the mechanism of self-referential decomposition.", "examples": ["Logic gates implement propositional logic in hardware", "Databases store and query sets of records", "Compilers use recursion to parse nested syntax"], "nonExamples": ["User interface design (applied, not foundational)", "Network protocols (systems built on foundations)"], "analogies": ["Foundations are to CS what grammar is to language"], "visuals": ["Map showing how logic, sets, and recursion interconnect"], "practiceProblems": [{ "id": "csf.p1", "problemText": "Identify at least one example of logic, sets, and recursion in a web browser.", "targetDepth": "comprehended" }] },
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 86400000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Computer science foundations encompass the core abstractions that make computation possible. Logic provides the language of valid reasoning. Set theory provides the mathematics of collections and relationships. Recursion provides the mechanism of self-referential decomposition.",
+      "examples": [
+        "Logic gates implement propositional logic in hardware",
+        "Databases store and query sets of records",
+        "Compilers use recursion to parse nested syntax"
+      ],
+      "nonExamples": [
+        "User interface design (applied, not foundational)",
+        "Network protocols (systems built on foundations)"
+      ],
+      "analogies": [
+        "Foundations are to CS what grammar is to language"
+      ],
+      "visuals": [
+        "Map showing how logic, sets, and recursion interconnect"
+      ],
+      "practiceProblems": [
+        {
+          "id": "csf.p1",
+          "problemText": "Identify at least one example of logic, sets, and recursion in a web browser.",
+          "targetDepth": "comprehended"
+        }
+      ]
+    },
     "misconceptions": [],
     "depthRubric": {
       "conceptId": "cs.foundations",
       "levels": {
-        "memorized": { "evidence": "Can name the three foundational areas", "canDo": ["Identify logic, sets, recursion as foundations"], "cannotDo": ["Explain how they interconnect"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
-        "comprehended": { "evidence": "Can explain how each foundation contributes to CS", "canDo": ["Describe the role of each foundation"], "cannotDo": ["Map cross-foundational relationships"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
-        "applied": { "evidence": "Can identify foundational concepts in real software", "canDo": ["Locate logic, sets, recursion in code"], "cannotDo": ["Analyze foundational choices in system design"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
-        "analyzed": { "evidence": "Can decompose systems into foundational components", "canDo": ["Map software to foundational abstractions"], "cannotDo": ["Evaluate foundational trade-offs"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
-        "evaluated": { "evidence": "Can assess when foundational approaches are appropriate", "canDo": ["Choose foundational tools for problems"], "cannotDo": ["Create novel foundational frameworks"], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
-        "transformed": { "evidence": "Foundational thinking is instinctive", "canDo": ["Teach foundations", "Create novel abstractions"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+        "memorized": {
+          "evidence": "Can name the three foundational areas",
+          "canDo": [
+            "Identify logic, sets, recursion as foundations"
+          ],
+          "cannotDo": [
+            "Explain how they interconnect"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain how each foundation contributes to CS",
+          "canDo": [
+            "Describe the role of each foundation"
+          ],
+          "cannotDo": [
+            "Map cross-foundational relationships"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can identify foundational concepts in real software",
+          "canDo": [
+            "Locate logic, sets, recursion in code"
+          ],
+          "cannotDo": [
+            "Analyze foundational choices in system design"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose systems into foundational components",
+          "canDo": [
+            "Map software to foundational abstractions"
+          ],
+          "cannotDo": [
+            "Evaluate foundational trade-offs"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can assess when foundational approaches are appropriate",
+          "canDo": [
+            "Choose foundational tools for problems"
+          ],
+          "cannotDo": [
+            "Create novel foundational frameworks"
+          ],
+          "appropriateTasks": [
+            "peer_review"
+          ],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Foundational thinking is instinctive",
+          "canDo": [
+            "Teach foundations",
+            "Create novel abstractions"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
+          "threshold": 0.95
+        }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Deterministic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Deterministic"
+    ]
   },
   {
     "id": "cs.algorithms",
@@ -39,35 +190,197 @@
     "description": "The study of systematic procedures for solving computational problems: algorithm design, analysis, and optimization.",
     "level": "subject",
     "parentId": "cs.foundations",
-    "childIds": ["cs.algorithms.fundamentals"],
+    "childIds": [
+      "cs.algorithms.fundamentals"
+    ],
     "phases": {
-      "observation": { "question": "How do you approach solving a multi-step problem systematically?", "assessmentType": "factual_recall", "completionEvidence": "Student can describe their problem-solving process" },
-      "principle": { "question": "What makes an algorithm correct, efficient, and elegant?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain correctness, complexity, and design principles" },
-      "application": { "question": "How do you choose the right algorithm for a given problem?", "assessmentType": "application_problem", "completionEvidence": "Student can select and apply appropriate algorithms" },
-      "integration": { "question": "How do algorithms connect to mathematics, engineering, and biology?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can map algorithmic patterns across domains" },
-      "creation": { "question": "How can you design a novel algorithm for a new problem?", "assessmentType": "project_based", "completionEvidence": "Student can design and analyze new algorithms" }
+      "observation": {
+        "question": "How do you approach solving a multi-step problem systematically?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can describe their problem-solving process"
+      },
+      "principle": {
+        "question": "What makes an algorithm correct, efficient, and elegant?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student can explain correctness, complexity, and design principles"
+      },
+      "application": {
+        "question": "How do you choose the right algorithm for a given problem?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student can select and apply appropriate algorithms"
+      },
+      "integration": {
+        "question": "How do algorithms connect to mathematics, engineering, and biology?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student can map algorithmic patterns across domains"
+      },
+      "creation": {
+        "question": "How can you design a novel algorithm for a new problem?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student can design and analyze new algorithms"
+      }
     },
     "isomorphisms": [],
-    "prerequisites": ["cs.foundations"],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Willpower"], "stageRange": { "min": "Orange", "max": "Green" } },
-    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
-    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
-    "content": { "explanation": "Algorithms are step-by-step procedures for solving problems. An algorithm is correct if it produces the right output for all valid inputs. It is efficient if it uses minimal time and space resources. Algorithm analysis uses Big-O notation to classify growth rates.", "examples": ["Binary search: O(log n) — divide and conquer", "Bubble sort: O(n²) — simple but slow", "Dijkstra's algorithm: shortest path in weighted graphs"], "nonExamples": ["Random guessing (not systematic)", "Trial and error without structure"], "analogies": ["An algorithm is like a recipe — precise steps that produce a result"], "visuals": ["Big-O growth rate chart"], "practiceProblems": [{ "id": "alg.f.p1", "problemText": "Write pseudocode for binary search and prove it terminates.", "targetDepth": "applied" }] },
+    "prerequisites": [
+      "cs.foundations"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Willpower"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Algorithms are step-by-step procedures for solving problems. An algorithm is correct if it produces the right output for all valid inputs. It is efficient if it uses minimal time and space resources. Algorithm analysis uses Big-O notation to classify growth rates.",
+      "examples": [
+        "Binary search: O(log n) — divide and conquer",
+        "Bubble sort: O(n²) — simple but slow",
+        "Dijkstra's algorithm: shortest path in weighted graphs"
+      ],
+      "nonExamples": [
+        "Random guessing (not systematic)",
+        "Trial and error without structure"
+      ],
+      "analogies": [
+        "An algorithm is like a recipe — precise steps that produce a result"
+      ],
+      "visuals": [
+        "Big-O growth rate chart"
+      ],
+      "practiceProblems": [
+        {
+          "id": "alg.f.p1",
+          "problemText": "Write pseudocode for binary search and prove it terminates.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
     "misconceptions": [
-      { "id": "alg.f.mc1", "statement": "Faster always means better", "whyItFeelsRight": "Speed is the most visible performance metric", "structuralReason": "An O(n log n) algorithm may be slower than O(n) in practice due to constant factors, cache behavior, or implementation complexity. Correctness and maintainability matter as much as asymptotic complexity.", "diagnosticTaskId": "alg.f.mc1.diag" }
+      {
+        "id": "alg.f.mc1",
+        "statement": "Faster always means better",
+        "whyItFeelsRight": "Speed is the most visible performance metric",
+        "structuralReason": "An O(n log n) algorithm may be slower than O(n) in practice due to constant factors, cache behavior, or implementation complexity. Correctness and maintainability matter as much as asymptotic complexity.",
+        "diagnosticTaskId": "alg.f.mc1.diag"
+      }
     ],
     "depthRubric": {
       "conceptId": "cs.algorithms",
       "levels": {
-        "memorized": { "evidence": "Can recall common algorithm categories and their uses", "canDo": ["Name sorting, searching, graph algorithms"], "cannotDo": ["Analyze complexity or design new algorithms"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
-        "comprehended": { "evidence": "Can explain how algorithms work and why they're correct", "canDo": ["Trace algorithm execution", "Explain correctness"], "cannotDo": ["Analyze complexity formally"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
-        "applied": { "evidence": "Can implement algorithms and solve standard problems", "canDo": ["Implement binary search, sorting, graph traversal"], "cannotDo": ["Design novel algorithms", "Analyze amortized complexity"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
-        "analyzed": { "evidence": "Can analyze algorithm complexity and compare approaches", "canDo": ["Big-O analysis", "Compare algorithm trade-offs"], "cannotDo": ["Create novel algorithms for new problems"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
-        "evaluated": { "evidence": "Can judge algorithm quality and choose appropriate approaches", "canDo": ["Select algorithms for real problems", "Evaluate trade-offs"], "cannotDo": ["Design novel algorithmic paradigms"], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
-        "transformed": { "evidence": "Algorithmic thinking is instinctive — sees computational structure everywhere", "canDo": ["Design novel algorithms", "Teach algorithms", "Create new paradigms"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+        "memorized": {
+          "evidence": "Can recall common algorithm categories and their uses",
+          "canDo": [
+            "Name sorting, searching, graph algorithms"
+          ],
+          "cannotDo": [
+            "Analyze complexity or design new algorithms"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain how algorithms work and why they're correct",
+          "canDo": [
+            "Trace algorithm execution",
+            "Explain correctness"
+          ],
+          "cannotDo": [
+            "Analyze complexity formally"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can implement algorithms and solve standard problems",
+          "canDo": [
+            "Implement binary search, sorting, graph traversal"
+          ],
+          "cannotDo": [
+            "Design novel algorithms",
+            "Analyze amortized complexity"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can analyze algorithm complexity and compare approaches",
+          "canDo": [
+            "Big-O analysis",
+            "Compare algorithm trade-offs"
+          ],
+          "cannotDo": [
+            "Create novel algorithms for new problems"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can judge algorithm quality and choose appropriate approaches",
+          "canDo": [
+            "Select algorithms for real problems",
+            "Evaluate trade-offs"
+          ],
+          "cannotDo": [
+            "Design novel algorithmic paradigms"
+          ],
+          "appropriateTasks": [
+            "peer_review"
+          ],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Algorithmic thinking is instinctive — sees computational structure everywhere",
+          "canDo": [
+            "Design novel algorithms",
+            "Teach algorithms",
+            "Create new paradigms"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
+          "threshold": 0.95
+        }
       }
     },
-    "supportedModalities": ["LanguageReflective", "Deterministic", "ScenarioChoice"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "Deterministic",
+      "ScenarioChoice"
+    ]
   },
   {
     "id": "cs.data_structures",
@@ -75,35 +388,197 @@
     "description": "The study of organizing and storing data for efficient access and modification: arrays, trees, graphs, hash tables, and their trade-offs.",
     "level": "subject",
     "parentId": "cs.foundations",
-    "childIds": ["cs.data_structures.basics"],
+    "childIds": [
+      "cs.data_structures.basics"
+    ],
     "phases": {
-      "observation": { "question": "How do you organize information in your daily life?", "assessmentType": "factual_recall", "completionEvidence": "Student can describe how they organize data in familiar contexts" },
-      "principle": { "question": "What makes a data structure appropriate for a given task?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain access patterns, memory layout, and trade-offs" },
-      "application": { "question": "How do you choose the right data structure for a problem?", "assessmentType": "application_problem", "completionEvidence": "Student can select and implement appropriate data structures" },
-      "integration": { "question": "How do data structures connect to algorithms, databases, and operating systems?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can map data structure concepts across domains" },
-      "creation": { "question": "How can you design a custom data structure for a novel problem?", "assessmentType": "project_based", "completionEvidence": "Student can design and implement new data structures" }
+      "observation": {
+        "question": "How do you organize information in your daily life?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can describe how they organize data in familiar contexts"
+      },
+      "principle": {
+        "question": "What makes a data structure appropriate for a given task?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student can explain access patterns, memory layout, and trade-offs"
+      },
+      "application": {
+        "question": "How do you choose the right data structure for a problem?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student can select and implement appropriate data structures"
+      },
+      "integration": {
+        "question": "How do data structures connect to algorithms, databases, and operating systems?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student can map data structure concepts across domains"
+      },
+      "creation": {
+        "question": "How can you design a custom data structure for a novel problem?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student can design and implement new data structures"
+      }
     },
     "isomorphisms": [],
-    "prerequisites": ["cs.foundations"],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Intrapersonal"], "stageRange": { "min": "Orange", "max": "Green" } },
-    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
-    "forgettingParams": { "initialHalfLifeMs": 129600000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
-    "content": { "explanation": "Data structures are ways of organizing and storing data so that they can be accessed and modified efficiently. Each data structure has trade-offs: arrays offer O(1) access but O(n) insertion; linked lists offer O(1) insertion but O(n) access; hash tables offer O(1) average access but no ordering.", "examples": ["Array: contiguous memory, O(1) index access", "Binary tree: hierarchical, O(log n) search when balanced", "Hash table: O(1) average lookup via key hashing"], "nonExamples": ["Unordered list with linear search (no structure)", "Random memory access (no organization)"], "analogies": ["Data structures are like filing systems — different systems for different access patterns"], "visuals": ["Comparison chart of common data structure operations"], "practiceProblems": [{ "id": "ds.f.p1", "problemText": "When would you use an array vs. a linked list? Justify based on access patterns.", "targetDepth": "comprehended" }] },
+    "prerequisites": [
+      "cs.foundations"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Intrapersonal"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Data structures are ways of organizing and storing data so that they can be accessed and modified efficiently. Each data structure has trade-offs: arrays offer O(1) access but O(n) insertion; linked lists offer O(1) insertion but O(n) access; hash tables offer O(1) average access but no ordering.",
+      "examples": [
+        "Array: contiguous memory, O(1) index access",
+        "Binary tree: hierarchical, O(log n) search when balanced",
+        "Hash table: O(1) average lookup via key hashing"
+      ],
+      "nonExamples": [
+        "Unordered list with linear search (no structure)",
+        "Random memory access (no organization)"
+      ],
+      "analogies": [
+        "Data structures are like filing systems — different systems for different access patterns"
+      ],
+      "visuals": [
+        "Comparison chart of common data structure operations"
+      ],
+      "practiceProblems": [
+        {
+          "id": "ds.f.p1",
+          "problemText": "When would you use an array vs. a linked list? Justify based on access patterns.",
+          "targetDepth": "comprehended"
+        }
+      ]
+    },
     "misconceptions": [
-      { "id": "ds.f.mc1", "statement": "Hash tables are always the best choice", "whyItFeelsRight": "O(1) average access seems unbeatable", "structuralReason": "Hash tables have O(n) worst case, no ordering, high memory overhead, and poor cache performance. For ordered access, range queries, or memory-constrained environments, trees or arrays may be superior.", "diagnosticTaskId": "ds.f.mc1.diag" }
+      {
+        "id": "ds.f.mc1",
+        "statement": "Hash tables are always the best choice",
+        "whyItFeelsRight": "O(1) average access seems unbeatable",
+        "structuralReason": "Hash tables have O(n) worst case, no ordering, high memory overhead, and poor cache performance. For ordered access, range queries, or memory-constrained environments, trees or arrays may be superior.",
+        "diagnosticTaskId": "ds.f.mc1.diag"
+      }
     ],
     "depthRubric": {
       "conceptId": "cs.data_structures",
       "levels": {
-        "memorized": { "evidence": "Can recall common data structures and their basic properties", "canDo": ["Name arrays, linked lists, trees, hash tables"], "cannotDo": ["Analyze trade-offs or implement complex structures"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
-        "comprehended": { "evidence": "Can explain how data structures work and their trade-offs", "canDo": ["Describe memory layout, access patterns"], "cannotDo": ["Implement from scratch", "Analyze amortized complexity"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
-        "applied": { "evidence": "Can implement data structures and solve standard problems", "canDo": ["Implement stacks, queues, trees, hash tables"], "cannotDo": ["Design novel structures", "Analyze cache behavior"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
-        "analyzed": { "evidence": "Can analyze data structure performance and compare approaches", "canDo": ["Big-O analysis for all operations", "Compare structures for given problems"], "cannotDo": ["Design new data structure paradigms"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
-        "evaluated": { "evidence": "Can judge which data structure is best for a given context", "canDo": ["Select structures for real problems", "Evaluate cache, memory, complexity trade-offs"], "cannotDo": ["Create novel data structure paradigms"], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
-        "transformed": { "evidence": "Data structure thinking is instinctive — sees organizational patterns everywhere", "canDo": ["Design novel structures", "Teach data structures", "Create new paradigms"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+        "memorized": {
+          "evidence": "Can recall common data structures and their basic properties",
+          "canDo": [
+            "Name arrays, linked lists, trees, hash tables"
+          ],
+          "cannotDo": [
+            "Analyze trade-offs or implement complex structures"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain how data structures work and their trade-offs",
+          "canDo": [
+            "Describe memory layout, access patterns"
+          ],
+          "cannotDo": [
+            "Implement from scratch",
+            "Analyze amortized complexity"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can implement data structures and solve standard problems",
+          "canDo": [
+            "Implement stacks, queues, trees, hash tables"
+          ],
+          "cannotDo": [
+            "Design novel structures",
+            "Analyze cache behavior"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can analyze data structure performance and compare approaches",
+          "canDo": [
+            "Big-O analysis for all operations",
+            "Compare structures for given problems"
+          ],
+          "cannotDo": [
+            "Design new data structure paradigms"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can judge which data structure is best for a given context",
+          "canDo": [
+            "Select structures for real problems",
+            "Evaluate cache, memory, complexity trade-offs"
+          ],
+          "cannotDo": [
+            "Create novel data structure paradigms"
+          ],
+          "appropriateTasks": [
+            "peer_review"
+          ],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Data structure thinking is instinctive — sees organizational patterns everywhere",
+          "canDo": [
+            "Design novel structures",
+            "Teach data structures",
+            "Create new paradigms"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
+          "threshold": 0.95
+        }
       }
     },
-    "supportedModalities": ["LanguageReflective", "Deterministic", "ImmersiveRPG"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "Deterministic",
+      "ImmersiveRPG"
+    ]
   },
   {
     "id": "cs.algorithms.fundamentals",
@@ -113,35 +588,205 @@
     "parentId": "cs.algorithms",
     "childIds": [],
     "phases": {
-      "observation": { "question": "How do you break a large problem into smaller pieces?", "assessmentType": "factual_recall", "completionEvidence": "Student can describe strategies for decomposing problems" },
-      "principle": { "question": "What are the fundamental paradigms for designing algorithms?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain divide-and-conquer, greedy, DP, and backtracking" },
-      "application": { "question": "How do you apply each paradigm to concrete problems?", "assessmentType": "application_problem", "completionEvidence": "Student can implement solutions using each paradigm" },
-      "integration": { "question": "How do algorithm paradigms relate to each other and to mathematical proof techniques?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can map paradigm relationships across domains" },
-      "creation": { "question": "How do you recognize which paradigm fits a new problem?", "assessmentType": "project_based", "completionEvidence": "Student can classify and solve novel problems using appropriate paradigms" }
+      "observation": {
+        "question": "How do you break a large problem into smaller pieces?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can describe strategies for decomposing problems"
+      },
+      "principle": {
+        "question": "What are the fundamental paradigms for designing algorithms?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student can explain divide-and-conquer, greedy, DP, and backtracking"
+      },
+      "application": {
+        "question": "How do you apply each paradigm to concrete problems?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student can implement solutions using each paradigm"
+      },
+      "integration": {
+        "question": "How do algorithm paradigms relate to each other and to mathematical proof techniques?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student can map paradigm relationships across domains"
+      },
+      "creation": {
+        "question": "How do you recognize which paradigm fits a new problem?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student can classify and solve novel problems using appropriate paradigms"
+      }
     },
     "isomorphisms": [
-      { "pattern": "decomposition into smaller subproblems", "targetConceptId": "cs.foundations.recursion", "targetDomain": "CS", "mappingDescription": "Divide-and-conquer is recursive decomposition with a combination step", "limitations": "DP adds memoization to avoid redundant work" }
+      {
+        "pattern": "decomposition into smaller subproblems",
+        "targetConceptId": "cs.foundations.recursion",
+        "targetDomain": "CS",
+        "mappingDescription": "Divide-and-conquer is recursive decomposition with a combination step",
+        "limitations": "DP adds memoization to avoid redundant work"
+      }
     ],
-    "prerequisites": ["cs.algorithms", "cs.foundations.logic"],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Willpower", "Intrapersonal"], "stageRange": { "min": "Orange", "max": "Green" } },
-    "depthMeta": { "requiredPrerequisiteDepth": "comprehended", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
-    "forgettingParams": { "initialHalfLifeMs": 172800000, "halfLifeMultiplier": 2.0, "maxHalfLifeMs": 31536000000 },
-    "content": { "explanation": "Algorithm design paradigms are general strategies for constructing algorithms. Divide-and-conquer splits a problem into subproblems, solves them recursively, and combines results. Greedy algorithms make locally optimal choices at each step. Dynamic programming solves overlapping subproblems by storing solutions. Backtracking explores all possibilities and prunes dead ends.", "examples": ["Merge sort: divide-and-conquer sorting", "Dijkstra's: greedy shortest path", "Fibonacci with memoization: dynamic programming", "N-queens: backtracking with pruning"], "nonExamples": ["Brute force enumeration (no strategy)", "Random search (no structure)"], "analogies": ["Each paradigm is a different lens for viewing the same problem"], "visuals": ["Decision tree showing paradigm selection criteria"], "practiceProblems": [{ "id": "af.p1", "problemText": "Classify merge sort, insertion sort, and quicksort by paradigm. Which is which?", "targetDepth": "comprehended" }] },
+    "prerequisites": [
+      "cs.algorithms",
+      "cs.foundations.logic"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Willpower",
+        "Intrapersonal"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "comprehended",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 172800000,
+      "halfLifeMultiplier": 2.0,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Algorithm design paradigms are general strategies for constructing algorithms. Divide-and-conquer splits a problem into subproblems, solves them recursively, and combines results. Greedy algorithms make locally optimal choices at each step. Dynamic programming solves overlapping subproblems by storing solutions. Backtracking explores all possibilities and prunes dead ends.",
+      "examples": [
+        "Merge sort: divide-and-conquer sorting",
+        "Dijkstra's: greedy shortest path",
+        "Fibonacci with memoization: dynamic programming",
+        "N-queens: backtracking with pruning"
+      ],
+      "nonExamples": [
+        "Brute force enumeration (no strategy)",
+        "Random search (no structure)"
+      ],
+      "analogies": [
+        "Each paradigm is a different lens for viewing the same problem"
+      ],
+      "visuals": [
+        "Decision tree showing paradigm selection criteria"
+      ],
+      "practiceProblems": [
+        {
+          "id": "af.p1",
+          "problemText": "Classify merge sort, insertion sort, and quicksort by paradigm. Which is which?",
+          "targetDepth": "comprehended"
+        }
+      ]
+    },
     "misconceptions": [
-      { "id": "af.mc1", "statement": "Dynamic programming is always better than greedy", "whyItFeelsRight": "DP considers all subproblems while greedy only looks ahead locally", "structuralReason": "Greedy algorithms are correct when the problem has optimal substructure and greedy choice property. When these properties hold, greedy is often faster and simpler. DP is needed only when greedy choices can lead to suboptimal solutions.", "diagnosticTaskId": "af.mc1.diag" }
+      {
+        "id": "af.mc1",
+        "statement": "Dynamic programming is always better than greedy",
+        "whyItFeelsRight": "DP considers all subproblems while greedy only looks ahead locally",
+        "structuralReason": "Greedy algorithms are correct when the problem has optimal substructure and greedy choice property. When these properties hold, greedy is often faster and simpler. DP is needed only when greedy choices can lead to suboptimal solutions.",
+        "diagnosticTaskId": "af.mc1.diag"
+      }
     ],
     "depthRubric": {
       "conceptId": "cs.algorithms.fundamentals",
       "levels": {
-        "memorized": { "evidence": "Can name the four paradigms and give one example of each", "canDo": ["Identify divide-and-conquer, greedy, DP, backtracking"], "cannotDo": ["Apply paradigms to new problems"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
-        "comprehended": { "evidence": "Can explain how each paradigm works and when to use it", "canDo": ["Describe paradigm mechanisms", "Classify known algorithms"], "cannotDo": ["Implement from scratch", "Apply to novel problems"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
-        "applied": { "evidence": "Can implement solutions using each paradigm", "canDo": ["Implement merge sort, knapsack, N-queens"], "cannotDo": ["Design novel applications", "Analyze paradigm trade-offs"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
-        "analyzed": { "evidence": "Can analyze paradigm trade-offs and classify novel problems", "canDo": ["Compare paradigms for given problems", "Identify substructure properties"], "cannotDo": ["Create new paradigms"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
-        "evaluated": { "evidence": "Can judge which paradigm is optimal for a given context", "canDo": ["Select paradigms for real problems", "Evaluate correctness and complexity"], "cannotDo": ["Create new algorithmic paradigms"], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
-        "transformed": { "evidence": "Paradigmatic thinking is instinctive — sees algorithmic structure everywhere", "canDo": ["Design novel algorithms using paradigms", "Teach paradigms", "Create new paradigms"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+        "memorized": {
+          "evidence": "Can name the four paradigms and give one example of each",
+          "canDo": [
+            "Identify divide-and-conquer, greedy, DP, backtracking"
+          ],
+          "cannotDo": [
+            "Apply paradigms to new problems"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain how each paradigm works and when to use it",
+          "canDo": [
+            "Describe paradigm mechanisms",
+            "Classify known algorithms"
+          ],
+          "cannotDo": [
+            "Implement from scratch",
+            "Apply to novel problems"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can implement solutions using each paradigm",
+          "canDo": [
+            "Implement merge sort, knapsack, N-queens"
+          ],
+          "cannotDo": [
+            "Design novel applications",
+            "Analyze paradigm trade-offs"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can analyze paradigm trade-offs and classify novel problems",
+          "canDo": [
+            "Compare paradigms for given problems",
+            "Identify substructure properties"
+          ],
+          "cannotDo": [
+            "Create new paradigms"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can judge which paradigm is optimal for a given context",
+          "canDo": [
+            "Select paradigms for real problems",
+            "Evaluate correctness and complexity"
+          ],
+          "cannotDo": [
+            "Create new algorithmic paradigms"
+          ],
+          "appropriateTasks": [
+            "peer_review"
+          ],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Paradigmatic thinking is instinctive — sees algorithmic structure everywhere",
+          "canDo": [
+            "Design novel algorithms using paradigms",
+            "Teach paradigms",
+            "Create new paradigms"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
+          "threshold": 0.95
+        }
       }
     },
-    "supportedModalities": ["LanguageReflective", "Deterministic", "ScenarioChoice"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "Deterministic",
+      "ScenarioChoice"
+    ]
   },
   {
     "id": "cs.data_structures.basics",
@@ -151,35 +796,203 @@
     "parentId": "cs.data_structures",
     "childIds": [],
     "phases": {
-      "observation": { "question": "How do different containers store and retrieve items differently?", "assessmentType": "factual_recall", "completionEvidence": "Student can describe how different data structures store and access data" },
-      "principle": { "question": "What are the fundamental operations and trade-offs of each data structure?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain time/space complexity for each structure" },
-      "application": { "question": "How do you implement and use each data structure?", "assessmentType": "application_problem", "completionEvidence": "Student can implement and apply each structure to solve problems" },
-      "integration": { "question": "How do data structures relate to algorithms, databases, and hardware?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can map data structure concepts across domains" },
-      "creation": { "question": "How can you combine data structures to solve complex problems?", "assessmentType": "project_based", "completionEvidence": "Student can design solutions using appropriate data structure combinations" }
+      "observation": {
+        "question": "How do different containers store and retrieve items differently?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can describe how different data structures store and access data"
+      },
+      "principle": {
+        "question": "What are the fundamental operations and trade-offs of each data structure?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student can explain time/space complexity for each structure"
+      },
+      "application": {
+        "question": "How do you implement and use each data structure?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student can implement and apply each structure to solve problems"
+      },
+      "integration": {
+        "question": "How do data structures relate to algorithms, databases, and hardware?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student can map data structure concepts across domains"
+      },
+      "creation": {
+        "question": "How can you combine data structures to solve complex problems?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student can design solutions using appropriate data structure combinations"
+      }
     },
     "isomorphisms": [
-      { "pattern": "hierarchical organization with traversal", "targetConceptId": "cs.foundations.recursion", "targetDomain": "CS", "mappingDescription": "Tree traversal is inherently recursive", "limitations": "Iterative traversal uses explicit stacks" }
+      {
+        "pattern": "hierarchical organization with traversal",
+        "targetConceptId": "cs.foundations.recursion",
+        "targetDomain": "CS",
+        "mappingDescription": "Tree traversal is inherently recursive",
+        "limitations": "Iterative traversal uses explicit stacks"
+      }
     ],
-    "prerequisites": ["cs.data_structures", "cs.foundations.sets"],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Intrapersonal"], "stageRange": { "min": "Orange", "max": "Green" } },
-    "depthMeta": { "requiredPrerequisiteDepth": "comprehended", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
-    "forgettingParams": { "initialHalfLifeMs": 172800000, "halfLifeMultiplier": 2.0, "maxHalfLifeMs": 31536000000 },
-    "content": { "explanation": "Fundamental data structures are the building blocks of efficient software. Arrays provide O(1) indexed access. Linked lists provide O(1) insertion/deletion. Stacks and queues provide LIFO/FIFO access. Trees provide O(log n) search when balanced. Hash tables provide O(1) average lookup.", "examples": ["Array: int[] arr = new int[10]", "Linked list: node.next = newNode", "Stack: push/pop/peek in O(1)", "Hash table: map.put(key, value)"], "nonExamples": ["Unsorted array with linear search (no indexing)", "Random memory access (no structure)"], "analogies": ["Data structures are like tools in a toolbox — each designed for a specific job"], "visuals": ["Memory layout diagrams for each structure"], "practiceProblems": [{ "id": "fds.p1", "problemText": "Implement a stack using only arrays. What operations are O(1)?", "targetDepth": "applied" }] },
+    "prerequisites": [
+      "cs.data_structures",
+      "cs.foundations.sets"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Intrapersonal"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "comprehended",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 172800000,
+      "halfLifeMultiplier": 2.0,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Fundamental data structures are the building blocks of efficient software. Arrays provide O(1) indexed access. Linked lists provide O(1) insertion/deletion. Stacks and queues provide LIFO/FIFO access. Trees provide O(log n) search when balanced. Hash tables provide O(1) average lookup.",
+      "examples": [
+        "Array: int[] arr = new int[10]",
+        "Linked list: node.next = newNode",
+        "Stack: push/pop/peek in O(1)",
+        "Hash table: map.put(key, value)"
+      ],
+      "nonExamples": [
+        "Unsorted array with linear search (no indexing)",
+        "Random memory access (no structure)"
+      ],
+      "analogies": [
+        "Data structures are like tools in a toolbox — each designed for a specific job"
+      ],
+      "visuals": [
+        "Memory layout diagrams for each structure"
+      ],
+      "practiceProblems": [
+        {
+          "id": "fds.p1",
+          "problemText": "Implement a stack using only arrays. What operations are O(1)?",
+          "targetDepth": "applied"
+        }
+      ]
+    },
     "misconceptions": [
-      { "id": "fds.mc1", "statement": "Arrays are always faster than linked lists", "whyItFeelsRight": "Arrays have better cache locality and O(1) access", "structuralReason": "For frequent insertions/deletions at arbitrary positions, linked lists are O(1) vs arrays' O(n). For prepend operations, linked lists are superior. The choice depends on the access pattern, not an absolute speed ranking.", "diagnosticTaskId": "fds.mc1.diag" }
+      {
+        "id": "fds.mc1",
+        "statement": "Arrays are always faster than linked lists",
+        "whyItFeelsRight": "Arrays have better cache locality and O(1) access",
+        "structuralReason": "For frequent insertions/deletions at arbitrary positions, linked lists are O(1) vs arrays' O(n). For prepend operations, linked lists are superior. The choice depends on the access pattern, not an absolute speed ranking.",
+        "diagnosticTaskId": "fds.mc1.diag"
+      }
     ],
     "depthRubric": {
       "conceptId": "cs.data_structures.basics",
       "levels": {
-        "memorized": { "evidence": "Can name fundamental data structures and their basic operations", "canDo": ["List arrays, lists, stacks, queues, trees, hash tables"], "cannotDo": ["Implement or analyze trade-offs"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
-        "comprehended": { "evidence": "Can explain how each structure works and its trade-offs", "canDo": ["Describe operations and complexity"], "cannotDo": ["Implement from scratch"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
-        "applied": { "evidence": "Can implement each structure and use it to solve problems", "canDo": ["Implement all basic structures", "Apply to standard problems"], "cannotDo": ["Analyze cache behavior", "Design novel structures"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
-        "analyzed": { "evidence": "Can analyze performance characteristics and compare structures", "canDo": ["Big-O analysis", "Compare for given problems"], "cannotDo": ["Create novel structures"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
-        "evaluated": { "evidence": "Can judge which structure is best for a given context", "canDo": ["Select structures for real problems", "Evaluate cache, memory, complexity"], "cannotDo": ["Create new paradigms"], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
-        "transformed": { "evidence": "Data structure thinking is instinctive — sees organizational patterns everywhere", "canDo": ["Design novel structures", "Teach data structures", "Create new paradigms"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+        "memorized": {
+          "evidence": "Can name fundamental data structures and their basic operations",
+          "canDo": [
+            "List arrays, lists, stacks, queues, trees, hash tables"
+          ],
+          "cannotDo": [
+            "Implement or analyze trade-offs"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain how each structure works and its trade-offs",
+          "canDo": [
+            "Describe operations and complexity"
+          ],
+          "cannotDo": [
+            "Implement from scratch"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can implement each structure and use it to solve problems",
+          "canDo": [
+            "Implement all basic structures",
+            "Apply to standard problems"
+          ],
+          "cannotDo": [
+            "Analyze cache behavior",
+            "Design novel structures"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can analyze performance characteristics and compare structures",
+          "canDo": [
+            "Big-O analysis",
+            "Compare for given problems"
+          ],
+          "cannotDo": [
+            "Create novel structures"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can judge which structure is best for a given context",
+          "canDo": [
+            "Select structures for real problems",
+            "Evaluate cache, memory, complexity"
+          ],
+          "cannotDo": [
+            "Create new paradigms"
+          ],
+          "appropriateTasks": [
+            "peer_review"
+          ],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Data structure thinking is instinctive — sees organizational patterns everywhere",
+          "canDo": [
+            "Design novel structures",
+            "Teach data structures",
+            "Create new paradigms"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
+          "threshold": 0.95
+        }
       }
     },
-    "supportedModalities": ["LanguageReflective", "Deterministic", "ImmersiveRPG"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "Deterministic",
+      "ImmersiveRPG"
+    ]
   },
   {
     "id": "cs.foundations.logic",
@@ -189,31 +1002,198 @@
     "parentId": "cs.foundations",
     "childIds": [],
     "phases": {
-      "observation": { "question": "What patterns of valid reasoning can you identify in everyday arguments?", "assessmentType": "factual_recall", "completionEvidence": "Student can identify premises and conclusions in natural language statements" },
-      "principle": { "question": "What are the formal rules that make an argument logically valid regardless of its content?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain truth tables, logical operators, and validity vs. soundness" },
-      "application": { "question": "How do you use logical operators to express complex conditions precisely?", "assessmentType": "application_problem", "completionEvidence": "Student can translate natural language into propositional logic" },
-      "integration": { "question": "Where does formal logic connect to other domains of reasoning?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can map logical structure to circuit design, database queries, and program control flow" },
-      "creation": { "question": "How can you construct a novel logical argument that withstands scrutiny?", "assessmentType": "research_question", "completionEvidence": "Student can construct valid proofs using direct, contrapositive, and contradiction methods" }
+      "observation": {
+        "question": "What patterns of valid reasoning can you identify in everyday arguments?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can identify premises and conclusions in natural language statements"
+      },
+      "principle": {
+        "question": "What are the formal rules that make an argument logically valid regardless of its content?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student can explain truth tables, logical operators, and validity vs. soundness"
+      },
+      "application": {
+        "question": "How do you use logical operators to express complex conditions precisely?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student can translate natural language into propositional logic"
+      },
+      "integration": {
+        "question": "Where does formal logic connect to other domains of reasoning?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student can map logical structure to circuit design, database queries, and program control flow"
+      },
+      "creation": {
+        "question": "How can you construct a novel logical argument that withstands scrutiny?",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student can construct valid proofs using direct, contrapositive, and contradiction methods"
+      }
     },
-    "isomorphisms": [{ "pattern": "conditional branching based on truth values", "targetConceptId": "cs.foundations.recursion", "targetDomain": "Computer Science", "mappingDescription": "IF-THEN logic maps to base-case checking in recursion", "limitations": "Recursion adds temporal depth" }],
+    "isomorphisms": [
+      {
+        "pattern": "conditional branching based on truth values",
+        "targetConceptId": "cs.foundations.recursion",
+        "targetDomain": "Computer Science",
+        "mappingDescription": "IF-THEN logic maps to base-case checking in recursion",
+        "limitations": "Recursion adds temporal depth"
+      }
+    ],
     "prerequisites": [],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Intrapersonal"], "stageRange": { "min": "Amber", "max": "Orange" } },
-    "depthMeta": { "requiredPrerequisiteDepth": "absent", "targetDepthRange": { "min": "memorized", "max": "evaluated" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated"] },
-    "forgettingParams": { "initialHalfLifeMs": 86400000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
-    "content": { "explanation": "Formal logic provides a rigorous framework for reasoning. Propositional logic deals with statements that are true or false, combined using operators like AND, OR, NOT, and IMPLIES.", "examples": ["IF it rains THEN the ground is wet (P → Q)", "The ground is NOT wet AND it is NOT raining", "It is raining OR it is cold"], "nonExamples": ["It might rain tomorrow (probabilistic)", "Rain feels cold (subjective)"], "analogies": ["Logic gates in circuits mirror logical operators", "SQL WHERE clauses are applied propositional logic"], "visuals": ["Truth table for P → Q"], "practiceProblems": [{ "id": "logic.p1", "problemText": "Construct a truth table for (P → Q) ∧ (Q → P).", "targetDepth": "applied" }] },
-    "misconceptions": [{ "id": "logic.mc1", "statement": "IF P THEN Q means P causes Q", "whyItFeelsRight": "In everyday language, if-then often implies causation", "structuralReason": "Material conditional only constrains truth values, not causal relationships.", "diagnosticTaskId": "logic.mc1.diag" }],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Intrapersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Orange"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 86400000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Formal logic provides a rigorous framework for reasoning. Propositional logic deals with statements that are true or false, combined using operators like AND, OR, NOT, and IMPLIES.",
+      "examples": [
+        "IF it rains THEN the ground is wet (P → Q)",
+        "The ground is NOT wet AND it is NOT raining",
+        "It is raining OR it is cold"
+      ],
+      "nonExamples": [
+        "It might rain tomorrow (probabilistic)",
+        "Rain feels cold (subjective)"
+      ],
+      "analogies": [
+        "Logic gates in circuits mirror logical operators",
+        "SQL WHERE clauses are applied propositional logic"
+      ],
+      "visuals": [
+        "Truth table for P → Q"
+      ],
+      "practiceProblems": [
+        {
+          "id": "logic.p1",
+          "problemText": "Construct a truth table for (P → Q) ∧ (Q → P).",
+          "targetDepth": "applied"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "logic.mc1",
+        "statement": "IF P THEN Q means P causes Q",
+        "whyItFeelsRight": "In everyday language, if-then often implies causation",
+        "structuralReason": "Material conditional only constrains truth values, not causal relationships.",
+        "diagnosticTaskId": "logic.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "cs.foundations.logic",
       "levels": {
-        "memorized": { "evidence": "Can recall definitions of AND, OR, NOT, IMPLIES", "canDo": ["Name the logical operators"], "cannotDo": ["Construct a truth table from scratch"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
-        "comprehended": { "evidence": "Can explain WHY each operator works the way it does", "canDo": ["Explain each operator's truth conditions"], "cannotDo": ["Apply logic to novel domains"], "appropriateTasks": ["concept_explanation", "analogy_mapping"], "threshold": 0.5 },
-        "applied": { "evidence": "Can translate between natural language and formal logic", "canDo": ["Translate sentences to propositional logic"], "cannotDo": ["Analyze hidden assumptions"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
-        "analyzed": { "evidence": "Can decompose complex arguments into logical components", "canDo": ["Identify hidden premises", "Detect common fallacies"], "cannotDo": ["Evaluate competing logical frameworks"], "appropriateTasks": ["case_study_analysis", "debate_position"], "threshold": 0.8 },
-        "evaluated": { "evidence": "Can critically assess the limits of formal logic", "canDo": ["Compare formal vs. informal reasoning"], "cannotDo": ["Synthesize new logical systems"], "appropriateTasks": ["peer_review", "debate_position"], "threshold": 0.9 },
-        "transformed": { "evidence": "Logic has become a lens through which the student sees ALL reasoning", "canDo": ["Apply logical rigor to any field", "Teach logic to others"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+        "memorized": {
+          "evidence": "Can recall definitions of AND, OR, NOT, IMPLIES",
+          "canDo": [
+            "Name the logical operators"
+          ],
+          "cannotDo": [
+            "Construct a truth table from scratch"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain WHY each operator works the way it does",
+          "canDo": [
+            "Explain each operator's truth conditions"
+          ],
+          "cannotDo": [
+            "Apply logic to novel domains"
+          ],
+          "appropriateTasks": [
+            "concept_explanation",
+            "analogy_mapping"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can translate between natural language and formal logic",
+          "canDo": [
+            "Translate sentences to propositional logic"
+          ],
+          "cannotDo": [
+            "Analyze hidden assumptions"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex arguments into logical components",
+          "canDo": [
+            "Identify hidden premises",
+            "Detect common fallacies"
+          ],
+          "cannotDo": [
+            "Evaluate competing logical frameworks"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis",
+            "debate_position"
+          ],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can critically assess the limits of formal logic",
+          "canDo": [
+            "Compare formal vs. informal reasoning"
+          ],
+          "cannotDo": [
+            "Synthesize new logical systems"
+          ],
+          "appropriateTasks": [
+            "peer_review",
+            "debate_position"
+          ],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Logic has become a lens through which the student sees ALL reasoning",
+          "canDo": [
+            "Apply logical rigor to any field",
+            "Teach logic to others"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
+          "threshold": 0.95
+        }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Deterministic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Deterministic"
+    ]
   },
   {
     "id": "cs.foundations.sets",
@@ -223,31 +1203,197 @@
     "parentId": "cs.foundations",
     "childIds": [],
     "phases": {
-      "observation": { "question": "How do you naturally group and categorize things in your daily life?", "assessmentType": "factual_recall", "completionEvidence": "Student can identify examples of sets, subsets, and membership" },
-      "principle": { "question": "What are the formal operations that govern how collections interact?", "assessmentType": "concept_explanation", "completionEvidence": "Student can define union, intersection, difference, complement, and power set" },
-      "application": { "question": "How do you use set operations to solve real computational problems?", "assessmentType": "application_problem", "completionEvidence": "Student can solve problems involving Venn diagrams and set-builder notation" },
-      "integration": { "question": "How do sets connect to logic, databases, and type systems?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can map set operations to SQL JOINs and logical connectives" },
-      "creation": { "question": "How can you model a complex real-world system using set-theoretic structures?", "assessmentType": "project_based", "completionEvidence": "Student can formalize a domain model using sets, relations, and functions" }
+      "observation": {
+        "question": "How do you naturally group and categorize things in your daily life?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can identify examples of sets, subsets, and membership"
+      },
+      "principle": {
+        "question": "What are the formal operations that govern how collections interact?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student can define union, intersection, difference, complement, and power set"
+      },
+      "application": {
+        "question": "How do you use set operations to solve real computational problems?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student can solve problems involving Venn diagrams and set-builder notation"
+      },
+      "integration": {
+        "question": "How do sets connect to logic, databases, and type systems?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student can map set operations to SQL JOINs and logical connectives"
+      },
+      "creation": {
+        "question": "How can you model a complex real-world system using set-theoretic structures?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student can formalize a domain model using sets, relations, and functions"
+      }
     },
-    "isomorphisms": [{ "pattern": "combining elements under well-defined rules", "targetConceptId": "cs.foundations.logic", "targetDomain": "Logic", "mappingDescription": "Set operations parallel logical connectives", "limitations": "Sets deal with membership; logic deals with truth values" }],
-    "prerequisites": ["cs.foundations.logic"],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Interpersonal"], "stageRange": { "min": "Amber", "max": "Green" } },
-    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
-    "forgettingParams": { "initialHalfLifeMs": 86400000, "halfLifeMultiplier": 2.5, "maxHalfLifeMs": 31536000000 },
-    "content": { "explanation": "A set is a well-defined collection of distinct elements. Core operations include union, intersection, difference, and complement.", "examples": ["The set of even numbers: {2, 4, 6, 8, ...}", "Union of {1,2,3} and {2,3,4} = {1,2,3,4}", "A function f: N → N where f(n) = n²"], "nonExamples": ["A list with duplicate elements (multiset)", "A vague collection like 'tall people'"], "analogies": ["SQL tables are finite sets of rows", "TypeScript union types model set union"], "visuals": ["Venn diagram showing A ∩ B and A ∪ B"], "practiceProblems": [{ "id": "sets.p1", "problemText": "Given A = {1,2,3,4} and B = {3,4,5,6}, find A ∩ B and A ∪ B.", "targetDepth": "memorized" }] },
-    "misconceptions": [{ "id": "sets.mc1", "statement": "Sets can contain duplicate elements", "whyItFeelsRight": "Lists and arrays allow duplicates", "structuralReason": "By definition, a set contains each element exactly once.", "diagnosticTaskId": "sets.mc1.diag" }],
+    "isomorphisms": [
+      {
+        "pattern": "combining elements under well-defined rules",
+        "targetConceptId": "cs.foundations.logic",
+        "targetDomain": "Logic",
+        "mappingDescription": "Set operations parallel logical connectives",
+        "limitations": "Sets deal with membership; logic deals with truth values"
+      }
+    ],
+    "prerequisites": [
+      "cs.foundations.logic"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Interpersonal"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 86400000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "A set is a well-defined collection of distinct elements. Core operations include union, intersection, difference, and complement.",
+      "examples": [
+        "The set of even numbers: {2, 4, 6, 8, ...}",
+        "Union of {1,2,3} and {2,3,4} = {1,2,3,4}",
+        "A function f: N → N where f(n) = n²"
+      ],
+      "nonExamples": [
+        "A list with duplicate elements (multiset)",
+        "A vague collection like 'tall people'"
+      ],
+      "analogies": [
+        "SQL tables are finite sets of rows",
+        "TypeScript union types model set union"
+      ],
+      "visuals": [
+        "Venn diagram showing A ∩ B and A ∪ B"
+      ],
+      "practiceProblems": [
+        {
+          "id": "sets.p1",
+          "problemText": "Given A = {1,2,3,4} and B = {3,4,5,6}, find A ∩ B and A ∪ B.",
+          "targetDepth": "memorized"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "sets.mc1",
+        "statement": "Sets can contain duplicate elements",
+        "whyItFeelsRight": "Lists and arrays allow duplicates",
+        "structuralReason": "By definition, a set contains each element exactly once.",
+        "diagnosticTaskId": "sets.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "cs.foundations.sets",
       "levels": {
-        "memorized": { "evidence": "Can recall definitions of set, union, intersection, difference", "canDo": ["Name set operations"], "cannotDo": ["Apply operations to solve problems"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
-        "comprehended": { "evidence": "Can explain how set operations work and why they matter", "canDo": ["Explain each operation's semantics"], "cannotDo": ["Solve complex counting problems"], "appropriateTasks": ["concept_explanation"], "threshold": 0.5 },
-        "applied": { "evidence": "Can use set operations to solve concrete problems", "canDo": ["Compute set expressions"], "cannotDo": ["Analyze the structure of set systems"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
-        "analyzed": { "evidence": "Can decompose complex systems into set-theoretic components", "canDo": ["Map set operations to logical connectives"], "cannotDo": ["Evaluate competing formalizations"], "appropriateTasks": ["case_study_analysis"], "threshold": 0.8 },
-        "evaluated": { "evidence": "Can assess the appropriateness of set-theoretic models", "canDo": ["Choose the right formalization"], "cannotDo": ["Create new mathematical frameworks"], "appropriateTasks": ["peer_review"], "threshold": 0.9 },
-        "transformed": { "evidence": "Set theory has become an intuitive lens", "canDo": ["Formalize any domain using sets", "Teach set theory"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+        "memorized": {
+          "evidence": "Can recall definitions of set, union, intersection, difference",
+          "canDo": [
+            "Name set operations"
+          ],
+          "cannotDo": [
+            "Apply operations to solve problems"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain how set operations work and why they matter",
+          "canDo": [
+            "Explain each operation's semantics"
+          ],
+          "cannotDo": [
+            "Solve complex counting problems"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can use set operations to solve concrete problems",
+          "canDo": [
+            "Compute set expressions"
+          ],
+          "cannotDo": [
+            "Analyze the structure of set systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex systems into set-theoretic components",
+          "canDo": [
+            "Map set operations to logical connectives"
+          ],
+          "cannotDo": [
+            "Evaluate competing formalizations"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can assess the appropriateness of set-theoretic models",
+          "canDo": [
+            "Choose the right formalization"
+          ],
+          "cannotDo": [
+            "Create new mathematical frameworks"
+          ],
+          "appropriateTasks": [
+            "peer_review"
+          ],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Set theory has become an intuitive lens",
+          "canDo": [
+            "Formalize any domain using sets",
+            "Teach set theory"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
+          "threshold": 0.95
+        }
       }
     },
-    "supportedModalities": ["LanguageReflective", "Deterministic", "ScenarioChoice"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "Deterministic",
+      "ScenarioChoice"
+    ]
   },
   {
     "id": "cs.foundations.recursion",
@@ -257,36 +1403,219 @@
     "parentId": "cs.foundations",
     "childIds": [],
     "phases": {
-      "observation": { "question": "Where do you see self-similar patterns repeating in nature or daily life?", "assessmentType": "factual_recall", "completionEvidence": "Student can identify examples of recursive structure" },
-      "principle": { "question": "What are the minimal components that make a recursive definition well-founded?", "assessmentType": "concept_explanation", "completionEvidence": "Student can explain base case, recursive case, and termination" },
-      "application": { "question": "How do you decompose a problem into smaller instances of itself?", "assessmentType": "application_problem", "completionEvidence": "Student can write recursive functions and trace their execution" },
-      "integration": { "question": "How does recursion connect to mathematical induction, trees, and self-reference?", "assessmentType": "analogy_mapping", "completionEvidence": "Student can prove correctness via induction" },
-      "creation": { "question": "How can you design a novel recursive solution?", "assessmentType": "project_based", "completionEvidence": "Student can design a divide-and-conquer algorithm" }
+      "observation": {
+        "question": "Where do you see self-similar patterns repeating in nature or daily life?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student can identify examples of recursive structure"
+      },
+      "principle": {
+        "question": "What are the minimal components that make a recursive definition well-founded?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student can explain base case, recursive case, and termination"
+      },
+      "application": {
+        "question": "How do you decompose a problem into smaller instances of itself?",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student can write recursive functions and trace their execution"
+      },
+      "integration": {
+        "question": "How does recursion connect to mathematical induction, trees, and self-reference?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student can prove correctness via induction"
+      },
+      "creation": {
+        "question": "How can you design a novel recursive solution?",
+        "assessmentType": "project_based",
+        "completionEvidence": "Student can design a divide-and-conquer algorithm"
+      }
     },
     "isomorphisms": [
-      { "pattern": "self-similar structure at different scales", "targetConceptId": "cs.foundations.logic", "targetDomain": "Logic", "mappingDescription": "Recursive base cases parallel logical base truths", "limitations": "Recursion adds execution order and stack depth" },
-      { "pattern": "combining smaller instances into a whole", "targetConceptId": "cs.foundations.sets", "targetDomain": "Mathematics", "mappingDescription": "Divide-and-conquer splits a set into subsets; union recombines results", "limitations": "Sets are flat; recursion creates hierarchical structure" }
+      {
+        "pattern": "self-similar structure at different scales",
+        "targetConceptId": "cs.foundations.logic",
+        "targetDomain": "Logic",
+        "mappingDescription": "Recursive base cases parallel logical base truths",
+        "limitations": "Recursion adds execution order and stack depth"
+      },
+      {
+        "pattern": "combining smaller instances into a whole",
+        "targetConceptId": "cs.foundations.sets",
+        "targetDomain": "Mathematics",
+        "mappingDescription": "Divide-and-conquer splits a set into subsets; union recombines results",
+        "limitations": "Sets are flat; recursion creates hierarchical structure"
+      }
     ],
-    "prerequisites": ["cs.foundations.logic", "cs.foundations.sets"],
-    "devMapping": { "primaryLine": "Cognitive", "secondaryLines": ["Spiritual", "Intrapersonal"], "stageRange": { "min": "Orange", "max": "Green" } },
-    "depthMeta": { "requiredPrerequisiteDepth": "memorized", "targetDepthRange": { "min": "memorized", "max": "transformed" }, "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"] },
-    "forgettingParams": { "initialHalfLifeMs": 259200000, "halfLifeMultiplier": 2.0, "maxHalfLifeMs": 31536000000 },
-    "content": { "explanation": "Recursion is a method where the solution depends on solutions to smaller instances of the same problem. A well-formed recursive function has a base case and a recursive case.", "examples": ["Factorial: fact(0)=1, fact(n)=n*fact(n-1)", "Fibonacci: fib(0)=0, fib(1)=1, fib(n)=fib(n-1)+fib(n-2)", "Tree traversal: visit left, visit root, visit right"], "nonExamples": ["An infinite loop without a base case", "Iterative loops (recursion uses self-reference)"], "analogies": ["Russian nesting dolls (matryoshka)", "A dictionary that defines words using other words"], "visuals": ["Call stack diagram showing nested calls unwinding"], "practiceProblems": [{ "id": "rec.p1", "problemText": "Write a recursive function to compute the sum of a list.", "targetDepth": "applied" }] },
+    "prerequisites": [
+      "cs.foundations.logic",
+      "cs.foundations.sets"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Spiritual",
+        "Intrapersonal"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 259200000,
+      "halfLifeMultiplier": 2.0,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Recursion is a method where the solution depends on solutions to smaller instances of the same problem. A well-formed recursive function has a base case and a recursive case.",
+      "examples": [
+        "Factorial: fact(0)=1, fact(n)=n*fact(n-1)",
+        "Fibonacci: fib(0)=0, fib(1)=1, fib(n)=fib(n-1)+fib(n-2)",
+        "Tree traversal: visit left, visit root, visit right"
+      ],
+      "nonExamples": [
+        "An infinite loop without a base case",
+        "Iterative loops (recursion uses self-reference)"
+      ],
+      "analogies": [
+        "Russian nesting dolls (matryoshka)",
+        "A dictionary that defines words using other words"
+      ],
+      "visuals": [
+        "Call stack diagram showing nested calls unwinding"
+      ],
+      "practiceProblems": [
+        {
+          "id": "rec.p1",
+          "problemText": "Write a recursive function to compute the sum of a list.",
+          "targetDepth": "applied"
+        }
+      ]
+    },
     "misconceptions": [
-      { "id": "rec.mc1", "statement": "Recursion is always slower than iteration", "whyItFeelsRight": "Function calls have overhead", "structuralReason": "Recursive algorithms can have better time complexity (e.g., merge sort O(n log n)). Tail-call optimization eliminates overhead.", "diagnosticTaskId": "rec.mc1.diag" },
-      { "id": "rec.mc2", "statement": "You need to understand the entire call stack to write recursion", "whyItFeelsRight": "Tracing recursive calls is mentally demanding", "structuralReason": "The trust-the-protocol principle: if the recursive call works for smaller inputs and the base case is correct, the whole function is correct.", "diagnosticTaskId": "rec.mc2.diag" }
+      {
+        "id": "rec.mc1",
+        "statement": "Recursion is always slower than iteration",
+        "whyItFeelsRight": "Function calls have overhead",
+        "structuralReason": "Recursive algorithms can have better time complexity (e.g., merge sort O(n log n)). Tail-call optimization eliminates overhead.",
+        "diagnosticTaskId": "rec.mc1.diag"
+      },
+      {
+        "id": "rec.mc2",
+        "statement": "You need to understand the entire call stack to write recursion",
+        "whyItFeelsRight": "Tracing recursive calls is mentally demanding",
+        "structuralReason": "The trust-the-protocol principle: if the recursive call works for smaller inputs and the base case is correct, the whole function is correct.",
+        "diagnosticTaskId": "rec.mc2.diag"
+      }
     ],
     "depthRubric": {
       "conceptId": "cs.foundations.recursion",
       "levels": {
-        "memorized": { "evidence": "Can recall the definition of recursion and identify base/recursive cases", "canDo": ["Name the components of a recursive function"], "cannotDo": ["Write recursive functions from scratch"], "appropriateTasks": ["factual_recall"], "threshold": 0.3 },
-        "comprehended": { "evidence": "Can explain HOW recursion works and WHY it terminates", "canDo": ["Explain the call stack mechanism", "Verify termination"], "cannotDo": ["Design recursive solutions to novel problems"], "appropriateTasks": ["concept_explanation", "analogy_mapping"], "threshold": 0.5 },
-        "applied": { "evidence": "Can write correct recursive functions for standard problems", "canDo": ["Implement factorial, Fibonacci, list operations"], "cannotDo": ["Optimize for efficiency"], "appropriateTasks": ["application_problem"], "threshold": 0.65 },
-        "analyzed": { "evidence": "Can decompose complex problems into recursive sub-problems", "canDo": ["Design divide-and-conquer algorithms", "Analyze time/space complexity"], "cannotDo": ["Create novel recursive data structures"], "appropriateTasks": ["case_study_analysis", "research_question"], "threshold": 0.8 },
-        "evaluated": { "evidence": "Can assess when recursion is the right tool", "canDo": ["Choose between recursion and iteration", "Evaluate recursive algorithm efficiency"], "cannotDo": ["Invent new recursive paradigms"], "appropriateTasks": ["peer_review", "debate_position"], "threshold": 0.9 },
-        "transformed": { "evidence": "Recursive thinking has become natural", "canDo": ["Design novel recursive algorithms", "Teach recursion", "See recursive structure in non-CS domains"], "cannotDo": [], "appropriateTasks": ["peer_teaching", "creative_synthesis"], "threshold": 0.95 }
+        "memorized": {
+          "evidence": "Can recall the definition of recursion and identify base/recursive cases",
+          "canDo": [
+            "Name the components of a recursive function"
+          ],
+          "cannotDo": [
+            "Write recursive functions from scratch"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain HOW recursion works and WHY it terminates",
+          "canDo": [
+            "Explain the call stack mechanism",
+            "Verify termination"
+          ],
+          "cannotDo": [
+            "Design recursive solutions to novel problems"
+          ],
+          "appropriateTasks": [
+            "concept_explanation",
+            "analogy_mapping"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can write correct recursive functions for standard problems",
+          "canDo": [
+            "Implement factorial, Fibonacci, list operations"
+          ],
+          "cannotDo": [
+            "Optimize for efficiency"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can decompose complex problems into recursive sub-problems",
+          "canDo": [
+            "Design divide-and-conquer algorithms",
+            "Analyze time/space complexity"
+          ],
+          "cannotDo": [
+            "Create novel recursive data structures"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis",
+            "research_question"
+          ],
+          "threshold": 0.8
+        },
+        "evaluated": {
+          "evidence": "Can assess when recursion is the right tool",
+          "canDo": [
+            "Choose between recursion and iteration",
+            "Evaluate recursive algorithm efficiency"
+          ],
+          "cannotDo": [
+            "Invent new recursive paradigms"
+          ],
+          "appropriateTasks": [
+            "peer_review",
+            "debate_position"
+          ],
+          "threshold": 0.9
+        },
+        "transformed": {
+          "evidence": "Recursive thinking has become natural",
+          "canDo": [
+            "Design novel recursive algorithms",
+            "Teach recursion",
+            "See recursive structure in non-CS domains"
+          ],
+          "cannotDo": [],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
+          "threshold": 0.95
+        }
       }
     },
-    "supportedModalities": ["LanguageReflective", "Deterministic", "ImmersiveRPG"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "Deterministic",
+      "ImmersiveRPG"
+    ]
   }
 ]

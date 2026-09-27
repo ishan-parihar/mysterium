@@ -345,7 +345,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "civics-institutions.mc1",
+        "statement": "Institutions are just buildings and officials",
+        "whyItFeelsRight": "Civics class tours look physical",
+        "structuralReason": "Institutions are rule systems that structure repeated decisions — roles, procedures, and incentives that persist beyond occupants. The physical view predicts nothing about why the same building behaves differently under different rules.",
+        "diagnosticTaskId": "civics-institutions.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "ScenarioChoice",
       "SocialCooperative"
@@ -524,7 +532,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "civics-deliberation.mc1",
+        "statement": "Debate is about winning the exchange",
+        "whyItFeelsRight": "Competitive debate trophies",
+        "structuralReason": "Deliberation aims at shared understanding and legitimate decisions; adversarial framing selects for persuasion tricks that survive contact with opponents rather than with the problem. Winning a debate can lose the decision's legitimacy.",
+        "diagnosticTaskId": "civics-deliberation.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "ScenarioChoice",
       "SocialCooperative"
@@ -703,7 +719,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "civics-rights.mc1",
+        "statement": "Rights are absolute and unconditional",
+        "whyItFeelsRight": "Constitutional language sounds categorical",
+        "structuralReason": "Nearly every right is bounded where it collides with other rights or compelling public interests; the doctrine lives in the balancing tests, not the absolute statement. The absolute reading cannot explain a single actual case outcome.",
+        "diagnosticTaskId": "civics-rights.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "ScenarioChoice",
       "SocialCooperative"
@@ -882,7 +906,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "civics-participation.mc1",
+        "statement": "One vote is statistically meaningless, so participation is irrational",
+        "whyItFeelsRight": "A single vote almost never decides",
+        "structuralReason": "Participation operates at scale through signals, agendas, and legitimacy, not through single decisive acts; the statistical frame treats an individually-insufficient act as if it must be individually decisive — a category error applied to collective action.",
+        "diagnosticTaskId": "civics-participation.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "ScenarioChoice",
       "SocialCooperative"

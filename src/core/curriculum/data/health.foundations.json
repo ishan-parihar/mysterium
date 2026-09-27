@@ -344,7 +344,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "health-movement.mc1",
+        "statement": "Exercise damages the body, so rest is always safer",
+        "whyItFeelsRight": "Soreness feels like injury",
+        "structuralReason": "Adaptation requires stress-then-recovery: bone density, tendon strength, and metabolic fitness all depend on load. The rest-only model guarantees decline — the dose makes the adaptation, not stress-free avoidance.",
+        "diagnosticTaskId": "health-movement.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "Embodied"
     ]
@@ -522,7 +530,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "health-physiology.mc1",
+        "statement": "The body is a machine with parts",
+        "whyItFeelsRight": "Anatomy diagrams look like hardware",
+        "structuralReason": "Physiological systems are homeostatic feedback loops — the same organ behaves differently depending on hormonal and neural context. Parts-thinking predicts fixed function and misses adaptation entirely.",
+        "diagnosticTaskId": "health-physiology.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "Embodied"
     ]
@@ -700,7 +716,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "health-nutrition_sleep.mc1",
+        "statement": "Sleep is lost time you can repay later",
+        "whyItFeelsRight": "Busy people bank sleep on weekends",
+        "structuralReason": "Consolidation, hormonal regulation, and clearance processes run on nightly cycles; debt is only partially repayable and chronic short sleep degrades the very systems that make 'catching up' possible.",
+        "diagnosticTaskId": "health-nutrition_sleep.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "Embodied"
     ]
@@ -878,7 +902,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "health-mental.mc1",
+        "statement": "Mental health is willpower",
+        "whyItFeelsRight": "People describe mood as a choice",
+        "structuralReason": "Affect is built on physiology, sleep, load, and practice patterns; willpower is one bandwidth-limited resource among many. The willpower frame blames the symptom and prescribes the one input already depleted.",
+        "diagnosticTaskId": "health-mental.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "Embodied"
     ]

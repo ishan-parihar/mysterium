@@ -350,6 +350,16 @@ proxy-mention hole by scoping the gate's rows to the KV adapter's class body). D
 waits on the user-reserved KV IDs unchanged. Remaining: **d5** (37 teeth-first), **D-39**
 (the journal P1 seam — ruled to ship), **Track B** (WebUI parity + Interpersonal fix).
 
+**d5 is BUILT 2026-09-27**: 37's teeth-first repair in the plan's order — P-3/P-4 promoted to
+ERROR scoped to content-bearing levels; 32 misconceptions + 10 practice-problem fills authored
+under the new teeth; the `earth-science` branch authored (5 holons, seeded, line-mapped — corpus
+113 holons / 248 assessment items); 37's tables reconciled to the measured registry (the 56/1,280
+row retired); the difficulty-bell criterion amended as unimplementable-as-specified; the per-branch
+density instrument live in `check-invariants` (report-only, `--deny-under` opt-in, exit-1 proven).
+The honest headline the instrument reports: **every branch is below 35 §5.2's 97-holon minimum**
+— the calibration input the owner's hardening decision needs. Remaining: **D-39** (journal P1
+seam), **Track B** (WebUI parity + Interpersonal fix).
+
 Battery state at this writing: **150 files / 1702 tests**, `arch.py validate` 23/23 with fixtures
 proven 23/23, lint 0/0, build green (adapter-cloudflare), gate roster **46** (G45 + G46, teeth
 proven by six mutations total).

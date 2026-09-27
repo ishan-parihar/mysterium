@@ -303,6 +303,39 @@ check('every Complex in ALL_COMPLEXES has at least 2 lines', () => {
   }
 });
 
+// --- Curriculum density (Phase 17 d5, 35 §5.2) ---
+// The per-branch density instrument. REPORT-ONLY by default (the corpus is a live
+// authoring surface; a hard floor here would freeze growth mid-flight). Opt in to
+// enforcement with `--deny-under <N>`: any branch under N holons fails the check.
+// The reference figure is 35 §5.2's minimum-viable-branch (97); hardening the check
+// to battery-failing is the owner decision named in the plan §8.
+const DENSITY_MIN = 97; // 35 §5.2: 1 + 6 + 18 + 36 + 36
+const denyUnder = (() => {
+  const i = process.argv.indexOf('--deny-under');
+  return i >= 0 ? Number(process.argv[i + 1]!) : null;
+})();
+{
+  const { resetCurriculumRegistry, getCurriculumRegistry } = await import('../src/core/curriculum/CurriculumRegistry.js');
+  const { seedCurriculumRegistry } = await import('../src/core/curriculum/CurriculumSeed.js');
+  resetCurriculumRegistry();
+  seedCurriculumRegistry();
+  const byBranch = new Map<string, number>();
+  for (const h of getCurriculumRegistry().getAll()) {
+    const branch = h.id.split('.')[0]!;
+    byBranch.set(branch, (byBranch.get(branch) ?? 0) + 1);
+  }
+  console.log(`\n  Curriculum density (35 §5.2 minimum: ${DENSITY_MIN} holons/branch; ${denyUnder !== null ? `ENFORCING --deny-under ${denyUnder}` : 'report-only'}):`);
+  for (const [branch, count] of [...byBranch.entries()].sort()) {
+    const short = count < (denyUnder ?? DENSITY_MIN);
+    console.log(`    ${branch}: ${count} holons${short ? '  ← below' : ''}`);
+  }
+  console.log(`    total: ${getCurriculumRegistry().getAll().length} holons across ${byBranch.size} branches`);
+  if (denyUnder !== null) {
+    const under = [...byBranch.entries()].filter(([, c]) => c < denyUnder);
+    if (under.length > 0) throw new Error(`density floor violated: ${under.map(([b, c]) => `${b}=${c}`).join(', ')} < ${denyUnder}`);
+  }
+}
+
 console.log(`\n${passed + failed} checks run: ${passed} passed, ${failed} failed.`);
 
 if (failed > 0) {

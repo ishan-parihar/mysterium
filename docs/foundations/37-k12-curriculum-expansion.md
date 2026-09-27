@@ -80,15 +80,15 @@ legibility (41). These are mechanisms, not ideology — they port cleanly.
 | Mathematics | Cognitive | Mind | puzzle/strategy | `math` ✓ |
 | Computing / CS | Cognitive (+ Willpower: tool-building) | Mind | puzzle, creation | `cs` ✓ |
 | Physics / Chemistry | Cognitive (empirical mode) | Mind | experiment/simulation | `physics` ✓ |
-| Biology / Earth & space | Cognitive + Somatic | Mind/Body | nature/simulation | — |
-| Literacy (L1) | Cognitive (decoding) → Emotional (meaning) | Mind→Spirit | narrative | — |
+| Biology / Earth & space | Cognitive + Somatic | Mind/Body | nature/simulation | `bio` ✓ + `earth` ✓ (Phase 17 d5) |
+| Literacy (L1) | Cognitive (decoding) → Emotional (meaning) | Mind→Spirit | narrative | `language-arts` ✓ |
 | Literature / creative writing | Emotional + Intrapersonal | Spirit | narrative/reflection | — |
-| Arts & music | Emotional + Somatic (+ Spiritual: resonance) | Spirit/Body | creation/performance | — |
-| Second language (L2) | Cognitive + Interpersonal | Mind/Spirit | dialogue | — |
-| History | Moral + Interpersonal (collective meaning) | Spirit | narrative/dilemma | — |
-| Civics & ethics | Moral + Interpersonal | Spirit | dilemma/roleplay | — |
-| Geography / social studies | Interpersonal + Cognitive | Spirit/Mind | strategy/simulation | — |
-| PE / health | Somatic + Willpower | Body | physical/rhythm | — |
+| Arts & music | Emotional + Somatic (+ Spiritual: resonance) | Spirit/Body | creation/performance | `arts` ✓ + `music` ✓ |
+| Second language (L2) | Cognitive + Interpersonal | Mind/Spirit | dialogue | `second-language` ✓ |
+| History | Moral + Interpersonal (collective meaning) | Spirit | narrative/dilemma | `hist` ✓ |
+| Civics & ethics | Moral + Interpersonal | Spirit | dilemma/roleplay | `civics` ✓ |
+| Geography / social studies | Interpersonal + Cognitive | Spirit/Mind | strategy/simulation | `geo` ✓ |
+| PE / health | Somatic + Willpower | Body | physical/rhythm | `health` ✓ |
 | Social-emotional learning | Intrapersonal + Emotional + Interpersonal | Spirit | (home turf — see below) | `integral` partial |
 
 **The SEL inversion.** On every row above, mainstream schooling is the incumbent and
@@ -120,21 +120,37 @@ registry/linter/bridge chain (32 → 34).
 
 | Phase | New domain trees | Notes |
 |---|---|---|
-| **K1 — academic spine** | `math` (extend), `language-arts`, `biology`, `chemistry`, `earth-science` | highest credential demand (41) |
-| **K2 — humanities** | `history`, `civics`, `geography`, `second-language` (generic L2 scaffold) | dilemma-heavy; strong Moral/Interpersonal coupling |
-| **K3 — expressive & embodied** | `arts`, `music`, `health` (PE + nutrition + sleep) | Somatic/Willpower lines finally get curriculum weight |
+| **K1 — academic spine** | `math` (extend) ✓, `language-arts` ✓, `biology` ✓, `chemistry` ✓, `earth-science` ✓ (authored 2026-09-27, Phase 17 d5, under the promoted P-3/P-4 teeth) | highest credential demand (41) — **all shipped** |
+| **K2 — humanities** | `history` ✓, `civics` ✓, `geography` ✓, `second-language` ✓ (generic L2 scaffold) | dilemma-heavy; strong Moral/Interpersonal coupling — **all shipped** |
+| **K3 — expressive & embodied** | `arts` ✓, `music` ✓, `health` ✓ (PE + nutrition + sleep) | Somatic/Willpower lines finally get curriculum weight — **all shipped** |
 
 ### 4.2 Corpus budget (targets, not promises)
 
-| Phase | Target holons | Target items | Cumulative items |
-|---|---|---|---|
-| current | 56 | 1,280 | 1,280 |
-| K1 | +45 (9 branches × ~5) | +2,200 | ~3,500 |
-| K2 | +40 | +1,900 | ~5,400 |
-| K3 | +25 | +1,200 | ~6,600 |
+**Reconciled to the measured registry (2026-09-27, Phase 17 d5):** 16 data files,
+**113 holons** across 15 branches (`earth` authored under the new teeth), **248 assessment
+items** (135 practice problems + 113 misconceptions). The pre-d5 "current 56 holons / 1,280
+items" row was stale when written and is retired here; the branch-density instrument
+(`check-invariants`, report-only + `--deny-under <N>`) is now the honest measure:
 
-Difficulty distributions per branch must reproduce the observed bell curve (0.2→0.9,
-peak ≈ 0.5); branch linting (32) rejects otherwise.
+| Branches | Holons | Assessment items |
+|---|---|---|
+| measured (2026-09-27) | 15 branches, 113 holons | 248 (135 practice + 113 misconceptions) |
+| 35 §5.2 minimum-viable branch | 97 holons/branch | — |
+
+Every branch is currently **below** 35 §5.2's 97-holon minimum — the density check reports
+this honestly rather than asserting a completeness the registry does not have; hardening the
+check to battery-failing is the owner decision named in the plan §8.
+
+**Difficulty distributions (amended 2026-09-27):** the original criterion — "distributions
+must reproduce the observed bell curve (0.2→0.9, peak ≈ 0.5); branch linting rejects
+otherwise" — is **unimplementable as specified**: `CurriculumHolon` carries no difficulty
+field (difficulty lives on PACK items, 40 §1's measurement instruments, not on curriculum
+holons), and the linter (32) has no difficulty check. The enforceable teeth as of Phase 17 d5:
+P-3/P-4 are **error-severity** (every content-bearing holon — concept/module/lesson/unit —
+must carry practice problems, and misconceptions at analyzed-or-deeper targets), so an
+assessment-empty module cannot lint clean. A difficulty field for curriculum holons, if ever
+added, would carry its own linter check; until then this clause records the gap rather than
+pretending at enforcement.
 
 ### 4.3 One optional metadata extension
 

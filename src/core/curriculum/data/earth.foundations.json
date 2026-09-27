@@ -1,0 +1,828 @@
+[
+  {
+    "id": "earth.foundations",
+    "name": "Earth & Space Science",
+    "description": "The planet as one coupled system: rock and motion beneath, ocean and air above, and Earth's place in the solar theatre.",
+    "level": "branch",
+    "parentId": null,
+    "childIds": [
+      "earth.geology",
+      "earth.atmosphere",
+      "earth.oceans",
+      "earth.space"
+    ],
+    "phases": {
+      "observation": {
+        "question": "What must any account of the planet explain?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student names the observable phenomena and the scales involved"
+      },
+      "principle": {
+        "question": "Why do Earth's layers move at all — where does the energy come from?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student states the driving mechanism"
+      },
+      "application": {
+        "question": "Predict what a given coastline will experience when a storm system arrives.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons from mechanism to a concrete prediction"
+      },
+      "integration": {
+        "question": "How do crust, ocean, and atmosphere exchange energy and matter as one system?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links two earth systems into one account"
+      },
+      "creation": {
+        "question": "Design an instrument plan to answer a stated question about a local landscape.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student proposes a testable question with the right instrument"
+      }
+    },
+    "isomorphisms": [],
+    "prerequisites": [],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "absent",
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Earth science reads one planet across four coupled reservoirs — solid crust, ocean, atmosphere, and the space environment — each moving on its own timescale from days (weather) to eons (plate motion).",
+      "examples": [
+        "A volcanic island arc feeding nutrients to the ocean above it",
+        "A hurricane moving heat from tropic to pole"
+      ],
+      "nonExamples": [
+        "Treating any one reservoir in isolation",
+        "Describing rock strata without time"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": []
+    },
+    "misconceptions": [],
+    "depthRubric": {
+      "conceptId": "earth.foundations",
+      "levels": {}
+    },
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
+  },
+  {
+    "id": "earth.geology",
+    "name": "Rocks & Plate Tectonics",
+    "description": "Heat escaping the interior drives plates; collision builds mountains, divergence opens oceans, and the rock cycle recycles the crust.",
+    "level": "concept",
+    "parentId": "earth.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What patterns appear when you look at a map of earthquakes and volcanoes?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student names the observable phenomena and the scales involved"
+      },
+      "principle": {
+        "question": "Why does the crust move at all?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student states the driving mechanism"
+      },
+      "application": {
+        "question": "Predict what forms at a given plate boundary from its motion type.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons from mechanism to a concrete prediction"
+      },
+      "integration": {
+        "question": "How do the rock cycle and plate motion turn one rock into another over deep time?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links two earth systems into one account"
+      },
+      "creation": {
+        "question": "Propose how to read a road-cut or cliff face as a timeline, stating the evidence for each layer.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student proposes a testable question with the right instrument"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "convection cells and heat flow",
+        "targetConceptId": "physics.foundations",
+        "targetDomain": "Physics",
+        "mappingDescription": "Mantle convection and atmospheric convection share one mechanism: heated fluid rises, cools, sinks — plate motion is the crust riding the top of the loop"
+      }
+    ],
+    "prerequisites": [
+      "earth.foundations"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "The planet's interior is hot and that heat must escape; convection in the mantle is the escape route, and the rigid crust breaks into plates that ride the convection. Every mountain range, ocean basin, and earthquake belt is the surface expression of that one rule.",
+      "examples": [
+        "The Himalayas rising from continental collision",
+        "Iceland straddling a divergent boundary"
+      ],
+      "nonExamples": [
+        "Calling earthquakes random rather than boundary-bound",
+        "Explaining mountains by \"the ground just rose\""
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "earth.geology.p1",
+          "problemText": "Given a plate-boundary map, classify each boundary (divergent / convergent / transform) and predict the landform each produces: rift valley, mountain range, or fault line.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "earth.geology.p2",
+          "problemText": "Explain why oceanic crust subducts but continental crust does not, and trace one full rock-cycle loop from igneous birth at a ridge back to sediment at a trench.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "earth.geology.mc1",
+        "statement": "The mantle is liquid",
+        "whyItFeelsRight": "Volcanoes erupt molten rock",
+        "structuralReason": "The mantle is solid that creeps over millions of years; only isolated pockets melt. The liquid-mantle picture predicts a wrong global structure and blocks understanding of convection.",
+        "diagnosticTaskId": "earth.geology.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "earth.geology",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define rocks & plate tectonics terms",
+          "canDo": [
+            "Recall, locate, name"
+          ],
+          "cannotDo": [
+            "Explain mechanisms"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain plate motion as mantle convection",
+          "canDo": [
+            "Explain the driving mechanism"
+          ],
+          "cannotDo": [
+            "Predict new cases"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict boundary landforms from motion type",
+          "canDo": [
+            "Reason from mechanism to outcome"
+          ],
+          "cannotDo": [
+            "Analyze coupled systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace a rock through the full cycle across deep time",
+          "canDo": [
+            "Trace effects to causes across scales"
+          ],
+          "cannotDo": [
+            "Design interventions"
+          ],
+          "appropriateTasks": [
+            "analogy_mapping"
+          ],
+          "threshold": 0.75
+        },
+        "evaluated": {
+          "evidence": "Can judge rival accounts of a landscape using boundary evidence",
+          "canDo": [
+            "Judge competing explanations"
+          ],
+          "cannotDo": [
+            "Original research synthesis"
+          ],
+          "appropriateTasks": [
+            "research_question"
+          ],
+          "threshold": 0.85
+        }
+      }
+    },
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
+  },
+  {
+    "id": "earth.atmosphere",
+    "name": "Weather & Climate",
+    "description": "The atmosphere moves heat and water; weather is its day-scale behaviour, climate its statistics — and their distinction is where most public confusion lives.",
+    "level": "concept",
+    "parentId": "earth.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What does a week of sky observations tell you about air masses?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student names the observable phenomena and the scales involved"
+      },
+      "principle": {
+        "question": "Why does air move at all — what sets winds in motion?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student states the driving mechanism"
+      },
+      "application": {
+        "question": "Read a weather map and predict the next 48 hours for a named city.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons from mechanism to a concrete prediction"
+      },
+      "integration": {
+        "question": "How do ocean surface temperatures steer the atmosphere above them?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links two earth systems into one account"
+      },
+      "creation": {
+        "question": "Design a data plan to test whether a local trend is weather-noise or climate-shift.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student proposes a testable question with the right instrument"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "driven flow with feedback",
+        "targetConceptId": "chem.equilibrium",
+        "targetDomain": "Chemistry",
+        "mappingDescription": "Climate states are equilibria of energy flows; a forcing shifts the equilibrium and feedbacks amplify or damp the response, exactly like Le Chatelier applied to heat budget"
+      }
+    ],
+    "prerequisites": [
+      "earth.foundations"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Sunlight heats the tropics more than the poles, and the atmosphere is the machine that moves the surplus. Pressure differences set winds; water's phase changes load and unload the heat being shipped. Weather is the machine's transient behaviour; climate is its statistics over decades.",
+      "examples": [
+        "A sea breeze reversing daily with the land’s faster heating",
+        "A storm track bending around a blocking high"
+      ],
+      "nonExamples": [
+        "Calling any cold snap evidence against a warming trend",
+        "Reading weather and climate as synonyms"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "earth.atmosphere.p1",
+          "problemText": "From a surface weather map, locate one cold front and one high-pressure system, and predict temperature, wind shift, and precipitation for a city in each system’s path over 48 hours.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "earth.atmosphere.p2",
+          "problemText": "Explain why one cold week cannot confirm or refute a climate trend, using the weather-vs-clarity of statistics; then state what evidence COULD confirm a shift and over what period.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "earth.atmosphere.mc1",
+        "statement": "Weather disproves climate change",
+        "whyItFeelsRight": "Cold snaps feel like counter-evidence",
+        "structuralReason": "Climate is the distribution’s parameters, not any single draw; a cold week is one sample from a distribution whose mean can still rise. Confusing sample with distribution blocks all statistical reasoning about trends.",
+        "diagnosticTaskId": "earth.atmosphere.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "earth.atmosphere",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define weather & climate terms",
+          "canDo": [
+            "Recall, locate, name"
+          ],
+          "cannotDo": [
+            "Explain mechanisms"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain wind as heat-transport",
+          "canDo": [
+            "Explain the driving mechanism"
+          ],
+          "cannotDo": [
+            "Predict new cases"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can read a weather map into a 48-hour forecast",
+          "canDo": [
+            "Reason from mechanism to outcome"
+          ],
+          "cannotDo": [
+            "Analyze coupled systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can separate weather noise from climate signal",
+          "canDo": [
+            "Trace effects to causes across scales"
+          ],
+          "cannotDo": [
+            "Design interventions"
+          ],
+          "appropriateTasks": [
+            "analogy_mapping"
+          ],
+          "threshold": 0.75
+        },
+        "evaluated": {
+          "evidence": "Can evaluate competing trend claims from data design",
+          "canDo": [
+            "Judge competing explanations"
+          ],
+          "cannotDo": [
+            "Original research synthesis"
+          ],
+          "appropriateTasks": [
+            "research_question"
+          ],
+          "threshold": 0.85
+        }
+      }
+    },
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
+  },
+  {
+    "id": "earth.oceans",
+    "name": "The Hydrosphere",
+    "description": "The ocean is the planet’s heat battery and carbon sponge; its currents set climate’s slow moods and its chemistry records the atmosphere’s debts.",
+    "level": "concept",
+    "parentId": "earth.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What does the ocean’s temperature map look like, and where is it warmest?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student names the observable phenomena and the scales involved"
+      },
+      "principle": {
+        "question": "Why doesn’t the equatorial ocean keep boiling hotter every day?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student states the driving mechanism"
+      },
+      "application": {
+        "question": "Predict how a changed current alters the climate of the coast it bathes.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons from mechanism to a concrete prediction"
+      },
+      "integration": {
+        "question": "How do ocean and atmosphere trade heat, water, and carbon as one coupled system?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links two earth systems into one account"
+      },
+      "creation": {
+        "question": "Design a monitoring proposal for a fishery whose catch is shifting poleward.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student proposes a testable question with the right instrument"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "reservoir and residence time",
+        "targetConceptId": "bio.ecology",
+        "targetDomain": "Biology",
+        "mappingDescription": "The ocean is the biosphere’s great reservoir: heat, carbon, and nutrients each cycle through it with measurable residence times that set the pace of everything downstream"
+      }
+    ],
+    "prerequisites": [
+      "earth.foundations"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "Water holds heat far better than air, so the ocean is where the climate system stores its energy; currents are the distribution network. The same water dissolves the atmosphere’s carbon dioxide, making the ocean both buffer and ledger for the air above it.",
+      "examples": [
+        "The Gulf Stream keeping Northern Europe mild",
+        "A coral bleaching event following a temperature anomaly"
+      ],
+      "nonExamples": [
+        "Treating sea level as one flat surface",
+        "Explaining tides as \"the moon pulls the water up\" with no rotation term"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "earth.oceans.p1",
+          "problemText": "Explain why Western Europe is milder than the same latitude in Canada, naming the current responsible and what would change if it weakened.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "earth.oceans.p2",
+          "problemText": "Trace one carbon atom from atmosphere to deep-ocean storage, naming each reservoir it passes through and the timescale of each step; then state which step is the bottleneck.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "earth.oceans.mc1",
+        "statement": "Ocean acidification means the ocean will become acid",
+        "whyItFeelsRight": "The word acidification suggests reaching acid",
+        "structuralReason": "Acidification is a pH shift toward the acid side, not arrival at acid; seawater is and remains alkaline. The wrong picture predicts total dissolution and misses the actual harm to shell-building organisms.",
+        "diagnosticTaskId": "earth.oceans.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "earth.oceans",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define the hydrosphere terms",
+          "canDo": [
+            "Recall, locate, name"
+          ],
+          "cannotDo": [
+            "Explain mechanisms"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain the ocean as heat store",
+          "canDo": [
+            "Explain the driving mechanism"
+          ],
+          "cannotDo": [
+            "Predict new cases"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can link a current to a coast’s climate",
+          "canDo": [
+            "Reason from mechanism to outcome"
+          ],
+          "cannotDo": [
+            "Analyze coupled systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can trace coupled ocean–atmosphere budgets",
+          "canDo": [
+            "Trace effects to causes across scales"
+          ],
+          "cannotDo": [
+            "Design interventions"
+          ],
+          "appropriateTasks": [
+            "analogy_mapping"
+          ],
+          "threshold": 0.75
+        },
+        "evaluated": {
+          "evidence": "Can design a monitoring plan around the right timescale",
+          "canDo": [
+            "Judge competing explanations"
+          ],
+          "cannotDo": [
+            "Original research synthesis"
+          ],
+          "appropriateTasks": [
+            "research_question"
+          ],
+          "threshold": 0.85
+        }
+      }
+    },
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
+  },
+  {
+    "id": "earth.space",
+    "name": "Earth in Space",
+    "description": "Earth’s properties — seasons, tides, day and year — are consequences of its motion and orientation in the solar system; the planet is only knowable in its orbit.",
+    "level": "concept",
+    "parentId": "earth.foundations",
+    "childIds": [],
+    "phases": {
+      "observation": {
+        "question": "What changes between summer and winter, and what does NOT?",
+        "assessmentType": "factual_recall",
+        "completionEvidence": "Student names the observable phenomena and the scales involved"
+      },
+      "principle": {
+        "question": "Why do seasons occur — what exactly is the causal chain from orbit to temperature?",
+        "assessmentType": "concept_explanation",
+        "completionEvidence": "Student states the driving mechanism"
+      },
+      "application": {
+        "question": "Predict the tide and moon phase for a stated date and place given the orbital geometry.",
+        "assessmentType": "application_problem",
+        "completionEvidence": "Student reasons from mechanism to a concrete prediction"
+      },
+      "integration": {
+        "question": "How do Earth’s tilt, orbit, and the moon’s gravity jointly produce the year’s rhythm?",
+        "assessmentType": "analogy_mapping",
+        "completionEvidence": "Student links two earth systems into one account"
+      },
+      "creation": {
+        "question": "Propose an observation plan that would distinguish Earth-centered from sun-centered accounts using only the naked eye.",
+        "assessmentType": "research_question",
+        "completionEvidence": "Student proposes a testable question with the right instrument"
+      }
+    },
+    "isomorphisms": [
+      {
+        "pattern": "frames and apparent motion",
+        "targetConceptId": "physics.foundations",
+        "targetDomain": "Physics",
+        "mappingDescription": "Retrograde loops of planets and the sun’s apparent daily circuit are frame effects: choosing the reference frame decides what looks simple — the same lesson as relative velocity"
+      }
+    ],
+    "prerequisites": [
+      "earth.foundations"
+    ],
+    "devMapping": {
+      "primaryLine": "Cognitive",
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "stageRange": {
+        "min": "Amber",
+        "max": "Green"
+      }
+    },
+    "depthMeta": {
+      "requiredPrerequisiteDepth": "memorized",
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
+    },
+    "forgettingParams": {
+      "initialHalfLifeMs": 129600000,
+      "halfLifeMultiplier": 2.5,
+      "maxHalfLifeMs": 31536000000
+    },
+    "content": {
+      "explanation": "The seasons come from axial tilt changing how steeply sunlight strikes each hemisphere, never from distance to the sun. Tides come from the moon’s gravity gradient acting on a rotating Earth. Both facts are basic literacy for reading any sky, any coast, any calendar.",
+      "examples": [
+        "The sun’s path through the sky shifting with the seasons",
+        "Two high tides a day, not one"
+      ],
+      "nonExamples": [
+        "Explaining seasons by Earth’s distance from the sun",
+        "Believing the moon has a permanently dark side"
+      ],
+      "analogies": [],
+      "visuals": [],
+      "practiceProblems": [
+        {
+          "id": "earth.space.p1",
+          "problemText": "Given Earth’s 23.5° tilt, explain why the southern hemisphere’s summer occurs during the northern winter; then refute the \"closer to the sun\" account with the actual orbit geometry.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "earth.space.p2",
+          "problemText": "Explain why most coastlines see two high tides a day: derive the two tidal bulges from the moon’s gravity gradient across Earth’s diameter, and state what the rotation period contributes.",
+          "targetDepth": "analyzed"
+        }
+      ]
+    },
+    "misconceptions": [
+      {
+        "id": "earth.space.mc1",
+        "statement": "Seasons come from Earth’s distance to the sun",
+        "whyItFeelsRight": "Closer feels warmer in everyday life",
+        "structuralReason": "Earth is actually closest to the sun in early January, the northern winter; the causal variable is the angle of incident sunlight set by axial tilt. The distance picture predicts the wrong season for half the planet at once.",
+        "diagnosticTaskId": "earth.space.mc1.diag"
+      }
+    ],
+    "depthRubric": {
+      "conceptId": "earth.space",
+      "levels": {
+        "memorized": {
+          "evidence": "Can define earth in space terms",
+          "canDo": [
+            "Recall, locate, name"
+          ],
+          "cannotDo": [
+            "Explain mechanisms"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
+          "threshold": 0.3
+        },
+        "comprehended": {
+          "evidence": "Can explain seasons via axial tilt",
+          "canDo": [
+            "Explain the driving mechanism"
+          ],
+          "cannotDo": [
+            "Predict new cases"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
+          "threshold": 0.5
+        },
+        "applied": {
+          "evidence": "Can predict tide and phase from orbital geometry",
+          "canDo": [
+            "Reason from mechanism to outcome"
+          ],
+          "cannotDo": [
+            "Analyze coupled systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
+          "threshold": 0.65
+        },
+        "analyzed": {
+          "evidence": "Can derive apparent motion from frame choice",
+          "canDo": [
+            "Trace effects to causes across scales"
+          ],
+          "cannotDo": [
+            "Design interventions"
+          ],
+          "appropriateTasks": [
+            "analogy_mapping"
+          ],
+          "threshold": 0.75
+        },
+        "evaluated": {
+          "evidence": "Can design observations that discriminate rival cosmologies",
+          "canDo": [
+            "Judge competing explanations"
+          ],
+          "cannotDo": [
+            "Original research synthesis"
+          ],
+          "appropriateTasks": [
+            "research_question"
+          ],
+          "threshold": 0.85
+        }
+      }
+    },
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
+  }
+]

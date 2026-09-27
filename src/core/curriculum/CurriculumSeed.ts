@@ -41,6 +41,8 @@ import musicFoundations from './data/music.foundations.json';
 import secondLanguageFoundations from './data/second-language.foundations.json';
 import civicsFoundations from './data/civics.foundations.json';
 import healthFoundations from './data/health.foundations.json';
+// Phase 17 d5 (37 §4.1 K1's one missing branch): earth & space science.
+import earthFoundations from './data/earth.foundations.json';
 
 /** All seed data modules. Each entry is an array of CurriculumHolon objects. */
 const SEED_MODULES: readonly { name: string; data: CurriculumHolon[] }[] = [
@@ -60,6 +62,7 @@ const SEED_MODULES: readonly { name: string; data: CurriculumHolon[] }[] = [
   { name: 'second-language.foundations', data: secondLanguageFoundations as unknown as CurriculumHolon[] },
   { name: 'civics.foundations', data: civicsFoundations as unknown as CurriculumHolon[] },
   { name: 'health.foundations', data: healthFoundations as unknown as CurriculumHolon[] },
+  { name: 'earth.foundations', data: earthFoundations as unknown as CurriculumHolon[] },
 ];
 
 /**

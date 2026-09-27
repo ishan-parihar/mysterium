@@ -347,7 +347,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "arts-elements.mc1",
+        "statement": "Art is subjective, so elements don't matter",
+        "whyItFeelsRight": "People disagree about art",
+        "structuralReason": "Elements are the mechanics of directed attention — line, value, and contrast produce predictable perceptual effects before any judgment. Subjective taste operates ON the elements' effects; it does not dissolve them.",
+        "diagnosticTaskId": "arts-elements.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "ImmersiveRPG",
       "Embodied"
@@ -527,7 +535,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "arts-principles.mc1",
+        "statement": "Composition rules tell you where to put things",
+        "whyItFeelsRight": "Rule-of-thirds posters",
+        "structuralReason": "Principles are relational forces (contrast creates emphasis, repetition creates rhythm), not grid coordinates. Treating them as placements yields technically-arranged but inert work; they govern tension between elements.",
+        "diagnosticTaskId": "arts-principles.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "ImmersiveRPG",
       "Embodied"
@@ -707,7 +723,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "arts-media.mc1",
+        "statement": "Digital tools make all media equivalent",
+        "whyItFeelsRight": "Software mimics every texture",
+        "structuralReason": "Every medium has affordances and resistances — watercolor bleeds, clay has mass, vectors are frictionlessly editable. The mimicry is a translation that loses exactly the resistance the medium contributed.",
+        "diagnosticTaskId": "arts-media.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "ImmersiveRPG",
       "Embodied"
@@ -888,7 +912,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "arts-critique.mc1",
+        "statement": "Criticism is just opinion with vocabulary",
+        "whyItFeelsRight": "Reviews sound like preferences",
+        "structuralReason": "Structured critique derives claims from observed formal choices and their perceptual effects — it is falsifiable against the work in a way preference is not. Naming the mechanism is what separates critique from reaction.",
+        "diagnosticTaskId": "arts-critique.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "ImmersiveRPG",
       "Embodied"

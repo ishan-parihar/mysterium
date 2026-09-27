@@ -649,9 +649,28 @@
         "Sorting algorithm comparison table",
         "Recursion tree diagrams"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "cs.program.alg.sorting.p1",
+          "problemText": "Hand-trace quicksort and mergesort on the same 8-element array; count comparisons and swaps for each, then explain why their constant factors differ even though both are O(n log n) on average.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "cs.program.alg.sorting.p2",
+          "problemText": "A colleague claims a comparison-based sort that beats O(n log n) in the worst case. Refute or confirm using the decision-tree argument.",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "cs-program-alg-sorting.mc1",
+        "statement": "Sorting is solved once you know one algorithm",
+        "whyItFeelsRight": "Curricula teach one sort and move on",
+        "structuralReason": "Each sort is a point in a trade-off space (time, space, stability, constant factors); 'solved' thinking cannot answer which sort fits a memory-constrained embedded system versus a nearly-sorted log file.",
+        "diagnosticTaskId": "cs-program-alg-sorting.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "cs.program.alg.sorting",
       "levels": {
@@ -799,7 +818,7 @@
       "maxHalfLifeMs": 25920000000
     },
     "content": {
-      "explanation": "Quicksort selects a pivot element, partitions the array around it (elements less than pivot go left, greater go right), then recursively sorts the sub-arrays. Average case is O(n log n) with good pivot selection; worst case is O(n\u00b2) with poor pivots.",
+      "explanation": "Quicksort selects a pivot element, partitions the array around it (elements less than pivot go left, greater go right), then recursively sorts the sub-arrays. Average case is O(n log n) with good pivot selection; worst case is O(n²) with poor pivots.",
       "examples": [
         "Hoare partition scheme",
         "Lomuto partition scheme",
@@ -808,7 +827,7 @@
       ],
       "nonExamples": [
         "Merge sort (uses extra space, always O(n log n))",
-        "Insertion sort (O(n\u00b2), not divide-and-conquer)"
+        "Insertion sort (O(n²), not divide-and-conquer)"
       ],
       "analogies": [
         "Like a tournament: pick a referee (pivot), split teams by who they can beat, then recursively sort each half"
@@ -817,9 +836,28 @@
         "Partition step animation",
         "Recursion tree with pivot choices"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "cs.program.alg.sorting.quicksort.p1",
+          "problemText": "For a sorted, a reversed, and a random 8-element array, choose pivot strategies (first / middle / median-of-three), predict the recursion depth of each, then verify by hand-tracing.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "cs.program.alg.sorting.quicksort.p2",
+          "problemText": "Explain why quicksort degrades to O(n^2) on adversarial pivot choices and what expectation a random pivot restores; name one real-world input that produces the adversarial case deterministically.",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "cs-program-alg-sorting-quicksort.mc1",
+        "statement": "Quicksort is always fastest",
+        "whyItFeelsRight": "It usually wins benchmarks",
+        "structuralReason": "Quicksort's average-case dominance rests on random-ish pivots and cache locality; adversarial or already-sorted inputs with naive pivots degrade it to O(n²). 'Always fastest' hides when mergesort or heapsort is the right call.",
+        "diagnosticTaskId": "cs-program-alg-sorting-quicksort.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "cs.program.alg.sorting.quicksort",
       "levels": {
@@ -1010,9 +1048,28 @@
         "Merge step animation",
         "Space usage comparison with quicksort"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "cs.program.alg.sorting.mergesort.p1",
+          "problemText": "Given the two sorted halves [2,5,9,12] and [1,4,10], perform the merge step on paper, writing the exact comparison sequence.",
+          "targetDepth": "comprehended"
+        },
+        {
+          "id": "cs.program.alg.sorting.mergesort.p2",
+          "problemText": "Argue from the recursion tree why mergesort is O(n log n) in ALL cases while quicksort is not, and state what mergesort pays for that guarantee in space.",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "cs-program-alg-sorting-mergesort.mc1",
+        "statement": "Mergesort is wasteful because it copies",
+        "whyItFeelsRight": "In-place partitioning looks leaner",
+        "structuralReason": "The copy is the price of the O(n log n) guarantee and stability; calling it waste confuses average-case speed with worst-case contracts. Merge-sorting linked lists needs no extra space at all.",
+        "diagnosticTaskId": "cs-program-alg-sorting-mergesort.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "cs.program.alg.sorting.mergesort",
       "levels": {
@@ -1192,9 +1249,28 @@
         "Recursion tree for mergesort",
         "Partition diagram for quicksort"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "cs.program.alg.sorting.divide-conquer.p1",
+          "problemText": "Take the maximum-subarray-sum problem: state its divide / conquer / combine steps explicitly and derive the recurrence for the running time.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "cs.program.alg.sorting.divide-conquer.p2",
+          "problemText": "Identify a problem where divide-and-conquer does NOT help asymptotically, and explain exactly which property of the combine step breaks it.",
+          "targetDepth": "evaluated"
+        }
+      ]
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "cs-program-alg-sorting-divide-conquer.mc1",
+        "statement": "Divide-and-conquer means splitting in half",
+        "whyItFeelsRight": "Every textbook example halves the input",
+        "structuralReason": "Halving is one instantiation; the pattern is 'divide into independent subproblems, solve, combine' — quicksort's partition is unequal, multiway splits exist, and the combine step's cost, not the split shape, decides the recurrence.",
+        "diagnosticTaskId": "cs-program-alg-sorting-divide-conquer.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "cs.program.alg.sorting.divide-conquer",
       "levels": {
@@ -1356,9 +1432,28 @@
         "Decision tree for sorting 3 elements",
         "log2(n!) growth curve"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "cs.program.alg.sorting.comparison-basics.p1",
+          "problemText": "Model insertion sort on n=3 distinct keys as a decision tree: draw the tree, count its leaves, and compare the leaf count with 3! and with the ⌈log2 3!⌉ depth bound.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "cs.program.alg.sorting.comparison-basics.p2",
+          "problemText": "Prove the Ω(n log n) lower bound for comparison sorts from the decision-tree leaf count, and state precisely which step of the argument fails for non-comparison sorts (give counting sort as the witness).",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "cs-program-alg-sorting-comparison-basics.mc1",
+        "statement": "A cleverer programmer can beat O(n log n)",
+        "whyItFeelsRight": "Algorithms keep improving",
+        "structuralReason": "The lower bound is information-theoretic, not skill-limited: n! orderings require log2(n!) ≈ n log n comparisons to distinguish. Escaping it means leaving the comparison model (counting/radix sort), not out-clevering it.",
+        "diagnosticTaskId": "cs-program-alg-sorting-comparison-basics.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "cs.program.alg.sorting.comparison-basics",
       "levels": {

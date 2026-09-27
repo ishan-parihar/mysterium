@@ -5,7 +5,12 @@
     "description": "The foundational concepts of matter and its transformations: atoms and bonding, reactions and energy, equilibrium and rates, and the carbon chemistry of life.",
     "level": "branch",
     "parentId": null,
-    "childIds": ["chem.atoms", "chem.reactions", "chem.equilibrium", "chem.organic"],
+    "childIds": [
+      "chem.atoms",
+      "chem.reactions",
+      "chem.equilibrium",
+      "chem.organic"
+    ],
     "phases": {
       "observation": {
         "question": "What must any explanation of matter account for?",
@@ -45,12 +50,25 @@
     "devMapping": {
       "primaryLine": "Cognitive",
       "secondaryLines": [],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "absent",
-      "targetDepthRange": { "min": "memorized", "max": "transformed" },
-      "depthProgression": ["memorized", "comprehended", "applied", "analyzed", "evaluated", "transformed"]
+      "targetDepthRange": {
+        "min": "memorized",
+        "max": "transformed"
+      },
+      "depthProgression": [
+        "memorized",
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated",
+        "transformed"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 86400000,
@@ -97,49 +115,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can name bond types and the four organizing ideas",
-          "canDo": ["Recall terms and examples"],
-          "cannotDo": ["Predict interactions"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall terms and examples"
+          ],
+          "cannotDo": [
+            "Predict interactions"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain why electrons govern chemistry",
-          "canDo": ["Explain bonding in energy terms"],
-          "cannotDo": ["Predict reactions from first principles"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain bonding in energy terms"
+          ],
+          "cannotDo": [
+            "Predict reactions from first principles"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.45
         },
         "applied": {
           "evidence": "Can predict interaction outcomes from composition",
-          "canDo": ["Reason solubility, reactivity cases"],
-          "cannotDo": ["Analyze equilibrium shifts"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Reason solubility, reactivity cases"
+          ],
+          "cannotDo": [
+            "Analyze equilibrium shifts"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.6
         },
         "analyzed": {
           "evidence": "Can chain thermodynamics, kinetics, and equilibrium on one reaction",
-          "canDo": ["Produce a full reaction account"],
-          "cannotDo": ["Evaluate competing mechanisms"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Produce a full reaction account"
+          ],
+          "cannotDo": [
+            "Evaluate competing mechanisms"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.75
         },
         "evaluated": {
           "evidence": "Can adjudicate mechanism claims with evidence",
-          "canDo": ["Weigh proposed pathways against data"],
+          "canDo": [
+            "Weigh proposed pathways against data"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Reads matter as interacting electron systems by default",
-          "canDo": ["Explain unfamiliar materials chemistry fluently"],
+          "canDo": [
+            "Explain unfamiliar materials chemistry fluently"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "chem.atoms",
@@ -183,16 +238,29 @@
         "mappingDescription": "Electron shells fill by discrete rules like queue/stack protocols — the periodic table is a fill-order visualization"
       }
     ],
-    "prerequisites": ["chem.foundations"],
+    "prerequisites": [
+      "chem.foundations"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
       "secondaryLines": [],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -239,49 +307,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can define bond types and read valence off the table",
-          "canDo": ["Recall, locate, name"],
-          "cannotDo": ["Predict bonds"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall, locate, name"
+          ],
+          "cannotDo": [
+            "Predict bonds"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain bonding via energy minimization",
-          "canDo": ["Explain why nobles are inert"],
-          "cannotDo": ["Predict from electronegativity"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain why nobles are inert"
+          ],
+          "cannotDo": [
+            "Predict from electronegativity"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can predict bond character and properties",
-          "canDo": ["Reason pairs → bonds → properties"],
-          "cannotDo": ["Analyze multi-property systems"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Reason pairs → bonds → properties"
+          ],
+          "cannotDo": [
+            "Analyze multi-property systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can trace property differences to bonding differences (allotropes, polymorphs)",
-          "canDo": ["Analyze diamond/graphite class cases"],
-          "cannotDo": ["Evaluate models of bonding"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Analyze diamond/graphite class cases"
+          ],
+          "cannotDo": [
+            "Evaluate models of bonding"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can weigh bonding models' domains (ionic/covalent as poles, not bins)",
-          "canDo": ["Critique binary bond classification"],
+          "canDo": [
+            "Critique binary bond classification"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Outer-shell reading is automatic — materials are seen as bonding diagrams",
-          "canDo": ["Predict unfamiliar material behavior from composition"],
+          "canDo": [
+            "Predict unfamiliar material behavior from composition"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "chem.reactions",
@@ -325,16 +430,30 @@
         "mappingDescription": "Developmental frame-shifts have activation costs too — stable states persist until a threshold of energy (catalyst) is crossed"
       }
     ],
-    "prerequisites": ["chem.foundations", "chem.atoms"],
+    "prerequisites": [
+      "chem.foundations",
+      "chem.atoms"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
       "secondaryLines": [],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -381,49 +500,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can define exo/endothermic, catalyst, activation energy",
-          "canDo": ["Recall definitions"],
-          "cannotDo": ["Account for energy in reactions"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall definitions"
+          ],
+          "cannotDo": [
+            "Account for energy in reactions"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain bond-energy accounting and barriers",
-          "canDo": ["Explain spark-needing favorable reactions"],
-          "cannotDo": ["Balance and compute"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain spark-needing favorable reactions"
+          ],
+          "cannotDo": [
+            "Balance and compute"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can balance equations and classify energy changes",
-          "canDo": ["Solve stoichiometry with energy signs"],
-          "cannotDo": ["Analyze multi-step mechanisms"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Solve stoichiometry with energy signs"
+          ],
+          "cannotDo": [
+            "Analyze multi-step mechanisms"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can decompose reactions into thermodynamic and kinetic parts",
-          "canDo": ["Explain metastability, catalysis cases"],
-          "cannotDo": ["Evaluate mechanism evidence"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Explain metastability, catalysis cases"
+          ],
+          "cannotDo": [
+            "Evaluate mechanism evidence"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can adjudicate competing pathway claims",
-          "canDo": ["Weigh kinetic data against proposed mechanisms"],
+          "canDo": [
+            "Weigh kinetic data against proposed mechanisms"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Dual-lens (thermo + kinetic) reading is habitual for all change",
-          "canDo": ["Apply barrier thinking to unfamiliar systems"],
+          "canDo": [
+            "Apply barrier thinking to unfamiliar systems"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "chem.equilibrium",
@@ -467,16 +623,32 @@
         "mappingDescription": "Physiological setpoints are chemical equilibria actively defended — Le Châtelier at body scale"
       }
     ],
-    "prerequisites": ["chem.foundations", "chem.reactions"],
+    "prerequisites": [
+      "chem.foundations",
+      "chem.reactions"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Somatic"],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -523,49 +695,86 @@
       "levels": {
         "memorized": {
           "evidence": "Can define K, dynamic equilibrium, Le Châtelier",
-          "canDo": ["Recall the vocabulary"],
-          "cannotDo": ["Predict shifts"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall the vocabulary"
+          ],
+          "cannotDo": [
+            "Predict shifts"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain dynamic balance and stress-response logic",
-          "canDo": ["Narrate why shifts occur"],
-          "cannotDo": ["Quantify yields"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Narrate why shifts occur"
+          ],
+          "cannotDo": [
+            "Quantify yields"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can predict and justify shift outcomes",
-          "canDo": ["Solve Le Châtelier and K problems"],
-          "cannotDo": ["Analyze coupled equilibria"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Solve Le Châtelier and K problems"
+          ],
+          "cannotDo": [
+            "Analyze coupled equilibria"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can trace buffer and coupled-equilibrium systems",
-          "canDo": ["Analyze blood/ocean chemistry cases"],
-          "cannotDo": ["Evaluate industrial trade-offs rigorously"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Analyze blood/ocean chemistry cases"
+          ],
+          "cannotDo": [
+            "Evaluate industrial trade-offs rigorously"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can adjudicate yield-vs-cost industrial decisions",
-          "canDo": ["Weigh thermodynamic, kinetic, economic factors"],
+          "canDo": [
+            "Weigh thermodynamic, kinetic, economic factors"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Equilibrium thinking generalizes — sees dynamic standoffs in economics, ecology, psychology",
-          "canDo": ["Apply settled-state reasoning beyond chemistry"],
+          "canDo": [
+            "Apply settled-state reasoning beyond chemistry"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Strategic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Strategic"
+    ]
   },
   {
     "id": "chem.organic",
@@ -609,16 +818,32 @@
         "mappingDescription": "Macromolecules are strings: monomers as characters, polymers as programs — biology's data structures"
       }
     ],
-    "prerequisites": ["chem.foundations", "chem.atoms"],
+    "prerequisites": [
+      "chem.foundations",
+      "chem.atoms"
+    ],
     "devMapping": {
       "primaryLine": "Cognitive",
-      "secondaryLines": ["Somatic"],
-      "stageRange": { "min": "Orange", "max": "Green" }
+      "secondaryLines": [
+        "Somatic"
+      ],
+      "stageRange": {
+        "min": "Orange",
+        "max": "Green"
+      }
     },
     "depthMeta": {
       "requiredPrerequisiteDepth": "memorized",
-      "targetDepthRange": { "min": "comprehended", "max": "evaluated" },
-      "depthProgression": ["comprehended", "applied", "analyzed", "evaluated"]
+      "targetDepthRange": {
+        "min": "comprehended",
+        "max": "evaluated"
+      },
+      "depthProgression": [
+        "comprehended",
+        "applied",
+        "analyzed",
+        "evaluated"
+      ]
     },
     "forgettingParams": {
       "initialHalfLifeMs": 129600000,
@@ -665,48 +890,85 @@
       "levels": {
         "memorized": {
           "evidence": "Can name the four families and their monomers",
-          "canDo": ["Recall the chart"],
-          "cannotDo": ["Explain carbon's uniqueness"],
-          "appropriateTasks": ["factual_recall"],
+          "canDo": [
+            "Recall the chart"
+          ],
+          "cannotDo": [
+            "Explain carbon's uniqueness"
+          ],
+          "appropriateTasks": [
+            "factual_recall"
+          ],
           "threshold": 0.3
         },
         "comprehended": {
           "evidence": "Can explain tetravalence and group-based reactivity",
-          "canDo": ["Explain structure→function logic"],
-          "cannotDo": ["Predict from groups"],
-          "appropriateTasks": ["concept_explanation"],
+          "canDo": [
+            "Explain structure→function logic"
+          ],
+          "cannotDo": [
+            "Predict from groups"
+          ],
+          "appropriateTasks": [
+            "concept_explanation"
+          ],
           "threshold": 0.5
         },
         "applied": {
           "evidence": "Can predict properties from functional groups",
-          "canDo": ["Reason solubility, linkage cases"],
-          "cannotDo": ["Analyze folding/metabolism systems"],
-          "appropriateTasks": ["application_problem"],
+          "canDo": [
+            "Reason solubility, linkage cases"
+          ],
+          "cannotDo": [
+            "Analyze folding/metabolism systems"
+          ],
+          "appropriateTasks": [
+            "application_problem"
+          ],
           "threshold": 0.65
         },
         "analyzed": {
           "evidence": "Can decompose metabolism/synthesis into hydrolysis/dehydration economics",
-          "canDo": ["Analyze digestion, polymerization cases"],
-          "cannotDo": ["Evaluate drug-design claims"],
-          "appropriateTasks": ["case_study_analysis"],
+          "canDo": [
+            "Analyze digestion, polymerization cases"
+          ],
+          "cannotDo": [
+            "Evaluate drug-design claims"
+          ],
+          "appropriateTasks": [
+            "case_study_analysis"
+          ],
           "threshold": 0.8
         },
         "evaluated": {
           "evidence": "Can weigh structure-activity arguments critically",
-          "canDo": ["Adjudicate molecular design claims"],
+          "canDo": [
+            "Adjudicate molecular design claims"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_review"],
+          "appropriateTasks": [
+            "peer_review"
+          ],
           "threshold": 0.9
         },
         "transformed": {
           "evidence": "Reads food, drugs, and cells as organic-chemistry systems by default",
-          "canDo": ["Apply molecular reasoning to daily life fluently"],
+          "canDo": [
+            "Apply molecular reasoning to daily life fluently"
+          ],
           "cannotDo": [],
-          "appropriateTasks": ["peer_teaching", "creative_synthesis"],
+          "appropriateTasks": [
+            "peer_teaching",
+            "creative_synthesis"
+          ],
           "threshold": 0.95
         }
       }
     },
-    "supportedModalities": ["LanguageReflective", "ScenarioChoice", "Somatic"]
+    "supportedModalities": [
+      "LanguageReflective",
+      "ScenarioChoice",
+      "Somatic"
+    ]
   }
 ]

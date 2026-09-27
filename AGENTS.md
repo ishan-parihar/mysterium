@@ -372,7 +372,13 @@ surface gate's stripper). **d4 (pod transport M0) is BUILT 2026-09-27**: the KV 
 over the declared-binding shape with local doubles holds the serial event discipline behind
 the privacy wall; the pod CLI routes every mutating action through the transport and
 `mysterium pod sync` polls the event tail — G48 locks the seam (mutations #10–#12 proven, #12
-closing a proxy-mention hole by class-scoping). The current
+closing a proxy-mention hole by class-scoping). **d5 (37 teeth-first repair) is BUILT 2026-09-27**:
+P-3/P-4 are ERROR-severity scoped to content-bearing levels; 32 misconceptions + 10 practice
+fills authored under the teeth; the earth-science branch authored (corpus 113 holons / 248
+assessment items); 37 reconciled to the measured registry with the difficulty-bell criterion
+amended as unimplementable-as-specified; the per-branch density instrument lives in
+`check-invariants` (report-only, `--deny-under` opt-in) — every branch honestly below 35 §5.2's
+97-holon minimum, the numbers for the owner's hardening decision. The current
 kernel roster is **48 gates** (45 + **G46** + **G47** + **G48**: in-vitro-class absences no runtime
 gate could see; G46 requires each ladder consumer to reach BOTH the payload bridge and
 `renderLevel`, G47 requires BOTH enforcement points of the share scope law plus the view's

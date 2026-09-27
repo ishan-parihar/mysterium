@@ -229,16 +229,25 @@ const checkContentRichness: LinterCheck = (holon) => {
 };
 
 /**
- * P-3: Practice problems — each concept should have at least one practice problem.
+ * Content-bearing levels — the holon kinds that must carry assessment content. Containers
+ * (branch/subject/topic/program/degree/course) structurally hold structure, not exercises;
+ * P-3/P-4 apply to what a learner actually works (Phase 17 d5, audit divergence 4).
+ */
+const ASSESSMENT_BEARING_LEVELS: ReadonlySet<string> = new Set(['concept', 'module', 'lesson', 'unit']);
+
+/**
+ * P-3: Practice problems — every content-bearing holon (concept/module/lesson/unit) must carry
+ * at least one. ERROR since Phase 17 d5: an assessment-empty module must not lint clean
+ * (cs.program shipped 8/8 empty; the severity promotion is the teeth).
  */
 const checkPracticeProblems: LinterCheck = (holon) => {
-  if (holon.content.practiceProblems.length === 0) {
+  if (ASSESSMENT_BEARING_LEVELS.has(holon.level) && holon.content.practiceProblems.length === 0) {
     return [{
       checkId: 'P-3',
       category: 'pedagogical',
-      severity: 'warning',
-      message: `No practice problems provided`,
-      suggestion: `Add practice problems to enable active learning`,
+      severity: 'error',
+      message: `Content-bearing holon (${holon.level}) has no practice problems — assessment-empty`,
+      suggestion: `Add at least one practice problem so the holon can be exercised, not just read`,
       location: `${holon.id}.content.practiceProblems`,
     }];
   }
@@ -246,16 +255,18 @@ const checkPracticeProblems: LinterCheck = (holon) => {
 };
 
 /**
- * P-4: Misconception coverage — concepts at higher depth targets should have misconceptions.
+ * P-4: Misconception coverage — content-bearing holons at higher depth targets must carry
+ * misconceptions. ERROR since Phase 17 d5 (same teeth as P-3).
  */
 const checkMisconceptionCoverage: LinterCheck = (holon) => {
+  if (!ASSESSMENT_BEARING_LEVELS.has(holon.level)) return [];
   const maxTargetOrdinal = depthOrdinal(holon.depthMeta.targetDepthRange.max);
   if (maxTargetOrdinal >= 4 && holon.misconceptions.length === 0) {
     return [{
       checkId: 'P-4',
       category: 'pedagogical',
-      severity: 'info',
-      message: `Concept targets ${holon.depthMeta.targetDepthRange.max} depth but has no misconceptions`,
+      severity: 'error',
+      message: `Content-bearing holon targets ${holon.depthMeta.targetDepthRange.max} depth but has no misconceptions`,
       suggestion: `Add misconception entries for deeper mastery levels`,
       location: holon.id,
     }];

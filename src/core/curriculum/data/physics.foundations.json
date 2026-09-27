@@ -2,7 +2,7 @@
   {
     "id": "physics.foundations",
     "name": "Physics Foundations",
-    "description": "The foundational concepts of physical reasoning: conservation laws, symmetry principles, and mathematical modeling \u2014 the bedrock upon which all physics is built.",
+    "description": "The foundational concepts of physical reasoning: conservation laws, symmetry principles, and mathematical modeling — the bedrock upon which all physics is built.",
     "level": "branch",
     "parentId": null,
     "childIds": [
@@ -274,7 +274,7 @@
       "practiceProblems": [
         {
           "id": "cm.p1",
-          "problemText": "Calculate the trajectory of a ball thrown at 30\u00b0 above horizontal with initial velocity 20 m/s.",
+          "problemText": "Calculate the trajectory of a ball thrown at 30° above horizontal with initial velocity 20 m/s.",
           "targetDepth": "applied"
         }
       ]
@@ -362,7 +362,7 @@
           "threshold": 0.9
         },
         "transformed": {
-          "evidence": "Mechanical thinking is instinctive \u2014 sees forces and motion everywhere",
+          "evidence": "Mechanical thinking is instinctive — sees forces and motion everywhere",
           "canDo": [
             "Model novel systems",
             "Teach mechanics",
@@ -474,7 +474,7 @@
       "practiceProblems": [
         {
           "id": "em.p1",
-          "problemText": "Calculate the electric field at a point 0.1m from a point charge of 1\u03bcC.",
+          "problemText": "Calculate the electric field at a point 0.1m from a point charge of 1μC.",
           "targetDepth": "applied"
         }
       ]
@@ -561,7 +561,7 @@
           "threshold": 0.9
         },
         "transformed": {
-          "evidence": "Electromagnetic thinking is instinctive \u2014 sees fields and waves everywhere",
+          "evidence": "Electromagnetic thinking is instinctive — sees fields and waves everywhere",
           "canDo": [
             "Model novel EM systems",
             "Teach electromagnetism",
@@ -665,7 +665,7 @@
         "Isolated systems (no real system is perfectly isolated)"
       ],
       "analogies": [
-        "Entropy is to thermodynamics what uncertainty is to quantum mechanics \u2014 a fundamental limit"
+        "Entropy is to thermodynamics what uncertainty is to quantum mechanics — a fundamental limit"
       ],
       "visuals": [
         "PV diagrams showing thermodynamic cycles"
@@ -761,7 +761,7 @@
           "threshold": 0.9
         },
         "transformed": {
-          "evidence": "Thermodynamic thinking is instinctive \u2014 sees energy and entropy everywhere",
+          "evidence": "Thermodynamic thinking is instinctive — sees energy and entropy everywhere",
           "canDo": [
             "Model novel thermal systems",
             "Teach thermodynamics",
@@ -871,7 +871,7 @@
         "Energy calculations (related but distinct)"
       ],
       "analogies": [
-        "Velocity is to position what interest is to principal \u2014 the rate of accumulation"
+        "Velocity is to position what interest is to principal — the rate of accumulation"
       ],
       "visuals": [
         "Position-time and velocity-time graphs"
@@ -1065,9 +1065,9 @@
     "content": {
       "explanation": "Dynamics is the study of how forces produce motion. Newton's second law (F=ma) is the central equation. Free-body diagrams decompose forces into components. Friction opposes motion; drag opposes velocity. Multi-body problems require solving coupled equations.",
       "examples": [
-        "Sliding block with friction: F_net = F_applied - \u03bcmg",
+        "Sliding block with friction: F_net = F_applied - μmg",
         "Atwood machine: coupled masses connected by a string",
-        "Drag force: F_drag = \u00bd\u03c1v\u00b2CdA"
+        "Drag force: F_drag = ½ρv²CdA"
       ],
       "nonExamples": [
         "Kinematics (describes motion, not forces)",
@@ -1082,7 +1082,7 @@
       "practiceProblems": [
         {
           "id": "dyn.p1",
-          "problemText": "A 5kg block on a 30\u00b0 incline with \u03bc=0.3. What force is needed to push it up at constant velocity?",
+          "problemText": "A 5kg block on a 30° incline with μ=0.3. What force is needed to push it up at constant velocity?",
           "targetDepth": "applied"
         }
       ]
@@ -1092,7 +1092,7 @@
         "id": "dyn.mc1",
         "statement": "A heavier object requires more force to accelerate the same amount",
         "whyItFeelsRight": "It feels harder to push heavy things fast",
-        "structuralReason": "F=ma shows that for the same force, heavier objects accelerate less \u2014 but the question of 'same acceleration' requires proportionally more force for more mass. This is exactly what F=ma captures.",
+        "structuralReason": "F=ma shows that for the same force, heavier objects accelerate less — but the question of 'same acceleration' requires proportionally more force for more mass. This is exactly what F=ma captures.",
         "diagnosticTaskId": "dyn.mc1.diag"
       }
     ],
@@ -1307,7 +1307,7 @@
         "memorized": {
           "evidence": "Can recall Coulomb's law and basic definitions",
           "canDo": [
-            "State F = kq\u2081q\u2082/r\u00b2",
+            "State F = kq₁q₂/r²",
             "Define E, V, C"
           ],
           "cannotDo": [
@@ -1484,7 +1484,7 @@
         "Electrostatics (no current)"
       ],
       "analogies": [
-        "Faraday's law is to electromagnetism what Newton's third law is to mechanics \u2014 an action-reaction principle"
+        "Faraday's law is to electromagnetism what Newton's third law is to mechanics — an action-reaction principle"
       ],
       "visuals": [
         "Faraday's law demonstration with moving magnets and coils"
@@ -1492,7 +1492,7 @@
       "practiceProblems": [
         {
           "id": "ed.p1",
-          "problemText": "A coil with 100 turns and area 0.01m\u00b2 experiences a magnetic field changing at 2T/s. What is the induced EMF?",
+          "problemText": "A coil with 100 turns and area 0.01m² experiences a magnetic field changing at 2T/s. What is the induced EMF?",
           "targetDepth": "applied"
         }
       ]
@@ -1681,7 +1681,7 @@
       "explanation": "The four laws of thermodynamics form a complete framework. Zeroth: thermal equilibrium is transitive. First: energy is conserved. Second: entropy of an isolated system never decreases. Third: entropy approaches a minimum at absolute zero.",
       "examples": [
         "Zeroth law: if A and B are in equilibrium, and B and C are in equilibrium, then A and C are in equilibrium",
-        "First law: \u0394U = Q - W (internal energy change = heat added minus work done)",
+        "First law: ΔU = Q - W (internal energy change = heat added minus work done)",
         "Second law: heat flows spontaneously from hot to cold, never the reverse",
         "Third law: no process can reach absolute zero in finite steps"
       ],
@@ -1690,7 +1690,7 @@
         "Reversible processes (idealizations that approach but never reach true reversibility)"
       ],
       "analogies": [
-        "The second law is to thermodynamics what G\u00f6del's theorem is to mathematics \u2014 a fundamental limit on what's achievable"
+        "The second law is to thermodynamics what Gödel's theorem is to mathematics — a fundamental limit on what's achievable"
       ],
       "visuals": [
         "Carnot cycle on PV and TS diagrams"
@@ -1884,7 +1884,7 @@
       "maxHalfLifeMs": 31536000000
     },
     "content": {
-      "explanation": "Statistical mechanics bridges microscopic particle behavior and macroscopic thermodynamic properties. A microstate specifies the complete state of every particle. A macrostate specifies bulk properties. Boltzmann's formula S = k\u00b7ln(W) connects entropy to the number of accessible microstates.",
+      "explanation": "Statistical mechanics bridges microscopic particle behavior and macroscopic thermodynamic properties. A microstate specifies the complete state of every particle. A macrostate specifies bulk properties. Boltzmann's formula S = k·ln(W) connects entropy to the number of accessible microstates.",
       "examples": [
         "Ideal gas: pressure from molecular collisions",
         "Maxwell-Boltzmann distribution: speeds of gas molecules",
@@ -1923,7 +1923,7 @@
         "memorized": {
           "evidence": "Can recall Boltzmann's formula and basic statistical concepts",
           "canDo": [
-            "State S = k\u00b7ln(W)",
+            "State S = k·ln(W)",
             "Define microstate and macrostate"
           ],
           "cannotDo": [
@@ -2097,7 +2097,7 @@
         "Open systems (mass or energy can flow in/out)"
       ],
       "analogies": [
-        "Conservation laws are the 'accounting rules' of physics \u2014 nothing appears or disappears without explanation"
+        "Conservation laws are the 'accounting rules' of physics — nothing appears or disappears without explanation"
       ],
       "visuals": [
         "Energy flow diagrams showing conservation"
@@ -2288,7 +2288,7 @@
         "Discrete symmetries (parity, charge conjugation)"
       ],
       "analogies": [
-        "Symmetry is to physics what grammar is to language \u2014 it constrains what is possible"
+        "Symmetry is to physics what grammar is to language — it constrains what is possible"
       ],
       "visuals": [
         "Symmetry groups and their associated conservation laws"
@@ -2406,7 +2406,7 @@
   {
     "id": "physics.classical_mechanics.dynamics",
     "name": "Classical Dynamics",
-    "description": "Newton's laws, forces, momentum, and energy conservation \u2014 the core dynamics framework.",
+    "description": "Newton's laws, forces, momentum, and energy conservation — the core dynamics framework.",
     "level": "unit",
     "parentId": "physics.classical_mechanics",
     "childIds": [
@@ -2501,9 +2501,28 @@
         "Energy bar charts",
         "Phase space portraits"
       ],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "physics.classical_mechanics.dynamics.p1",
+          "problemText": "A 2 kg block slides down a 30° incline with μ = 0.2: draw the free-body diagram first, then compute its acceleration.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "physics.classical_mechanics.dynamics.p2",
+          "problemText": "Use Newton’s third law to resolve the \"horse and cart\" paradox: identify the paired forces, which body each acts on, and why the pair does not cancel for the cart alone.",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "physics-classical_mechanics-dynamics.mc1",
+        "statement": "Heavier objects fall faster",
+        "whyItFeelsRight": "Everyday experience with air resistance",
+        "structuralReason": "In vacuum all masses accelerate identically under gravity; the everyday observation confuses weight with drag. F=ma means larger mass gets proportionally larger force — the a cancels.",
+        "diagnosticTaskId": "physics-classical_mechanics-dynamics.mc1.diag"
+      }
+    ],
     "depthRubric": {
       "conceptId": "physics.classical_mechanics.dynamics",
       "levels": {

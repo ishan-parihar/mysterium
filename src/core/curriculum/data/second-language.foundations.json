@@ -345,7 +345,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "second-language-input.mc1",
+        "statement": "Immersion means just being around the language",
+        "whyItFeelsRight": "Children 'just pick it up'",
+        "structuralReason": "Acquisition requires comprehensible, structured input at the right difficulty gap — raw exposure without comprehension is noise. Children get years of caretaker-tuned input; 'just being around' adult speech at full speed yields neither.",
+        "diagnosticTaskId": "second-language-input.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "SocialCooperative"
@@ -524,7 +532,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "second-language-lexicon.mc1",
+        "statement": "Vocabulary means word-for-word equivalents",
+        "whyItFeelsRight": "Bilingual dictionaries print pairs",
+        "structuralReason": "Words map to overlapping-but-not-identical sense fields across languages (false friends, different collocations); pair-memorization produces sentences that are grammatical but unnatural or wrong in register.",
+        "diagnosticTaskId": "second-language-lexicon.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "SocialCooperative"
@@ -703,7 +719,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "second-language-interaction.mc1",
+        "statement": "Speaking practice cements errors",
+        "whyItFeelsRight": "Fear of fossilized mistakes",
+        "structuralReason": "Interaction is where output hypothesis and negotiation of meaning do their work: errors corrected in context are precisely what restructures the learner's grammar. Error-free silence produces no restructuring at all.",
+        "diagnosticTaskId": "second-language-interaction.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "SocialCooperative"
@@ -882,7 +906,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "second-language-structure.mc1",
+        "statement": "Grammar is rules to be consciously applied",
+        "whyItFeelsRight": "Grammar books list rules",
+        "structuralReason": "Fluent production runs on proceduralized patterns built through meaningful use; consciously applying rules caps at slow, error-prone translation. Explicit grammar accelerates noticing — it cannot be the engine itself.",
+        "diagnosticTaskId": "second-language-structure.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "SocialCooperative"

@@ -623,7 +623,18 @@
         "The action is to mechanics what the Hamiltonian is to thermodynamics"
       ],
       "visuals": [],
-      "practiceProblems": []
+      "practiceProblems": [
+        {
+          "id": "physics.program.bachelors.mechanics.lagrangian.p1",
+          "problemText": "For a simple pendulum, write the Lagrangian and derive the equation of motion via the Euler–Lagrange equation; check it against the Newtonian derivation.",
+          "targetDepth": "applied"
+        },
+        {
+          "id": "physics.program.bachelors.mechanics.lagrangian.p2",
+          "problemText": "State the class of problems where the Lagrangian method beats the Newtonian one (holonomic constraints), and demonstrate with the bead-on-a-wire: show which constraint forces never appear.",
+          "targetDepth": "analyzed"
+        }
+      ]
     },
     "misconceptions": [
       "The principle of least action is just a trick",

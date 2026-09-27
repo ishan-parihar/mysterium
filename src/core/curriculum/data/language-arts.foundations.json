@@ -348,7 +348,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "language-arts-phonology.mc1",
+        "statement": "English spelling is chaotic, so decoding is memorization",
+        "whyItFeelsRight": "Many graphemes map several ways",
+        "structuralReason": "The system is statistical, not arbitrary: a constrained set of grapheme-phoneme patterns covers the vast majority of text. Whole-word memorization collapses under rare words; pattern-based decoding generalizes to words never seen.",
+        "diagnosticTaskId": "language-arts-phonology.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "ImmersiveRPG"
@@ -527,7 +535,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "language-arts-vocabulary.mc1",
+        "statement": "A word has one definition to memorize",
+        "whyItFeelsRight": "Dictionary entries look singular",
+        "structuralReason": "Word knowledge is a network of senses, morphological relatives, and contexts; a single-definition model fails at polysemy (a 'run' in stockings, code, and baseball) and blocks inference of unmet words from roots.",
+        "diagnosticTaskId": "language-arts-vocabulary.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "ImmersiveRPG"
@@ -706,7 +722,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "language-arts-comprehension.mc1",
+        "statement": "Comprehension means remembering what the text said",
+        "whyItFeelsRight": "Recall quizzes look like comprehension tests",
+        "structuralReason": "Recall is the floor. Meaning lives in the situation model the reader builds — inference connecting text to prior knowledge. A reader who recalls every sentence but cannot answer 'why did she do it?' has not comprehended.",
+        "diagnosticTaskId": "language-arts-comprehension.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "ImmersiveRPG"
@@ -885,7 +909,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "language-arts-composition.mc1",
+        "statement": "Good writing means following the rules",
+        "whyItFeelsRight": "Correction marks suggest rule violations",
+        "structuralReason": "Rules are heuristics serving clarity, rhythm, and audience; writing is design under constraint. Rule-following prose can be dead, and great writers break rules deliberately where the effect demands it.",
+        "diagnosticTaskId": "language-arts-composition.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "ImmersiveRPG"
@@ -1065,7 +1097,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "language-arts-interpretation.mc1",
+        "statement": "Any reading is as valid as any other",
+        "whyItFeelsRight": "People disagree about texts",
+        "structuralReason": "Interpretive claims are arguments settled by textual evidence: some readings account for more of the text with fewer contortions. 'All readings equal' mistakes 'sometimes undecidable' for 'always arbitrary'.",
+        "diagnosticTaskId": "language-arts-interpretation.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "LanguageReflective",
       "ImmersiveRPG"

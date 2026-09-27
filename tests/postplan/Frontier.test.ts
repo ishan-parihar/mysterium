@@ -327,13 +327,14 @@ import secondLanguageData from '../../src/core/curriculum/data/second-language.f
 import civicsData from '../../src/core/curriculum/data/civics.foundations.json';
 import healthData from '../../src/core/curriculum/data/health.foundations.json';
 import integralData from '../../src/core/curriculum/data/integral.foundations.json';
+import earthData from '../../src/core/curriculum/data/earth.foundations.json';
 
 const BRANCH_FILES: Record<string, unknown> = {
   math: mathData, cs: csData, physics: physicsData, bio: bioData,
   chem: chemData, hist: histData, geo: geoData,
   'language-arts': languageArtsData, arts: artsData, music: musicData,
   'second-language': secondLanguageData, civics: civicsData, health: healthData,
-  integral: integralData,
+  integral: integralData, earth: earthData,
 };
 
 function require_branch(branch: string): unknown {

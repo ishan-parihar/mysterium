@@ -347,7 +347,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "music-rhythm.mc1",
+        "statement": "Rhythm is just the beat",
+        "whyItFeelsRight": "Musicians count '1-2-3-4'",
+        "structuralReason": "The perceived beat is one layer among meter, grouping, and tempo; rhythms organize against it (syncopation exists only relative to the expected beat). Identifying rhythm with the beat erases the very tension music lives on.",
+        "diagnosticTaskId": "music-rhythm.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "Embodied",
       "ImmersiveRPG"
@@ -527,7 +535,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "music-pitch.mc1",
+        "statement": "Pitch is objective like frequency",
+        "whyItFeelsRight": "Tuning forks vibrate at fixed rates",
+        "structuralReason": "Pitch is a perceptual construct: octave equivalence, categorical perception, and scale frameworks all shape what counts as 'the same note'. Frequency is physical; pitch is the auditory system's organization of it.",
+        "diagnosticTaskId": "music-pitch.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "Embodied",
       "ImmersiveRPG"
@@ -708,7 +724,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "music-notation.mc1",
+        "statement": "Notation is the music",
+        "whyItFeelsRight": "Scores look like the definitive object",
+        "structuralReason": "Notation is a lossy, convention-laden recording of some performance parameters; it underdetermines timing, timbre, and idiom. Reading notation as the music itself confuses the map with the territory.",
+        "diagnosticTaskId": "music-notation.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "Embodied",
       "ImmersiveRPG"
@@ -888,7 +912,15 @@
         }
       }
     },
-    "misconceptions": [],
+    "misconceptions": [
+      {
+        "id": "music-ensemble.mc1",
+        "statement": "Playing together means following the loudest player",
+        "whyItFeelsRight": "Beginners latch onto whoever projects most",
+        "structuralReason": "Ensemble is mutual adjustment against a shared pulse — listening across parts and adjusting. Following the loudest voice fails the moment balance shifts, and it produces entries that are together by accident rather than by counting.",
+        "diagnosticTaskId": "music-ensemble.mc1.diag"
+      }
+    ],
     "supportedModalities": [
       "Embodied",
       "ImmersiveRPG"

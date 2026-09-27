@@ -1466,6 +1466,27 @@ parity, corpus growth, and refactoring.
 > adapter's call survived → initially GREEN, a proxy mention-hole the gate closed by scoping its
 > rows to the KVPodCoordinator class body; re-proven red). Battery: 152 files / 1713 tests;
 > roster **48**.
+>
+> **d5 ✅ BUILT 2026-09-27** — 37's teeth-first repair, executed in the plan's order:
+> **(i) teeth** — P-3/P-4 scoped to content-bearing levels (concept/module/lesson/unit; the old
+> checks fired on containers, which is why 34/44 locations looked empty when the real
+> concept-bearing gap was narrower) and promoted to **error** severity: an assessment-empty
+> holon now fails the lint. The promoted P-4 blast demanded honest content: **32 misconceptions
+> authored** (cs.program's sorting subtree, math, physics, language-arts, arts, music, civics,
+> health, second-language) and **10 practice-problem fills** (cs.program ×5, math ×3, physics ×2).
+> **(ii) `earth-science` authored** — the one genuinely missing branch (37 §4.1 K1): 5 holons
+> (geology / atmosphere / oceans / space) with full phases, isomorphisms, depth rubrics,
+> practice problems, and misconceptions, seeded and line-mapped (`earth-space-science`,
+> Cognitive + Somatic). Corpus: **113 holons, 248 assessment items**. **(iii) 37 reconciled** —
+> §3.1's corpus column, §4.1's tree table (all shipped), §4.2's stale 56/1,280 row replaced by
+> the measured registry; the difficulty-bell criterion amended as **unimplementable as
+> specified** (no difficulty field on curriculum holons — it lives on pack items) with the
+> enforceable teeth stated instead. **(iv) the density instrument** — `check-invariants` carries
+> the per-branch count vs 35 §5.2's 97 minimum, report-only by default, `--deny-under <N>`
+> enforcement opt-in (proven exit 1 at floor 200); **every branch is honestly below** the
+> minimum — the real numbers for the owner's hardening decision. Contract tests updated in the
+> same commit (SubjectLineMap 13→14 rows; Frontier's branch map + earth; the P-3 test now pins
+> the error contract). Battery: 152 files / 1715+ tests; roster **48**.
 
 ### Current work (post-plan) — not a phase
 

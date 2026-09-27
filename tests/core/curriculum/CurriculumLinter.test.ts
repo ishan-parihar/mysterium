@@ -148,10 +148,19 @@ describe('CurriculumLinter', () => {
       expect(report.warnings.some(w => w.checkId === 'P-2')).toBe(true);
     });
 
-    it('warns about no practice problems (P-3)', () => {
+    it('rejects an assessment-empty content-bearing holon (P-3, error since Phase 17 d5)', () => {
       const holon = { ...BASE_HOLON, content: { ...BASE_HOLON.content, practiceProblems: [] } };
       const report = lintHolon(holon, registry);
-      expect(report.warnings.some(w => w.checkId === 'P-3')).toBe(true);
+      // The teeth: a concept/module/lesson/unit with no practice problems is an ERROR, not a
+      // warning — cs.program shipped 8/8-empty and linted clean under the old severities.
+      expect(report.errors.some(e => e.checkId === 'P-3')).toBe(true);
+      expect(report.passed).toBe(false);
+    });
+
+    it('does not demand practice problems of containers (branch/subject/topic)', () => {
+      const holon = { ...BASE_HOLON, level: 'topic' as CurriculumHolon['level'], content: { ...BASE_HOLON.content, practiceProblems: [] } };
+      const report = lintHolon(holon, registry);
+      expect(report.errors.some(e => e.checkId === 'P-3')).toBe(false);
     });
 
     it('detects non-monotonic depth progression (D-1)', () => {

@@ -30,6 +30,7 @@ const EXPECTED_SUBJECTS = [
   'mathematics', 'computing', 'physical-sciences', 'life-sciences',
   'literacy-l1', 'literature', 'arts-music', 'second-language',
   'history', 'civics-ethics', 'geography', 'health-pe',
+  'earth-space-science',
   'social-emotional-learning',
 ];
 
@@ -48,7 +49,7 @@ describe('subject → line map (doc 37 §3.1)', () => {
     }
   });
 
-  it('S2: covers all 13 K-12 subject rows', () => {
+  it('S2: covers all 14 K-12 subject rows', () => {
     const subjects = mappings.map((m) => m.subject);
     for (const expected of EXPECTED_SUBJECTS) {
       expect(subjects, `missing subject ${expected}`).toContain(expected);
