@@ -706,3 +706,52 @@ export async function validatePodTransportWired(): Promise<GateResult> {
     return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }
 }
+
+// ---------------------------------------------------------------------------
+// G49 — the practice toolset registered (Phase 17 D-39; 39 §4.2/§4.4 P1).
+//
+// P0's practice loop was live via /journal, but the two agent tools existed only as a
+// header comment in practiceTools.ts — the in-vitro class G45–G48 exist to catch. The gate
+// requires: the schemas module reaching the pure functions AND the §4.4 pipeline with its
+// heuristic fallback AND the crisis gate; the orchestrator registering PRACTICE_TOOLS and
+// dispatching through handlePracticeTool; and the engine passing the integration.
+// ---------------------------------------------------------------------------
+
+export async function validatePracticeToolsWired(): Promise<GateResult> {
+  const gate = 'G49 practice tools registered';
+  try {
+    const read = (rel: string): string => {
+      const p = path.join(process.cwd(), rel);
+      if (!fs.existsSync(p)) throw new Error(`${p} not found`);
+      return stripSourceComments(fs.readFileSync(p, 'utf-8'));
+    };
+    const schemas = read('src/core/practice/practiceToolSchemas.ts');
+    const missingSchema = ([
+      ['proposeObjectives (the pure proposer)', /proposeObjectives\(/],
+      ['processCheckIn (the pure check-in)', /processCheckIn\(/],
+      ['scoreReflectionPipeline (the §4.4 pipeline)', /scoreReflectionPipeline\(/],
+      ['detectCrisis (the crisis gate before scoring)', /detectCrisis\(/],
+    ] as const).filter(([, re]) => !re.test(schemas)).map(([n]) => n);
+    if (missingSchema.length > 0) {
+      return { gate, passed: false, hard: true, details: `practiceToolSchemas.ts no longer reaches: ${missingSchema.join(', ')} — the tools bypass the pure core, the pipeline, or the crisis gate` };
+    }
+    const pipeline = read('src/core/practice/ReflectionEvidence.ts');
+    if (!/scoreReflectionDepth\(/.test(pipeline)) {
+      return { gate, passed: false, hard: true, details: 'ReflectionEvidence no longer calls scoreReflectionDepth — the §4.4 graceful-degrade fallback is gone' };
+    }
+    const orch = read('src/core/assessments/AgenticOrchestrator.ts');
+    const missingOrch = ([
+      ['PRACTICE_TOOLS registration', /PRACTICE_TOOLS as unknown as/],
+      ['handlePracticeTool dispatch', /handlePracticeTool\(/],
+    ] as const).filter(([, re]) => !re.test(orch)).map(([n]) => n);
+    if (missingOrch.length > 0) {
+      return { gate, passed: false, hard: true, details: `AgenticOrchestrator no longer reaches: ${missingOrch.join(', ')} — the practice tools cannot go live on the session loop` };
+    }
+    if (!/practice:/.test(read('src/lib/engine/gameEngine.ts'))) {
+      return { gate, passed: false, hard: true, details: 'gameEngine no longer passes the practice integration — the tools are constructed but never registered' };
+    }
+    return { gate, passed: true, hard: true, details: 'practice toolset reaches the pure core through the crisis gate and the §4.4 pipeline; registered and dispatched on both orchestrator paths; the engine supplies the integration' };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}

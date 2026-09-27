@@ -30,6 +30,9 @@ import { createModuleTaskTypesProvider } from '$core/engines/CandidateGeneration
 import { DEFAULT_WEIGHTS } from '$core/engines/PriorityComputation.js';
 import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
 import { AgenticOrchestrator } from '$core/assessments/AgenticOrchestrator.js';
+import { currentVowBook } from '$lib/stores/vowStore.js';
+import { detectDevelopmentalNeeds } from '$core/curriculum/DevelopmentalNeedsDetector.js';
+import { queryLLM } from '$infra/llm/LLMClient.js';
 // RuntimeLoop (43 §5.5 + 45 §5/§6 + 22 §7.5): the orchestration services — one per browser
 // session, held in the engine store so the feed and worker profiles accumulate across encounters.
 import { createOrchestrationServices, type OrchestrationServices } from '$core/personalization/sessionRuntime.js';
@@ -291,6 +294,22 @@ export async function runEncounter(
       noLlm: options.noLlm ?? false,
       forceShadow: options.forceShadow,
       orchestration,
+      // Phase 17 D-39 (39 §4.2/§4.4 P1): the practice toolset goes live on the browser
+      // session loop — propose_objective / process_checkin through the same pure functions
+      // /journal calls; depth via the §4.4 pipeline (queryLLM routes through the BFF in the
+      // browser; absent/unreachable config ⇒ the heuristic stands — offline is law).
+      practice: {
+        book: currentVowBook(),
+        sig: significator,
+        world,
+        objectiveContext: () => ({
+          needs: detectDevelopmentalNeeds(significator).map((n) => ({ label: `${n.type}:${n.line}`, urgency: n.urgency })),
+          activeShadows: significator.shadows.entries
+            .filter((e) => e.resolvedAt === null)
+            .map((e) => ({ line: e.line, quadrant: e.quadrant, severity: e.severity })),
+        }),
+        query: (prompt) => queryLLM(prompt, 'Reply with only the integer depth 1-5.'),
+      },
     });
 
     engineStore.update((s) => ({ ...s, activeOrchestrator: orchestrator }));

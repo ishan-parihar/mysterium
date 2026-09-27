@@ -160,3 +160,46 @@ export function processReflection(
     return { sig, world, applied: false };
   }
 }
+
+// ---------------------------------------------------------------------------
+// §4.4's scoring pipeline, P1 (Phase 17 D-39): LLM rubric scorer with graceful degrade.
+//
+// The law (39 §4.4): heuristic pre-scorer always runs; the LLM rubric scorer (temperature 0)
+// refines when reachable; on absence or divergence the heuristic score STANDS. Offline is a
+// first-class citizen — the practice loop must never require network.
+// ---------------------------------------------------------------------------
+
+export interface ReflectionDepthScore {
+  readonly depth: DepthScore;
+  readonly source: 'llm' | 'heuristic';
+}
+
+const RUBRIC_PROMPT = (answers: readonly string[]): string =>
+  `You are scoring a five-prompt reflection check-in (39 §3.3). Rate the DEPTH of reflection
+on a 1-5 scale: 1 = bare repetition, 2 = description without mechanism, 3 = a mechanism or
+reframe named, 4 = the mechanism connected across situations, 5 = genuine re-authoring with
+specificity. Judge what the player actually wrote, not its length.
+${REFLECTION_PROMPTS.map((q, i) => `${i + 1}. ${q}\n   ${answers[i] ?? '(unanswered)'}`).join('\n')}
+Reply with ONLY the integer 1, 2, 3, 4, or 5.`;
+
+/**
+ * The §4.4 pipeline. `query` is the host's LLM channel (the BFF proxy in the app, an adapter in
+ * the CLI); when absent, unreachable, or divergent (anything but a valid 1–5), the heuristic
+ * pre-score stands — identical to P0 behaviour.
+ */
+export async function scoreReflectionPipeline(
+  answers: readonly string[],
+  query?: (prompt: string) => Promise<string | null>,
+): Promise<ReflectionDepthScore> {
+  const heuristic = scoreReflectionDepth(answers);
+  if (!query) return { depth: heuristic, source: 'heuristic' };
+  try {
+    const reply = await query(RUBRIC_PROMPT(answers));
+    const parsed = reply ? Number(reply.trim().match(/\b[1-5]\b/)?.[0] ?? Number.NaN) : Number.NaN;
+    if (!Number.isInteger(parsed)) return { depth: heuristic, source: 'heuristic' };
+    return { depth: parsed as DepthScore, source: 'llm' };
+  } catch {
+    // Graceful degrade (39 §4.4): LLM absent/divergent ⇒ the heuristic stands.
+    return { depth: heuristic, source: 'heuristic' };
+  }
+}

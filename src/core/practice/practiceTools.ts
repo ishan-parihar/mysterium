@@ -90,6 +90,9 @@ export interface CheckInArgs {
   readonly answers: readonly string[];
   readonly now: number;
   readonly primaryLine?: Line;
+  /** The §4.4 pipeline's hook (D-39): when the caller scored depth via the LLM rubric (or the
+   *  heuristic), it supplies it here; absent ⇒ the heuristic scores inline (P0 behaviour). */
+  readonly depthOverride?: number;
 }
 
 export interface CheckInOutcome {
@@ -116,7 +119,9 @@ export function processCheckIn(args: CheckInArgs): CheckInOutcome {
     return { routedToSafety: true, book: args.book, sig: args.sig, world: args.world, engineIntegrated: false, lapseDeltaApplied: 0 };
   }
 
-  const depth = scoreReflectionDepth(args.answers);
+  const depth = args.depthOverride !== undefined && args.depthOverride >= 1 && args.depthOverride <= 5
+    ? (args.depthOverride as 1 | 2 | 3 | 4 | 5)
+    : scoreReflectionDepth(args.answers);
   const prompts = REFLECTION_PROMPTS.map((q: string, i: number) => ({ question: q, answer: args.answers[i] ?? '' }));
 
   // Record + vow counters (pure).

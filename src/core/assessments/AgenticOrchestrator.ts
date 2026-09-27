@@ -73,6 +73,16 @@ import {
   type CouncilIntegration,
 } from './councilTools.js';
 
+// Phase 17 D-39 (39 §4.2/§4.4 P1): the practice toolset — propose_objective / process_checkin,
+// dispatched through the same pure functions /journal calls; depth via the §4.4 pipeline
+// (LLM rubric when reachable, heuristic stands offline — the loop never requires network).
+import {
+  PRACTICE_TOOLS,
+  PRACTICE_TOOL_NAMES,
+  handlePracticeTool,
+  type PracticeIntegration,
+} from '../practice/practiceToolSchemas.js';
+
 const PESTLE_DIMS: (keyof PESTLETension)[] = ['political', 'economic', 'social', 'technological', 'legal', 'environmental'];
 
 export interface AgenticUIHandler {
@@ -273,6 +283,8 @@ export class AgenticOrchestrator {
   private unifiedProfile: UnifiedProfileServices | null = null;
   /** Phase 13 d12: the council integration — null when the summoning surface is not registered. */
   private council: CouncilIntegration | null = null;
+  // Phase 17 D-39 (39 §4.2 P1): the practice toolset — propose_objective / process_checkin.
+  private practice: PracticeIntegration | null = null;
   /** RuntimeLoop: orchestration services (feed/pooling/workers) — null when unwired. */
   private orchestration: OrchestrationServices | null = null;
   /** RuntimeLoop: consent-checked identity projection for this session. */
@@ -385,6 +397,14 @@ export class AgenticOrchestrator {
      * TABLE, never by the model. Omitted ⇒ the council surface is absent entirely.
      */
     council?: CouncilIntegration;
+    /**
+     * Phase 17 D-39 (39 §4.2/§4.4 P1): the practice integration — when present, the two
+     * practice tools (`propose_objective`, `process_checkin`) are registered and dispatched
+     * through the same pure functions /journal calls, with the §4.4 depth pipeline
+     * (LLM rubric when reachable; heuristic stands offline). Omitted ⇒ absent entirely —
+     * every existing caller stays byte-for-byte identical without one.
+     */
+    practice?: PracticeIntegration;
   }) {
     this.encounter = params.encounter;
     this.significator = params.significator;
@@ -405,6 +425,7 @@ export class AgenticOrchestrator {
     this.orchestration = params.orchestration ?? null;
     this.identity = params.identity;
     this.council = params.council ?? null;
+    this.practice = params.practice ?? null;
     // QUALITY-WIRING (MY-AD-0030): compute the agenda once at construction; refreshed by
     // `refreshAgenda` whenever the significator's altitudes change materially.
     this.developmentalAgenda = buildDevelopmentalAgenda(this.significator.currentStage);
@@ -427,6 +448,7 @@ export class AgenticOrchestrator {
     if (this.training) tools.push(...(TRAINING_TOOLS as unknown as any[]));
     if (this.unifiedProfile) tools.push(...(UNIFIED_PROFILE_TOOLS as unknown as any[]));
     if (this.council) tools.push(...(COUNCIL_TOOLS as unknown as any[]));
+    if (this.practice) tools.push(...(PRACTICE_TOOLS as unknown as any[]));
     return tools;
   }
 
@@ -716,6 +738,17 @@ export class AgenticOrchestrator {
             // (deterministic, from player state); the model only asks and then renders the answer
             // into the fiction (COUNCIL_RULES_SUFFIX 12–15).
             const outcome = await handleCouncilTool(tc.function.name, tc.function.arguments, this.councilContext());
+            this.messages.push({
+              role: 'tool',
+              content: JSON.stringify(outcome.ok ? outcome.payload : { error: outcome.payload.error }),
+              toolCallId: tc.id,
+              name: tc.function.name,
+            });
+          } else if (PRACTICE_TOOL_NAMES.has(tc.function.name) && this.practice) {
+            // Phase 17 D-39: the practice toolset (39 §4.2 P1). Same pure functions /journal
+            // calls; the §4.4 depth pipeline rides the check-in (LLM rubric when reachable,
+            // heuristic stands offline — the loop never requires network).
+            const outcome = await handlePracticeTool(tc.function.name, tc.function.arguments, this.practice);
             this.messages.push({
               role: 'tool',
               content: JSON.stringify(outcome.ok ? outcome.payload : { error: outcome.payload.error }),
@@ -1093,6 +1126,16 @@ INSTRUCTIONS:
             });
           } else if (COUNCIL_TOOL_NAMES.has(tc.function.name) && this.council) {
             const outcome = await handleCouncilTool(tc.function.name, tc.function.arguments, this.councilContext());
+            this.messages.push({
+              role: 'tool',
+              content: JSON.stringify(outcome.ok ? outcome.payload : { error: outcome.payload.error }),
+              toolCallId: tc.id,
+              name: tc.function.name,
+            });
+          } else if (PRACTICE_TOOL_NAMES.has(tc.function.name) && this.practice) {
+            // Phase 17 D-39: the practice toolset on the second run path — same dispatch as the
+            // primary loop (the pure functions /journal calls + the §4.4 depth pipeline).
+            const outcome = await handlePracticeTool(tc.function.name, tc.function.arguments, this.practice);
             this.messages.push({
               role: 'tool',
               content: JSON.stringify(outcome.ok ? outcome.payload : { error: outcome.payload.error }),

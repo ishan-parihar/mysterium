@@ -378,12 +378,17 @@ fills authored under the teeth; the earth-science branch authored (corpus 113 ho
 assessment items); 37 reconciled to the measured registry with the difficulty-bell criterion
 amended as unimplementable-as-specified; the per-branch density instrument lives in
 `check-invariants` (report-only, `--deny-under` opt-in) — every branch honestly below 35 §5.2's
-97-holon minimum, the numbers for the owner's hardening decision. The current
-kernel roster is **48 gates** (45 + **G46** + **G47** + **G48**: in-vitro-class absences no runtime
+97-holon minimum, the numbers for the owner's hardening decision. **D-39 (the journal P1 seam)
+is BUILT 2026-09-27**: both practice tools registered on the live tool surface through the pure
+core, §4.4's LLM-rubric/heuristic reconcile, the crisis gate ahead of scoring (crisis text never
+reaches the LLM), G49 locks it. The current
+kernel roster is **49 gates** (45 + **G46** + **G47** + **G48** + **G49**: in-vitro-class absences no runtime
 gate could see; G46 requires each ladder consumer to reach BOTH the payload bridge and
 `renderLevel`, G47 requires BOTH enforcement points of the share scope law plus the view's
 honesty gate, G48 requires the M0 adapter to hold applyEvent + payloadIsSafe behind the
-PodTransport contract and the pod CLI to construct/apply/poll through it. Phase 17 d1's
+PodTransport contract and the pod CLI to construct/apply/poll through it, G49 requires the
+practice tools to reach the pure core through the crisis gate and the §4.4 pipeline with the
+orchestrator registering and the engine supplying. Phase 17 d1's
 G45 remains: the pack engine's registry was
 production-test-only — an unseeded registry behaves exactly like an empty one, so no runtime gate
 could see the absence; G45 is the module-graph assertion, teeth proven by mutation. Phase 16 d8's

@@ -1487,6 +1487,22 @@ parity, corpus growth, and refactoring.
 > minimum — the real numbers for the owner's hardening decision. Contract tests updated in the
 > same commit (SubjectLineMap 13→14 rows; Frontier's branch map + earth; the P-3 test now pins
 > the error contract). Battery: 152 files / 1715+ tests; roster **48**.
+>
+> **D-39 ✅ BUILT 2026-09-27** — the journal P1 seam (39 §4.2/§4.4): `practiceToolSchemas.ts`
+> registers `propose_objective` + `process_checkin` on the live tool surface (OpenAI-function
+> schemas, closed vocabulary) and dispatches them through the SAME pure functions /journal
+> calls; `scoreReflectionPipeline` implements §4.4's reconcile (LLM rubric at temperature 0
+> when reachable; heuristic stands on absence/unreachable/divergent — offline is law);
+> `processCheckIn` gained a `depthOverride` hook so the pure core scores from either source.
+> **The crisis gate runs BEFORE the pipeline** (reviewer catch, same commit): 39 §4.2 says
+> journal text never leaves the client, so crisis-pattern answers route to safety with the LLM
+> query NEVER invoked and nothing scored — pinned by P1-5, which fails if the query is called
+> on crisis text. Vows are identified by text (the `Vow` shape has no id — the journal selects
+> by position). Wired on both orchestrator paths and live in the browser session loop
+> (gameEngine supplies book/sig/world/needs/shadows + a BFF-routed query). **G49** locks the
+> seam (roster **49**), teeth proven by mutation #13 (crisis gate deleted → red), #14
+> (registration deleted → red), #15 (engine integration deleted → red). Battery: 153 files /
+> 1720 tests.
 
 ### Current work (post-plan) — not a phase
 

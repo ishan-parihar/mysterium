@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -133,6 +133,11 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // privacy wall behind PodTransport, and the pod CLI to construct, apply through, and poll
   // through the transport — never around it.
   results.push(await validatePodTransportWired());
+  // G49 (Phase 17 D-39): the practice toolset (39 §4.2/§4.4 P1) — propose_objective /
+  // process_checkin were a header comment, an in-vitro surface. The gate requires the schemas
+  // module to reach the pure core THROUGH the crisis gate and the §4.4 pipeline (with its
+  // heuristic fallback), the orchestrator to register + dispatch, and the engine to supply.
+  results.push(await validatePracticeToolsWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
