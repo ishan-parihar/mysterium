@@ -1520,6 +1520,12 @@ parity, corpus growth, and refactoring.
 > skipped (eligibility is upstream). **G50** locks the parity rows + the export, teeth proven by
 > mutation #16 (browser strategy bias dropped → red), #17 (interleave dropped → red), #18
 > (reserve un-exported → red), restored green. Battery: 154 files / 1723 tests; roster **50**.
+>
+> **Phase 17 is FULLY EXECUTED (2026-09-27)** — d1–d5, D-39 and Track B built, gated and pushed;
+> the canon companion (C-A/C-B/R8) landed foundations-first. Owner-facing residue: the density
+> hardening ruling (report-only vs battery-failing, with the measured numbers now on the table:
+> 15 branches / 113 holons, every branch below 35 §5.2's 97 minimum) and the standing external
+> list (KV IDs, hosting, real raters, institutions, DPIA, C6 GitLab credentials).
 
 ### Current work (post-plan) — not a phase
 

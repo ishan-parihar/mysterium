@@ -367,6 +367,14 @@ re-measured at three scales (every line served, ratio 0.11–0.50 against G43's 
 2026-09-25 finding predated MY-AD-0033's reserve); the reserve's position contract now exported
 and pinned scale-independently; **G50** locks it (roster 50).
 
+**Phase 17 is FULLY EXECUTED (2026-09-27).** Every §6 item is closed; §7's open questions are
+answered by the four decisions the owner took this day: the share model is persona-free and
+scope-selected (MY-AD-0034), C-B is uncontroversial and landed, the density check ships
+report-only with the numbers measured (the hardening ruling stays with the owner), and D-39
+shipped under the full-execution directive. What remains is external, not unfinished: the
+user-reserved KV IDs, the pod hosting decision, real raters, partner institutions, the DPIA, and
+C6's GitLab credentials.
+
 Battery state at this writing: **150 files / 1702 tests**, `arch.py validate` 23/23 with fixtures
 proven 23/23, lint 0/0, build green (adapter-cloudflare), gate roster **46** (G45 + G46, teeth
 proven by six mutations total).

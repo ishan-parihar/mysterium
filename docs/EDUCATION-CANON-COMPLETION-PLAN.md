@@ -124,6 +124,8 @@ closed by d1–d5; not repeated here.
 6. R8's naming lines (16 §2.4 / 39 §4.3 / 40 name their code paths, the 38 pattern).
    **[ANSWERED by the ruling]** audit-trail depth: none now — the scope selection is the entire
    interface; grant/audit fields deferred to institutional surfaces if those ever land.
+   **STATUS: LANDED 2026-09-27** — 16 §2.4.1 + §10.5's amended AL4, MY-AD-0034, 33 §7's
+   honesty sentence, the R8 naming lines; the build (d3) followed.
 
 ### C-B — 40 §1 "Provenance & the synthetic-evidence contract" (new subsection, ~10 lines; standalone or with d5)
 1. Every reliability row and claim draft carries `provenance ∈ {deterministic-simulated,
@@ -135,45 +137,57 @@ closed by d1–d5; not repeated here.
    person's.
 3. Boot-seeding + rehydration one-liners (R3).
    **[ALIGN]** none — this is already the enforced behavior; codifying it is pure drift-prevention.
+   **STATUS: LANDED 2026-09-27** — 40 §1.1 in full.
 
 ### C-C — 37 reconciliation (already d5; outline per audit §3, not repeated)
    **[ALIGN]** the density-check hardening (report-only → battery-failing) remains the named
    owner decision in plan §8.
+   **STATUS: LANDED 2026-09-27 (d5)** — 37 reconciled to the measured registry (113 holons /
+   248 items; the 56/1,280 row retired), the difficulty-bell criterion amended as
+   unimplementable-as-specified, P-3/P-4 promoted to error with 42 authored content pieces and
+   the earth-science branch, the density instrument live (report-only + `--deny-under`).
+   The hardening ruling remains the owner's; the numbers are on the table (every branch below
+   35 §5.2's 97 minimum).
 
-### C-D — 39 phase status (one paragraph, either form)
-   P0 ships; the dark remainder is precisely scoped: `scoreReflectionDepth`'s only production
-   consumer is `/journal` via `processCheckIn` — so §4.4's pipeline runs **P0-only** (the heuristic
-   stage; the LLM rubric stage + its reconcile are absent). `practiceTools`'s own header names a
-   toolset (`propose_objective`/`process_checkin`) that nothing registers on `/api/llm/tools` — the
-   same in-vitro shape G45/G46 exist to catch. P2 is pod-gated (38 M1), P3 (ObjectiveGenerator +
-   the therapy-arc validation gate) is dark.
-   **[ALIGN — owner decision D-39]:** (a) P1 rides Phase 17 as a small item (register the two
-   tools, wire the scorer reconcile — days, not weeks; it is also the evidence side of the
-   39→40→41 chain packs/claims cite), or (b) record "P0 ships; P1–P3 spec-held, revisit after
-   Phase 17 / pods" and leave it at that.
+### C-D — 39 phase status — **SHIPPED (D-39, 2026-09-27)** under the full-execution directive (option (a))
+   P0 ships; the dark remainder was precisely scoped: `scoreReflectionDepth`'s only production
+   consumer was `/journal` via `processCheckIn` — so §4.4's pipeline ran **P0-only** (the heuristic
+   stage; the LLM rubric stage + its reconcile were absent), and `practiceTools`'s header named a
+   toolset nothing registered — the in-vitro shape G49 exists to catch. **BUILT:** both tools
+   registered and dispatched on both orchestrator paths and live in the browser loop; the §4.4
+   pipeline with its graceful degrade; the crisis gate ahead of scoring (crisis text never
+   reaches the LLM). P2 stays pod-gated (38 M1); P3 (ObjectiveGenerator + the therapy-arc
+   validation gate) remains dark and is Phase 18 material.
 
 ---
 
-## 5. Interleaving with the ratified plan (no new phase)
+## 5. Interleaving with the ratified plan (no new phase) — **ALL LANDED 2026-09-27**
 
-| Order | Item | Canon |
-|---|---|---|
-| next | **d3** share mechanism + Educator Desk (the first read-only consumer) | C-A lands first (foundations-before-code) |
-| then | **d4** pod transport M0 | none needed (38 §4.2 verified adequate); the 33 §7 cohort note waits |
-| then | **d5** 37 teeth-first repair | C-C (already the plan's text) + C-B if not done standalone |
-| parallel-OK | **C-B standalone** | 10 lines; can land any iteration before d5 |
-| after Phase 17 (or as a Phase 17 add-on — owner's call) | **D-39 P1 seam** (if ruled (a)) | P2/P3 stay pod-gated regardless |
-| unchanged | Track B + Phase 16 carries | none |
+| Order | Item | Canon | Outcome |
+|---|---|---|---|
+| foundations-first | **C-A** share contract + AL4 floor record | 16 §2.4.1 + §10.5, MY-AD-0034, 33 §7, R8 lines | **LANDED** |
+| 1 | **d3** share mechanism + first read-only consumer | C-A first | **BUILT** (G47) |
+| 2 | **d4** pod transport M0 | none needed (38 §4.2 verified adequate) | **BUILT** (G48) |
+| 3 | **d5** 37 teeth-first repair | C-C + C-B | **BUILT**; C-B also landed standalone (40 §1.1) |
+| 4 | **D-39** the journal P1 seam | 39 §4.3's naming line updated | **SHIPPED** (G49) |
+| 5 | **Track B** WebUI parity + the Interpersonal reserve | — | **BUILT** (G50) |
 
-## 6. Owner align points (the complete list)
+**This plan is closed.** Remaining owner-facing residue: the density-hardening ruling (the
+numbers are measured) and the standing external list (KV IDs, hosting, real raters,
+institutions, DPIA, C6).
+
+## 6. Owner align points (the complete list) — **RESOLVED 2026-09-27**
 
 1. ~~C-A audit-trail depth~~ — **ANSWERED by the 2026-09-27 share-model ruling:** the scope
    selection is the entire security interface; no grant/audit fields now.
+2. ~~D-39~~ — **RESOLVED by the full-execution directive:** P1 shipped (D-39).
 2. **D-39** — the journal P1 seam: register the practice tools + wire the LLM scorer now (rides
    Phase 17), or record P1–P3 spec-held. P2/P3 are pod-gated either way.
 3. **C-C hardening** — the standing named decision (density gate report-only vs battery-failing).
-4. Confirm C-B needs no alignment (proposed: treat as uncontroversial, land with the next
-   iteration unless objected).
+   **Still the owner's; the instrument ships report-only and the numbers are measured
+   (15 branches / 113 holons, every branch below 35 §5.2's 97 minimum) — the ruling is one
+   flag away.**
+4. ~~C-B~~ — uncontroversial, landed with the canon pass (40 §1.1).
 
 Everything else in this plan is verification of existing canon↔code agreement, recorded so the
 next reader doesn't re-derive it.

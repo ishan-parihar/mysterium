@@ -355,9 +355,8 @@ reaches its first seven lines and never the eighth. The reserve CAN reach the li
 seven carry positive timestamps — it is starved by position, not eligibility. Alongside that: an inert
 polarity loop, the wide `shadow-facing` 0.0 %, the real-rater RV1–RV7 thresholds, and per-line
 saturation thresholds awaiting real progression curves. **Phase 17 — the education-system second half —
-was ratified by user directive on 2026-09-27 and is in execution** (packs on a live seam, articulation
-ladder live, Educator Desk, pod transport M0, 37 teeth-first repair; evidence base
-`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md`, plan entry in `DEVELOPMENT-PLAN.md` §4). **d1
+was ratified by user directive on 2026-09-27 and is FULLY EXECUTED** (C-A/C-B canon first, then d1 packs on a live seam, d2 the articulation ladder live, d3 the persona-free share mechanism + first read-only consumer, d4 pod transport M0, d5 37's teeth-first repair, D-39 the journal P1 seam, Track B WebUI scheduling parity + the Interpersonal reserve contract; evidence base
+`docs/audits/EDUCATION-SURFACE-AUDIT-2026-09-26.md` + its §8 addendum, plan entry in `DEVELOPMENT-PLAN.md` §4, canon companion `docs/EDUCATION-CANON-COMPLETION-PLAN.md`). Only two items remain owner-facing: the density-hardening ruling (report-only vs battery-failing, numbers now measured) and the standard external/externalisation list below. **d1
 (packs on a live seam) is BUILT 2026-09-27**: the pack registry seeds on the boot path, `mysterium
 pack` runs a real S1 delegation end-to-end into reliability data and a pack-evidence claim draft,
  and G45 locks it. **d2 (the articulation ladder live) is BUILT 2026-09-27**: `buildLadderPayloads`
