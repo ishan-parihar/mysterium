@@ -41,6 +41,28 @@ measurement session is offered like any other encounter, never imposed, because
 measurement pressure would poison both the Veil (20) and the construct being measured
 (test anxiety is noise).
 
+### 1.1 The provenance & synthetic-evidence contract (added 2026-09-27)
+
+Every reliability row and every claim draft declares where its evidence came from:
+`provenance ∈ {deterministic-simulated, live-answers}`, with `synthetic: true` on every
+simulated row. The principle's canon neighbours: 12 §5.4 (synthetic personas are
+validation-only instruments — RV3) and the Phase-15 verdict — **synthetic evidence can
+reject a design but never certify a person**; an issued credential from a simulated
+responder is evidence of the machinery, not a measurement. Enforcement in code: one
+`RESPONDER_PROVENANCE` const feeds the claim's method/QA strings and the row's markers
+(`scripts/cli/packCmd.ts`), so the disclosure cannot drift; a real player-answer path
+extends the union and everything downstream follows.
+
+The pack registry seeds on the boot path (`seedPackRegistry()` beside
+`seedCurriculumRegistry()`, `src/core/GameLoop.ts`) — an unseeded registry is
+indistinguishable from an empty one, which is why the wiring is gate-checked (G45) rather
+than runtime-checked. Reliability rehydration loads prior rows through the public
+`recordSession` API (`src/core/packs/ReliabilityCollector.ts`) — no private backdoor
+loader; persistence is the caller's concern (JSON file in the CLI, KV in the app).
+
+**Satisfied by:** `src/core/packs/referencePacks.ts`, `src/core/packs/ReliabilityCollector.ts`,
+`scripts/cli/packCmd.ts`.
+
 ## 2. Scientific basis
 
 - **Reliability first.** A pack may not feed any growth narrative until it demonstrates

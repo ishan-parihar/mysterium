@@ -208,6 +208,11 @@ safety layer (the existing `checkSafetyOverride` contract) and to real-world res
 
 ### 4.3 Engine integration points (existing machinery, cited)
 
+> **Satisfied by (P0, live):** `src/core/practice/practiceTools.ts`,
+> `src/core/practice/VowService.ts`, `src/core/practice/ReflectionEvidence.ts`, consumed by
+> `src/routes/journal/+page.svelte`. The P1 toolset registration (on `/api/llm/tools`) and the
+> LLM rubric scorer are the open seam (D-39).
+
 - Proposal inputs: `DevelopmentalNeedsDetector` outputs (already ranked, urgency-scored),
   `AutoModeStrategy` theme, theta staleness map, active shadow ledger, curriculum
   position (34 bridge).

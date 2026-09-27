@@ -37,7 +37,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (66)
+## Records (67)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -68,6 +68,7 @@
 | `MY-AD-0019` | AD | kernel | Active | World, NPC and scenario libraries are pooled before selection |
 | `MY-AD-0029` | AD | kernel | Active | The ray is a lens over the altitude ladder, never restated per stage |
 | `MY-AD-0030` | AD | kernel | Active | Every altitude carries its quality, per quadrant, and the quadrants are read from it |
+| `MY-AD-0034` | AD | kernel | Active | The share mechanism is persona-free; the AL4 descent floor starts at L1 |
 | `MY-RG-0017` | RG | kernel | Active | Engagement mechanisms drift into manipulation |
 | `MY-RG-0025` | RG | kernel | Active | A flattened stage-to-ray map absorbs a shared ray by inventing one |
 | `MY-RG-0027` | RG | kernel | Active | An absent optional input takes a meaningful branch instead of its default |

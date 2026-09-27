@@ -117,6 +117,26 @@ Contract home: the projection registry lives beside the observability layers of 
 render contract owned by 33 §7). The four-layer observer matrix (§10.1) gains the
 auditor row; §10.4 specifies the projection schemas.
 
+### 2.4.1 The share contract (added 2026-09-27 — owner ruling; `MY-AD-0034`)
+
+The consent brokerage above is implemented, at this stage, as a **persona-free share**: no
+parent/guardian-of-record/teacher/therapist identity typing, no role classes — an
+API-key-permission shape. The persona rows above name the *consumers* the render contracts
+(33 §7) will serve; they are use cases, not implemented machinery.
+
+1. **Shape** — a share is `grantId` + `scopes ⊆ L1..L7` (**selected by the player**) +
+   `revoked` (`ConsentLink` in `src/core/domain/articulationLadder.ts`): one player-issued
+   key per recipient. **The scope selection is the entire security interface** — there is no
+   further identity machinery to implement at this point.
+2. **Lifecycle** — create → scope-check at EVERY render (AL5) → revoke nulls the projection
+   instantly; a refused render returns a reason, never a partial payload.
+3. **The L0 floor (AL4, `MY-AD-0034`)** — a share's scopes form a contiguous run from L1; L0
+   (felt-sense) is the player's own surface and is never shareable. Compensation: the L1
+   holonic span already carries the lived-experience summary in rubric-named form.
+4. **Satisfied by:** `src/core/domain/articulationLadder.ts` (the law-holder),
+   `src/core/presentation/ladderProjections.ts` (the payloads), `scripts/cli/ladderCmd.ts` +
+   `src/routes/profile/+page.svelte` (the renderers).
+
 ### 2.5 What the profile is NOT
 
 The PlayerProfile does not contain:
@@ -511,7 +531,10 @@ consented auditor (stance diagnostics) — and the ladder's levels are the same 
   player the full multi-line structure (22 §5 voice specs, 33 theming). "Understand yourself
   at any stage" is a voicing guarantee, not a data restriction.
 - **AL4 — Descent only for auditors** (progressive disclosure, §10.4 AP3); the self may
-  address any level directly.
+  address any level directly. **The floor (2026-09-27, `MY-AD-0034`): an auditor grant's
+  scopes form a contiguous run from L1 — L0 (felt-sense) is the player's own surface and is
+  never grantable; gapped in-scope grants are refused, and refused renders return a reason,
+  never a partial payload.**
 - **AL5 — Consent is re-checked at every render** (§10.4 AP4); revocation nulls the
   projection at any level instantly.
 - **AL6 — Presentation is never measurement pressure.** No comparison dynamics, no streaks,

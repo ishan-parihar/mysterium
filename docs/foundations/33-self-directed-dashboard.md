@@ -290,7 +290,9 @@ The profiling system acts as the diagnostics dashboard for parents, teachers/gua
 and therapists. This section is the RENDER CONTRACT for those dashboards; the data
 authority is 16 §2.4 + §10.4 (Auditor Projection Layer). The three scope projections
 arrive pre-filtered and consent-checked — this layer adds visual hierarchy and
-interaction only.
+interaction only. A surface that renders history refuses without a save — never
+narrates a fabricated profile (the `hasSave` honesty gate, 16 §2.4.1's share contract:
+the recipient holds a player-issued share, scopes re-checked at every render, AL5).
 
 ### 7.0 The ladder mapping (added 2026-09-20)
 
