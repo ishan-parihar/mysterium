@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -123,6 +123,11 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // consumer (the payload bridge AND the law-holder), so the ladder cannot be bypassed with raw
   // payloads any more than it can go dark.
   results.push(await validateLadderWired());
+  // G47 (Phase 17 d3): the share mechanism is persona-free and scope-selected (16 §2.4.1,
+  // MY-AD-0034) — same absence class: a share store with no consumer, or a view rendering
+  // around the law-holder, behaves exactly like no share system. The gate requires BOTH
+  // enforcement points of the one scope law (creation + render) and the view's honesty gate.
+  results.push(await validateShareSeamWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

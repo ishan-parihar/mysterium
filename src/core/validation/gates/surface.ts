@@ -32,7 +32,10 @@ function stripSourceComments(t: string): string {
   return t
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/^\s*\/\/.*$/gm, '');
+    // Line comments BOTH line-initial and trailing — G47's mutation #9 proved a trailing
+    // `// createShare(` mention satisfies a call-anchored row. `://` is protected (URLs);
+    // a quoted `//` literal in a string would be eaten, which is acceptable for gate matching.
+    .replace(/(^|[^\w:])\/\/.*$/gm, '$1');
 }
 
 // ---------------------------------------------------------------------------
@@ -603,6 +606,50 @@ export async function validateLadderWired(): Promise<GateResult> {
       }
     }
     return { gate, passed: true, hard: true, details: 'ladder bridge derives every level; both the CLI and the WebUI profile render through the law-holder' };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G47 — the share seam wired (Phase 17 d3; 16 §2.4.1 + MY-AD-0034).
+//
+// The share mechanism (persona-free, scope-selected — the owner's 2026-09-27 ruling) has the
+// same absence-class failure the pack and ladder seams had: a share store with no consumer,
+// or a view that renders around renderLevel, behaves exactly like no share system. The gate
+// requires BOTH enforcement points of MY-AD-0034's one law: createShare must call the
+// exported scopeRunValid (validated at creation), and the view consumer must reach
+// createShare + revokeShare + buildLadderPayloads + renderLevel + the hasSave honesty gate.
+// ---------------------------------------------------------------------------
+
+export async function validateShareSeamWired(): Promise<GateResult> {
+  const gate = 'G47 share mechanism wired';
+  try {
+    const read = (rel: string): string => {
+      const p = path.join(process.cwd(), rel);
+      if (!fs.existsSync(p)) throw new Error(`${p} not found`);
+      return stripSourceComments(fs.readFileSync(p, 'utf-8'));
+    };
+    const shares = read('src/core/domain/shares.ts');
+    if (!/scopeRunValid\(/.test(shares)) {
+      return { gate, passed: false, hard: true, details: 'shares.ts no longer validates through scopeRunValid — the MY-AD-0034 scope law has one enforcement point instead of two' };
+    }
+    const lawHolder = read('src/core/domain/articulationLadder.ts');
+    if (!/scopeRunValid\(/.test(lawHolder)) {
+      return { gate, passed: false, hard: true, details: 'the law-holder dropped scopeRunValid — the render-time re-check (AL5) is gone' };
+    }
+    const cmd = read('scripts/cli/shareCmd.ts');
+    const missing = ([
+      ['createShare', /createShare\(/],
+      ['revokeShare', /revokeShare\(/],
+      ['buildLadderPayloads', /buildLadderPayloads\(/],
+      ['renderLevel', /renderLevel\(/],
+      ['hasSave', /hasSave\(/],
+    ] as const).filter(([, re]) => !re.test(cmd)).map(([n]) => n);
+    if (missing.length > 0) {
+      return { gate, passed: false, hard: true, details: `scripts/cli/shareCmd.ts no longer reaches: ${missing.join(', ')} — the share surface left the scope law / ladder machinery` };
+    }
+    return { gate, passed: true, hard: true, details: 'share scope law enforced at creation and re-checked at render; the CLI share view renders through the law-holder with the hasSave honesty gate' };
   } catch (e) {
     return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }

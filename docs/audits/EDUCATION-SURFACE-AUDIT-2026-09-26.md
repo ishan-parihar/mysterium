@@ -327,14 +327,20 @@ findings, closed so far:
   refused, refused sets never leak payloads), and **G46** locks both consumers to the
   bridge + law-holder pair.
 
-Still open — the remaining ratified plan entries, in dependency order: **d3** the first auditor
-surface (Educator Desk + the consent brokerage whose AL5 refusal is already live), **d4** pod
-transport M0 (KV + polling fallback over declared bindings; deployment waits on the user-reserved
-KV IDs), **d5** 37's teeth-first repair (the per-branch density instrument with `--deny-under`,
+Still open — the remaining ratified plan entries, in dependency order: **d4** pod transport
+M0 (KV + polling fallback over declared bindings; deployment waits on the user-reserved KV
+IDs), **d5** 37's teeth-first repair (the per-branch density instrument with `--deny-under`,
 error-severity linter promotion so cs.program's 8/8-empty module cannot lint clean, then
-earth-science, then canon reconciliation), **Track B** WebUI scheduling parity + the
-Interpersonal slot fix. User-reserved as ever: KV namespace/dataset/secret creation, the pod
-hosting decision (M1), real raters (RV1–RV7), partner institutions, DPIA.
+earth-science, then canon reconciliation), **D-39** the journal P1 seam (practice tools on
+`/api/llm/tools` + the LLM rubric scorer with heuristic-degrade — ruled to ship under the
+full-execution directive), **Track B** WebUI scheduling parity + the Interpersonal slot fix.
+
+**d3 is BUILT 2026-09-27** (post-§8 update): the persona-free share mechanism (16 §2.4.1,
+MY-AD-0034 — the owner's API-key-permission ruling) + the first read-only consumer surface,
+gated by **G47** (roster 47), teeth proven by three mutations — the third of which exposed and
+closed a mention-hole in every surface gate (trailing comments now stripped). Canon-first:
+the share contract, the AL4 floor record, the 40 §1.1 provenance contract, and the R8
+path-naming lines all landed before the build.
 
 Battery state at this writing: **150 files / 1702 tests**, `arch.py validate` 23/23 with fixtures
 proven 23/23, lint 0/0, build green (adapter-cloudflare), gate roster **46** (G45 + G46, teeth

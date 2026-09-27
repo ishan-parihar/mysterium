@@ -43,6 +43,7 @@ import { runProfile, runStatus, runGlossary, runEvents, runPrivacyCommand } from
 import { runPodCommand, runCredentialCommand, runVowCommand } from './cli/practiceCmd.js';
 import { runPackCommand } from './cli/packCmd.js';
 import { runLadderCommand } from './cli/ladderCmd.js';
+import { runShareCommand } from './cli/shareCmd.js';
 import { runDelegateCommand } from './cli/delegateCmd.js';
 import { runDiagnostic, runSingleEncounter, runFullSession } from './cli/runtime.js';
 
@@ -395,6 +396,11 @@ program
   .allowUnknownOption()
   .description('The articulation ladder (16 §10.5): render your developmental picture through the one ladder — [--level L0..L7] [--register self|auditor]')
 
+program
+  .command('share [rest...]')
+  .allowUnknownOption()
+  .description('The persona-free share mechanism (16 §2.4.1, MY-AD-0034): create/list/revoke scope-bounded shares, and view a shared read-only profile — <create --scopes L1,L2 | list | revoke --id X | view --id X [--level L]>')
+
 // ponytail: .action() prevents commander from showing help when no subcommand given
 program.action(() => {});
 
@@ -671,7 +677,7 @@ async function main(): Promise<void> {
   // treat ALL subcommands as potentially interactive EXCEPT the truly
   // non-interactive ones (`status`, `glossary`). This is safer than
   // enumerating interactive ones — new subcommands default to safe.
-  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod', 'credential', 'pack', 'ladder']);
+  const NON_INTERACTIVE_SUBCOMMANDS = new Set(['status', 'glossary', 'profile', 'insights', 'train', 'export', 'events', 'calibrate', 'privacy', 'delegate', 'vow', 'pod', 'credential', 'pack', 'ladder', 'share']);
   const needsInteractive = !NON_INTERACTIVE_SUBCOMMANDS.has(subcommand ?? '') && !HEADLESS && !JSON_MODE;
   if (needsInteractive && !process.stdin.isTTY) {
     setHeadless(true);
@@ -709,6 +715,7 @@ async function main(): Promise<void> {
   if (subcommand === 'credential') { await runCredentialCommand(program.args.slice(1)); return; }
   if (subcommand === 'pack') { await runPackCommand(program.args.slice(1)); return; }
   if (subcommand === 'ladder') { await runLadderCommand(program.args.slice(1)); return; }
+  if (subcommand === 'share') { await runShareCommand(program.args.slice(1)); return; }
   // P0-5 + P0-6: Use deleteAllSaves (clears sig + world + atomic envelope).
   // P0-6: Also clear TDG graph state if the TDG bridge is running, so a new
   // game doesn't inherit the old player's developmental graph.

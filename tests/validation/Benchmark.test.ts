@@ -100,8 +100,12 @@ describe('Validation benchmark (CI tier)', () => {
     // render code with zero importers; the gate requires BOTH the payload bridge and the
     // law-holder at each consumer, so the ladder can neither go dark nor be bypassed with raw
     // payloads.)
-    expect(suite.results.length).toBe(46);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46']) {
+    // 46 → 47 with Phase 17 d3 (G47 share mechanism wired — the persona-free, scope-selected share
+    // (16 §2.4.1, MY-AD-0034) is the same absence class: the gate requires BOTH enforcement points
+    // of the one scope law (createShare's scopeRunValid call + the law-holder's render-time
+    // re-check) and the view consumer's reach: create/revoke/ladder/honesty gate.)
+    expect(suite.results.length).toBe(47);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46', 'G47']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

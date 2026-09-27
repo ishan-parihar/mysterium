@@ -1436,6 +1436,22 @@ parity, corpus growth, and refactoring.
 > and the law-holder, so the ladder can neither go dark nor be bypassed with raw payloads (teeth
 > proven by mutation: bypass, bridge-less, and dropped-completeness-contract mutations each go
 > red). Battery: 150 files / 1702 tests.
+>
+> **d3 ✅ BUILT 2026-09-27** — the persona-free share mechanism + the first read-only consumer
+> surface, per the owner's 2026-09-27 ruling (16 §2.4.1 + MY-AD-0034): `src/core/domain/shares.ts`
+> (createShare/revokeShare; the scope law validated AT CREATION through the exported
+> `scopeRunValid` — one law, two enforcement points), `mysterium share create|list|revoke|view`
+> (the view renders the shared levels through `buildLadderPayloads` + `renderLevel` ONLY, with
+> the `hasSave` honesty gate; revoked/unknown shares refuse with AL5 reasons), `shares.json`
+> persistence beside the save. **G47** locks the seam — creation-time validation, the law-holder's
+> render-time re-check, and the view's reach (create/revoke/ladder/honesty) — teeth proven by
+> mutation #7 (creation validation deleted → red), #8 (renderLevel bypassed → red), and #9
+> (createShare call deleted, trailing-comment mention surviving → red). Mutation #9 exposed a
+> real hole in EVERY surface gate: `stripSourceComments` only stripped line-initial comments, so
+> a deleted call surviving in a trailing comment satisfied any call-anchored row; the shared
+> stripper now strips trailing line comments too (URL `://` protected), and G45/G46 re-verified
+> green under it. C-A's canon (the share contract + the AL4 floor record) landed BEFORE this
+> build, per the grounding principle. Battery: 151 files / 1707 tests; roster **47**.
 
 ### Current work (post-plan) — not a phase
 

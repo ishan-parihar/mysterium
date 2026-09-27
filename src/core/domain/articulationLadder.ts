@@ -91,6 +91,19 @@ function presentationFor(stage: Stage): RenderedLevel['presentation'] {
   return 'standard';
 }
 
+/**
+ * MY-AD-0034 + 16 §2.4.1: an auditor/share grant's scopes form a contiguous run from L1 —
+ * L0 (the player's felt-sense surface) is never grantable. One law, two consumers:
+ * `renderLevel` (AL5 re-check at every render) and `createShare` (validated at creation).
+ */
+export function scopeRunValid(scopes: readonly LadderLevel[]): boolean {
+  const granted = [...new Set(scopes)].sort();
+  if (granted.length === 0) return false;
+  const firstIdx = LADDER_LEVELS.indexOf(granted[0]);
+  const lastIdx = LADDER_LEVELS.indexOf(granted[granted.length - 1]);
+  return lastIdx - firstIdx === granted.length - 1 && firstIdx >= 1;
+}
+
 // Local import to avoid a cycle with Stage.ts
 import { stageOrdinal } from './Stage.js';
 
@@ -131,10 +144,8 @@ export function renderLevel(req: RenderRequest, payloads: ReadonlyMap<LadderLeve
   // L1..L5 but the SELF-only levels are the same levels; progressive disclosure is enforced by
   // requiring the scopes to be a contiguous run STARTING AT L1 (L0 is the player's own
   // felt-sense surface — an auditor's descent begins above it). Pinned by LadderLive LD3.
-  const granted = [...consent.scopes].sort();
-  const firstIdx = LADDER_LEVELS.indexOf(granted[0]);
-  const lastIdx = LADDER_LEVELS.indexOf(granted[granted.length - 1]);
-  const contiguous = lastIdx - firstIdx === granted.length - 1 && firstIdx >= 1;
+  const contiguous = scopeRunValid(consent.scopes);
+  const granted = [...new Set(consent.scopes)].sort();
   const reqIdx = LADDER_LEVELS.indexOf(req.level);
   const belowTop = reqIdx <= LADDER_LEVELS.indexOf(granted[granted.length - 1]);
   if (!contiguous || !belowTop) {
