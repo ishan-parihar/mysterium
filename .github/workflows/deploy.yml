@@ -1,19 +1,35 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare Pages
 on:
   push:
     tags: ['v*']
   workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: cloudflare-pages
   cancel-in-progress: false
 
 jobs:
+  # The binding gate runs BEFORE the build: a deploy that cannot persist must fail here, with
+  # remediation, rather than ship an artifact whose save route 503s on the first player's save
+  # (B-1, `docs/DEPLOYMENT-READINESS-PLAN.md`). This is the step that makes the check-invariants
+  # check a gate rather than decoration — a reminder no step reads is the same silent-success
+  # class one layer up.
+  bindings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Refuse to deploy with placeholder KV bindings
+        run: npx tsx scripts/check-invariants.ts --require-bindings
+
   build:
+    needs: bindings
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,23 +44,27 @@ jobs:
         run: npx tsc --noEmit
       - name: Test
         run: npx vitest run
-      - name: Build (static target for GitHub Pages)
+      - name: Build (SSR + BFF — the deployable target)
         run: npm run build
         env:
-          BUILD_TARGET: static
+          BUILD_TARGET: cloudflare
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # adapter-static (BUILD_TARGET=static) writes to build/ by default
-          path: build
+          path: .svelte-kit/cloudflare
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: cloudflare-pages
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy to Cloudflare Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: mysterium
+          directory: .svelte-kit/cloudflare
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

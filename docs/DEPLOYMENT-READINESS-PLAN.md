@@ -77,9 +77,13 @@ which assert the 503's `body.message`, the exact text a client receives. The cli
 treats a non-OK response as a failure (`cloudSyncStore` returns `false`), so 503 is the correct
 signal all the way through.
 
-A build-time reminder in `check-invariants.ts` reads `wrangler.toml`, reports any
-`REPLACE_WITH_*` binding, and prints the exact remediation commands. It is a `NOTE`, not a
-failure: the committed file is *meant* to hold placeholders and CI builds on every push.
+And a **build-time gate** in `check-invariants.ts`: it reads `wrangler.toml`, finds any
+`REPLACE_WITH_*` namespace id, and **fails with the remediation commands** under
+`--require-bindings` (report-only by default, because the committed file is *meant* to hold
+placeholders and CI builds on every push). `deploy.yml` passes that flag in a `bindings` job that
+**gates the build**, so a deploy that cannot persist fails before an artifact exists rather than
+after a player's first save. A note no step reads would be the same silent-success class one
+layer up — the check's whole purpose is to be invoked by the thing it protects.
 
 ### B-2 — Two KV namespaces and one analytics dataset do not exist.
 
@@ -87,15 +91,20 @@ failure: the committed file is *meant* to hold placeholders and CI builds on eve
 **owner-reserved** (namespace/dataset ids are a user decision), but nothing can be verified
 until it is done. The commands are in the file's own header.
 
-### B-3 — `deploy.yml` has never run, and the GitHub Pages path is a degraded build.
+### B-3 — The GitHub Pages path was a degraded build wearing the product's name. **BUILT 2026-09-28.**
 
-The Pages job builds with `BUILD_TARGET=static`, which per `svelte.config.js` means **no SSR and
-no `/api/*` endpoints** — the client falls back to local-only persistence and a direct LLM call.
-That is a legitimate Capacitor/offline mode, but it is *not* the production web deploy, and
-deploying it to a public URL and calling that "Mysterium is live" would be a false claim: saves
-would be device-local and the LLM key would have to ship to the browser. **The Pages workflow
-should be relabelled or removed**; the real target is Cloudflare Pages with
-`BUILD_TARGET=cloudflare`.
+The single `deploy.yml` built with `BUILD_TARGET=static`, which per `svelte.config.js` means **no
+SSR and no `/api/*` endpoints** — the client falls back to local-only persistence and a direct
+LLM call. That is a legitimate Capacitor/offline mode, but it was named "Deploy to GitHub Pages",
+fired on every `v*` tag, and would have published a URL that cannot save a player's progress
+server-side while looking exactly like "Mysterium is live". **The workflows are now split:**
+
+- `deploy.yml` → **Cloudflare Pages**, `BUILD_TARGET=cloudflare`, the deployable target, and it
+  runs the binding gate (below) before it builds.
+- `deploy-static.yml` → the static artifact, retitled "Static build (offline demo / Capacitor
+  artifact)", moved off the `v*` tag onto `v*-static` tags and manual dispatch, with its own
+  header stating that it is not the production web deploy. A public static URL is still
+  available, but it can no longer be mistaken for the product.
 
 ### B-4 — No release has ever been cut: no tag, no npm publication.
 
@@ -118,7 +127,7 @@ audited in the same pass.
 | G-2 | **Create the KV namespaces + analytics dataset** (B-2) | nothing persists without them | **yes** — account + ids |
 | G-3 | **Set + verify `LLM_API_KEY`** (B-5) | no LLM without it | **yes** — the key |
 | G-4 | **First real deploy to Cloudflare Pages** | proves B-1's guard, the bindings, and the BFF together | no |
-| G-5 | **Relabel/remove the GitHub Pages workflow** (B-3) | prevents a false "live" claim | no |
+| G-5 | ~~**Relabel/remove the GitHub Pages workflow** (B-3)~~ **BUILT 2026-09-28** | prevents a false "live" claim | **done** |
 | G-6 | **Rate limiting on the BFF** | 8 unauthenticated endpoints; `/api/save` accepts 256KB writes keyed on a client-supplied `deviceId` | no — but confirm scope |
 | G-7 | **A first-run smoke test against the live URL** | the only proof that boot → session → save → restore works in production | no |
 | G-8 | **Error monitoring** | silent no-ops are the project's known failure mode; a deploy with no visibility cannot detect its own regressions | no |

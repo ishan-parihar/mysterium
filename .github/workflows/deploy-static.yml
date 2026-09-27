@@ -1,0 +1,62 @@
+# Static build (GitHub Pages / Capacitor) — NOT the production web deploy.
+#
+# This workflow publishes the BUILD_TARGET=static build, which per svelte.config.js means NO SSR
+# and NO /api/* endpoints: the client falls back to device-local persistence and a direct LLM
+# call. It is a legitimate OFFLINE / demo artifact and the Capacitor path, and it is not what
+# "Mysterium is live" means — a public URL served this way cannot save a player's progress
+# server-side. The deployable web target is `.github/workflows/deploy.yml` (BUILD_TARGET=cloudflare).
+#
+# The naming is the change: the previous workflow was called "Deploy to GitHub Pages" and built
+# this same static artifact, so a reader could reasonably conclude that the published site was the
+# product. It is not (B-3, `docs/DEPLOYMENT-READINESS-PLAN.md`).
+name: Static build (offline demo / Capacitor artifact)
+
+on:
+  push:
+    tags: ['v*-static']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Generate SvelteKit types
+        run: npx svelte-kit sync
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Test
+        run: npx vitest run
+      - name: Build (static target — no /api, local persistence only)
+        run: npm run build
+        env:
+          BUILD_TARGET: static
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # adapter-static (BUILD_TARGET=static) writes to build/ by default
+          path: build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy the static artifact to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
