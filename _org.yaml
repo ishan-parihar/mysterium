@@ -100,6 +100,7 @@ rungs:
     - docs/ONBOARDING-REDESIGN-PLAN.md
     - docs/ARCHITECTURE-TRANSMUTATION-PLAN.md
     - docs/REQUIREMENTS.md
+    - docs/EDUCATION-CANON-COMPLETION-PLAN.md
     authority: docs/DEVELOPMENT-PLAN.md
     live: true
   historical:

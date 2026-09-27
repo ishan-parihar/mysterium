@@ -49,7 +49,7 @@ canon-domain docs/{lines,stages,narrative,progression}/
 content      docs/concept-drafts/          the 512-file corpus
 system       docs/system/                 contracts, as ORGANS          authority: docs/system/AGENTS.md
 records      docs/system/**/core/         AD · RG · Log (architecture-discipline, localized)
-plans        docs/{DEVELOPMENT-PLAN,ONBOARDING-REDESIGN-PLAN,ARCHITECTURE-TRANSMUTATION-PLAN,REQUIREMENTS}.md
+plans        docs/{DEVELOPMENT-PLAN,ONBOARDING-REDESIGN-PLAN,ARCHITECTURE-TRANSMUTATION-PLAN,REQUIREMENTS,EDUCATION-CANON-COMPLETION-PLAN}.md
 historical   docs/historical/             dated records; never an authority, never cited
 audits       docs/audits/                 dated audit evidence behind the RG ledger; never an authority
 generated    docs/INDEX.md + docs/system/sub-systems/*/AGENTS.md   ← `arch.py emit`; never hand-edited

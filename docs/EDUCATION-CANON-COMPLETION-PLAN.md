@@ -1,10 +1,15 @@
-# EDUCATION-CANON-COMPLETION-PLAN — 2026-09-27
+# EDUCATION-CANON-COMPLETION-PLAN
+
+**Rung note:** living plan (plans rung). Emitted 2026-09-27 as a dated audit doc, promoted to
+this rung the same day on the owner's alignment directive — a document the owner extends in place
+is a plan, not a dated record, and the audits rung is never-authority by law.
 
 **Directive (user, 2026-09-27):** complete the missing architectural-docs context for the
 education-system dimension — a plan plus a per-doc outline for owner alignment, with an audit of
 existing codebase decisions mapped onto the docs. The ratified Phase 17 implementation track
-(d3 → d4 → d5 → Track B) is **unchanged and still first**; this plan sequences the canon depth
-*into* those iterations. Nothing here executes until aligned.
+(d3 → d4 → d5 → Track B) is **parked awaiting owner alignment** (user directive 2026-09-27: clarify
+the surface area and perfect the foundations first); this plan is that clarification. Nothing
+here executes until aligned.
 
 **What this is not:** not a re-audit of implementation (that is
 `EDUCATION-SURFACE-AUDIT-2026-09-26.md` + its §8 addendum), and not new phase scope — every
@@ -21,9 +26,12 @@ canon item attaches to an already-ratified iteration or is explicitly marked own
 | 31 depth-assessment | Depth scoring model | **Built + gated** (depth rungs) |
 | 32 agentic linter | Lint contract for the corpus | Built; **severities too weak** (P-3 warning / P-4 info → cs.program's 8/8-empty module lints clean) — d5 |
 | 33 §1–5 learner dashboards | Player-facing render contract | **Built** (WebUI surfaces) |
-| 33 §7 auditor dashboards | Render contract: Guardian Mirror / Educator Desk / Therapeutic Pane | Spec — **d3 builds the first surface** (Educator Desk) |
+| 33 §7 auditor dashboards | Render contract: Guardian Mirror / Educator Desk / Therapeutic Pane | **Contract complete — surface absent.** §7 is an 80-line render contract (§7.0–§7.4, five binding rules) specifying three named surfaces, a shared `AuditorShell.svelte`, and a `/api/auditor/view` server route; grep over `src/` returns **zero** hits for any of them. `src/routes/api/` exists (llm/tools, recovery, agent,
+   save, telemetry), so §7.4's route has a natural home beside them — **d3 builds the first
+   consumer** (Educator Desk + the §7.4 auditor route) |
 | 34 engine bridge | Curriculum ↔ engine adapters | **Built + gated** (adapter-cloudflare) |
 | 35 complexity mapping | The density instrument (§5.2: 97-holon minimum) | Measured; the invariant itself **not built** — d5 |
+| 36 upgrade plan | Curriculum upgrade trajectory (AGENTS 2.2: expansion-set sequencing) | Trajectory doc; no gap claimed without a read — not yet audited this pass |
 | 37 K-12 expansion | Branch trees, acceptance layer | Built 10/11 trees; **5 verified divergences** (audit §3) — d5 |
 | 38 cohort weave | Pods, transport M0/M1, sync discipline | Spec-only; **§4.2 already owns the M0/M1 transport decision exactly as planned** — d4 implements, no canon work needed |
 | 39 action-induction journal | Objectives, reflection protocol, journal system | **P0 BUILT + LIVE** — VowService (§3.2 lifecycle), ReflectionEvidence (§3.3 five-prompt protocol + §4.4 P0 heuristic scorer), `/journal` route; the audit called it "the most operationally complete doc in the dimension". **P1 DARK** (LLM rubric scorer + `propose_objective`/`process_checkin` never registered on `/api/llm/tools` — verified by grep); P2 pod-gated (38 M1); P3 (ObjectiveGenerator + therapy-arc gate) dark |
@@ -50,6 +58,7 @@ Each row: the code decision (file), its intended canon home, the gap.
 | R5 | Pod event discipline (monotonic events, serial application, occurredAtMs ordering) | `src/core/pods/podStateMachine.ts` | 38 §4.2/4.3 specify it | **No gap** (mapped) — d4 implements M0 as written |
 | R6 | `hasSave` honesty gate: a render that requires history refuses without a save rather than narrating a fabricated profile | `ladderCmd.ts`, SaveRepository | Nowhere stated as a render-contract pattern | One sentence in 33 §7 intro — rides **C-A** |
 | R7 | G45/G46 gate contracts (call-anchored, comment-stripped matching) | Record layer + `surface.ts` | Owned by the record layer as intended | **No gap** (records own gate contracts by design) |
+| R8 | Path-naming linkage: `arch.py context src/core/practice` routes to the catalyst organ and `src/core/packs` to curriculum, but both report *"no foundation document names this path"* — while 38 names `src/core/pods/podStateMachine.ts` and routes to its spec cleanly. 39/40 don't name the code they govern, so `context` cannot surface them | `arch.py context` output, 2026-09-27 | 39 §4.3 / 40 (a naming line each, the 38 pattern) | **Linkage gap** — rides C-A/C-B (one naming line per doc) |
 
 The audit's wider wall-list (§0 of the 2026-09-26 audit) — packs unreachable, ladder in-vitro,
 auditor surfaces dark, pods in-vitro, 37 acceptance teeth — is **implementation state**, being
@@ -90,18 +99,25 @@ closed by d1–d5; not repeated here.
    issued-by-the-player (guardian-of-record for young players, per the existing table).
 2. Lifecycle: issue → grant-check at every render (AL5, already canon) → revoke nulls the
    projection instantly; refused renders return a reason, never a partial payload (LD3 pin).
-3. The AL4 floor, one sentence in §10.5's AL4 row: *auditor descent is contiguous from L1; L0 is
-   the player's felt-sense surface and is never grantable to an auditor.*
+3. The AL4 floor — **a recorded divergence, not a prose sentence**: canon AL4 (16:513) says
+   "descent only for auditors" but never names L0 as ungrantable; code (`articulationLadder.ts`)
+   enforces `firstIdx >= 1`. AGENTS §2.0: an unrecorded divergence is a defect, not a decision.
+   Lands as a MY-AD via `arch.py new` WITH its compensation (what an auditor loses: nothing — the
+   L1 holonic span already carries the player's lived-experience summary in rubric-named form),
+   plus the one-line AL4 amendment in §10.5.
 4. R6's honesty-gate sentence in 33 §7's intro: *a surface that renders history refuses without
    a save — never narrates a fabricated profile.*
-   **[ALIGN]** depth of 2 — does the owner want audit-trail (who granted, when) as a first-class
-   field now or when institutional surfaces need it?
+    **[ALIGN]** depth of 2 — does the owner want audit-trail (who granted, when) as a first-class
+    field now or when institutional surfaces need it?
 
 ### C-B — 40 §1 "Provenance & the synthetic-evidence contract" (new subsection, ~10 lines; standalone or with d5)
 1. Every reliability row and claim draft carries `provenance ∈ {deterministic-simulated,
    live-answers}`; `synthetic: true` on every simulated row.
-2. The rule as law: *synthetic evidence can reject a design but never certify a person; an
-   issued VC from a simulated responder is evidence of the machinery, not a measurement.*
+2. The rule's canon neighbours, cited not re-stated: 12 §5.4 RV3 (synthetic personas are
+   validation-only instruments) and the Phase-15 record (*synthetic evidence can reject but never
+   certify*). What has **no** canon home is the record-level enforcement contract: every row and
+   claim carries provenance + synthetic markers, so a drill's theta can never be mistaken for a
+   person's.
 3. Boot-seeding + rehydration one-liners (R3).
    **[ALIGN]** none — this is already the enforced behavior; codifying it is pure drift-prevention.
 
@@ -110,8 +126,12 @@ closed by d1–d5; not repeated here.
    owner decision in plan §8.
 
 ### C-D — 39 phase status (one paragraph, either form)
-   P0 ships; the dark remainder is P1 (tools on `/api/llm/tools` + LLM rubric scorer with
-   heuristic-degrade), P2 (pod-gated), P3 (ObjectiveGenerator + therapy-arc gate).
+   P0 ships; the dark remainder is precisely scoped: `scoreReflectionDepth`'s only production
+   consumer is `/journal` via `processCheckIn` — so §4.4's pipeline runs **P0-only** (the heuristic
+   stage; the LLM rubric stage + its reconcile are absent). `practiceTools`'s own header names a
+   toolset (`propose_objective`/`process_checkin`) that nothing registers on `/api/llm/tools` — the
+   same in-vitro shape G45/G46 exist to catch. P2 is pod-gated (38 M1), P3 (ObjectiveGenerator +
+   the therapy-arc validation gate) is dark.
    **[ALIGN — owner decision D-39]:** (a) P1 rides Phase 17 as a small item (register the two
    tools, wire the scorer reconcile — days, not weeks; it is also the evidence side of the
    39→40→41 chain packs/claims cite), or (b) record "P0 ships; P1–P3 spec-held, revisit after
