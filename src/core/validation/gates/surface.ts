@@ -755,3 +755,47 @@ export async function validatePracticeToolsWired(): Promise<GateResult> {
     return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }
 }
+
+// ---------------------------------------------------------------------------
+// G50 — the WebUI schedules like the kernel (Phase 17 Track B) + the reserved
+// primary's position contract (MY-AD-0033).
+//
+// The browser's `scheduleEncounters` called `scheduleNextWithHolonicReturn` with
+// DEFAULT_WEIGHTS and no bleed-through and never interleaved curriculum beats, while every
+// other surface scheduled through `tickWithStrategy` (strategy weight bias + bleed-through +
+// the curriculum interleave). One cadence definition, two consumers — the parity gap.
+// The reserve row keeps MY-AD-0033's POSITION contract (most-starved eligible line wins;
+// the all-zero tie is canonical order, not hash order) scale-independent, which no seeded
+// campaign can witness.
+// ---------------------------------------------------------------------------
+
+export async function validateWebUiParityWired(): Promise<GateResult> {
+  const gate = 'G50 WebUI scheduling parity';
+  try {
+    const read = (rel: string): string => {
+      const p = path.join(process.cwd(), rel);
+      if (!fs.existsSync(p)) throw new Error(`${p} not found`);
+      return stripSourceComments(fs.readFileSync(p, 'utf-8'));
+    };
+    const engine = read('src/lib/engine/gameEngine.ts');
+    const missing = ([
+      ['applyWeightBias (the strategy bias)', /applyWeightBias\(/],
+      ['detectBleedThrough', /detectBleedThrough\(/],
+      ['generateCurriculumEncounters (the interleave)', /generateCurriculumEncounters\(/],
+    ] as const).filter(([, re]) => !re.test(engine)).map(([n]) => n);
+    if (missing.length > 0) {
+      return { gate, passed: false, hard: true, details: `gameEngine.ts no longer reaches: ${missing.join(', ')} — the browser has drifted back to unweighted scheduling` };
+    }
+    const loop = read('src/core/GameLoop.ts');
+    if (!/applyWeightBias\(\s*DEFAULT_WEIGHTS/.test(loop) || !/generateCurriculumEncounters\(/.test(loop)) {
+      return { gate, passed: false, hard: true, details: 'the kernel loop no longer applies the strategy bias or the curriculum interleave — the parity definition itself is gone' };
+    }
+    const scheduler = read('src/core/engines/EncounterScheduler.ts');
+    if (!/export function selectReservedPrimaryByLineCoverage/.test(scheduler)) {
+      return { gate, passed: false, hard: true, details: 'the reserved primary is no longer exported — its scale-independent contract cannot be asserted' };
+    }
+    return { gate, passed: true, hard: true, details: 'browser scheduling carries the strategy bias, bleed-through and the curriculum interleave; the reserved primary keeps its exported position contract' };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}

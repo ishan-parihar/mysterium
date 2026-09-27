@@ -1503,6 +1503,23 @@ parity, corpus growth, and refactoring.
 > seam (roster **49**), teeth proven by mutation #13 (crisis gate deleted → red), #14
 > (registration deleted → red), #15 (engine integration deleted → red). Battery: 153 files /
 > 1720 tests.
+>
+> **Track B ✅ BUILT 2026-09-27** — WebUI scheduling parity + the reserve contract. (a) **Parity:**
+> `scheduleEncounters` now schedules through the SAME inputs the kernel loop applies — the
+> session strategy's `applyWeightBias(DEFAULT_WEIGHTS, …)` and `detectBleedThrough` — and
+> interleaves up to one curriculum beat per pass through the same pure
+> `generateCurriculumEncounters` (the counter rides a store copy; SessionState is readonly by
+> contract). Threshold mode stays the kernel-only Crucible path behind `isDeliberateInstrumentPin`.
+> (b) **The Interpersonal exclusion: measured, not assumed.** The 2026-09-25 report's
+> "structural slot deficit" predates MY-AD-0033's reserve — measured today at three scales
+> through `runCampaign`: every canonical line served, quietest/busiest 0.50 (3×4), 0.20 (6×6),
+> 0.11 (12×6) against G43's 0.02 floor. (c) **The scale-independent assertion G43 cannot make:**
+> `selectReservedPrimaryByLineCoverage` is now exported and its POSITION contract pinned
+> directly — the most-starved eligible line takes the first offer, the all-zero tie resolves in
+> canonical `ALL_LINES` order whatever the candidate-list shape, and an ineligible line is
+> skipped (eligibility is upstream). **G50** locks the parity rows + the export, teeth proven by
+> mutation #16 (browser strategy bias dropped → red), #17 (interleave dropped → red), #18
+> (reserve un-exported → red), restored green. Battery: 154 files / 1723 tests; roster **50**.
 
 ### Current work (post-plan) — not a phase
 

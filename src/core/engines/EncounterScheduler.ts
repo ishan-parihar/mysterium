@@ -27,7 +27,7 @@ export type { SessionContext } from './PriorityComputation.js';
 /** Candidates scoring within this band of each other are considered tied (`24 §3.3`). */
 export const TIE_BAND = 0.05;
 
-interface ScoredCandidate {
+export interface ScoredCandidate {
   readonly candidate: EncounterCandidate;
   readonly priority: number;
 }
@@ -50,7 +50,19 @@ function latestPositiveLineTimestamp(sig: Significator, line: Line): number {
  * tie-break; it does not claim that one line has greater developmental value. A zero timestamp
  * means never served; later ticks use the newest positive timestamp.
  */
-function selectReservedPrimaryByLineCoverage(
+/**
+ * The reserved developmental primary (MY-AD-0033, Phase 16 d3).
+ *
+ * This is a POSITION policy, not a census: among the lines ELIGIBLE for a developmental offer
+ * (eligibility is decided upstream by candidate generation), the least-recently-served takes the
+ * first slot. Which lines are eligible is a property of the world's supply, so "every canonical
+ * line is reached" is not what this function can promise — what it can promise, and what this test
+ * pins directly at the function, is the position rule itself: the most-starved eligible line wins,
+ * and an all-zero tie resolves in canonical `ALL_LINES` order (never hash order), identically
+ * whatever shape the candidate list has. Exported so that contract is testable at any scale —
+ * G43 can only observe one seeded campaign at one scale, where an unlucky seed can satisfy it.
+ */
+export function selectReservedPrimaryByLineCoverage(
   ranked: readonly ScoredCandidate[],
   sig: Significator,
 ): ScoredCandidate {

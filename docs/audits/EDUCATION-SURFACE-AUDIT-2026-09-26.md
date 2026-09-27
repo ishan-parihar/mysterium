@@ -360,8 +360,12 @@ The honest headline the instrument reports: **every branch is below 35 §5.2's 9
 — the calibration input the owner's hardening decision needs. **D-39 is BUILT 2026-09-27**:
 the journal P1 seam — both practice tools registered on the live tool surface through the pure
 core, with §4.4's LLM-rubric/heuristic reconcile and the crisis gate ahead of scoring (crisis
-text never reaches the LLM, pinned by test), gated by **G49** (roster 49). Remaining: **Track B**
-(WebUI scheduling parity + Interpersonal slot fix).
+text never reaches the LLM, pinned by test), gated by **G49** (roster 49). **Track B is BUILT
+2026-09-27**: the browser schedules like the kernel (strategy weight bias + bleed-through +
+the curriculum interleave, all through the same pure functions); the Interpersonal exclusion
+re-measured at three scales (every line served, ratio 0.11–0.50 against G43's 0.02 floor — the
+2026-09-25 finding predated MY-AD-0033's reserve); the reserve's position contract now exported
+and pinned scale-independently; **G50** locks it (roster 50).
 
 Battery state at this writing: **150 files / 1702 tests**, `arch.py validate` 23/23 with fixtures
 proven 23/23, lint 0/0, build green (adapter-cloudflare), gate roster **46** (G45 + G46, teeth

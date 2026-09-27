@@ -110,8 +110,11 @@ describe('Validation benchmark (CI tier)', () => {
     // 48 → 49 with Phase 17 D-39 (G49 practice tools registered — propose_objective /
     // process_checkin reach the pure core through the crisis gate and the §4.4 pipeline, the
     // orchestrator registers + dispatches them, and the engine supplies the integration.)
-    expect(suite.results.length).toBe(49);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46', 'G47', 'G48', 'G49']) {
+    // 49 → 50 with Phase 17 Track B (G50 WebUI scheduling parity — the browser carries the
+    // strategy bias, bleed-through and the curriculum interleave the kernel applies, and
+    // MY-AD-0033's reserved primary keeps an exported, scale-independent position contract.)
+    expect(suite.results.length).toBe(50);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46', 'G47', 'G48', 'G49', 'G50']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

@@ -24,10 +24,11 @@ import type { ScheduledEncounter } from '$core/domain/EncounterSpecNew.js';
 import type { SessionContext } from '$core/engines/PriorityComputation.js';
 import type { SessionState } from '$core/GameLoop.js';
 import type { OrchestratorResult, AgenticUIHandler } from '$core/assessments/AgenticOrchestrator.js';
-import { startSession, applyResponseOnly, computeTrainingWeave } from '$core/GameLoop.js';
+import { startSession, applyResponseOnly, computeTrainingWeave, generateCurriculumEncounters } from '$core/GameLoop.js';
+import { detectBleedThrough } from '$core/engines/ThetaDecay.js';
 import { scheduleNextWithHolonicReturn } from '$core/engines/EncounterScheduler.js';
 import { createModuleTaskTypesProvider } from '$core/engines/CandidateGeneration.js';
-import { DEFAULT_WEIGHTS } from '$core/engines/PriorityComputation.js';
+import { DEFAULT_WEIGHTS, applyWeightBias } from '$core/engines/PriorityComputation.js';
 import { sessionControlStore } from '$lib/stores/sessionControlStore.js';
 import { AgenticOrchestrator } from '$core/assessments/AgenticOrchestrator.js';
 import { currentVowBook } from '$lib/stores/vowStore.js';
@@ -176,24 +177,45 @@ export function scheduleEncounters(): void {
     forceStage: control.forceStage ?? undefined,
     forceModality: control.forceModality ?? undefined,
   };
+  const sessionContext: SessionContext = {
+    encountersSoFar: session.recentOutcomes.length,
+    sessionDurationMs: now - (session.sessionStartMs ?? now),
+    targetSessionLength: control.encounterCount,
+    recentLines: [],
+    ...forceFields,
+  };
   let encounters = scheduleNextWithHolonicReturn(
     significator,
     world,
-    {
-      encountersSoFar: session.recentOutcomes.length,
-      sessionDurationMs: now - (session.sessionStartMs ?? now),
-      targetSessionLength: control.encounterCount,
-      recentLines: [],
-      ...forceFields,
-    },
+    sessionContext,
     now,
     3,
-    DEFAULT_WEIGHTS,
-    undefined,
+    // The STRATEGY's weight bias + bleed-through, exactly as the kernel loop computes them
+    // (tickWithStrategy steps 3–4). Without these the browser scheduled unweighted while
+    // every other surface scheduled with the session's strategy — the parity gap Track B
+    // closes. The curriculum interleave (step 5) and the training weave (step 5b) are applied
+    // below; threshold mode is the kernel-only Crucible path (see `isDeliberateInstrumentPin`).
+    applyWeightBias(DEFAULT_WEIGHTS, session.strategy.weightBias),
+    detectBleedThrough(significator.theta.lastEncounter, now),
     moduleTaskTypesProvider ?? undefined,
     session.userMatrixModel,
     session.encountersSinceRefresh,
   );
+
+  // The curriculum interleave (kernel step 5): up to one curriculum beat per scheduling pass,
+  // placed after the first developmental encounter when slots remain — the same interleave
+  // tickWithStrategy performs, driven by the same pure generator. The counter rides the
+  // session copy (SessionState is readonly by contract; the store is replaced wholesale).
+  const curriculumEncounters = generateCurriculumEncounters(significator, session, sessionContext, now);
+  if (curriculumEncounters.length > 0 && encounters.length > 0) {
+    encounters = [encounters[0]!, curriculumEncounters[0]!, ...encounters.slice(1)].slice(0, 3);
+    engineStore.update((s) => ({
+      ...s,
+      session: s.session
+        ? { ...s.session, curriculumEncountersThisSession: (s.session.curriculumEncountersThisSession ?? 0) + 1 }
+        : s.session,
+    }));
+  }
 
   // WIRE-7 (training-beat parity): apply the SAME weave policy as the kernel
   // loop (computeTrainingWeave) after every scheduling pass — exactly where
