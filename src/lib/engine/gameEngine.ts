@@ -231,9 +231,14 @@ export function scheduleEncounters(): void {
   // together, and relax G44's no-pin-logic assertion in the same commit.
   //
   // SCOPE, stated plainly because the parity claim is otherwise overstated: the WebUI calls
-  // `scheduleNextWithHolonicReturn` directly rather than `tickWithStrategy`, so it never runs the
-  // kernel's threshold-mode or curriculum-interleave seams at all. That is the larger parity gap (the
-  // WebUI does not drive the orchestrated loop), and nothing in this file closes it.
+  // `scheduleNextWithHolonicReturn` directly rather than `tickWithStrategy`, so it does not drive
+  // the orchestrated loop. Track B closed the three seams that were silently missing — the strategy
+  // weight bias, the bleed-through and the curriculum interleave, all now the same pure functions
+  // the kernel uses. What remains browser-dark is THRESHOLD MODE: the kernel's stage-transition
+  // branch assembles the whole foreground council with the Therapist first and advances the
+  // state machine, which only `processOutcome` (the browser has it) and the tick's response
+  // handling own. It stays CLI/campaign-only by design, not by omission — see the plan's Track B
+  // entry for the narrowing this records.
   if (!encounters.some((e) => e.isTrainingBeat)) {
     const weave = computeTrainingWeave(
       session.strategy.trainingSlots ?? 0,

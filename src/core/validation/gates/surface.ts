@@ -740,10 +740,17 @@ export async function validatePracticeToolsWired(): Promise<GateResult> {
       return { gate, passed: false, hard: true, details: 'ReflectionEvidence no longer calls scoreReflectionDepth — the §4.4 graceful-degrade fallback is gone' };
     }
     const orch = read('src/core/assessments/AgenticOrchestrator.ts');
+    // BOTH dispatch sites, not one: the orchestrator has two run paths, and a row that matches
+    // either lets one path's practice dispatch be deleted while the gate stays green — the MUT12
+    // shape. A tool call on that path would then fall through to "unknown tool". Counted, because
+    // both sites are the same call and only the count distinguishes them.
+    const practiceDispatchSites = (orch.match(/handlePracticeTool\(/g) ?? []).length;
     const missingOrch = ([
       ['PRACTICE_TOOLS registration', /PRACTICE_TOOLS as unknown as/],
-      ['handlePracticeTool dispatch', /handlePracticeTool\(/],
-    ] as const).filter(([, re]) => !re.test(orch)).map(([n]) => n);
+      [`handlePracticeTool dispatch on BOTH run paths (found ${practiceDispatchSites}, need 2)`, practiceDispatchSites >= 2],
+    ] as const)
+      .filter(([, ok]) => (typeof ok === 'boolean' ? !ok : !ok.test(orch)))
+      .map(([n]) => n);
     if (missingOrch.length > 0) {
       return { gate, passed: false, hard: true, details: `AgenticOrchestrator no longer reaches: ${missingOrch.join(', ')} — the practice tools cannot go live on the session loop` };
     }

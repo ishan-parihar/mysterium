@@ -375,6 +375,7 @@ shipped under the full-execution directive. What remains is external, not unfini
 user-reserved KV IDs, the pod hosting decision, real raters, partner institutions, the DPIA, and
 C6's GitLab credentials.
 
-Battery state at this writing: **150 files / 1702 tests**, `arch.py validate` 23/23 with fixtures
-proven 23/23, lint 0/0, build green (adapter-cloudflare), gate roster **46** (G45 + G46, teeth
-proven by six mutations total).
+Battery state at this writing: **154 files / 1723 tests**, `arch.py validate` 23/23 with fixtures
+proven 23/23, lint 0/0, build green (adapter-cloudflare), release smoke green, gate roster **50**
+(G45–G50, teeth proven by twelve mutations across the phase — every new row broken at least once
+before it was called proven, per MY-RG-0010).

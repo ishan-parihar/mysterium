@@ -180,7 +180,7 @@ institutions, DPIA, C6).
 
 1. ~~C-A audit-trail depth~~ — **ANSWERED by the 2026-09-27 share-model ruling:** the scope
    selection is the entire security interface; no grant/audit fields now.
-2. ~~D-39~~ — **RESOLVED by the full-execution directive:** P1 shipped (D-39).
+2. ~~D-39~~ — **RESOLVED by the full-execution directive:** P1 shipped as deliverable D-39 (G49).
 2. **D-39** — the journal P1 seam: register the practice tools + wire the LLM scorer now (rides
    Phase 17), or record P1–P3 spec-held. P2/P3 are pod-gated either way.
 3. **C-C hardening** — the standing named decision (density gate report-only vs battery-failing).
