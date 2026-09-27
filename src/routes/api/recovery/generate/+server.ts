@@ -14,6 +14,7 @@
  */
 
 import { json, error } from '@sveltejs/kit';
+import { requireBoundStorage } from '$lib/server/requireBoundStorage.js';
 import type { RequestHandler } from './$types';
 
 // Minimal BIP-39 word list (256 words — enough for a 12-word mnemonic
@@ -96,6 +97,9 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const kv = platform.env!.RECOVERY_KV;
     await kv.put(`recovery:${hash}`, body.deviceId);
   } else {
+    // Unreachable in a built artifact (B-1): a recovery phrase that is accepted into memory
+    // and lost on restart is worse than a 503 — the player believes their save is recoverable.
+    requireBoundStorage(false, 'RECOVERY_KV', 'recovery');
     devRecoveryStore.set(hash, body.deviceId);
   }
 

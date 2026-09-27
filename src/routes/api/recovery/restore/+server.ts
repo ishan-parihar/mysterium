@@ -8,6 +8,7 @@
  */
 
 import { json, error } from '@sveltejs/kit';
+import { requireBoundStorage } from '$lib/server/requireBoundStorage.js';
 import type { RequestHandler } from './$types';
 
 // Must match the hash function in generate/+server.ts.
@@ -58,6 +59,8 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const stored = await kv.get(`recovery:${hash}`, 'text');
     deviceId = typeof stored === 'string' ? stored : null;
   } else {
+    // Unreachable in a built artifact (B-1).
+    requireBoundStorage(false, 'RECOVERY_KV', 'recovery');
     deviceId = devRecoveryStore.get(hash) ?? null;
   }
 

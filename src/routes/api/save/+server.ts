@@ -13,6 +13,10 @@
  *   - Cloudflare: platform.env.SAVE_KV (Workers KV namespace)
  *   - Dev: in-memory Map (resets on restart — dev only)
  *
+ * PRODUCTION SAFETY: with SAVE_KV unbound this route 503s rather than accepting saves into
+ * memory — a fallback that answers 200 would lose every save on the next cold start
+ * (`docs/DEPLOYMENT-READINESS-PLAN.md` B-1).
+ *
  * GET response (200): { "deviceId": "...", "blob": "<base64-encrypted-save>", "updatedAt": 1234567890 }
  * GET response (404): no save found for deviceId
  * POST response (200): { "accepted": true, "updatedAt": 1234567890 }
@@ -20,6 +24,7 @@
 
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { requireBoundStorage } from '$lib/server/requireBoundStorage.js';
 
 const MAX_BLOB_SIZE = 256 * 1024; // 256KB — generous for encrypted Significator + WorldState
 const MAX_DEVICE_ID_LENGTH = 64;
@@ -60,7 +65,8 @@ export const GET: RequestHandler = async ({ url, platform }) => {
     return json(raw);
   }
 
-  // Dev fallback: in-memory store.
+  // Dev fallback: in-memory store. Unreachable in a built artifact (B-1).
+  requireBoundStorage(false, 'SAVE_KV', 'save');
   const record = devSaveStore.get(deviceId);
   if (!record) {
     throw error(404, 'No save found for deviceId (dev store)');
@@ -104,7 +110,8 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     return json({ accepted: true, updatedAt });
   }
 
-  // Dev fallback.
+  // Dev fallback. Unreachable in a built artifact (B-1).
+  requireBoundStorage(false, 'SAVE_KV', 'save');
   devSaveStore.set(body.deviceId, { blob: body.blob, updatedAt });
   return json({ accepted: true, updatedAt });
 };

@@ -34,6 +34,8 @@ import {
   RayRegistry,
   DriveRegistry,
 } from '../src/core/registries/index.js';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
 let passed = 0;
 let failed = 0;
@@ -335,6 +337,28 @@ const denyUnder = (() => {
     if (under.length > 0) throw new Error(`density floor violated: ${under.map(([b, c]) => `${b}=${c}`).join(', ')} < ${denyUnder}`);
   }
 }
+
+// --- Deployment readiness (B-1, `docs/DEPLOYMENT-READINESS-PLAN.md`) --------------------
+// wrangler.toml still ships the literal `REPLACE_WITH_*` placeholders, which is CORRECT to commit
+// (they are placeholders, not secrets) and correct to keep the system local-only. The hazard is
+// deploying that file as-is: SAVE_KV would be unbound and the save route would fall back to an
+// in-memory store. B-1's guard turns that into a 503 at runtime, so this check is the belt to
+// that guard's braces — it catches the mistake at BUILD time instead of at the first player's save.
+check('no placeholder KV/analytics bindings can reach a deploy unexamined', () => {
+  const wrangler = readFileSync(path.join(process.cwd(), 'wrangler.toml'), 'utf-8');
+  const placeholders = [...wrangler.matchAll(/(id|preview_id|dataset)\s*=\s*"([^"]*)"/g)]
+    .filter(([, key, value]) => key !== 'dataset' || value === 'mysterium_telemetry')
+    .filter(([, , value]) => value.startsWith('REPLACE_WITH_'))
+    .map(([, key, value]) => `${key}=${value}`);
+  if (placeholders.length > 0) {
+    // Not a FAILURE: the committed file is *meant* to hold placeholders, and CI builds on every
+    // push. It is a loud standing reminder with the exact remediation, so whoever deploys reads it.
+    console.log(`    NOTE: ${placeholders.length} placeholder binding(s) in wrangler.toml (${placeholders.join(', ')}).`);
+    console.log('    Deploying with these is safe ONLY because B-1 refuses the in-memory fallback (503);');
+    console.log('    before a real deploy: npx wrangler kv namespace create SAVE_KV && npx wrangler kv namespace create RECOVERY_KV,');
+    console.log('    then paste the ids. Until then the save/recovery routes will 503 by design.');
+  }
+});
 
 console.log(`\n${passed + failed} checks run: ${passed} passed, ${failed} failed.`);
 

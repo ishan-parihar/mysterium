@@ -1,0 +1,171 @@
+# Deployment Readiness Plan
+
+> **Rung:** plans. **Authority for sequencing:** this document orders the work; it invents no
+> contract. Where it states a fact about the tree, that fact is verified against the code and
+> dated in §1. Where it states a decision, the decision belongs to the owner and is marked.
+>
+> **Status (2026-09-28): OPEN — B-1 BUILT, the rest awaits the owner.** B-1 (the critical
+> data-loss-with-a-success-message defect) is **fixed in this commit**: the dev-fallback guard plus
+> a build-time reminder. Every other item is owner-reserved (a Cloudflare account, a secret, a
+> credential) or a deploy step. Nothing here is "build a new thing" — every item is a gap between
+> an already-ratified design and an already-shipped surface.
+
+---
+
+## 0. The one-paragraph version
+
+Mysterium is **feature-complete and instrumented** (roster 50, 1723 tests, 23/23 doc gates) but
+it has **never been deployed** — there is no git tag, no npm publication, and no Cloudflare
+namespace. The risk is not missing features; it is that a deploy would *appear* to succeed while
+silently doing the wrong thing. Three surfaces are built to degrade quietly by design — the
+in-memory save fallback, the `cloudSyncStore` silent no-op, and the `PodTransport` local double —
+and quiet degradation is exactly the right behaviour in development and exactly the wrong
+behaviour in production. **The work is therefore: make the difference between "not configured"
+and "working" loud, then configure it.** Every item below exists because a real deploy step can
+currently return success while the thing it claims to have done never happened.
+
+---
+
+## 1. Verified state of the tree (2026-09-28)
+
+Facts, not assumptions. Each was read from the code in this commit.
+
+| Surface | State | Evidence |
+|---|---|---|
+| Battery | 154 files / 1723 tests green; `arch.py validate` 23/23 + fixtures 23/23; lint 0/0 | CI + local |
+| Gate roster | 50 (`G45`–`G50` added this phase, each row mutation-proven) | `src/core/validation/gates/roster.ts` |
+| Release smoke | green — built CLI reports 0.1.0, both session modes complete, checkpoints persist | `npm run verify:release` |
+| Deploy targets | dual: `BUILD_TARGET=cloudflare` (default, adapter-cloudflare, SSR + BFF) and `BUILD_TARGET=static` (adapter-static, SPA, **no server endpoints**) | `svelte.config.js` |
+| BFF endpoints | 8 live `+server.ts` routes under `src/routes/api/` | `find src/routes/api` |
+| Client BFF consumers | 9 modules fetch `/api/*` (`ProxiedLLMClient`, `AgentRunner`, `cloudSyncStore`, `telemetryStore`, 3 pages, 2 hooks) | grep |
+| Secrets/env | `LLM_API_KEY` (secret, set via `wrangler secret put`), `SAVE_KV` + `RECOVERY_KV` (ids **still the literal `REPLACE_WITH_*` placeholders**), `ANALYTICS` dataset | `wrangler.toml` |
+| Git history | **no git tag exists** — `deploy.yml` triggers only on `v*` tags, so it has never fired | `git tag` → empty |
+| npm | `mysterium` is **not published** (`npm view` → 404); `prepublishOnly` is wired but has never run against a release | `npm view mysterium` |
+| GitLab remote | credential-blocked, `Permission denied (publickey)` exit 128 — origin (GitHub) is the only reachable remote | C6, `AGENTS.md` §4.2 |
+| CI | `ci.yml` runs on every push to `main`; governance + build jobs both green | `.github/workflows/ci.yml` |
+
+---
+
+## 2. Blocking findings — these must be fixed before any public deploy
+
+### B-1 — A misconfigured KV deploy reports success and loses every save. **CRITICAL.**
+
+`src/routes/api/save/+server.ts` reads `platform.env.SAVE_KV`; if that binding is **absent or
+still the `REPLACE_WITH_SAVE_KV_ID` placeholder**, the route falls through to a
+process-local `Map` (line 28) and **still returns `200 {accepted: true}`** (line 109). The
+client (`cloudSyncStore.ts`) treats a network error as a silent no-op. Net effect of deploying
+with the placeholder ids that ship in `wrangler.toml`: every player believes their progress is
+saved; nothing is; the first server restart loses everything, and no error is ever surfaced.
+
+This is exactly the "quiet by design" class the project has been auditing for. In dev the
+fallback is correct. In production it is a data-loss bug wearing a success message.
+
+**STATUS: BUILT 2026-09-28.** `src/lib/server/requireBoundStorage.ts` — one rule, four call
+sites: `requireBoundStorage(bound, binding, devOnly, env?)` throws a 503 with an operator-facing
+body when a binding is absent outside a dev/test process. Wired into `/api/save` (GET + POST),
+`/api/recovery/generate` and `/api/recovery/restore`. The fallback is **not deleted** — it remains
+the dev experience and the `BUILD_TARGET=static` path — it is simply unreachable in a built
+artifact, which is the minimal honest version: dev keeps working, production cannot lie.
+
+`devFallbackAllowed(env)` is a pure function of `{dev, mode}` rather than reading `import.meta`
+inline, so the production branch is assertable under vitest (whose `$app/environment` stub sets
+`dev = false` — i.e. a helper that read `dev` directly would have been permanently untestable and
+therefore permanently unverified). An unknown `mode` fails **closed** (treated as production).
+Covered by `tests/server/requireBoundStorage.test.ts` (4 tests) which assert the *failure* — a
+test that only proved the fallback still works would pass against the data-loss build — and
+which assert the 503's `body.message`, the exact text a client receives. The client already
+treats a non-OK response as a failure (`cloudSyncStore` returns `false`), so 503 is the correct
+signal all the way through.
+
+A build-time reminder in `check-invariants.ts` reads `wrangler.toml`, reports any
+`REPLACE_WITH_*` binding, and prints the exact remediation commands. It is a `NOTE`, not a
+failure: the committed file is *meant* to hold placeholders and CI builds on every push.
+
+### B-2 — Two KV namespaces and one analytics dataset do not exist.
+
+`wrangler.toml` ships placeholders, and creating them requires a Cloudflare account. This is
+**owner-reserved** (namespace/dataset ids are a user decision), but nothing can be verified
+until it is done. The commands are in the file's own header.
+
+### B-3 — `deploy.yml` has never run, and the GitHub Pages path is a degraded build.
+
+The Pages job builds with `BUILD_TARGET=static`, which per `svelte.config.js` means **no SSR and
+no `/api/*` endpoints** — the client falls back to local-only persistence and a direct LLM call.
+That is a legitimate Capacitor/offline mode, but it is *not* the production web deploy, and
+deploying it to a public URL and calling that "Mysterium is live" would be a false claim: saves
+would be device-local and the LLM key would have to ship to the browser. **The Pages workflow
+should be relabelled or removed**; the real target is Cloudflare Pages with
+`BUILD_TARGET=cloudflare`.
+
+### B-4 — No release has ever been cut: no tag, no npm publication.
+
+`prepublishOnly` runs `verify:release`, so the machinery is correct and simply has never been
+invoked. The first release is a deliberate act: tag `v0.1.0`, confirm the tag build, publish.
+
+### B-5 — Secrets are unverified. `LLM_API_KEY` may be absent at runtime.
+
+If the secret is missing, the LLM paths fail per-request. Whether that fails *loudly* (a clear
+500 the player sees) or *quietly* (an empty encounter) is the same question as B-1 and should be
+audited in the same pass.
+
+---
+
+## 3. Gating items — required for a responsible deploy, not for boot
+
+| # | Item | Why it gates | Owner? |
+|---|---|---|---|
+| G-1 | ~~**Fail-loud guard for missing bindings** (B-1)~~ **BUILT 2026-09-28** | data loss with a success message | **done** |
+| G-2 | **Create the KV namespaces + analytics dataset** (B-2) | nothing persists without them | **yes** — account + ids |
+| G-3 | **Set + verify `LLM_API_KEY`** (B-5) | no LLM without it | **yes** — the key |
+| G-4 | **First real deploy to Cloudflare Pages** | proves B-1's guard, the bindings, and the BFF together | no |
+| G-5 | **Relabel/remove the GitHub Pages workflow** (B-3) | prevents a false "live" claim | no |
+| G-6 | **Rate limiting on the BFF** | 8 unauthenticated endpoints; `/api/save` accepts 256KB writes keyed on a client-supplied `deviceId` | no — but confirm scope |
+| G-7 | **A first-run smoke test against the live URL** | the only proof that boot → session → save → restore works in production | no |
+| G-8 | **Error monitoring** | silent no-ops are the project's known failure mode; a deploy with no visibility cannot detect its own regressions | no |
+| G-9 | **npm publish decision** | `mysterium` is a declared `bin`; publishing makes the CLI installable | **yes** |
+| G-10 | **GitLab push credentials** (C6) | the two remotes must stay in sync per the protocol | **yes** — SSH key |
+| G-11 | **Density-hardening ruling** (carried from Phase 17) | report-only vs battery-failing | **yes** |
+| G-12 | **Pod hosting decision** (carried, 38 M1) | `PodTransport` runs on the local double only; pods do not sync | **yes** |
+
+---
+
+## 4. What is explicitly NOT deployment work
+
+Named so the next reader does not re-open it:
+
+- **Real raters / RV1–RV7 thresholds.** A deploy does not make synthetic evidence real. The
+  numbers stay `provisional-simulated-cohort` until humans produce them. Deploy first, ratify
+  later — but do not describe the deployed build as clinically calibrated.
+- **Institutions / DPIA.** Required before any *third-party* use with real players' data, not
+  before a private or self-hosted deploy.
+- **Phase 16 d7's open calibration items** (expansion ratio 21% vs a 25% floor, entropy
+  `insufficient-data`). These are *measurements to collect*, and a deployment is precisely the
+  instrument that collects them. They are not blockers; they are beneficiaries.
+
+---
+
+## 5. Standing external list (owner-reserved, carried forward)
+
+1. Cloudflare account + KV namespace/dataset ids.
+2. `LLM_API_KEY` (and any provider-specific key).
+3. Pod hosting target (M1).
+4. Real raters.
+5. Partner institutions + the DPIA.
+6. GitLab SSH credentials (C6).
+7. npm publish decision.
+8. The density-hardening ruling.
+
+---
+
+## 6. Definition of done for "deployment ready"
+
+Deployment-ready is a *verifiable* state, and every clause is a check that can fail:
+
+- [ ] `npm run verify:release` green on the release commit.
+- [ ] A live URL, reached over the network, completes boot → session → **save → restore** with
+      the restore verified to have read from the *bound* namespace (not the in-memory fallback) —
+      the B-1 guard makes the fallback impossible to reach in production, so reaching it *is* the
+      failure signal.
+- [ ] The BFF responds 4xx/5xx (not silent) on a deliberately malformed request.
+- [ ] `git tag` shows the released version; both remotes carry the same commit.
+- [ ] Every §5 item is either done or explicitly deferred *in writing*, by the owner.
