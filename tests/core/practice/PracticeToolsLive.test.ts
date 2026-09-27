@@ -41,7 +41,7 @@ function integration(book: VowBook, query?: (p: string) => Promise<string | null
   return {
     book,
     sig: createSignificator('practice-test', altitudes, 'Amber'),
-    world: createInitialWorldState(),
+    world: createInitialWorldState([]),
     objectiveContext: () => ({
       needs: [{ label: 'drive_rebalance:Cognitive', urgency: 0.6 }],
       activeShadows: [{ line: 'Emotional', quadrant: 'Dark-Addiction', severity: 0.7 }],
