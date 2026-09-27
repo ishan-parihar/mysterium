@@ -1452,6 +1452,20 @@ parity, corpus growth, and refactoring.
 > stripper now strips trailing line comments too (URL `://` protected), and G45/G46 re-verified
 > green under it. C-A's canon (the share contract + the AL4 floor record) landed BEFORE this
 > build, per the grounding principle. Battery: 151 files / 1707 tests; roster **47**.
+>
+> **d4 ✅ BUILT 2026-09-27** — pod transport M0 (38 §4.2, mirrored-mode-only): the KV adapter
+> family (`KVLike` + `InMemoryKV`/`FileKV` doubles + `KVPodCoordinator implements PodTransport`)
+> holds the SAME serial event discipline (`applyEvent`) behind the privacy wall (`payloadIsSafe`,
+> G18 defense-in-depth) with last-write-wins on monotonic event keys; `pollEvents(sinceSeq)` is
+> the client-polling half. The pod CLI (`mysterium pod form|join|ritual|advance|recognize|sync`)
+> routes EVERY mutating action through the transport — never around it — with a one-time legacy
+> migration from pre-M0 `pods.json` state, and `mysterium pod sync` polls the event tail.
+> Deployment waits on the user-reserved KV IDs exactly as before (the double stands in).
+> **G48** locks the seam — teeth proven by mutation #10 (CLI construction deleted → red), #11
+> (sync's poll deleted → red), and #12 (the KV adapter's applyEvent bypassed while the in-memory
+> adapter's call survived → initially GREEN, a proxy mention-hole the gate closed by scoping its
+> rows to the KVPodCoordinator class body; re-proven red). Battery: 152 files / 1713 tests;
+> roster **48**.
 
 ### Current work (post-plan) — not a phase
 

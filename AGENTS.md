@@ -368,11 +368,16 @@ consumer) is BUILT 2026-09-27**, per the owner's persona-free share ruling (16 �
 MY-AD-0034): `mysterium share create|list|revoke|view` — scope selection is the entire security
 interface, the scope law enforced at creation AND re-checked at render; G47 locks the seam
 (teeth proven by three mutations, one of which closed a trailing-comment mention-hole in every
-surface gate's stripper). The current
-kernel roster is **47 gates** (45 + **G46** + **G47**: both in-vitro-class absences no runtime
+surface gate's stripper). **d4 (pod transport M0) is BUILT 2026-09-27**: the KV adapter family
+over the declared-binding shape with local doubles holds the serial event discipline behind
+the privacy wall; the pod CLI routes every mutating action through the transport and
+`mysterium pod sync` polls the event tail — G48 locks the seam (mutations #10–#12 proven, #12
+closing a proxy-mention hole by class-scoping). The current
+kernel roster is **48 gates** (45 + **G46** + **G47** + **G48**: in-vitro-class absences no runtime
 gate could see; G46 requires each ladder consumer to reach BOTH the payload bridge and
 `renderLevel`, G47 requires BOTH enforcement points of the share scope law plus the view's
-honesty gate. Phase 17 d1's
+honesty gate, G48 requires the M0 adapter to hold applyEvent + payloadIsSafe behind the
+PodTransport contract and the pod CLI to construct/apply/poll through it. Phase 17 d1's
 G45 remains: the pack engine's registry was
 production-test-only — an unseeded registry behaves exactly like an empty one, so no runtime gate
 could see the absence; G45 is the module-graph assertion, teeth proven by mutation. Phase 16 d8's

@@ -16,6 +16,8 @@
  * in the state machine is the only gate (G18), and both adapters feed it.
  */
 
+import * as fs from 'fs';
+import * as path from 'path';
 import {
   applyEvent, emptyPodState, payloadIsSafe,
   type PodState, type SerializedEvent,
@@ -192,4 +194,112 @@ export function remotePodTransport(
       return res.events;
     },
   };
+}
+
+// ---------------------------------------------------------------------------
+// M0 — KV + client polling (38 §4.2): last-write-wins on monotonic events,
+// mirrored mode only; collaborative/assistive still require the DO (M1,
+// deferred to the user-reserved hosting decision).
+//
+// The KV surface is declared abstract (KVLike) so the app binds Cloudflare KV
+// (wrangler.toml's SAVE_KV/RECOVERY_KV — IDs user-reserved) while the local
+// double (FileKV / InMemoryKV) stands in for the CLI and tests.
+// ---------------------------------------------------------------------------
+
+/** The minimal KV surface this transport needs (a subset of Cloudflare KV). */
+export interface KVLike {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string): Promise<void>;
+  list(prefix: string): Promise<readonly string[]>;
+}
+
+/** The local KV double for tests and in-process coordination. */
+export class InMemoryKV implements KVLike {
+  private readonly map = new Map<string, string>();
+  async get(key: string): Promise<string | null> { return this.map.get(key) ?? null; }
+  async put(key: string, value: string): Promise<void> { this.map.set(key, value); }
+  async list(prefix: string): Promise<readonly string[]> { return [...this.map.keys()].filter((k) => k.startsWith(prefix)).sort(); }
+}
+
+/** The file-backed KV double — the CLI's persistence layer (one JSON file, KV-shaped). */
+export class FileKV implements KVLike {
+  private readonly data: Map<string, string>;
+  constructor(private readonly file: string) {
+    this.data = fs.existsSync(file) ? new Map(Object.entries(JSON.parse(fs.readFileSync(file, 'utf8')))) : new Map();
+  }
+  async get(key: string): Promise<string | null> { return this.data.get(key) ?? null; }
+  async put(key: string, value: string): Promise<void> {
+    this.data.set(key, value);
+    fs.mkdirSync(path.dirname(this.file), { recursive: true });
+    fs.writeFileSync(this.file, JSON.stringify(Object.fromEntries(this.data), null, 2));
+  }
+  async list(prefix: string): Promise<readonly string[]> { return [...this.data.keys()].filter((k) => k.startsWith(prefix)).sort(); }
+}
+
+/**
+ * The M0 coordinator: the pod's event log and state snapshot live in the KV;
+ * clients apply events through the SAME serial discipline (applyEvent) and
+ * poll incrementally with `pollEvents(sinceSeq)`. Last-write-wins on the
+ * monotonic event keys (38 §4.2): each seq key is written once, and the
+ * snapshot is rewritten per apply — acceptable for mirrored mode.
+ */
+export class KVPodCoordinator implements PodTransport {
+  private readonly stateKey: string;
+  private readonly eventsPrefix: string;
+
+  constructor(private readonly kv: KVLike, podId: string) {
+    this.stateKey = `pod/${podId}/state`;
+    this.eventsPrefix = `pod/${podId}/events/`;
+  }
+
+  private eventKey(seq: number): string { return `${this.eventsPrefix}${String(seq).padStart(8, '0')}`; }
+
+  private async currentSeq(): Promise<number> {
+    const keys = await this.kv.list(this.eventsPrefix);
+    return keys.length === 0 ? 0 : Number(keys[keys.length - 1].slice(this.eventsPrefix.length));
+  }
+
+  async apply(event: SerializedEvent): Promise<PodApplyResult> {
+    // Privacy wall BEFORE any write (G18, defense in depth — same as the in-memory coordinator).
+    if (!payloadIsSafe(event.payload)) {
+      return { ok: false, reason: 'payload violates the privacy wall', seq: await this.currentSeq() };
+    }
+    const state = await this.stateFromKV();
+    const applied = applyEvent(state, event);
+    if (!applied.ok) return { ok: false, reason: applied.reason, seq: await this.currentSeq() };
+    // Idempotent no-ops must not enter the replay log (at-least-once redelivery safety) —
+    // and must not advance the sequence number (the in-memory coordinator's contract).
+    if (applied.mutated === false) return { ok: true, seq: await this.currentSeq() };
+    const seq = (await this.currentSeq()) + 1;
+    await this.kv.put(this.eventKey(seq), JSON.stringify(event));
+    await this.kv.put(this.stateKey, JSON.stringify(applied.state));
+    return { ok: true, seq };
+  }
+
+  private async stateFromKV(): Promise<PodState> {
+    const raw = await this.kv.get(this.stateKey);
+    return raw === null ? emptyPodState() : JSON.parse(raw) as PodState;
+  }
+
+  async snapshot(): Promise<PodState> { return this.stateFromKV(); }
+
+  restore(state: PodState, events?: readonly SerializedEvent[]): void {
+    // Synchronous by contract (restore precedes the first await); write-through immediately.
+    void this.kv.put(this.stateKey, JSON.stringify(state));
+    for (const [i, e] of [...(events ?? [])].entries()) void this.kv.put(this.eventKey(i + 1), JSON.stringify(e));
+  }
+
+  async events(): Promise<readonly SerializedEvent[]> { return this.pollEvents(0); }
+
+  /** The client-polling half of M0: every event after `sinceSeq`, in serial order. */
+  async pollEvents(sinceSeq: number): Promise<readonly SerializedEvent[]> {
+    const keys = await this.kv.list(this.eventsPrefix);
+    const out: SerializedEvent[] = [];
+    for (const key of keys) {
+      if (Number(key.slice(this.eventsPrefix.length)) <= sinceSeq) continue;
+      const raw = await this.kv.get(key);
+      if (raw !== null) out.push(JSON.parse(raw) as SerializedEvent);
+    }
+    return out;
+  }
 }

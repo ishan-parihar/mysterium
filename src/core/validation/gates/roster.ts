@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -128,6 +128,11 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // around the law-holder, behaves exactly like no share system. The gate requires BOTH
   // enforcement points of the one scope law (creation + render) and the view's honesty gate.
   results.push(await validateShareSeamWired());
+  // G48 (Phase 17 d4): pod transport M0 — the KV coordinator + client-polling half (38 §4.2).
+  // Same absence class: the gate requires the adapter family to hold the serial discipline +
+  // privacy wall behind PodTransport, and the pod CLI to construct, apply through, and poll
+  // through the transport — never around it.
+  results.push(await validatePodTransportWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

@@ -342,6 +342,14 @@ closed a mention-hole in every surface gate (trailing comments now stripped). Ca
 the share contract, the AL4 floor record, the 40 §1.1 provenance contract, and the R8
 path-naming lines all landed before the build.
 
+**d4 is BUILT 2026-09-27**: pod transport M0 (38 §4.2 — KV + client polling, mirrored-mode-only)
+over the declared-binding shape with local doubles (`InMemoryKV`/`FileKV`); the pod CLI routes
+every mutating action through the serial event discipline and `mysterium pod sync` polls the
+event tail. **G48** locks the seam (roster 48; mutations #10–#12 proven, #12 closing a
+proxy-mention hole by scoping the gate's rows to the KV adapter's class body). Deployment
+waits on the user-reserved KV IDs unchanged. Remaining: **d5** (37 teeth-first), **D-39**
+(the journal P1 seam — ruled to ship), **Track B** (WebUI parity + Interpersonal fix).
+
 Battery state at this writing: **150 files / 1702 tests**, `arch.py validate` 23/23 with fixtures
 proven 23/23, lint 0/0, build green (adapter-cloudflare), gate roster **46** (G45 + G46, teeth
 proven by six mutations total).

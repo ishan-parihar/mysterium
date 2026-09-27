@@ -104,8 +104,11 @@ describe('Validation benchmark (CI tier)', () => {
     // (16 §2.4.1, MY-AD-0034) is the same absence class: the gate requires BOTH enforcement points
     // of the one scope law (createShare's scopeRunValid call + the law-holder's render-time
     // re-check) and the view consumer's reach: create/revoke/ladder/honesty gate.)
-    expect(suite.results.length).toBe(47);
-    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46', 'G47']) {
+    // 47 → 48 with Phase 17 d4 (G48 pod transport M0 wired — the KV coordinator + client polling
+    // (38 §4.2) requires the adapter family to hold applyEvent + payloadIsSafe behind the
+    // PodTransport contract, and the pod CLI to construct/apply/poll through it.)
+    expect(suite.results.length).toBe(48);
+    for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46', 'G47', 'G48']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

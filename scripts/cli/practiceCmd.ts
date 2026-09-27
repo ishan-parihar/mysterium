@@ -19,53 +19,72 @@ import { vowFilePath, loadVowFile, saveVowFile } from './support.js';
 
 export async function runPodCommand(argv: string[]): Promise<void> {
   const action = argv.find((a) => !a.startsWith('--')) ?? 'status';
-  const { emptyPodState, formPod, joinPod, startRitual, advanceRitual, publishAggregate, issueRecognition } = await import('../../src/core/pods/podStateMachine.js');
+  const { emptyPodState } = await import('../../src/core/pods/podStateMachine.js');
+  const { FileKV, KVPodCoordinator } = await import('../../src/infra/pods/PodTransport.js');
+  type PodStateT = ReturnType<typeof emptyPodState>;
   const p = vowFilePath();
   const podFile = path.join(path.dirname(p), 'pods.json');
-  const load = (): { state: ReturnType<typeof emptyPodState>; player: string } => {
+  const kvFile = path.join(path.dirname(p), 'pod-kv.json');
+  const load = (): { state: PodStateT; player: string; lastSeenSeq?: number } => {
     if (fs.existsSync(podFile)) {
       try { return JSON.parse(fs.readFileSync(podFile, 'utf8')); } catch { /* fall through */ }
     }
     return { state: emptyPodState(), player: 'local-player' };
   };
-  const save = (data: unknown): void => { fs.writeFileSync(podFile, JSON.stringify(data, null, 2)); };
+  const save = (data: { state: PodStateT; player: string; lastSeenSeq?: number }): void => {
+    fs.writeFileSync(podFile, JSON.stringify(data, null, 2));
+  };
   const ctx = load();
-  let state = ctx.state;
   const now = Date.now();
+
+  // M0 (38 §4.2): the pod's event log + snapshot live in the KV (the local FileKV double until
+  // the user-reserved KV IDs exist); pods.json stays the caller-side mirror. Every mutating
+  // action goes through the transport's serial event discipline (applyEvent), never around it.
+  const coordinatorFor = (podId: string): InstanceType<typeof KVPodCoordinator> =>
+    new KVPodCoordinator(new FileKV(kvFile), podId);
+  const coordinator = coordinatorFor(ctx.state.pod?.id ?? 'unformed');
+  // Legacy migration: pre-M0 pods.json carried the state directly; if the KV has no state for
+  // this pod but pods.json does, restore once so the event discipline owns the history.
+  if (ctx.state.pod && !(await coordinator.snapshot()).pod) coordinator.restore(ctx.state);
+  const apply = async (
+    co: InstanceType<typeof KVPodCoordinator>,
+    type: 'form' | 'join' | 'ritual-start' | 'ritual-advance' | 'publish' | 'recognize',
+    payload: Record<string, unknown>,
+  ): Promise<PodStateT | null> => {
+    const r = await co.apply({ type, payload, occurredAtMs: now });
+    if (!r.ok) { console.error(r.reason); process.exitCode = 1; return null; }
+    const state = await co.snapshot();
+    save({ state, player: ctx.player });
+    return state;
+  };
 
   if (action === 'form') {
     const id = argv[argv.indexOf('form') + 1] ?? `pod-${now.toString(36)}`;
-    const formed = formPod(state, { id, covenant: 'we practice together', createdAtMs: now }, ctx.player);
-    save({ state: formed, player: ctx.player });
+    const state = await apply(coordinatorFor(id), 'form', { id, covenant: 'we practice together', createdAtMs: now, founderId: ctx.player });
+    if (!state) return;
     console.log(`\n  ${chalk.green('Pod formed:')} ${id}`);
     console.log(chalk.dim('  Others join with: mysterium pod join <podId> (same machine)'));
     return;
   }
   if (action === 'join') {
     const podId = argv[argv.indexOf('join') + 1];
-    if (!podId || state.pod?.id !== podId) { console.error(`Pod '${podId ?? ''}' not found on this machine.`); process.exitCode = 1; return; }
-    const r = joinPod(state, ctx.player, now);
-    if (!r.ok) { console.error(r.reason); process.exitCode = 1; return; }
-    state = r.state;
-    save({ state, player: ctx.player });
+    if (!podId || ctx.state.pod?.id !== podId) { console.error(`Pod '${podId ?? ''}' not found on this machine.`); process.exitCode = 1; return; }
+    const state = await apply(coordinator, 'join', { playerId: ctx.player });
+    if (!state) return;
     console.log(`\n  ${chalk.green('Joined.')} ${state.pod?.members.length ?? 0} members.`);
     return;
   }
   if (action === 'ritual') {
     const mode = (argv.includes('--collaborative') ? 'collaborative' : argv.includes('--assistive') ? 'assistive' : 'mirrored') as 'mirrored' | 'collaborative' | 'assistive';
-    const members = Object.fromEntries((state.pod?.members ?? []).map((m) => [m.playerId, 'participant']));
-    const r = startRitual(state, { encounterTemplateId: 'shared-encounter', mode, roles: members, now });
-    if (!r.ok) { console.error(r.reason); process.exitCode = 1; return; }
-    state = r.state;
-    save({ state, player: ctx.player });
+    const members = Object.fromEntries((ctx.state.pod?.members ?? []).map((m) => [m.playerId, 'participant']));
+    const state = await apply(coordinator, 'ritual-start', { encounterTemplateId: 'shared-encounter', mode, roles: members });
+    if (!state) return;
     console.log(`\n  ${chalk.green('Ritual open')} (${mode}) — ${chalk.dim('gathering')}`);
     return;
   }
   if (action === 'advance') {
-    const r = advanceRitual(state);
-    if (!r.ok) { console.error(r.reason); process.exitCode = 1; return; }
-    state = r.state;
-    save({ state, player: ctx.player });
+    const state = await apply(coordinator, 'ritual-advance', {});
+    if (!state) return;
     console.log(`\n  Ritual phase: ${chalk.cyan(state.ritual?.state ?? '?')}`);
     return;
   }
@@ -74,20 +93,30 @@ export async function runPodCommand(argv: string[]): Promise<void> {
     const kindArg = (argv.find((a) => a.startsWith('--kind=')) ?? '--kind=growth').split('=')[1] as 'consistency' | 'growth' | 'service';
     if (!to) { console.error('Usage: mysterium pod recognize <memberId> [--kind=consistency|growth|service]'); process.exitCode = 1; return; }
     const evidenceRef = `${to}:${kindArg}:local`;
-    const memberIds = new Set((state.pod?.members ?? []).map((m) => m.playerId));
+    const memberIds = new Set((ctx.state.pod?.members ?? []).map((m) => m.playerId));
     if (!memberIds.has(to)) { console.error(`'${to}' is not a member.`); process.exitCode = 1; return; }
-    const pub = state.publishedAggregates[evidenceRef] === undefined
-      ? publishAggregate(state, evidenceRef, { kind: kindArg, publishedBy: to, at: now }, now)
-      : { state, ok: true as const };
-    if (!pub.ok) { console.error(pub.reason); process.exitCode = 1; return; }
-    const rec = issueRecognition(pub.state, { fromMemberId: ctx.player, toMemberId: to, kind: kindArg, periodId: 'local', evidenceRef }, now);
-    if (!rec.ok) { console.error(rec.reason); process.exitCode = 1; return; }
-    state = rec.state;
-    save({ state, player: ctx.player });
+    if (ctx.state.publishedAggregates[evidenceRef] === undefined) {
+      const pub = await apply(coordinator, 'publish', { evidenceRef, aggregate: { kind: kindArg, publishedBy: to, at: now } });
+      if (!pub) return;
+    }
+    const state = await apply(coordinator, 'recognize', { fromMemberId: ctx.player, toMemberId: to, kind: kindArg, periodId: 'local', evidenceRef });
+    if (!state) return;
     console.log(`\n  ${chalk.green('Recognition offered:')} ${kindArg} → ${to}`);
     return;
   }
+  if (action === 'sync') {
+    // The client-polling half of M0: pull every event after the last seen seq.
+    const since = ctx.lastSeenSeq ?? 0;
+    const events = await coordinator.pollEvents(since);
+    const lastSeenSeq = since + events.length;
+    save({ state: await coordinator.snapshot(), player: ctx.player, lastSeenSeq });
+    if (events.length === 0) { console.log(chalk.dim('\n  No new pod events.')); return; }
+    console.log(`\n  ${chalk.green(`${events.length} new pod event(s):`)}`);
+    for (const e of events) console.log(`  · ${chalk.cyan(e.type)} ${chalk.dim(new Date(e.occurredAtMs).toISOString())}`);
+    return;
+  }
   // status
+  const state = await coordinator.snapshot();
   console.log(`\n  Pod: ${state.pod ? chalk.cyan(state.pod.id) : chalk.dim('none — try: mysterium pod form')}`);
   if (state.pod) {
     console.log(`  Covenant: ${chalk.dim(state.pod.covenant)}`);

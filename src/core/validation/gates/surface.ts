@@ -654,3 +654,55 @@ export async function validateShareSeamWired(): Promise<GateResult> {
     return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }
 }
+
+// ---------------------------------------------------------------------------
+// G48 — pod transport M0 wired (Phase 17 d4; 38 §4.2).
+//
+// M0 gives the pod state machine its transport seam: a KV-backed coordinator over the
+// declared-binding shape (local double until the user-reserved KV IDs exist) plus the
+// client-polling half. The absence class is the same one G45/G46/G47 close: a transport
+// with no consumer, or a consumer applying events around the serial discipline, behaves
+// exactly like no transport. The gate requires the CLI to construct the coordinator, poll
+// through it, and apply through it — and the adapter family to hold the discipline
+// (applyEvent) and the privacy wall (payloadIsSafe) behind the PodTransport contract.
+// ---------------------------------------------------------------------------
+
+export async function validatePodTransportWired(): Promise<GateResult> {
+  const gate = 'G48 pod transport M0 wired';
+  try {
+    const read = (rel: string): string => {
+      const p = path.join(process.cwd(), rel);
+      if (!fs.existsSync(p)) throw new Error(`${p} not found`);
+      return stripSourceComments(fs.readFileSync(p, 'utf-8'));
+    };
+    const adapters = read('src/infra/pods/PodTransport.ts');
+    // Scope the discipline rows to the KVPodCoordinator CLASS BODY: the in-memory adapter's own
+    // applyEvent/payloadIsSafe calls must not satisfy the M0 rows (mutation #12 — the production
+    // adapter bypassing the discipline while the test double keeps it stays red).
+    const kvStart = adapters.indexOf('export class KVPodCoordinator');
+    if (kvStart < 0) {
+      return { gate, passed: false, hard: true, details: 'PodTransport.ts no longer declares KVPodCoordinator — the M0 adapter is gone' };
+    }
+    const kvBody = adapters.slice(kvStart);
+    const missingAdapter = ([
+      ['applyEvent (the serial discipline)', /applyEvent\(/],
+      ['payloadIsSafe (the privacy wall)', /payloadIsSafe\(/],
+      ['the PodTransport contract', /implements PodTransport/],
+    ] as const).filter(([, re]) => !re.test(kvBody)).map(([n]) => n);
+    if (missingAdapter.length > 0) {
+      return { gate, passed: false, hard: true, details: `PodTransport.ts no longer holds: ${missingAdapter.join(', ')} — the M0 adapter bypasses the event discipline/privacy wall` };
+    }
+    const cmd = read('scripts/cli/practiceCmd.ts');
+    const missingCmd = ([
+      ['KVPodCoordinator construction', /new KVPodCoordinator\(/],
+      ['pollEvents (the client-polling half)', /pollEvents\(/],
+      ['apply (the serial event path)', /\.apply\(/],
+    ] as const).filter(([, re]) => !re.test(cmd)).map(([n]) => n);
+    if (missingCmd.length > 0) {
+      return { gate, passed: false, hard: true, details: `scripts/cli/practiceCmd.ts no longer reaches: ${missingCmd.join(', ')} — the pod CLI left the M0 transport seam` };
+    }
+    return { gate, passed: true, hard: true, details: 'M0 KV coordinator holds the serial discipline + privacy wall; the pod CLI applies and polls through the transport' };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
+  }
+}
