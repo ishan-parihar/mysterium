@@ -11,6 +11,14 @@ existing codebase decisions mapped onto the docs. The ratified Phase 17 implemen
 the surface area and perfect the foundations first); this plan is that clarification. Nothing
 here executes until aligned.
 
+**Owner ruling (2026-09-27) — the share model:** the Significator profile sharing system does
+**not** implement second-party personas (parent / guardian-of-record / teacher / therapist) at
+this point. It is implemented like an **API-key permission level**: a player intending to share
+their profile creates a share and selects the scopes the recipient may see — **the scope
+selection is the entire security interface.** C-A below is restated to that ruling; the persona
+rows in 16 §2.4 become *consumers* (use cases of 33 §7's render contracts), not implemented
+machinery.
+
 **What this is not:** not a re-audit of implementation (that is
 `EDUCATION-SURFACE-AUDIT-2026-09-26.md` + its §8 addendum), and not new phase scope — every
 canon item attaches to an already-ratified iteration or is explicitly marked owner-decision.
@@ -31,14 +39,14 @@ canon item attaches to an already-ratified iteration or is explicitly marked own
    consumer** (Educator Desk + the §7.4 auditor route) |
 | 34 engine bridge | Curriculum ↔ engine adapters | **Built + gated** (adapter-cloudflare) |
 | 35 complexity mapping | The density instrument (§5.2: 97-holon minimum) | Measured; the invariant itself **not built** — d5 |
-| 36 upgrade plan | Curriculum upgrade trajectory (AGENTS 2.2: expansion-set sequencing) | Trajectory doc; no gap claimed without a read — not yet audited this pass |
+| 36 upgrade plan | Curriculum upgrade trajectory (phases A–G; scaling projection) | **Audited:** plan-shaped foundations doc whose Phase A (prerequisite depth enforcement) / Phase B (deepen the holarchy) are what d5 executes via 35 §5.2's minimum; day-estimates stale by construction, non-load-bearing; no divergence verified |
 | 37 K-12 expansion | Branch trees, acceptance layer | Built 10/11 trees; **5 verified divergences** (audit §3) — d5 |
 | 38 cohort weave | Pods, transport M0/M1, sync discipline | Spec-only; **§4.2 already owns the M0/M1 transport decision exactly as planned** — d4 implements, no canon work needed |
 | 39 action-induction journal | Objectives, reflection protocol, journal system | **P0 BUILT + LIVE** — VowService (§3.2 lifecycle), ReflectionEvidence (§3.3 five-prompt protocol + §4.4 P0 heuristic scorer), `/journal` route; the audit called it "the most operationally complete doc in the dimension". **P1 DARK** (LLM rubric scorer + `propose_objective`/`process_checkin` never registered on `/api/llm/tools` — verified by grep); P2 pod-gated (38 M1); P3 (ObjectiveGenerator + therapy-arc gate) dark |
 | 40 measurement packs | Pack registry, administration, reliability infra | Seam **built by d1**; provenance contract absent (C-B below) |
 | 41 credentialing | Claim ledger, issue flow, EU staging | **Built** (ledger, draft≠issue per §4.3); issuance CLI-only by design (§2 staging) |
 | 42 levelling | Evidence-only grading, competence/identity firewall | **Built + gated** |
-| 16 §2.4 / §10.4 / §10.5 | Auditor Projection Layer, projections, Articulation Ladder | Projections + ladder **built by d2**; consent *data contract* thin (C-A below) |
+| 16 §2.4 / §10.4 / §10.5 | Auditor Projection Layer, projections, Articulation Ladder | Projections + ladder **built by d2**; the sharing *contract* is thin (C-A below, restated to the owner's 2026-09-27 share-model ruling) |
 
 Headline: the canon is **not broadly incomplete**. 38, 40, 41, 42 are in buildable-to-built shape.
 The real gaps are **five**, three of which already have ratified homes.
@@ -51,7 +59,7 @@ Each row: the code decision (file), its intended canon home, the gap.
 
 | # | Code decision | Where it lives | Canon home | Gap |
 |---|---|---|---|---|
-| R1 | `ConsentLink { grantId, scopes, revoked }` lifecycle: player-issued, revocable, scope-bounded; AL4 contiguous-from-L1 floor; refused renders never leak payloads | `src/core/domain/articulationLadder.ts` (+ LadderLive LD3 pins) | 16 §2.4 names the brokerage concept ("extends the IdentityProfile consent ledger §2.1") but has **no data contract / lifecycle section**; §10.5's AL4 row says "descent only" but never pins the L1 floor | **Thin — C-A (attaches to d3)** |
+| R1 | `ConsentLink { grantId, scopes, revoked }` — player-created share, scope-selected, revocable; AL4 contiguous-from-L1 floor; refused renders never leak payloads. **Owner ruling 2026-09-27: persona-free, API-key shape — scope selection is the entire security interface** | `src/core/domain/articulationLadder.ts` (+ LadderLive LD3 pins) | 16 §2.4 is persona-brokered (parent/teacher/therapist rows, "extends the IdentityProfile consent ledger §2.1") with **no share-contract section**; the ruling diverges from the persona framing (recorded with compensation in C-A); §10.5's AL4 row says "descent only" but never pins the L1 floor | **Thin — C-A (attaches to d3)** |
 | R2 | `ResponderProvenance = 'deterministic-simulated' \| 'live-answers'` — one const feeds claim method/QA and every reliability row (`provenance`, `synthetic: true`); synthetic evidence can reject, never certify | `scripts/cli/packCmd.ts:16-17` | The reject-never-certify rule lives in plan/audit prose; the **record-marker contract** (every row and claim carries provenance) has no canon home | **Absent — C-B (small standalone pass, or rides d5)** |
 | R3 | Pack registry seeds on the boot path beside the curriculum registry; reliability rehydrates through the public `recordSession` API (persistence is the caller's concern) | `referencePacks.ts` seed + `GameLoop.ts:264` + `ReliabilityCollector.ts:74` | 40 §1 owns the registry concept; the boot-seeding + rehydration decisions are code-only | One line each — rides **C-B** |
 | R4 | Draft ≠ issue: pack evidence lands as a claim DRAFT; naming the subject stays the player's consented act | `ClaimLedger.draftClaim` / `mysterium credential issue` | 41 §4.3 already specifies this flow | **No gap** (mapped, confirming canon ↔ code) |
@@ -70,9 +78,9 @@ closed by d1–d5; not repeated here.
 
 **REQUIRE (production-blocking, all have homes):**
 1. 37's five divergences + the density instrument + linter severities — **d5, ratified**.
-2. 16 §2.4 consent data contract (issue/grant/scope/revoke lifecycle, AL4 floor) — **C-A**; d3
-   needs it *before* building the brokerage, per the grounding principle (§4.3: fix foundations
-   first).
+2. 16 §2.4 share contract (create / scope-select / revoke lifecycle per the owner ruling, AL4
+   floor) — **C-A**; d3 needs it *before* building the share mechanism, per the grounding
+   principle (§4.3: fix foundations first).
 3. 40 provenance contract (R2/R3) — **C-B**.
 
 **WANT (coherence, schedule with owners):**
@@ -94,21 +102,28 @@ closed by d1–d5; not repeated here.
 
 ## 4. The outline — proposed canon amendments for owner alignment
 
-### C-A — 16 §2.4 "The consent brokerage data contract" (new subsection, ~15 lines; with d3)
-1. The `ConsentLink` shape as code already types it: `grantId`, `scopes ⊆ L1..L7`, `revoked`,
-   issued-by-the-player (guardian-of-record for young players, per the existing table).
-2. Lifecycle: issue → grant-check at every render (AL5, already canon) → revoke nulls the
+### C-A — 16 §2.4 "The share contract" (new subsection, ~12 lines; with d3)
+**Restated to the owner's 2026-09-27 ruling:** an API-key-permission shape, persona-free.
+1. The share shape, as code already types it: `grantId`, `scopes ⊆ L1..L7` (**player-selected**),
+   `revoked` — one player-issued key per recipient; no identity typing, no role classes, no
+   guardian-of-record logic. The scope selection **is** the security interface.
+2. Lifecycle: create → scope-check at every render (AL5, already canon) → revoke nulls the
    projection instantly; refused renders return a reason, never a partial payload (LD3 pin).
-3. The AL4 floor — **a recorded divergence, not a prose sentence**: canon AL4 (16:513) says
-   "descent only for auditors" but never names L0 as ungrantable; code (`articulationLadder.ts`)
-   enforces `firstIdx >= 1`. AGENTS §2.0: an unrecorded divergence is a defect, not a decision.
-   Lands as a MY-AD via `arch.py new` WITH its compensation (what an auditor loses: nothing — the
-   L1 holonic span already carries the player's lived-experience summary in rubric-named form),
-   plus the one-line AL4 amendment in §10.5.
-4. R6's honesty-gate sentence in 33 §7's intro: *a surface that renders history refuses without
+3. AL4 floor stays load-bearing (a share's scopes are contiguous from L1; L0 — the player's
+   felt-sense surface — is never shareable) — **a recorded divergence, not a prose sentence**:
+   canon AL4 (16:513) says "descent only for auditors" but never names L0; code
+   (`articulationLadder.ts`) enforces `firstIdx >= 1`. Lands as a MY-AD via `arch.py new` WITH
+   its compensation (nothing lost: L1's holonic span already carries the lived-experience
+   summary in rubric-named form), plus the one-line AL4 amendment in §10.5.
+4. 16 §2.4's persona rows are re-framed as *consumers* of the share mechanism (the use cases
+   33 §7's render contracts serve) — the re-framing is recorded in C-A's MY-AD (compensation:
+   the three surfaces remain render contracts over the same shares; no capability is removed,
+   only identity-typing deferred).
+5. R6's honesty-gate sentence in 33 §7's intro: *a surface that renders history refuses without
    a save — never narrates a fabricated profile.*
-    **[ALIGN]** depth of 2 — does the owner want audit-trail (who granted, when) as a first-class
-    field now or when institutional surfaces need it?
+6. R8's naming lines (16 §2.4 / 39 §4.3 / 40 name their code paths, the 38 pattern).
+   **[ANSWERED by the ruling]** audit-trail depth: none now — the scope selection is the entire
+   interface; grant/audit fields deferred to institutional surfaces if those ever land.
 
 ### C-B — 40 §1 "Provenance & the synthetic-evidence contract" (new subsection, ~10 lines; standalone or with d5)
 1. Every reliability row and claim draft carries `provenance ∈ {deterministic-simulated,
@@ -143,7 +158,7 @@ closed by d1–d5; not repeated here.
 
 | Order | Item | Canon |
 |---|---|---|
-| next | **d3** Educator Desk + consent brokerage | C-A lands first (foundations-before-code) |
+| next | **d3** share mechanism + Educator Desk (the first read-only consumer) | C-A lands first (foundations-before-code) |
 | then | **d4** pod transport M0 | none needed (38 §4.2 verified adequate); the 33 §7 cohort note waits |
 | then | **d5** 37 teeth-first repair | C-C (already the plan's text) + C-B if not done standalone |
 | parallel-OK | **C-B standalone** | 10 lines; can land any iteration before d5 |
@@ -152,7 +167,8 @@ closed by d1–d5; not repeated here.
 
 ## 6. Owner align points (the complete list)
 
-1. **C-A §2 depth** — audit-trail as first-class now, or deferred to institutional surfaces.
+1. ~~C-A audit-trail depth~~ — **ANSWERED by the 2026-09-27 share-model ruling:** the scope
+   selection is the entire security interface; no grant/audit fields now.
 2. **D-39** — the journal P1 seam: register the practice tools + wire the LLM scorer now (rides
    Phase 17), or record P1–P3 spec-held. P2/P3 are pod-gated either way.
 3. **C-C hardening** — the standing named decision (density gate report-only vs battery-failing).
