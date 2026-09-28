@@ -102,6 +102,7 @@ rungs:
     - docs/REQUIREMENTS.md
     - docs/EDUCATION-CANON-COMPLETION-PLAN.md
     - docs/DEPLOYMENT-READINESS-PLAN.md
+    - docs/PRODUCTION-DEPLOYMENT-PLAN.md
     authority: docs/DEVELOPMENT-PLAN.md
     live: true
   historical:

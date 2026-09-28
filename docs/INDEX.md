@@ -14,7 +14,7 @@
 | `system` | `docs/system` | yes | `docs/system/AGENTS.md` |
 | `content` | `docs/concept-drafts` | yes | `docs/concept-drafts/README.md` |
 | `records` | `docs/system/core/decisions`<br>`docs/system/core/regressions`<br>`docs/system/core/worklog` | yes | `—` |
-| `plans` | `docs/DEVELOPMENT-PLAN.md`<br>`docs/ONBOARDING-REDESIGN-PLAN.md`<br>`docs/ARCHITECTURE-TRANSMUTATION-PLAN.md`<br>`docs/REQUIREMENTS.md`<br>`docs/EDUCATION-CANON-COMPLETION-PLAN.md`<br>`docs/DEPLOYMENT-READINESS-PLAN.md` | yes | `docs/DEVELOPMENT-PLAN.md` |
+| `plans` | `docs/DEVELOPMENT-PLAN.md`<br>`docs/ONBOARDING-REDESIGN-PLAN.md`<br>`docs/ARCHITECTURE-TRANSMUTATION-PLAN.md`<br>`docs/REQUIREMENTS.md`<br>`docs/EDUCATION-CANON-COMPLETION-PLAN.md`<br>`docs/DEPLOYMENT-READINESS-PLAN.md`<br>`docs/PRODUCTION-DEPLOYMENT-PLAN.md` | yes | `docs/DEVELOPMENT-PLAN.md` |
 | `historical` | `docs/historical` | no | `docs/historical/AGENTS.md` |
 | `audits` | `docs/audits` | no | `—` |
 
