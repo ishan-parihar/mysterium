@@ -35,14 +35,25 @@ failing into them.
 
 | # | Step | Who | Gate |
 |---|---|---|---|
-| **D-1** | `noLlm` becomes a build-time flag, not a hardcoded `false` | **me** | new gate: the flag reaches `runEncounter` |
+| **D-1** | ~~`noLlm` becomes a build-time flag~~ **BUILT `a55129d`** — `src/lib/config/noLlm.ts`, gated by **G52** | **done** |
 | **D-2** | `wrangler kv namespace create SAVE_KV` + `RECOVERY_KV`; paste 4 IDs into `wrangler.toml` | **you** | `deploy.yml:36` binding gate |
 | **D-3** | Decide the identity model (§3) | **you** | — |
 | **D-4** | First deploy + tag `v0.1.0` | **me** | `verify:release` |
 | **D-5** | Verify in the live browser: boot → play an encounter → save → reload | **me + you** | manual |
 
 **D-2 is the only thing standing between this repo and a live URL.** Everything else on the
-critical path is code.
+critical path is code, and the one code item on it is done.
+
+### How to configure it
+
+`VITE_LLM_REQUIRED` is unset by default, which means **detect**: the build uses the authored
+corpus when no client-visible key exists. So a keyless deploy works with no configuration at all.
+
+| `VITE_LLM_REQUIRED` | Behaviour | Use when |
+|---|---|---|
+| unset | corpus when no key; model when a key is present | the default, and the right one |
+| `1` | always attempt the model path | the key is injected at runtime, not at build |
+| `0` | never attempt the model path | you deliberately want deterministic content |
 
 ## 3. The identity decision (D-3) — the one real security finding
 
