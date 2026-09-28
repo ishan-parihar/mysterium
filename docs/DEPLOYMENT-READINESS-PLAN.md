@@ -5,8 +5,8 @@
 > dated in §1. Where it states a decision, the decision belongs to the owner and is marked.
 >
 > **Status (2026-09-28): OPEN — B-1 BUILT, the rest awaits the owner.** B-1 (the critical
-> data-loss-with-a-success-message defect) is **fixed in this commit**: the dev-fallback guard plus
-> a build-time reminder. Every other item is owner-reserved (a Cloudflare account, a secret, a
+> data-loss-with-a-success-message defect) is **fixed and verified end to end in the real
+> worker**: the dev-fallback guard, the client-visible failure state, and the build-time gate. Every other item is owner-reserved (a Cloudflare account, a secret, a
 > credential) or a deploy step. Nothing here is "build a new thing" — every item is a gap between
 > an already-ratified design and an already-shipped surface.
 
@@ -77,7 +77,28 @@ which assert the 503's `body.message`, the exact text a client receives. The cli
 treats a non-OK response as a failure (`cloudSyncStore` returns `false`), so 503 is the correct
 signal all the way through.
 
-And a **build-time gate** in `check-invariants.ts`: it reads `wrangler.toml`, finds any
+And the **player-visible half** (`src/lib/components/CloudSyncIndicator.svelte`, mounted in the
+root layout so the signal is on every route): a failed sync says what is true — "saved on this
+device, not yet on the server", with the attempt count and the server's own message — and never
+claims a save succeeded when it did not. `cloudSyncState` is locked by an importer-count test,
+because a store with no reader is the same silent-success class one layer up.
+
+**VERIFIED END TO END IN THE REAL ARTIFACT**, which the unit test could not do — and the trap is
+worth recording, because anyone verifying B-1 locally will hit it: `wrangler pages dev`
+**auto-creates local KV bindings** from wrangler.toml's declared blocks, so it answers
+`200 {accepted:true}` with the guard never running. B-1 is a deploy-time property, so no local
+run can prove it. With the KV and analytics blocks removed from wrangler.toml, the real worker
+returns:
+
+```
+POST /api/save              -> 503 {"message":"storage not configured: SAVE_KV is unbound, so
+                                     this route cannot serve the save path. Refusing rather
+                                     than falling back to an in-memory store that a restart
+                                     would erase."}
+POST /api/recovery/generate  -> 503 {"message":"storage not configured: RECOVERY_KV is unbound, ..."}
+```
+
+A **build-time gate** in `check-invariants.ts`: it reads `wrangler.toml`, finds any
 `REPLACE_WITH_*` namespace id, and **fails with the remediation commands** under
 `--require-bindings` (report-only by default, because the committed file is *meant* to hold
 placeholders and CI builds on every push). `deploy.yml` passes that flag in a `bindings` job that
