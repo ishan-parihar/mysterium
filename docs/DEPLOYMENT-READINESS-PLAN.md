@@ -46,6 +46,47 @@ Facts, not assumptions. Each was read from the code in this commit.
 
 ---
 
+
+## 1b. Measurement honesty — calibration figures must be reported as a RANGE (verified 2026-09-28)
+
+**`scripts/cohort-calibrate.ts` is deterministic in substance but not bit-reproducible, and its
+output varies run to run at identical arguments.** Three invocations of `--seed 1 --generated 50`
+gave **22.4% / 22.4% / 22.3%** unfamiliar-pole share; an unflagged run gave 23.0% — a spread of
+~0.7pp at n=745 encounters.
+
+**What is actually deterministic, verified rather than assumed:**
+
+- **Persona generation is bit-identical.** `cohort.ts:89` seeds `mulberry32(seed +
+  hashSeed(...))`; two `generateCohort({count:50, seed:1})` calls produced byte-identical arrays.
+- **The encounter sequence is identical.** Diffing two `runCampaign` runs field by field: all 30
+  differing lines were timestamps (`createdAt`, `lastEncounterAt`, per-cell theta) and nothing
+  else — no cell, altitude or session record changed.
+- **Staleness is NOT the mechanism.** A full-scale `--json` diff of two 745-encounter runs found
+  **zero staleness differences** and every run reports `staleness=0.000` on all eight lines, so the
+  `(now - ts)` urgency path in `DevelopmentalNeedsDetector.ts:30` is not what moves the number.
+  `observables.ts:11-19` already documents the general hazard and the mitigation: the harness
+  anchors a virtual clock at a fixed epoch and normalizes staleness relative to the newest cell,
+  so gates assert on relative ordering, never absolute time.
+
+**What does vary is small-scale content drift**: the same diff shows `readings` 842 vs 841 and
+`distinctPairs` 6 vs 7 — a small number of encounters differ in which polarity pair they produce,
+which moves a percentage computed over 745. The exact upstream source was not isolated; the
+honest statement is that the pass is not bit-reproducible and the residual is a small content
+drift, not a seeded-RNG failure and not a staleness effect.
+
+**Why this belongs in a deployment-readiness plan.** §46/§5.2's 0.25 unfamiliar-pole floor is
+evaluated against a number that moves by up to 0.7pp. Every figure this pass produces is therefore
+a **distribution, not a point** — consistent with `provisional-simulated-cohort` (it may reject,
+never certify), but NOT compatible with quoting a single figure to one decimal as a finding. The
+decision-relevant fact, which holds across the whole observed range, is the **verdict**:
+
+> unfamiliar-pole share **22.3–23.0% against a 0.25 floor — below-floor (REJECTED) in every run
+> observed**, at 50 campaigns / 173 sessions / 745 encounters.
+
+**The fix, if the range is ever wanted to be zero:** inject a fixed `now` into the campaign (the
+ladder bridge already accepts `{now}`) and make the per-encounter clock a passed-in value rather
+than a wall read. Not urgent: the verdict is stable, and a narrower number would not change it.
+
 ## 2. Blocking findings — these must be fixed before any public deploy
 
 ### B-1 — A misconfigured KV deploy reports success and loses every save. **CRITICAL.**
@@ -112,27 +153,31 @@ layer up — the check's whole purpose is to be invoked by the thing it protects
 **owner-reserved** (namespace/dataset ids are a user decision), but nothing can be verified
 until it is done. The commands are in the file's own header.
 
-### B-3 — The GitHub Pages path was a degraded build wearing the product's name. **HALF BUILT — corrected 2026-09-28.**
+### B-3 — The GitHub Pages path was a degraded build wearing the product's name. **BUILT 2026-09-28.**
 
 The single `deploy.yml` built with `BUILD_TARGET=static`, which per `svelte.config.js` means **no
 SSR and no `/api/*` endpoints** — the client falls back to local-only persistence and a direct
 LLM call. That is a legitimate Capacitor/offline mode, but it was named "Deploy to GitHub Pages",
 fired on every `v*` tag, and would have published a URL that cannot save a player's progress
-server-side while looking exactly like "Mysterium is live".
+server-side while looking exactly like "Mysterium is live". The workflows were split, then the
+static half was removed outright:
 
-**What is real (verified against the tree 2026-09-28):** `deploy.yml` now deploys **Cloudflare
-Pages** with `BUILD_TARGET: cloudflare` (`:57`), and its `bindings` job runs
-`scripts/check-invariants.ts --require-bindings` (`:36`) which refuses to proceed while
-`wrangler.toml` holds `REPLACE_WITH_*` ids. The dangerous half — the one that could have shipped a
-save-less build under the product's name — is closed.
+- `deploy.yml` → **Cloudflare Pages**, `BUILD_TARGET=cloudflare` (`:57`), the only production
+  deploy, and it runs the binding gate (`scripts/check-invariants.ts --require-bindings`, `:36`)
+  before it builds.
+- `deploy-static.yml` → created in `28d251b`, retitled "Static build (offline demo / Capacitor
+  artifact)" and moved to `v*-static` tags and manual dispatch — then **deleted entirely** in
+  `75fb471` ("Remove the GitHub Pages deploy; keep Cloudflare Pages as the only production
+  path"). The offline artifact is now built deliberately and locally, never published. Nothing in
+  CI builds `BUILD_TARGET=static` under the product's name, so the confusion cannot recur.
 
-**What is NOT built:** `.github/workflows/deploy-static.yml` **does not exist.** The workflow
-directory holds exactly `ci.yml` and `deploy.yml`. So there is no retitled static artifact, no
-`v*-static` tag trigger, and no manual-dispatch path for the Capacitor/offline build. The
-consequence is benign-but-real: the static target is currently simply **not published by any
-workflow**, so nothing can be mistaken for the product. Building that workflow is optional
-convenience, not a blocker — but this plan previously claimed it existed, and a reader
-diffing the tree against G-5 would have found nothing to review.
+**Verified 2026-09-28, including a correction to that same day.** An earlier pass at this file
+marked B-3 "HALF BUILT" because `deploy-static.yml` was absent from the tree. That was wrong: the
+file was created in `28d251b` and deliberately deleted in `75fb471`, so its absence is the
+intended end state rather than a half-finished repair. A missing file proves only that nothing
+currently creates it — `git log --all -- <path>` is the check that distinguishes deletion-by-
+design from never-built, and that pass had not run it. The check is recorded here because it is
+the one that would have caught it.
 
 ### B-4 — No release has ever been cut: no tag, no npm publication.
 
