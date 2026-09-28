@@ -200,7 +200,7 @@ audited in the same pass.
 | G-2 | **Create the KV namespaces + analytics dataset** (B-2) | nothing persists without them | **yes** — account + ids |
 | G-3 | **Set + verify `LLM_API_KEY`** (B-5) | no LLM without it | **yes** — the key |
 | G-4 | **First real deploy to Cloudflare Pages** | proves B-1's guard, the bindings, and the BFF together | no |
-| G-5 | ~~**Relabel/remove the GitHub Pages workflow** (B-3)~~ **BUILT 2026-09-28** | prevents a false "live" claim | **done** |
+| G-5 | ~~**Relabel/remove the GitHub Pages workflow** (B-3)~~ **DONE 2026-09-28 — removed outright, not relabelled** (`75fb471`) | prevents a false "live" claim | **done**; see the trade-off note in B-3 — `BUILD_TARGET=static` now has **no publishing path at all** |
 | G-6 | **Rate limiting on the BFF** | 8 unauthenticated endpoints; `/api/save` accepts 256KB writes keyed on a client-supplied `deviceId` | no — but confirm scope |
 | G-7 | **A first-run smoke test against the live URL** | the only proof that boot → session → save → restore works in production | no |
 | G-8 | **Error monitoring** | silent no-ops are the project's known failure mode; a deploy with no visibility cannot detect its own regressions | no |

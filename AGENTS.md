@@ -385,7 +385,7 @@ reaches the LLM), G49 locks it. **Track B is BUILT 2026-09-27**: WebUI schedulin
 the Interpersonal exclusion re-measured (every line served at 3×4/6×6/12×6; the 2026-09-25
 finding predated MY-AD-0033's reserve) with the reserve's position contract exported and pinned
 scale-independently; G50 locks it. The current
-kernel roster is **50 gates** (45 + **G46** + **G47** + **G48** + **G49** + **G50**: in-vitro-class absences no runtime
+kernel roster is **51 gates** (45 + **G46** + **G47** + **G48** + **G49** + **G50** + **G51**: in-vitro-class absences no runtime
 gate could see; G46 requires each ladder consumer to reach BOTH the payload bridge and
 `renderLevel`, G47 requires BOTH enforcement points of the share scope law plus the view's
 honesty gate, G48 requires the M0 adapter to hold applyEvent + payloadIsSafe behind the
@@ -573,7 +573,7 @@ When you implement one, record the implementation in the same commit and cite th
    architecture-live). Agents generate the play data the calibration list is waiting for. Everything
    an agent cannot reach is a blind spot by construction — the same ruling that produced Phase 14 d4.
 
-Standing constraints: workspace-lint → `arch.py validate` (DG1–DG23) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The full gate roster is in `_org.yaml → gates` and in step 1b below.
+Standing constraints: workspace-lint → `arch.py validate` (DG1–DG23) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The **kernel** gate roster is `src/core/validation/gates/roster.ts` (currently **51**, `G1`–`G51`); the **doc-governance** gate roster is `_org.yaml → gates` (DG1–DG23). They are different rosters and neither is a subset of the other.
 
 ### 4.3 The Grounding Principle
 
