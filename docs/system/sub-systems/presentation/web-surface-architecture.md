@@ -7,6 +7,22 @@
 >
 > **Status (2026-09-28): the substrate is built; the experience is not.** Every foundation below
 > exists and works. The gaps in §7 are the actual work.
+>
+> **Re-measured against the tree 2026-09-28 (P1 item 1 landed, `632d32a`).** Three claims in this
+> document were a pre-build snapshot and are now false; §6 and §7 carry the corrections, and the
+> gaps that survive are the real work:
+>
+> - **The three auditor surfaces are BUILT**, not ABSENT — `/auditor/{guardian,educator,therapeutic}`,
+>   one consent seam (`auditorProjection.ts`), the share store, and **G51**. `33 §7`'s three panes
+>   are routes.
+> - **P0 (`cloudSyncState` has no reader) was FALSE.** `CloudSyncIndicator.svelte` reads it and is
+>   mounted at `+layout.svelte:93`. The reader exists; §7 has been corrected to say so.
+> - **P2's "20 CLI subcommands" was a miscount.** The real registry is the
+>   `NON_INTERACTIVE_SUBCOMMANDS` set at `scripts/cli-game.ts:680` — 16 entries, and it is the
+>   authority for which surfaces have no web route, not a number typed into prose.
+>
+> What §7 still holds: the ladder gap (L0 + L3–L7 + the auditor register), the P2 routes, and both
+> P3 items.
 
 ## 1. What this system is
 
@@ -145,40 +161,66 @@ only** (`+page.svelte:39-50`, `:198-208`), with AL3's stage-articulated presenta
 L3–L7 have **no web render**; only the CLI `ladder` command reaches them. The **auditor register
 (AL2's second traversal) has no web path at all**, and there is no level selector or drill-down.
 
-**Educator Desk / Guardian Mirror / Therapeutic Pane (33 §7) — ABSENT.** Zero routes, zero
-components, zero stores. `grep` for `Educator|Guardian|Therapeutic` across `src/routes` and
-`src/lib` returns nothing; every hit is core-domain. The share system
-(`src/core/domain/shares.ts`) exists and is gated (G47), but its only consumers are the CLI
-(`shareCmd.ts`) and the tests — **the first read-only consumer the canon names was never built in
-the web.** This is the single largest canon gap in the front end.
+**Educator Desk / Guardian Mirror / Therapeutic Pane (33 §7) — BUILT 2026-09-28 (`632d32a`).**
+Three routes, one consent seam. `auditorProjection.ts` holds the four refusal steps in order
+(no Significator → no/revoked grant → payload bridge → `renderLevel` per level, re-checked at
+render per AL5); the three routes name only their scope, their ceiling and the one `33 §7.3` rule
+that binds them, and **G51** fails a route that reaches the bridge or the law itself. The
+surfaces differ in ceiling, not structure: guardian L5, educator L3, therapeutic L4.
+
+**The first read-only consumer the canon names now exists in the web** — and closing it surfaced
+a live consent failure, because the surface's `$effect` had subscribed to the share store's
+*variable* rather than its value, so a revoked grant kept rendering until reload. Fixed, and
+pinned.
 
 ## 7. Gaps — the actual work, in priority order
 
-**P0 — a shipped defect, not a feature.**
+> **P0 was closed before this document was first read and is retained here only as the shape of
+> the class.** A reader arriving fresh should skip it: the gap is a shipped defect with no front
+> end, and `cloudSyncState` does have one.
 
-1. **`cloudSyncState` has no reader.** The player cannot see that a save failed. `/settings` is the
-   surface; `+layout.svelte:32` is the import site. Until this renders, B-1's client half is
-   incomplete: the server refuses correctly, the client counts correctly, and the player still
-   sees nothing.
+**P0 — a shipped defect, not a feature.** ✅ **NOT A GAP — verified 2026-09-28.**
+
+1. ~~**`cloudSyncState` has no reader.**~~ `CloudSyncIndicator.svelte` reads
+   `$cloudSyncState.status`, `.consecutiveFailures` and `.lastError`, and **is mounted** at
+   `+layout.svelte:93`. B-1's client half is complete. Kept in the document because the check
+   that found it is the one worth repeating: a component that exists is not a surface.
 
 **P1 — canon-required surfaces with no front end.**
 
-2. **The auditor surfaces (33 §7)** — all three, behind the share/consent law that already exists.
-   The share mechanism is built and gated; it needs a route. `MY-AD-0034` makes scopes the entire
-   security interface and the law is re-checked at render, so the surface is bounded by design.
+2. **The auditor surfaces (33 §7)** — ✅ **BUILT `632d32a`.** All three, behind the share/consent law
+   that already exists, through one seam rather than three consent decisions in `src/routes`.
 3. **Ladder L0 + L3–L7 and the auditor register (16 §10.5).** The payloads exist
-   (`buildLadderPayloads`); the rendering does not.
+   (`buildLadderPayloads`); the rendering does not. **This is the remaining P1.**
 
-**P2 — kernel capabilities with no web surface** (cross-referenced against the CLI's 20
-subcommands): `insights`, `export`, `events`, `delegate`, `pod`, `credential`, `pack` have no
-route. `calibrate` is partial (onboarding probes, no headless equivalent). `privacy` is partial
-(transparency page exists; no export/inspect-own-data).
+**P2 — kernel capabilities with no web surface**, cross-referenced against the real registry —
+**the `NON_INTERACTIVE_SUBCOMMANDS` set at `scripts/cli-game.ts:680`**, not a count in prose
+(there are 16, and the earlier "20" was wrong):
+
+| Command | Web route | Note |
+|---|---|---|
+| `insights` | none | cognitive/per-line aggregates exist in the kernel |
+| `export` | none | **also a privacy gap** — see below |
+| `events` | none | event tail; the pod CLI polls the same tail |
+| `delegate` | none | `--summon` exists; the council is a CLI-only surface today |
+| `pod` | none | M0 transport is built and gated (G48) |
+| `credential` | none | |
+| `pack` | none | pack engine is live and gated (G45) |
+| `privacy` | `/telemetry` only | transparency page exists; **no export-your-own-data** |
+| `calibrate` | `/onboarding` probes only | no headless equivalent |
 
 **P3 — consistency debt.**
 
-4. `agentBusy` is dead — delete it or wire it.
-5. `/knowledge`, `/curriculum`, `/curriculum/progress` still SSR; the empty-state flash is a
-   consequence of the split, not a decision.
+4. `agentBusy` is dead — **confirmed dead, and structurally so.** It is declared
+   `export const agentBusy = writable<number>(0)` inside `AgentRunner.svelte`'s instance
+   `<script>` and consumed only by a `derived` **in that same component**; the sole importer of
+   the file is `+layout.svelte:28`, which imports the default component, not the store. In Svelte 5
+   an instance-script export is component-local, so no consumer *can* reach it. It is either a
+   store that belongs in `src/lib/stores/` or it is dead code to delete.
+5. `/knowledge`, `/curriculum`, `/curriculum/progress` still SSR — **confirmed**: these are the
+   only three `+page.svelte` routes with no `+page.ts`, against 16 that opt out. The empty-state
+   flash is a consequence of the split, not a decision, and the fix is one decision applied to
+   three routes, not three more exceptions.
 
 ## 8. The design brief (website-design skill, adapted)
 

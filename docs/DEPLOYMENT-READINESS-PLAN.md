@@ -14,7 +14,7 @@
 
 ## 0. The one-paragraph version
 
-Mysterium is **feature-complete and instrumented** (roster 50, 1723 tests, 23/23 doc gates) but
+Mysterium is **feature-complete and instrumented** (roster 51, 1765 tests, 23/23 doc gates) but
 it has **never been deployed** — there is no git tag, no npm publication, and no Cloudflare
 namespace. The risk is not missing features; it is that a deploy would *appear* to succeed while
 silently doing the wrong thing. Three surfaces are built to degrade quietly by design — the
@@ -33,7 +33,7 @@ Facts, not assumptions. Each was read from the code in this commit.
 | Surface | State | Evidence |
 |---|---|---|
 | Battery | 154 files / 1723 tests green; `arch.py validate` 23/23 + fixtures 23/23; lint 0/0 | CI + local |
-| Gate roster | 50 (`G45`–`G50` added this phase, each row mutation-proven) | `src/core/validation/gates/roster.ts` |
+| Gate roster | 51 (`G51` added 2026-09-28 with the auditor surfaces, mutation-proven) | `src/core/validation/gates/roster.ts` |
 | Release smoke | green — built CLI reports 0.1.0, both session modes complete, checkpoints persist | `npm run verify:release` |
 | Deploy targets | dual: `BUILD_TARGET=cloudflare` (default, adapter-cloudflare, SSR + BFF) and `BUILD_TARGET=static` (adapter-static, SPA, **no server endpoints**) | `svelte.config.js` |
 | BFF endpoints | 8 live `+server.ts` routes under `src/routes/api/` | `find src/routes/api` |
@@ -112,20 +112,27 @@ layer up — the check's whole purpose is to be invoked by the thing it protects
 **owner-reserved** (namespace/dataset ids are a user decision), but nothing can be verified
 until it is done. The commands are in the file's own header.
 
-### B-3 — The GitHub Pages path was a degraded build wearing the product's name. **BUILT 2026-09-28.**
+### B-3 — The GitHub Pages path was a degraded build wearing the product's name. **HALF BUILT — corrected 2026-09-28.**
 
 The single `deploy.yml` built with `BUILD_TARGET=static`, which per `svelte.config.js` means **no
 SSR and no `/api/*` endpoints** — the client falls back to local-only persistence and a direct
 LLM call. That is a legitimate Capacitor/offline mode, but it was named "Deploy to GitHub Pages",
 fired on every `v*` tag, and would have published a URL that cannot save a player's progress
-server-side while looking exactly like "Mysterium is live". **The workflows are now split:**
+server-side while looking exactly like "Mysterium is live".
 
-- `deploy.yml` → **Cloudflare Pages**, `BUILD_TARGET=cloudflare`, the deployable target, and it
-  runs the binding gate (below) before it builds.
-- `deploy-static.yml` → the static artifact, retitled "Static build (offline demo / Capacitor
-  artifact)", moved off the `v*` tag onto `v*-static` tags and manual dispatch, with its own
-  header stating that it is not the production web deploy. A public static URL is still
-  available, but it can no longer be mistaken for the product.
+**What is real (verified against the tree 2026-09-28):** `deploy.yml` now deploys **Cloudflare
+Pages** with `BUILD_TARGET: cloudflare` (`:57`), and its `bindings` job runs
+`scripts/check-invariants.ts --require-bindings` (`:36`) which refuses to proceed while
+`wrangler.toml` holds `REPLACE_WITH_*` ids. The dangerous half — the one that could have shipped a
+save-less build under the product's name — is closed.
+
+**What is NOT built:** `.github/workflows/deploy-static.yml` **does not exist.** The workflow
+directory holds exactly `ci.yml` and `deploy.yml`. So there is no retitled static artifact, no
+`v*-static` tag trigger, and no manual-dispatch path for the Capacitor/offline build. The
+consequence is benign-but-real: the static target is currently simply **not published by any
+workflow**, so nothing can be mistaken for the product. Building that workflow is optional
+convenience, not a blocker — but this plan previously claimed it existed, and a reader
+diffing the tree against G-5 would have found nothing to review.
 
 ### B-4 — No release has ever been cut: no tag, no npm publication.
 
