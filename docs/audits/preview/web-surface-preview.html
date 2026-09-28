@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en" data-stage="red">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mysterium — what you will see</title>
+<style>
+  /* Stage palettes copied verbatim from src/styles/tokens.css. This is the real design
+     system, not a mock aesthetic — the whole point of the preview is that it cannot lie. */
+  :root{
+    --bg:#0d0a0a; --surface:#1a1010; --surface-elevated:#241616; --fg:#d8c8b4;
+    --fg-muted:#a08868; --muted:#6a5040; --accent:#b8252a; --accent-soft:#5a1318;
+    --accent-fg:#ffffff; --accent-soft-fg:#ffffff; --border:rgba(184,37,42,.3);
+    --font-display:"Big Shoulders","Arial Narrow",sans-serif; --font-body:"IBM Plex Mono","Courier New",monospace;
+  }
+  [data-stage="infrared"]{--bg:#0a0707;--surface:#140d0d;--surface-elevated:#1f1414;--fg:#d8c8b4;--fg-muted:#a08868;--muted:#6a5040;--accent:#c44525;--accent-soft:#6b2415;--accent-fg:#fff;--accent-soft-fg:#fff;--border:rgba(196,69,37,.3);--font-display:"Boldonse",system-ui;--font-body:"DM Mono",monospace}
+  [data-stage="magenta"]{--bg:#0d0814;--surface:#170f24;--surface-elevated:#211634;--fg:#e0c8f0;--fg-muted:#a888c0;--muted:#68507a;--accent:#9440c8;--accent-soft:#4a2068;--accent-fg:#fff;--accent-soft-fg:#fff;--border:rgba(148,64,200,.3);--font-display:"Italiana",serif;--font-body:"Lora",serif}
+  [data-stage="red"]{--bg:#0d0a0a;--surface:#1a1010;--surface-elevated:#241616;--fg:#d8c8b4;--fg-muted:#a08868;--muted:#6a5040;--accent:#b8252a;--accent-soft:#5a1318;--accent-fg:#fff;--accent-soft-fg:#fff;--border:rgba(184,37,42,.3);--font-display:"Big Shoulders","Arial Narrow",sans-serif;--font-body:"IBM Plex Mono",monospace}
+  [data-stage="amber"]{--bg:#0f0a05;--surface:#1c1409;--surface-elevated:#291e10;--fg:#f0e0c0;--fg-muted:#c0a070;--muted:#7a6440;--accent:#d4a425;--accent-soft:#6a5215;--accent-fg:#12100c;--accent-soft-fg:#fff;--border:rgba(212,164,37,.3);--font-display:"Young Serif",serif;--font-body:"Libre Baskerville",serif}
+  [data-stage="orange"]{--bg:#0a0d10;--surface:#111a20;--surface-elevated:#18262e;--fg:#d8e4ec;--fg-muted:#90a8b8;--muted:#58707c;--accent:#2590c4;--accent-soft:#155068;--accent-fg:#12100c;--accent-soft-fg:#fff;--border:rgba(37,144,196,.3);--font-display:"Tektur",sans-serif;--font-body:"Instrument Sans",sans-serif}
+  [data-stage="green"]{--bg:#080d08;--surface:#101a10;--surface-elevated:#172617;--fg:#d4e8d0;--fg-muted:#94b890;--muted:#5c7858;--accent:#5aa425;--accent-soft:#2a5215;--accent-fg:#12100c;--accent-soft-fg:#fff;--border:rgba(90,164,37,.3);--font-display:"Bricolage Grotesque",sans-serif;--font-body:"Work Sans",sans-serif}
+  [data-stage="teal"]{--bg:#08101a;--surface:#0c1828;--surface-elevated:#102038;--fg:#c8e8f0;--fg-muted:#78a8c0;--muted:#406878;--accent:#25c4b0;--accent-soft:#156858;--accent-fg:#12100c;--accent-soft-fg:#fff;--border:rgba(37,196,176,.3);--font-display:"Poiret One",sans-serif;--font-body:"Jura",sans-serif}
+  [data-stage="turquoise"]{--bg:#f8f6f0;--surface:#fff;--surface-elevated:#f0ede4;--fg:#2a2620;--fg-muted:#6a6258;--muted:#9a9080;--accent:#7a5f10;--accent-soft:#d4c068;--accent-fg:#fff;--accent-soft-fg:#2a2620;--border:rgba(122,95,16,.3);--font-display:"Crimson Pro",Georgia,serif;--font-body:"Erica One",system-ui}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:14px;line-height:1.6;
+       transition:background .5s,color .5s;min-height:100vh}
+  .wrap{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+  .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .brand{font-family:var(--font-display);font-size:20px;letter-spacing:.12em;text-transform:uppercase;padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:14px}
+  .nav a{display:flex;gap:10px;padding:9px 20px;color:var(--fg-muted);text-decoration:none;font-size:12.5px;border-left:2px solid transparent}
+  .nav a:hover{color:var(--fg);background:var(--surface-elevated)}
+  .nav a.active{color:var(--accent-fg);background:var(--accent-soft);border-left-color:var(--accent)}
+  .nav .dot{width:5px;height:5px;border-radius:50%;background:currentColor;margin-top:7px;flex:0 0 auto;opacity:.6}
+  main{padding:28px 32px 80px;max-width:1100px}
+  .stagebar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);
+            padding:10px 20px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;z-index:20}
+  .stagebar .lbl{font-family:var(--font-display);letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:var(--fg-muted);margin-right:8px}
+  .stagebar button{background:transparent;border:1px solid var(--border);color:var(--fg-muted);padding:5px 11px;
+                   font-family:var(--font-body);font-size:11.5px;cursor:pointer;text-transform:capitalize}
+  .stagebar button:hover{border-color:var(--accent);color:var(--fg)}
+  .stagebar button.on{background:var(--accent-soft);color:var(--accent-soft-fg);border-color:var(--accent)}
+  h1{font-family:var(--font-display);font-size:40px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px}
+  h2{font-family:var(--font-display);font-size:19px;letter-spacing:.09em;text-transform:uppercase;color:var(--fg);margin:30px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+  .sub{color:var(--fg-muted);font-size:13px;margin-bottom:8px}
+  .hero-sub{font-family:var(--font-body);color:var(--fg-muted);letter-spacing:.2em;text-transform:uppercase;font-size:11px;margin-bottom:30px}
+  .card{background:var(--surface);border:1px solid var(--border);padding:16px 18px;margin-bottom:12px}
+  .card h3{font-family:var(--font-display);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .grid{display:grid;gap:12px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  .stat{background:var(--surface);border:1px solid var(--border);padding:14px}
+  .stat .k{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  .stat .v{font-size:15px;color:var(--fg);line-height:1.45}
+  .veil{color:var(--fg-muted);font-style:italic;font-size:12.5px}
+  .btn{display:inline-block;background:var(--accent);color:var(--accent-fg);padding:9px 20px;border:1px solid var(--accent);
+       font-family:var(--font-display);letter-spacing:.09em;text-transform:uppercase;font-size:13px;cursor:pointer}
+  .btn:hover{background:var(--accent-soft);color:var(--accent-soft-fg)}
+  .btn.ghost{background:transparent;color:var(--fg);border-color:var(--border)}
+  .badge{display:inline-block;background:var(--accent-soft);color:var(--accent-soft-fg);border:1px solid var(--accent);
+         padding:2px 9px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .hr{height:1px;background:var(--border);margin:22px 0}
+  .note{border-left:2px solid var(--accent);padding:10px 16px;background:var(--surface-elevated);color:var(--fg-muted);font-size:12.5px;margin:14px 0}
+  .wire{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}
+  .wire div{background:var(--surface-elevated);border:1px solid var(--border);height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted)}
+  .opts{display:grid;gap:9px;margin:14px 0}
+  .opt{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--border);padding:13px 16px}
+  .opt.sel{background:var(--accent-soft);border-left-color:var(--accent);color:var(--accent-soft-fg)}
+  .opt .m{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+  .opt.sel .m{color:var(--accent-soft-fg)}
+  .opt .d{font-size:12px;color:var(--fg-muted);margin-top:3px}
+  .opt.sel .d{color:var(--accent-soft-fg);opacity:.85}
+  .radar{width:100%;max-width:300px;display:block;margin:0 auto}
+  .depth{display:grid;gap:5px;margin:10px 0}
+  .depth div{height:15px;background:var(--surface-elevated);border-left:2px solid var(--border);display:flex;align-items:center;padding-left:9px;font-size:10.5px;color:var(--muted)}
+  .depth div.on{background:var(--accent-soft);color:var(--accent-soft-fg);border-left-color:var(--accent)}
+  code{background:var(--surface-elevated);padding:1px 6px;color:var(--accent);font-size:12px}
+  .lede{color:var(--fg-muted);font-size:13.5px;max-width:70ch;margin-bottom:6px}
+  .toc{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
+  .toc a{color:var(--fg-muted);text-decoration:none;border:1px solid var(--border);padding:4px 10px;font-size:11.5px}
+  .toc a:hover{border-color:var(--accent);color:var(--fg)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="sidebar">
+    <div class="brand">Mysterium</div>
+    <nav class="nav" id="nav">
+      <a href="#" data-go="menu"><span class="dot"></span>Menu</a>
+      <a href="#" data-go="play" class="active"><span class="dot"></span>Continue</a>
+      <a href="#" data-go="profile"><span class="dot"></span>Profile</a>
+      <a href="#" data-go="profiles"><span class="dot"></span>Profiles</a>
+      <a href="#" data-go="curriculum"><span class="dot"></span>Curriculum</a>
+      <a href="#" data-go="progress"><span class="dot"></span>Progress</a>
+      <a href="#" data-go="journal"><span class="dot"></span>Journal</a>
+      <a href="#" data-go="codex"><span class="dot"></span>Codex</a>
+      <a href="#" data-go="settings"><span class="dot"></span>Settings</a>
+      <a href="#" data-go="setup"><span class="dot"></span>Setup</a>
+      <a href="#" data-go="recover"><span class="dot"></span>Recover</a>
+      <a href="#" data-go="glossary"><span class="dot"></span>Glossary</a>
+      <a href="#" data-go="telemetry"><span class="dot"></span>Telemetry</a>
+      <a href="#" data-go="diagnostic"><span class="dot"></span>Diagnostic</a>
+      <a href="#" data-go="onboarding"><span class="dot"></span>Onboarding</a>
+      <a href="#" data-go="knowledge"><span class="dot"></span>Knowledge</a>
+    </nav>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<div class="stagebar">
+  <span class="lbl">Player stage</span>
+  <button data-s="infrared" onclick="setStage('infrared')">infrared</button>
+  <button data-s="magenta"  onclick="setStage('magenta')">magenta</button>
+  <button data-s="red" class="on" onclick="setStage('red')">red</button>
+  <button data-s="amber"   onclick="setStage('amber')">amber</button>
+  <button data-s="orange"  onclick="setStage('orange')">orange</button>
+  <button data-s="green"   onclick="setStage('green')">green</button>
+  <button data-s="teal"    onclick="setStage('teal')">teal</button>
+  <button data-s="turquoise" onclick="setStage('turquoise')">turquoise</button>
+</div>
+
+<script>
+const S = {main:document.getElementById('main'),nav:document.getElementById('nav')};
+
+const radar = (cx=150,cy=150,R=118) => {
+  const pts=[[0,-1],[.71,-.71],[1,0],[.71,.71],[0,1],[-.71,.71],[-1,0],[-.71,-.71]];
+  const v=[.74,.62,.81,.55,.68,.47,.72,.58];
+  const grid=(k)=>pts.map(([x,y])=>`<line x1="${cx}" y1="${cy}" x2="${cx+x*R*k}" y2="${cy+y*R*k}" stroke="var(--border)" stroke-width="1"/>`).join('');
+  const rings=[.33,.66,1].map(k=>`<circle cx="${cx}" cy="${cy}" r="${R*k}" fill="none" stroke="var(--border)" stroke-width="1"/>`).join('');
+  const labels=["Will","Knowledge","Being","Relational","Drive","Expression","Integration","Structure"]
+    .map((n,i)=>{const[x,y]=pts[i],lx=cx+x*(R+18),ly=cy+y*(R+18);
+      return `<text x="${lx}" y="${ly+3}" font-size="8.5" fill="var(--muted)" text-anchor="middle"
+        font-family="var(--font-body)">${n}</text>`}).join('');
+  const poly=pts.map(([x,y],i)=>`${cx+x*R*v[i]},${cy+y*R*v[i]}`).join(' ');
+  return `<svg class="radar" viewBox="0 0 300 300">${rings}${grid(1)}${labels}
+    <polygon points="${poly}" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="1.8"/>
+    ${pts.map(([x,y],i)=>`<circle cx="${cx+x*R*v[i]}" cy="${cy+y*R*v[i]}" r="2.6" fill="var(--accent)"/>`).join('')}</svg>`;
+};
+
+const P = {};
+
+P.menu = () => `
+<h1>Mysterium</h1>
+<div class="hero-sub">Cognitive Combat RPG</div>
+<p class="lede">The entry point. One card states where you are, and everything else is a door.
+No marketing surface, no hero — this is a practice you return to, so the first question is
+"where were you?"</p>
+<div class="card"><h3>Where you are</h3><div class="grid g4">
+  <div class="stat"><div class="k">The World</div><div class="v veil">an unnamed quality</div></div>
+  <div class="stat"><div class="k">Tendencies</div><div class="v veil">not yet spoken</div></div>
+  <div class="stat"><div class="k">Path</div><div class="v veil">still forming</div></div>
+  <div class="stat"><div class="k">Presence</div><div class="v veil">—</div></div>
+</div><div class="note">These four are <code>VeiledStat</code> — the player sees a <em>descriptor</em>,
+never a number. This is the Veil working: assessment happens, the polarity ledger stays closed.</div></div>
+<div class="row"><span class="btn">Continue</span><span class="btn ghost">Profile</span>
+  <span class="btn ghost">Journal</span><span class="btn ghost">Curriculum</span>
+  <span class="btn ghost">Codex</span></div>
+<div class="hr"></div><div class="sub">Also: Setup · Recover · Telemetry · Onboarding · Knowledge</div>`;
+
+P.play = () => `
+<h1>The Red Keep</h1>
+<div class="hero-sub">encounter · cognitive</div>
+<p class="lede">The heart. An encounter is presented as <strong>cards</strong> — not a form, not a
+quiz. The modality badge names the game type, the holon names who you are meeting, and the options
+are the developmental choice itself. DOM/Svelte throughout; there is no canvas engine.</p>
+<div class="opts">
+  <div class="opt sel"><div class="m">selected</div>Name the cost before you pay it
+    <div class="d">The debt you refuse to look at is the one that compounds.</div></div>
+  <div class="opt"><div class="m">option</div>Strike first and ask nothing
+    <div class="d">Faster. The ledger records it as your choice, not your intention.</div></div>
+  <div class="opt"><div class="m">option</div>Leave the room
+    <div class="d">Withdrawal is a polarity too — it is recorded, not judged.</div></div>
+</div>
+<div class="row" style="margin-top:16px"><span class="badge">cognitive</span>
+  <span class="badge">holon · a merchant who remembers you</span></div>
+<div class="wire"><div>reflect</div><div>integrate</div><div>hold probe</div>
+  <div>training beat</div><div>frame shift</div><div>agency readout</div></div>
+<div class="note">The three-phase loop is <code>booting → world → encounter → reflection</code>.
+Reflection is mandatory: an encounter without integration is an event, not a catalyst.</div>
+<div class="row"><span class="btn">Continue</span><span class="btn ghost">Reflect</span></div>`;
+
+P.profile = () => `
+<h1>Developmental Profile</h1>
+<div class="hero-sub">the self-register</div>
+<p class="lede">Pure SVG, no chart library. Eight lines of intelligence as eight spokes; the
+shaded polygon is your current shape. Density here is deliberate — this is the page you study.</p>
+<div class="grid g2">
+  <div class="card"><h3>Lines of intelligence</h3>${radar()}
+    <div class="sub" style="text-align:center;margin-top:8px">8 spokes · your profile at a glance</div></div>
+  <div>
+    <div class="stat" style="margin-bottom:12px"><div class="k">Consciousness Index</div>
+      <div class="v">Aggregate across every line and stage</div></div>
+    ${["Drive Balance","Shadows","Session Position","Articulation"]
+      .map(s=>`<div class="stat" style="margin-bottom:9px"><div class="k">${s}</div>
+        <div class="v veil">rendered from the live Significator</div></div>`).join('')}
+  </div>
+</div>
+<h2>What is visible, and what is not</h2>
+<p class="lede">The open register — stage altitudes, line profiles, drive balance, curriculum depth
+— is player-readable at any stage, metric-bearing, through the Articulation Ladder. The closed
+register — polarity, shadow quadrants, harvest eligibility, ray profile — is never rendered, at any
+stage. That split is the single most important product rule the UI has to honour.</p>`;
+
+P.profiles = () => `
+<h1>Profiles</h1><div class="hero-sub">multi-significator</div>
+<p class="lede">Several player-patterns on one device. A switcher, not a login — the same save
+format, several soul-patterns.</p>
+<div class="grid g3">${["Ishan — Red","Practice — Amber","Guest — Teal"]
+  .map(n=>`<div class="card"><h3>${n.split('—')[1]?.trim()}</h3>
+  <div class="v veil">${n.split('—')[0].trim()}</div>
+  <div class="row" style="margin-top:12px"><span class="btn ghost">Switch</span></div></div>`).join('')}</div>
+<div class="row" style="margin-top:12px"><span class="btn">New profile</span></div>`;
+
+P.journal = () => `
+<h1>Journal</h1><div class="hero-sub">encounter history</div>
+<p class="lede">Four distinct registers, and the separation is the point: the vow you made, the
+evidence that you are not alone, what you practised, and what you discovered.</p>
+<div class="grid g2">
+  <div class="card"><h3>Reflection</h3><div class="v">"I will not abandon the work when it is slow."</div>
+    <div class="sub" style="margin-top:8px">Your check-in vow, restated every session</div></div>
+  <div class="card"><h3>Practice objectives</h3><div class="v veil">what you have agreed to practise</div></div>
+  <div class="card"><h3>Codex Entries</h3><div class="v veil">terms unlocked by what you have lived through</div></div>
+  <div class="card"><h3>You are not alone</h3><div class="v veil">the body of the work, prior sessions</div></div>
+</div>`;
+
+P.codex = () => `
+<h1>Codex</h1><div class="hero-sub">unlocked knowledge</div>
+<p class="lede">Not a manual. A term becomes visible only once an encounter has made it
+experience — the Veil applied to <em>information</em> as well as to measurement.</p>
+<div class="grid g2">${["Archetype","Catalyst","Harvest","Social Memory","The Veil","Polarity"]
+  .map(t=>`<div class="card"><h3>${t}</h3><div class="v veil">unlocked · read</div></div>`).join('')}
+  <div class="card" style="border-style:dashed;opacity:.55"><h3>Locked</h3>
+    <div class="v veil">reach the relevant line to unlock</div></div></div>`;
+
+P.glossary = () => `
+<h1>Glossary</h1><div class="hero-sub">shared vocabulary</div>
+<p class="lede">The canon's terms, defined once. A flat reference list — no player state, no
+progression. This is the one page that is allowed to be boring.</p>
+<div class="grid g3">${["Veil","VeiledStat","Holon","Catalyst","Line","Stage","Drive","Shadow","CCI"]
+  .map(t=>`<div class="card"><h3>${t}</h3><div class="v veil">definition</div></div>`).join('')}</div>`;
+
+P.curriculum = () => `
+<h1>Curriculum</h1><div class="hero-sub">holonic curriculum</div>
+<p class="lede">The largest single page in the app. A holon tree: each node is a real context with
+its own difficulty and its own set of practices. Expanding one shows what it asks of you and what
+it returns.</p>
+<div class="card"><h3>A holon, expanded</h3>
+  <div class="wire"><div>premise</div><div>difficulty</div><div>form</div>
+    <div>lines</div><div>stages</div><div>assessed by</div><div>returns</div><div>unlocks</div></div>
+  <div class="sub">8 facets per curriculum module, mirrored from <code>docs/foundations/30</code></div></div>
+<div class="grid g3">${["The Merchant","The Wall","The Mirror","The Storm","The Court","The Garden"]
+  .map(n=>`<div class="card"><h3>${n}</h3><div class="v veil">begin</div></div>`).join('')}</div>`;
+
+P.progress = () => `
+<h1>Progress</h1><div class="hero-sub">depth · mastery</div>
+<p class="lede">How deep you have gone rather than how far. Depth levels and mastery sequences —
+the difference between <em>touching</em> a capacity and <em>integrating</em> it.</p>
+<div class="card"><h3>Depth ladder</h3><div class="depth">
+  ${["Encountered","Practised","Integrated","Mastered","Embodied"]
+    .map((d,i)=>`<div class="${i<2?'on':''}">${d}</div>`).join('')}</div>
+  <div class="sub">L0 · L3–L7 are built; the articulation register is partially wired</div></div>
+<div class="grid g2">
+  <div class="stat"><div class="k">Mastery sequences</div><div class="v veil">ordered, not scored</div></div>
+  <div class="stat"><div class="k">Retention</div><div class="v veil">theta freshness decays lower stages</div></div>
+</div>
+<div class="note">Lower stages are never "completed" — neglect makes them decay, and upper-stage
+unlocks require their health. This is the <code>holon is never outgrown</code> rule made visible.</div>`;
+
+P.settings = () => `
+<h1>Settings</h1><div class="hero-sub">six groups</div>
+<p class="lede">Everything grouped, nothing hidden behind a gear icon you have to find. The Session
+group is where the four parity controls live.</p>
+${["Accessibility","Session","Account","Privacy","Data","Developer"].map((g,i)=>`
+  <div class="card"><h3>${g}</h3>
+    <div class="wire" style="grid-template-columns:repeat(${i===0?4:3},1fr)">
+    ${(i===0?["Reduce motion","High contrast","Larger type","Dyslexia spacing"]:
+       i===1?["Target line","Target stage","Session length","Encounter count"]:
+       i===2?["Profile","Significator","Export"]:["Data","Reset","Developer"])
+      .map(x=>`<div>${x}</div>`).join('')}</div>
+    <div class="sub">${i===0?"prefers-reduced-motion is honoured, and the stage motion respects it":
+        i===1?"these four persist to localStorage and now reach the SessionContext — four controls that changed nothing for a while":
+        i===2?"the same save format as a profile":i===3?"telemetry is opt-in and revocable":"recovery keys, raw data, dev tools"}</div>
+  </div>`).join('')}`;
+
+P.telemetry = () => `
+<h1>Telemetry</h1><div class="hero-sub">opt-in</div>
+<p class="lede">Off by default, and the page says so. A consent record, not a dashboard — the
+share law (G47) means a scope chosen at creation is re-checked at render, not trusted.</p>
+<div class="card"><h3>Current consent</h3>
+  <div class="row"><span class="badge">revocable</span><span class="v veil">last recorded —</span></div></div>
+<div class="row"><span class="btn ghost">Revoke</span><span class="btn">Enable</span></div>`;
+
+P.diagnostic = () => `
+<h1>Diagnostic</h1><div class="hero-sub">the instrument</div>
+<p class="lede">The dev-facing read: which cell you are in, which drivers are live, what the
+scheduler decided and why. Everything here is <em>report-only</em> — it measures, it does not
+grade, and it never certifies.</p>
+<div class="grid g2">${["Current cell","Scheduler decision","Provenance","Density"]
+  .map(s=>`<div class="stat"><div class="k">${s}</div><div class="v veil">measured</div></div>`).join('')}</div>
+<div class="note">Synthetic evidence can reject but never certify. Calibration numbers here are
+<span class="badge">provisional-simulated-cohort</span> until real play produces distributions.</div>`;
+
+P.recover = () => `
+<h1>Recover Save</h1><div class="hero-sub">the fire door</div>
+<p class="lede">If durable storage is not bound, the save APIs return 503 and the player is told
+so — a failed save is never silently dropped. This page is the manual override.</p>
+<div class="card"><h3>Recovery</h3><div class="wire">
+  <div>generate</div><div>restore</div><div>verify</div></div>
+  <div class="sub">Requires a bound KV namespace; without one, this surface explains why</div></div>
+<div class="row"><span class="btn">Generate key</span><span class="btn ghost">Restore</span></div>`;
+
+P.setup = () => `
+<h1>Setup</h1><div class="hero-sub">first run</div>
+<p class="lede">Choose your starting conditions before the practice begins. This is the player's
+first act of authorship, so it is a short form, not a wizard.</p>
+<div class="card"><h3>Starting conditions</h3><div class="wire">
+  <div>line</div><div>stage</div><div>modality</div><div>difficulty</div></div></div>
+<div class="row"><span class="btn">Begin</span></div>`;
+
+P.onboarding = () => `
+<h1>A journey of healing and evolution</h1>
+<div class="hero-sub">onboarding · 573 lines, the longest page</div>
+<p class="lede">The binary-search composite assessment that seeds your Significator. It asks
+about your <em>pattern</em>, not your history, and it is the one place the app is allowed to
+feel like an exam — because it is one, and because finishing it is what makes the rest honest.</p>
+<div class="opts">
+  <div class="opt"><div class="m">probe 1 of 8</div>I avoid conversations that might change how I am seen
+    <div class="d">agency, shadow-facing</div></div>
+  <div class="opt sel"><div class="m">selected</div>I say the difficult thing early, before it is useful
+    <div class="d">communion, expression</div></div>
+  <div class="opt"><div class="m">option</div>I wait until I can be certain I am right</div></div>
+</div>
+<div class="row"><span class="btn">Continue</span><span class="badge">writing</span></div>
+<div class="note">The prose you are reading is generated against the live Significator, not a
+script. What it says about you is derived from what you have already answered.</div>`;
+
+P.knowledge = () => `
+<h1>Knowledge</h1><div class="hero-sub">earth-science branch</div>
+<p class="lede">The densest content surface in the app: 113 holons and 248 assessment items, authored
+to the same difficulty-bell criterion as every other branch. Every branch currently sits below the
+97-holon minimum, which is reported honestly rather than hidden.</p>
+<div class="grid g3">${["113 holons","248 items","4 misconceptions","10 practice fills"]
+  .map(n=>`<div class="stat"><div class="k">${n}</div><div class="v veil">earth-science</div></div>`).join('')}</div>
+<div class="note">This is one of three routes that still server-render, so it flashes an empty
+state before hydration. The inconsistency is unintentional and is a known P3 item.</div>`;
+
+function render(k){
+  S.main.innerHTML = (P[k]||P.menu)();
+  S.nav.querySelectorAll('a').forEach(a=>a.classList.toggle('active',a.dataset.go===k));
+  window.scrollTo(0,0);
+}
+S.nav.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();render(a.dataset.go);});
+function setStage(s){document.documentElement.dataset.stage=s;
+  document.querySelectorAll('.stagebar button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));}
+render('play');
+</script>
+</body>
+</html>
