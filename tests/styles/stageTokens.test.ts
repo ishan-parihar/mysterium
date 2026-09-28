@@ -89,6 +89,12 @@ describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
       expect(ratio(hex('--mysterium-fg'), bg), `${stage} fg on bg`).toBeGreaterThanOrEqual(4.5);
       expect(ratio(hex('--mysterium-fg-muted'), bg), `${stage} fg-muted on bg`).toBeGreaterThanOrEqual(4.5);
       // Text drawn ON the accent-soft fill, in accent-fg. This is the pair the components use.
+      // WCAG 1.4.11 non-text contrast: `accent` is not only an identity colour, it IS the focus
+      // ring (17 sites across 8 components — Button, BackButton, BottomNav, Card, Toggle,
+      // Sidebar, Toaster, LLMDialogueRunner) and a border colour. A focus indicator the user
+      // cannot see fails the keyboard-navigation contract, so 3:1 is owed here, not 4.5:1.
+      // This is the rule that was previously "exempt by design"; the exemption was the bug.
+      expect(ratio(hex('--mysterium-accent'), bg), `${stage} accent on bg (non-text)`).toBeGreaterThanOrEqual(3);
       // Text on the SOLID accent fill.
       expect(
         ratio(hex('--mysterium-accent-fg'), hex('--mysterium-accent')),
@@ -135,6 +141,29 @@ describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
       if (SOLID_ONLY.includes(name)) {
         expect(src, `${name} sits on the solid accent — it must not use accent-soft-fg`).not.toContain(
           'accent-soft-fg',
+        );
+      }
+    }
+  });
+
+  it('no component mixes an accent token into transparency, which no contrast gate can read', () => {
+    // `color-mix(... 80%, transparent)` lowers the effective ratio below the flat pairing, so a
+    // measured 4.5:1 says nothing about what renders. The rule is therefore an absolute one:
+    // text on an accent fill is a flat token or it is not checked. Every accent-adjacent colour
+    // in a component must therefore be one the per-stage gate can verify by reading the value.
+    const files = [
+      'src/lib/components/Button.svelte',
+      'src/lib/components/Badge.svelte',
+      'src/lib/components/Sidebar.svelte',
+      'src/lib/components/gameplay/HoldProbe.svelte',
+      'src/lib/components/gameplay/LLMDialogueRunner.svelte',
+    ];
+    for (const file of files) {
+      const src = readFileSync(join(process.cwd(), file), 'utf-8');
+      for (const rule of src.match(/\{[^}]*\}/g) ?? []) {
+        if (!/color-mix\([^)]*--mysterium-accent/.test(rule)) continue;
+        expect(rule, `${file}: accent colour mixed into transparency is unverifiable`).not.toMatch(
+          /color-mix\([^)]*--mysterium-accent/,
         );
       }
     }
@@ -235,8 +264,10 @@ describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
         if (!m) throw new Error(`${stage}: ${t} is not a hex colour`);
         return m[1]!;
       };
-      // fg and fg-muted carry text; accent is a FILL/identity colour and is measured in the
-      // contrast report rather than required to be text-safe (it fails on 3 stages by design).
+      // fg and fg-muted carry body text, so they owe AA (4.5:1). The accent pairings are asserted
+      // in the test above, which also covers accent as a non-text UI colour (WCAG 1.4.11, 3:1) and
+      // both text-on-fill pairings — none of them are exempt, and an earlier version of this
+      // comment claimed they were.
       expect(ratio(val('--mysterium-fg'), val('--mysterium-bg')), `${stage} fg/bg`).toBeGreaterThanOrEqual(4.5);
       expect(ratio(val('--mysterium-fg-muted'), val('--mysterium-bg')), `${stage} muted/bg`).toBeGreaterThanOrEqual(4.5);
     }

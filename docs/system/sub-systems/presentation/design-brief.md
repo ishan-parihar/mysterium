@@ -73,19 +73,16 @@ own §5.A table.
 
 ## Constraints carried into development
 
-- **Contrast is measured, not asserted — and all of it clears AA.** All four pairings clear 4.5:1
-  on all 8 stages: `fg`/`bg` (12.27–15.61), `fg-muted`/`bg` (5.55–8.69), text-on-solid-accent
-  (4.97–8.27) and text-on-accent-soft (6.66–13.63). `tests/styles/stageTokens.test.ts` recomputes
-  every ratio from the file, so a palette edit cannot pass unmeasured.
-- **There are two accent text tokens, deliberately.** `accent-fg` is text on the solid accent,
-  `accent-soft-fg` is text on the soft fill. A stage's solid and soft differ in lightness, so one
-  token cannot serve both — amber, orange, green and teal need dark-on-solid and white-on-soft;
-  the other four need the reverse. Merging them is the bug this split exists to prevent, and the
-  gate asserts both pairings plus that each component uses the token matching its own fill.
-- **Turquoise was repaired, not themed.** It inherited a dark gold on the ladder's only light
-  background (2.75:1). The palette hexes appear nowhere in `docs/foundations/`, so they are
-  implementation, not canon — which makes the correction ours to make rather than a deviation to
-  argue for.
+- **Contrast is measured, and nothing is exempt.** All four pairings clear their bar on all 8
+  stages: `fg`/`bg` and `fg-muted`/`bg` at AA 4.5:1 (12.27–15.61 and 5.55–8.69), text-on-solid
+  and text-on-soft at 4.5:1 (4.97–8.27 and 6.66–13.63), and `accent` at **3:1** as a non-text UI
+  colour (3.13–8.73). `tests/styles/stageTokens.test.ts` recomputes every ratio from the file.
+  An earlier version of this brief exempted `accent` as "a fill, not text" — that was wrong on
+  both counts, and the correction is recorded in the architecture doc rather than quietly applied.
+- **The accessibility cap is now load-bearing, not decorative.** The skill's quiet-constraint rule
+  caps an accessibility-critical build at VARIANCE 4 / MOTION 3; here that rule is the thing that
+  produced these measurements, because a "vibe" argument is exactly how a focus ring ends up at
+  2.75:1.
 - **Every stage has a palette, and no palette is without a stage.** Enforced by reading
   `ALL_STAGES`, so the check cannot itself drift.
 - **The descriptor vocabulary lives in one place** — `describeStage()`'s `Record<Stage, string>` in

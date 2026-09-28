@@ -448,9 +448,11 @@
     line-height: var(--mysterium-leading-normal);
   }
 
-  .option.selected .option-desc {
-    color: color-mix(in srgb, var(--mysterium-accent-soft-fg) 80%, transparent);
-  }
+  /* No selected-state override for the description. It used to mix accent-soft-fg at 80% into
+     transparent, which is the one accent-fill pairing no contrast gate can read: the mix lowers
+     the effective ratio below the flat pairing, so it was asserted by nothing while being the
+     least legible of the set. The base --mysterium-fg-muted is the correct role for a
+     de-emphasised secondary line, and it clears AA on all 8 stages. */
 
   .writein-section {
     margin-top: var(--mysterium-space-2);

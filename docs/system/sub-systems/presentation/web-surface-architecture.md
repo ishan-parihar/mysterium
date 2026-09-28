@@ -228,7 +228,17 @@ all eight stages, and `tests/styles/stageTokens.test.ts` recomputes them from th
 Thresholds: **4.5:1** for every column — `fg` and `fg-muted` are body text on the background, and
 the last two are *text on a fill*, which is ordinary text, not a decorative element.
 
-**Two tokens, two fills, and why.** A stage's solid `accent` and its `accent-soft` differ in
+**`accent` is not exempt.** An earlier version of this document recorded four stages failing AA on
+`accent` and called it a design position, on the reasoning that accent is a fill and never carries
+text. That reasoning was wrong twice over. Text *on* the fill is ordinary text and owes 4.5:1 —
+which is what `accent-fg` and `accent-soft-fg` now guarantee per stage. And `accent` is not only a
+fill: it is the **focus ring and border colour** at 17 sites across 8 components (Button,
+BackButton, BottomNav, Card, Toggle, Sidebar, Toaster, LLMDialogueRunner), so WCAG 1.4.11 owes it
+**3:1** against the background as a non-text UI colour. A focus indicator a keyboard user cannot
+see is a broken navigation contract, not an aesthetic. All eight stages now clear 3:1 (lowest is
+red at 3.13), and the gate asserts it.
+
+**Two tokens, two fills, and why.****Two tokens, two fills, and why.** A stage's solid `accent` and its `accent-soft` differ in
 lightness, so one text token cannot serve both. `accent-fg` is the text on the **solid** accent
 (`Button.svelte` `.btn-primary`, `HoldProbe.svelte` `.hold-button`); `accent-soft-fg` is the text
 on the **soft** fill (`Badge.svelte` `.badge-accent`, `Sidebar.svelte` `.nav-item.active`,
