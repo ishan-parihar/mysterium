@@ -806,3 +806,116 @@ export async function validateWebUiParityWired(): Promise<GateResult> {
     return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }
 }
+
+// ---------------------------------------------------------------------------
+// G51 — the three auditor surfaces are wired through the share law (33 §7, 16 §2.4.1).
+//
+// 33 §7 has declared Guardian Mirror, Educator Desk and Therapeutic Pane as RENDER CONTRACTS
+// since 2026-09-17. They were unbuilt, and nothing failed: an absence no runtime gate can see.
+//
+// The failure this gate exists for is specific. A surface that renders a profile is a CONSENT
+// DECISION, and the law is already written — `renderLevel` re-checks the scope run and the
+// revocation at every render (AL5). A surface that builds its own payloads and draws them is
+// not a style choice, it is a second and weaker permission system sitting in `src/routes`,
+// where the player's revocation would not reach it.
+//
+// So the gate requires the SEAM to be the only path, and requires both halves of it at every
+// consumer, in the shape G46/G47 already use:
+//   - the projection seam reaches BOTH buildLadderPayloads and renderLevel (it cannot derive a
+//     payload without the bridge, and it cannot decide permission without the law-holder);
+//   - each of the three routes reaches the seam, so no surface can render around it;
+//   - the honesty gate survives — a surface refuses without a Significator rather than
+//     narrating a fabricated profile, which is the one failure a working law would still permit.
+// ---------------------------------------------------------------------------
+
+export async function validateAuditorSurfacesWired(): Promise<GateResult> {
+  const gate = 'G51 auditor surfaces wired through the share law';
+  try {
+    const read = (rel: string): string => {
+      const p = path.join(process.cwd(), rel);
+      if (!fs.existsSync(p)) throw new Error(`${p} not found`);
+      return stripSourceComments(fs.readFileSync(p, 'utf-8'));
+    };
+
+    // (1) The seam holds BOTH halves. A seam that reaches the bridge but not the law-holder is a
+    //     payload factory; one that reaches the law but not the bridge renders nothing.
+    const seam = read('src/lib/components/auditor/auditorProjection.ts');
+    const seamMissing = ([
+      ['buildLadderPayloads (the payload bridge)', /buildLadderPayloads\(/],
+      ['renderLevel (the law-holder)', /renderLevel\(/],
+      ['consentFor (the grant lookup)', /consentFor\(/],
+      ['auditor register (AL1 — never the self register)', /register:\s*'auditor'/],
+      ['the hasSave honesty gate', /no Significator loaded/],
+    ] as const).filter(([, re]) => !re.test(seam)).map(([n]) => n);
+    if (seamMissing.length > 0) {
+      return { gate, passed: false, hard: true, details: `the projection seam no longer reaches: ${seamMissing.join(', ')} — a surface can render a profile without passing the consent law (16 §2.4.1)` };
+    }
+
+    // (2) Every one of the three surfaces reaches the seam. 33 §7 declares exactly three; a
+    //     fourth surface with no gate row is the same absence this gate is closing.
+    const SURFACES = ['guardian', 'educator', 'therapeutic'] as const;
+    for (const surface of SURFACES) {
+      const rel = `src/routes/auditor/${surface}/+page.svelte`;
+      const page = read(rel);
+      // `read` already strips comments, so this cannot be satisfied by a comment naming the
+      // component — MUT52 wrapped the surface in `<!-- AuditorSurface -->` and passed a
+      // call-anchored-looking check. The row is now about USE, not the name.
+      if (!/<AuditorSurface[\s/>]/.test(page)) {
+        return { gate, passed: false, hard: true, details: `${rel} no longer renders the shared surface — 33 §7.1 declares this surface, and a surface that renders its own payloads is a second permission system` };
+      }
+      // The surface must name its own scope, or all three would be the same pane.
+      if (!new RegExp(`surface="${surface}"`).test(page)) {
+        return { gate, passed: false, hard: true, details: `${rel} does not declare surface="${surface}" — 33 §7.1 gives each surface its own projection` };
+      }
+      // AND it must not reach the bridge or the law-holder itself. Reaching the seam is not
+      // enough: a route that renders the shared surface AND builds its own payloads beside it is
+      // still a second permission system, and the shared component's refusal would not cover the
+      // extra drawing. (MUT46: this row exists because the reach-only check passed it.)
+      // Match the SYMBOL, not a call with it. MUT46 imported buildLadderPayloads and never
+      // called it — an unused import is the bypass just as much as a call is, and a call-anchored
+      // row let it through. G47's mutation #9 taught this lesson already; this row would have
+      // repeated it.
+      const bypass = ([
+        ['buildLadderPayloads', /buildLadderPayloads/],
+        ['renderLevel', /renderLevel/],
+        ['LADDER_LEVELS (the ladder is the seam\'s to read)', /LADDER_LEVELS/],
+      ] as const).filter(([, re]) => re.test(page)).map(([n]) => n);
+      if (bypass.length > 0) {
+        return { gate, passed: false, hard: true, details: `${rel} reaches ${bypass.join(', ')} directly — the seam is the ONLY path a surface may take, or a route draws beside its own refusal` };
+      }
+    }
+
+    // (2b) And there is no FOURTH surface. 33 §7.1 declares exactly three, each with its own
+    //      projection and its own rules. A new route under src/routes/auditor/ rendering an
+    //      AuditorSurface is an auditor surface with no render contract, no scope and no rule —
+    //      the same absence this gate exists to close, in the direction that matters most.
+    //      (MUT55: a `counsellor` route passed every row above.)
+    const auditorDir = path.join(process.cwd(), 'src/routes/auditor');
+    if (fs.existsSync(auditorDir)) {
+      const found = fs
+        .readdirSync(auditorDir, { withFileTypes: true })
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name)
+        .filter((n) => fs.existsSync(path.join(auditorDir, n, '+page.svelte')))
+        .sort();
+      const extra = found.filter((n) => !(SURFACES as readonly string[]).includes(n));
+      if (extra.length > 0) {
+        return { gate, passed: false, hard: true, details: `src/routes/auditor/ has surfaces 33 §7.1 does not declare: ${extra.join(', ')} — an auditor surface without a render contract, scope or rule is an unratified disclosure surface` };
+      }
+    }
+
+    // (3) The shell renders no data of its own. 33 §7: the projections arrive pre-filtered and
+    //     consent-checked and the render layer "adds visual hierarchy and interaction only" — a
+    //     shell that reads a payload is a shell that can decide to show one.
+    const shell = read('src/lib/components/auditor/AuditorShell.svelte');
+    // Symbol-anchored, for the same reason as the bypass rows: a shell that reads
+    // `payloads.get('L1')` (MUT51) never spells a call, so a call-anchored row let it through.
+    if (/buildLadderPayloads|renderLevel|\bpayloads\b|\.metrics\b|LevelPayload/.test(shell)) {
+      return { gate, passed: false, hard: true, details: 'AuditorShell.svelte reaches the payload or the law — 33 §7 makes the shell hierarchy and interaction only' };
+    }
+
+    return { gate, passed: true, hard: true, details: 'all three surfaces reach the seam, the seam holds both halves of the law, and the honesty gate survives' };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `G51 errored: ${(e as Error).message}` };
+  }
+}

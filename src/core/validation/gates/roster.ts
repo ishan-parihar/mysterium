@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired, validateWebUiParityWired } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired, validateWebUiParityWired, validateAuditorSurfacesWired } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -142,6 +142,12 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // + the curriculum interleave), and MY-AD-0033's reserved primary keeps an exported,
   // scale-independent position contract no seeded campaign can witness.
   results.push(await validateWebUiParityWired());
+  // G51 (Phase 17 auditor surfaces): Guardian Mirror, Educator Desk and Therapeutic Pane were
+  // 33 §7 render contracts with no implementation. A surface that renders a profile is a CONSENT
+  // decision, so the gate requires the seam to hold BOTH halves of the one law (the payload
+  // bridge and renderLevel's render-time re-check) and every surface to reach it — a surface
+  // building its own payloads is a second, weaker permission system in src/routes.
+  results.push(await validateAuditorSurfacesWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }
