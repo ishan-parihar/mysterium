@@ -15,9 +15,13 @@
   import type { LadderLevel } from '$core/domain/articulationLadder.js';
   import { SURFACE_LABEL, type AuditorSurface } from '$lib/stores/shareStore.js';
 
-  /** 33 §7.2 — the granularity ladder, one step per drill-down request. Descent-only. */
-  const GRANULARITY = ['summary', 'line', 'line-stage', 'line-stage-cell'] as const;
-  type Granularity = (typeof GRANULARITY)[number];
+  // The ladder and the ceiling decision live in `granularityStepper.ts` as PURE functions, so
+  // they are testable as values. Two defects lived here first and neither was findable by a
+  // component test: a plain `const` snapshotting the prop (label frozen on the first step) and a
+  // ceiling comparison that could never be true before the last rung. This component still
+  // `$derived`s them — a plain const would reintroduce the first.
+  import { stepperState, nextGranularity } from './granularityStepper.js';
+  import type { Granularity } from './granularityStepper.js';
 
   interface Props {
     surface: AuditorSurface;
@@ -26,6 +30,10 @@
     /** The refusal reason when there is no usable grant. Shown instead of content, never around it. */
     refusal?: string;
     level: LadderLevel;
+    /** 33 §7.2 — the deepest level this surface's grant permits. The stepper stops HERE, not at
+     *  the end of the ladder: a therapeutic surface's ceiling is L4, so it must refuse to offer
+     *  the step that would request L5 even though the grant shape would allow it. */
+    ceiling?: LadderLevel;
     granularity?: Granularity;
     window?: '30d' | '90d' | 'all';
     onGranularity?: (g: Granularity) => void;
@@ -38,12 +46,18 @@
     consent,
     refusal,
     level,
+    ceiling,
     granularity = 'summary',
     window = '90d',
     onGranularity,
     onWindow,
     children,
   }: Props = $props();
+
+  // AP3 — the ONE forward step, derived from where the view currently sits. `next` is undefined
+  // at the end of the ladder; `atCeiling` is a separate flag rather than `!next` so the control can
+  // DISABLE with a reason instead of vanishing, which is what a reader needs to know.
+  const stepper = $derived(stepperState(granularity, ceiling ?? 'L7'));
 </script>
 
 <section class="shell" aria-label={SURFACE_LABEL[surface]}>
@@ -79,11 +93,21 @@
       </div>
       <div class="ctl" role="group" aria-label="Granularity">
         <span class="k">Granularity</span>
-        <!-- 33 §7.2.1: the dashboard expands when the auditor asks, not before. Every stepper
-             control is an explicit request; nothing pushes detail into a view. -->
-        {#each GRANULARITY as g}
-          <button class:on={granularity === g} onclick={() => onGranularity?.(g)}>{g}</button>
-        {/each}
+        <!-- 33 §7.2.1 + AP3, and this is the piece the comment above used to describe without
+             implementing: the ladder is DESCENT-ONLY. Each request issues exactly ONE level
+             deeper than the current view, and no deeper level is reachable directly. Four
+             buttons all live at once is a level selector, not a stepper — it lets an auditor
+             jump straight to the most detailed view the grant permits, which is the opposite of
+             progressive disclosure. So the only forward control is "one level deeper", and it
+             is disabled (and says so) once the grant's own ceiling is reached. -->
+        <button
+          class="on"
+          disabled={stepper.atCeiling}
+          onclick={() => { const n = nextGranularity(granularity); if (n) onGranularity?.(n); }}
+          title={stepper.atCeiling ? 'The consent grant reaches no further' : 'Expand one level deeper'}
+        >
+          {stepper.label}
+        </button>
       </div>
     </div>
 

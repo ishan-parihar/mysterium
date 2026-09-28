@@ -13,6 +13,7 @@
   import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
   import { liveShares, SURFACE_ENTRY_LEVEL, type AuditorSurface } from '$lib/stores/shareStore.js';
   import { LADDER_LEVELS, type LadderLevel } from '$core/domain/articulationLadder.js';
+  import { topLevelOf } from './granularityStepper.js';
   import type { Significator } from '$core/domain/Significator.js';
 
   type Granularity = 'summary' | 'line' | 'line-stage' | 'line-stage-cell';
@@ -47,10 +48,13 @@
   // Every change here is an EXPLICIT request through the law (33 §7.2.3): a granularity step or a
   // grant revocation re-issues the projection. No background refresh pushes detail into a view.
   $effect(() => {
-    const depth = LADDER_LEVELS.indexOf(granularity === 'summary' ? 'L1'
-      : granularity === 'line' ? 'L2'
-      : granularity === 'line-stage' ? 'L3'
-      : ceiling);
+    // The rung->level mapping is the SHARED one from `granularityStepper.ts`, not a second copy.
+    // It was duplicated here, and when the stepper's copy was corrected (a property test proved
+    // the range-per-rung version let a step reach past the grant) this one would have kept the
+    // old behaviour — the same question answered twice, disagreeing. `line-stage-cell` is
+    // special: the seam lets it request the surface's own ceiling rather than a fixed level, so
+    // the deepest rung is always lawful and the ceiling is enforced by the LAW, not the stepper.
+    const depth = LADDER_LEVELS.indexOf(topLevelOf(granularity, ceiling));
     const requested = LADDER_LEVELS.slice(
       LADDER_LEVELS.indexOf(SURFACE_ENTRY_LEVEL[surface]),
       Math.min(depth + 1, LADDER_LEVELS.indexOf(ceiling) + 1),
@@ -72,6 +76,7 @@
   level={SURFACE_ENTRY_LEVEL[surface]}
   {granularity}
   {window}
+  ceiling={result.ceiling}
   onGranularity={(g) => (granularity = g)}
   onWindow={(w) => (window = w)}
 >

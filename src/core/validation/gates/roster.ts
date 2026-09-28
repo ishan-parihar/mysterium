@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired, validateWebUiParityWired, validateAuditorSurfacesWired , validateNoLlmModeWired } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired, validateWebUiParityWired, validateAuditorSurfacesWired , validateNoLlmModeWired, validateBffRateLimitWired, validateRouteSsrPolicyWired } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -155,6 +155,21 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // per narrative element and then used the fallback anyway. The gate requires the resolved value
   // to REACH the call site, and both the engine and the orchestrator to still read it.
   results.push(await validateNoLlmModeWired());
+  // G54 (2026-09-29, consistency): the per-route SSR opt-out is a POLICY, and it was applied 16 times
+  // and forgotten 3 — /knowledge, /curriculum and /curriculum/progress had a +page.svelte and no
+  // +page.ts, so they inherited the global BUILD_TARGET switch and server-rendered while their
+  // neighbours did not. Nothing throws when a route SSRs: the page hydrates a moment later and looks
+  // correct in the browser, so a NEW route added without the sibling file fails the same silent way
+  // until it is deployed. Absence again, so the instrument is the route tree on disk, and the second
+  // half IMPORTS each +page.ts to read the exported values — a comment promising client-only, or a
+  // `ssr = true` behind a right-looking string, fails there.
+  results.push(await validateRouteSsrPolicyWired());
+  // G53 (Production Deployment SEC): the BFF rate limit. The failure is an ABSENCE — the hook
+  // shipped metering `/api/llm/*` and nothing else, so seven endpoints ran unmetered and
+  // `/api/save` accepted 256KB unauthenticated writes. No runtime test can see an unmetered
+  // route, so the gate enumerates the route tree from disk and refuses to pass on a route that
+  // the limiter does not actually refuse.
+  results.push(await validateBffRateLimitWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

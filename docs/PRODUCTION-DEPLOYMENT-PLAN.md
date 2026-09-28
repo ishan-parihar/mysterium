@@ -27,9 +27,11 @@ the browser's only call site — `LLMDialogueRunner.svelte:121` — passes no op
 keyless production deploy therefore aims every encounter at `/api/llm/chat`, which has no key.
 
 This is safe but wasteful: `ProxiedLLMClient.ts:135` throws, and the orchestrator catches it per
-element, so the game still works — after a failed round-trip per narrative element. **D-1 sets
-`noLlm` from a build-time flag** so a keyless deploy skips the dead requests entirely rather than
-failing into them.
+element, so the game still works — after a failed round-trip per narrative element. **D-1 (BUILT
+`a55129d`, gated by **G52**) resolves `noLlm` by DETECTING, not by a flag that can be forgotten**:
+with `VITE_LLM_REQUIRED` unset — the default — the build uses the corpus whenever no
+client-visible key exists, and `=1` / `=0` are the explicit overrides. A keyless deploy therefore
+needs no configuration at all, and a build that later gains a key works unchanged.
 
 ## 2. The deploy sequence — 5 steps, 2 of them yours
 
@@ -93,7 +95,7 @@ derivation change, and it is what the code already intends. It also adds a check
 | `agentBusy` delete-or-wire | structurally dead: a Svelte 5 instance-script export, unreachable by any consumer |
 | SSR in one decision | `/knowledge`, `/curriculum`, `/curriculum/progress` are the only 3 of 19 routes that still SSR |
 | P2 — 9 routes | `export` → `insights` → `events` → `pack` → `delegate` → `pod` → `credential`; plus `privacy` (no export-your-own-data) and `calibrate` |
-| **BFF rate limiting** | `hooks.server.ts:63` rate-limits **only** `/api/llm/*`. The other 7 endpoints are unmetered, and `/api/save` accepts 256KB writes keyed on a client-supplied id |
+| **BFF rate limiting** | **DONE (SEC).** All 8 `/api/*` endpoints are metered through one shared limiter (`src/lib/server/rateLimit.ts`) with per-IP tiers; the old `/api/llm/*`-only guard is gone. G53 refuses to pass on any route the limiter does not actually refuse |
 
 **Owner-blocked, non-blocking:** pod hosting (M1), density-hardening ruling, real raters /
 institutions / DPIA, GitLab SSH (C6).

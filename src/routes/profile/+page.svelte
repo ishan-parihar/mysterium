@@ -10,6 +10,7 @@
   import { browser } from '$app/environment';
   import Seo from '$lib/components/Seo.svelte';
   import RouteShell from '$lib/components/RouteShell.svelte';
+  import ArticulationLadder from '$lib/components/profile/ArticulationLadder.svelte';
   import Card from '$lib/components/Card.svelte';
   import VeiledStat from '$lib/components/VeiledStat.svelte';
   import Stack from '$lib/components/Stack.svelte';
@@ -21,8 +22,6 @@
   import { engineStore } from '$lib/engine/gameEngine.js';
   import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
   import { describeStage, describeDriveSpread } from '$core/presentation/veilDescriptors.js';
-  import { renderLevel } from '$core/domain/articulationLadder.js';
-  import { buildLadderPayloads } from '$core/presentation/ladderProjections.js';
   import { toSnapshot } from '$core/domain/SignificatorSnapshot.js';
   import { computeCCI } from '$core/engines/CCIEngine.js';
   import { stageFade } from '$lib/transitions/stageMotion.js';
@@ -33,21 +32,11 @@
 
   const sig = $derived($gameStore.significator);
 
-  // Phase 17 d2: the articulation ladder live in the browser — the same bridge + law-holder the
-  // CLI renders through (16 §10.5). L1 holonic span + L2 line profile, self register, AL3
-  // presentation applied by renderLevel.
-  const ladder = $derived.by(() => {
-    if (!sig) return null;
-    const payloads = buildLadderPayloads(sig);
-    const l1 = renderLevel({ register: 'self', level: 'L1', playerStage: sig.currentStage }, payloads);
-    const l2 = renderLevel({ register: 'self', level: 'L2', playerStage: sig.currentStage }, payloads);
-    if (!l1.allowed || !l2.allowed) return null;
-    return {
-      presentation: l1.presentation,
-      l1: l1.payload?.narrative ?? '',
-      l2: l2.payload?.narrative ?? '',
-    };
-  });
+  // The articulation ladder moved into <ArticulationLadder> (P1 item 2). It was two hardcoded
+  // levels here with no selector, so L0 and L3/L6/L7 — every level `SELF_RENDER_LEVELS` permits —
+  // had a payload derived and never rendered. The component asks `renderLevel` which levels the
+  // self register may show, so the closed class stays refused by the law-holder rather than by a
+  // hand-kept list here.
 
   onMount(() => {
     if (!browser) return;
@@ -195,16 +184,8 @@
         </Stack>
       {/if}
 
-      {#if ladder}
-        <Stack gap="space-3">
-          <h2 class="section-title">Articulation</h2>
-          <Card padding="space-5">
-            <div class="ladder-line">L1 · whole-person span <span class="ladder-pres">({ladder.presentation})</span></div>
-            <p class="ladder-narrative">{ladder.l1}</p>
-            <div class="ladder-line">L2 · line profile</div>
-            <p class="ladder-narrative">{ladder.l2}</p>
-          </Card>
-        </Stack>
+      {#if sig}
+        <ArticulationLadder significator={sig} />
       {/if}
 
       {#if sessionPosition}
@@ -262,23 +243,6 @@
     font-style: italic;
     text-align: center;
     padding: var(--mysterium-space-7) var(--mysterium-space-4);
-  }
-
-  .ladder-line {
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    color: var(--mysterium-fg-muted);
-    margin-bottom: var(--mysterium-space-1);
-  }
-
-  .ladder-pres {
-    font-size: 0.7rem;
-    opacity: 0.7;
-  }
-
-  .ladder-narrative {
-    margin: 0 0 var(--mysterium-space-4);
-    line-height: 1.55;
   }
 
   .chart-container {

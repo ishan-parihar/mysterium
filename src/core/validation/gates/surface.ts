@@ -23,6 +23,14 @@ import { ALL_MODALITIES } from '../../domain/enums.js';
 import { SESSION_MODES } from '../../domain/SessionMode.js';
 import { ALL_STAGES } from '../../domain/Stage.js';
 import type { GateResult } from './plumbing.js';
+import { handle as bffHandle } from '../../../hooks.server.js';
+import {
+  checkRequestRateLimit,
+  createRateLimiter,
+  policyFor,
+  RATE_LIMIT_POLICIES,
+  type MeteredRequest,
+} from '../../../lib/server/rateLimit.js';
 
 /**
  * Gate-source reader helper: strip line, block, and HTML comments before matching, so a gate can only be satisfied by live code — never by a mention in prose (a JSDoc
@@ -591,9 +599,19 @@ export async function validateLadderWired(): Promise<GateResult> {
     if (!/for \(const spec of LADDER\)/.test(bridge)) {
       return { gate, passed: false, hard: true, details: 'ladderProjections dropped its every-level completeness contract — a level can go dark silently again' };
     }
+    // The consumers are the SEAMS, not the files that happened to hold the calls when this gate
+    // was written. P1 item 2 moved the WebUI's two hardcoded levels (L1, L2) out of
+    // `src/routes/profile/+page.svelte` and into `ArticulationLadder.svelte`, because a page that
+    // hardcodes two of six self-register levels cannot express the other four. A path-anchored
+    // consumer list would have read that move as a BYPASS — the exact "a consumer named in the
+    // docs that no live seam calls" class — and the tempting fix, leaving two dead calls in the
+    // route, is worse: it would keep a gate green against code that runs nothing.
+    //
+    // So each entry names a seam and what it must reach, and the route is kept as a REACHABILITY
+    // row: the component is only a live consumer if something renders it.
     const consumers: readonly [string, string][] = [
       ['scripts/cli/ladderCmd.ts', 'the CLI ladder command'],
-      ['src/routes/profile/+page.svelte', 'the WebUI profile page'],
+      ['src/lib/components/profile/ArticulationLadder.svelte', 'the WebUI Articulation card'],
     ];
     for (const [rel, name] of consumers) {
       const text = read(rel);
@@ -605,7 +623,14 @@ export async function validateLadderWired(): Promise<GateResult> {
         return { gate, passed: false, hard: true, details: `${name} no longer reaches: ${missing.join(', ')} — the ladder ${missing.includes('renderLevel') ? 'is bypassed (raw payloads, no register law)' : 'has no real payload producer'}` };
       }
     }
-    return { gate, passed: true, hard: true, details: 'ladder bridge derives every level; both the CLI and the WebUI profile render through the law-holder' };
+    // Reachability: the component must actually be rendered by the profile page, or it is a
+    // component nothing mounts — the in-vitro/in-vivo class, invisible to any runtime test.
+    const route = read('src/routes/profile/+page.svelte');
+    if (!/ArticulationLadder/.test(route)) {
+      return { gate, passed: false, hard: true, details: 'the profile page no longer renders <ArticulationLadder> — the WebUI ladder component is built and never mounted' };
+    }
+
+    return { gate, passed: true, hard: true, details: 'ladder bridge derives every level; both the CLI and the WebUI Articulation card render through the law-holder, and the card is mounted by /profile' };
   } catch (e) {
     return { gate, passed: false, hard: true, details: `error: ${e instanceof Error ? e.message : String(e)}` };
   }
@@ -1008,5 +1033,309 @@ export async function validateNoLlmModeWired(): Promise<GateResult> {
     return { gate, passed: true, hard: true, details: 'the no-LLM mode is resolved at build time, forwarded by the browser, and read by both the engine and the orchestrator' };
   } catch (e) {
     return { gate, passed: false, hard: true, details: `G52 errored: ${(e as Error).message}` };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G53 — the BFF is metered end to end.
+//
+// This is an ABSENCE check, and absence is the one class of defect no runtime test can see. Every
+// other test in the repo exercises a route that a test names; a route that is simply not metered
+// has no failing caller, no changed assertion, and no red build. `hooks.server.ts` shipped for
+// weeks metering `/api/llm/*` and nothing else, with seven live endpoints beside it — including
+// `/api/save`, which accepts a 256KB write keyed on a client-supplied `deviceId` with no auth.
+//
+// So the gate enumerates the route tree FROM DISK and meters what it finds, rather than asserting a
+// hand-maintained list. A hand-written list is a second place to forget, and the forget is silent.
+//
+// Three properties, each proved to have teeth:
+//   (1) COVERAGE — every `+server.ts` under src/routes/api resolves to a DELIBERATE policy, not the
+//       fallback. The fallback is a backstop for a route nobody has triaged; a route sitting on it
+//       is unmetered-in-intent even though it is not unmetered-in-fact.
+//   (2) ENFORCEMENT — the hook really calls the limiter for a route, checked by driving the real
+//       exported `checkRequestRateLimit` to refusal on the real route's path. A gate that read
+//       the hook's source would pass on a bare import; this one asks the limiter to refuse.
+//   (3) TIERS — every deliberate budget is finite and positive, so no tier is a silent unlimited.
+// ---------------------------------------------------------------------------
+
+/** Every `+server.ts` route under `src/routes`, as a URL pathname (`/api/save`, not a file path). */
+function enumerateRouteFiles(root: string): string[] {
+  const out: string[] = [];
+  const walk = (dir: string, segments: readonly string[]): void => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+        walk(path.join(dir, entry.name), [...segments, entry.name]);
+        continue;
+      }
+      if (entry.name === '+server.ts') out.push(`/${segments.join('/')}`);
+    }
+  };
+  walk(root, []);
+  return out.sort();
+}
+
+export async function validateBffRateLimitWired(): Promise<GateResult> {
+    const gate = 'G53 every BFF route is rate-limited';
+    try {
+      const routesRoot = path.join(process.cwd(), 'src/routes');
+    if (!fs.existsSync(routesRoot)) throw new Error(`${routesRoot} not found`);
+
+    const routes = enumerateRouteFiles(routesRoot);
+    const apiRoutes = routes.filter((r) => r.startsWith('/api/'));
+    if (apiRoutes.length === 0) {
+      return { gate, passed: false, hard: true, details: 'no /api/* +server.ts found under src/routes — the enumeration is broken, so coverage proves nothing' };
+    }
+
+    // (1) COVERAGE. Every API route must land on a named tier. The fallback policy is excluded by
+    //     name, and a route on the fallback is reported with the route that owns the prefix, so
+    //     the fix is "triage this path", not "make the gate quieter".
+    //
+    //     This is the BELT to (2)'s braces, not the braces themselves: a new `/api/x` is caught
+    //     here with a precise "triage this" message, and (2) catches it again as "not refused".
+    //     Removing this check alone leaves the gate GREEN on the current route set (mutation M15
+    //     observed) because (2) re-derives enforcement per route. That redundancy is deliberate —
+    //     it is what makes a second, independent check impossible to defeat by one edit.
+    const untriaged = apiRoutes.filter((r) => policyFor(r).name === 'api-fallback');
+    if (untriaged.length > 0) {
+      return {
+        gate,
+        passed: false,
+        hard: true,
+        details: `${untriaged.length} route(s) sit on the fallback budget rather than a deliberate tier: ${untriaged.join(', ')} — add a policy to RATE_LIMIT_POLICIES`,
+      };
+    }
+
+    // (2) ENFORCEMENT. Drive the REAL limiter on each route's real path and require it to refuse
+    //     exactly when that route's OWN tier says it should. The IP is loopback for every route on
+    //     purpose: with a shared key, a route that is genuinely unmetered shows up as "never
+    //     refused" rather than being masked by a neighbour that already spent a budget.
+    //
+    //     The probe walks the route's real limit, not an arbitrary one. An earlier version used
+    //     `{limit: 3}` as a stand-in budget and the gate reported 0/4 refused on every route while
+    //     metering worked perfectly — the probe was measuring its own fiction, and the gate would
+    //     have shipped red for a build that was fine (or, worse, been loosened to pass).
+    const perRoute: string[] = [];
+    for (const route of apiRoutes) {
+      const limiter = createRateLimiter({ maxEntries: 100 });
+      const { limit } = policyFor(route).rule;
+      const request = (): MeteredRequest => ({
+        url: { pathname: route },
+        request: { headers: { get: (n: string) => (n.toLowerCase() === 'cf-connecting-ip' ? '127.0.0.1' : null) } },
+      });
+      // One call past the limit, all inside the same window, so the ONLY thing that can refuse is
+      // the limiter counting this route's requests. A hook that dropped the route never refuses;
+      // a limiter wired to the wrong rule refuses at the wrong point and fails the `verdicts[0]`
+      // check below (a limiter that refused the very first request is broken in the other
+      // direction, and this catches it).
+      const verdicts: boolean[] = [];
+      for (let i = 0; i < limit + 1; i++) {
+        const hit = checkRequestRateLimit(request(), 0, limiter);
+        verdicts.push(hit !== null && !hit.decision.allowed);
+      }
+      const enforced =
+        verdicts[0] === false && verdicts.every((refused, i) => refused === (i >= limit));
+      if (!enforced) {
+        perRoute.push(`${route} (refused ${verdicts.filter(Boolean).length}×, expected ${limit})`);
+      }
+    }
+    if (perRoute.length > 0) {
+      return {
+        gate,
+        passed: false,
+        hard: true,
+        details: `the limiter does not refuse past its budget on: ${perRoute.join(', ')} — the route is unmetered, or its tier is looser than the request pattern`,
+      };
+    }
+
+    // (3) TIERS. A tier with a non-finite or non-positive budget is an unlimited tier. Checked
+    //     against the real policy objects, not a re-declared copy of them.
+    for (const policy of RATE_LIMIT_POLICIES) {
+      if (!Number.isFinite(policy.rule.limit) || policy.rule.limit <= 0) {
+        return { gate, passed: false, hard: true, details: `policy "${policy.name}" has a non-finite or non-positive limit (${policy.rule.limit}) — it meters nothing` };
+      }
+      if (!Number.isFinite(policy.rule.windowMs) || policy.rule.windowMs <= 0) {
+        return { gate, passed: false, hard: true, details: `policy "${policy.name}" has a non-finite or non-positive window (${policy.rule.windowMs}) — its window never closes` };
+      }
+    }
+
+    // (4) THE HOOK IS THE ONE CALLING IT. Assertions (1)-(3) drive `checkRequestRateLimit`
+    //     DIRECTLY, which proves the limiter works but says nothing about the request path — and
+    //     the request path is the whole defect. An earlier version of this gate read
+    //     `hooks.server.ts` and regex-matched a call, which mutation proved is decoration: a
+    //     BARE IMPORT plus a call whose verdict is discarded (M10) satisfied it with the suite
+    //     fully green, because the text was present and the limiter itself still worked.
+    //
+    //     So this drives the REAL exported `handle`. It sends a request to /api/save, answers 429,
+    //     and the status is the evidence. A hook that never meters, meters a dead verdict, or
+    //     calls the limiter for a different path answers 200 and this goes red.
+    const flooded = `/api/save?__g53=${process.pid}-${apiRoutes.length}-${routes.length}`;
+    let refusedAt: number | null = null;
+    for (let i = 0; i < 1_000 && refusedAt === null; i++) {
+      const res = await bffHandle({
+        event: {
+          // The hook reads the path from `event.url` and the client IP from the request headers,
+          // so BOTH are present here. An earlier version of this fixture omitted `headers` on the
+          // event object and the gate still went green — the hook's fail-closed branch caught the
+          // resulting TypeError and answered 429, which this assertion mistook for metering. That
+          // is a false pass, and it is why the request is built once and inspected below.
+          url: new URL(flooded, 'http://localhost'),
+          request: new Request(`http://localhost${flooded}`, { headers: { 'cf-connecting-ip': '203.0.113.9' } }),
+        },
+        resolve: async () => new Response('reached the route', { status: 200 }),
+      } as unknown as Parameters<typeof bffHandle>[0]);
+      if (res.status === 429) {
+        // Distinguish a real 429 from the fail-closed catch-all: metering says WHICH budget ran
+        // out, and the fail-closed branch does not.
+        const body = (await res.clone().json()) as { error?: string };
+        if (body?.error === 'Rate limit exceeded') refusedAt = i;
+        else throw new Error(`hook failed CLOSED on a metering error rather than metering: ${body?.error}`);
+      }
+    }
+    if (refusedAt === null) {
+      return {
+        gate,
+        passed: false,
+        hard: true,
+        details: 'hooks.server.ts served 1,000 requests to one IP without a single 429 — the limiter is not in the request path, or its verdict is discarded',
+      };
+    }
+
+    return {
+      gate,
+      passed: true,
+      hard: true,
+      details: `${apiRoutes.length} /api route(s) metered on deliberate tiers (${apiRoutes.join(', ')}); hooks.server.ts refused the ${refusedAt + 1}th request from one IP`,
+    };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `G53 errored: ${(e as Error).message}` };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// G54 — every route makes its SSR choice explicitly.
+//
+// This is an ABSENCE check, and absence is the one class of defect no runtime test can see. Nothing
+// about "a route SSRs" throws, and nothing about a route rendering an empty shell on the cloudflare
+// target looks like a bug in the client: the page hydrates a second later and looks fine. So the
+// three routes that were missing a `+page.ts` — /knowledge, /curriculum, /curriculum/progress —
+// server-rendered against the global BUILD_TARGET switch while the other 16 opted out individually,
+// with no stated reason anywhere for the difference.
+//
+// The gate enumerates the route tree FROM DISK. A hand-maintained list of the 19 client-only routes
+// is a second place to forget, and the forget is silent: a NEW route added with only a `+page.svelte`
+// inherits the global `ssr = true` and nobody notices until it is deployed.
+//
+// Two properties, and the first is the load-bearing one:
+//   (1) COVERAGE — every directory under src/routes holding a `+page.svelte` also holds a
+//       `+page.ts`. This is the absence itself, and it is the thing a later route gets wrong.
+//   (2) DECLARED POLICY — the sibling `+page.ts` really resolves to client-only. Asserted by
+//       IMPORTING the module and reading the exported values, so a file that declares the right
+//       literal in a comment, or computes `ssr = true`, fails. A string match would pass on both.
+//
+// The import also makes the check a no-op-proof: if a route's `+page.ts` gains a `load` that reads
+// a browser-only global at module scope, the dynamic import throws HERE rather than in a browser
+// console nobody reads. That failure is loud and names the route.
+//
+// (3) THE ENUMERATION IS TRUSTWORTHY. A gate that cannot see a defect is worse than no gate, and this
+//     one is an instrument built on a filesystem walk. Mutation proved the instrument lies in a
+//     specific way: collapsing every route path to '/' kept the entry COUNT at 19, so both a
+//     count-equality check and a count floor passed and the gate reported a clean tree having
+//     resolved nineteen references to the same directory. The guard is therefore over DISTINCT
+//     resolved routes, not over a count — a count says "I saw N things", never "I saw N different
+//     things". This is the check that makes the absence claim load-bearing rather than decorative.
+
+/**
+ * The number of page routes this gate expects to find, used as a FLOOR rather than an equality
+ * assertion so that adding a route does not require editing the gate. The floor exists only to catch
+ * an enumeration that stopped walking — the failure that would otherwise report a clean tree.
+ */
+const ROUTE_COUNT_FLOOR = 19;
+
+/** Every directory under `root` that holds a `+page.svelte`, as route paths (`/curriculum/progress`). */
+function enumeratePageRoutes(root: string): string[] {
+  const out: string[] = [];
+  const walk = (dir: string, segments: readonly string[]): void => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+        walk(path.join(dir, entry.name), [...segments, entry.name]);
+        continue;
+      }
+      if (entry.name === '+page.svelte') out.push(`/${segments.join('/')}`);
+    }
+  };
+  walk(root, []);
+  return out.sort();
+}
+
+/**
+ * Every directory under `root` that holds a `+page.svelte`, as route paths (`/curriculum/progress`).
+ */export async function validateRouteSsrPolicyWired(): Promise<GateResult> {
+  const gate = 'G54 every route declares its SSR choice';
+  try {
+    const routesRoot = path.join(process.cwd(), 'src/routes');
+    if (!fs.existsSync(routesRoot)) throw new Error(`${routesRoot} not found`);
+
+    const pages = enumeratePageRoutes(routesRoot);
+    // Self-agreement is not evidence, and a COUNT cannot detect a walk that has lost path
+    // information: mutation replayed exactly that — collapsing every route to '/' still found 19
+    // entries, matched the independent count, cleared the floor, and reported a clean tree. A count
+    // only says "I saw N things", never "I saw N DIFFERENT things". So the instrument checks the
+    // thing it actually depends on: that the enumeration yields DISTINCT routes. A walk that stops
+    // descending, or that stops accumulating segments, collapses the set and fails here.
+    const distinct = new Set(pages);
+    if (distinct.size !== pages.length) {
+      return { gate, passed: false, hard: true, details: `route enumeration collapsed ${pages.length} entries to ${distinct.size} distinct route(s) — the walk has lost its paths, so coverage proves nothing` };
+    }
+    if (pages.length < ROUTE_COUNT_FLOOR) {
+      return { gate, passed: false, hard: true, details: `only ${pages.length} page route(s) found under src/routes, below the floor of ${ROUTE_COUNT_FLOOR} — a broken enumeration must not report a clean tree` };
+    }
+
+    // (1) COVERAGE. A route with a component and no sibling `+page.ts` silently inherits the global
+    //     BUILD_TARGET switch and SSRs on cloudflare. That is the defect, and it is an absence, so
+    //     this enumeration IS the instrument.
+    const undeclared: string[] = [];
+    for (const route of pages) {
+      const dir = route === '/' ? routesRoot : path.join(routesRoot, ...route.split('/').filter(Boolean));
+      if (!fs.existsSync(path.join(dir, '+page.ts'))) undeclared.push(route);
+    }
+    if (undeclared.length > 0) {
+      return {
+        gate,
+        passed: false,
+        hard: true,
+        details: `${undeclared.length} route(s) have a +page.svelte with no sibling +page.ts, so they inherit the global BUILD_TARGET switch and SSR on cloudflare: ${undeclared.join(', ')} — add the two exports, matching the routes beside them`,
+      };
+    }
+
+    // (2) DECLARED POLICY, executed. Importing the module and reading the exports is the only check
+    //     with teeth: a `+page.ts` whose comment promises client-only while exporting `ssr = true`
+    //     fails here, and so does one that computes the value instead of declaring it.
+    const wrong: string[] = [];
+    for (const route of pages) {
+      const dir = route === '/' ? routesRoot : path.join(routesRoot, ...route.split('/').filter(Boolean));
+      const mod = (await import(path.join(dir, '+page.ts'))) as { ssr?: unknown; prerender?: unknown };
+      if (mod.ssr !== false || mod.prerender !== false) {
+        wrong.push(`${route} (ssr=${String(mod.ssr)}, prerender=${String(mod.prerender)})`);
+      }
+    }
+    if (wrong.length > 0) {
+      return {
+        gate,
+        passed: false,
+        hard: true,
+        details: `${wrong.length} route(s) declare an SSR choice other than client-only: ${wrong.join(', ')} — the per-route policy is ssr = false AND prerender = false`,
+      };
+    }
+
+    return {
+      gate,
+      passed: true,
+      hard: true,
+      details: `all ${pages.length} page route(s) declare ssr = false and prerender = false: ${pages.join(', ')}`,
+    };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `G54 errored: ${(e as Error).message}` };
   }
 }
