@@ -1,3 +1,10 @@
+# Deploy to Cloudflare Pages — the ONLY production deploy path.
+#
+# Required secrets (all owner-set; see docs/DEPLOYMENT-READINESS-PLAN.md §5):
+#   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, and the Pages project `mysterium` must exist.
+# `LLM_API_KEY` is set on the Cloudflare side with `wrangler secret put`, not here.
+# The `bindings` job refuses to proceed while wrangler.toml still holds REPLACE_WITH_* ids, so
+# the namespace ids must be pasted into the committed file before this workflow can pass.
 name: Deploy to Cloudflare Pages
 on:
   push:
@@ -48,11 +55,6 @@ jobs:
         run: npm run build
         env:
           BUILD_TARGET: cloudflare
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .svelte-kit/cloudflare
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
