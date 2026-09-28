@@ -87,15 +87,15 @@ derivation change, and it is what the code already intends. It also adds a check
 
 ## 4. Everything else, ranked
 
-**Buildable now, after D-1:**
+**Buildable now — status as committed:**
 
-| Item | What |
+| Item | Status |
 |---|---|
-| Ladder L0/L3/L6/L7 + descent stepper | canon-complete; L4/L5 are `closed` class and correctly unreachable in the self register. All 8 payloads exist — pure render work |
-| `agentBusy` delete-or-wire | structurally dead: a Svelte 5 instance-script export, unreachable by any consumer |
-| SSR in one decision | `/knowledge`, `/curriculum`, `/curriculum/progress` are the only 3 of 19 routes that still SSR |
-| P2 — 9 routes | `export` → `insights` → `events` → `pack` → `delegate` → `pod` → `credential`; plus `privacy` (no export-your-own-data) and `calibrate` |
-| **BFF rate limiting** | **DONE (SEC).** All 8 `/api/*` endpoints are metered through one shared limiter (`src/lib/server/rateLimit.ts`) with per-IP tiers; the old `/api/llm/*`-only guard is gone. G53 refuses to pass on any route the limiter does not actually refuse |
+| Ladder L0/L3/L6/L7 + descent stepper | ✅ **BUILT `4129cac`** — all six self-register levels render behind a selector; L4/L5 stay closed-class and unreachable in the self register. The stepper is genuinely descent-only and bounded by each surface's own consent ceiling |
+| `agentBusy` | ✅ **DELETED `4129cac`** — an instance-script export in a Svelte 5 component, so structurally unreachable; every blocking surface already has a more precise local spinner |
+| SSR in one decision | ✅ **BUILT `4129cac`** — all 19 routes declare their choice; **G54** imports each `+page.ts` and fails on a comment-only or computed value |
+| **BFF rate limiting** | ✅ **DONE (SEC), `4129cac`.** All 8 `/api/*` endpoints are metered through one shared limiter (`src/lib/server/rateLimit.ts`) with per-IP tiers; the old `/api/llm/*`-only guard is gone. G53 refuses to pass on any route the limiter does not actually refuse |
+| P2 — 7 routes | **in progress** — `insights`, `export`, `events`, `credential`, `delegate`, `pod`, `pack`. `privacy` and `calibrate` remain partial after this |
 
 **Owner-blocked, non-blocking:** pod hosting (M1), density-hardening ruling, real raters /
 institutions / DPIA, GitLab SSH (C6).
