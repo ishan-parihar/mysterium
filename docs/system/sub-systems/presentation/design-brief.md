@@ -16,7 +16,7 @@ blindly.
 | Audience | the player at every stage, plus consented guardians | AGENTS §5.4 |
 | Vibe words | cave-dark · spirit-haunted · fortress-sharp · cathedral-ordered · mechanism-precise · garden-lush · crystalline · luminous-silence | `describeStage()` — **canon, not taste** |
 | Foundation | **none — an existing hand-rolled token system** (`src/styles/tokens.css`) | the skill's own §5.A rule: never recreate a system you already have |
-| Mode | **preserve** | 16 routes, 32 components and 11 stores are already shipped |
+| Mode | **preserve** | 16 routes, 32 components and 10 stores are already shipped (counts measured from the tree, not from a survey) |
 
 ## The dials, and the one place this product diverges
 
@@ -74,8 +74,13 @@ own §5.A table.
 ## Constraints carried into development
 
 - **Contrast is measured, not asserted.** `fg` and `fg-muted` pass WCAG AA (4.5:1) on all 8
-  stages; `accent` does not, on 4 stages, **by design** — it is a fill, border, glow and focus-ring
-  colour and must never carry body text. `tests/styles/stageTokens.test.ts` holds both facts.
+  stages; `accent` does not, on 4 — infrared 4.04, magenta 3.60, red 3.13, and turquoise 2.75.
+  **By design**: accent is the stage's identity colour, the palette is canon rather than a choice,
+  and it is a fill, border, glow and focus-ring colour that must never carry body text.
+  `accent-fg` is the token for text *on* an accent fill.
+  Turquoise is the notable case: its accent is a dark gold on the ladder's one light background,
+  the inverse of every other stage, so its ratio is the worst of the eight rather than the best.
+  `tests/styles/stageTokens.test.ts` holds the `fg` and `fg-muted` facts.
 - **Every stage has a palette, and no palette is without a stage.** Enforced by reading
   `ALL_STAGES`, so the check cannot itself drift.
 - **The descriptor vocabulary lives in one place** — `describeStage()`'s `Record<Stage, string>` in

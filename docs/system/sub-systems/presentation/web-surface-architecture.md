@@ -46,7 +46,7 @@ agentic route with `llmStatus.offline` redirects to `/setup` rather than failing
 
 ## 3. State model
 
-Eleven Svelte stores under `src/lib/stores/`. The import graph, measured:
+Ten Svelte store files under `src/lib/stores/`. The import graph, measured:
 
 | Store | Importers | Role |
 |---|---|---|
@@ -60,7 +60,7 @@ Eleven Svelte stores under `src/lib/stores/`. The import graph, measured:
 | `cloudSyncStore` | 2 | encrypted save sync **+ `cloudSyncState`** |
 | `profileStore` | 1 | profile list |
 | `telemetryStore` | 1 | event batch |
-| `agentBusy` | **0** | **dead — no caller** |
+| *(not a store)* | — | `agentBusy` is a local signal inside `components/AgentRunner.svelte`, not a store file. It has **no caller** — the dead-code item in §7. |
 
 `src/lib/engine/gameEngine.ts` is the seam: it wraps the kernel's `GameLoop`,
 `EncounterScheduler` and `AgenticOrchestrator` and bridges them into `gameStore` signals. This is
