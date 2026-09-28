@@ -73,14 +73,19 @@ own §5.A table.
 
 ## Constraints carried into development
 
-- **Contrast is measured, not asserted.** `fg` and `fg-muted` pass WCAG AA (4.5:1) on all 8
-  stages; `accent` does not, on 4 — infrared 4.04, magenta 3.60, red 3.13, and turquoise 2.75.
-  **By design**: accent is the stage's identity colour, the palette is canon rather than a choice,
-  and it is a fill, border, glow and focus-ring colour that must never carry body text.
-  `accent-fg` is the token for text *on* an accent fill.
-  Turquoise is the notable case: its accent is a dark gold on the ladder's one light background,
-  the inverse of every other stage, so its ratio is the worst of the eight rather than the best.
-  `tests/styles/stageTokens.test.ts` holds the `fg` and `fg-muted` facts.
+- **Contrast is measured, not asserted — and all of it clears AA.** All four pairings clear 4.5:1
+  on all 8 stages: `fg`/`bg` (12.27–15.61), `fg-muted`/`bg` (5.55–8.69), text-on-solid-accent
+  (4.97–8.27) and text-on-accent-soft (6.66–13.63). `tests/styles/stageTokens.test.ts` recomputes
+  every ratio from the file, so a palette edit cannot pass unmeasured.
+- **There are two accent text tokens, deliberately.** `accent-fg` is text on the solid accent,
+  `accent-soft-fg` is text on the soft fill. A stage's solid and soft differ in lightness, so one
+  token cannot serve both — amber, orange, green and teal need dark-on-solid and white-on-soft;
+  the other four need the reverse. Merging them is the bug this split exists to prevent, and the
+  gate asserts both pairings plus that each component uses the token matching its own fill.
+- **Turquoise was repaired, not themed.** It inherited a dark gold on the ladder's only light
+  background (2.75:1). The palette hexes appear nowhere in `docs/foundations/`, so they are
+  implementation, not canon — which makes the correction ours to make rather than a deviation to
+  argue for.
 - **Every stage has a palette, and no palette is without a stage.** Enforced by reading
   `ALL_STAGES`, so the check cannot itself drift.
 - **The descriptor vocabulary lives in one place** — `describeStage()`'s `Record<Stage, string>` in

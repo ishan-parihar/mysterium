@@ -210,27 +210,38 @@ system: 8 stage palettes, a spacing scale, a modular type scale, motion duration
 ## 9. Measured contrast (WCAG 2.1, computed from `tokens.css`)
 
 Computed with correct channel linearisation — `((c/255 + 0.055)/1.055)^2.4`, then
-`0.2126R + 0.7152G + 0.0722B`, then `(L1+0.05)/(L2+0.05)`. Ratios are capped at 21 by
-construction; anything larger is an arithmetic error, not a result.
+`0.2126R + 0.7152G + 0.0722B`, then `(L1+0.05)/(L2+0.05)`. Ratios cap at 21 by construction;
+anything larger is an arithmetic error, not a result. All four columns clear their threshold on
+all eight stages, and `tests/styles/stageTokens.test.ts` recomputes them from the file.
 
-| Stage | `fg`/`bg` | `fg-muted`/`bg` | `accent`/`bg` |
-|---|---|---|---|
-| infrared | 12.27 | 5.94 | **4.04** |
-| magenta | 13.98 | 6.98 | **3.60** |
-| red (default) | 13.82 | 6.54 | **3.13** |
-| amber | 15.61 | 8.55 | 8.57 |
-| orange | 14.50 | 7.87 | 5.44 |
-| green | 15.10 | 8.69 | 6.32 |
-| teal | 14.79 | 7.42 | 8.73 |
-| turquoise | 13.91 | 5.55 | **2.75** |
+| Stage | `fg`/`bg` | `fg-muted`/`bg` | `accent-fg`/`accent` | `accent-soft-fg`/`accent-soft` |
+|---|---|---|---|---|
+| infrared | 12.27 | 5.94 | 4.97 | 11.12 |
+| magenta | 13.98 | 6.98 | 5.49 | 12.37 |
+| red | 13.82 | 6.54 | 6.29 | 13.63 |
+| amber | 15.61 | 8.55 | 8.27 | 7.42 |
+| orange | 14.50 | 7.87 | 5.31 | 8.83 |
+| green | 15.10 | 8.69 | 6.13 | 9.07 |
+| teal | 14.79 | 7.42 | 8.69 | 6.66 |
+| turquoise | 13.91 | 5.55 | 6.05 | 10.44 |
 
-**Body text passes AA (4.5:1) on all 8 stages**, for both `fg` and `fg-muted`, and this is now a
-test rather than a claim. **`accent` fails AA on 4 stages (2.75–4.04) — and that is by design**:
-accent is the stage's *identity* colour, and the palette is canon, not a choice. It is a fill,
-border, glow and focus-ring colour. **It must never carry body text.** `accent-fg` is the token
-for text *on* an accent fill, and the semantic pairs (`danger`/`success`/`warning`/`info`, each
-with a `-soft` fill and an `-fg`) are the correct choice for status. Locked by
-`tests/styles/stageTokens.test.ts`.
+Thresholds: **4.5:1** for every column — `fg` and `fg-muted` are body text on the background, and
+the last two are *text on a fill*, which is ordinary text, not a decorative element.
+
+**Two tokens, two fills, and why.** A stage's solid `accent` and its `accent-soft` differ in
+lightness, so one text token cannot serve both. `accent-fg` is the text on the **solid** accent
+(`Button.svelte` `.btn-primary`, `HoldProbe.svelte` `.hold-button`); `accent-soft-fg` is the text
+on the **soft** fill (`Badge.svelte` `.badge-accent`, `Sidebar.svelte` `.nav-item.active`,
+`LLMDialogueRunner.svelte` `.option.selected`). Amber, orange, green and teal need **dark** text on
+the solid and **white** on the soft; infrared, magenta, red and turquoise need the reverse. Inverting
+one to fix the other is how the other silently regressed, which is why the gate asserts both.
+
+**Turquoise inherited a defect from the re-key.** It carries the retired block's dark gold
+(`#b89025`) on the ladder's only light background — 2.75:1, the inverse of every other stage — and
+its old `accent-fg` was white on a light soft fill at 1.82:1. Since the palette hexes appear
+nowhere in `docs/foundations/`, they are implementation rather than canon, which makes this ours
+to fix: darkened to `#7a5f10` (5.60:1 on bg), with `accent-soft-fg` set dark to suit the light soft
+fill. Both pairs are now asserted, so neither can drift back.
 
 ## 10. How to extend this surface
 

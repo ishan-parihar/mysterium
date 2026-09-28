@@ -11,12 +11,14 @@
  * prove it is delete a block and watch this go red).
  */
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { ALL_STAGES } from '../../src/core/domain/Stage.js';
 import { describeStage } from '../../src/core/presentation/veilDescriptors.js';
 
 const TOKENS = readFileSync(join(process.cwd(), 'src/styles/tokens.css'), 'utf-8');
+const FONT_FACES = readFileSync(join(process.cwd(), 'src/styles/fonts.css'), 'utf-8');
+const FONT_DIR = join(process.cwd(), 'static/fonts');
 
 /** `[data-stage="x"] { ... }` blocks, keyed by the attribute value. */
 function stageBlocks(): Map<string, string> {
@@ -32,6 +34,8 @@ const REQUIRED = [
   '--mysterium-fg-muted',
   '--mysterium-accent',
   '--mysterium-accent-soft',
+  '--mysterium-accent-fg',
+  '--mysterium-accent-soft-fg',
   '--mysterium-border',
   '--mysterium-font-display',
   '--mysterium-font-body',
@@ -39,6 +43,131 @@ const REQUIRED = [
 
 describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
   const blocks = stageBlocks();
+
+  // The same absence-blind class as the ladder above: `fonts.css` names a family, `tokens.css`
+  // asks for it, and if the .ttf is absent the browser silently falls through to the NEXT family
+  // in the stack — no error, no gate, a stage quietly rendered in the wrong typeface. The Teal
+  // re-key moved four family assignments between blocks, so this is a live surface, not a
+  // hypothetical.
+  it('every stage is legible: text AA on bg, on the solid accent, and on accent-soft', () => {
+    // TWO defects, found by reading the values rather than trusting the intent.
+    //
+    // (1) One `accent-fg` was serving TWO fills of different lightness. `accent-fg` is text on
+    //     the SOLID accent (Button .btn-primary, HoldProbe .hold-button); `accent-soft-fg` is
+    //     text on the accent-soft fill (Badge .badge-accent, Sidebar .nav-item.active,
+    //     LLMDialogueRunner .option.selected). Amber and teal need DARK text on the solid and
+    //     WHITE on the soft — inverting one to fix the other is how the other regressed, which
+    //     is exactly what happened mid-fix here. Both pairings are asserted so a later edit
+    //     cannot pass on one and fail the other.
+    // (2) Turquoise inherited the retired block's dark gold on the ladder's only light
+    //     background (2.75:1), the inverse of every other stage.
+    for (const [stage, body] of blocks) {
+      const hex = (token: string) => {
+        const m = new RegExp(`${token}:\\s*(#[0-9a-fA-F]{6})`).exec(body);
+        expect(m, `${stage} declares no ${token}`).not.toBeNull();
+        return m![1]!;
+      };
+      // WCAG 2.1 relative luminance, done properly: linearise the channel first, then weight.
+      // Skipping the linearisation is the mistake that makes a "contrast check" decorative —
+      // it reports 2.75 where the true ratio is 8, or the reverse.
+      const luminance = (hex: string) => {
+        const channel = (v: number) => {
+          const c = v / 255;
+          return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+        };
+        const n = hex.replace('#', '');
+        const [r, g, b] = [0, 2, 4].map((i) => channel(parseInt(n.slice(i, i + 2), 16)));
+        return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+      };
+      const ratio = (a: string, b: string) => {
+        const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+        return (hi! + 0.05) / (lo! + 0.05);
+      };
+
+      const bg = hex('--mysterium-bg');
+      // Body text: WCAG AA is 4.5:1 for normal text.
+      expect(ratio(hex('--mysterium-fg'), bg), `${stage} fg on bg`).toBeGreaterThanOrEqual(4.5);
+      expect(ratio(hex('--mysterium-fg-muted'), bg), `${stage} fg-muted on bg`).toBeGreaterThanOrEqual(4.5);
+      // Text drawn ON the accent-soft fill, in accent-fg. This is the pair the components use.
+      // Text on the SOLID accent fill.
+      expect(
+        ratio(hex('--mysterium-accent-fg'), hex('--mysterium-accent')),
+        `${stage} accent-fg on accent`,
+      ).toBeGreaterThanOrEqual(4.5);
+      // Text on the accent-soft fill.
+      expect(
+        ratio(hex('--mysterium-accent-soft-fg'), hex('--mysterium-accent-soft')),
+        `${stage} accent-soft-fg on accent-soft`,
+      ).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it('every component drawing text on an accent fill uses the token for THAT fill', () => {
+    // The class of bug the two tokens exist to prevent: a `color:` paired with a `background:`
+    // that both reference accent, but one the solid and the other the soft. This reads the real
+    // component sources, so a new consumer cannot reintroduce the mismatch silently.
+    // HoldProbe has no hover rule that changes the fill, so it is the one component that only
+    // ever sits on the solid accent. Button is NOT here: its :hover swaps to accent-soft and
+    // switches token, so it legitimately uses both.
+    const SOLID_ONLY = ['HoldProbe.svelte'];
+    const files = [
+      'src/lib/components/Button.svelte',
+      'src/lib/components/Badge.svelte',
+      'src/lib/components/Sidebar.svelte',
+      'src/lib/components/gameplay/HoldProbe.svelte',
+      'src/lib/components/gameplay/LLMDialogueRunner.svelte',
+    ];
+    for (const file of files) {
+      const src = readFileSync(join(process.cwd(), file), 'utf-8');
+      const name = file.slice(file.lastIndexOf('/') + 1);
+      // Split on a whole rule, not on every '}' — a nested at-rule or a selector list would
+      // otherwise leave a fragment with a background and no colour (or the reverse), which is how
+      // a real mis-pairing slips past the check.
+      for (const rule of src.match(/\{[^}]*\}/g) ?? []) {
+        const fill = /background:\s*var\(--mysterium-(accent|accent-soft)\)/.exec(rule);
+        if (!fill) continue;
+        const wants = fill[1] === 'accent' ? 'accent-fg' : 'accent-soft-fg';
+        // Assert the pairing, do not skip when it is absent: a rule that sets an accent fill and
+        // then declares NO accent text colour is exactly the invisible-label case, and an
+        // `if (!x) continue` here would let it through silently.
+        expect(rule, `${name}: a ${fill[1]} fill must pair with ${wants}`).toContain(wants);
+      }
+      if (SOLID_ONLY.includes(name)) {
+        expect(src, `${name} sits on the solid accent — it must not use accent-soft-fg`).not.toContain(
+          'accent-soft-fg',
+        );
+      }
+    }
+  });
+
+  it('every stage font resolves to a real .ttf, so no family falls back silently', () => {
+    const onDisk = new Set(readdirSync(FONT_DIR));
+    const declared = new Map<string, string>();
+    const face = /font-family:\s*"([^"]+)";\s*\n\s*src:\s*url\("\/fonts\/([^"]+)"/g;
+    for (let m = face.exec(FONT_FACES); m; m = face.exec(FONT_FACES)) declared.set(m[1]!, m[2]!);
+
+    for (const [stage, body] of blocks) {
+      for (const token of ['--mysterium-font-display', '--mysterium-font-body']) {
+        const m = new RegExp(`${token}:\\s*"([^"]+)"`).exec(body);
+        expect(m, `${stage} declares no ${token}`).not.toBeNull();
+        const family = m![1]!;
+        const file = declared.get(family);
+        // The family must be registered AND its file must exist — either half missing is a
+        // silent fallback, and neither half is visible from tokens.css alone.
+        expect(file, `${stage} ${token} "${family}" has no @font-face in fonts.css`).toBeDefined();
+        expect(onDisk, `${stage} ${token} "${family}" -> ${file} is absent`).toContain(file!);
+      }
+    }
+  });
+
+  it('no registered font is dead weight, and none is missing from disk', () => {
+    const onDisk = new Set(readdirSync(FONT_DIR));
+    const referenced = [...FONT_FACES.matchAll(/url\("\/fonts\/([^"]+)"\)/g)].map((m) => m[1]!);
+    for (const file of referenced) expect(onDisk, `fonts.css references a missing ${file}`).toContain(file);
+    for (const file of onDisk) {
+      expect(referenced, `${file} is shipped but never registered — dead weight`).toContain(file);
+    }
+  });
 
   it('defines exactly one palette per stage in ALL_STAGES, and no others', () => {
     const expected = new Set(ALL_STAGES.map((s) => s.toLowerCase()));

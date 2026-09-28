@@ -412,7 +412,7 @@
   .option.selected {
     background: var(--mysterium-accent-soft);
     border-color: var(--mysterium-accent);
-    color: var(--mysterium-accent-fg);
+    color: var(--mysterium-accent-soft-fg);
   }
 
   .option-marker {
@@ -427,7 +427,7 @@
   }
 
   .option.selected .option-marker {
-    color: var(--mysterium-accent-fg);
+    color: var(--mysterium-accent-soft-fg);
   }
 
   .option-content {
@@ -449,7 +449,7 @@
   }
 
   .option.selected .option-desc {
-    color: color-mix(in srgb, var(--mysterium-accent-fg) 80%, transparent);
+    color: color-mix(in srgb, var(--mysterium-accent-soft-fg) 80%, transparent);
   }
 
   .writein-section {

@@ -115,7 +115,7 @@
 
   .nav-item.active {
     background: var(--mysterium-accent-soft);
-    color: var(--mysterium-accent-fg);
+    color: var(--mysterium-accent-soft-fg);
   }
 
   .nav-item:focus-visible {

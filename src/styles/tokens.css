@@ -149,6 +149,8 @@
   --mysterium-accent: #c44525;
   --mysterium-accent-soft: #6b2415;
   --mysterium-accent-fg: #ffffff;
+  --mysterium-accent-soft-fg: #ffffff;
+  --mysterium-accent-soft-fg: #ffffff;
   --mysterium-border: rgba(196, 69, 37, 0.3);
   --mysterium-font-display: "Boldonse", system-ui, sans-serif;
   --mysterium-font-body: "DM Mono", "Courier New", monospace;
@@ -166,6 +168,7 @@
   --mysterium-accent: #9440c8;
   --mysterium-accent-soft: #4a2068;
   --mysterium-accent-fg: #ffffff;
+  --mysterium-accent-soft-fg: #ffffff;
   --mysterium-border: rgba(148, 64, 200, 0.3);
   --mysterium-font-display: "Italiana", "Times New Roman", serif;
   --mysterium-font-body: "Lora", Georgia, serif;
@@ -183,6 +186,7 @@
   --mysterium-accent: #b8252a;
   --mysterium-accent-soft: #5a1318;
   --mysterium-accent-fg: #ffffff;
+  --mysterium-accent-soft-fg: #ffffff;
   --mysterium-border: rgba(184, 37, 42, 0.3);
   --mysterium-font-display: "Big Shoulders", "Arial Narrow", sans-serif;
   --mysterium-font-body: "IBM Plex Mono", "Courier New", monospace;
@@ -199,7 +203,8 @@
   --mysterium-muted: #806840;
   --mysterium-accent: #d4a425;
   --mysterium-accent-soft: #6a5215;
-  --mysterium-accent-fg: #1a1408;
+  --mysterium-accent-fg: #12100c;
+  --mysterium-accent-soft-fg: #ffffff;
   --mysterium-border: rgba(212, 164, 37, 0.3);
   --mysterium-font-display: "Young Serif", Georgia, serif;
   --mysterium-font-body: "Libre Baskerville", Georgia, serif;
@@ -216,7 +221,8 @@
   --mysterium-muted: #506878;
   --mysterium-accent: #2590c4;
   --mysterium-accent-soft: #155068;
-  --mysterium-accent-fg: #ffffff;
+  --mysterium-accent-fg: #12100c;
+  --mysterium-accent-soft-fg: #ffffff;
   --mysterium-border: rgba(37, 144, 196, 0.3);
   --mysterium-font-display: "Tektur", "Arial", sans-serif;
   --mysterium-font-body: "Instrument Sans", system-ui, sans-serif;
@@ -233,7 +239,8 @@
   --mysterium-muted: #506840;
   --mysterium-accent: #5aa425;
   --mysterium-accent-soft: #2a5215;
-  --mysterium-accent-fg: #ffffff;
+  --mysterium-accent-fg: #12100c;
+  --mysterium-accent-soft-fg: #ffffff;
   --mysterium-border: rgba(90, 164, 37, 0.3);
   --mysterium-font-display: "Bricolage Grotesque", system-ui, sans-serif;
   --mysterium-font-body: "Work Sans", system-ui, sans-serif;
@@ -253,7 +260,8 @@
   --mysterium-muted: #406878;
   --mysterium-accent: #25c4b0;
   --mysterium-accent-soft: #156858;
-  --mysterium-accent-fg: #08101a;
+  --mysterium-accent-fg: #12100c;
+  --mysterium-accent-soft-fg: #ffffff;
   --mysterium-border: rgba(37, 196, 176, 0.3);
   --mysterium-font-display: "Poiret One", "Optima", sans-serif;
   --mysterium-font-body: "Jura", "Optima", sans-serif;
@@ -271,10 +279,11 @@
   --mysterium-fg: #2a2620;
   --mysterium-fg-muted: #6a6258;
   --mysterium-muted: #9a9080;
-  --mysterium-accent: #b89025;
+  --mysterium-accent: #7a5f10;
   --mysterium-accent-soft: #d4c068;
   --mysterium-accent-fg: #ffffff;
-  --mysterium-border: rgba(184, 144, 37, 0.3);
+  --mysterium-accent-soft-fg: #12100c;
+  --mysterium-border: rgba(122, 95, 16, 0.3);
   --mysterium-font-display: "Crimson Pro", Georgia, serif;
   --mysterium-font-body: "Erica One", system-ui, sans-serif;
   --mysterium-motion: dissolve;

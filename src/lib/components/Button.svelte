@@ -114,8 +114,12 @@
     border-color: var(--mysterium-accent);
     color: var(--mysterium-accent-fg);
   }
+  /* Hover swaps the fill to accent-soft, so the text must swap with it — the same pair rule
+     the .badge-accent consumers follow. Without this the label keeps the solid token's
+     contrast against a soft fill, which is a different lightness. */
   .btn-primary:hover:not(:disabled) {
     background: var(--mysterium-accent-soft);
+    color: var(--mysterium-accent-soft-fg);
     box-shadow: var(--mysterium-shadow-glow);
   }
 

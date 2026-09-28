@@ -68,7 +68,7 @@
 
   .badge-accent {
     background: var(--mysterium-accent-soft);
-    color: var(--mysterium-accent-fg);
+    color: var(--mysterium-accent-soft-fg);
     border-color: var(--mysterium-accent);
   }
 </style>
