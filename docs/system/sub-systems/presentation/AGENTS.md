@@ -14,6 +14,7 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 
 ### Documents in this organ (auto-discovered — never hand-maintained)
 
+- [design-brief.md](./design-brief.md) — DESIGN BRIEF — Mysterium
 - [rendering-layer.md](./rendering-layer.md) — Rendering Layer Architecture
 - [web-surface-architecture.md](./web-surface-architecture.md) — Web Surface Architecture
 

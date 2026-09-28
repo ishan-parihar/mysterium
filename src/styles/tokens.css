@@ -4,15 +4,28 @@
  * Each stage has its own palette, typography, and motion language.
  * Switch stages by setting data-stage="..." on <html>.
  *
- * Derived from the canon (MainMenuScene stageAesthetics):
+ * DESCRIPTORS ARE NOT AUTHORED HERE. The single source is `describeStage()`'s
+ * `Record<Stage, string>` in `src/core/presentation/veilDescriptors.ts` — edit there, never in
+ * a comment here. These blocks are palettes; that record is the vocabulary, and the two are
+ * checked against each other by `tests/styles/stageTokens.test.ts`.
+ *
+ * Mirrored from that record, in `ALL_STAGES` order (src/core/domain/Stage.ts:15):
  *   Infrared: "cave-dark, primal"
  *   Magenta:  "spirit-haunted, symbolic"
  *   Red:      "fortress-sharp, weapon-walls" (default)
  *   Amber:    "cathedral-ordered, gold-stone"
  *   Orange:   "mechanism-precise, steel-glass"
  *   Green:    "garden-lush, earth-toned"
- *   Turquoise:"crystalline, translucent"
- *   White:    "luminous silence, spacious"
+ *   Teal:     "crystalline, translucent"
+ *   Turquoise:"luminous silence, spacious"
+ *
+ * STAGE 7 is Teal, not White. The `white` palette that stood here belonged to a retired 8th
+ * stage; `ALL_STAGES` (src/core/domain/Stage.ts:15) ends at Turquoise with Teal in the
+ * penultimate position, so a player at Teal — the integral structure, canon law-band 3 —
+ * previously fell through to the default red theme. The retirement had reached `src/` and
+ * missed the CSS, which is the residue class AGENTS.md §4.2 warns about: a retired constant
+ * outliving its retirement outside the checked graph. Teal is now the 7th palette and White is
+ * gone. `data-stage` values are the lowercased stage names; a value with no block is a bug.
  *
  * Pure-Svelte frontend: these tokens are the single source of truth.
  * The Svelte layer consumes them via var(--mysterium-*).
@@ -227,8 +240,11 @@
   --mysterium-motion: grow;
 }
 
-/* ─── Stage 7: Turquoise — "crystalline, translucent" ─── */
-[data-stage="turquoise"] {
+/* ─── Stage 7: Teal — "crystalline, translucent" (canon: stages/07 — Teal / Integral) ───
+ * Descriptor from `describeStage` (src/core/presentation/veilDescriptors.ts:28). The palette is
+ * the dark crystal that stood on Turquoise, which carried this same descriptor — the block was
+ * one rung out of place, not merely missing. */
+[data-stage="teal"] {
   --mysterium-bg: #08101a;
   --mysterium-surface: #0c1828;
   --mysterium-surface-elevated: #102038;
@@ -244,8 +260,11 @@
   --mysterium-motion: refract;
 }
 
-/* ─── Stage 8: White — "luminous silence, spacious" ─── */
-[data-stage="white"] {
+/* ─── Stage 8: Turquoise — "luminous silence, spacious" ───
+ * The top of the ladder and the only LIGHT register: the dark crystal that stood here belonged
+ * to Teal's descriptor, and the light palette that stood under the retired `white` block belongs
+ * to this one. Seven dark stages and one luminous one, so the ascent is legible at a glance. */
+[data-stage="turquoise"] {
   --mysterium-bg: #f8f6f0;
   --mysterium-surface: #ffffff;
   --mysterium-surface-elevated: #f0ede4;

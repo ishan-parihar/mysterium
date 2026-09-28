@@ -26,15 +26,22 @@ Describes the rendering surfaces of Mysterium — SvelteKit WebUI, CLI, and Capa
 
 ### SvelteKit WebUI
 
-`src/routes/` — 8 routes:
+`src/routes/` — 16 player-facing routes (12 opt out of SSR individually via their own
+`+page.ts`; `/curriculum`, `/curriculum/progress` and `/knowledge` inherit the root `+layout.ts`
+switch, so they still SSR on the cloudflare target):
 - `/` — menu hub
-- `/play` — mounts Phaser for gameplay
+- `/play` — the gameplay session (DOM/Svelte encounter cards; see §4 — no canvas engine)
 - `/profile` — radial altitude chart
 - `/journal` — encounter history
 - `/codex` — glossary and terms
 - `/settings` — configuration
 - `/recover` — save recovery
 - `/telemetry` — opt-in telemetry
+- plus `/onboarding`, `/setup`, `/diagnostic`, `/glossary`, `/knowledge`, `/curriculum`,
+  `/curriculum/progress`, `/profiles`, and `+error.svelte`
+
+Per-route composition, the state model and the extension rules are in
+[[docs/system/sub-systems/presentation/web-surface-architecture|web-surface-architecture]].
 
 ### Design Tokens
 

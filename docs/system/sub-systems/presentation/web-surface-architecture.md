@@ -87,6 +87,11 @@ There is **no Tailwind and no PostCSS**. The system is hand-rolled CSS custom pr
   **`capabilities.css`** — adaptations for input method, motion preference, contrast and
   connection quality.
 
+The design brief these tokens implement is
+[[docs/system/sub-systems/presentation/design-brief|design-brief]] — derived from the canon, not
+chosen, with the dials and the one deliberate divergence from the `website-design` skill's
+defaults recorded there.
+
 **The stage theming is the system's spine.** `<html data-stage="…">` drives everything, and
 `app.html` sets that attribute **synchronously in `<head>` from `localStorage` before first paint**
 specifically to prevent a flash of the default red theme for a player at another stage. A
@@ -175,7 +180,60 @@ route. `calibrate` is partial (onboarding probes, no headless equivalent). `priv
 5. `/knowledge`, `/curriculum`, `/curriculum/progress` still SSR; the empty-state flash is a
    consequence of the split, not a decision.
 
-## 8. How to extend this surface
+## 8. The design brief (website-design skill, adapted)
+
+The skill's `briefing` node says a DESIGN BRIEF must be extracted and re-read by every later
+phase. This project already has one — the canon's own stage vocabulary — so the brief is
+*derived from `describeStage()`* rather than chosen. The skill targets marketing sites; the two
+nodes that transfer (briefing, direction) are applied, the two that do not (marketing `components/`
+recipes, static-host `deploy/`) are recorded as not-applicable rather than applied blindly.
+
+**The dials, and the one place this product diverges from the skill's default answer:** the skill's
+"quiet constraints" rule caps accessibility-critical briefs at VARIANCE 4 / MOTION 3 *whatever the
+vibe words say*. That cap is adopted — and it matters more here than it would on a marketing site,
+because Mysterium's vibe words are unusually strong and unusually load-bearing. **The canon's drama
+is carried by colour and type, not by layout variance or motion volume.** VARIANCE 4, MOTION 3,
+DENSITY 6 (between the skill's "dashboard" 7 and "e-commerce" 5 — `/profile` is dense, `/play` is
+not, and density is a per-route decision).
+
+**The one rule this yields, which the skill's own §0.5 implies:** visual choices follow the
+subject's vernacular. Mysterium's subject supplies its own — the developmental ladder. A player at
+Infrared must not be able to mistake their experience for a player at Turquoise, which makes
+`data-stage` a **semantic contract, not a skin**. It is set synchronously in `<head>` before first
+paint for exactly that reason, and it is why a retired stage (`White`) could leave a palette
+behind while a live stage (`Teal`) had none: the ladder was being copied instead of imported.
+
+**Foundation: none needed.** The skill's §5.A honesty rule — never recreate a system you already
+have — means no package is installed. `src/styles/tokens.css` is already a complete, canon-derived
+system: 8 stage palettes, a spacing scale, a modular type scale, motion durations and easings.
+
+## 9. Measured contrast (WCAG 2.1, computed from `tokens.css`)
+
+Computed with correct channel linearisation — `((c/255 + 0.055)/1.055)^2.4`, then
+`0.2126R + 0.7152G + 0.0722B`, then `(L1+0.05)/(L2+0.05)`. Ratios are capped at 21 by
+construction; anything larger is an arithmetic error, not a result.
+
+| Stage | `fg`/`bg` | `fg-muted`/`bg` | `accent`/`bg` |
+|---|---|---|---|
+| infrared | 12.27 | 5.94 | **4.04** |
+| magenta | 13.98 | 6.98 | **3.60** |
+| red (default) | 13.82 | 6.54 | **3.13** |
+| amber | 15.61 | 8.55 | 8.57 |
+| orange | 14.50 | 7.87 | 5.44 |
+| green | 15.10 | 8.69 | 6.32 |
+| teal | 14.79 | 7.42 | 8.73 |
+| turquoise | 13.91 | 5.55 | **2.75** |
+
+**Body text passes AA (4.5:1) on all 8 stages**, for both `fg` and `fg-muted`, and this is now a
+test rather than a claim. **`accent` fails AA on 4 stages (2.75–4.04) — and that is by design**:
+accent is the stage's *identity* colour, and the palette is canon, not a choice. It is a fill,
+border, glow and focus-ring colour. **It must never carry body text.** `accent-fg` is the token
+for text *on* an accent fill, and the semantic pairs (`danger`/`success`/`warning`/`info`, each
+with a `-soft` fill and an `-fg`) are the correct choice for status. Locked by
+`tests/styles/stageTokens.test.ts`.
+
+## 10. How to extend this surface
+
 
 - **Read `tokens.css` before writing CSS.** Every colour, space, size and duration comes from a
   token. If a value is not a token, either it should be (add it) or it should not exist.
@@ -183,6 +241,11 @@ route. `calibrate` is partial (onboarding probes, no headless equivalent). `priv
   has a genuine reason to SSR, in which case say why in the page's doc comment.
 - **New state goes in a store with a named reader in the same commit.** A store with no reader is
   the write-only defect class; the importer count is the assertion.
-- **Closed-register data goes through `VeiledStat`.** Do not hand-roll visibility.
+- **Closed-register data must not be rendered here at all.** `VeiledStat` shapes *expression*, not
+  permission — it takes a pre-computed `descriptor: string` and has no register logic, so it cannot
+  decide whether a value may be shown. The closed register class (polarity, shadow quadrants, ray
+  profile, harvest eligibility — AGENTS §5.4) is non-player-readable at any stage; deciding that per
+  surface is the failure mode, so when a surface wants closed-class data, the answer is a new law in
+  20, not a new conditional.
 - **After any surface change, check the ADR ledger** (`arch.py context src/routes/…`) — the Veil
   and the ladder laws constrain what may be shown, and DG19 fails a law with no declared consumer.
