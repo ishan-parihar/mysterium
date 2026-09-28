@@ -5,22 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Mysterium — what you will see</title>
 <style>
-  /* Stage palettes copied verbatim from src/styles/tokens.css. This is the real design
-     system, not a mock aesthetic — the whole point of the preview is that it cannot lie. */
+  /* WIREFRAME. The palettes between the GENERATED markers are written by
+     scripts/build-preview.mjs straight from src/styles/tokens.css — the real design system, not a
+     mock aesthetic. tests/styles/stageTokens.test.ts asserts they still match the source, so the
+     preview cannot drift into a second, wrong copy of the ladder. Everything else here is
+     structure: copy is illustrative, the encounter and probe prose is placeholder, and there is
+     no interactivity beyond navigation and the stage switcher. */
   :root{
     --bg:#0d0a0a; --surface:#1a1010; --surface-elevated:#241616; --fg:#d8c8b4;
     --fg-muted:#a08868; --muted:#6a5040; --accent:#b8252a; --accent-soft:#5a1318;
     --accent-fg:#ffffff; --accent-soft-fg:#ffffff; --border:rgba(184,37,42,.3);
     --font-display:"Big Shoulders","Arial Narrow",sans-serif; --font-body:"IBM Plex Mono","Courier New",monospace;
   }
-  [data-stage="infrared"]{--bg:#0a0707;--surface:#140d0d;--surface-elevated:#1f1414;--fg:#d8c8b4;--fg-muted:#a08868;--muted:#6a5040;--accent:#c44525;--accent-soft:#6b2415;--accent-fg:#fff;--accent-soft-fg:#fff;--border:rgba(196,69,37,.3);--font-display:"Boldonse",system-ui;--font-body:"DM Mono",monospace}
-  [data-stage="magenta"]{--bg:#0d0814;--surface:#170f24;--surface-elevated:#211634;--fg:#e0c8f0;--fg-muted:#a888c0;--muted:#68507a;--accent:#9440c8;--accent-soft:#4a2068;--accent-fg:#fff;--accent-soft-fg:#fff;--border:rgba(148,64,200,.3);--font-display:"Italiana",serif;--font-body:"Lora",serif}
-  [data-stage="red"]{--bg:#0d0a0a;--surface:#1a1010;--surface-elevated:#241616;--fg:#d8c8b4;--fg-muted:#a08868;--muted:#6a5040;--accent:#b8252a;--accent-soft:#5a1318;--accent-fg:#fff;--accent-soft-fg:#fff;--border:rgba(184,37,42,.3);--font-display:"Big Shoulders","Arial Narrow",sans-serif;--font-body:"IBM Plex Mono",monospace}
-  [data-stage="amber"]{--bg:#0f0a05;--surface:#1c1409;--surface-elevated:#291e10;--fg:#f0e0c0;--fg-muted:#c0a070;--muted:#7a6440;--accent:#d4a425;--accent-soft:#6a5215;--accent-fg:#12100c;--accent-soft-fg:#fff;--border:rgba(212,164,37,.3);--font-display:"Young Serif",serif;--font-body:"Libre Baskerville",serif}
-  [data-stage="orange"]{--bg:#0a0d10;--surface:#111a20;--surface-elevated:#18262e;--fg:#d8e4ec;--fg-muted:#90a8b8;--muted:#58707c;--accent:#2590c4;--accent-soft:#155068;--accent-fg:#12100c;--accent-soft-fg:#fff;--border:rgba(37,144,196,.3);--font-display:"Tektur",sans-serif;--font-body:"Instrument Sans",sans-serif}
-  [data-stage="green"]{--bg:#080d08;--surface:#101a10;--surface-elevated:#172617;--fg:#d4e8d0;--fg-muted:#94b890;--muted:#5c7858;--accent:#5aa425;--accent-soft:#2a5215;--accent-fg:#12100c;--accent-soft-fg:#fff;--border:rgba(90,164,37,.3);--font-display:"Bricolage Grotesque",sans-serif;--font-body:"Work Sans",sans-serif}
-  [data-stage="teal"]{--bg:#08101a;--surface:#0c1828;--surface-elevated:#102038;--fg:#c8e8f0;--fg-muted:#78a8c0;--muted:#406878;--accent:#25c4b0;--accent-soft:#156858;--accent-fg:#12100c;--accent-soft-fg:#fff;--border:rgba(37,196,176,.3);--font-display:"Poiret One",sans-serif;--font-body:"Jura",sans-serif}
-  [data-stage="turquoise"]{--bg:#f8f6f0;--surface:#fff;--surface-elevated:#f0ede4;--fg:#2a2620;--fg-muted:#6a6258;--muted:#9a9080;--accent:#7a5f10;--accent-soft:#d4c068;--accent-fg:#fff;--accent-soft-fg:#2a2620;--border:rgba(122,95,16,.3);--font-display:"Crimson Pro",Georgia,serif;--font-body:"Erica One",system-ui}
+  /* ── GENERATED PALETTES (scripts/build-preview.mjs) ── */
+  [data-stage="infrared"]{--bg:#0a0707,--surface:#140d0d,--surface-elevated:#1f1414,--fg:#d8c8b4,--fg-muted:#a08868,--muted:#6a5040,--accent:#c44525,--accent-soft:#6b2415,--accent-fg:#ffffff,--accent-soft-fg:#ffffff,--border:rgba(196, 69, 37, 0.3);--font-display:"Boldonse", system-ui, sans-serif;--font-body:"DM Mono", "Courier New", monospace}
+  [data-stage="magenta"]{--bg:#0d0814,--surface:#1a1028,--surface-elevated:#261838,--fg:#e0d4f0,--fg-muted:#a890c0,--muted:#6a5080,--accent:#9440c8,--accent-soft:#4a2068,--accent-fg:#ffffff,--accent-soft-fg:#ffffff,--border:rgba(148, 64, 200, 0.3);--font-display:"Italiana", "Times New Roman", serif;--font-body:"Lora", Georgia, serif}
+  [data-stage="red"]{--bg:#0d0a0a,--surface:#1a0f0f,--surface-elevated:#261818,--fg:#e8d4cc,--fg-muted:#a89080,--muted:#8a5040,--accent:#b8252a,--accent-soft:#5a1318,--accent-fg:#ffffff,--accent-soft-fg:#ffffff,--border:rgba(184, 37, 42, 0.3);--font-display:"Big Shoulders", "Arial Narrow", sans-serif;--font-body:"IBM Plex Mono", "Courier New", monospace}
+  [data-stage="amber"]{--bg:#0f0a05,--surface:#1a1408,--surface-elevated:#26200c,--fg:#f0e4c8,--fg-muted:#c0a878,--muted:#806840,--accent:#d4a425,--accent-soft:#6a5215,--accent-fg:#12100c,--accent-soft-fg:#ffffff,--border:rgba(212, 164, 37, 0.3);--font-display:"Young Serif", Georgia, serif;--font-body:"Libre Baskerville", Georgia, serif}
+  [data-stage="orange"]{--bg:#0a0d10,--surface:#141a20,--surface-elevated:#1f262e,--fg:#d4e0e8,--fg-muted:#90a8b8,--muted:#506878,--accent:#2590c4,--accent-soft:#155068,--accent-fg:#12100c,--accent-soft-fg:#ffffff,--border:rgba(37, 144, 196, 0.3);--font-display:"Tektur", "Arial", sans-serif;--font-body:"Instrument Sans", system-ui, sans-serif}
+  [data-stage="green"]{--bg:#080d08,--surface:#101810,--surface-elevated:#182218,--fg:#d4e8c8,--fg-muted:#90b878,--muted:#506840,--accent:#5aa425,--accent-soft:#2a5215,--accent-fg:#12100c,--accent-soft-fg:#ffffff,--border:rgba(90, 164, 37, 0.3);--font-display:"Bricolage Grotesque", system-ui, sans-serif;--font-body:"Work Sans", system-ui, sans-serif}
+  [data-stage="teal"]{--bg:#08101a,--surface:#0c1828,--surface-elevated:#102038,--fg:#c8e8f0,--fg-muted:#78a8c0,--muted:#406878,--accent:#25c4b0,--accent-soft:#156858,--accent-fg:#12100c,--accent-soft-fg:#ffffff,--border:rgba(37, 196, 176, 0.3);--font-display:"Poiret One", "Optima", sans-serif;--font-body:"Jura", "Optima", sans-serif}
+  [data-stage="turquoise"]{--bg:#f8f6f0,--surface:#ffffff,--surface-elevated:#f0ede4,--fg:#2a2620,--fg-muted:#6a6258,--muted:#9a9080,--accent:#7a5f10,--accent-soft:#d4c068,--accent-fg:#ffffff,--accent-soft-fg:#12100c,--border:rgba(122, 95, 16, 0.3);--font-display:"Crimson Pro", Georgia, serif;--font-body:"Erica One", system-ui, sans-serif}
+/* ── END GENERATED ── */
 
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:14px;line-height:1.6;
@@ -28,6 +34,18 @@
   .wrap{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
   .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
   .brand{font-family:var(--font-display);font-size:20px;letter-spacing:.12em;text-transform:uppercase;padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:14px}
+  .nav-h{padding:0 20px 8px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .nav a.off{opacity:.5}
+  .parity{background:var(--surface-elevated);border:1px solid var(--border);
+          border-left:2px solid var(--accent);padding:11px 14px;margin:20px 14px 0;
+          font-size:11px;color:var(--fg-muted);line-height:1.5}
+  .parity b{color:var(--fg)}
+  /* The app swaps the 11-item Sidebar for the 4-item BottomNav on mobile. Reproduced here so
+     the parity gap above is demonstrable rather than merely asserted. */
+  @media (max-width:820px){
+    .wrap{grid-template-columns:1fr}
+    .sidebar{display:none}
+  }
   .nav a{display:flex;gap:10px;padding:9px 20px;color:var(--fg-muted);text-decoration:none;font-size:12.5px;border-left:2px solid transparent}
   .nav a:hover{color:var(--fg);background:var(--surface-elevated)}
   .nav a.active{color:var(--accent-fg);background:var(--accent-soft);border-left-color:var(--accent)}
@@ -86,7 +104,7 @@
   <aside class="sidebar">
     <div class="brand">Mysterium</div>
     <nav class="nav" id="nav">
-      <a href="#" data-go="menu"><span class="dot"></span>Menu</a>
+      <div class="nav-h">In the shipped sidebar &mdash; 11</div>
       <a href="#" data-go="play" class="active"><span class="dot"></span>Continue</a>
       <a href="#" data-go="profile"><span class="dot"></span>Profile</a>
       <a href="#" data-go="profiles"><span class="dot"></span>Profiles</a>
@@ -98,11 +116,21 @@
       <a href="#" data-go="setup"><span class="dot"></span>Setup</a>
       <a href="#" data-go="recover"><span class="dot"></span>Recover</a>
       <a href="#" data-go="glossary"><span class="dot"></span>Glossary</a>
-      <a href="#" data-go="telemetry"><span class="dot"></span>Telemetry</a>
-      <a href="#" data-go="diagnostic"><span class="dot"></span>Diagnostic</a>
-      <a href="#" data-go="onboarding"><span class="dot"></span>Onboarding</a>
-      <a href="#" data-go="knowledge"><span class="dot"></span>Knowledge</a>
+      <div class="nav-h">Routed, not in the nav &mdash; 5</div>
+      <a href="#" data-go="telemetry" class="off"><span class="dot"></span>Telemetry</a>
+      <a href="#" data-go="diagnostic" class="off"><span class="dot"></span>Diagnostic</a>
+      <a href="#" data-go="onboarding" class="off"><span class="dot"></span>Onboarding</a>
+      <a href="#" data-go="knowledge" class="off"><span class="dot"></span>Knowledge</a>
+      <a href="#" data-go="menu" class="off"><span class="dot"></span>Menu</a>
     </nav>
+    <div class="parity">
+      <b>A real product decision, not a wireframe detail.</b> The desktop <b>Sidebar lists 11</b>
+      routes. The mobile <b>BottomNav lists 4</b> &mdash; Continue, Profile, Journal, Settings
+      &mdash; so on a phone there is no nav route at all to Curriculum, Progress, Codex,
+      Profiles, Setup, Recover or Glossary. Both counts are the real arrays in
+      <code>Sidebar.svelte</code> and <code>BottomNav.svelte</code>. Narrow this window to watch
+      the sidebar disappear and the gap appear.
+    </div>
   </aside>
   <main id="main"></main>
 </div>

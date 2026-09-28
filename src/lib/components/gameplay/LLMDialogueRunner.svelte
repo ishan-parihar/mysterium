@@ -448,11 +448,9 @@
     line-height: var(--mysterium-leading-normal);
   }
 
-  /* No selected-state override for the description. It used to mix accent-soft-fg at 80% into
-     transparent, which is the one accent-fill pairing no contrast gate can read: the mix lowers
-     the effective ratio below the flat pairing, so it was asserted by nothing while being the
-     least legible of the set. The base --mysterium-fg-muted is the correct role for a
-     de-emphasised secondary line, and it clears AA on all 8 stages. */
+  /* The description deliberately has no selected-state colour: it inherits the base
+     --mysterium-fg-muted, and any accent-tinted override would be unverifiable (see
+     stageTokens.test.ts). */
 
   .writein-section {
     margin-top: var(--mysterium-space-2);

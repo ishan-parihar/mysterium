@@ -11,7 +11,7 @@
  * prove it is delete a block and watch this go red).
  */
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { ALL_STAGES } from '../../src/core/domain/Stage.js';
 import { describeStage } from '../../src/core/presentation/veilDescriptors.js';
@@ -49,6 +49,44 @@ describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
   // in the stack — no error, no gate, a stage quietly rendered in the wrong typeface. The Teal
   // re-key moved four family assignments between blocks, so this is a live surface, not a
   // hypothetical.
+  it('the committed web-surface preview carries the same ladder, not a second copy', () => {
+    // The preview (docs/audits/preview/web-surface-preview.html) inlines the 8 palettes so the
+    // owner can open one file and see the whole surface. That makes it a second copy of this
+    // ladder in a file no other gate reads — the exact drift class that produced a palette for
+    // a stage that did not exist while a real stage had none. It is generated from this file at
+    // build time by scripts/build-preview.mjs; this assertion is what makes that generation
+    // load-bearing instead of aspirational.
+    const previewPath = join(process.cwd(), 'docs/audits/preview/web-surface-preview.html');
+    if (!existsSync(previewPath)) return; // the preview is optional; its absence is not drift
+    const preview = readFileSync(previewPath, 'utf-8');
+    for (const [stage, body] of blocks) {
+      // Read from THIS block's own body. Matching the raw file here would pick up the :root
+      // baseline, which also declares --bg/--accent — the same mistake a file-wide regex makes.
+      const bg = /--mysterium-bg:\s*(#[0-9a-fA-F]{6})/.exec(body)?.[1];
+      const accent = /--mysterium-accent:\s*(#[0-9a-fA-F]{6})/.exec(body)?.[1];
+      expect(bg, `${stage} block declares no --bg`).toBeDefined();
+      expect(accent, `${stage} block declares no --accent`).toBeDefined();
+      // The preview must carry this stage AND its two identity values. Either half missing is
+      // the drift: a palette that is present but wrong renders a lie the owner approves.
+      expect(preview, `preview is missing a block for ${stage}`).toContain(`[data-stage="${stage}"]`);
+      const blockRe = new RegExp(
+        `\\[data-stage="${stage}"\\]\\{([^}]*)\\}`,
+      );
+      const pblock = blockRe.exec(preview)?.[1];
+      expect(pblock, `preview has no readable ${stage} block`).toBeDefined();
+      expect(pblock, `preview ${stage} bg drifted from tokens.css`).toContain(`--bg:${bg}`);
+      expect(pblock, `preview ${stage} accent drifted from tokens.css`).toContain(
+        `--accent:${accent}`,
+      );
+    }
+    // And the reverse: a stage block in the preview that the ladder does not have.
+    for (const m of preview.matchAll(/\[data-stage="([a-z]+)"\]/g)) {
+      expect(ALL_STAGES.map((s) => s.toLowerCase()), `preview has a ${m[1]} block the canon lacks`).toContain(
+        m[1]!,
+      );
+    }
+  });
+
   it('every stage is legible: text AA on bg, on the solid accent, and on accent-soft', () => {
     // TWO defects, found by reading the values rather than trusting the intent.
     //
@@ -244,32 +282,4 @@ describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
     }
   });
 
-  it('body text passes WCAG AA (4.5:1) on every stage', () => {
-    const lin = (v: number): number => {
-      const c = v / 255;
-      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-    };
-    const lum = (hex: string): number => {
-      const h = hex.replace('#', '');
-      const [r, g, b] = [0, 2, 4].map((i) => lin(parseInt(h.slice(i, i + 2), 16)));
-      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    };
-    const ratio = (a: string, b: string): number => {
-      const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
-      return (hi + 0.05) / (lo + 0.05);
-    };
-    for (const [stage, body] of blocks) {
-      const val = (t: string): string => {
-        const m = new RegExp(`${t}:\\s*(#[0-9a-fA-F]{6})`).exec(body);
-        if (!m) throw new Error(`${stage}: ${t} is not a hex colour`);
-        return m[1]!;
-      };
-      // fg and fg-muted carry body text, so they owe AA (4.5:1). The accent pairings are asserted
-      // in the test above, which also covers accent as a non-text UI colour (WCAG 1.4.11, 3:1) and
-      // both text-on-fill pairings — none of them are exempt, and an earlier version of this
-      // comment claimed they were.
-      expect(ratio(val('--mysterium-fg'), val('--mysterium-bg')), `${stage} fg/bg`).toBeGreaterThanOrEqual(4.5);
-      expect(ratio(val('--mysterium-fg-muted'), val('--mysterium-bg')), `${stage} muted/bg`).toBeGreaterThanOrEqual(4.5);
-    }
-  });
 });
