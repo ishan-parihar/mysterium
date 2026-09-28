@@ -121,7 +121,11 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // G46 (Phase 17 d2): the articulation ladder was in-vitro — law-holding render code with zero
   // importers. Same absence class as G45; the gate requires BOTH halves of the seam at each
   // consumer (the payload bridge AND the law-holder), so the ladder cannot be bypassed with raw
-  // payloads any more than it can go dark.
+  // payloads any more than it can go dark. The WebUI consumer is
+  // `src/lib/components/profile/ArticulationLadder.svelte` — P1 item 2 moved the two hardcoded
+  // levels out of `src/routes/profile/+page.svelte` into that component, so the gate names the SEAM
+  // and additionally requires /profile to MOUNT it, or a component nothing renders would satisfy
+  // the consumer row.
   results.push(await validateLadderWired());
   // G47 (Phase 17 d3): the share mechanism is persona-free and scope-selected (16 §2.4.1,
   // MY-AD-0034) — same absence class: a share store with no consumer, or a view rendering

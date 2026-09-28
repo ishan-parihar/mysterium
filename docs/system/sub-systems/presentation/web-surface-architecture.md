@@ -40,11 +40,17 @@ and is why no GitHub Pages workflow exists any more.
 
 ## 2. Routing model
 
-`+layout.ts:19-20` sets the global `ssr`/`prerender` switch from `BUILD_TARGET`. **Most routes then
-opt out individually** via their own `+page.ts` (`ssr = false`), making them client-only. Three do
-not: `/curriculum`, `/curriculum/progress`, `/knowledge` — they still SSR on the cloudflare target,
-which produces a cosmetic empty-state flash before hydration. This inconsistency is unintentional
-and should be settled by one decision, not three exceptions.
+`+layout.ts:19-20` sets the global `ssr`/`prerender` switch from `BUILD_TARGET`. **Every route then
+opts out individually** via its own `+page.ts` (`ssr = false`), making them client-only. This was
+settled as ONE decision on 2026-09-28 (`4129cac`): `/curriculum`, `/curriculum/progress` and
+`/knowledge` were the only three `+page.svelte` routes with no `+page.ts`, so they still SSR'd on
+the cloudflare target and flashed an empty state before hydration.
+
+The inconsistency is now enforced rather than remembered — **G54** enumerates the routes from disk,
+requires every one with a `+page.svelte` to have a sibling `+page.ts`, and **imports** each one to
+read the exported `ssr`/`prerender` values. A comment promising client-only, a computed value, or a
+wrong literal all fail; a string match would pass the first two. The failure mode is an absence, so
+no runtime test could have seen it.
 
 **Two route families:**
 
@@ -76,7 +82,7 @@ Ten Svelte store files under `src/lib/stores/`. The import graph, measured:
 | `cloudSyncStore` | 2 | encrypted save sync **+ `cloudSyncState`** |
 | `profileStore` | 1 | profile list |
 | `telemetryStore` | 1 | event batch |
-| *(not a store)* | — | `agentBusy` is a local signal inside `components/AgentRunner.svelte`, not a store file. It has **no caller** — the dead-code item in §7. |
+| *(deleted `4129cac`)* | — | `agentBusy` was a local signal inside `components/AgentRunner.svelte` with no caller. It was an **instance-script export**, which in Svelte 5 is component-local, so no consumer *could* reach it. Deleted rather than wired: every surface that blocks on a BFF round-trip already has a more precise local spinner. |
 
 `src/lib/engine/gameEngine.ts` is the seam: it wraps the kernel's `GameLoop`,
 `EncounterScheduler` and `AgenticOrchestrator` and bridges them into `gameStore` signals. This is
@@ -151,15 +157,25 @@ player sees.
 badge and holon — with `LLMDialogueRunner` for the adaptive content, `TrainingBeatRunner` for the
 training weave, `StageTransitionOverlay` for frame-change, and a reflection phase.
 
-`/profile` (358L) is the self-register: a pure-SVG 8-spoke radar, CCI, the L1/L2 Articulation
-Ladder via `renderLevel` + `buildLadderPayloads`, and the four `displays/` components.
+`/profile` is the self-register: a pure-SVG 8-spoke radar, CCI, the Articulation Ladder, and the
+four `displays/` components. The ladder moved out of the route into
+`src/lib/components/profile/ArticulationLadder.svelte` (`4129cac`) — see §6.
 
 ## 6. Canon surfaces — what is and is not rendered
 
-**Articulation Ladder (16 §10.5) — PARTIAL.** `/profile` renders **L1 and L2, self register
-only** (`+page.svelte:39-50`, `:198-208`), with AL3's stage-articulated presentation applied. L0,
-L3–L7 have **no web render**; only the CLI `ladder` command reaches them. The **auditor register
-(AL2's second traversal) has no web path at all**, and there is no level selector or drill-down.
+**Articulation Ladder (16 §10.5) — SELF REGISTER BUILT 2026-09-28 (`4129cac`).**
+`<ArticulationLadder>` renders **all six levels `SELF_RENDER_LEVELS` permits — L0, L1, L2, L3, L6,
+L7** — behind a level selector, with AL3's stage-articulated presentation applied by `renderLevel`
+for each. It previously rendered two hardcoded levels inline, so four permitted levels had a
+payload derived by `buildLadderPayloads` and never drawn.
+
+**L4 and L5 are correctly absent from the browser.** They are the `closed` register class and
+`renderLevel` refuses them in the self register at any stage (`20 §11.1`, `MY-AD-0006`); the
+component asks the law-holder which levels it may show rather than keeping its own list, because a
+hand-kept list is a second place for that boundary to drift. They are reachable through a consented
+grant, which is what the three auditor routes are for — so the **auditor register has a web path**,
+and the drill-down is now **descent-only** (§7.2/AP3) and bounded by each surface's own consent
+ceiling, which is a required prop.
 
 **Educator Desk / Guardian Mirror / Therapeutic Pane (33 §7) — BUILT 2026-09-28 (`632d32a`).**
 Three routes, one consent seam. `auditorProjection.ts` holds the four refusal steps in order
@@ -190,8 +206,9 @@ pinned.
 
 2. **The auditor surfaces (33 §7)** — ✅ **BUILT `632d32a`.** All three, behind the share/consent law
    that already exists, through one seam rather than three consent decisions in `src/routes`.
-3. **Ladder L0 + L3–L7 and the auditor register (16 §10.5).** The payloads exist
-   (`buildLadderPayloads`); the rendering does not. **This is the remaining P1.**
+3. ~~**Ladder L0 + L3–L7 and the auditor register (16 §10.5).**~~ **BUILT `4129cac`** — all six
+   self-register levels render behind a selector; the auditor register and its descent-only
+   drill-down ship with the three auditor surfaces (`632d32a`). **This was the remaining P1.**
 
 **P2 — kernel capabilities with no web surface**, cross-referenced against the real registry —
 **the `NON_INTERACTIVE_SUBCOMMANDS` set at `scripts/cli-game.ts:680`**, not a count in prose
@@ -211,16 +228,17 @@ pinned.
 
 **P3 — consistency debt.**
 
-4. `agentBusy` is dead — **confirmed dead, and structurally so.** It is declared
+4. ~~`agentBusy` is dead.~~ **DELETED `4129cac`.** It was declared
    `export const agentBusy = writable<number>(0)` inside `AgentRunner.svelte`'s instance
    `<script>` and consumed only by a `derived` **in that same component**; the sole importer of
    the file is `+layout.svelte:28`, which imports the default component, not the store. In Svelte 5
-   an instance-script export is component-local, so no consumer *can* reach it. It is either a
-   store that belongs in `src/lib/stores/` or it is dead code to delete.
-5. `/knowledge`, `/curriculum`, `/curriculum/progress` still SSR — **confirmed**: these are the
-   only three `+page.svelte` routes with no `+page.ts`, against 16 that opt out. The empty-state
-   flash is a consequence of the split, not a decision, and the fix is one decision applied to
-   three routes, not three more exceptions.
+   an instance-script export is component-local, so no consumer *could* reach it. Deleted rather
+   than moved to `stores/`: every surface that blocks on a BFF round-trip already has a more
+   precise local spinner, so a global pill would be a strictly worse duplicate.
+5. ~~`/knowledge`, `/curriculum`, `/curriculum/progress` still SSR.~~ **BUILT `4129cac`, enforced
+   by G54.** These were the only three `+page.svelte` routes with no `+page.ts`, against 16 that
+   opted out. All three now declare `ssr = false; prerender = false;` like the rest, and G54 fails on
+   any future route that does not — including a comment-only or computed declaration.
 
 ## 8. The design brief (website-design skill, adapted)
 

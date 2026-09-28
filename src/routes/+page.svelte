@@ -50,7 +50,7 @@
     readonly label: string;
     readonly desc: string;
     readonly variant: 'primary' | 'default' | 'muted';
-    readonly icon: 'play' | 'user' | 'book' | 'settings' | 'recover' | 'info';
+    readonly icon: 'play' | 'user' | 'book' | 'settings' | 'recover' | 'info' | 'bar-chart';
   }
 
   const navItems: NavItem[] = [
@@ -64,6 +64,16 @@
   const secondaryItems: NavItem[] = [
     { href: '/recover', label: 'Recover Save', desc: 'Restore on a new device', variant: 'muted', icon: 'recover' },
     { href: '/telemetry', label: 'Telemetry', desc: 'What data is collected', variant: 'muted', icon: 'info' },
+    // The P2 surfaces. They were shipped reachable only by typing a URL — a route nothing links to
+    // is the same in-vitro/in-vivo class the kernel gates exist to catch, and a nav entry is the
+    // cheapest possible fix. Privacy-adjacent first: /export is how a player leaves with their data.
+    { href: '/export', label: 'Export My Data', desc: 'Everything held about you', variant: 'muted', icon: 'info' },
+    { href: '/insights', label: 'Insights', desc: 'What your play has measured', variant: 'muted', icon: 'bar-chart' },
+    { href: '/credential', label: 'Credentials', desc: 'Practice claims you can export', variant: 'muted', icon: 'book' },
+    { href: '/events', label: 'Event Log', desc: 'What this device recorded', variant: 'muted', icon: 'info' },
+    { href: '/delegate', label: 'Delegate', desc: 'Request a council session', variant: 'muted', icon: 'user' },
+    { href: '/pack', label: 'Packs', desc: 'Measurement packs and their evidence', variant: 'muted', icon: 'book' },
+    { href: '/pod', label: 'Pod', desc: 'Shared-world sync', variant: 'muted', icon: 'recover' },
   ];
 </script>
 

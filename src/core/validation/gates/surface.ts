@@ -626,7 +626,11 @@ export async function validateLadderWired(): Promise<GateResult> {
     // Reachability: the component must actually be rendered by the profile page, or it is a
     // component nothing mounts — the in-vitro/in-vivo class, invisible to any runtime test.
     const route = read('src/routes/profile/+page.svelte');
-    if (!/ArticulationLadder/.test(route)) {
+    // TAG-ANCHORED, not a bare name. A bare `/ArticulationLadder/` is satisfied by the import and
+    // by the comment that explains why the ladder moved out of the route — so deleting the element
+    // left the gate green, and a mutation that reports "0 red" is a mutation measuring nothing.
+    // Requiring the `<` is what makes "mounted" mean mounted.
+    if (!/<ArticulationLadder[\s/>]/.test(route)) {
       return { gate, passed: false, hard: true, details: 'the profile page no longer renders <ArticulationLadder> — the WebUI ladder component is built and never mounted' };
     }
 
