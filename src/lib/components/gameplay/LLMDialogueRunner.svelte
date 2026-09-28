@@ -25,6 +25,7 @@
   import type { AgenticUIHandler } from '$core/assessments/AgenticOrchestrator.js';
   import type { ScheduledEncounter } from '$core/domain/EncounterSpecNew.js';
   import { runEncounter } from '$lib/engine/gameEngine.js';
+  import { NO_LLM } from '$lib/config/noLlm.js';
   import Card from '$lib/components/Card.svelte';
   import Button from '$lib/components/Button.svelte';
   import Input from '$lib/components/Input.svelte';
@@ -118,7 +119,7 @@
     try {
       phase = 'starting';
       abortController = new AbortController();
-      await runEncounter(encounter, uiHandler, { signal: abortController.signal });
+      await runEncounter(encounter, uiHandler, { signal: abortController.signal, noLlm: NO_LLM });
       phase = 'complete';
       showToast('Encounter complete', 'success', 3000);
       // Brief delay so the user sees the "complete" state before transition

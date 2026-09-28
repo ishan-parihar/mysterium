@@ -17,7 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
-import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired, validateWebUiParityWired, validateAuditorSurfacesWired } from './surface.js';
+import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired, validateWebUiParityWired, validateAuditorSurfacesWired , validateNoLlmModeWired } from './surface.js';
 import {
   validateCampaignContinuity,
   validateCampaignInvariants,
@@ -148,6 +148,13 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // bridge and renderLevel's render-time re-check) and every surface to reach it — a surface
   // building its own payloads is a second, weaker permission system in src/routes.
   results.push(await validateAuditorSurfacesWired());
+  // G52 (D-1, no-LLM deploy mode): the System-1 model is gone, and that is not a deploy blocker —
+  // the orchestrator already routes an encounter to the line-specific corpus when `noLlm` is set.
+  // The failure is the one an absence cannot reveal: `runEncounter` defaulted the flag to false and
+  // the browser forwarded nothing, so a keyless production build paid a dead /api/llm round-trip
+  // per narrative element and then used the fallback anyway. The gate requires the resolved value
+  // to REACH the call site, and both the engine and the orchestrator to still read it.
+  results.push(await validateNoLlmModeWired());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

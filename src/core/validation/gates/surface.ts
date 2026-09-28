@@ -919,3 +919,94 @@ export async function validateAuditorSurfacesWired(): Promise<GateResult> {
     return { gate, passed: false, hard: true, details: `G51 errored: ${(e as Error).message}` };
   }
 }
+
+// ---------------------------------------------------------------------------
+// G52 — the browser actually honours the no-LLM deployment mode (D-1).
+//
+// The System-1 model is gone. That is not a deploy blocker, because the game never required one:
+// `AgenticOrchestrator.ts:494-497` routes an encounter to `runFallback` when `noLlm` is set, and
+// the narrative layer falls back per element on any LLM error or timeout (`:1211-1222`) into a
+// line-specific, stage-banded corpus (`FallbackProvider.ts:11-13`). A keyless deploy PLAYS.
+//
+// The failure this gate exists for is subtler than "the flag is missing". `runEncounter` defaulted
+// `noLlm` to `false` and the browser's only call site passed no options, so a keyless production
+// build aimed every encounter at `/api/llm/chat`, paid a failed round-trip per narrative element,
+// and then used the fallback anyway. The game worked; it was just quietly doing a dead request per
+// element, which is invisible in a screenshot and costs a round-trip per narrative beat in
+// production. An absence-of-wiring defect, which is exactly the class no runtime test can see.
+//
+// The gate requires the resolved value to REACH the call site — not merely to exist. A
+// `noLlm.ts` nobody imports passes an existence check and deploys broken, so the assertion is
+// anchored on the call, symbol-anchored rather than call-anchored for the reason G51 documented:
+// a bare import of the same name satisfies a naive check without changing behaviour.
+// ---------------------------------------------------------------------------
+
+export async function validateNoLlmModeWired(): Promise<GateResult> {
+  const gate = 'G52 the browser honours the no-LLM deployment mode';
+  try {
+    const read = (rel: string): string => {
+      const p = path.join(process.cwd(), rel);
+      if (!fs.existsSync(p)) throw new Error(`${p} not found`);
+      return stripSourceComments(fs.readFileSync(p, 'utf-8'));
+    };
+
+    // (1) The RESOLVER'S TRUTH TABLE, executed — not read. A string check for `noLlmEnabled` is
+    //     satisfied by a resolver hardcoded to `false`, which is precisely the defect this module
+    //     exists to prevent; mutation proved that: with `NO_LLM = false && noLlmEnabled(...)` the
+    //     whole suite stayed green. The gate now IMPORTS the resolver and asks it the four
+    //     questions a deploy depends on. This is the difference between a check and a decoration.
+    const { noLlmEnabled } = await import('../../../lib/config/noLlm.js');
+    const cases: readonly [Readonly<Record<string, string>>, boolean, string][] = [
+      [{}, true, 'no key configured at all — a keyless deploy must use the corpus'],
+      [{ VITE_LLM_PROVIDER: 'opencode' }, true, 'a provider NAME is not a key; with no key the build still 503s'],
+      [{ VITE_LLM_API_KEY: 'sk-x' }, false, 'a client-visible key is present, so the model path is worth attempting'],
+      [{ VITE_LLM_REQUIRED: '1' }, false, 'the operator explicitly demands the model path'],
+    ];
+    for (const [env, want, why] of cases) {
+      const got = noLlmEnabled(env);
+      if (got !== want) {
+        return { gate, passed: false, hard: true, details: `noLlmEnabled(${JSON.stringify(env)}) is ${got}, expected ${want} — ${why}` };
+      }
+    }
+    // The EXPORTED CONSTANT is what the browser actually reads, and it is a second thing from the
+    // resolver. Hardcoding it to `false` leaves every case above passing while every deploy pays
+    // for the model — which mutation showed exactly. So the const must be a call, not a literal.
+    const cfgText = read('src/lib/config/noLlm.ts');
+    if (!/export const NO_LLM\s*:\s*boolean\s*=\s*\n?\s*noLlmEnabled\(/.test(cfgText)) {
+      return { gate, passed: false, hard: true, details: 'NO_LLM is not a call to noLlmEnabled — the browser reads a constant the resolver cannot influence, so a keyless build still aims at /api/llm/chat' };
+    }
+
+    // (2) The browser call site passes it. This is the assertion the gate is really about: an
+    //     imported-but-unused NO_LLM, or a call site that stops forwarding it, both deploy a
+    //     keyless build that still pays for the model.
+    const runner = read('src/lib/components/gameplay/LLMDialogueRunner.svelte');
+    if (!/runEncounter\([\s\S]{0,300}noLlm/.test(runner)) {
+      return { gate, passed: false, hard: true, details: 'the browser call site does not forward NO_LLM into runEncounter — a keyless deploy would aim every encounter at /api/llm/chat and pay a failed round-trip per narrative element' };
+    }
+
+    // (3) The engine still honours the flag rather than ignoring it. Without this, a future
+    //     refactor could keep the plumbing and drop the effect, and the gate above would pass on
+    //     a value nothing reads.
+    const engine = read('src/lib/engine/gameEngine.ts');
+    if (!/noLlm/.test(engine)) {
+      return { gate, passed: false, hard: true, details: 'gameEngine no longer reads noLlm — the browser forwards a flag the engine ignores' };
+    }
+
+    // (4) The orchestrator's branch is LIVE, not merely present. `if (false && this.noLlm)` is
+    //     still a file that "reads noLlm", so the string check passed a mutated orchestrator —
+    //     proven by mutation. The assertion is structural instead: the guard must be a bare
+    //     condition on the flag with nothing conjoined, because a conjoined guard is the exact
+    //     shape of "wired but inert".
+    const orch = read('src/core/assessments/AgenticOrchestrator.ts');
+    // Bare-condition AND a live body: `if (false && this.noLlm)` fails the first, and a branch
+    // whose body does not actually call the fallback fails the second. Both mutations survived
+    // the string check, so both shapes are now rejected.
+    if (!/if\s*\(\s*this\.noLlm\s*\)\s*\{\s*\n?\s*return this\.runFallback\(/.test(orch)) {
+      return { gate, passed: false, hard: true, details: 'the orchestrator no longer branches on a bare this.noLlm — the no-LLM mode is declared end to end and does nothing' };
+    }
+
+    return { gate, passed: true, hard: true, details: 'the no-LLM mode is resolved at build time, forwarded by the browser, and read by both the engine and the orchestrator' };
+  } catch (e) {
+    return { gate, passed: false, hard: true, details: `G52 errored: ${(e as Error).message}` };
+  }
+}
