@@ -26,6 +26,7 @@
   import BottomNav from '$lib/components/BottomNav.svelte';
   import Toaster from '$lib/components/Toaster.svelte';
   import AgentRunner from '$lib/components/AgentRunner.svelte';
+  import CloudSyncIndicator from '$lib/components/CloudSyncIndicator.svelte';
   import { applyCapabilities, watchCapabilities } from '$lib/capabilities/CapabilityProbe.js';
   import { setSignificator } from '$lib/stores/gameStore.js';
   import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
@@ -88,3 +89,5 @@
 <BottomNav />
 <Toaster />
 <AgentRunner />
+<!-- B-1: a save that did not reach durable storage must be visible, on every route. -->
+<CloudSyncIndicator />
