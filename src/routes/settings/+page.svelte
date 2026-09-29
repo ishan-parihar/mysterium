@@ -2,7 +2,7 @@
   /**
    * /settings route — Svelte-native settings.
    *
-   * Uses the new component library: RouteShell, Card, Toggle, Modal, Button.
+   * Uses the new component library: RouteShell, Card, Toggle, Button.
    * Toggles wire to accessibilityStore + A11yApplier → data-* on <html>.
    * Data deletion lives on /privacy, which enumerates what this app holds rather than
    * offering a single button whose copy cannot be kept honest.

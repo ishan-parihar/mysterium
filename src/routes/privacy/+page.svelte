@@ -3,10 +3,10 @@
    * /privacy route — what this app holds about you, and how to delete it.
    *
    * The page exists because the plan called export-your-own-data the actual privacy gap, and
-   * because the `/settings` reset was incomplete in a way nobody could see: it removed THREE keys
-   * while the app writes at least six more. A
-   * player who deleted their saves left behind their profile identities, their shares, the device
-   * id their cloud key derives from, and their settings. The inventory below is built from the
+   * because the `/settings` reset was incomplete in a way nobody could see: it removed three of
+   * the nine keys the app stores, and its copy claimed it deleted your telemetry, which it never
+   * did. A player who ran it kept their profile identities, their shares, the device id their
+   * cloud key derives from, and their settings. The inventory below is built from the
    * real key set (`storedData.ts`) and annotated with what THIS build actually holds, so the page
    * reports the truth rather than a list that drifts.
    *

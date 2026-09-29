@@ -179,8 +179,17 @@
           seedable,
           'Red',
         );
+    // A GUARD THAT SKIPS THE WRITE WITHOUT SAYING SO IS A FALSE CLAIM. `if (browser)` on the
+    // write alone skipped the storage call and then fell straight through to `saved = true`, so
+    // the page could render "Saved to this device" having saved nothing — the same store-says-one-
+    // thing-disk-says-another shape the settings reset and the /privacy delete both had. It cannot
+    // fire from a click today, which is exactly why nothing caught it. The branch reports instead.
+    if (!browser) {
+      applyError = 'This page can only save from a browser, so nothing was written.';
+      return;
+    }
     try {
-      if (browser) localStorage.setItem('profile:v1', JSON.stringify(sig));
+      localStorage.setItem('profile:v1', JSON.stringify(sig));
     } catch (err) {
       console.error('[calibrate] offline save failed:', err);
       applyError = 'The result could not be saved on this device, so it was not applied.';
