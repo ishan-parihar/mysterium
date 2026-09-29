@@ -29,14 +29,20 @@ binding = "RECOVERY_KV"
 id = "8ab82fa3ed034c6dad487265df721a47"
 preview_id = "c1e76bd37fe84e4196b5689cdf13b25c"
 
-# ─── Analytics Engine (telemetry) ──────────────────────────────────
-# Create before first deploy:
-#   npx wrangler analytics-engine dataset create mysterium_telemetry
-# The dataset name becomes the binding's dataset.
-
-[[analytics_engine_datasets]]
-binding = "ANALYTICS"
-dataset = "mysterium_telemetry"
+# ─── Analytics Engine (telemetry) — NOT YET BOUND ──────────────────
+# `npx wrangler pages deploy` FAILS the whole deployment if this binding is declared and the
+# account has not enabled Analytics Engine (dash.cloudflare.com → Workers → Analytics Engine).
+# Measured, not assumed: the first deploy attempt died on exactly that.
+#
+# Nothing is lost by leaving it out. `/api/telemetry/+server.ts:81` already degrades — it writes
+# through `platform.env.ANALYTICS` when the binding exists and otherwise logs to the console, so
+# the endpoint works either way. Telemetry is opt-in and OFF by default (`telemetryStore.ts:47`),
+# so no binding means no events are sent at all until an owner opts in.
+#
+# To bind it later: enable Analytics Engine in the dashboard, then uncomment the block below.
+# [[analytics_engine_datasets]]
+# binding = "ANALYTICS"
+# dataset = "mysterium_telemetry"
 
 # ─── Secrets (set via CLI, NOT in this file) ───────────────────────
 # LLM_API_KEY — the OpenAI/Anthropic API key. Set via:
