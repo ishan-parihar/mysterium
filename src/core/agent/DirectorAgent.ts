@@ -70,6 +70,15 @@ export class DirectorAgent {
   private calibrationConfidence = 0;
   private calibrationComplete = false;
   private llmOffline = false;
+  /**
+   * How many calibration probes this Director has ISSUED. The corpus path needs a progress signal
+   * that actually advances, and no existing counter does: `Loom.render()` exposes two capped
+   * windows (5 game events, 3 free inputs) and during onboarding the event window is EMPTY —
+   * `observeGameEvent` is only driven by play — so any selector keyed on it serves the same probe
+   * forever. This is the honest counter, and it is the Director's because the Director is the
+   * thing that decides a probe is due.
+   */
+  private probeCount = 0;
   private readonly calibration: CalibrationAgent;
 
   constructor() {
@@ -126,7 +135,13 @@ export class DirectorAgent {
 
   /** Calibration-only: ask CalibrationAgent for the next onboarding probe. */
   async generateCalibrationProbe(): Promise<AgenticProbe> {
-    return await this.calibration.generateProbe(this.loom, this.calibrationConfidence);
+    const probe = await this.calibration.generateProbe(
+      this.loom,
+      this.calibrationConfidence,
+      this.probeCount,
+    );
+    this.probeCount += 1;
+    return probe;
   }
 
   /**

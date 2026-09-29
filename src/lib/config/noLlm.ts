@@ -8,6 +8,15 @@
  * A deploy with no `LLM_API_KEY` therefore plays a complete session; what it loses is GENERATED
  * narrative, which is a content-quality difference and never an availability one.
  *
+ * SCOPE, CORRECTED 2026-09-29. This module governs the ENCOUNTER path. It did not govern
+ * onboarding: `CalibrationAgent.generateProbe` had no corpus branch, so a keyless deploy threw
+ * `'LLM not configured server-side'`, `/api/agent/probe` turned that into an `{ error }` frame at
+ * HTTP 200, and `onboarding/+page.svelte` read it as "no LLM — go to /setup" — i.e. it could not
+ * reach the game at all. `CalibrationCorpus.ts` closes that. Read this file's claim as "the game
+ * runs without a model", which is now true of both entry points, rather than "every code path
+ * consults this flag" — it does not, and the agent path is metered separately
+ * (`agent-probe` in `rateLimit.ts`, because it calls the provider directly).
+ *
  * This module exists because the flag previously had no way to be set in a deploy. `runEncounter`
  * defaulted it to `false` (`gameEngine.ts:321`) and the browser's only call site passed no options
  * at all, so a keyless production build aimed every encounter at `/api/llm/chat`, paid a failed

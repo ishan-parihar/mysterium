@@ -30,6 +30,24 @@ import type { AgenticProbe } from './AgenticProbe.js';
 import { assertAgenticProbe, AgenticProbeValidationError } from './validateAgenticProbe.js';
 import { calibrationProbeTemplate } from '../../infra/llm/templates.js';
 import { resolveServerLLMConfig } from '../../routes/api/llm/_lib.js';
+import { selectCalibrationProbe } from '../fallback/CalibrationCorpus.js';
+
+/**
+ * Corpus probe → `AgenticProbe`. The corpus is authored against the same contract, but the types
+ * are declared separately on purpose: the corpus is in the fallback layer and must not import the
+ * LLM path's types, so the bridge is explicit and validated by the SAME `assertAgenticProbe` the
+ * LLM output goes through. A corpus probe that drifted out of contract would fail here rather
+ * than render a malformed questionnaire.
+ */
+function toAgenticProbe(c: ReturnType<typeof selectCalibrationProbe>): unknown {
+  return {
+    id: c.id,
+    prompt: c.prompt,
+    options: c.options,
+    freeInputPlaceholder: c.freeInputPlaceholder,
+    metadata: c.metadata,
+  };
+}
 
 export interface CalibrationAgentDeps {
   /** Pluggable LLM caller so tests can override. Default uses server fetches. */
@@ -59,7 +77,23 @@ export class CalibrationAgent {
    * generic Error if the LLM is offline or the call fails. Caller is
    * responsible for converting either to a failure frame.
    */
-  async generateProbe(loom: Loom, calibrationConfidence: number): Promise<AgenticProbe> {
+  async generateProbe(
+    loom: Loom,
+    calibrationConfidence: number,
+    probeCount = 0,
+  ): Promise<AgenticProbe> {
+    // NO CORPUS BELOW THIS LINE, NO ONBOARDING. A keyless deploy reached here, found no server
+    // config, and threw; `/api/agent/probe` turned that into an `{ error }` frame at HTTP 200,
+    // and the client read it as "no LLM — go to /setup". So the no-LLM deployment mode (D-1)
+    // was true for encounters and false for the questionnaire, which is the first thing a new
+    // player does. The corpus is the same authored-content contract `FallbackProvider` serves
+    // for encounter narrative, authored against the same 4-polarity instrument.
+    if (!this.deps.llmCaller && !resolveServerLLMConfig()) {
+      return assertAgenticProbe(
+        toAgenticProbe(selectCalibrationProbe(probeCount, calibrationConfidence)),
+      );
+    }
+
     const rendered = loom.render();
     const userMessage =
       CALIBRATION_USER_INTRO +

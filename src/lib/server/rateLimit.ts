@@ -122,6 +122,13 @@ export const RATE_LIMIT_POLICIES: readonly RateLimitPolicy[] = [
   { name: 'recovery-generate', prefix: '/api/recovery/generate', rule: { limit: 5, windowMs: HOUR_MS } },
   { name: 'recovery-restore', prefix: '/api/recovery/restore', rule: { limit: 20, windowMs: HOUR_MS } },
   { name: 'save', prefix: '/api/save', rule: { limit: 60, windowMs: MINUTE_MS } },
+  // SPLIT BY COST, not by route. `/api/agent/probe` reaches `CalibrationAgent.generateProbe`, which
+  // spends a provider call with `max_tokens: 2048` — issued DIRECTLY against the provider, not
+  // through `/api/llm/chat`, so the `llm` tier above never sees it. The sibling `agent` tier's
+  // 120/min is sized for a bookkeeping endpoint, and multiplying that by 2048 tokens per call is
+  // not a budget. `observe` carries no LLM call, so the two are metered apart; `agent-probe`
+  // precedes `agent` because the first matching policy wins.
+  { name: 'agent-probe', prefix: '/api/agent/probe', rule: { limit: 10, windowMs: HOUR_MS } },
   { name: 'agent', prefix: '/api/agent/', rule: { limit: 120, windowMs: MINUTE_MS } },
   { name: 'telemetry', prefix: '/api/telemetry', rule: { limit: 30, windowMs: MINUTE_MS } },
 ];

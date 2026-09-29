@@ -185,7 +185,10 @@ describe('policyFor — which tier a path lands in', () => {
     expect(policyFor('/api/llm/chat').name).toBe('llm');
     expect(policyFor('/api/llm/tools').name).toBe('llm');
     expect(policyFor('/api/agent/observe').name).toBe('agent');
-    expect(policyFor('/api/agent/probe').name).toBe('agent');
+    // `/api/agent/probe` spends a 2048-token provider call directly (not via `/api/llm/chat`), so
+    // it is metered apart from its bookkeeping sibling. A shared `agent` tier would let 120/min
+    // of LLM spend sit under a limit sized for an endpoint that makes no model call at all.
+    expect(policyFor('/api/agent/probe').name).toBe('agent-probe');
     expect(policyFor('/api/telemetry').name).toBe('telemetry');
     expect(policyFor('/api/recovery/generate').name).toBe('recovery-generate');
     expect(policyFor('/api/recovery/restore').name).toBe('recovery-restore');
