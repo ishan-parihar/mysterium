@@ -34,7 +34,7 @@ import {
   RayRegistry,
   DriveRegistry,
 } from '../src/core/registries/index.js';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 let passed = 0;
@@ -370,6 +370,61 @@ check('wrangler bindings are real (only enforced with --require-bindings)', () =
   }
   console.log(`    NOTE: ${placeholders.length} placeholder binding(s) in wrangler.toml (${placeholders.join(', ')}).`);
   console.log(`    Not enforced here (report-only). A deploy that must persist passes --require-bindings; see ${remediation}.`);
+});
+
+// A `VITE_`-prefixed var is inlined into the PUBLIC client bundle by design, and a PROCESS env
+// var of the same name is inlined too — editing `.env` does not stop it. This shipped a live API
+// key at `/_app/immutable/nodes/21.C2jHX329.js`, HTTP 200, to anyone who read the page source.
+// The build is the only place that can catch it, because by the time the bundle exists the key
+// is public. Fails under `--require-bindings` (what the deploy workflow passes) for the same
+// reason the KV check does: a warning a deploy does not read is decoration.
+check('no client-visible LLM key can be inlined into the bundle (--require-bindings)', () => {
+  const buildDir = path.join(process.cwd(), '.svelte-kit/cloudflare');
+  if (!existsSync(buildDir)) {
+    if (requireBindings) {
+      throw new Error(
+        'no build output at .svelte-kit/cloudflare — refusing to certify a bundle that does not exist. ' +
+          'Run `npm run build` first; the deploy workflow builds before this check.',
+      );
+    }
+    console.log('    NOTE: no .svelte-kit/cloudflare yet; run `npm run build` to scan the bundle.');
+    return;
+  }
+
+  // Scan the EMITTED bundle, not the source. A key in source is a review question; a key in a
+  // built, public, content-hashed asset is a disclosure.
+  const KEY_IN_BUNDLE = /(?:sk-|cfoat_|cfevt_)[A-Za-z0-9_.-]{12,}/g;
+  const offenders: string[] = [];
+  const walk = (dir: string): void => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.name.endsWith('.js')) {
+        for (const m of readFileSync(full, 'utf8').matchAll(KEY_IN_BUNDLE)) {
+          // `sk-placeholder` is the deliberate sentinel, and `-x` style fixtures are too short
+          // to match the {12,} tail. A real provider key does.
+          if (m[0] === 'sk-placeholder') continue;
+          offenders.push(`${path.relative(process.cwd(), full)}: ${m[0].slice(0, 6)}…`);
+        }
+      }
+    }
+  };
+  walk(buildDir);
+
+  if (offenders.length === 0) return;
+  const unique = [...new Set(offenders)];
+  const remediation =
+    'A `VITE_`-prefixed var (or a process env var of that name) is inlined into the PUBLIC bundle. ' +
+    'The server reads LLM_API_KEY / OPENAI_API_KEY / ANTHROPIC_API_KEY at runtime — the client needs no key. ' +
+    'Remove the VITE_ var from `.env` AND from the shell (`env | grep VITE_`), then rebuild. ' +
+    'A key that has already been deployed is published and must be rotated at the provider.';
+  if (requireBindings) {
+    throw new Error(
+      `${unique.length} client-visible key(s) in the built bundle — refusing to deploy. ${unique.slice(0, 5).join('; ')}. ${remediation}`,
+    );
+  }
+  console.log(`    NOTE: ${unique.length} client-visible key(s) in the built bundle: ${unique.slice(0, 5).join('; ')}.`);
+  console.log(`    Not enforced here (report-only). A deploy passes --require-bindings; see ${remediation}`);
 });
 
 console.log(`\n${passed + failed} checks run: ${passed} passed, ${failed} failed.`);
