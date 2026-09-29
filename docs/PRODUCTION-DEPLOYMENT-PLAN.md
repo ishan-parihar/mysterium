@@ -57,6 +57,23 @@ corpus when no client-visible key exists. So a keyless deploy works with no conf
 | `1` | always attempt the model path | the key is injected at runtime, not at build |
 | `0` | never attempt the model path | you deliberately want deterministic content |
 
+**A ZERO-COST DEPLOY IS EXPLICIT, NOT INFERRED.** The two resolvers are deliberately asymmetric, and
+`0` is the only setting that makes a deploy free *on both sides*:
+
+| | browser (`noLlmEnabled`) | server (`serverNoLlmEnabled`) |
+|---|---|---|
+| unset | detects from `VITE_*` | **defers to its own key check** — a set `LLM_API_KEY` still gets used |
+| `1` | model path | model path |
+| `0` | corpus | corpus |
+
+Unset does **not** make the server corpus-only. The server cannot detect: it has no client-visible
+key by construction, so a resolver that detected there would answer "keyless" for every paid
+deploy. So if you want a genuinely free tier, set `VITE_LLM_REQUIRED=0` as a **Pages environment
+variable** (not just in `.env`) so the client bundle and the Worker both see it. With it unset and
+`LLM_API_KEY` set, you get generated narrative on the server and the corpus in the browser — that
+is what "detect" means across a build-time/runtime boundary, and it is why G52 pins the asymmetry
+as a truth table rather than asserting the two agree.
+
 ## 3. The identity decision (D-3) — the one real security finding
 
 **The codebase contradicts itself in a privacy-critical path, and the code says so itself:**

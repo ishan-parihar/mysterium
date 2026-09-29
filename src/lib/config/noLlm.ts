@@ -23,10 +23,26 @@
  * round-trip per narrative element, and then used the fallback anyway. This makes the intent
  * explicit at build time instead of accidental at runtime.
  *
- * AUTO-DETECTION IS DELIBERATE. `VITE_LLM_REQUIRED` unset means "detect": the flag is on when no
- * client-visible key is configured, so an operator who forgets to set it gets a working game
- * rather than a broken one. `VITE_LLM_REQUIRED=1` forces the model path on (for a build that will
- * have a key injected at runtime); `=0` forces the corpus path off deliberately.
+ * AUTO-DETECTION IS DELIBERATE, AND IT IS A BROWSER-ONLY DEFAULT. `VITE_LLM_REQUIRED` unset means
+ * "detect": the flag is on when no client-visible key is configured, so an operator who forgets to
+ * set it gets a working game rather than a broken one. `VITE_LLM_REQUIRED=1` forces the model path
+ * on (for a build that will have a key injected at runtime); `=0` forces the corpus path off
+ * deliberately.
+ *
+ * THE SERVER ASKS A DIFFERENT, NARROWER QUESTION, ON PURPOSE. `resolveServerLLMConfig()` calls
+ * `serverNoLlmEnabled`, NOT this function. Calling this one there was a bug: it reads
+ * `hasClientVisibleKey`, and a server has no `VITE_*` key by construction, so detection answered
+ * "keyless" on a deploy that had set `LLM_API_KEY` — a paid deploy silently serving the corpus
+ * with nothing anywhere reporting it. The two questions are genuinely different. The browser asks
+ * "is a key reachable from here?"; the server asks "did the operator say not to spend?" Only the
+ * second is answerable without a client-visible key, so only `serverNoLlmEnabled` treats the unset
+ * case as "carry on and let the key check decide".
+ *
+ * The cost of the honest answer: in DETECTION mode the two can still differ — a runtime
+ * `LLM_API_KEY` with no `VITE_*` gives the server a model and the browser the corpus. That is not
+ * a bug to be engineered away; it is what "detect" means across a build-time/runtime boundary. A
+ * zero-cost deploy is therefore EXPLICIT, not inferred: set `VITE_LLM_REQUIRED=0` as a Pages
+ * environment variable (so the client bundle and the Worker both see it) and both sides agree.
  */
 
 /** True when the build must not attempt any LLM call — the corpus answers every element. */
@@ -53,3 +69,18 @@ function hasClientVisibleKey(env: Readonly<Record<string, string | undefined>>):
 export const NO_LLM: boolean = noLlmEnabled(
   (typeof import.meta !== 'undefined' && (import.meta as { env?: Record<string, string | undefined> }).env) || {},
 );
+
+/**
+ * The server's half of the same decision, and deliberately NARROWER.
+ *
+ * True only when the operator EXPLICITLY asked for the corpus (`VITE_LLM_REQUIRED=0/false`).
+ * Unset means "not my call" — the caller's own key check decides. Using `noLlmEnabled` here
+ * instead would read `hasClientVisibleKey`, which a server never satisfies, so it would answer
+ * `true` for every deploy and quietly downgrade a paid one. The asymmetry is the point: the
+ * browser can detect from its own environment, the server cannot, so only the browser gets a
+ * default and the server gets an instruction.
+ */
+export function serverNoLlmEnabled(env: Readonly<Record<string, string | undefined>>): boolean {
+  const explicit = env.VITE_LLM_REQUIRED;
+  return explicit === '0' || explicit === 'false';
+}

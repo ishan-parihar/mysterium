@@ -28,6 +28,7 @@ import { filterInput, filterOutput } from '$shared/llm/VeilFilter.js';
 import { env } from '$env/dynamic/private';
 
 import { InfraConfig } from '$core/config/InfraConfig.js';
+import { serverNoLlmEnabled } from '$lib/config/noLlm.js';
 const LLM_TIMEOUT_MS = InfraConfig.LLM_TIMEOUT_MS;
 
 export interface LLMProviderConfig {
@@ -60,8 +61,19 @@ export interface LLMProviderConfig {
  *      by prefix or not; clients never read them.
  *   4. Sk-placeholder is treated as "not configured" so a stub
  *      `.env` doesn't accidentally proxy a fake call.
+ *
+ * ASK ONE QUESTION, DON'T RE-DECIDE. This function used to read only `LLM_API_KEY`, so a deploy
+ * that set `VITE_LLM_REQUIRED=0` — the operator's explicit "serve the corpus, spend nothing"
+ * signal — still reached a provider on every call, because only the browser consulted the
+ * resolver. It now asks `serverNoLlmEnabled`, which is NARROWER than the browser's `noLlmEnabled`
+ * on purpose: it answers only the explicit instruction. The first attempt called the browser
+ * resolver here, and that was a worse bug than the one it fixed — the browser resolver detects
+ * from a client-visible key, a server has none, so it returned true for every deploy and turned
+ * a PAID deploy into a silent corpus-only one. The server's own key check is the authority on
+ * whether a key exists; this function only carries the operator's veto over it.
  */
 export function resolveServerLLMConfig(): LLMProviderConfig | null {
+  if (serverNoLlmEnabled(env)) return null;
   const apiKey =
     env.LLM_API_KEY ||
     env.OPENAI_API_KEY ||

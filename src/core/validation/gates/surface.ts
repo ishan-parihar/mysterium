@@ -1038,7 +1038,42 @@ export async function validateNoLlmModeWired(): Promise<GateResult> {
       return { gate, passed: false, hard: true, details: 'the orchestrator no longer branches on a bare this.noLlm — the no-LLM mode is declared end to end and does nothing' };
     }
 
-    return { gate, passed: true, hard: true, details: 'the no-LLM mode is resolved at build time, forwarded by the browser, and read by both the engine and the orchestrator' };
+    // (5) THE SERVER'S HALF, PINNED AS A TRUTH TABLE. Added 2026-09-30 after the deploy prep.
+    //     Steps (1)-(4) all vary `VITE_*` and all describe the BROWSER, so none of them could see
+    //     that `resolveServerLLMConfig()` read only `LLM_API_KEY` — a runtime Worker secret — and
+    //     ignored the operator's `VITE_LLM_REQUIRED=0` veto entirely. This table pins the chosen
+    //     semantics, which is an ASYMMETRY: the browser detects, the server obeys.
+    //
+    //     The row that matters is `{LLM_API_KEY: 'sk-real'}` with no VITE vars. The first fix for
+    //     the divergence made the server call the browser's resolver, and that resolver detects
+    //     from a CLIENT-VISIBLE key — which a server never has — so it answered "keyless" for a
+    //     paid deploy. That is a strictly worse defect than the one being fixed: money spent on a
+    //     key, and a corpus silently served with nothing reporting the downgrade. UNSET therefore
+    //     means "not my call" on the server, and only the explicit veto is honoured.
+    const { serverNoLlmEnabled } = await import('../../../lib/config/noLlm.js');
+    const serverCases: readonly [Readonly<Record<string, string>>, boolean, string][] = [
+      [{}, false, 'a paid deploy with LLM_API_KEY and no instruction is NOT silently downgraded — the key check decides'],
+      [{ LLM_API_KEY: 'sk-real' }, false, 'the exact shape this gate exists for: a real key with no VITE_* must still reach the provider'],
+      [{ VITE_LLM_REQUIRED: '0' }, true, "the operator's explicit veto: serve the corpus, spend nothing"],
+      [{ VITE_LLM_REQUIRED: 'false' }, true, 'the spelled-out form of the same veto'],
+      [{ VITE_LLM_REQUIRED: '1' }, false, 'an explicit opt-in to the model path is never a veto'],
+    ];
+    for (const [e, want, why] of serverCases) {
+      const got = serverNoLlmEnabled(e);
+      if (got !== want) {
+        return { gate, passed: false, hard: true, details: `serverNoLlmEnabled(${JSON.stringify(e)}) is ${got}, expected ${want} — ${why}` };
+      }
+    }
+
+    // (6) The server must actually CALL that resolver, not re-derive the answer. The table above
+    //     pins the semantics; this pins the wiring, and without it a re-derived check passes every
+    //     row while the operator's veto is ignored.
+    const lib = read('src/routes/api/llm/_lib.ts');
+    if (!/serverNoLlmEnabled\(\s*env\s*\)/.test(lib)) {
+      return { gate, passed: false, hard: true, details: 'resolveServerLLMConfig does not consult serverNoLlmEnabled — the server re-derives the keyless decision, so a deploy with VITE_LLM_REQUIRED=0 still pays for every call' };
+    }
+
+    return { gate, passed: true, hard: true, details: 'one no-LLM decision with a pinned asymmetry — the browser detects from its own env, the server obeys an explicit veto and defers to its own key check — forwarded by the browser, read by the engine and orchestrator, and consulted by resolveServerLLMConfig' };
   } catch (e) {
     return { gate, passed: false, hard: true, details: `G52 errored: ${(e as Error).message}` };
   }

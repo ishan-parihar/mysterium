@@ -22,12 +22,12 @@ pages_build_output_dir = ".svelte-kit/cloudflare"
 [[kv_namespaces]]
 binding = "SAVE_KV"
 id = "debf2638a10c4b4888c14c82ad104add"
-preview_id = "debf2638a10c4b4888c14c82ad104add"
+    preview_id = "28fca022c946400d81d8216e33179e4b"
 
 [[kv_namespaces]]
 binding = "RECOVERY_KV"
 id = "8ab82fa3ed034c6dad487265df721a47"
-preview_id = "8ab82fa3ed034c6dad487265df721a47"
+    preview_id = "c1e76bd37fe84e4196b5689cdf13b25c"
 
 # ─── Analytics Engine (telemetry) ──────────────────────────────────
 # Create before first deploy:
