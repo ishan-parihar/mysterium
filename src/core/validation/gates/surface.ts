@@ -31,6 +31,10 @@ import {
   RATE_LIMIT_POLICIES,
   type MeteredRequest,
 } from '../../../lib/server/rateLimit.js';
+// G54 asserts every route against the SERVING POLICY, not a literal. Importing it here means the
+// gate cannot disagree with `src/lib/config/serving.ts` about what the app is doing — the previous
+// hard-coded `!== false` check would have kept passing (or failing) for a policy it no longer read.
+import * as SERVING from '../../../lib/config/serving.js';
 
 /**
  * Gate-source reader helper: strip line, block, and HTML comments before matching, so a gate can only be satisfied by live code — never by a mention in prose (a JSDoc
@@ -1309,18 +1313,26 @@ function enumeratePageRoutes(root: string): string[] {
         gate,
         passed: false,
         hard: true,
-        details: `${undeclared.length} route(s) have a +page.svelte with no sibling +page.ts, so they inherit the global BUILD_TARGET switch and SSR on cloudflare: ${undeclared.join(', ')} — add the two exports, matching the routes beside them`,
+        details: `${undeclared.length} route(s) have a +page.svelte with no sibling +page.ts, so they fall back to the layout's own policy with no route of their own: ${undeclared.join(', ')} — add a +page.ts that re-exports from $lib/config/serving.js`,
       };
     }
 
     // (2) DECLARED POLICY, executed. Importing the module and reading the exports is the only check
     //     with teeth: a `+page.ts` whose comment promises client-only while exporting `ssr = true`
-    //     fails here, and so does one that computes the value instead of declaring it.
+    //     fails here, and so does one that computes the value instead of declaring it. The value
+    //     itself is asserted against `serving.ts`, not against a literal repeated here, so the gate
+    //     and the policy cannot disagree about what the app is doing.
+    //
+    //     A note for whoever mutates this gate: a bare `import(path)` is served from Node's module
+    //     registry, so a route rewritten DURING a single test process keeps reporting its old
+    //     exports and a mutation reads green. That is the harness, not the gate — in a real run
+    //     the tree is not edited underneath it. Prove teeth by running each mutation in a FRESH
+    //     process, not by adding a cache-busting query string here.
     const wrong: string[] = [];
     for (const route of pages) {
       const dir = route === '/' ? routesRoot : path.join(routesRoot, ...route.split('/').filter(Boolean));
       const mod = (await import(path.join(dir, '+page.ts'))) as { ssr?: unknown; prerender?: unknown };
-      if (mod.ssr !== false || mod.prerender !== false) {
+      if (mod.ssr !== SERVING.ssr || mod.prerender !== SERVING.prerender) {
         wrong.push(`${route} (ssr=${String(mod.ssr)}, prerender=${String(mod.prerender)})`);
       }
     }
@@ -1329,7 +1341,7 @@ function enumeratePageRoutes(root: string): string[] {
         gate,
         passed: false,
         hard: true,
-        details: `${wrong.length} route(s) declare an SSR choice other than client-only: ${wrong.join(', ')} — the per-route policy is ssr = false AND prerender = false`,
+        details: `${wrong.length} route(s) disagree with the serving policy in src/lib/config/serving.ts (ssr = ${SERVING.ssr}, prerender = ${SERVING.prerender}): ${wrong.join(', ')} — re-export from serving.ts rather than declaring your own`,
       };
     }
 
@@ -1337,7 +1349,7 @@ function enumeratePageRoutes(root: string): string[] {
       gate,
       passed: true,
       hard: true,
-      details: `all ${pages.length} page route(s) declare ssr = false and prerender = false: ${pages.join(', ')}`,
+      details: `all ${pages.length} page route(s) match the serving policy (ssr = ${SERVING.ssr}, prerender = ${SERVING.prerender}): ${pages.join(', ')}`,
     };
   } catch (e) {
     return { gate, passed: false, hard: true, details: `G54 errored: ${(e as Error).message}` };
