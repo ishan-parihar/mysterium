@@ -175,14 +175,17 @@ export const WHAT_LEAVES_THIS_DEVICE: readonly { readonly title: string; readonl
   {
     title: 'Who can read the shadow quadrants we collect',
     body:
-      'A shadow quadrant names a pattern of how you respond, and we treat it as private: it is ' +
-      'never shown to you in any surface, and the game is designed so you cannot read it back. ' +
-      'The analytics store is write-only from this app — the endpoint calls writeDataPoint and ' +
-      'nothing in the codebase ever reads the store back, so no surface in the game can display ' +
-      'it to you. It is visible to us, the operator of the deploy, and to the infrastructure ' +
-      'provider who stores it, through the provider\'s own query tools rather than through the ' +
-      'app. If you would rather it were not collected at all, leaving telemetry off is enough — ' +
-      'and that is the default.',
+      'A shadow quadrant names a pattern of how you respond, and in your OWN play it is never ' +
+      'shown to you — the game is built so you cannot read it back, and the privacy rule in the ' +
+      'design is that it never appears in a player surface. The one deliberate exception is a ' +
+      'third party you have consented to: the therapeutic projection, which by design reads ' +
+      'shadow-surfacing patterns for a practitioner working with you. Consent is the only thing ' +
+      'that opens it, not a privilege level. Separately, the analytics store is write-only from ' +
+      'this app — the endpoint calls writeDataPoint and nothing in the codebase reads the store ' +
+      'back, so no surface in the game can display what was collected. It is visible to us, the ' +
+      'operator of the deploy, and to the infrastructure provider who stores it, through the ' +
+      'provider\'s own query tools. If you would rather it were not collected at all, leaving ' +
+      'telemetry off is enough — and that is the default.',
   },
   {
     title: 'Text you type into a probe',

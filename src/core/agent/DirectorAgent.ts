@@ -141,6 +141,14 @@ export class DirectorAgent {
       this.probeCount,
     );
     this.probeCount += 1;
+    // STAGE THE WEIGHT HERE, not in the caller. `observeProbeResponse` reads
+    // `stagedProbeSignalWeight ?? 0.1`, and the only thing that ever staged it was
+    // `api/agent/probe/+server.ts:53` — a convention held in one route. Any other caller
+    // silently fell back to 0.1, and a corpus whose `signalWeight` is ignored never reaches
+    // CALIBRATION_THRESHOLD inside the client's six-probe cap: every line ends up seeded Red,
+    // which is the outcome the corpus exists to prevent. The probe carries its own weight, so the
+    // Director reads it from the probe it just built and every caller inherits the ramp.
+    this.setLatestProbeSignalWeight(probe.metadata.signalWeight);
     return probe;
   }
 

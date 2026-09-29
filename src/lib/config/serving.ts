@@ -11,7 +11,8 @@
  * client-side anyway — billed invocations to deliver bytes the CDN holds. With `prerender = true`
  * the 26 client-only routes are emitted as static assets and served from the edge, and the only
  * invocations left are the ones that genuinely need computation: `/api/*`. No route carries a
- * `load` function (asserted by G55), so there is nothing for a prerender pass to execute and
+ * `load` function (verified by grep, enforced by nothing — a route that adds one must decide
+ * whether it can run at build time), so there is nothing for a prerender pass to execute and
  * nothing that can read per-request state at build time.
  *
  * THE `/api/*` HALF IS UNCHANGED. Endpoints under `src/routes/api/` do not read these exports —
@@ -20,8 +21,10 @@
  *
  * The `static` BUILD_TARGET (Capacitor / offline demo) wanted these values before anyone thought
  * to ask why cloudflare should differ. It was never a separate policy; it was the only policy,
- * applied to one target and forgotten on the other. `deployStatic` exists so a future target that
- * genuinely needs a server can opt back in without editing 26 files.
+ * applied to one target and forgotten on the other. `servingPolicyFor` exists so a future target
+ * that genuinely needs a server can opt back in without editing 26 files — it is currently
+ * UNUSED, and a target that needs dynamic HTML should delete it and add the branch when it exists
+ * rather than assuming the switch is live policy.
  */
 
 /** Pre-render the route into a static asset. Page loads then cost no Worker invocation. */

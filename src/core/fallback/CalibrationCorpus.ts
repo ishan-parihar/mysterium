@@ -260,14 +260,21 @@ export const CALIBRATION_CORPUS: readonly CorpusProbe[] = [
  */
 export function selectCalibrationProbe(
   progress: number,
-  confidence: number,
+  _confidence: number,
 ): CorpusProbe {
   const p = CALIBRATION_CORPUS;
   // `progress` is the Director's probe count; modulo wraps for a long calibration, which is
   // correct: the set is a cycle of orientations, not a script with an end.
   const step = Math.min(Math.max(Math.floor(progress), 0), p.length - 1);
-  // Confidence shifts the phase, so a Director that already trusts the player starts on the
-  // subtler half of the set rather than re-asking the concrete questions.
-  const phase = confidence >= 0.5 ? Math.floor(p.length / 2) : 0;
-  return p[(step + phase) % p.length]!;
+  // SELECTION IS BY POSITION ONLY. This previously shifted by `confidence >= 0.5 ? 6 : 0`, on the
+  // reasoning that a Director who already trusts the player should start on the subtler half. It
+  // fired on the ONLY path a keyless player has, mid-run, and served cal-01, cal-02, cal-03,
+  // cal-04, cal-11, cal-12 — six authored probes never seen, in an order the module's own
+  // doc-comment says is most-concrete-to-most-abstract. The offset corrected nothing because
+  // `nextCalibrationConfidence` already rises monotonically through the ramp; it only inserted the
+  // discontinuity. Measured over the client's six-probe cap: the ramp alone carries confidence
+  // 0.15 → 0.32 → 0.49 → 0.643 → 0.768 → 0.861, clearing CALIBRATION_THRESHOLD on probe 6.
+  // `_confidence` is kept in the signature because the Director passes it and the LLM path's
+  // selection genuinely is driven by confidence — only the corpus path is positional.
+  return p[step % p.length]!;
 }

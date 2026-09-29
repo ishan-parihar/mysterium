@@ -50,7 +50,9 @@ export const GET: RequestHandler = async ({ url }) => {
 
         const probe = await director.generateCalibrationProbe();
         director.setLatestProbe(probe);
-        director.setLatestProbeSignalWeight(probe.metadata.signalWeight);
+        // The signal weight is staged by `generateCalibrationProbe` itself, from the probe it just
+        // built — a caller that forgets it silently scored every response at 0.1, which is a ramp
+        // with no ramp. Not repeated here.
 
         controller.enqueue(
           encoder.encode(

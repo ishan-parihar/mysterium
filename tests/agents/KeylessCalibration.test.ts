@@ -28,7 +28,7 @@ import {
 } from '../../src/lib/server/rateLimit.js';
 import { CalibrationAgent } from '../../src/core/agent/CalibrationAgent.js';
 import { Loom } from '../../src/core/agent/Loom.js';
-import { DirectorAgent } from '../../src/core/agent/DirectorAgent.js';
+import { DirectorAgent, CALIBRATION_THRESHOLD } from '../../src/core/agent/DirectorAgent.js';
 import { assertAgenticProbe } from '../../src/core/agent/validateAgenticProbe.js';
 import { CALIBRATION_CORPUS } from '../../src/core/fallback/CalibrationCorpus.js';
 
@@ -45,12 +45,55 @@ it('KEYLESS: 6 consecutive probes are DISTINCT (this is the frozen-selection tes
   expect(new Set(ids).size).toBe(6);
 }, 60000);
 
-it('KEYLESS: the Director — the real caller — advances', async () => {
+it('KEYLESS: the served sequence is the authored order, under the REAL confidence trajectory', async () => {
+  // The previous version of this test looped `generateCalibrationProbe` without ever driving
+  // `observeProbeResponse`, so confidence stayed 0 for the whole run. Production POSTs
+  // `probe-response` after every answer (`onboarding/+page.svelte:187`), which is what pushes
+  // confidence up — and a test that never crosses 0.5 cannot see a defect that only fires above
+  // 0.5. That is how a selection discontinuity shipped inside a green test.
   const d = new DirectorAgent();
-  const ids: string[] = [];
-  for (let i = 0; i < 6; i++) ids.push((await d.generateCalibrationProbe()).id);
-  console.log('DIRECTOR 6:', ids.join(','), '->', new Set(ids).size, 'unique');
+  const served: string[] = [];
+  for (let i = 0; i < 6; i++) {
+    const p = await d.generateCalibrationProbe();
+    served.push(p.id);
+    await d.observeProbeResponse({
+      probeId: p.id,
+      selectedPolarity: 'action',
+      selectedIndex: 0,
+      freeInput: '',
+    });
+  }
+  console.log('SERVED UNDER REAL CONFIDENCE:', served.join(', '));
+  // Authored order, no jump. A set-membership check would pass on cal-01..04 + cal-11; asserting
+  // the SEQUENCE is what catches it.
+  expect(served).toEqual(['cal-01', 'cal-02', 'cal-03', 'cal-04', 'cal-05', 'cal-06']);
+}, 60000);
+
+  it('KEYLESS: probes are distinct, valid, and the ramp reaches the cap', async () => {
+    const d = new DirectorAgent();
+    const ids: string[] = [];
+    let confidence = 0;
+    for (let i = 0; i < 6; i++) {
+      const p = await d.generateCalibrationProbe();
+      expect(() => assertAgenticProbe(p)).not.toThrow();
+      ids.push(p.id);
+      // NO `setLatestProbeSignalWeight` HERE, deliberately. The Director stages the weight from the
+      // probe it built, so a caller cannot forget; this test is what proves that, because it is
+      // the shape of every caller other than the one that used to carry the convention.
+      confidence = await d.observeProbeResponse({
+        probeId: p.id,
+        selectedPolarity: 'action',
+        selectedIndex: 0,
+        freeInput: '',
+      });
+    }
+  console.log('DISTINCT 6:', ids.join(','), '->', new Set(ids).size, 'unique, confidence', confidence);
   expect(new Set(ids).size).toBe(6);
+  // The ramp's job is to make calibration REACH a conclusion inside the client's six-probe cap
+  // (`onboarding/+page.svelte:78`, MAX_PROBES = 6). Below the threshold, a keyless player is
+  // walked to the cap and every line is seeded Red — the exact outcome the corpus exists to
+  // avoid. Asserting the confidence rather than the private flag keeps this a public contract.
+  expect(confidence).toBeGreaterThanOrEqual(CALIBRATION_THRESHOLD);
 }, 60000);
 
 it('the signal ramp is real, not flat', () => {
