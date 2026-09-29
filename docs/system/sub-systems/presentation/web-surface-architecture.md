@@ -54,9 +54,11 @@ no runtime test could have seen it.
 
 **Two route families:**
 
-1. **Player** — `/`, `/onboarding`, `/play`, `/profile`, `/journal`, `/codex`, `/knowledge`,
-   `/curriculum`, `/curriculum/progress`, `/glossary`, `/diagnostic`, `/settings`, `/recover`,
-   `/telemetry`, `/setup`, `/error`.
+1. **Player** — `/`, `/onboarding`, `/calibrate`, `/play`, `/profile`, `/profiles`, `/journal`,
+   `/codex`, `/knowledge`, `/curriculum`, `/curriculum/progress`, `/glossary`, `/diagnostic`,
+   `/settings`, `/recover`, `/telemetry`, `/privacy`, `/export`, `/insights`, `/events`,
+   `/credential`, `/delegate`, `/pack`, `/pod`, `/setup`, `/error`, and the three
+   `/auditor/{guardian,educator,therapeutic}` surfaces.
 2. **BFF** — eight `+server.ts` under `src/routes/api/`: `save`, `recovery/generate`,
    `recovery/restore`, `telemetry`, `llm/chat`, `llm/tools`, `agent/observe`, `agent/probe`.
 
@@ -216,15 +218,15 @@ pinned.
 
 | Command | Web route | Note |
 |---|---|---|
-| `insights` | none | cognitive/per-line aggregates exist in the kernel |
-| `export` | none | **also a privacy gap** — see below |
-| `events` | none | event tail; the pod CLI polls the same tail |
-| `delegate` | none | `--summon` exists; the council is a CLI-only surface today |
-| `pod` | none | M0 transport is built and gated (G48) |
-| `credential` | none | |
-| `pack` | none | pack engine is live and gated (G45) |
-| `privacy` | `/telemetry` only | transparency page exists; **no export-your-own-data** |
-| `calibrate` | `/onboarding` probes only | no headless equivalent |
+| `insights` | `/insights` | cognitive/per-line aggregates exist in the kernel; reads `loadInsights` |
+| `export` | `/export` | built in the browser from local storage, no server round-trip |
+| `events` | `/events` | event tail; the pod CLI polls the same tail |
+| `delegate` | `/delegate` | `--summon` exists; the route projects the trigger table into player language behind a leak guard |
+| `pod` | `/pod` | M0 transport is built and gated (G48); the route reaches the tail only via `applyEvent` + `payloadIsSafe` |
+| `credential` | `/credential` | four visibly distinct states, not one boolean |
+| `pack` | `/pack` | pack engine is live and gated (G45) |
+| `privacy` | `/privacy` | **both halves now exist** — export-your-own-data is `/export`, and `/privacy` is the inventory + per-group deletion. The inventory is built from the real key set, which is how the pre-existing gap surfaced: `/settings`'s reset removed 3 of 9 keys. The page also states the save-key contradiction (the key derives from a device id the server holds) rather than letting "encrypted" imply E2E, and names who can read the collected shadow quadrants. |
+| `calibrate` | `/calibrate` | the browser equivalent of the CLI's `runQuickCalibration`, over the same pure scoring. The timing probe for Somatic/Willpower is preserved rather than replaced with a choice, and an unprobed line is rendered as unprobed rather than defaulted to Red. |
 
 **P3 — consistency debt.**
 

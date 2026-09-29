@@ -68,6 +68,8 @@
     // is the same in-vitro/in-vivo class the kernel gates exist to catch, and a nav entry is the
     // cheapest possible fix. Privacy-adjacent first: /export is how a player leaves with their data.
     { href: '/export', label: 'Export My Data', desc: 'Everything held about you', variant: 'muted', icon: 'info' },
+    { href: '/privacy', label: 'Privacy', desc: 'What is stored, and delete it', variant: 'muted', icon: 'info' },
+    { href: '/calibrate', label: 'Calibrate', desc: 'Set your starting altitudes', variant: 'muted', icon: 'user' },
     { href: '/insights', label: 'Insights', desc: 'What your play has measured', variant: 'muted', icon: 'bar-chart' },
     { href: '/credential', label: 'Credentials', desc: 'Practice claims you can export', variant: 'muted', icon: 'book' },
     { href: '/events', label: 'Event Log', desc: 'What this device recorded', variant: 'muted', icon: 'info' },

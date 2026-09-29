@@ -95,7 +95,7 @@ derivation change, and it is what the code already intends. It also adds a check
 | `agentBusy` | ✅ **DELETED `4129cac`** — an instance-script export in a Svelte 5 component, so structurally unreachable; every blocking surface already has a more precise local spinner |
 | SSR in one decision | ✅ **BUILT `4129cac`** — all 19 routes declare their choice; **G54** imports each `+page.ts` and fails on a comment-only or computed value |
 | **BFF rate limiting** | ✅ **DONE (SEC), `4129cac`.** All 8 `/api/*` endpoints are metered through one shared limiter (`src/lib/server/rateLimit.ts`) with per-IP tiers; the old `/api/llm/*`-only guard is gone. G53 refuses to pass on any route the limiter does not actually refuse |
-| P2 — 7 routes | **in progress** — `insights`, `export`, `events`, `credential`, `delegate`, `pod`, `pack`. `privacy` and `calibrate` remain partial after this |
+| P2 — 9 routes | **BUILT** — `insights`, `export`, `events`, `credential`, `delegate`, `pod`, `pack` (`a537181`), then `privacy` and `calibrate` (`/privacy` carries both the inventory and the delete path; `/calibrate` is the browser equivalent of the CLI's quick calibration). All nine are linked from the home route. |
 
 **Owner-blocked, non-blocking:** pod hosting (M1), density-hardening ruling, real raters /
 institutions / DPIA, GitLab SSH (C6).
