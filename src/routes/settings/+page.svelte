@@ -4,24 +4,20 @@
    *
    * Uses the new component library: RouteShell, Card, Toggle, Modal, Button.
    * Toggles wire to accessibilityStore + A11yApplier → data-* on <html>.
-   * Reset modal uses the accessible Modal (focus trap, Escape, restore-focus).
+   * Data deletion lives on /privacy, which enumerates what this app holds rather than
+   * offering a single button whose copy cannot be kept honest.
    */
 
   import { goto } from '$app/navigation';
-  import { browser } from '$app/environment';
   import Seo from '$lib/components/Seo.svelte';
   import RouteShell from '$lib/components/RouteShell.svelte';
   import Card from '$lib/components/Card.svelte';
   import Toggle from '$lib/components/Toggle.svelte';
-  import Modal from '$lib/components/Modal.svelte';
   import Button from '$lib/components/Button.svelte';
   import Stack from '$lib/components/Stack.svelte';
-  import Cluster from '$lib/components/Cluster.svelte';
   import Icon from '$lib/components/Icon.svelte';
-  import { accessibilityStore, updateAccessibility, resetAccessibility } from '$lib/stores/accessibilityStore.js';
+  import { accessibilityStore, updateAccessibility } from '$lib/stores/accessibilityStore.js';
   import { sessionControlStore, updateSessionControl } from '$lib/stores/sessionControlStore.js';
-  import { resetSavesInStorage } from '$lib/stores/saveHydration.js';
-  import { setSignificator } from '$lib/stores/gameStore.js';
   import { showToast } from '$lib/stores/toastStore.js';
   import { stageFade } from '$lib/transitions/stageMotion.js';
   import { ALL_LINES } from '$core/domain/Line.js';
@@ -31,8 +27,6 @@
   const settings = $derived($accessibilityStore);
   const sessionControl = $derived($sessionControlStore);
 
-  let showResetConfirm = $state(false);
-  let isResetting = $state(false);
 
   function toggleHighContrast() {
     updateAccessibility({ highContrast: !settings.highContrast });
@@ -49,23 +43,6 @@
     showToast(settings.telemetryOptIn ? 'Telemetry disabled' : 'Telemetry enabled', 'info', 2000);
   }
 
-  function confirmReset() {
-    if (!browser) return;
-    isResetting = true;
-    try {
-      resetSavesInStorage();
-      resetAccessibility();
-      setSignificator(null);
-      showResetConfirm = false;
-      isResetting = false;
-      showToast('All data reset', 'success', 2000);
-      goto('/');
-    } catch (err) {
-      console.error('Reset failed:', err);
-      isResetting = false;
-      showToast('Reset failed', 'danger', 3000);
-    }
-  }
 </script>
 
 <Seo
@@ -262,11 +239,15 @@
         <Card variant="default" padding="space-5">
           <Stack gap="space-3">
             <div class="setting-label">
-              <span class="setting-name">Reset all data</span>
-              <span class="setting-desc">Permanently delete your Significator, WorldState, and all telemetry data. This cannot be undone.</span>
+              <span class="setting-name">Delete your data</span>
+              <span class="setting-desc">
+                See everything this app holds on this device, and delete it by group. This page
+                used to offer a single "reset all data" that removed three of the nine keys the app
+                stores — and its copy claimed it deleted your telemetry, which it never did.
+              </span>
             </div>
-            <Button variant="danger" onclick={() => (showResetConfirm = true)}>
-              Reset all data
+            <Button variant="danger" onclick={() => goto('/privacy')}>
+              Review and delete
             </Button>
           </Stack>
         </Card>
@@ -274,23 +255,6 @@
     </section>
   </Stack>
 </RouteShell>
-
-<Modal open={showResetConfirm} onclose={() => (showResetConfirm = false)} title="Reset all data?" size="sm">
-  <Stack gap="space-4">
-    <p class="modal-warning">
-      This will permanently delete your Significator, WorldState, and all telemetry data.
-      Your journey will begin anew.
-    </p>
-    <Cluster gap="space-3" justify="end">
-      <Button variant="ghost" onclick={() => (showResetConfirm = false)} disabled={isResetting}>
-        Cancel
-      </Button>
-      <Button variant="danger" onclick={confirmReset} loading={isResetting}>
-        Yes, reset everything
-      </Button>
-    </Cluster>
-  </Stack>
-</Modal>
 
 <style>
   .section-title {
@@ -391,13 +355,6 @@
     text-align: center;
   }
 
-  .modal-warning {
-    font-family: var(--mysterium-font-body);
-    font-size: var(--mysterium-text-sm);
-    color: var(--mysterium-fg);
-    line-height: var(--mysterium-leading-relaxed);
-    margin: 0;
-  }
 
   /* Desktop: 2-column layout */
   @media (min-width: 1024px) {
