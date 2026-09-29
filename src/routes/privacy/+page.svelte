@@ -3,8 +3,8 @@
    * /privacy route — what this app holds about you, and how to delete it.
    *
    * The page exists because the plan called export-your-own-data the actual privacy gap, and
-   * because `/settings`'s existing reset was incomplete in a way nobody could see: it calls
-   * `resetSavesInStorage`, which removes THREE keys, while the app writes at least six more. A
+   * because the `/settings` reset was incomplete in a way nobody could see: it removed THREE keys
+   * while the app writes at least six more. A
    * player who deleted their saves left behind their profile identities, their shares, the device
    * id their cloud key derives from, and their settings. The inventory below is built from the
    * real key set (`storedData.ts`) and annotated with what THIS build actually holds, so the page
@@ -42,6 +42,7 @@
     type DataGroup,
     type StoredItem,
   } from '$core/presentation/storedData.js';
+  import { setSignificator } from '$lib/stores/gameStore.js';
 
   let items = $state<readonly StoredItem[]>([]);
   /** The group the player is being asked to confirm, or `null`. */
@@ -75,6 +76,13 @@
       return;
     }
     deleted = [...deleted, g];
+    // CLEAR THE IN-MEMORY PROFILE. `gameStore` is a store, not storage: a player who deletes
+    // their play data would keep seeing the profile the app already holds in memory, and every
+    // route that reads the store rather than the disk would keep reporting it, until a full
+    // reload. Deleting the data and continuing to display it is the worst version of this bug, so
+    // the store follows the disk. Only the two groups that carry the Significator — preferences
+    // and shares never held one.
+    if (g === 'play' || g === 'identity') setSignificator(null);
     items = storedData((k) => localStorage.getItem(k) !== null);
     confirming = null;
     failure = null;

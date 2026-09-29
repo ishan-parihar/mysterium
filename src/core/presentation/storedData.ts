@@ -1,8 +1,8 @@
 /**
  * StoredData — the inventory of what this app keeps, and what deleting it means.
  *
- * `/settings` has had a "reset saves" that calls `resetSavesInStorage`, and that function removes
- * THREE keys: `profile:v1`, `world:v1`, `save:v1`. The app writes at least six more —
+ * The `/settings` reset removed THREE keys: `profile:v1`, `world:v1`, `save:v1`. The app writes
+ * at least six more —
  * `mysterium:profiles`, `mysterium:active-profile`, `mysterium:device-id`, `mysterium:accessibility`,
  * `mysterium:session-control`, `mysterium.shares.v1`. So a player who deleted their saves left
  * behind their profile identities, their shares (which point at a Significator projection), the

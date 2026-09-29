@@ -26,6 +26,7 @@
    * at any stage per `foundations/16` §10.5. Never for a line the run did not score.
    */
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
   import Seo from '$lib/components/Seo.svelte';
   import RouteShell from '$lib/components/RouteShell.svelte';
   import Card from '$lib/components/Card.svelte';
@@ -179,7 +180,7 @@
           'Red',
         );
     try {
-      localStorage.setItem('profile:v1', JSON.stringify(sig));
+      if (browser) localStorage.setItem('profile:v1', JSON.stringify(sig));
     } catch (err) {
       console.error('[calibrate] offline save failed:', err);
       applyError = 'The result could not be saved on this device, so it was not applied.';

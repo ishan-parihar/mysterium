@@ -37,17 +37,3 @@ export function loadSignificatorFromStorage(): Significator | null {
   }
 }
 
-/**
- * Reset all saves from localStorage. Used by the /settings reset flow
- * as a lightweight alternative to importing SaveRepository.
- */
-export function resetSavesInStorage(): void {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.removeItem(PROFILE_KEY);
-    localStorage.removeItem('world:v1');
-    localStorage.removeItem('save:v1');
-  } catch {
-    // best-effort
-  }
-}

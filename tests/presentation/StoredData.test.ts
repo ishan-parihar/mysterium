@@ -26,7 +26,7 @@ describe('the privacy inventory reports what this device actually holds', () => 
     localStorage.setItem('mysterium.shares.v1', '[]');
     const items = storedData((k) => localStorage.getItem(k) !== null);
     expect(storedSummary(items).present).toBe(4);
-    // The gap this page exists to close: resetSavesInStorage removes 3 keys, and the device id,
+    // The gap this page exists to close: the old settings reset removed 3 keys, and the device id,
     // profiles and shares survive it.
     expect(deletableKeys(items)).toContain('mysterium:device-id');
     expect(deletableKeys(items)).toContain('mysterium.shares.v1');
