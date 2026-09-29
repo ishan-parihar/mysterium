@@ -50,6 +50,7 @@ export interface LLMEvaluation {
 }
 
 import { InfraConfig } from '../../core/config/InfraConfig.js';
+import { extractCompletionText } from './providerResponse.js';
 
 const FALLBACK: LLMEvaluation = { score: 0.5, feedback: 'LLM unavailable' };
 
@@ -262,9 +263,11 @@ export async function evaluateResponse(
     if (!res.ok) return FALLBACK;
 
     const data = (await res.json()) as any;
+    // Tolerant of a gateway `data` envelope — see `providerResponse.ts` for the shape that broke
+    // this. `as any` is pre-existing on this line; only the reader is new.
     const content = isAnthropicProtocol(config)
-      ? data.content?.[0]?.text ?? ''
-      : data.choices?.[0]?.message?.content ?? '';
+      ? (data.content?.[0]?.text ?? '')
+      : extractCompletionText(data);
     const parsed = JSON.parse(content) as { score: number; feedback: string; inferredStage?: string; confidence?: number };
     const score = Math.max(0, Math.min(1, parsed.score));
 

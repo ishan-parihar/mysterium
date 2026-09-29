@@ -30,6 +30,7 @@ import type { AgenticProbe } from './AgenticProbe.js';
 import { assertAgenticProbe, AgenticProbeValidationError } from './validateAgenticProbe.js';
 import { calibrationProbeTemplate } from '../../infra/llm/templates.js';
 import { resolveServerLLMConfig } from '../../routes/api/llm/_lib.js';
+import { describeEmptyCompletion, extractCompletionText, hasCompletionShape } from '../../infra/llm/providerResponse.js';
 import { selectCalibrationProbe } from '../fallback/CalibrationCorpus.js';
 
 /**
@@ -105,13 +106,29 @@ export class CalibrationAgent {
       });
 
     const raw = await this.callLlm(CALIBRATION_SYSTEM_PROMPT, userMessage);
+
+    // AN EMPTY COMPLETION IS NOT INVALID JSON. `JSON.parse('')` reports "Unexpected end of JSON
+    // input", which names the parse and hides the cause: the provider answered with no assistant
+    // content at all, and this file's reader had been returning `''` for a wrapped response. The
+    // player saw an onboarding page that never advanced, and the log named a JSON error. Say what
+    // actually happened, with the model and the keys that arrived.
+    if (!raw || !raw.trim()) {
+      throw new AgenticProbeValidationError(
+        'JSON',
+        `CalibrationAgent received an EMPTY completion from ${resolveServerLLMConfig()?.model ?? 'the provider'} ` +
+          `(body was ${raw === '' ? 'zero-length' : 'whitespace only'}). The provider answered with no ` +
+          'assistant content — check whether the gateway wraps its payload in a `data` envelope, and ' +
+          'whether the turn was reasoning-only.',
+      );
+    }
+
     let parsed: unknown;
     try {
       parsed = JSON.parse(raw);
     } catch (err) {
       throw new AgenticProbeValidationError(
         'JSON',
-        `CalibrationAgent LLM returned invalid JSON: ${(err as Error).message}`,
+        `CalibrationAgent LLM returned invalid JSON: ${(err as Error).message} (first 200 chars: ${raw.slice(0, 200)})`,
       );
     }
     return assertAgenticProbe(parsed);
@@ -178,7 +195,24 @@ export class CalibrationAgent {
       const textBlock = content?.find((b) => b.type === 'text');
       return textBlock?.text ?? '';
     }
-    const choices = data['choices'] as Array<{ message?: { content?: string } }> | undefined;
-    return choices?.[0]?.message?.content ?? '';
+    // One reader, both shapes. A Cline-style `{ data: { choices } }` envelope used to read as
+    // `undefined` here, coerce to `''`, and hand `''` to `JSON.parse` — which surfaced to the
+    // player as an onboarding page that never advanced. See `providerResponse.ts`.
+    const text = extractCompletionText(data);
+    // THROW ONLY FOR A MALFORMED BODY. This reader is now on the path for every OpenAI-protocol
+    // call, and a TOOL-USE turn legitimately has no `message.content` — `ProxiedLLMClient` treats a
+    // tool block as a meaningful answer and `_lib` has its own `tool_use` branch. Throwing on every
+    // empty extraction would convert that handled case into a hard failure. So the test is
+    // structural: a body that carries neither `choices` nor `content` is malformed, and anything
+    // that does carry them is the caller's to interpret.
+    if (!text && !hasCompletionShape(data)) {
+      // Name the model and the keys NOW, while the body is in hand. Upstream this produced a bare
+      // "Unexpected end of JSON input" that pointed at the parse instead of at the response that
+      // never arrived, which is how a production page sat dead with no readable cause.
+      throw new Error(
+        `malformed provider response — ${describeEmptyCompletion(data, config.model)}`,
+      );
+    }
+    return text;
   }
 }

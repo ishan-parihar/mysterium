@@ -14,6 +14,7 @@
  */
 
 import { InfraConfig } from '../../core/config/InfraConfig.js';
+import { extractCompletionText } from './providerResponse.js';
 const BFF_TIMEOUT_MS = InfraConfig.LLM_BFF_TIMEOUT_MS;
 
 async function fetchWithTimeout(
@@ -79,15 +80,17 @@ export async function proxyQueryLLM(
     }
 
     const data = await res.json() as any;
-    // Extract text content from either OpenAI or Anthropic response format.
+    // Extract text content from either OpenAI or Anthropic response format, tolerating a gateway
+    // `data` envelope (see `providerResponse.ts` — this reader previously returned '' for one, and
+    // the caller turned that into an "unexpected end of JSON" error naming the wrong cause).
     // The BFF applies VeilFilter server-side, so content is already filtered.
     if (data.content?.[0]?.text !== undefined) {
       // Anthropic format
       return data.content[0].text;
     }
-    if (data.choices?.[0]?.message?.content !== undefined) {
-      // OpenAI format
-      return data.choices[0].message.content;
+    const openAiText = extractCompletionText(data);
+    if (openAiText) {
+      return openAiText;
     }
     return JSON.stringify(data);
   } catch (err) {
