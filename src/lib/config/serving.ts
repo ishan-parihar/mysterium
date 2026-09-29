@@ -9,7 +9,7 @@
  * WHY PRERENDER IS TRUE. This is the deployment-cost lever. With `prerender = false` on the
  * cloudflare target, EVERY page navigation boots a Worker to return an HTML shell that hydrates
  * client-side anyway — billed invocations to deliver bytes the CDN holds. With `prerender = true`
- * the 26 client-only routes are emitted as static assets and served from the edge, and the only
+ * the client-only routes are emitted as static assets and served from the edge, and the only
  * invocations left are the ones that genuinely need computation: `/api/*`. No route carries a
  * `load` function (verified by grep, enforced by nothing — a route that adds one must decide
  * whether it can run at build time), so there is nothing for a prerender pass to execute and
@@ -22,7 +22,7 @@
  * The `static` BUILD_TARGET (Capacitor / offline demo) wanted these values before anyone thought
  * to ask why cloudflare should differ. It was never a separate policy; it was the only policy,
  * applied to one target and forgotten on the other. `servingPolicyFor` exists so a future target
- * that genuinely needs a server can opt back in without editing 26 files — it is currently
+ * that genuinely needs a server can opt back in without editing every route — it is currently
  * UNUSED, and a target that needs dynamic HTML should delete it and add the branch when it exists
  * rather than assuming the switch is live policy.
  */

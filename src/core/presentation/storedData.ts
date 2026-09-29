@@ -193,7 +193,8 @@ export const WHAT_LEAVES_THIS_DEVICE: readonly { readonly title: string; readonl
       'On a deploy with a model key configured, free-input answers are sent to the model provider ' +
       'as part of the prompt, and leave our infrastructure entirely. On a deploy with no key the ' +
       'questionnaire is answered from an authored corpus and nothing you type is sent anywhere. ' +
-      'Which one you are on is visible in the response times of the questions.',
+      'The /setup page reports which one this deploy is, and it is worth reading before you write ' +
+      'anything here that you would not want sent.',
   },
   {
     title: 'Nothing else',

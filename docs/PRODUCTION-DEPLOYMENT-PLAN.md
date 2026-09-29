@@ -100,6 +100,17 @@ derivation change, and it is what the code already intends. It also adds a check
 **Owner-blocked, non-blocking:** pod hosting (M1), density-hardening ruling, real raters /
 institutions / DPIA, GitLab SSH (C6).
 
+**Owner-blocked, and now public — D-3, the save-key decision.** `api/save/+server.ts:7` claims the
+server never sees plaintext; `cloudSyncStore.ts:4-11` says the key derives from the deviceId the
+server holds and calls it "NOT full E2E". Both describe the same code. The options are
+mnemonic-derived (**recommended** — it is that file's own suggestion and it makes the first
+docstring true), a server-held key (honest, but not E2E), or real identity. This is one decision,
+not three tickets, because it changes the recovery design. **`/privacy` now states the current
+design out loud** (`/privacy` → "What leaves this device" → your cloud save), so a player can read
+it today — which is correct, but it means the decision should be scheduled rather than left to be
+discovered from a public page. It does not block a deploy; it is the one item a public deploy
+exposes before it is settled.
+
 **Measurement, not code:** calibration figures are a **range** (22.3–23.0% unfamiliar-pole against
 a 0.25 floor — below-floor in every run, at 745 encounters). Entropy is `insufficient-data`. The
 polarity loop is inert (842 readings, 0 reconciled). All `provisional-simulated-cohort`: it may
