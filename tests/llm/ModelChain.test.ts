@@ -162,4 +162,41 @@ describe('the model chain', () => {
     expect((await callProxy()).status).toBe(200);
     expect(calls).toEqual(['first-model', 'second-model']);
   });
+
+  it('KEEPS the earlier status when a later model times out — a 429 is still the best answer', async () => {
+    // The ordering that a `lastResponse = undefined` on transport failure silently broke: the
+    // first model answers with a real status, the second never answers at all. Reporting "all
+    // models failed at the transport level" throws away the one concrete fact the caller had.
+    env.LLM_API_KEY = 'sk-test';
+    env.LLM_BASE_URL = 'https://example.test/v1';
+    env.LLM_PROVIDER = 'openai';
+    env.LLM_MODEL = 'first-model';
+    env.LLM_MODEL_CHAIN = 'first-model,second-model';
+    const seen: string[] = [];
+    globalThis.fetch = vi.fn(async (_url: unknown, init: unknown) => {
+      const body = JSON.parse((init as RequestInit).body as string) as { model: string };
+      seen.push(body.model);
+      if (body.model === 'first-model') return new Response('slow down', { status: 429 });
+      throw new Error('the operation timed out');
+    }) as unknown as typeof fetch;
+
+    const res = await callProxy();
+    expect(seen).toEqual(['first-model', 'second-model']);
+    expect(res.status).toBe(429);
+  });
+
+  it('throws only when NO model ever returned a status', async () => {
+    env.LLM_API_KEY = 'sk-test';
+    env.LLM_BASE_URL = 'https://example.test/v1';
+    env.LLM_PROVIDER = 'openai';
+    env.LLM_MODEL = 'first-model';
+    env.LLM_MODEL_CHAIN = 'first-model,second-model';
+    globalThis.fetch = vi.fn(async () => {
+      throw new Error('DNS failure');
+    }) as unknown as typeof fetch;
+
+    // The proxy's own catch maps this to a 500, which is correct: there is no upstream status to
+    // report, and inventing one would be the misreport this whole branch exists to avoid.
+    expect((await callProxy()).status).toBe(500);
+  });
 });

@@ -188,8 +188,14 @@ export function modelChain(config: LLMProviderConfig): readonly string[] {
  * so a chain-wide rate limit reads as a 429 to whatever handles it. Throwing here was the first
  * implementation and the test caught it — a synthetic `Error` reached the caller's catch and every
  * upstream status collapsed into one opaque 500, which is precisely the loss of information a
- * chain exists to prevent. A genuine TRANSPORT failure (timeout, DNS) has no response to return,
- * so that still propagates as an error.
+ * chain exists to prevent.
+ *
+ * A TRANSPORT FAILURE IS TRACKED SEPARATELY, because `lastResponse = undefined` on a timeout
+ * DISCARDS the status the previous model already gave. For a chain of [429, timeout] that turned a
+ * concrete rate limit into a synthetic "all models failed at the transport level" — the one status
+ * the caller could have acted on was the one thrown away. So the response and the transport
+ * failure are separate facts: a real response is returned whenever one exists, and the throw is
+ * reserved for a chain where NO model ever answered with a status at all.
  */
 async function fetchThroughChain(
   config: LLMProviderConfig,
@@ -197,6 +203,7 @@ async function fetchThroughChain(
 ): Promise<Response> {
   const models = modelChain(config);
   let lastResponse: Response | undefined;
+  let sawTransportFailure = false;
   for (const model of models) {
     let res: Response;
     try {
@@ -205,10 +212,10 @@ async function fetchThroughChain(
         headers: buildHeaders(config),
         body: JSON.stringify(buildBody(model)),
       });
-    } catch (err) {
-      // A transport failure is upstream's problem for THAT model; try the next one. Nothing to
-      // return, so remember that we saw one.
-      lastResponse = undefined;
+    } catch {
+      // A timeout is upstream's problem for THAT model; try the next one. `lastResponse` is left
+      // ALONE — a status an earlier model already returned is still the best thing to report.
+      sawTransportFailure = true;
       continue;
     }
     if (res.ok || (res.status !== 429 && res.status < 500)) return res;
@@ -216,7 +223,11 @@ async function fetchThroughChain(
     console.warn(`[llm] model ${model} returned ${res.status}; trying the next in the chain`);
   }
   if (lastResponse) return lastResponse;
-  throw new Error(`All ${models.length} model(s) in the chain failed at the transport level`);
+  throw new Error(
+    sawTransportFailure
+      ? `All ${models.length} model(s) in the chain failed at the transport level`
+      : `The LLM model chain is empty`,
+  );
 }
 
 export async function proxyChatCompletion(
