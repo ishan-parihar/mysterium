@@ -32,6 +32,70 @@ import type { GateResult } from './plumbing.js';
 
 export function validateCorpusIntegrity(): GateResult {
   try {
+    /**
+     * 0. EVERY `devMapping` LINE MUST BE CANONICAL.
+     *
+     * Found while building `33 §3.1` View 2: `bio.foundations.json`'s `bio.ecology` listed
+     * `"Naturalist"` as a secondary line, which is not one of the eight. There is no such line —
+     * `docs/foundations/03` §5 records "ecological intelligence [is a] defensible additional line.
+     * Mysterium's decision: hold to eight in MVP" and names it as NOT adopted.
+     *
+     * Every other G17 assertion passed straight over it. Each one checks a RELATIONSHIP — cells
+     * populated, ids resolvable, lint clean, the 64-module index complete — and a line value is
+     * neither: the holon was fully well-formed and merely named a capacity that does not exist. A
+     * closed graph over the WRONG vertex set is still closed, which is the blind spot.
+     *
+     * The failure was found by a view crashing, which is the worst way to find it: `tally.get()` on
+     * an unknown line returns `undefined` and the whole dashboard throws on one holon out of 113. So
+     * the check lives here, where a corpus defect is a red gate rather than a blank page.
+     */
+    // SEED FIRST. `getCurriculumRegistry()` returns an EMPTY registry on a cold process, so reading it
+    // before `seedCurriculumRegistry()` would check nothing and pass — the same vacuous-green shape as
+    // Phase 17 d1's pack registry, where an unseeded registry behaves exactly like an empty one. The
+    // existing seed below is idempotent, so seeding here as well costs one call.
+    seedCurriculumRegistry();
+    const registryHolons = getCurriculumRegistry().getAll();
+    if (registryHolons.length === 0) {
+      return {
+        gate: 'G17 corpus integrity',
+        passed: false,
+        hard: true,
+        details: 'the curriculum registry is empty after seeding — this check would pass vacuously, so it fails instead',
+      };
+    }
+    const badLines: string[] = [];
+    for (const h of registryHolons) {
+      const dm = h.devMapping;
+      if (!dm) {
+        badLines.push(`${h.id}: no devMapping`);
+        continue;
+      }
+      const named = [dm.primaryLine, ...dm.secondaryLines];
+      for (const l of named) {
+        if (typeof l !== 'string' || !(ALL_LINES as readonly string[]).includes(l)) {
+          badLines.push(`${h.id}: ${String(l)}`);
+        }
+      }
+      // stageRange carries stages, and a RETIRED stage reads exactly like a live one in JSON.
+      for (const bound of [dm.stageRange?.min, dm.stageRange?.max]) {
+        if (typeof bound === 'string' && !(ALL_STAGES as readonly string[]).includes(bound)) {
+          badLines.push(`${h.id}: stageRange ${bound}`);
+        }
+      }
+    }
+    if (badLines.length > 0) {
+      return {
+        gate: 'G17 corpus integrity',
+        passed: false,
+        hard: true,
+        details:
+          `${badLines.length} devMapping value(s) name a line or stage the theory does not have: ` +
+          `${badLines.slice(0, 8).join('; ')}${badLines.length > 8 ? ' …' : ''}. ` +
+          `The eight lines are docs/foundations/03; the eight stages are docs/foundations/02. ` +
+          `A well-formed holon naming a retired capacity is a closed graph over the wrong vertex set.`,
+      };
+    }
+
     // 1. Stage-holon cells: all 8 stages × 8 lines covered by the combined
     //    red-layer + stage corpus, with all relationships resolvable.
     const holons = [...redHolonsJson, ...stageHolonsJson] as unknown as import('../../world/Holon.js').Holon[];

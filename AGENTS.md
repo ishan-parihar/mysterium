@@ -409,7 +409,12 @@ nav surfaces, and a route-body `+page.svelte` is not. The three newest of these 
 a hardcoded roster count in prose is a derived surface with no emitter, so every future gate lands
 invisible. Six gates were undocumented when G58 landed and all six are now named here — **G17** corpus
 integrity (the content corpus must resolve as a closed graph: every stage-holon cell populated, every
-relationship resolvable, every branch lint-clean, the 64-module concept-draft index complete),
+relationship resolvable, every branch lint-clean, the 64-module concept-draft index complete, AND —
+added 2026-09-30 — every `devMapping` line and `stageRange` bound must be one of the eight canonical
+lines or stages, because a holon that is perfectly well-formed but names a retired capacity is a CLOSED
+graph over the wrong vertex set, and every other assertion in the gate passed straight over one:
+`bio.ecology` carried `"Naturalist"`, which `docs/foundations/03` §5 names as considered and NOT
+adopted),
 **G19** measurement packs, **G24** scaffold integrity, **G29** preference-intake firewall,
 **G39** campaign continuity (two empty roots over N sessions must produce an identical series, and
 every session must restore its predecessor's checkpoint with a growing feed), and **G40** campaign
