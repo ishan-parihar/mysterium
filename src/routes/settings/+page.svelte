@@ -111,6 +111,52 @@
               </div>
               <span class="link-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
             </a>
+            <div class="setting-divider" role="presentation"></div>
+            <!--
+              The three auditor surfaces (16 §10.4: Guardian Mirror, Educator Desk, Therapeutic Pane)
+              and the Diagnostic report were ROUTES WITH NO ENTRY POINT. `knowledge` is reachable
+              from the curriculum and so is not listed here; these four were linked from nothing in
+              the app — not the sidebar, not the mobile nav, not the home grid — so a fully-featured
+              auditor capability existed as a URL a player had to be told about by hand.
+
+              They live in Settings rather than the sidebar because they are not daily surfaces: the
+              sidebar should carry what a player meets daily, and an auditor enters when they are
+              asked to.
+
+              VERIFIED, NOT ASSUMED: driven in a browser with no consent grant, each surface refuses
+              with "NO LIVE GRANT" and renders no closed-register value. The refusal lives in
+              `renderLevel` (AL5), not in the template, so the link cannot become a door to the
+              closed class — but the copy says so plainly rather than inviting the reader to expect
+              content they will not have.
+            -->
+            <a class="setting-row setting-link" href="/diagnostic">
+              <div class="setting-label">
+                <span class="setting-name">Diagnostic</span>
+                <span class="setting-desc">Your developmental profile in full detail</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
+            </a>
+            <a class="setting-row setting-link" href="/auditor/guardian">
+              <div class="setting-label">
+                <span class="setting-name">Guardian view</span>
+                <span class="setting-desc">What a guardian may read, if you have issued a consent link</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
+            </a>
+            <a class="setting-row setting-link" href="/auditor/educator">
+              <div class="setting-label">
+                <span class="setting-name">Educator view</span>
+                <span class="setting-desc">What an educator may read, if you have issued a consent link</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
+            </a>
+            <a class="setting-row setting-link" href="/auditor/therapeutic">
+              <div class="setting-label">
+                <span class="setting-name">Therapeutic view</span>
+                <span class="setting-desc">What a practitioner may read, if you have issued a consent link</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
+            </a>
           </Stack>
         </Card>
       </Stack>
