@@ -49,8 +49,8 @@ export const PLAYER_GLOSSARY_TERMS: readonly GlossaryTerm[] = [
   { term: 'Encounter', def: 'A single developmental exchange — a question that meets you where you are. Each encounter touches one line of intelligence at your current stage. There are no wrong answers; the game reads how you think, feel, and choose, not what you believe.', audience: 'player', unlockTier: 'tier1' },
   { term: 'Holon', def: 'A whole that is also part of a larger whole. The world of Mysterium is made of holons — nested layers of meaning that shift as you grow. A holon at one stage becomes part of a larger pattern at the next.', audience: 'player', unlockTier: 'tier1' },
   { term: 'Significator', def: 'The game holds a living memory of you across sessions — not a score, not a label, but a pattern of what you have touched and what has touched you. It carries your developmental history so the game can meet you where you actually are, not where it assumes you should be.', audience: 'player', unlockTier: 'tier1' },
-  { term: 'Transformation', def: 'A frame-change. When the resonance shifts, new encounters open and the work deepens. Transformation is not a climb — it is the same world seen from a new altitude.', audience: 'player', unlockTier: 'tier1' },
-  { term: 'Veil', def: 'A design principle: the game never shows you clinical labels about yourself. You see qualitative felt-sense language, not diagnoses. The Veil is what makes the game a practice rather than a test.', audience: 'player', unlockTier: 'tier1' },
+  { term: 'Transformation', def: 'A frame-change. When the resonance shifts, new encounters open and the work deepens. Transformation is not a climb — it is the same world seen from a new altitude. A stage transition is the moment you cross into it: new encounter types unlock, the resonance shifts, and the work deepens. The LLM system prompt calls this a "stage transition", a "frame-change" or a "new altitude" — they are the same event.', audience: 'player', unlockTier: 'tier1', unlockKeywords: ['transform', 'transformation', 'stage transition', 'frame-change', 'new altitude', 'something shifted', 'the work deepens'] },
+  { term: 'Veil', def: 'A design principle: the game never shows you clinical labels about yourself. You see qualitative felt-sense language, not diagnoses. The Veil is what makes the game a practice rather than a test. It arrives in play as a contemplative frame.', audience: 'player', unlockTier: 'tier1', unlockKeywords: ['veil', 'the game never shows', 'qualitative', 'felt-sense', 'contemplative frame'] },
 ];
 
 /** Tier 2 terms — unlock when encountered in play.
@@ -64,8 +64,6 @@ export const PLAYER_GLOSSARY_TERMS: readonly GlossaryTerm[] = [
  *  and "soul-pattern". The keywords are tuned to the LLM's actual vocabulary. */
 export const TIER2_GLOSSARY_TERMS: readonly GlossaryTerm[] = [
   { term: 'Resonance', def: 'A poetic 2-3 word description of your current stage\'s aesthetic (e.g. "fortress-sharp, weapon-walls" for Red). The resonance shifts as you move through stages — it is the felt texture of where you are, not a label.', audience: 'player', unlockTier: 'tier2', unlockKeywords: ['resonance', 'cathedral-ordered', 'fortress-sharp', 'weapon-walls', 'gold-stone', 'the world feels'] },
-  { term: 'Transformation', def: 'A stage transition. When you transform, the resonance shifts, new encounter types unlock, and the work deepens. Transformation is not a climb; it is a frame-change — the same world seen from a new altitude.', audience: 'player', unlockTier: 'tier2', unlockKeywords: ['transform', 'transformation', 'stage transition', 'frame-change', 'new altitude', 'something shifted', 'the work deepens'] },
-  { term: 'Veil', def: 'A design principle: the game never shows you clinical labels about yourself. You see qualitative felt-sense language, not diagnoses. The Veil is what makes the game a practice rather than a test.', audience: 'player', unlockTier: 'tier2', unlockKeywords: ['veil', 'the game never shows', 'qualitative', 'felt-sense', 'contemplative frame'] },
 ];
 
 /** Advanced theoretical set — only shown with `mysterium glossary --full` (now requires --dev).
@@ -102,9 +100,19 @@ export const GLOSSARY_TERMS: readonly GlossaryTerm[] = [
 export function checkTermUnlocks(narrativeText: string, alreadyUnlocked: readonly string[]): readonly string[] {
   const newlyUnlocked: string[] = [];
   const lowerText = narrativeText.toLowerCase();
-  for (const term of TIER2_GLOSSARY_TERMS) {
+  // EVERY term that declares keywords, not just TIER2. The tier1 and advanced rows carry
+  // `unlockKeywords` too — a term's tier records WHEN a player first meets it, not whether its
+  // vocabulary can unlock it — and narrowing this loop to TIER2 made every keyword on a merged
+  // row unreachable. A term de-duplicated across tiers keeps its keywords on the surviving row, and
+  // this is the loop that has to read them.
+  for (const term of GLOSSARY_TERMS) {
     if (alreadyUnlocked.includes(term.term)) continue;
-    const keywords = term.unlockKeywords ?? [term.term.toLowerCase()];
+    // A term with NO `unlockKeywords` is not keyword-unlockable, and falling back to its own name
+    // would be a way to leak the whole corpus: "drive" or "CCI" appearing in one narrative line
+    // would mark the clinical terms as newly unlocked to the player, which is exactly the tiering
+    // P2-U5 puts behind an unlock. A row opts in by declaring the vocabulary that reaches it.
+    const keywords = term.unlockKeywords;
+    if (!keywords || keywords.length === 0) continue;
     if (keywords.some(kw => lowerText.includes(kw.toLowerCase()))) {
       newlyUnlocked.push(term.term);
     }

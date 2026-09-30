@@ -174,7 +174,7 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // route, so the gate enumerates the route tree from disk and refuses to pass on a route that
   // the limiter does not actually refuse.
   results.push(await validateBffRateLimitWired());
-  // G54 (Veil): polarity and shadow are CLOSED register (20 §11.1), and two surfaces were printing
+  // G55 (Veil): polarity and shadow are CLOSED register (20 §11.1), and two surfaces were printing
   // them straight to the player — /onboarding rendered `{option.polarity}` under every answer, so
   // the instrument showed its own scoring key, and ShadowsDisplay grouped by `e.quadrant` with a
   // per-quadrant severity band. Renaming `DarkAddiction` to 'Clinging' did not veil it: the
@@ -183,7 +183,7 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // gate reads the templates and strips comments, `<script>`, and `data-*` before looking, leaving
   // only the regions that actually reach the player.
   results.push(validateClosedRegisterNotRendered());
-  // G55: a keyed `each` on a field that repeats is a hard Svelte invariant failure that blanks the WHOLE
+  // G56: a keyed `each` on a field that repeats is a hard Svelte invariant failure that blanks the WHOLE
   // page — the glossary corpus defines 'Transformation' twice and the last nav item rendered nothing.
   results.push(validateKeyedEachKeys());
   const hardFailed = results.some((r) => r.hard && !r.passed);

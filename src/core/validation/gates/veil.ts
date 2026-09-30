@@ -254,7 +254,7 @@ function renderedRegionsOf(source: string): string {
 }
 
 export function validateClosedRegisterNotRendered(): GateResult {
-  const gate = 'G54 closed-register values never reach a player-facing template';
+  const gate = 'G55 closed-register values never reach a player-facing template';
   try {
     const files = svelteFiles(path.join(process.cwd(), 'src'));
     if (files.length === 0) {
@@ -292,22 +292,23 @@ export function validateClosedRegisterNotRendered(): GateResult {
 }
 
 // ---------------------------------------------------------------------------
-// G55 — a keyed each is never keyed on a field that can repeat
+// G56 — a keyed each is never keyed on a field that can repeat
 // ---------------------------------------------------------------------------
 
 /**
- * G55: a keyed `{#each … (x.field)}` whose `field` is not unique in the data renders NOTHING.
+ * G56: a keyed `{#each … (x.field)}` whose `field` is not unique in the data renders NOTHING.
  *
  * Svelte treats a duplicate key as a hard invariant failure, and it fails the whole component tree
- * — so one duplicate row in a corpus took down an entire page. The `/glossary` corpus defines
- * 'Transformation' at both tier1 and tier2, the list was keyed on `term`, and the last item in the
- * app's navigation rendered a blank screen. No test failed and `tsc` was clean: the failure only
- * exists in the browser, on the exact data a player has.
+ * — so one duplicate row in a corpus took down an entire page. The `/glossary` corpus defined
+ * 'Transformation' and 'Veil' at both tier1 and tier2, the list was keyed on `term`, and the last
+ * item in the app's navigation rendered a blank screen. No test failed and `tsc` was clean: the
+ * failure only exists in a browser, on the exact data a player has.
  *
- * The gate cannot prove any field is unique for every future corpus, so it pins the two properties
- * that are checkable statically: no keyed `each` may key on a field this gate knows repeats, and the
- * known-repeating corpora must actually repeat (so a future de-duplication turns this gate red and
- * gets it deleted rather than left as decoration).
+ * TWO CHECKS, and the corpus one now asserts UNIQUENESS rather than the presence of a duplicate.
+ * The first version required the corpus to still contain a repeat, on the reasoning that a gate
+ * outliving its reason is decoration — but a de-duplicated corpus is the FIXED state, and deleting
+ * the gate is precisely how this class returns the next time a term is added twice. So the rule is
+ * the invariant, and the corpus is held to it.
  */
 const REPEATABLE_KEY_FIELDS: readonly string[] = ['term'];
 
@@ -316,7 +317,7 @@ function keyedEachBlocks(source: string): string[] {
 }
 
 export function validateKeyedEachKeys(): GateResult {
-  const gate = 'G55 a keyed each is never keyed on a field that can repeat';
+  const gate = 'G56 a keyed each is never keyed on a field that can repeat';
   try {
     const files = svelteFiles(path.join(process.cwd(), 'src'));
     if (files.length === 0) {
@@ -332,20 +333,25 @@ export function validateKeyedEachKeys(): GateResult {
       }
     }
 
-    // The second half: the corpus MUST still contain the duplicate this gate exists for. If someone
-    // de-duplicates `term`, this fails and the gate gets removed in the same commit — a gate that
-    // outlives its reason is decoration (MY-RG-0010).
+    // (2) CORPUS UNIQUENESS. The field a keyed each leans on must be unique in the data that feeds
+    // it. This is what keeps the blank-glossary class from coming back: adding a term that already
+    // exists fails here, at build time, rather than blanking a page in someone's browser.
     const glossary = fs.readFileSync(path.join(process.cwd(), 'src/core/data/glossary.ts'), 'utf-8');
     const terms = [...glossary.matchAll(/\{ term: '([^']+)'/g)].map((m) => m[1]!);
-    const dupes = terms.filter((t, i) => terms.indexOf(t) !== i);
-    if (dupes.length === 0) {
-      return { gate, passed: false, hard: true, details: 'no duplicate glossary term remains — G55 was written for a repeat-key crash that no longer exists, so delete this gate rather than leave it green' };
+    const dupes = [...new Set(terms.filter((t, i) => terms.indexOf(t) !== i))];
+    if (dupes.length > 0) {
+      return {
+        gate,
+        passed: false,
+        hard: true,
+        details: `glossary defines ${dupes.length} term(s) more than once: ${dupes.join(', ')} — a keyed each over a repeated key blanks the whole page. Merge the rows (keep the richer definition, union the unlockKeywords).`,
+      };
     }
 
     if (offenders.length > 0) {
-      return { gate, passed: false, hard: true, details: `${offenders.join('; ')} — corpus still repeats: ${[...new Set(dupes)].join(', ')}` };
+      return { gate, passed: false, hard: true, details: offenders.join('; ') };
     }
-    return { gate, passed: true, hard: true, details: `${files.length} .svelte files scanned; no each is keyed on a repeating field (corpus still repeats: ${[...new Set(dupes)].join(', ')})` };
+    return { gate, passed: true, hard: true, details: `${files.length} .svelte files scanned; no each is keyed on a field that repeats, and all ${terms.length} glossary terms are unique` };
   } catch (err) {
     return { gate, passed: false, hard: true, details: `gate threw: ${err instanceof Error ? err.message : String(err)}` };
   }
