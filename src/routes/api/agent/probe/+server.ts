@@ -24,8 +24,11 @@ import { AgenticProbeValidationError } from '../../../../core/agent/validateAgen
 export const GET: RequestHandler = async ({ url }) => {
   const sessionId = url.searchParams.get('session') ?? '';
 
-  const { director } = getOrCreateAgentRuntime();
-  void sessionId; // reserved for per-session routing later
+  // Routed by session. This line used to read `void sessionId; // reserved for per-session routing
+  // later`, which meant every browser on this isolate shared one DirectorAgent: the first player to
+  // calibrate completed calibration for everyone, and the next arrival overwrote their probe state.
+  // See `agentRegistry.ts`.
+  const { director } = getOrCreateAgentRuntime(sessionId);
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream({

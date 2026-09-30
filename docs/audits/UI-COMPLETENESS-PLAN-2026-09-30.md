@@ -141,8 +141,14 @@ without them, and the deploy blocker below makes them un-shippable anyway. Do P1
   so, not to quietly broaden its semantics.
 - **`inferAltitudesFromAnswers` — unused.** `/calibrate` uses `QuickCalibrationScoring`. Dead module
   or live? Decide and delete or wire.
-- **Process-global `DirectorAgent`** (`src/lib/server/agentRegistry.ts`) — two concurrent players
-  share calibration state; traps until process restart. Real on Workers.
+- **Process-global `DirectorAgent` — FIXED.** `src/lib/server/agentRegistry.ts` held ONE director for
+  the whole process, and both callers discarded the session id they had already parsed —
+  `probe/+server.ts:28` read `void sessionId; // reserved for per-session routing later`, and
+  `observe/+server.ts` validated that a `sessionId` was present and then ignored it. So the first
+  browser to calibrate completed calibration for every other browser on the isolate, and nothing ever
+  reset it. Now keyed by session, LRU-bounded at 64 so a public endpoint cannot grow the map without
+  limit, and both endpoints pass their id. Proven by mutation: reverting to a global turns 6 of the 9
+  isolation tests red, one of them reading "b was completed by a".
 
 ---
 

@@ -65,7 +65,9 @@ export const POST: RequestHandler = async ({ request }) => {
     return json({ error: 'sessionId is required' }, { status: 400 });
   }
 
-  const { director } = getOrCreateAgentRuntime();
+  // Routed by session. The endpoint REQUIRED a sessionId and then did not use it, which meant every
+  // browser on this isolate shared one DirectorAgent — see `agentRegistry.ts`.
+  const { director } = getOrCreateAgentRuntime(sessionId);
 
   if (body.op === 'probe-response') {
     if (!body.response) {
