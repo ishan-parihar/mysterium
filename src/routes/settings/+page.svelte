@@ -129,6 +129,13 @@
               closed class — but the copy says so plainly rather than inviting the reader to expect
               content they will not have.
             -->
+            <a class="setting-row setting-link" href="/knowledge">
+              <div class="setting-label">
+                <span class="setting-name">Knowledge map</span>
+                <span class="setting-desc">Every concept you have met, and what is still missing</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
+            </a>
             <a class="setting-row setting-link" href="/diagnostic">
               <div class="setting-label">
                 <span class="setting-name">Diagnostic</span>

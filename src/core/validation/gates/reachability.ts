@@ -73,38 +73,70 @@ export function validateRoutesReachable(): GateResult {
     // gate that cannot fail. Refuse instead.
     if (routeFiles.length === 0) return mk('no +page.svelte found under src/routes — the walk is broken');
 
-    // Every .svelte file is a potential link source: a nav array, a settings list, a card, anything.
+    // Every .svelte file is a candidate link source: a nav array, a settings list, a card, anything.
     const svelte: string[] = [];
     walk(path.join(root, LINK_SOURCES), svelte);
-    const linkFiles = svelte.filter((p) => p.endsWith('.svelte'));
+    const navFiles = svelte.filter((p) => p.endsWith('.svelte'));
 
-    if (linkFiles.length === 0) return mk('no .svelte files found — nothing can link anywhere');
+    // A ROUTE PAGE MAY VOUCH FOR ITSELF, NEVER FOR ANOTHER ROUTE.
+    //
+    // Excluding `src/routes/**` outright was too blunt and wrong: the app's real navigation surfaces
+    // live INSIDE the route tree — `src/routes/+page.svelte` holds the 16-item home menu and
+    // `+layout.svelte` the shell — and excluding them flagged 16 genuinely reachable routes as
+    // orphans. The rule that survives is narrower and is the one a player experiences: a route can
+    // only vouch for ITSELF. `/insights` appearing inside `/insights` is its own title; `/insights`
+    // appearing inside `/glossary` is not a path to it.
+    //
+    // So the haystack is PER ROUTE: every navigation surface plus, for each route, only its own page.
+    if (navFiles.length === 0) return mk('no .svelte files found — nothing can link anywhere');
 
-    // One concatenated haystack, with comments stripped. A link inside a comment is not a link, and
-    // the four routes that had this bug each carry a comment explaining it — a naive scan reports
-    // all of them as linked and the gate silently passes forever.
     const stripComments = (s: string): string =>
       s.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/^\s*\/\/.*$/gm, ' ');
 
-    const haystack = linkFiles
+    // The SHARED navigation surfaces are the shell and the pages a player navigates THROUGH rather than
+    // reads: the sidebar and bottom nav in `src/lib`, the home menu, the app shell, and SETTINGS —
+    // which is where the auditor surfaces and the diagnostic report are offered, and which is a
+    // navigation surface in its own right rather than a content page that happens to hold links.
+    // Excluding it flagged the four routes that fix in 37c3119 added links to.
+    const isNavigationSurface = (p: string): boolean => {
+      const f = p.replace(/\\/g, '/');
+      if (!f.includes('/src/routes/')) return true;                     // src/lib/** — shell + components
+      if (/src\/routes\/\+page\.svelte$/.test(f)) return true;          // the 16-item home menu
+      if (/src\/routes\/\+layout\.svelte$/.test(f)) return true;        // the app shell
+      if (/src\/routes\/settings\/[+a-z]*page\.svelte$/.test(f)) return true; // the settings hub
+      return false;                                                     // a CONTENT page
+    };
+
+    const sharedHaystack = navFiles
+      .filter(isNavigationSurface)
       .map((f) => stripComments(fs.readFileSync(f, 'utf-8')))
       .join('\n');
+
+    // For each route, its own page may count — and only itself.
+    const selfHaystack = new Map<string, string>();
+    for (const file of routeFiles) {
+      selfHaystack.set(routeOf(file, root), stripComments(fs.readFileSync(file, 'utf-8')));
+    }
+
+    const linked = (route: string, haystack: string): boolean => {
+      const pattern = new RegExp(`['"\`]${route.replace(/\//g, '\\/')}(\\?[^'"\`]*)?['"\`]`);
+      return pattern.test(haystack);
+    };
 
     const exempt = new Set(REACHABILITY_EXEMPT.map((e) => e.route));
     const orphans = routeFiles
       .map((f) => routeOf(f, root))
       .filter((route) => !exempt.has(route))
-      // `goto('/play')`, `href="/play"`, `href="/play?x"` — a path SEGMENT match, not a substring,
-      // so `/play` is not satisfied by a link to `/playlist`.
       .filter((route) => {
-        const pattern = new RegExp(`['"\`]${route.replace(/\//g, '\\/')}(\\?[^'"\`]*)?['"\`]`);
-        return !pattern.test(haystack);
+        if (linked(route, sharedHaystack)) return false;
+        return !linked(route, selfHaystack.get(route) ?? '');
       });
 
     if (orphans.length > 0) {
       return mk(
-        `${orphans.length} route(s) are reachable from NO link in ${LINK_SOURCES}: ${orphans.join(', ')}. ` +
-          `A player cannot get there. Link it, or add it to REACHABILITY_EXEMPT with a reason.`,
+        `${orphans.length} route(s) are reachable from NO navigation surface: ${orphans.join(', ')}. ` +
+          `A player cannot get there. Link it from a nav/settings surface or from its own page, or add ` +
+          `it to REACHABILITY_EXEMPT with a reason. One route cannot vouch for another.`,
       );
     }
 
@@ -112,7 +144,7 @@ export function validateRoutesReachable(): GateResult {
       gate: 'G57 route reachability',
       passed: true,
       hard: true,
-      details: `${routeFiles.length} routes on disk, all reachable from a link (${linkFiles.length} .svelte files scanned)`,
+      details: `${routeFiles.length} routes on disk, all reachable — each linked from a shared navigation surface or from its own page (a route never counts as a link source for another route)`,
     };
   } catch (err) {
     return mk(`threw: ${err instanceof Error ? err.message : String(err)}`);

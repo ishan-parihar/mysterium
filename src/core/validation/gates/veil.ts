@@ -325,7 +325,7 @@ export function validateClosedRegisterNotRendered(): GateResult {
       gate,
       passed: true,
       hard: true,
-      details: `${files.length} .svelte files scanned; no closed-register polarity/shadow value reaches a rendered region`,
+      details: `${files.length} .svelte files scanned for rendered regions, plus the player-audience rows of src/core/data/glossary.ts for DATA leaks; no closed-register polarity/shadow value reaches a rendered region`,
     };
   } catch (err) {
     return { gate, passed: false, hard: true, details: `gate threw: ${err instanceof Error ? err.message : String(err)}` };

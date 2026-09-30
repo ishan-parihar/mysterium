@@ -23,6 +23,44 @@ import {
 } from '../../src/core/data/glossary.js';
 
 describe('the glossary corpus', () => {
+  it('THE PLAYER-READ SET IS EXACTLY THE PLAYER-AUDIENCE TERMS — the browser check, made repeatable', () => {
+    // `/glossary` renders `audience === 'player'` and nothing else. That filter was a fix: the page
+    // used to render all 22 rows, which put `rayProfile`, `G_z / P_z` and definitions spelling out
+    // `DarkAddiction` in front of every player — the same shadow-quadrant vocabulary that had just
+    // been removed from `/onboarding` and `ShadowsDisplay`. A browser check proved it once and was
+    // not repeatable, so the visible outcome is asserted here instead.
+    const players = GLOSSARY_TERMS.filter((t) => t.audience === 'player');
+
+    expect(players.map((t) => t.term).sort()).toEqual(
+      ['Encounter', 'Holon', 'Line', 'Resonance', 'Shadow', 'Significator', 'Stage', 'Transformation', 'Veil'].sort(),
+    );
+  });
+
+  it('no advanced term leaks into the player set', () => {
+    // Named explicitly rather than implied by the count: if a row is retagged `player`, one of
+    // these two assertions must name it.
+    const playerTerms = new Set(GLOSSARY_TERMS.filter((t) => t.audience === 'player').map((t) => t.term));
+    const advancedTerms = ADVANCED_GLOSSARY_TERMS.map((t) => t.term);
+
+    expect(advancedTerms.length).toBeGreaterThan(0);
+    expect(advancedTerms.filter((t) => playerTerms.has(t))).toEqual([]);
+  });
+
+  it('a player-audience definition names no closed-register concept', () => {
+    // The DATA half of G55 (20 §11.1). A template that interpolates `{term.def}` is correct; the
+    // leak is the text behind it, and a template scan cannot see that.
+    const CLOSED = ['DarkAddiction', 'DarkAllergy', 'GoldenAddiction', 'GoldenAllergy', 'rayProfile', 'G_z', 'P_z'];
+    const offenders: string[] = [];
+    for (const t of GLOSSARY_TERMS.filter((x) => x.audience === 'player')) {
+      for (const token of CLOSED) {
+        if (new RegExp(`\\b${token}\\b`).test(t.def) || new RegExp(`\\b${token}\\b`).test(t.term)) {
+          offenders.push(`${t.term} names ${token}`);
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+
   it('defines every term exactly once — a repeat blanks the page', () => {
     const terms = GLOSSARY_TERMS.map((t) => t.term);
     const dupes = [...new Set(terms.filter((t, i) => terms.indexOf(t) !== i))];
