@@ -12,7 +12,7 @@ import { validatePracticeLoop } from '../../practice/practiceTools.js';
 import { validatePodPrivacyWall } from '../../pods/podStateMachine.js';
 import type { GateResult, Tier } from './plumbing.js';
 import { CI_DIVERGENCE, validateAdaptiveDifficulty, validateCoherence, validateDivergence, validateEducationalStream, validateForgettingCurve, validateMetacognition, validateNeedsDetection, validateReproducibility, validateShadowResolution, validateTransformationGating } from './trajectory.js';
-import { validateIdentityFirewall, validateLevellingMechanism, validateVeilCompliance, validateClosedRegisterNotRendered } from './veil.js';
+import { validateIdentityFirewall, validateLevellingMechanism, validateVeilCompliance, validateClosedRegisterNotRendered, validateKeyedEachKeys } from './veil.js';
 import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPacks, validatePlacementConvergence } from './curriculum.js';
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
@@ -183,6 +183,9 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // gate reads the templates and strips comments, `<script>`, and `data-*` before looking, leaving
   // only the regions that actually reach the player.
   results.push(validateClosedRegisterNotRendered());
+  // G55: a keyed `each` on a field that repeats is a hard Svelte invariant failure that blanks the WHOLE
+  // page — the glossary corpus defines 'Transformation' twice and the last nav item rendered nothing.
+  results.push(validateKeyedEachKeys());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

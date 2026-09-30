@@ -116,14 +116,18 @@ describe('Validation benchmark (CI tier)', () => {
     // 49 → 50 with Phase 17 Track B (G50 WebUI scheduling parity — the browser carries the
     // strategy bias, bleed-through and the curriculum interleave the kernel applies, and
     // MY-AD-0033's reserved primary keeps an exported, scale-independent position contract.)
+    // 55 → 56 with G55 (a keyed each is never keyed on a field that can repeat). A duplicate corpus
+    // key is a hard Svelte invariant failure that blanks the entire page, and it only exists in a
+    // browser on the exact data a player has — the glossary corpus repeats 'Transformation' and
+    // 'Veil', so the last nav item rendered nothing.
     // 54 → 55 with G54 (the closed register is never rendered). Two surfaces printed polarity and
     // shadow quadrant/intensity straight to the player — the onboarding option label and the
     // profile's per-quadrant shadow breakdown — and the failure is an ABSENCE, so no runtime test
     // could see a closed value that was never rendered. The gate reads the templates, stripping
     // comments, `<script>` and `data-*`, and refuses on the rest.
-    expect(suite.results.length).toBe(55);
+    expect(suite.results.length).toBe(56);
     for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46', 'G47', 'G48', 'G49', 'G50', 'G51',
-      'G52', 'G53', 'G54']) {
+      'G52', 'G53', 'G54', 'G55']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);

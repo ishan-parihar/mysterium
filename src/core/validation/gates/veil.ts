@@ -290,3 +290,63 @@ export function validateClosedRegisterNotRendered(): GateResult {
     return { gate, passed: false, hard: true, details: `gate threw: ${err instanceof Error ? err.message : String(err)}` };
   }
 }
+
+// ---------------------------------------------------------------------------
+// G55 — a keyed each is never keyed on a field that can repeat
+// ---------------------------------------------------------------------------
+
+/**
+ * G55: a keyed `{#each … (x.field)}` whose `field` is not unique in the data renders NOTHING.
+ *
+ * Svelte treats a duplicate key as a hard invariant failure, and it fails the whole component tree
+ * — so one duplicate row in a corpus took down an entire page. The `/glossary` corpus defines
+ * 'Transformation' at both tier1 and tier2, the list was keyed on `term`, and the last item in the
+ * app's navigation rendered a blank screen. No test failed and `tsc` was clean: the failure only
+ * exists in the browser, on the exact data a player has.
+ *
+ * The gate cannot prove any field is unique for every future corpus, so it pins the two properties
+ * that are checkable statically: no keyed `each` may key on a field this gate knows repeats, and the
+ * known-repeating corpora must actually repeat (so a future de-duplication turns this gate red and
+ * gets it deleted rather than left as decoration).
+ */
+const REPEATABLE_KEY_FIELDS: readonly string[] = ['term'];
+
+function keyedEachBlocks(source: string): string[] {
+  return [...source.matchAll(/\{\#each\s+[^}]*?\((\w+)\.(\w+)\)\}/g)].map((m) => `${m[1]}.${m[2]}`);
+}
+
+export function validateKeyedEachKeys(): GateResult {
+  const gate = 'G55 a keyed each is never keyed on a field that can repeat';
+  try {
+    const files = svelteFiles(path.join(process.cwd(), 'src'));
+    if (files.length === 0) {
+      return { gate, passed: false, hard: true, details: 'no .svelte files enumerated — the gate would pass on an empty scan' };
+    }
+    const offenders: string[] = [];
+    for (const file of files) {
+      for (const block of keyedEachBlocks(fs.readFileSync(file, 'utf-8'))) {
+        const field = block.split('.')[1]!;
+        if (REPEATABLE_KEY_FIELDS.includes(field)) {
+          offenders.push(`${path.relative(process.cwd(), file)} keys an each on ${block}, and \`${field}\` repeats in the corpus`);
+        }
+      }
+    }
+
+    // The second half: the corpus MUST still contain the duplicate this gate exists for. If someone
+    // de-duplicates `term`, this fails and the gate gets removed in the same commit — a gate that
+    // outlives its reason is decoration (MY-RG-0010).
+    const glossary = fs.readFileSync(path.join(process.cwd(), 'src/core/data/glossary.ts'), 'utf-8');
+    const terms = [...glossary.matchAll(/\{ term: '([^']+)'/g)].map((m) => m[1]!);
+    const dupes = terms.filter((t, i) => terms.indexOf(t) !== i);
+    if (dupes.length === 0) {
+      return { gate, passed: false, hard: true, details: 'no duplicate glossary term remains — G55 was written for a repeat-key crash that no longer exists, so delete this gate rather than leave it green' };
+    }
+
+    if (offenders.length > 0) {
+      return { gate, passed: false, hard: true, details: `${offenders.join('; ')} — corpus still repeats: ${[...new Set(dupes)].join(', ')}` };
+    }
+    return { gate, passed: true, hard: true, details: `${files.length} .svelte files scanned; no each is keyed on a repeating field (corpus still repeats: ${[...new Set(dupes)].join(', ')})` };
+  } catch (err) {
+    return { gate, passed: false, hard: true, details: `gate threw: ${err instanceof Error ? err.message : String(err)}` };
+  }
+}

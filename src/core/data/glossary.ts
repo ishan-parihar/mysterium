@@ -84,7 +84,7 @@ export const ADVANCED_GLOSSARY_TERMS: readonly GlossaryTerm[] = [
   { term: 'Polarity', def: 'The energetic direction of an encounter: Absorptive (taking in), Radiative (giving out), or Homeostatic (balanced).', audience: 'advanced', unlockTier: 'advanced' },
   { term: 'Aesthetic Label', def: 'The bracketed word next to each developmental line in status output (e.g. [power]). It is the short form of your current stage: primal=Infrared, symbolic=Magenta, power=Red, order=Amber, reason=Orange, harmony=Green, integral=Teal, unity=Turquoise.', audience: 'advanced', unlockTier: 'advanced' },
   { term: 'Theme', def: 'The session strategy that biases encounter selection (e.g. "balanced-development"). Shown in diagnostic. Different themes emphasize different lines or shadow work.', audience: 'advanced', unlockTier: 'advanced' },
-  { term: 'Calibration', def: 'The initial 8-question session that establishes your baseline across all 8 lines. Runs automatically on first play.', audience: 'advanced', unlockTier: 'advanced' },
+  { term: 'Calibration', def: 'The opening question set that establishes your baseline across all 8 lines. It runs automatically on first play, and it ends when the instrument has gathered enough signal — usually a handful of questions, not a fixed number.', audience: 'advanced', unlockTier: 'advanced' },
 ];
 
 /** All terms (tier1 + tier2 + advanced), for backwards-compat imports. */

@@ -43,7 +43,13 @@
       </Card>
     {:else}
       <Stack gap="space-2">
-        {#each filtered as entry (entry.term)}
+        <!--
+          The key is NOT `entry.term`. Tier1 and tier2 both define 'Transformation', and a keyed
+          each over a non-unique key is a hard Svelte invariant failure that renders NOTHING — the
+          whole page came up blank, from the one nav item called Glossary. Index is the correct key
+          here because the list is a static corpus, not a reorderable collection.
+        -->
+        {#each filtered as entry, i (i)}
           <Card padding="space-4" variant="default">
             <div class="term-entry">
               <h3 class="term-name">{entry.term}</h3>
