@@ -91,7 +91,7 @@ describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
     // TWO defects, found by reading the values rather than trusting the intent.
     //
     // (1) One `accent-fg` was serving TWO fills of different lightness. `accent-fg` is text on
-    //     the SOLID accent (Button .btn-primary, HoldProbe .hold-button); `accent-soft-fg` is
+    //     the SOLID accent (Button .btn-primary; HoldProbe was removed 2026-09-30); `accent-soft-fg` is
     //     text on the accent-soft fill (Badge .badge-accent, Sidebar .nav-item.active,
     //     LLMDialogueRunner .option.selected). Amber and teal need DARK text on the solid and
     //     WHITE on the soft — inverting one to fix the other is how the other regressed, which
@@ -150,15 +150,17 @@ describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
     // The class of bug the two tokens exist to prevent: a `color:` paired with a `background:`
     // that both reference accent, but one the solid and the other the soft. This reads the real
     // component sources, so a new consumer cannot reintroduce the mismatch silently.
-    // HoldProbe has no hover rule that changes the fill, so it is the one component that only
-    // ever sits on the solid accent. Button is NOT here: its :hover swaps to accent-soft and
-    // switches token, so it legitimately uses both.
-    const SOLID_ONLY = ['HoldProbe.svelte'];
+    // HoldProbe.svelte was DELETED (2026-09-30): zero importers, and the hold probe that actually
+    // runs is `/calibrate`'s inline implementation, which additionally aborts on
+    // `visibilitychange` — a case HoldProbe never handled. `scoreHoldProbe` is untouched and live.
+    // It was the only component sitting purely on the solid accent, so the set is now EMPTY rather
+    // than absent: it stays so a future single-fill consumer has a place to go. Button is NOT here:
+    // its :hover swaps to accent-soft and switches token, so it legitimately uses both.
+    const SOLID_ONLY: readonly string[] = [];
     const files = [
       'src/lib/components/Button.svelte',
       'src/lib/components/Badge.svelte',
       'src/lib/components/Sidebar.svelte',
-      'src/lib/components/gameplay/HoldProbe.svelte',
       'src/lib/components/gameplay/LLMDialogueRunner.svelte',
     ];
     for (const file of files) {
@@ -193,7 +195,6 @@ describe('stage tokens — the CSS ladder IS the canonical ladder', () => {
       'src/lib/components/Button.svelte',
       'src/lib/components/Badge.svelte',
       'src/lib/components/Sidebar.svelte',
-      'src/lib/components/gameplay/HoldProbe.svelte',
       'src/lib/components/gameplay/LLMDialogueRunner.svelte',
     ];
     for (const file of files) {

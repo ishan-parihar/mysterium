@@ -119,15 +119,23 @@ without them, and the deploy blocker below makes them un-shippable anyway. Do P1
 - **`/diagnostic` never browser-verified.** Linked into Settings; renders CCI dimension bands (open
   register per 20 §11.1). `:57` carries a `ponytail:` noting CCI+theme is deferred to avoid an engine
   import — so what it *does* render must be confirmed, not assumed.
-- **`/curriculum` and `/curriculum/progress` seeding race.** `/knowledge` seeds idempotently; these
-  two still read the registry in their own `onMount`. My `bede9e0` commit message claims "one boot
-  path for every route" — that is **overstated** and must be corrected.
-- **G57 self-link hole.** The gate scans all 66 `.svelte` files including `src/routes/**`, so a route
-  satisfied only by another route's template counts as linked. Exclude `src/routes/**` from the
-  haystack, or a page can self-satisfy. Prove: unlink one of the four orphans, confirm red.
-- **`HoldProbe.svelte` — 0 importers.** `scoreHoldProbe` and `CalibrationRun` are built and tested;
-  the component is orphaned. Mount it on `/calibrate` (the page already runs hold probes) or record
-  it as deliberately unmounted with the reason.
+- **`/curriculum` and `/curriculum/progress` seeding race — CHECKED, NOT A BUG.** This was carried
+  here on the strength of a commit message, and it is wrong: both routes call
+  `seedCurriculumRegistry()` themselves (`curriculum/+page.svelte:32`, `curriculum/progress/+page.svelte:31`),
+  not only `/knowledge`. Verified cold, as a fresh visitor with `localStorage.clear()`: `/curriculum`
+  renders "113 concepts · 17 roots" and the full CS/Maths/Physics tree, and `/curriculum/progress`
+  renders "113 TOTAL CONCEPTS" with per-branch depth and retention. No race, no empty state. The
+  `bede9e0` claim of "one boot path for every route" was accurate on inspection.
+- **G57 self-link hole — CLOSED.** The gate scanned all `.svelte` files including `src/routes/**`, so
+  a route could be satisfied by another route's template. Rebuilt as: a route may vouch for ITSELF,
+  and shared navigation surfaces (`src/lib/**`, `src/routes/+page.svelte`, `+layout.svelte`,
+  `settings/`) vouch for everything else. Both naive versions were wrong — "any `.svelte`" is too
+  generous, and excluding `src/routes/**` flagged 16 genuinely reachable routes as orphans.
+  Rebuilding it found a real one: `/knowledge` was linked only from `/profile`. Now in settings.
+- **`HoldProbe.svelte` — 0 importers.** `scoreHoldProbe` is LIVE — imported and called by
+  `CalibrationRun.ts:21` and `:59`, and it is the Somatic/Willpower timing path. Only the Svelte
+  COMPONENT is orphaned. Mount it on `/calibrate` (the page already runs hold probes) or record it as
+  deliberately unmounted with the reason. Do NOT treat `scoreHoldProbe` as dead.
 - **`checkTermUnlocks` — 0 callers.** Check `scripts/` and the CLI before changing its loop; if
   genuinely uncalled it is a documented in-vitro surface, and the honest move is to wire it or say
   so, not to quietly broaden its semantics.
