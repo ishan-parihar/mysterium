@@ -22,11 +22,13 @@
   import type { CurriculumHolon, KnowledgeState } from '$core/curriculum/types.js';
   import type { Line } from '$core/domain/Line.js';
   import { ALL_LINES } from '$core/domain/Line.js';
-  import { ALL_STAGES, stageOrdinal, type Stage } from '$core/domain/Stage.js';
+  import { ALL_STAGES, type Stage } from '$core/domain/Stage.js';
   import {
     lineCurriculum,
     crossDomainLinks,
     depthSummary,
+    radarPoints,
+    radarPath,
     type LineCurriculum,
   } from './radarModel.js';
 
@@ -45,6 +47,21 @@
 
   const rows = $derived(lineCurriculum(holons, knowledge));
   const links = $derived(crossDomainLinks(holons, knowledge));
+
+  /**
+   * The altitude shape, through the model rather than inline.
+   *
+   * `radarPoints`/`radarPath` were exported, tested by 8 tests, and reached by nothing — the altitude
+   * marker was drawn from a hand-inlined `stageOrdinal` and a constant 0.75. That is the shape MY-RG-0010
+   * and the `recordProbeResult?.` episode both describe: a green suite over an unreachable function. So
+   * the component now uses the model it was tested for, and if the geometry changes the view changes.
+   *
+   * `altR` per spoke stays the model's own radius; the dashed marker is drawn at the altitude point's
+   * own distance rather than a constant, so a learner at Red and one at Turquoise get visibly different
+   * markers — which was the point of drawing them separately from the curriculum band.
+   */
+  const altitude = $derived(radarPoints(altitudes, SIZE, ALL_STAGES.length));
+  const altitudeByLine = $derived(new Map(altitude.map((p) => [p.line, p])));
 
   function spokeAngle(index: number): number {
     return (2 * Math.PI * index) / ALL_LINES.length - Math.PI / 2;
@@ -87,7 +104,7 @@
       {#each rows as row (row.line)}
         {@const band = bandRow(row)}
         {@const angle = spokeAngle(band.index)}
-        {@const altR = maxRadius * (stageOrdinal(altitudes[row.line] ?? 'Infrared') / (ALL_STAGES.length - 1))}
+        {@const altPoint = altitudeByLine.get(row.line)}
         {@const reachR = maxRadius * row.coverage}
         <g role="listitem" aria-label={bandLabel(row)}>
           <line
@@ -113,15 +130,16 @@
             />
           {/if}
           <!-- Altitude: the hollow marker, drawn on its own shorter spoke so the two never overlap. -->
-          <line
-            x1={cx}
-            y1={cy}
-            x2={cx + Math.cos(angle) * altR}
-            y2={cy + Math.sin(angle) * altR}
-            stroke="var(--mysterium-fg-muted)"
-            stroke-width="1"
-            stroke-dasharray="2 3"
-          />
+          {#if altPoint}
+            <circle
+              cx={altPoint.x}
+              cy={altPoint.y}
+              r="3.5"
+              fill="none"
+              stroke="var(--mysterium-fg-muted)"
+              stroke-width="1.5"
+            />
+          {/if}
           <text
             x={cx + Math.cos(angle) * (maxRadius + 14)}
             y={cy + Math.sin(angle) * (maxRadius + 14)}
@@ -135,6 +153,20 @@
           </text>
         </g>
       {/each}
+
+      <!--
+        The altitude outline, through the model's own path builder. This is the SHAPE the eight
+        altitude points make, and drawing it is what makes the radar a radar rather than eight spokes:
+        a reader sees the profile at a glance and the per-line detail only when they look for it.
+      -->
+      <path
+        d={radarPath(altitude)}
+        fill="var(--mysterium-accent)"
+        fill-opacity="0.1"
+        stroke="var(--mysterium-accent)"
+        stroke-width="1.5"
+        opacity="0.7"
+      />
     </svg>
 
     <ul class="radar-legend" aria-label="Curriculum reach per line">
