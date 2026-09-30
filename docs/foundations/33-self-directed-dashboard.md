@@ -247,18 +247,55 @@ interface StudyRecommendation {
 
 ### 4.2 Dashboard Render Contract
 
-The dashboard renders using the existing SvelteKit component architecture:
+The dashboard renders using the existing SvelteKit component architecture. **Status is stated per
+component, and it was measured rather than assumed** (2026-09-30): four of these five were named here
+while having zero importers, and a sixth renderer that DOES exist was not listed. The list below is the
+plan; the status column is the record. Ratified by **MY-AD-0035**.
 
-- `KnowledgeMap.svelte` — D3.js force-directed graph with depth coloring
-- `DevelopmentalRadar.svelte` — Extension of existing radar component with curriculum data
-- `LearningTrajectory.svelte` — Time-series chart with milestone annotations
-- `StudyPlanner.svelte` — Card-based recommendation list with rationale
-- `IntegrationMap.svelte` — Network graph of cross-domain connections (conditionally rendered)
+- `KnowledgeMap.svelte` — D3.js force-directed graph with depth colouring — **BUILT**
+  (`src/lib/components/displays/KnowledgeMap.svelte`, mounted at `/knowledge`). The layout is
+  concentric rings rather than a force simulation, deterministically: `mapLayout.ts` holds the geometry
+  and is mutation-tested. The `depthOrdinalFor` off-by-one (a prerequisite ROOT returning ring 1
+  instead of 0) was found by that extraction and fixed; measured live on the 113-node corpus, four of
+  five rings are used, at radii 190/150/110/80, with 32 roots on the outer ring.
+- `DevelopmentalRadar.svelte` — Extension of existing radar component with curriculum data — **BUILT**
+  (`src/lib/components/displays/DevelopmentalRadar.svelte`, mounted at `/profile`; arithmetic in
+  `radarModel.ts`). Curriculum reach is drawn as a filled band per spoke and altitude as a separate
+  hollow marker, because they are different measurements.
+- `LearningTrajectory.svelte` — Time-series chart with milestone annotations — **BUILT**
+  (`src/lib/components/displays/LearningTrajectory.svelte`; arithmetic in `trajectoryModel.ts`). Scatters
+  and per-concept step lines, never a single merged timeline line. The pace is a RATE and is omitted
+  below two ascending transitions, because a projection over one point is a promise the data cannot keep.
+- `StudyPlanner.svelte` — Card-based recommendation list with rationale — **BUILT**
+  (`src/lib/components/displays/StudyPlanner.svelte`; arithmetic in `plannerModel.ts`). The strategy
+  engine is an INPUT; its `themeRationale` carries a composite score and §3.2 forbids scores on a player
+  surface, so every rendered sentence is generated from the learner's own state.
+- `IntegrationMap.svelte` — Network graph of cross-domain connections (conditionally rendered) —
+  **BUILT** (`src/lib/components/displays/IntegrationMap.svelte`; arithmetic in `integrationModel.ts`).
+  Gated on `analyzed` depth per §3.2. Rendered as an authored list rather than a force graph: the
+  corpus writes 52 resolvable connections and 15 of them carry an explicit statement of where the
+  analogy stops, and a scatter would hide that text.
+- **`KnowledgeDashboard.svelte` — NOT PREVIOUSLY LISTED.** Renders the coverage, depth-distribution and
+  retention panels the map sits in, and is mounted by `/knowledge/+page.svelte`. This section named five
+  renderers where six exist; a reader could reasonably have concluded §4.2 was an inventory rather than a
+  plan.
+
+A view with no extracted pure module is not finished: `mapLayout.ts`, `radarModel.ts`,
+`trajectoryModel.ts`, `plannerModel.ts` and `integrationModel.ts` hold the arithmetic for Views 1–5, each
+mutation-tested, because a view whose geometry lives in a template cannot be tested without a browser and
+gets copied four more times.
 
 All views share:
 - The existing `StageTheme.svelte` for color palette
 - The existing `A11yApplier.svelte` for accessibility
 - The existing `StageTransitionOverlay.svelte` for depth-level transitions
+
+**Not built, and deliberately so.** View 4's learner overrides (§3.1:141-145) are absent: the kernel
+already honours session-local preferences through `PriorityComputation`'s weights and
+`sessionControlStore`'s `encounterCount`, and a second override channel nothing reads is the
+documented-but-unwired class. View 3's pattern insights (§3.1:126-128) are absent: "you learn faster in
+morning sessions" needs a clock on every session and a sample no test can hold. Both are recorded rather
+than faked.
 
 ---
 

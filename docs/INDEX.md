@@ -37,7 +37,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (70)
+## Records (71)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -82,6 +82,7 @@
 | `MY-RG-0030` | RG | catalyst | Active | A lifecycle table that lists the terminal event as an ordinary successor licenses the event by walking |
 | `MY-RG-0033` | RG | catalyst | Active | A reproducibility hash silently decides developmental line coverage |
 | `MY-AD-0023` | AD | curriculum | Active | Delivery structure is selected from a scaffold library, never authored per encounter and never left unfaded |
+| `MY-AD-0037` | AD | curriculum | Active | Ecology is Interpersonal, not Naturalist: a declined capacity remapped in the corpus |
 | `MY-AD-0022` | AD | profiling | Active | Preference is inferred under an evidence tier, and only the instrumented tier becomes a field of record |
 | `MY-RG-0020` | RG | profiling | Active | A language-derived inference becomes a field of record without a tier, a data class, or consent |
 | `MY-RG-0021` | RG | profiling | Active | A preference prior hardens into an identity label |
