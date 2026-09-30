@@ -21,6 +21,7 @@
   import DevelopmentalRadar from '$lib/components/displays/DevelopmentalRadar.svelte';
   import LearningTrajectory from '$lib/components/displays/LearningTrajectory.svelte';
   import StudyPlanner from '$lib/components/displays/StudyPlanner.svelte';
+  import IntegrationMap from '$lib/components/displays/IntegrationMap.svelte';
   import { getCurriculumRegistry } from '$core/curriculum/CurriculumRegistry.js';
   import { seedCurriculumRegistry } from '$core/curriculum/CurriculumSeed.js';
   import { gameStore, setSignificator } from '$lib/stores/gameStore.js';
@@ -203,6 +204,10 @@
            from the learner's own state, because the engine's `themeRationale` carries a composite score
            and canon §3.2:168 forbids scores on a player surface. -->
       <StudyPlanner holons={curriculumHolons} knowledge={sig.knowledge} />
+
+      <!-- `33 §3.1` View 5, gated on 'analyzed' depth by `§3.2:170`. The gate lives in the model, so
+           the component states the reason rather than rendering an unexplained empty panel. -->
+      <IntegrationMap holons={curriculumHolons} knowledge={sig.knowledge} />
 
       <Card variant="accent" padding="space-5">
         <Stack gap="space-3">
