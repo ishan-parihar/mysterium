@@ -18,9 +18,10 @@
    * CLUSTERING rather than order, a force layout earns its cost — swap `layout()` only; the data,
    * colours and selection all stay.
    */
-  import { buildGraph, detectGaps, type GraphNode } from '$core/curriculum/KnowledgeGraph.js';
+  import { buildGraph, detectGaps } from '$core/curriculum/KnowledgeGraph.js';
   import type { CurriculumHolon } from '$core/curriculum/types.js';
   import { ALL_DEPTH_LEVELS, type DepthLevel, type KnowledgeState } from '$core/curriculum/types.js';
+  import { layoutRings, type Placed } from './mapLayout.js';
 
   interface Props {
     knowledge: KnowledgeState;
@@ -43,8 +44,6 @@
   };
 
   const SIZE = 460;
-  const CX = SIZE / 2;
-  const CY = SIZE / 2;
 
   const graph = $derived(buildGraph(holons));
 
@@ -58,14 +57,6 @@
     return gaps;
   });
 
-  interface Placed {
-    readonly node: GraphNode;
-    readonly x: number;
-    readonly y: number;
-    readonly depth: DepthLevel;
-    readonly met: boolean;
-  }
-
   function depthOf(id: string): DepthLevel {
     return knowledge.conceptStates.get(id)?.depthLevel ?? 'absent';
   }
@@ -75,48 +66,9 @@
    * radius is derived from the node's ring so a gap in the middle reads as a hole, which is the
    * visual language 33 §3.1 asks for ("gaps are visible as missing nodes").
    */
-  const placed = $derived.by(() => {
-    const byRing = new Map<number, GraphNode[]>();
-    for (const node of graph.nodes.values()) {
-      const ring = Math.min(4, depthOrdinalFor(node.id));
-      if (!byRing.has(ring)) byRing.set(ring, []);
-      byRing.get(ring)!.push(node);
-    }
-    const out: Placed[] = [];
-    for (const [ring, nodes] of [...byRing.entries()].sort((a, b) => b[0] - a[0])) {
-      const radius = (SIZE / 2 - 40) * (1 - ring / 5);
-      const n = nodes.length || 1;
-      nodes.forEach((node, i) => {
-        const angle = (2 * Math.PI * i) / n - Math.PI / 2;
-        out.push({
-          node,
-          x: CX + radius * Math.cos(angle),
-          y: CY + radius * Math.sin(angle),
-          depth: depthOf(node.id),
-          met: knowledge.conceptStates.has(node.id),
-        });
-      });
-    }
-    return out;
-  });
-
-  /** How deep a node sits, from its own prerequisite closure — the same signal the engine uses. */
-  function depthOrdinalFor(id: string): number {
-    const seen = new Set<string>();
-    let frontier = [id];
-    let depth = 0;
-    while (frontier.length > 0 && depth < 5) {
-      const next: string[] = [];
-      for (const f of frontier) {
-        for (const pre of graph.adjacency.get(f) ?? []) {
-          if (!seen.has(pre)) { seen.add(pre); next.push(pre); }
-        }
-      }
-      frontier = next;
-      depth++;
-    }
-    return depth;
-  }
+  const placed = $derived.by(() =>
+    layoutRings(graph.nodes.values(), graph.adjacency, depthOf, new Set(knowledge.conceptStates.keys()), SIZE),
+  );
 
   const edges = $derived.by(() => {
     const byId = new Map(placed.map((p) => [p.node.id, p]));
