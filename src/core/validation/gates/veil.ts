@@ -224,6 +224,39 @@ const CLOSED_REGISTER_LITERALS: readonly string[] = [
   'GoldenAllergy',
 ];
 
+/**
+ * Corpus rows the PLAYER may never be shown, whatever template reads them.
+ *
+ * The first version of this gate scanned templates only, and `/glossary` passed it while rendering
+ * every term in the corpus — including `rayProfile`, `G_z / P_z`, and definitions that spell out
+ * `DarkAddiction` and `GoldenAllergy`. The template was correct; it interpolated `{term.def}` and the
+ * DATA behind it was closed-register. A template scan cannot see that, so the check is extended to
+ * the corpus: any row marked `audience: 'advanced'` whose term or definition names a closed-register
+ * concept is a leak waiting for whichever route renders it unfiltered.
+ *
+ * This is the register rule (20 §11.1) applied to data rather than markup: closed-class vocabulary
+ * is not allowed to reach a player-facing surface in ANY form, and a corpus is a player-facing
+ * surface the moment a page renders it whole.
+ */
+const CLOSED_CORPUS_ROWS: readonly { readonly re: RegExp; readonly what: string }[] = [
+  { re: /Dark(Addiction|Allergy)|Golden(Addiction|Allergy)/, what: 'shadow quadrant names' },
+  { re: /\brayProfile\b/, what: 'ray profile values' },
+  { re: /\bG_z\b|\bP_z\b/, what: 'metabolic-health primitives' },
+];
+
+function corpusRowsInPlayerAudience(source: string): string[] {
+  const offenders: string[] = [];
+  for (const line of source.split('\n')) {
+    if (!line.includes("{ term: '")) continue;
+    // A row is player-facing if it declares the player audience. `advanced` is not.
+    if (!line.includes("audience: 'player'")) continue;
+    for (const { re, what } of CLOSED_CORPUS_ROWS) {
+      if (re.test(line)) offenders.push(`${what} in a player-audience glossary row`);
+    }
+  }
+  return offenders;
+}
+
 function svelteFiles(root: string): string[] {
   const out: string[] = [];
   const walk = (dir: string): void => {
@@ -271,6 +304,14 @@ export function validateClosedRegisterNotRendered(): GateResult {
           offenders.push(`${path.relative(process.cwd(), file)} renders the closed literal ${lit}`);
         }
       }
+    }
+
+    // The DATA half. A template that interpolates `{term.def}` is correct; the corpus it reads is
+    // where the closed register was actually leaking.
+    for (const corpus of ['src/core/data/glossary.ts']) {
+      const p = path.join(process.cwd(), corpus);
+      if (!fs.existsSync(p)) continue;
+      offenders.push(...corpusRowsInPlayerAudience(fs.readFileSync(p, 'utf-8')).map((o) => `${corpus}: ${o}`));
     }
     if (offenders.length > 0) {
       return {

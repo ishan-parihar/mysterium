@@ -10,11 +10,27 @@
   import Stack from '$lib/components/Stack.svelte';
   import { GLOSSARY_TERMS } from '$core/data/glossary.js';
 
+  /**
+   * PLAYER-AUDIENCE TERMS ONLY.
+   *
+   * This page rendered the whole corpus, which put all thirteen `audience: 'advanced'` rows on
+   * screen for every visitor: `rayProfile`, `G_z / P_z`, raw `DarkAddiction`/`GoldenAllergy` quadrant
+   * names, and the CCI composite's dimensions. Two of those are the CLOSED register class (20 §11.1 —
+   * "polarity … shadow (quadrant names, intensities)"), so a player could read the scoring key and
+   * the clinical vocabulary from a page whose whole job is explaining the game's own language.
+   *
+   * G55 guards TEMPLATES; this leak came through DATA — the template correctly interpolated
+   * `{term.def}` — so the corpus carries its own audience and the page honours it. The advanced rows
+   * are still here, still exported, and still reachable by an auditor surface that asks for them by
+   * name; they are simply not on the player's glossary.
+   */
+  const PLAYER_TERMS = GLOSSARY_TERMS.filter((t) => t.audience === 'player');
+
   let search = $state('');
   const filtered = $derived(
     search.trim() === ''
-      ? GLOSSARY_TERMS
-      : GLOSSARY_TERMS.filter((t) =>
+      ? PLAYER_TERMS
+      : PLAYER_TERMS.filter((t) =>
           t.term.toLowerCase().includes(search.toLowerCase()) ||
           t.def.toLowerCase().includes(search.toLowerCase())
         )
@@ -23,7 +39,7 @@
 
 <Seo
   title="Glossary"
-  description="Definitions for Mysterium terminology — Holon, Significator, Line, Stage, Module, Modality, CCI, and more."
+  description="Definitions for Mysterium terminology — Holon, Significator, Line, Stage, Module, Modality, and more."
 />
 
 <RouteShell title="Glossary" back="/">
