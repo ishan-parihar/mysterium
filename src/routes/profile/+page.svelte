@@ -20,6 +20,7 @@
   import SessionPosition from '$lib/components/displays/SessionPosition.svelte';
   import DevelopmentalRadar from '$lib/components/displays/DevelopmentalRadar.svelte';
   import LearningTrajectory from '$lib/components/displays/LearningTrajectory.svelte';
+  import StudyPlanner from '$lib/components/displays/StudyPlanner.svelte';
   import { getCurriculumRegistry } from '$core/curriculum/CurriculumRegistry.js';
   import { seedCurriculumRegistry } from '$core/curriculum/CurriculumSeed.js';
   import { gameStore, setSignificator } from '$lib/stores/gameStore.js';
@@ -197,6 +198,11 @@
       <!-- `33 §3.1` View 3. Needs only the concept NAMES for its labels, so it takes the registry's
            identity rather than the whole holon — the trajectory reads depthHistory, not the corpus. -->
       <LearningTrajectory knowledge={sig.knowledge} concepts={curriculumHolons} />
+
+      <!-- `33 §3.1` View 4. The strategy engine is an INPUT here; every sentence rendered is generated
+           from the learner's own state, because the engine's `themeRationale` carries a composite score
+           and canon §3.2:168 forbids scores on a player surface. -->
+      <StudyPlanner holons={curriculumHolons} knowledge={sig.knowledge} />
 
       <Card variant="accent" padding="space-5">
         <Stack gap="space-3">
