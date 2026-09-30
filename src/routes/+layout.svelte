@@ -54,6 +54,19 @@
     const sig = loadSignificatorFromStorage();
     if (sig) setSignificator(sig);
 
+    // 3b. Seed the curriculum registry ONCE, here, because nothing else in the browser does.
+    //
+    // `seedCurriculumRegistry()` was only ever called by the kernel harness and by
+    // `SeedInitialKnowledge` — both kernel-side. No route, layout or component ran it, so the
+    // registry a browser reads was permanently EMPTY and every surface over it told a playing
+    // player "no curriculum data yet": /curriculum, /curriculum/progress and /knowledge. Seeding
+    // per-page would mean three boot paths to keep in step; the layout is the one place every route
+    // already passes through, and `seedCurriculumRegistry` is idempotent (`isRegistrySeeded`), so a
+    // later caller cannot double-seed.
+    void import('$core/curriculum/CurriculumSeed.js').then(({ seedCurriculumRegistry }) => {
+      seedCurriculumRegistry();
+    });
+
     // 4. Flush cloud sync on beforeunload (tab close / navigate away).
     beforeUnloadHandler = () => {
       const state = get(gameStore);
