@@ -586,6 +586,15 @@ export async function endGameSession(): Promise<void> {
     await saveRepo.saveProfile(closed.sig);
     await saveRepo.saveWorldState(closedWorld);
   }
+
+  // THE MIRROR THAT WAS MISSING, and it is not cosmetic. `setSignificator` + `debouncedSync` are
+  // what every OTHER consequence path does here (lines 499-501). Without them the session's theta
+  // decay, its `totalSessions`, and the Choice outcome reached `engineStore` and disk while
+  // `gameStore` — which `/journal`, `/profile` and the nav read — kept serving the PRE-session
+  // profile until a reload. Same class as the store-says-one-thing defect this session fixed twice:
+  // the save was honest and the display was not.
+  setSignificator(closed.sig);
+  debouncedSync(closed.sig);
 }
 
 // ─── Flush on unload ────────────────────────────────────────────────

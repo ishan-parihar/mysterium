@@ -17,6 +17,17 @@
     class?: string;
     onclick?: () => void;
     href?: string;
+    /**
+     * The control's accessible name, for a card whose VISIBLE text is not its name.
+     *
+     * A card's text is read in full by a screen reader, so a clickable card wrapping a title, two
+     * badges, a line label and a nested "Skip" button was announced as one long control name
+     * including another control's label. That is operability (which `onkeydown` fixed) and
+     * INTELLIGIBILITY being different claims: a keyboard player can now open the encounter, but was
+     * still told its name was "Warmup Deterministic The Viper Tactician … Skip". Optional — a plain
+     * informational card has nothing to override.
+     */
+    'aria-label'?: string;
     children: Snippet;
   }
 
@@ -28,6 +39,7 @@
     class: className = '',
     onclick,
     href,
+    'aria-label': ariaLabel,
     children,
   }: Props = $props();
 
@@ -49,7 +61,7 @@
 </script>
 
 {#if href && isInteractive}
-  <a class="card card-{variant} interactive {className}" {href} style="padding: var(--mysterium-{padding});">
+  <a class="card card-{variant} interactive {className}" {href} aria-label={ariaLabel} style="padding: var(--mysterium-{padding});">
     {@render children()}
   </a>
 {:else if onclick && isInteractive}
@@ -61,6 +73,7 @@
     onkeydown={onKeydown}
     role="button"
     tabindex="0"
+    aria-label={ariaLabel}
   >
     {@render children()}
   </svelte:element>

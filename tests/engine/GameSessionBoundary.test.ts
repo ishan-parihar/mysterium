@@ -7,6 +7,7 @@ import { endSession, startSession } from '$core/GameLoop.js';
 import { createSignificator } from '$core/domain/Significator.js';
 import { createFirstBootWorld } from '$lib/engine/worldBootstrap.js';
 import { engineStore, endGameSession } from '$lib/engine/gameEngine.js';
+import { gameStore, setSignificator } from '$lib/stores/gameStore.js';
 
 /**
  * Leaving `/play` must close the session.
@@ -107,6 +108,64 @@ describe('endGameSession', () => {
 
     expect(get(engineStore).significator?.id).toBe(before.id);
     expect(get(engineStore).significator?.totalEncounters).toBe(3);
+  });
+
+  it('syncs gameStore — /journal and /profile read it, not engineStore', async () => {
+    // The half that was missing and is invisible in the browser until a reload. `applyResponseOnly`
+    // mirrors `setSignificator` + `debouncedSync` after every consequence (gameEngine.ts:499-501);
+    // without the same here, theta decay and the Choice outcome persisted correctly while the
+    // surfaces a player actually reads served the PRE-session profile. Same class as the
+    // store-says-one-thing-disk-says-another defect this session has now hit three times.
+    const before = sigWith(1);
+    setSignificator(before);
+    engineStore.set({
+      significator: before, world: createFirstBootWorld(),
+      session: sessionWithCompleted(1), encounters: [], phase: 'world', error: null,
+    } as never);
+
+    await endGameSession();
+
+    const mirrored = get(gameStore).significator;
+    expect(mirrored?.totalSessions, 'gameStore still holds the pre-session profile').toBe(1);
+    expect(mirrored?.id).toBe(before.id);
+  });
+
+  it('both stores agree after the boundary', async () => {
+    const before = sigWith(2);
+    setSignificator(before);
+    engineStore.set({
+      significator: before, world: createFirstBootWorld(),
+      session: sessionWithCompleted(1), encounters: [], phase: 'world', error: null,
+    } as never);
+
+    await endGameSession();
+
+    expect(get(gameStore).significator?.totalSessions).toBe(get(engineStore).significator?.totalSessions);
+  });
+
+  it('BOTH exits are wired — the Menu button and the tab close', () => {
+    // `flushEngine` existed with zero callers, so before this the only exit that closed a session was
+    // the Menu button. Two assertions because the two exits are wired in different places, and one
+    // can be present while the other is not.
+    //
+    // COMMENTS ARE STRIPPED FIRST, and this is not tidiness — it is the same false-positive generator
+    // that hit G57. The docblock above the listeners explains that `pagehide` is paired with
+    // `beforeunload` for Safari, so a regex over the raw source matches that PROSE and stays green
+    // after the listener is deleted. Verified: deleting the `addEventListener` line left this test
+    // passing until the comment was excluded.
+    const src = readFileSync('src/routes/play/+page.svelte', 'utf8');
+    const code = src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/^\s*\/\/.*$/gm, ' ');
+
+    expect(code, '/play does not await the boundary before navigating').toMatch(
+      /await endGameSession\(\)[\s\S]{0,400}?goto\('\/'\)/,
+    );
+    expect(code, 'a tab close is not a session boundary').toMatch(/addEventListener\('beforeunload'/);
+    expect(code, 'pagehide is missing (Safari delivers only that on tab close)').toMatch(
+      /addEventListener\('pagehide'/,
+    );
+    // Both listeners must be REMOVED too, or navigating away from /play leaks a handler that fires
+    // on every later unload in the SPA session.
+    expect(code.match(/removeEventListener\('(beforeunload|pagehide)'/g) ?? [], 'a listener is never removed').toHaveLength(2);
   });
 
   it('/play actually calls it — the binding a unit test on the engine cannot prove', () => {

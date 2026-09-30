@@ -77,28 +77,34 @@ export const CALIBRATION_PROMPTS: Readonly<Record<Line, CalibrationPrompt>> = {
 // caller that scored a choice probe on Somatic placed the player at the top of the ladder from a
 // probe that cannot measure the line — the same saturation class `ThresholdMaps.test.ts` records as
 // "previously produced a spurious 'Turquoise'". The type now makes that path unrepresentable.
-// THESE VALUES MUST LAND ON THREE DISTINCT RUNGS. A choice probe offers three options, so if two
-// options resolve to the same stage the instrument cannot distinguish the player's answer from
-// itself — and the whole point of a per-line probe is that it places THAT line.
+// THE VALUES ARE THE CONTRACT ABOVE, REALISED. `// Index 0 = Red level, 1 = Amber level, 2 = Orange
+// level` is not a preference — it is what the three authored options mean, so each triple is chosen
+// per map to land on exactly that stage: `t0 ∈ [Red, Amber)`, `t1 ∈ [Amber, Orange)`,
+// `t2 ∈ [Orange, Green)`. Cognitive has its OWN map (`ThresholdMaps.ts` → COGNITIVE, Red 2.2 / Amber
+// 2.8 / Orange 3.5), so it does not share the EMOTIONAL numbers.
 //
-// The shared EMOTIONAL map ascends 1.8→Magenta, 2.5→Red, 3.2→Amber, 4.0→Orange. The values below
-// were `[2, 2.5, 3]`, which resolved to **Magenta, Red, Red**: options 2 and 3 — the difference
-// between "I go along with it" and "I look for the synthesis that makes room for both" — produced
-// the same reading on FIVE of the six choice-probed lines. Measured: every line in an eight-probe
-// run reported `Red · gathering`, and the deepest answer those probes could give was Red. Cognitive
-// was the only line that discriminated.
+// Two earlier defects, both in this file, both found by measuring instead of reasoning:
 //
-// Each triple now sits just BELOW its boundary so the ascending comparison resolves as intended:
-// `1.75` < 1.8 → Magenta · `2.4` < 2.5 → Red · `3.1` < 3.2 → Amber. `ThresholdDiscrimination`
-// pins the property rather than these literals, so a future edit that collapses two options again
-// fails rather than passing silently.
+//   1. `[2, 2.5, 3]` for the five EMOTIONAL lines resolved to **Magenta, Red, Red** — options 2 and 3
+//      were the same reading, so "look for the evolutionary synthesis that makes room for both"
+//      scored exactly as the plainer middle answer. Measured: an eight-probe run reported
+//      `Red · gathering` on all eight lines.
+//   2. The first repair (`[1.75, 2.4, 3.1]`, mine) made the stages distinct and was STILL WRONG:
+//      `thresholdToStage` returns the highest rung whose cutoff the value reaches, and EMOTIONAL's
+//      Magenta cutoff is 1.8 — so `1.75` cleared nothing and placed those five lines at **Infrared**,
+//      the FLOOR. The comment then claimed `1.75 < 1.8 → Magenta`, which is false: below a cutoff you
+//      get the rung below, not the one above. The test passed because it asserted distinctness, which
+//      three wrong-but-different rungs satisfy.
+//
+// So: three distinct stages is NECESSARY and NOT SUFFICIENT. `ThresholdDiscrimination` asserts the
+// DECLARED STAGE PER OPTION PER LINE, which is the only form that catches both defects.
 export const CHOICE_THRESHOLDS: Readonly<Partial<Record<Line, readonly [number, number, number]>>> = {
-  Cognitive: [1.75, 2.4, 3.1],
-  Emotional: [1.75, 2.4, 3.1],
-  Moral: [1.75, 2.4, 3.1],
-  Intrapersonal: [1.75, 2.4, 3.1],
-  Spiritual: [1.75, 2.4, 3.1],
-  Interpersonal: [1.75, 2.4, 3.1],
+  Cognitive: [2.4, 3.0, 3.8],   // COGNITIVE map: Red 2.2 / Amber 2.8 / Orange 3.5
+  Emotional: [2.6, 3.4, 4.1],   // EMOTIONAL map: Red 2.5 / Amber 3.2 / Orange 4.0
+  Moral: [2.6, 3.4, 4.1],
+  Intrapersonal: [2.6, 3.4, 4.1],
+  Spiritual: [2.6, 3.4, 4.1],
+  Interpersonal: [2.6, 3.4, 4.1],
 };
 
 export const HOLD_TARGETS: Readonly<Partial<Record<Line, number>>> = {

@@ -67,12 +67,39 @@ describe('Card keyboard activation', () => {
     expect(() => cardKeydown(new KeyboardEvent('keydown', { key: 'Enter' }), undefined)).not.toThrow();
   });
 
+  it('a HELD key does not re-fire — event.repeat is refused', () => {
+    // A real button's click does not repeat while a key is held. On `/play` the card opens an
+    // ENCOUNTER, so without this a player holding Space re-fires it continuously.
+    const onclick = vi.fn();
+    const held = new KeyboardEvent('keydown', { key: ' ', repeat: true, cancelable: true });
+    cardKeydown(held, onclick);
+
+    expect(onclick, 'holding Space kept activating the card').not.toHaveBeenCalled();
+    expect(held.defaultPrevented, 'a repeated key was still prevented').toBe(false);
+  });
+
+  it('invokes the callback with NO argument (Card declares onclick?: () => void)', () => {
+    // Passing the KeyboardEvent would be a lie about the signature, and a handler written against
+    // the mouse contract (`e.stopPropagation()`) would be handed a key event.
+    const spy = vi.fn();
+    cardKeydown(new KeyboardEvent('keydown', { key: 'Enter' }), spy);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy.mock.calls[0], 'the handler received an argument it never declared').toHaveLength(0);
+  });
+
   it('THE COMPONENT IS WIRED TO THIS HANDLER — the binding is the part that can rot', () => {
     // The pure tests above pass even if `Card.svelte` stops using the handler, which is the failure
     // mode the extraction introduces. This asserts the wiring without a component library.
+    //
+    // The import path is asserted, NOT the attribute expression: a formatter or a rename of
+    // `onKeydown` would turn a regex over `{onkeydown={onKeydown}}` red and the pressure would be to
+    // weaken the assertion. `from './cardActivation.js'` is the stable binding.
     const src = readFileSync('src/lib/components/Card.svelte', 'utf8');
-    expect(src, 'Card.svelte no longer binds the activation handler').toMatch(/onkeydown=\{onKeydown\}/);
-    expect(src, 'Card.svelte no longer declares the handler').toMatch(/cardKeydown/);
+    expect(src, 'Card.svelte no longer imports the activation handler').toMatch(
+      /from '\.\/cardActivation\.js'/,
+    );
+    expect(src, 'Card.svelte imports it but never binds it to a key handler').toMatch(/onkeydown=/);
     // And the promise must still be kept: role and focusability only mean something with a handler.
     expect(src).toMatch(/role="button"/);
     expect(src).toMatch(/tabindex="0"/);

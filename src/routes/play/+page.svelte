@@ -25,9 +25,8 @@
   import Cluster from '$lib/components/Cluster.svelte';
   import { engineStore, bootEngine, startGameSession, declineEncounter, clearTransformationSignal, completeTrainingBeat, endGameSession } from '$lib/engine/gameEngine.js';
   import StageTransitionOverlay from '$lib/components/StageTransitionOverlay.svelte';
-  import { gameStore } from '$lib/stores/gameStore.js';
+  import { gameStore, setSignificator } from '$lib/stores/gameStore.js';
   import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
-  import { setSignificator } from '$lib/stores/gameStore.js';
   import { describeStage } from '$core/presentation/veilDescriptors.js';
   import { stageFade } from '$lib/transitions/stageMotion.js';
   import LLMDialogueRunner from '$lib/components/gameplay/LLMDialogueRunner.svelte';
@@ -47,6 +46,33 @@
   const engineError = $derived($engineStore.error);
   const transformationSignal = $derived($engineStore.transformationSignal);
   const stageAesthetic = $derived(sig ? describeStage(sig.currentStage) : '');
+
+  // A CLOSING TAB IS A SESSION BOUNDARY TOO. `flushEngine` existed with zero callers, so the only
+  // exit that closed a session was the Menu button added in e4b73f7 — a player who closed the tab
+  // lost their session summary, which is the same absence by a different route.
+  //
+  // Deliberately NOT inside the async `onMount` below: Svelte only honours a synchronous return as
+  // a cleanup, and an async function returns a Promise, so the listeners would never be removed.
+  //
+  // What this does and does not buy, stated plainly because the temptation is to overclaim: an
+  // async write is NOT guaranteed to finish during unload, so this is best-effort. The guarantee
+  // that actually holds is that every COMPLETED encounter is already persisted by
+  // `applyResponseOnly`, so a tab close costs the session summary (theta decay, the Choice apex,
+  // `totalSessions`) and never the encounters themselves. `pagehide` is paired with `beforeunload`
+  // because Safari delivers only the former on tab close.
+  onMount(() => {
+    const closeSession = (): void => {
+      void endGameSession().catch((err: unknown) => {
+        console.error('[play] session did not close on unload:', err);
+      });
+    };
+    window.addEventListener('beforeunload', closeSession);
+    window.addEventListener('pagehide', closeSession);
+    return () => {
+      window.removeEventListener('beforeunload', closeSession);
+      window.removeEventListener('pagehide', closeSession);
+    };
+  });
 
   onMount(async () => {
     if (!browser) return;
@@ -188,6 +214,7 @@
                   interactive
                   onclick={() => startEncounter(encounter)}
                   class="encounter-card"
+                  aria-label={`${arcLabel} ${encounter.modality} encounter${holon ? ` with ${holon.name}` : ''}`}
                 >
                   <div class="encounter-card-inner">
                     <div class="encounter-info">
