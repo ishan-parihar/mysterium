@@ -44,7 +44,7 @@
     type CalibrationAnswers,
   } from '$core/usecases/CalibrationRun.js';
   import { feltSenseLabel } from '$core/usecases/QuickCalibrationScoring.js';
-  import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
+  import { loadSignificatorFromStorage, persistSignificator } from '$lib/stores/saveHydration.js';
   import { setSignificator } from '$lib/stores/gameStore.js';
   import { createSignificator } from '$core/domain/Significator.js';
   import type { Significator } from '$core/domain/Significator.js';
@@ -157,17 +157,21 @@
   /**
    * Carry the scored altitudes into a profile.
    *
-   * The write goes through the SAME path `onboarding/+page.svelte:255` uses — `createSignificator`
-   * then `localStorage.setItem('profile:v1', …)` then `setSignificator` — because that is the
-   * established client-side writer for this key. Routing through `setSignificator` alone would
-   * update the store and leave the durable save stale, so the run would vanish on reload; reaching
-   * for a new abstraction instead would be a second binding for one serialization (M8).
+   * The write goes through `persistSignificator` — the SAME path `onboarding/+page.svelte` uses.
+   * This used to hand-type `localStorage.setItem('profile:v1', …)`, copying a comment that claimed
+   * onboarding did the same. Onboarding had already been migrated to the `SaveRepository` path,
+   * whose `KeyValueStore` prefixes every key with `mysterium:`; the bare name was therefore a key
+   * NOTHING EVER READ. Measured: a player who completed all eight probes and clicked "Use these as
+   * your starting altitudes" was told "Saved to this device", and their very next `goto('/play')`
+   * hydrated null and redirected back to `/onboarding` — the exact escape loop fixed on the
+   * onboarding path earlier today, re-introduced here by a copy of the pre-fix line. One writer,
+   * one key: never re-type the key literal (M8).
    *
    * A calibration run is a seed, not a verdict: `stage` starts at `Red` and the game moves it as
    * the player plays. Applying it to an existing profile REPLACES the eight line altitudes and
    * nothing else, and the page says so on the button before the click.
    */
-  function applyResult(): void {
+  async function applyResult(): Promise<void> {
     if (seedable === null) {
       applyError = 'A run that did not score every line cannot be used as a starting point.';
       return;
@@ -188,8 +192,11 @@
       applyError = 'This page can only save from a browser, so nothing was written.';
       return;
     }
+    // The write is async because the repository is dynamically imported, so `saved` can only be
+    // claimed AFTER it resolves. Setting it optimistically is the store-says-one-thing-disk-says-
+    // another shape the settings reset and the /privacy delete both had.
     try {
-      localStorage.setItem('profile:v1', JSON.stringify(sig));
+      await persistSignificator(sig as Significator);
     } catch (err) {
       console.error('[calibrate] offline save failed:', err);
       applyError = 'The result could not be saved on this device, so it was not applied.';
