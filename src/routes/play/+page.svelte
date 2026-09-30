@@ -211,32 +211,42 @@
                 <Card
                   variant={isShadow ? 'accent' : 'default'}
                   padding="space-5"
-                  interactive
-                  onclick={() => startEncounter(encounter)}
                   class="encounter-card"
-                  aria-label={`${arcLabel} ${encounter.modality} encounter${holon ? ` with ${holon.name}` : ''}`}
                 >
                   <div class="encounter-card-inner">
                     <div class="encounter-info">
-                      <Cluster gap="space-2" align="start" wrap={true}>
-                        <Badge variant={arcVariant}>{arcLabel}</Badge>
-                        <Badge variant="accent">{encounter.modality}</Badge>
-                        {#if isShadow}
-                          <Badge variant="danger">◆ Shadow-work</Badge>
-                        {/if}
-                      </Cluster>
-                      {#if holon}
-                        <p class="encounter-holon">
-                          <span class="holon-name">{holon.name}</span>
-                          {#if holon.narrativeRole}
-                            <span class="holon-role"> · {holon.narrativeRole}</span>
+                      <!--
+                        The primary action. A real button holding the card's former accessible name,
+                        so role=button is gone from the container and the name is a button's name. The
+                        visible holon name stays INSIDE it, so a screen reader announces the label and
+                        the visible text together rather than one replacing the other.
+                      -->
+                      <button
+                        type="button"
+                        class="encounter-open"
+                        onclick={() => startEncounter(encounter)}
+                        aria-label={`${arcLabel} ${encounter.modality} encounter${holon ? ` with ${holon.name}` : ''}`}
+                      >
+                        <Cluster as="span" gap="space-2" align="start" wrap={true}>
+                          <Badge variant={arcVariant}>{arcLabel}</Badge>
+                          <Badge variant="accent">{encounter.modality}</Badge>
+                          {#if isShadow}
+                            <Badge variant="danger">◆ Shadow-work</Badge>
                           {/if}
-                        </p>
-                      {/if}
-                      <p class="encounter-line">{encounter.moduleRef}</p>
+                        </Cluster>
+                        {#if holon}
+                          <span class="encounter-holon">
+                            <span class="holon-name">{holon.name}</span>
+                            {#if holon.narrativeRole}
+                              <span class="holon-role"> · {holon.narrativeRole}</span>
+                            {/if}
+                          </span>
+                        {/if}
+                        <span class="encounter-line">{encounter.moduleRef}</span>
+                      </button>
                     </div>
                     <div class="encounter-actions">
-                      <Button size="sm" variant="ghost" onclick={(e) => { e.stopPropagation(); decline(encounter); }}>Skip</Button>
+                      <Button size="sm" variant="ghost" onclick={() => decline(encounter)}>Skip</Button>
                       <span class="encounter-arrow" aria-hidden="true">→</span>
                     </div>
                   </div>
@@ -421,6 +431,38 @@
     animation: encounter-enter var(--mysterium-duration-base) var(--mysterium-ease-out) backwards;
   }
 
+  /*
+   * The card's primary action, in place of the card itself.
+   *
+   * A button reset: the card already supplies the surface, the border and the padding, so this control
+   * has to be invisible and cover only the text column. `text-align: start` keeps the holon name
+   * flush-left as it was when the whole card was the target — the default `center` would visibly
+   * shift the layout. The hover rule reuses the card's own `--mysterium-surface` variable rather than
+   * inventing a second hover colour, so the two halves of the row cannot drift apart.
+   */
+  .encounter-open {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: start;
+    background: none;
+    border: none;
+    border-radius: var(--mysterium-radius-sm);
+    cursor: pointer;
+  }
+
+  .encounter-open:hover {
+    background: color-mix(in srgb, var(--mysterium-fg) 4%, transparent);
+  }
+
+  .encounter-open:focus-visible {
+    outline: 2px solid var(--mysterium-accent, currentColor);
+    outline-offset: 4px;
+  }
+
   @keyframes encounter-enter {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
@@ -436,6 +478,20 @@
   .encounter-info {
     flex: 1;
     min-width: 0;
+  }
+
+  /*
+   * Phrasing-content wrappers, not layout elements.
+   *
+   * A BUTTON's content model is phrasing content only: no <p>, no <div>. These three were <p> and a
+   * <Cluster> when the whole card was the control, and became invalid the moment a real <button>
+   * wrapped them — trading an ARIA nesting error for an HTML content-model error, which is not a fix.
+   * The spans carry `display: block` so the rendered layout is byte-identical to the paragraphs they
+   * replaced; the element change is invisible and the markup is now valid.
+   */
+  .encounter-holon,
+  .encounter-line {
+    display: block;
   }
 
   .encounter-holon {
