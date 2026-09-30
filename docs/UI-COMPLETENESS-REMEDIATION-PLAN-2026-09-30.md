@@ -119,9 +119,20 @@ Honest status. None of these are new; none are fixed by anything above.
 - **`flushEngine` has zero callers.** A tab close still loses the session unless `beforeunload` in the
   layout covers it — `[UNMEASURED: the layout does register `beforeunload`; whether it reaches
   `flushEngine` specifically is not confirmed.]`
-- **`checkTermUnlocks` — 0 callers in `src/`.** Check `scripts/` and the CLI before touching its loop.
-  If genuinely uncalled, wire it or record it as documented in-vitro. Do not quietly broaden semantics.
-- **`inferAltitudesFromAnswers` — unused.** `/calibrate` uses `QuickCalibrationScoring`. Delete or wire.
+- **`checkTermUnlocks` and `inferAltitudesFromAnswers` — BOTH LIVE; my earlier claim was wrong, twice.**
+  Checked in `scripts/` before touching `src/`, exactly as `AGENTS.md` §4.2's checked-graph warning
+  demands, and the src-only grep that produced the original claim is the same blindness item 2 tracks:
+  - `inferAltitudesFromAnswers` (`src/core/usecases/InitialAltitudeInference.ts:102`) is called from
+    `scripts/cli/onboarding.ts:46`, on the `HEADLESS || SKIP_CALIBRATION || JSON_MODE` branch — the only
+    altitude seeding a headless/JSON CLI run gets. Deleting it would drop every such run to the floor.
+  - `checkTermUnlocks` (`src/core/data/glossary.ts:100`) is called from `scripts/cli/runtime.ts:1380`,
+    persisted by `addUnlockedTerms` to `unlocked-terms.json`, and read back by
+    `scripts/cli/output.ts:271`. Live end to end.
+- **No WebUI parity gap either — checked before claiming one.** `/glossary` filters on
+  `t.audience === 'player'` (`+page.svelte:27`), not on unlock state, so the browser has no unlock *state*
+  to be missing: the WebUI shows a fixed audience-gated corpus and the CLI shows a play-earned one.
+  Different surfaces serving different registers (a player-readable open list vs. an audit-grade one),
+  not the same feature half-wired. Nothing to fix here; recorded so a future session does not "fix" it.
 - **`docs/audits/UI-COMPLETENESS-PLAN-2026-09-30.md` is in the wrong rung** — this document supersedes
   it as the live sequence. Moving the predecessor is a separate change with a router edit.
 - **Deploy blockers (user-deferred, not code work):** the Cloudflare account mismatch
@@ -143,4 +154,4 @@ Each line is a decision, not a task. Nothing starts until these are answered.
 | 3 | The doc-drift gate (item 3) — build it now, or record the finding and fix it after the views? | **Now.** It is small, it is the only thing that stops recurrence, and every week it waits is another unnamed gate. |
 | 4 | Move `UI-COMPLETENESS-PLAN-2026-09-30.md` out of `audits`? | **Yes**, to `plans` with a router entry. Cheap, and it is why `arch.py context` never surfaced it. |
 | 5 | The nested Skip/card ARIA violation — fix now, or with the view work? | **Now.** It is a small, self-contained a11y defect in a live surface. |
-| 6 | `checkTermUnlocks` / `inferAltitudesFromAnswers` — delete or wire? | **Check callers first**, then decide. Deleting an unused export is the lazy correct answer if nothing calls it in `scripts/` either. |
+| 6 | `checkTermUnlocks` / `inferAltitudesFromAnswers` — delete or wire? | **Neither — both are live in the CLI, and `/glossary` gates on `audience`, not unlock state. Resolved: no action.** |

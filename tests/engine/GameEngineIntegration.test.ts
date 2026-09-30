@@ -29,7 +29,7 @@ import {
   completeTrainingBeat,
   declineEncounter,
   runEncounter,
-  flushEngine,
+  syncEngineNow,
 } from '../../src/lib/engine/gameEngine.js';
 import { computeTrainingWeave } from '../../src/core/GameLoop.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
@@ -234,7 +234,7 @@ describe('gameEngine integration (browser binding over the real persistence seam
       askUser: async () => ({ answers: [{ selectedLabels: ['I engage directly'] }] }),
     };
     await runEncounter(encounter!, handler, { noLlm: true });
-    await flushEngine();
+    await syncEngineNow();
 
     const after = get(engineStore).significator!;
     expect(after.totalEncounters).toBe(1);

@@ -646,9 +646,25 @@ export async function endGameSession(): Promise<void> {
   debouncedSync(closed.sig);
 }
 
-// ─── Flush on unload ────────────────────────────────────────────────
+// ─── Sync on unload ─────────────────────────────────────────────────
 
-export async function flushEngine(): Promise<void> {
+/**
+ * Await the cloud sync for whatever the engine currently holds.
+ *
+ * NOT A DEAD EXPORT. It had zero callers outside one test, and that test is load-bearing: it drives
+ * the full seam, then awaits this before asserting the counters are ON DISK, so it is the barrier
+ * between the engine's store and the repository's view of it. Renaming it to `syncEngineNow` says what
+ * it is — an explicit flush, not a lifecycle hook — and `flushEngine` said the latter, which is why it
+ * looked dead: nothing hooks it to a lifecycle event.
+ *
+ * WHY THE LAYOUT DOES NOT CALL IT. `+layout.svelte:72-73` inlines the same two lines against
+ * `gameStore` rather than the engine store, and that is deliberate: `beforeunload` cannot await, so the
+ * call is `void flushSync(...)` either way and the distinction is which store is authoritative at the
+ * boundary. Folding them together would mean the layout either imports the engine (a heavy module on
+ * every route's boot) or the engine's flush reads the wrong store. Two lines of duplication beat a
+ * wrong coupling.
+ */
+export async function syncEngineNow(): Promise<void> {
   const { significator } = get(engineStore);
   if (significator) {
     await flushSync(significator);
