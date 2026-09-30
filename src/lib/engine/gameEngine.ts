@@ -203,12 +203,26 @@ export function scheduleEncounters(): void {
     recentLines: [],
     ...forceFields,
   };
+  // A DECLINED ENCOUNTER MUST NOT COME BACK, AND THE KEY IS THE ONE THE PLAYER SEES.
+  //
+  // A `ScheduledEncounter.id` is `moduleRef:holonId:<timestamp>`, so every scheduling pass mints a
+  // FRESH id for the same encounter. Measured: four Skips on the first card produced
+  // `Cognitive:Red:viper-tactician:1790773895026`, `…904656`, `…910766`, `…916876` — ten unique ids
+  // accumulated while the screen never changed. Excluding by id therefore can never match, and the
+  // profile fills with ids of encounters that are still on offer. `moduleRef` IS the identity the
+  // player perceives, so that is what is excluded.
+  const exclude = new Set<string>([
+    ...significator.avoidedEncounters,
+    ...get(engineStore).encounters.map((e) => e.moduleRef),
+  ]);
   let encounters = scheduleNextWithHolonicReturn(
     significator,
     world,
     sessionContext,
     now,
-    3,
+    // OVER-FETCH, so the exclusion below has candidates left. Three would be enough if nothing had
+    // to be filtered out; on a reschedule after a decline it would leave a short list.
+    8,
     // The STRATEGY's weight bias + bleed-through, exactly as the kernel loop computes them
     // (tickWithStrategy steps 3–4). Without these the browser scheduled unweighted while
     // every other surface scheduled with the session's strategy — the parity gap Track B
@@ -268,6 +282,14 @@ export function scheduleEncounters(): void {
     if (weave.shouldWeave && weave.paradigmId && encounters.length > 0) {
       encounters = [makeTrainingBeatEncounter(weave.paradigmId, significator.currentStage, now), ...encounters].slice(0, 5);
     }
+  }
+
+  // APPLY THE EXCLUSION, AFTER the curriculum interleave and the training weave — those two INSERT
+  // encounters of their own (a curriculum beat, a training beat) that carry fresh ids, so filtering
+  // before them would let a declined id back in through a different path. A training beat's id is
+  // time-and-random stamped, so it is never excluded; that is intended, it is a different instrument.
+  if (exclude.size > 0) {
+    encounters = encounters.filter((e) => !exclude.has(e.moduleRef)).slice(0, 3);
   }
 
   engineStore.update((s) => ({ ...s, encounters }));
@@ -533,14 +555,41 @@ export async function declineEncounter(encounter: ScheduledEncounter): Promise<v
     encounterId: encounter.id,
     moduleRef: encounter.moduleRef,
   });
+  // A DECLINE THAT RE-OFFERS THE SAME CARD IS NOT A DECLINE. `scheduleEncounters` re-derives the top
+  // three from the same deterministic seed, so filtering the declined id out and immediately
+  // rescheduling returned the identical three — measured: Skip fired, the encounter was removed, and
+  // the same moduleRefs were back on screen, with `avoidedEncounters` still empty because this
+  // function never touched the Significator. A player who declines is told, in effect, "here it is
+  // again".
+  //
+  // So the decline is recorded on the PROFILE, which is the scheduler's own memory of what has been
+  // served, and the reschedule sees it. `moduleRef`, NOT the id: ids are timestamped per pass, so
+  // storing them grows the list without ever matching anything. The list is bounded so a long session
+  // cannot grow it without limit; the bound drops the OLDEST entries, so what it forgets is what was
+  // declined longest ago — the encounters a player is least likely to decline again.
+  const DECAYED_MEMORY = 20;
+  const declinedRef = encounter.moduleRef;
+  const avoided = [...(get(engineStore).significator?.avoidedEncounters ?? []).filter((m) => m !== declinedRef), declinedRef]
+    .slice(-DECAYED_MEMORY);
+
   engineStore.update((s) => ({
     ...s,
+    significator: s.significator ? { ...s.significator, avoidedEncounters: avoided } : s.significator,
     encounters: s.encounters.filter((e) => e.id !== encounter.id),
   }));
   const { encounters } = get(engineStore);
   if (encounters.length < 3) {
     scheduleEncounters();
   }
+  // The profile is the scheduler's memory of what has been served, so the decline has to REACH it.
+  // Guarded rather than asserted: `saveProfile` takes a Significator, and the engine early-returns
+  // above when there is none — a `!` here would be a promise about a value the store may not hold.
+  //
+  // NO `saveWorldState` alongside it, deliberately: declining does not touch the world. The world is
+  // written by `applyResponseOnly` on every COMPLETED encounter, and writing it here would mean a
+  // decline rewrote world state that has not changed — a wider write for no new information.
+  const { significator: after } = get(engineStore);
+  if (saveRepo && after) await saveRepo.saveProfile(after);
 }
 
 // ─── Session end ─────────────────────────────────────────────────────

@@ -63,6 +63,36 @@ describe('Card keyboard activation', () => {
     }
   });
 
+  it('a key event from a NESTED control does not activate the card', () => {
+    // The measured defect, not a tidiness rule. `/play`'s encounter card is a `role="button"`
+    // containing a "Skip" `<button>`. Keydown BUBBLES from the child, so focusing "Skip" and
+    // pressing Enter ran both handlers: it opened the encounter the player was trying to skip and
+    // removed all three cards. A real button's Enter dispatches the CHILD's click and the parent's
+    // activation is a separate path — so the containment test is what restores real-button behaviour.
+    const onclick = vi.fn();
+    const event = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+    Object.defineProperty(event, 'currentTarget', { value: { tagName: 'DIV' } });
+    Object.defineProperty(event, 'target', { value: { tagName: 'BUTTON' } });
+
+    cardKeydown(event, onclick);
+
+    expect(onclick, 'a key from a nested control activated the outer card').not.toHaveBeenCalled();
+    expect(event.defaultPrevented, 'and it still swallowed the key').toBe(false);
+  });
+
+  it('a key from the card ITSELF still activates it', () => {
+    // The other half: the containment test must not break the ordinary path.
+    const onclick = vi.fn();
+    const event = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+    const self = { tagName: 'DIV' };
+    Object.defineProperty(event, 'currentTarget', { value: self });
+    Object.defineProperty(event, 'target', { value: self });
+
+    cardKeydown(event, onclick);
+
+    expect(onclick).toHaveBeenCalledTimes(1);
+  });
+
   it('tolerates a missing callback (a keyboard-focusable card with no action)', () => {
     expect(() => cardKeydown(new KeyboardEvent('keydown', { key: 'Enter' }), undefined)).not.toThrow();
   });

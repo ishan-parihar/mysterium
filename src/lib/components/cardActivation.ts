@@ -24,6 +24,18 @@
 export function cardKeydown(event: KeyboardEvent, onclick?: () => void): void {
   if (event.repeat) return;
   if (event.key !== 'Enter' && event.key !== ' ') return;
+  // A KEY EVENT FROM A NESTED CONTROL IS NOT A REQUEST TO ACTIVATE THIS ONE. `/play`'s encounter
+  // card is a `role="button"` containing a "Skip" `<button>`, which is invalid ARIA (an interactive
+  // control inside another) and made keyboard activation ambiguous: keydown bubbles from the child,
+  // so focusing "Skip" and pressing Enter ran BOTH handlers — measured, it opened the encounter the
+  // player was trying to skip, and removed all three cards. A real `<button>` does not do this,
+  // because Enter on a nested control dispatches the CHILD's click and the parent's handler is a
+  // separate activation path, not a bubbled key event.
+  //
+  // `currentTarget !== target` is the containment test: it is true when the event originated
+  // somewhere inside this card, and false when the card itself has focus. Svelte's own dispatch
+  // synthesises a click for Enter, so nothing is lost on the ordinary path.
+  if (event.currentTarget !== event.target) return;
   // Required, not stylistic: the default Space action scrolls the page, so a keyboard player would
   // activate the card and be thrown to the top mid-encounter.
   event.preventDefault();
