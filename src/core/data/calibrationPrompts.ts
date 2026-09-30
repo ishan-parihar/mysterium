@@ -77,13 +77,28 @@ export const CALIBRATION_PROMPTS: Readonly<Record<Line, CalibrationPrompt>> = {
 // caller that scored a choice probe on Somatic placed the player at the top of the ladder from a
 // probe that cannot measure the line — the same saturation class `ThresholdMaps.test.ts` records as
 // "previously produced a spurious 'Turquoise'". The type now makes that path unrepresentable.
+// THESE VALUES MUST LAND ON THREE DISTINCT RUNGS. A choice probe offers three options, so if two
+// options resolve to the same stage the instrument cannot distinguish the player's answer from
+// itself — and the whole point of a per-line probe is that it places THAT line.
+//
+// The shared EMOTIONAL map ascends 1.8→Magenta, 2.5→Red, 3.2→Amber, 4.0→Orange. The values below
+// were `[2, 2.5, 3]`, which resolved to **Magenta, Red, Red**: options 2 and 3 — the difference
+// between "I go along with it" and "I look for the synthesis that makes room for both" — produced
+// the same reading on FIVE of the six choice-probed lines. Measured: every line in an eight-probe
+// run reported `Red · gathering`, and the deepest answer those probes could give was Red. Cognitive
+// was the only line that discriminated.
+//
+// Each triple now sits just BELOW its boundary so the ascending comparison resolves as intended:
+// `1.75` < 1.8 → Magenta · `2.4` < 2.5 → Red · `3.1` < 3.2 → Amber. `ThresholdDiscrimination`
+// pins the property rather than these literals, so a future edit that collapses two options again
+// fails rather than passing silently.
 export const CHOICE_THRESHOLDS: Readonly<Partial<Record<Line, readonly [number, number, number]>>> = {
-  Cognitive: [1.8, 2.2, 2.8],
-  Emotional: [2, 2.5, 3],
-  Moral: [2, 2.5, 3],
-  Intrapersonal: [2, 2.5, 3],
-  Spiritual: [2, 2.5, 3],
-  Interpersonal: [2, 2.5, 3],
+  Cognitive: [1.75, 2.4, 3.1],
+  Emotional: [1.75, 2.4, 3.1],
+  Moral: [1.75, 2.4, 3.1],
+  Intrapersonal: [1.75, 2.4, 3.1],
+  Spiritual: [1.75, 2.4, 3.1],
+  Interpersonal: [1.75, 2.4, 3.1],
 };
 
 export const HOLD_TARGETS: Readonly<Partial<Record<Line, number>>> = {

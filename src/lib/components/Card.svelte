@@ -4,6 +4,7 @@
    * Replaces .profile-card, .entry-card, .event-card, .setting-row, etc.
    */
   import type { Snippet } from 'svelte';
+  import { cardKeydown } from './cardActivation.js';
 
   type Variant = 'default' | 'elevated' | 'accent' | 'ghost';
   type Padding = 'space-0' | 'space-2' | 'space-3' | 'space-4' | 'space-5' | 'space-6';
@@ -31,6 +32,20 @@
   }: Props = $props();
 
   const isInteractive = $derived(interactive || onclick !== undefined || href !== undefined);
+
+  /**
+   * Keyboard activation for the clickable-card form.
+   *
+   * This element advertises `role="button"` and `tabindex="0"`, which promises a control a keyboard
+   * and a screen reader can operate. It did not deliver one: with no key handler, Enter and Space
+   * did nothing, so the promise was a lie in the exact sense that matters — the element was FOCUSABLE
+   * (so it passed a tab-order audit) and NAMED-BY-ROLE (so it passed an axe scan) while being
+   * unreachable. The decision itself lives in `cardActivation.ts` so it can be tested without a
+   * component library; `CardKeyboard.test.ts` pins that this element stays bound to it.
+   */
+  function onKeydown(event: KeyboardEvent): void {
+    cardKeydown(event, onclick);
+  }
 </script>
 
 {#if href && isInteractive}
@@ -43,6 +58,7 @@
     class="card card-{variant} interactive {className}"
     style="padding: var(--mysterium-{padding});"
     onclick={onclick}
+    onkeydown={onKeydown}
     role="button"
     tabindex="0"
   >

@@ -57,6 +57,7 @@
   let existing = $state<Significator | null>(null);
   let saved = $state(false);
   let applyError = $state<string | null>(null);
+  let applying = $state(false);
   let holdAborted = $state(false);
   let tick: ReturnType<typeof setInterval> | null = null;
 
@@ -172,6 +173,14 @@
    * nothing else, and the page says so on the button before the click.
    */
   async function applyResult(): Promise<void> {
+    // RE-ENTRANCY GUARD, AND IT IS NOT DEFENSIVE CODING. `persistSignificator` awaits two dynamic
+    // imports before it writes, so the button is live for the whole of that window. A double-click
+    // (or an impatient Enter held down) entered this function twice with `existing` still null, and
+    // each pass minted its OWN Significator id — the second write won and the first profile was
+    // orphaned on disk with the player believing there was one save. The button is also the only
+    // thing standing between a calibration run and two ids, so it is disabled for the duration
+    // rather than trusted not to be clicked twice.
+    if (applying) return;
     if (seedable === null) {
       applyError = 'A run that did not score every line cannot be used as a starting point.';
       return;
@@ -195,12 +204,15 @@
     // The write is async because the repository is dynamically imported, so `saved` can only be
     // claimed AFTER it resolves. Setting it optimistically is the store-says-one-thing-disk-says-
     // another shape the settings reset and the /privacy delete both had.
+    applying = true;
     try {
       await persistSignificator(sig as Significator);
     } catch (err) {
       console.error('[calibrate] offline save failed:', err);
       applyError = 'The result could not be saved on this device, so it was not applied.';
       return;
+    } finally {
+      applying = false;
     }
     setSignificator(sig as Significator);
     existing = sig as Significator;
@@ -300,10 +312,12 @@
             A profile already exists. Carrying these altitudes in will replace the eight line
             altitudes in it; everything else in the profile is kept.
           </p>
-          <Button onclick={applyResult}>Replace the eight altitudes</Button>
+          <Button onclick={applyResult} disabled={applying}>Replace the eight altitudes</Button>
         {:else}
           <p>No profile exists yet, so this will create one seeded with these altitudes.</p>
-          <Button onclick={applyResult}>Use these as your starting altitudes</Button>
+          <Button onclick={applyResult} disabled={applying}>
+            {#if applying}Saving…{:else}Use these as your starting altitudes{/if}
+          </Button>
         {/if}
         <Button onclick={restart}>Run it again</Button>
       </Card>

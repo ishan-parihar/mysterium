@@ -17,7 +17,8 @@
   import Button from '$lib/components/Button.svelte';
   import Stack from '$lib/components/Stack.svelte';
   import { gameStore, setSignificator } from '$lib/stores/gameStore.js';
-  import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
+  import { loadSignificatorFromStorage, persistSignificator } from '$lib/stores/saveHydration.js';
+  import { showToast } from '$lib/stores/toastStore.js';
   import { loadWorldState, saveWorldState } from '$infra/persistence/SaveRepository.js';
   import { loadVowBook, saveVowBook, vowBookStore } from '$lib/stores/vowStore.js';
   import { processCheckIn } from '$core/practice/practiceTools.js';
@@ -75,7 +76,14 @@
     }
     saveVowBook(outcome.book);
     setSignificator(outcome.sig);
-    if (browser) localStorage.setItem('profile:v1', JSON.stringify(outcome.sig));
+    // Routed through the ONE writer. This hand-typed the bare `profile:v1`, a key nothing reads —
+    // the engine hydrates through `SaveRepository`, which namespaces with `mysterium:`. A vow
+    // fulfilment therefore moved the in-memory Significator and left the durable save stale, so the
+    // change was lost on the next reload while the page said it had been recorded.
+    if (browser) void persistSignificator(outcome.sig).catch((err: unknown) => {
+      console.error('[journal] vow save failed:', err);
+      showToast('Vow recorded, but the save did not persist', 'danger');
+    });
     saveWorldState(outcome.world);
     checkInVow = null;
     checkInStage = 'done';

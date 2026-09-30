@@ -17,6 +17,7 @@
   import Button from '$lib/components/Button.svelte';
   import Stack from '$lib/components/Stack.svelte';
   import { setSignificator } from '$lib/stores/gameStore.js';
+  import { persistSignificator } from '$lib/stores/saveHydration.js';
   import { showToast } from '$lib/stores/toastStore.js';
   import { validateSignificator } from '$infra/persistence/validateSignificator.js';
 
@@ -113,7 +114,13 @@
         if (!sig) throw new Error('Invalid save data');
         // Restore the deviceId so future syncs use the same key.
         localStorage.setItem('mysterium:device-id', deviceId);
-        localStorage.setItem('profile:v1', JSON.stringify(sig));
+        // THE RESTORE PATH WROTE THE BARE KEY. `localStorage.setItem('profile:v1', …)` is a key no
+        // reader ever asks for — the engine hydrates through `SaveRepository`, whose `KeyValueStore`
+        // prefixes with `mysterium:` — so a successfully decrypted, correctly validated save was
+        // written, the player was told "Save restored", they were sent to `/`, and on the very next
+        // load they were a stranger again. The most destructive place this asymmetry can live: a
+        // restore that restores nothing. Same one writer as every other path (M8).
+        await persistSignificator(sig);
         setSignificator(sig);
         showToast('Save restored', 'success', 3000);
         goto('/');
