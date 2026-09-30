@@ -151,9 +151,19 @@ export function studyPlan(
     }
   }
 
-  const chosen = [...reviews, ...fresh, ...connects]
-    .sort((a, b) => a.order - b.order || a.conceptName.localeCompare(b.conceptName))
-    .slice(0, limit);
+  // ONE SLOT PER KIND FIRST, then the leftover capacity in priority order. See the note above: a single
+  // slice over the sorted list starved the `connect` kind completely at the component's default cap.
+  const cap = Math.max(limit, 1);
+  const quota = Math.max(1, Math.floor(cap / 3));
+  const chosen: Recommendation[] = [];
+  for (const bucket of [reviews, fresh, connects]) {
+    for (const r of bucket.slice(0, quota)) if (!chosen.includes(r)) chosen.push(r);
+  }
+  for (const r of [...reviews, ...fresh, ...connects]) {
+    if (chosen.length >= cap) break;
+    if (!chosen.includes(r)) chosen.push(r);
+  }
+  chosen.sort((a, b) => a.order - b.order || a.conceptName.localeCompare(b.conceptName));
 
   return {
     recommendations: chosen,

@@ -36,6 +36,19 @@ export const ALL_LINES: readonly Line[] = [
   'Interpersonal',
 ];
 
+/**
+ * Narrows an `unknown` to `Line` against the canonical set.
+ *
+ * It lives here, beside the constant it checks, rather than in a consumer — a membership test duplicated
+ * in two display models is a second binding for a canonical set, and M8 forbids that. It exists because
+ * `devMapping.primaryLine` is typed `Line` while its value arrives from JSON, where nothing enforces the
+ * type: a corpus naming `"Naturalist"` compiles cleanly and returns `undefined` from every `tally.get`,
+ * which blanked a whole dashboard before MY-AD-0037 and G17 caught it.
+ */
+export function isLine(v: unknown): v is Line {
+  return typeof v === 'string' && (ALL_LINES as readonly string[]).includes(v);
+}
+
 /** Primary quadrant home for each line. */
 export const LINE_QUADRANT: Readonly<Record<Line, Quadrant>> = {
   Cognitive: 'UR',

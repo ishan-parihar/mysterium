@@ -216,15 +216,26 @@ describe('radarPath', () => {
     expect(radarPath([{ x: 0, y: 0 }, { x: 10, y: 0 }])).toMatch(/^M 0 0 L 10 0 Z$/);
   });
 
-  it('an empty set is an empty string, not "MZ"', () => {
-    expect(radarPath([])).toBe('');
-  });
-
   it('a single point is a dot — no NaN coordinates from an undefined rest', () => {
     const d = radarPath([{ x: 5, y: 6 }]);
     // The exact spacing is cosmetic; what must hold is that there is no NaN and the path is closed.
     expect(d).not.toContain('NaN');
     expect(d).toMatch(/^M 5 6\s+Z$/);
+  });
+
+  it('the empty-input branch is NOT a reached safety net, and this says so', () => {
+    // `radarPath([]) === ''` used to be asserted as if the branch mattered. It cannot be reached from
+    // the component: `radarPoints` maps over `ALL_LINES`, so it returns 8 points for every input and
+    // the `d=""` path never renders. A test that certifies an unreachable branch is decoration that
+    // reads as coverage — the same shape as the two dead decay guards deleted from `paceProjection`.
+    //
+    // So the assertion is replaced rather than kept: this pins the fact that makes the branch dead, so
+    // if `radarPoints` ever becomes fallible the test fails HERE and the branch gets a real caller
+    // instead of silently staying unreachable.
+    const altitudes = Object.fromEntries(ALL_LINES.map((l) => [l, 'Infrared'])) as Record<Line, Stage>;
+    for (const ringCount of [ALL_STAGES.length, 4, 1]) {
+      expect(radarPoints(altitudes, 400, ringCount).length, 'radarPoints became fallible').toBe(ALL_LINES.length);
+    }
   });
 });
 

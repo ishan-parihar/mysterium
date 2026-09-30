@@ -217,6 +217,44 @@ describe('the REAL corpus, end to end', () => {
 
   });
 
+  it('the cap does not starve a kind — measured on the real corpus, at the COMPONENT limit', () => {
+    // THE BUG THIS EXISTS FOR. `slice(0, limit)` over a list sorted review-first is starvation with a
+    // plausible name: the third kind is never reached, because four reviews and new items outrank every
+    // connection. The component called `studyPlan` with the default cap and the live DOM contained
+    // **zero** `connect` rows — an entire mechanism of the view, invisible, in a plan that looked full.
+    //
+    // Asserting this only at a large limit is the trap the advisory named: the slice stops mattering
+    // once the cap exceeds the number of items, so a `limit: 40` fixture would pass against the bug.
+    // The component's real limit is the one that has to survive.
+    const { holons, g } = corpus();
+    const ids = holons.map((h) => h.id).slice(0, 40);
+    const reached: Record<string, { depth: DepthLevel }> = {};
+    for (const id of ids) {
+      const h = holons.find((x) => x.id === id)!;
+      if (h.devMapping.primaryLine === 'Emotional' || h.devMapping.primaryLine === 'Somatic') continue;
+      reached[id] = { depth: 'applied' };
+    }
+    const k = stateOf(reached);
+
+    for (const limit of [4, 6, 40]) {
+      const plan = studyPlan(holons, g.adjacency, k, limit);
+      const kinds = new Set(plan.recommendations.map((r) => r.kind));
+      expect(
+        plan.recommendations.filter((r) => r.kind === 'connect').length,
+        `at limit ${limit} the cross-domain kind was starved out entirely`,
+      ).toBeGreaterThan(0);
+      // A kind with nothing to show must not consume a slot, so `kinds` is the honest set rather than
+      // all three labels.
+      expect(kinds.size, `at limit ${limit} fewer than two kinds rendered`).toBeGreaterThan(1);
+      expect(plan.recommendations.length).toBeLessThanOrEqual(limit);
+    }
+
+    // And the surplus goes to the kinds that still have items, so a learner short on reviews is not
+    // shown a half-empty plan while 23 new items wait.
+    const small = studyPlan(holons, g.adjacency, k, 4);
+    expect(small.recommendations.length, 'the leftover capacity was not filled').toBe(4);
+  });
+
   it('the `connect` branch is a function of the corpus, not a constant', () => {
     // THE FIXTURE THAT DISCRIMINATES. The real-corpus test above fires 17 connects EITHER WAY when the
     // corpus argument is dropped, because its concepts already name untouched lines — so that mutation

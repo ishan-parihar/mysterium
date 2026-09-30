@@ -1,4 +1,4 @@
-import { ALL_LINES, type Line } from '$core/domain/Line.js';
+import { isLine, ALL_LINES, type Line } from '$core/domain/Line.js';
 import { stageOrdinal, type Stage } from '$core/domain/Stage.js';
 import { ALL_DEPTH_LEVELS, type CurriculumHolon, type DepthLevel, type KnowledgeState } from '$core/curriculum/types.js';
 
@@ -64,9 +64,6 @@ function lineOf(holon: CurriculumHolon): readonly Line[] {
   return out;
 }
 
-function isLine(v: unknown): v is Line {
-  return typeof v === 'string' && (ALL_LINES as readonly string[]).includes(v);
-}
 
 /**
  * NON-CANONICAL LINES ARE DROPPED, NOT ATTRIBUTED — and this is a corpus defect with a record, not a

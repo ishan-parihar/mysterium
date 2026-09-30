@@ -1,4 +1,4 @@
-import { ALL_LINES, type Line } from '$core/domain/Line.js';
+import { isLine, ALL_LINES, type Line } from '$core/domain/Line.js';
 import { depthOrdinal, type CurriculumHolon, type DepthLevel, type KnowledgeState } from '$core/curriculum/types.js';
 
 /**
@@ -29,8 +29,9 @@ export interface AnalogyEdge {
   readonly pattern: string;
   /** Where the analogy stops, verbatim. Empty when the corpus author wrote none. */
   readonly limitation: string;
-  readonly fromLine: Line;
-  readonly toLine: Line;
+  /** `Line`, or the literal 'unmapped' when a holon names a non-canonical line. See `isLine`. */
+  readonly fromLine: Line | 'unmapped';
+  readonly toLine: Line | 'unmapped';
   /** True when the two concepts are in different domains — the whole point of the view. */
   readonly crossDomain: boolean;
 }
@@ -72,6 +73,15 @@ export function analogyEdges(
       const target = byId.get(iso.targetConceptId);
       if (!target) continue;
 
+      // `devMapping` is REQUIRED on `CurriculumHolon`, so this read is type-safe — but the radar's
+      // first version asked for `holon.dev.primaryLine`, a field that does not exist, and returned all
+      // zeros against all 113 real holons while its own tests passed because the fixture built the same
+      // wrong shape. A required field is not the same as a present one, so both sides are read through
+      // one narrow guard and a holon that ever lacks it degrades to 'unmapped' instead of throwing from
+      // a render path. G17 is what actually guarantees the corpus; this is what keeps one bad holon
+      // from blanking the whole view.
+      const fromLine = isLine(holon.devMapping?.primaryLine) ? holon.devMapping.primaryLine : undefined;
+      const toLine = isLine(target.devMapping?.primaryLine) ? target.devMapping.primaryLine : undefined;
       out.push({
         from: holon.id,
         fromName: holon.name,
@@ -79,9 +89,9 @@ export function analogyEdges(
         toName: target.name,
         pattern: iso.pattern,
         limitation: iso.limitations ?? '',
-        fromLine: holon.devMapping.primaryLine,
-        toLine: target.devMapping.primaryLine,
-        crossDomain: holon.devMapping.primaryLine !== target.devMapping.primaryLine,
+        fromLine: fromLine ?? 'unmapped',
+        toLine: toLine ?? 'unmapped',
+        crossDomain: fromLine !== undefined && toLine !== undefined && fromLine !== toLine,
       });
     }
   }
@@ -99,6 +109,22 @@ export function analogyEdges(
  * Grouped on the pattern STRING, which is authored per isomorphism and so is the only honest key. A
  * one-member group is dropped — a cluster of one is a node, not a cluster, and listing it would pad
  * the view with the edges already drawn.
+ *
+ * AND THE CORPUS ALMOST DOES NOT SUPPORT THIS -- measured, not assumed. Over all 57 isomorphisms there
+ * are 55 distinct pattern strings, and exactly ONE appears on two or more distinct sources:
+ * `divide_and_conquer`, and that is a machine key rather than prose. Every other pattern is unique text
+ * ("decomposition into smaller subproblems", "hierarchical organization with traversal"). The corpus
+ * authors each pattern for the one edge it describes, so the only cluster that can ever form is two
+ * edges whose author happened to reuse a string.
+ *
+ * The three members that do form it are the algorithm family -- cs.program.algorithms,
+ * cs.program.alg.sorting and cs.program.alg.sorting.mergesort, all reaching into
+ * math.foundations.algebra -- so the section is not empty, it is one real cluster the corpus supports.
+ *
+ * A normalised key (stemming, or clustering on the target's subject) was NOT written. It would invent
+ * groupings the corpus does not assert, and a "patterns that repeat" panel reporting a relationship no
+ * author stated is the same over-claiming this view is built to avoid. When the corpus grows shared
+ * patterns this returns more than one cluster; the filter is already the multi-source one.
  */
 export function patternClusters(edges: readonly AnalogyEdge[]): readonly PatternCluster[] {
   const byPattern = new Map<string, AnalogyEdge[]>();
@@ -123,8 +149,10 @@ export function patternClusters(edges: readonly AnalogyEdge[]): readonly Pattern
 export function linesInvolved(edges: readonly AnalogyEdge[]): readonly Line[] {
   const seen = new Set<Line>();
   for (const e of edges) {
-    seen.add(e.fromLine);
-    seen.add(e.toLine);
+    // An 'unmapped' side contributes no line — it is a holon that names a non-canonical capacity, and
+    // counting it under a default would attribute a concept to a line the corpus never claimed.
+    if (e.fromLine !== 'unmapped') seen.add(e.fromLine);
+    if (e.toLine !== 'unmapped') seen.add(e.toLine);
   }
   return ALL_LINES.filter((l) => seen.has(l));
 }
