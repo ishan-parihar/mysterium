@@ -49,6 +49,7 @@
   import { stageOrdinal } from '$core/domain/Stage.js';
   import { ALL_LINES } from '$core/domain/Line.js';
   import { setSignificator } from '$lib/stores/gameStore.js';
+  import { persistSignificator } from '$lib/stores/saveHydration.js';
   import { showToast } from '$lib/stores/toastStore.js';
   import {
     type AgenticProbe,
@@ -75,7 +76,13 @@
   // Hard upper bound on Director-driven loop length. The progressive
   // threshold (>= 0.8) is the primary stop; this guard catches any case
   // where the LLM under-weights and would never reach 0.8.
-  const MAX_PROBES = 6;
+  //
+  // A BACKSTOP, not the expected count. With the corpus ramp the Director reaches 0.8 around probe
+  // six, so a player normally sees about six questions. The copy used to promise "8 short
+  // questions" — a number the ramp cannot deliver — and promising a count the instrument does not
+  // produce is how a player learns to distrust it. The ramp is the measurement and is pinned by
+  // `KeylessCalibration`; the promise is the copy, so the copy is what changed.
+  const MAX_PROBES = 8;
 
   // polarity log: each entry is (line, polarity) so we can roll up
   // lateral profiles when calibration completes.
@@ -136,7 +143,11 @@
         }
       }
       if (found.error) {
-        offlineReason = found.error;
+        // A Director-side error can carry provider text — model names, upstream status bodies,
+        // quota messages. Those are operator facts, not player copy, so keep them in the console
+        // and give the reader the part they can act on.
+        console.error('[onboarding] director returned an error frame', found.error);
+        offlineReason = 'The calibration service could not produce a question right now.';
         phase = 'offline';
         return;
       }
@@ -149,7 +160,12 @@
         phase = 'offline';
       }
     } catch (err) {
-      offlineReason = err instanceof Error ? err.message : String(err);
+      // A transport failure's `.message` is a browser string, not a sentence for a player: it
+      // reads "Failed to fetch" under a heading that already says the service is offline, which
+      // tells the reader nothing they can act on. Log the real cause for the operator and show
+      // the human half of the same failure.
+      console.error('[onboarding] probe transport failure', err);
+      offlineReason = 'The connection to the calibration service was interrupted.';
       phase = 'offline';
     } finally {
       submitting = false;
@@ -207,7 +223,8 @@
         await fetchNextProbe();
       }
     } catch (err) {
-      offlineReason = err instanceof Error ? err.message : String(err);
+      console.error('[onboarding] response submission failed', err);
+      offlineReason = 'The connection to the calibration service was interrupted.';
       phase = 'offline';
     } finally {
       submitting = false;
@@ -251,8 +268,16 @@
     for (const line of ALL_LINES) altitudes[line] = 'Red';
     const id = `sig-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const sig = createSignificator(id, altitudes, 'Red');
+    // ONE WRITER OWNS THE KEY. This used to `localStorage.setItem('profile:v1', ...)` — the bare,
+    // un-namespaced name — while every engine read went through `SaveRepository`, which prefixes
+    // every key with `mysterium:`. So the profile was written to a key nothing ever read, and the
+    // returning player's first `goto('/play')` hydrated null and bounced straight back to
+    // /onboarding: an unbreakable loop for a player who had in fact completed calibration.
+    //
+    // `persistSignificator` is the SaveRepository path, so onboarding and the engine now cannot
+    // disagree about where a profile lives.
     try {
-      if (browser) localStorage.setItem('profile:v1', JSON.stringify(sig));
+      if (browser) await persistSignificator(sig);
     } catch (err) {
       console.error('[onboarding] offline save failed:', err);
       showToast('Failed to save progress', 'danger');
@@ -286,7 +311,7 @@
     const sig = createSignificator(id, altitudes as Record<Line, Stage>, currentStage);
 
     try {
-      if (browser) localStorage.setItem('profile:v1', JSON.stringify(sig));
+      if (browser) await persistSignificator(sig);
     } catch (err) {
       console.error('[onboarding] failed to persist Significator:', err);
       showToast('Failed to save progress', 'danger');
@@ -321,7 +346,7 @@
             learns from how you engage, and the world shifts to meet you.
           </p>
           <p class="welcome-sub">
-            First, a brief calibration: 8 short questions to set your starting altitudes.
+            First, a brief calibration — a few short questions to set your starting altitudes.
             There are no wrong answers.
           </p>
           <Button variant="primary" size="lg" onclick={beginCalibration}>
@@ -340,7 +365,13 @@
           <Card variant="elevated" padding="space-6">
             <Stack gap="space-4">
               <p class="prompt-text">{currentProbe.prompt}</p>
-              <Stack gap="space-2">
+              <!--
+    Polarity is in the CLOSED register class (AGENTS §5.4 / 20 §11.1): never player-readable, at
+    any stage. It is the instrument's own scoring key, and rendering it under every option told the
+    player exactly which answer scored what. It stays on the button as `data-polarity` because that
+    attribute is neither rendered nor announced — the submit path reads it from the option object.
+  -->
+  <Stack gap="space-2">
                 {#each currentProbe.options as option, i (i)}
                   <button
                     class="option"
@@ -353,7 +384,6 @@
                       {#if selectedIndex === i}●{:else}○{/if}
                     </span>
                     <span class="option-label">{option.label}</span>
-                    <span class="option-polarity" aria-label="polarity">{option.polarity}</span>
                   </button>
                 {/each}
               </Stack>
@@ -544,14 +574,6 @@
     font-family: var(--mysterium-font-display);
     font-size: var(--mysterium-text-lg);
     color: var(--mysterium-fg);
-  }
-
-  .option-polarity {
-    margin-left: auto;
-    font-size: var(--mysterium-text-xs);
-    color: var(--mysterium-fg-muted);
-    text-transform: lowercase;
-    letter-spacing: var(--mysterium-tracking-wide);
   }
 
   .free-input-label {

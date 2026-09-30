@@ -1,8 +1,18 @@
 <script lang="ts">
   /**
-   * ShadowsDisplay — active shadow patterns, grouped by quadrant.
-   * Parity with CLI renderShadows. Veil-compliant: no clinical labels,
-   * shows quadrant + count + severity band.
+   * ShadowsDisplay — how much is active, and nothing about which quadrant.
+   *
+   * Veil: 20 §11.1 puts shadow — "quadrant names, intensities, ledger entries" — in the CLOSED
+   * register class, never player-readable at any stage. This component used to render a per-
+   * quadrant label ('Clinging' / 'Resisting' / 'Bypassing' / 'Refusing'), a per-quadrant count, and
+   * a per-quadrant severity band. Renaming `DarkAddiction` to 'Clinging' did not veil it: the
+   * grouping KEY was still the quadrant and the band was still the intensity, so the player read
+   * the ledger one renamed column at a time.
+   *
+   * What remains is the aggregate: how many patterns are live and how loud the loudest is. That is
+   * felt-sense (ladder L0, open) and it is what a player can act on between sessions. The quadrant
+   * breakdown belongs to the auditor register, which renders through the law-holder
+   * (`renderLevel`, 16 §10.4) with a consent link.
    */
   import Badge from '$lib/components/Badge.svelte';
   import type { ShadowLedger } from '$core/domain/ShadowLedger.js';
@@ -15,35 +25,14 @@
 
   const active = $derived(shadows.entries.filter((e) => e.resolvedAt === null));
 
-  const QUADRANT_VARIANT: Record<string, 'danger' | 'warning' | 'info' | 'default'> = {
-    DarkAddiction: 'danger',
-    DarkAllergy: 'warning',
-    GoldenAddiction: 'info',
-    GoldenAllergy: 'default',
-  };
+  // ONE band for the whole ledger, from the loudest entry. The per-quadrant split is what leaked.
+  const peak = $derived(active.length === 0 ? 0 : Math.max(...active.map((e) => e.severity)));
 
-  const QUADRANT_LABEL: Record<string, string> = {
-    DarkAddiction: 'Clinging',
-    DarkAllergy: 'Resisting',
-    GoldenAddiction: 'Bypassing',
-    GoldenAllergy: 'Refusing',
-  };
-
-  function severityBand(severity: number): string {
+  function intensityBand(severity: number): string {
     if (severity > 0.7) return 'intense';
     if (severity > 0.4) return 'present';
     return 'faint';
   }
-
-  const grouped = $derived.by(() => {
-    const groups: Record<string, typeof active> = {};
-    for (const s of active) {
-      const key = s.quadrant ?? 'Unknown';
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(s);
-    }
-    return groups;
-  });
 </script>
 
 <div class="shadows-display">
@@ -53,16 +42,10 @@
     <div class="shadows-summary">
       <span class="count">{active.length} active</span>
     </div>
-    <div class="shadows-groups">
-      {#each Object.entries(grouped) as [quadrant, entries] (quadrant)}
-        <div class="shadow-group">
-          <Badge variant={QUADRANT_VARIANT[quadrant] ?? 'default'}>
-            {QUADRANT_LABEL[quadrant] ?? quadrant}
-            {#if entries.length > 1}×{entries.length}{/if}
-          </Badge>
-          <span class="severity">{severityBand(Math.max(...entries.map((e) => e.severity)))}</span>
-        </div>
-      {/each}
+    <div class="shadow-aggregate">
+      <Badge variant={peak > 0.7 ? 'danger' : peak > 0.4 ? 'warning' : 'info'}>
+        {intensityBand(peak)}
+      </Badge>
     </div>
   {/if}
 </div>
@@ -95,22 +78,9 @@
     font-weight: 500;
   }
 
-  .shadows-groups {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--mysterium-space-2);
-  }
-
-  .shadow-group {
+  .shadow-aggregate {
     display: flex;
     align-items: center;
     gap: var(--mysterium-space-2);
-  }
-
-  .severity {
-    font-family: var(--mysterium-font-body);
-    font-size: var(--mysterium-text-xs);
-    color: var(--mysterium-fg-muted);
-    font-style: italic;
   }
 </style>

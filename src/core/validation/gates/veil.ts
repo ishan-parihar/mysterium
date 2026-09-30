@@ -199,3 +199,94 @@ export function validateIdentityFirewall(): GateResult {
   }
   return { gate: 'G12-identity-firewall', passed: true, hard: true, details: 'measurement paths clean of identity imports; projector consent-checked; identity optional on Significator' };
 }
+
+// ---------------------------------------------------------------------------
+// G54 — closed-register values never reach a player-facing template
+// ---------------------------------------------------------------------------
+
+/**
+ * The closed register class, as the field-level names a template would interpolate.
+ *
+ * 20 §11.1 puts polarity and shadow in the CLOSED class — "never to the player, at any stage".
+ * These are the concrete spellings a Svelte template would reach for. `data-*` attributes and
+ * script bodies are excluded below because they are not rendered.
+ */
+const CLOSED_REGISTER_INTERPOLATIONS: readonly RegExp[] = [
+  /\{[a-zA-Z_$][\w$]*(?:\.[a-zA-Z_$][\w$]*)*\.(polarity|quadrant|severity)\}/,
+  /\{[a-zA-Z_$][\w$]*\.(polarity|quadrant|severity)\s*\}/,
+];
+
+/** The literal closed-class words that must not appear as rendered text. */
+const CLOSED_REGISTER_LITERALS: readonly string[] = [
+  'DarkAddiction',
+  'DarkAllergy',
+  'GoldenAddiction',
+  'GoldenAllergy',
+];
+
+function svelteFiles(root: string): string[] {
+  const out: string[] = [];
+  const walk = (dir: string): void => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+        walk(path.join(dir, entry.name));
+        continue;
+      }
+      if (entry.name.endsWith('.svelte')) out.push(path.join(dir, entry.name));
+    }
+  };
+  walk(root);
+  return out;
+}
+
+/**
+ * Strip comments, `data-*` attributes, and the `<script>` block — none of which render.
+ *
+ * `data-polarity` is the legitimate carrier: it is not displayed and not announced by assistive
+ * technology, and the submit path reads the value from the option object rather than the DOM.
+ */
+function renderedRegionsOf(source: string): string {
+  return source
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<script[\s\S]*?<\/script>/g, '')
+    .replace(/\bdata-[\w-]+\s*=\s*\{[^}]*\}/g, '');
+}
+
+export function validateClosedRegisterNotRendered(): GateResult {
+  const gate = 'G54 closed-register values never reach a player-facing template';
+  try {
+    const files = svelteFiles(path.join(process.cwd(), 'src'));
+    if (files.length === 0) {
+      return { gate, passed: false, hard: true, details: 'no .svelte files enumerated — the gate would pass on an empty scan, so it measures nothing' };
+    }
+    const offenders: string[] = [];
+    for (const file of files) {
+      const rendered = renderedRegionsOf(fs.readFileSync(file, 'utf-8'));
+      for (const re of CLOSED_REGISTER_INTERPOLATIONS) {
+        if (re.test(rendered)) offenders.push(`${path.relative(process.cwd(), file)} matches ${re}`);
+      }
+      for (const lit of CLOSED_REGISTER_LITERALS) {
+        if (new RegExp(`>\\s*\\{?\\s*${lit}\\b`).test(rendered) || new RegExp(`\\{\\s*${lit}\\b`).test(rendered)) {
+          offenders.push(`${path.relative(process.cwd(), file)} renders the closed literal ${lit}`);
+        }
+      }
+    }
+    if (offenders.length > 0) {
+      return {
+        gate,
+        passed: false,
+        hard: true,
+        details: `${offenders.length} closed-register leak(s): ${offenders.slice(0, 6).join('; ')} — polarity/shadow are CLOSED (20 §11.1); keep them on a non-rendered carrier such as data-*`,
+      };
+    }
+    return {
+      gate,
+      passed: true,
+      hard: true,
+      details: `${files.length} .svelte files scanned; no closed-register polarity/shadow value reaches a rendered region`,
+    };
+  } catch (err) {
+    return { gate, passed: false, hard: true, details: `gate threw: ${err instanceof Error ? err.message : String(err)}` };
+  }
+}

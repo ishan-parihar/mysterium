@@ -20,10 +20,8 @@ import { validateSignificator } from './validateSignificator.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import { getMysteriumProfileDir } from './mysteriumDir.js';
+import { PROFILE_KEY, SAVE_KEY, WORLD_KEY } from './saveKeys.js';
 
-const SAVE_KEY = 'save:v1';
-const PROFILE_KEY = 'profile:v1';
-const WORLD_KEY = 'world:v1';
 const CURRENT_VERSION = 1;
 
 /** The root persisted save document. */

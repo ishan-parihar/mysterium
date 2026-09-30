@@ -42,6 +42,7 @@ import { getParadigm } from '$core/braingame/registry.js';
 import type { Line } from '$core/domain/Line.js';
 import { SaveRepository } from '$infra/persistence/SaveRepository.js';
 import { createKeyValueStore } from '$infra/persistence/createKeyValueStore.js';
+import { createFirstBootWorld, mergeAuthoredHolons } from './worldBootstrap.js';
 import { setSignificator, setLastEncounter } from '$lib/stores/gameStore.js';
 import { debouncedSync, flushSync } from '$lib/stores/cloudSyncStore.js';
 import { recordEvent } from '$lib/stores/telemetryStore.js';
@@ -99,7 +100,25 @@ export async function bootEngine(): Promise<void> {
 
     // Load Significator + WorldState
     const sig = await saveRepo.loadProfile();
-    const world = await saveRepo.loadWorldState();
+    let world = await saveRepo.loadWorldState();
+
+    // A first-time player has a profile but NO world: `world:v1` is only ever written after a
+    // session ENDS, so it cannot exist before the first one starts. The result was that
+    // calibration completed, /play loaded, and `startGameSession` refused with "no Significator or
+    // WorldState" — the game was unstartable on a clean profile, while the CLI (which seeds a world
+    // in `loadHolons`) could play. Seed it here from the same authored corpora the CLI seeds.
+    if (sig && !world) {
+      world = createFirstBootWorld();
+      await saveRepo.saveWorldState(world);
+    }
+    if (world) {
+      // Returning players: fold in holons authored since their save, and persist the merge once.
+      const merged = { ...world, holons: mergeAuthoredHolons(world.holons) };
+      if (merged.holons.length !== world.holons.length) {
+        world = merged;
+        await saveRepo.saveWorldState(world);
+      }
+    }
 
     if (sig) {
       setSignificator(sig);

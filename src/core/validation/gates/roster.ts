@@ -12,7 +12,7 @@ import { validatePracticeLoop } from '../../practice/practiceTools.js';
 import { validatePodPrivacyWall } from '../../pods/podStateMachine.js';
 import type { GateResult, Tier } from './plumbing.js';
 import { CI_DIVERGENCE, validateAdaptiveDifficulty, validateCoherence, validateDivergence, validateEducationalStream, validateForgettingCurve, validateMetacognition, validateNeedsDetection, validateReproducibility, validateShadowResolution, validateTransformationGating } from './trajectory.js';
-import { validateIdentityFirewall, validateLevellingMechanism, validateVeilCompliance } from './veil.js';
+import { validateIdentityFirewall, validateLevellingMechanism, validateVeilCompliance, validateClosedRegisterNotRendered } from './veil.js';
 import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPacks, validatePlacementConvergence } from './curriculum.js';
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
@@ -174,6 +174,15 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // route, so the gate enumerates the route tree from disk and refuses to pass on a route that
   // the limiter does not actually refuse.
   results.push(await validateBffRateLimitWired());
+  // G54 (Veil): polarity and shadow are CLOSED register (20 §11.1), and two surfaces were printing
+  // them straight to the player — /onboarding rendered `{option.polarity}` under every answer, so
+  // the instrument showed its own scoring key, and ShadowsDisplay grouped by `e.quadrant` with a
+  // per-quadrant severity band. Renaming `DarkAddiction` to 'Clinging' did not veil it: the
+  // GROUPING KEY was still the quadrant. Both were found by driving the UI, not by a test, and the
+  // failure is an ABSENCE — no runtime test can see a closed value that was never rendered — so the
+  // gate reads the templates and strips comments, `<script>`, and `data-*` before looking, leaving
+  // only the regions that actually reach the player.
+  results.push(validateClosedRegisterNotRendered());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

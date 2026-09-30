@@ -56,6 +56,13 @@ export interface CorpusProbe {
 // orientation, later ones carry the weight that closes calibration. Twelve entries for twelve
 // probes — a shorter ramp left the final probe short of 1.0, so the last (and most decisive)
 // question was worth the least.
+//
+// THE RAMP IS NOT A DIAL. An earlier attempt re-weighted it so the 0.8 threshold would land on
+// probe eight, matching the number the player-facing copy used to promise. It was reverted:
+// `KeylessCalibration` pins the ramp contract, and the re-weighting left confidence after the sixth
+// probe at 0.675 — BELOW where the old ramp stopped — because `nextCalibrationConfidence` compounds
+// `prior + (1 - prior) * weight`, so lowering the early weights drags every later total down with
+// them. The ramp is the measurement; the promise on the page is the copy. Fix the copy.
 const RAMP = [0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 1.0] as const;
 
 function probe(
