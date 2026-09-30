@@ -385,7 +385,7 @@ reaches the LLM), G49 locks it. **Track B is BUILT 2026-09-27**: WebUI schedulin
 the Interpersonal exclusion re-measured (every line served at 3×4/6×6/12×6; the 2026-09-25
 finding predated MY-AD-0033's reserve) with the reserve's position contract exported and pinned
 scale-independently; G50 locks it. The current
-kernel roster is **51 gates** (45 + **G46** + **G47** + **G48** + **G49** + **G50** + **G51**: in-vitro-class absences no runtime
+ kernel roster is **57 gates** (45 + **G46** + **G47** + **G48** + **G49** + **G50** + **G51** + **G52** + **G53** + **G54** + **G55** + **G56** + **G57**: in-vitro-class absences no runtime
 gate could see; G46 requires each ladder consumer to reach BOTH the payload bridge and
 `renderLevel`, G47 requires BOTH enforcement points of the share scope law plus the view's
 honesty gate, G48 requires the M0 adapter to hold applyEvent + payloadIsSafe behind the
@@ -393,7 +393,31 @@ PodTransport contract and the pod CLI to construct/apply/poll through it, G49 re
 practice tools to reach the pure core through the crisis gate and the §4.4 pipeline with the
 orchestrator registering and the engine supplying, G50 requires the browser to schedule through
 the kernel's strategy bias + bleed-through + curriculum interleave and the reserved primary to
-stay exported. Phase 17 d1's
+stay exported. **G52** requires the BROWSER to honour the no-LLM deployment mode by detecting it, not
+by a build-time flag (`src/lib/config/noLlm.ts`); **G53** requires every BFF route to actually be metered
+through the shared limiter, not merely to exist beside it; **G54** requires every route to declare its
+SSR choice explicitly, importing the SERVING POLICY rather than a literal, so the gate cannot hold a
+value the app no longer has; **G55** requires closed-register values (polarity, shadow, ray profile,
+harvest verdict, delegation inference) to never reach a player-facing surface — it scans both
+player-facing templates AND the glossary corpus, and a source scan must strip comments first or a
+docblock explaining a defect satisfies the regex for it; **G56** requires every keyed list to render
+under `{#each}` with a stable key; **G57** requires every route to be reachable from a navigation
+surface, with the boundary drawn as *a route may vouch for itself, shared nav surfaces vouch for
+everything else* — `src/lib/**`, `routes/+page.svelte`, `+layout.svelte` and `settings/` are the
+nav surfaces, and a route-body `+page.svelte` is not. The three newest of these (**G55**, **G56**,
+**G57**) were named nowhere in this file until 2026-09-30, which is what **MY-RG-0034** records:
+a hardcoded roster count in prose is a derived surface with no emitter, so every future gate lands
+invisible. Six gates were undocumented when G58 landed and all six are now named here — **G17** corpus
+integrity (the content corpus must resolve as a closed graph: every stage-holon cell populated, every
+relationship resolvable, every branch lint-clean, the 64-module concept-draft index complete),
+**G19** measurement packs, **G24** scaffold integrity, **G29** preference-intake firewall,
+**G39** campaign continuity (two empty roots over N sessions must produce an identical series, and
+every session must restore its predecessor's checkpoint with a growing feed), and **G40** campaign
+invariants. **G16** (practice loop — the vow→check-in→evidence cycle) and **G18** (pod privacy wall) are the
+two gates whose bodies live OUTSIDE `src/core/validation/gates/`, in `src/core/practice/practiceTools.ts`
+and `src/core/pods/podStateMachine.ts`; G58 resolves each id through the roster's import graph for
+exactly that reason, because a scan of the `gates/` directory reports 54 of 58 and calls two perfectly
+good gates absent. Phase 17 d1's
 G45 remains: the pack engine's registry was
 production-test-only — an unseeded registry behaves exactly like an empty one, so no runtime gate
 could see the absence; G45 is the module-graph assertion, teeth proven by mutation. Phase 16 d8's
@@ -573,7 +597,7 @@ When you implement one, record the implementation in the same commit and cite th
    architecture-live). Agents generate the play data the calibration list is waiting for. Everything
    an agent cannot reach is a blind spot by construction — the same ruling that produced Phase 14 d4.
 
-Standing constraints: workspace-lint → `arch.py validate` (DG1–DG23) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The **kernel** gate roster is `src/core/validation/gates/roster.ts` (currently **51**, `G1`–`G51`); the **doc-governance** gate roster is `_org.yaml → gates` (DG1–DG23). They are different rosters and neither is a subset of the other.
+Standing constraints: workspace-lint → `arch.py validate` (DG1–DG23) → build + test → commit + push to BOTH remotes (`origin` GitHub, `gitlab`). See §7.5. The **kernel** gate roster is `src/core/validation/gates/roster.ts` (currently **58**, `G1`–`G58` — **read the file, not this number**; **G58** fails the moment a gate exists that no live document names, which is MY-RG-0034's recurrence guard); the **doc-governance** gate roster is `_org.yaml → gates` (DG1–DG23). They are different rosters and neither is a subset of the other.
 
 ### 4.3 The Grounding Principle
 

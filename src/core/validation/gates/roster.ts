@@ -17,6 +17,7 @@ import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPa
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
 import { validateRoutesReachable } from './reachability.js';
+import { validateGatesDocumented } from './gateDocs.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
 import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired, validateWebUiParityWired, validateAuditorSurfacesWired , validateNoLlmModeWired, validateBffRateLimitWired, validateRouteSsrPolicyWired } from './surface.js';
 import {
@@ -194,6 +195,13 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // module-graph reasoning as G44 and G48), and strips comments first, because those four routes
   // each carry a comment naming their own path and a naive scan would call them linked forever.
   results.push(validateRoutesReachable());
+  // G58: a gate nobody has heard of. G55/G56/G57 ran in this roster for weeks while `AGENTS.md` taught
+  // a 51-gate model of a 57-gate kernel — a reader was never told the Veil gate, the keyed-list gate
+  // or the reachability gate existed (MY-RG-0034). An absence: nothing throws when a gate is
+  // unnamed, so the instrument compares roster ids against the LIVE doc set with comments stripped,
+  // and deliberately excludes docs/audits/ — a dated report about the gap is evidence, not
+  // communication. The ids are parsed from this file, so a new gate lands here with no edit here.
+  results.push(validateGatesDocumented());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

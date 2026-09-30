@@ -2,7 +2,7 @@
 
 > **GENERATED FILE — do not edit.** Produced by `python3 scripts/arch.py emit` from
 > `_org.yaml` plus the AD/RG records. Edit the source, then re-emit.
-> Generated: 2026-09-29
+> Generated: 2026-09-30
 
 ## Rungs
 
@@ -14,7 +14,7 @@
 | `system` | `docs/system` | yes | `docs/system/AGENTS.md` |
 | `content` | `docs/concept-drafts` | yes | `docs/concept-drafts/README.md` |
 | `records` | `docs/system/core/decisions`<br>`docs/system/core/regressions`<br>`docs/system/core/worklog` | yes | `—` |
-| `plans` | `docs/DEVELOPMENT-PLAN.md`<br>`docs/ONBOARDING-REDESIGN-PLAN.md`<br>`docs/ARCHITECTURE-TRANSMUTATION-PLAN.md`<br>`docs/REQUIREMENTS.md`<br>`docs/EDUCATION-CANON-COMPLETION-PLAN.md`<br>`docs/DEPLOYMENT-READINESS-PLAN.md`<br>`docs/PRODUCTION-DEPLOYMENT-PLAN.md` | yes | `docs/DEVELOPMENT-PLAN.md` |
+| `plans` | `docs/DEVELOPMENT-PLAN.md`<br>`docs/ONBOARDING-REDESIGN-PLAN.md`<br>`docs/ARCHITECTURE-TRANSMUTATION-PLAN.md`<br>`docs/REQUIREMENTS.md`<br>`docs/EDUCATION-CANON-COMPLETION-PLAN.md`<br>`docs/DEPLOYMENT-READINESS-PLAN.md`<br>`docs/PRODUCTION-DEPLOYMENT-PLAN.md`<br>`docs/UI-COMPLETENESS-REMEDIATION-PLAN-2026-09-30.md` | yes | `docs/DEVELOPMENT-PLAN.md` |
 | `historical` | `docs/historical` | no | `docs/historical/AGENTS.md` |
 | `audits` | `docs/audits` | no | `—` |
 
@@ -37,7 +37,7 @@
 | `validation` | `docs/system/sub-systems/validation/AGENTS.md` | `src/core/validation`, `scripts/run-validation-benchmark.ts`, `src/core/braingame` |
 | `platform` | `docs/system/sub-systems/platform/AGENTS.md` | `src/core/config`, `src/core/data`, `src/core/events`, `src/core/telemetry`, `src/infra/i18n`, `src/infra/telemetry`, `src/cli`, `src/shared` |
 
-## Records (67)
+## Records (70)
 
 | ID | Kind | Organ | Status | Title |
 |---|---|---|---|---|
@@ -87,8 +87,10 @@
 | `MY-RG-0021` | RG | profiling | Active | A preference prior hardens into an identity label |
 | `MY-AD-0021` | AD | world | Active | World entities are composed from facets, not stored whole |
 | `MY-RG-0019` | RG | world | Active | A static store reasserts itself beside the generated one |
+| `MY-AD-0035` | AD | presentation | Active | The four missing dashboard views are a ratified build sequence, and 33 section 4.2 is a plan that reads as an inventory |
 | `MY-AD-0020` | AD | safety | Active | Ethics and data privacy is a binding contract on every organ |
 | `MY-RG-0018` | RG | safety | Active | A stored field has no declared data class |
+| `MY-RG-0034` | RG | validation | Active | Six kernel gates exist in code and are named in no live document |
 | `MY-AD-0014` | AD | platform | Active | The doc set is readable as a map: route resolves code and context emits the bundle |
 | `MY-AD-0015` | AD | platform | Active | The knowledge-base is queried, not only validated |
 | `MY-AD-0016` | AD | platform | Active | Relationality is enforced when creating, modifying and validating the knowledge-base |
@@ -97,6 +99,7 @@
 | `MY-AD-0027` | AD | platform | Active | A gate is not trusted until it has been shown to fail |
 | `MY-AD-0028` | AD | platform | Active | A ratified law declares its consumer or a tracked deferral |
 | `MY-AD-0032` | AD | platform | Active | Cross-session memory is two deterministic surfaces over committed state |
+| `MY-AD-0036` | AD | platform | Active | A process-global cache on a multi-tenant request path is a defect by construction |
 | `MY-RG-0011` | RG | platform | Active | A generated surface drifts and the commit still looks green |
 | `MY-RG-0012` | RG | platform | Active | A declared rung that no gate reads |
 | `MY-RG-0013` | RG | platform | Active | A verification step mutates the artefact it verifies, or a restore discards unrelated work |

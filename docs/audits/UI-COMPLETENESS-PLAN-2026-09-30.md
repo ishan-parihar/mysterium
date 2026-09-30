@@ -90,10 +90,29 @@ weaken them. Assert the **import** (`from './cardActivation.js'`), which is the 
 
 ---
 
-## P3 — The five canon dashboard views
+## P3 — The four missing canon dashboard views
 
-`33 §4.2` names ten components; six were missing. Knowledge Map (View 1) shipped in `bede9e0`. Four
-remain, and **the data exists** — this is presentation debt, not a model gap:
+`33 §4.2:252-256` names **five** renderer components (not ten — corrected 2026-09-30 against
+`arch.py`-measured truth). Four were never built. Knowledge Map (View 1) shipped in `bede9e0`, and a
+**sixth, unnamed** display exists: `src/lib/components/displays/KnowledgeDashboard.svelte` (1 importer,
+`/knowledge/+page.svelte:72`), which `KnowledgeMap` draws into. So §4.2 is a plan that reads as an
+inventory. Ratified and status-corrected by **MY-AD-0035**; §4.2 gains a `KnowledgeDashboard` row and
+per-view status.
+
+Measured importer counts (2026-09-30) — a component with zero importers is dead, the `HoldProbe` lesson:
+
+| Canon §4.2 component | Status |
+|---|---|
+| `KnowledgeMap.svelte` | **shipped** — 1 importer (`/knowledge`) |
+| `DevelopmentalRadar.svelte` | **absent** — 0 importers |
+| `LearningTrajectory.svelte` | **absent** — 0 importers |
+| `StudyPlanner.svelte` | **absent** — 0 importers |
+| `IntegrationMap.svelte` | **absent** — 0 importers |
+| `StageTheme.svelte` (§4.2 "existing") | live — 2 importers |
+| `A11yApplier.svelte` (§4.2 "existing") | live — 3 importers |
+| `StageTransitionOverlay.svelte` (§4.2 "existing") | live — 1 importer |
+
+**The data exists** — presentation debt, not a model gap:
 `CurriculumHolon.prerequisites` (edges), `dev.primaryLine` + `dev.secondaryLines` (View 2's
 cross-domain link, which canon names specifically), `ConceptState.depthHistory` + `lastReviewedAt`
 (View 3's timeline).
@@ -105,9 +124,11 @@ cross-domain link, which canon names specifically), `ConceptState.depthHistory` 
 - **View 4 `StudyPlanner`** — `learningPath` already orders by unmet prerequisites.
 - **View 5 `IntegrationMap`** — `internalizedHolons` + `shadows` already on the Significator.
 
-Each gets its own test, and each is mounted in a browser before it counts. `KnowledgeMap` still has
-no test — its pure layout logic (`depthOrdinalFor`, `placed`, `gapIds`) is testable and should be
-first, since View 2–5 will copy its shape.
+**The bar MY-AD-0035 sets.** A view with no pure-logic module extracted is not finished: `KnowledgeMap`
+shipped its layout logic (`depthOrdinalFor`, `placed`, `gapIds`) untested, and that is exactly the debt
+View 2 would inherit. Each view gets: a pure module, a component, a mount, a **mutation-proven** test,
+and a browser read of the rendered surface. No placeholders — canon §3.2:170 rests the dashboard on
+earned disclosure, and a stub breaks that contract in the one place a player looks to see progress.
 
 **Sequencing note.** Views 2–5 are the largest feature debt and the least urgent: nothing is broken
 without them, and the deploy blocker below makes them un-shippable anyway. Do P1/P2 first.

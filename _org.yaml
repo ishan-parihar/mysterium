@@ -103,6 +103,7 @@ rungs:
     - docs/EDUCATION-CANON-COMPLETION-PLAN.md
     - docs/DEPLOYMENT-READINESS-PLAN.md
     - docs/PRODUCTION-DEPLOYMENT-PLAN.md
+    - docs/UI-COMPLETENESS-REMEDIATION-PLAN-2026-09-30.md
     authority: docs/DEVELOPMENT-PLAN.md
     live: true
   historical:
