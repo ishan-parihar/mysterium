@@ -14,6 +14,9 @@
  *         Significator/WorldState byte-identical.
  *   GE-4  Decline: the encounter is removed and the queue re-schedules.
  *   GE-5  Persistence round-trip: post-session state survives a fresh boot.
+ *   GE-6  An ANSWERED encounter persists its counters. `applyEncounterResult` used to persist the
+ *         PRE-encounter significator, so `totalEncounters` stayed 0 forever and a reload lost the
+ *         session — the save ran, with the wrong value, and reported no error.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { get } from 'svelte/store';
@@ -25,6 +28,8 @@ import {
   scheduleEncounters,
   completeTrainingBeat,
   declineEncounter,
+  runEncounter,
+  flushEngine,
 } from '../../src/lib/engine/gameEngine.js';
 import { computeTrainingWeave } from '../../src/core/GameLoop.js';
 import { createSignificator } from '../../src/core/domain/Significator.js';
@@ -206,5 +211,43 @@ describe('gameEngine integration (browser binding over the real persistence seam
     expect(reloaded.significator).toBeTruthy();
     expect(JSON.stringify(reloaded.significator)).toBe(JSON.stringify(sigBefore));
     void repo;
+  });
+
+  it('GE-6: an answered encounter PERSISTS its counters, and they survive a fresh boot', async () => {
+    // `applyEncounterResult` used to pass the PRE-encounter significator into applyResponseOnly and
+    // then persist that. The orchestrator's post-consequence state was discarded, so every counter
+    // an encounter computed was overwritten by the value from before it ran: totalEncounters stayed
+    // 0 no matter how many encounters a player answered, and a reload lost the session. Nothing
+    // errored — the save ran, with the wrong value. Found by driving the browser and reading the
+    // stored JSON immediately after answering.
+    await bootFresh();
+    startGameSession();
+    const encounter = get(engineStore).encounters[0];
+    expect(encounter).toBeTruthy();
+
+    const before = get(engineStore).significator!;
+    expect(before.totalEncounters).toBe(0);
+
+    // `runEncounter` drives the whole seam itself and calls applyEncounterResult internally, so the
+    // handler just answers the prompts it is asked. Keyless, so no model is reached.
+    const handler = {
+      askUser: async () => ({ answers: [{ selectedLabels: ['I engage directly'] }] }),
+    };
+    await runEncounter(encounter!, handler, { noLlm: true });
+    await flushEngine();
+
+    const after = get(engineStore).significator!;
+    expect(after.totalEncounters).toBe(1);
+    expect(after.recentEncounters.length).toBe(1);
+
+    // And it is on DISK, not only in memory.
+    const repo = new SaveRepository(createKeyValueStore());
+    const persisted = (await repo.loadProfile())!;
+    expect(persisted.totalEncounters).toBe(1);
+
+    // Reboot: the counter is still there.
+    await resetEngineStore();
+    await bootEngine();
+    expect(get(engineStore).significator!.totalEncounters).toBe(1);
   });
 });

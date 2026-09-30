@@ -477,9 +477,15 @@ async function applyEncounterResult(
     sourceOfNourishment: result.consequenceRecord.polarityTrace.sourceOfNourishment,
   };
 
+  // The orchestrator ALREADY applied consequences, so `result.updatedSig` / `result.updatedWorld`
+  // are the post-consequence state. This used to pass `state.significator` — the value from BEFORE
+  // the encounter — and then persisted that, so every counter the encounter computed was
+  // overwritten by the pre-encounter value: totalEncounters stayed 0 forever, a reload lost the
+  // session, and nothing reported an error. `applyResponseOnly` below ADDS to what it is given, so
+  // it must be given the state the consequences already updated, not a stale copy of the start.
   const { sig: newSig, world: newWorld, sessionState: newSession } = applyResponseOnly(
-    state.significator,
-    state.world,
+    result.updatedSig,
+    result.updatedWorld,
     state.session,
     playerResponse,
     encounter,
