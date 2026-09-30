@@ -23,6 +23,9 @@
 /** What a group means when a player asks "what does deleting this do". */
 export type DataGroup = 'play' | 'identity' | 'preferences' | 'shared';
 
+import { PROFILE_KEY, SAVE_KEY, WORLD_KEY } from '../../infra/persistence/saveKeys.js';
+import { resolveStorageKey } from '../../infra/persistence/LocalStorageStore.js';
+
 export interface StoredItem {
   readonly key: string;
   readonly label: string;
@@ -39,19 +42,25 @@ export interface StoredItem {
 
 const KNOWN_KEYS: readonly Omit<StoredItem, 'present'>[] = [
   {
-    key: 'profile:v1',
+    // The PHYSICAL keys, not the logical ones. `SaveRepository` asks its `KeyValueStore` for
+    // `profile:v1` and `LocalStorageStore` prefixes that to `mysterium:profile:v1`, which is the key
+    // the app actually writes. Listing the bare name made this page report "nothing here is stored
+    // on this device" for a player who had a full Significator and world on disk, and offer NO
+    // control to delete either — a privacy page that is silently wrong is worse than no privacy
+    // page. Composed through the same owners the app writes through, so the two cannot drift.
+    key: resolveStorageKey(PROFILE_KEY),
     label: 'Your Significator',
     holds: 'Your starting stage, the eight line altitudes, and your vow record.',
     group: 'play',
   },
   {
-    key: 'world:v1',
+    key: resolveStorageKey(WORLD_KEY),
     label: 'Your world',
     holds: 'The state of the world you have played through — which holons moved, and how.',
     group: 'play',
   },
   {
-    key: 'save:v1',
+    key: resolveStorageKey(SAVE_KEY),
     label: 'Your session checkpoint',
     holds: 'Where you stopped, so a session resumes where you left it.',
     group: 'play',
@@ -111,13 +120,43 @@ export const DATA_GROUP_LABEL: Readonly<Record<DataGroup, string>> = {
  * question "does this key exist?" is answerable without a global — the page passes `localStorage`
  * and a test passes a Map, and both get the same answer.
  */
+/**
+ * The legacy bare form of each namespaced play key.
+ *
+ * `SaveRepository` namespaces its keys, so the app writes `mysterium:profile:v1`. But onboarding
+ * wrote `profile:v1` directly for as long as it existed, so a real player can have their Significator
+ * at the BARE key and nothing at the namespaced one. A privacy page that only knows the namespaced
+ * form reports "nothing here is stored" for exactly those players and offers no control to delete
+ * what they actually have — their data becomes undeletable through the page that exists to make it
+ * deletable. So each play item is probed at both forms, and a delete removes whichever is present.
+ */
+const LEGACY_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  [resolveStorageKey(PROFILE_KEY)]: [PROFILE_KEY],
+  [resolveStorageKey(WORLD_KEY)]: [WORLD_KEY],
+  [resolveStorageKey(SAVE_KEY)]: [SAVE_KEY],
+};
+
 export function storedData(probe: (key: string) => boolean): readonly StoredItem[] {
-  return KNOWN_KEYS.map((item) => ({ ...item, present: probe(item.key) }));
+  return KNOWN_KEYS.map((item) => {
+    const aliases = LEGACY_ALIASES[item.key] ?? [];
+    return { ...item, present: probe(item.key) || aliases.some((a) => probe(a)) };
+  });
 }
 
 /** Keys a full deletion removes. `present: false` keys are skipped rather than reported. */
-export function deletableKeys(items: readonly StoredItem[]): readonly string[] {
-  return items.filter((i) => i.present).map((i) => i.key);
+export function deletableKeys(
+  items: readonly StoredItem[],
+  probe?: (key: string) => boolean,
+): readonly string[] {
+  const out: string[] = [];
+  for (const i of items) {
+    if (!i.present) continue;
+    out.push(i.key);
+    // A legacy alias is handed over ONLY when it is genuinely on the device, so a delete never
+    // claims to remove a key that was never written.
+    if (probe) for (const a of LEGACY_ALIASES[i.key] ?? []) if (probe(a)) out.push(a);
+  }
+  return out;
 }
 
 /** The honest total: how many of the known keys this build actually writes. */

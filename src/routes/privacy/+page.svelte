@@ -62,7 +62,10 @@
   }
 
   function deleteGroup(g: DataGroup): void {
-    const keys = deletableKeys(byGroup(g));
+    // The probe is passed so a legacy BARE key (`profile:v1`, written by onboarding before the
+    // repository namespaced it) is removed alongside the namespaced one. Without it, a player who
+    // calibrated on an older build keeps a Significator the privacy page cannot reach.
+    const keys = deletableKeys(byGroup(g), (k) => localStorage.getItem(k) !== null);
     // Log the exact set rather than trusting the filter. This path destroys data, and a group
     // deletion that removed a neighbouring group's key would be silent — the page would still say
     // "deleted" and the count would still move.
