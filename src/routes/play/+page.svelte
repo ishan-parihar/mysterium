@@ -23,7 +23,7 @@
   import Spinner from '$lib/components/Spinner.svelte';
   import Stack from '$lib/components/Stack.svelte';
   import Cluster from '$lib/components/Cluster.svelte';
-  import { engineStore, bootEngine, startGameSession, declineEncounter, clearTransformationSignal, completeTrainingBeat } from '$lib/engine/gameEngine.js';
+  import { engineStore, bootEngine, startGameSession, declineEncounter, clearTransformationSignal, completeTrainingBeat, endGameSession } from '$lib/engine/gameEngine.js';
   import StageTransitionOverlay from '$lib/components/StageTransitionOverlay.svelte';
   import { gameStore } from '$lib/stores/gameStore.js';
   import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
@@ -112,7 +112,24 @@
     await declineEncounter(encounter);
   }
 
-  function backToMenu() {
+  /**
+   * Leaving `/play` ends the session, and that is the ONLY place it ends in the browser.
+   *
+   * `endSession` is where the kernel applies theta-decay, evaluates the Choice at the apex, and runs
+   * the harvest check (`GameLoop.ts`). Navigating straight to `/` skipped all of it, so a browser
+   * player's `totalSessions` never left 0, neglected stages never decayed, and the Choice was never
+   * evaluated — while the CLI reached every one of those. `await` before the navigation: `goto` is
+   * not instantaneous, and a half-written save is how a player's session used to go missing.
+   *
+   * The `try` is honest degradation, not a swallow — a failed boundary still navigates rather than
+   * trapping the player on a screen they asked to leave, and the error is on the console.
+   */
+  async function backToMenu() {
+    try {
+      await endGameSession();
+    } catch (err) {
+      console.error('[play] could not close the session cleanly:', err);
+    }
     goto('/');
   }
 </script>

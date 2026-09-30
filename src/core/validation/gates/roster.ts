@@ -16,6 +16,7 @@ import { validateIdentityFirewall, validateLevellingMechanism, validateVeilCompl
 import { validateCorpusIntegrity, validateCredentialChain, validateMeasurementPacks, validatePlacementConvergence } from './curriculum.js';
 import { validateDelegationDeterminism, validateDelegationToolsetFirewall, validatePriorityClosure } from './orchestration.js';
 import { validateAuthoredSeedCoherence, validateCompositionIntegrity, validateInferenceWriteFirewall, validateScaffoldIntegrity, validateTierGate } from './personalization.js';
+import { validateRoutesReachable } from './reachability.js';
 import { validateCouncilDispatch, validateMemoryPersistence, validatePolarityPool, validatePreferenceIntakeFirewall, validateRetrievalFirewall, validateRoleScopeAlignment, validateUdvBandPopulation, validateVerdictCompleteness } from './memory.js';
 import { validateCheckedGraph, validateCliBoot, validateSessionControlsWired, validateSystem1Boundary, validatePackSeamWired, validateLadderWired, validateShareSeamWired, validatePodTransportWired, validatePracticeToolsWired, validateWebUiParityWired, validateAuditorSurfacesWired , validateNoLlmModeWired, validateBffRateLimitWired, validateRouteSsrPolicyWired } from './surface.js';
 import {
@@ -186,6 +187,13 @@ export async function runValidationSuite(tier: Tier = 'ci', personas: readonly P
   // G56: a keyed `each` on a field that repeats is a hard Svelte invariant failure that blanks the WHOLE
   // page — the glossary corpus defines 'Transformation' twice and the last nav item rendered nothing.
   results.push(validateKeyedEachKeys());
+  // G57: a route nobody can reach. The app's navigation is THREE independently maintained arrays
+  // (Sidebar 11, BottomNav 4, home 16) plus /settings, and four routes were in none of them — the
+  // three 16 §2.4 auditor surfaces and /diagnostic — all fully built, all fully tested, all
+  // invisible to a player. An absence, so the instrument reads the route tree from disk (same
+  // module-graph reasoning as G44 and G48), and strips comments first, because those four routes
+  // each carry a comment naming their own path and a naive scan would call them linked forever.
+  results.push(validateRoutesReachable());
   const hardFailed = results.some((r) => r.hard && !r.passed);
   return { tier, results, wallTimeMs: Date.now() - t0, passed: !hardFailed };
 }

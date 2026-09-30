@@ -24,7 +24,7 @@ import type { ScheduledEncounter } from '$core/domain/EncounterSpecNew.js';
 import type { SessionContext } from '$core/engines/PriorityComputation.js';
 import type { SessionState } from '$core/GameLoop.js';
 import type { OrchestratorResult, AgenticUIHandler } from '$core/assessments/AgenticOrchestrator.js';
-import { startSession, applyResponseOnly, computeTrainingWeave, generateCurriculumEncounters } from '$core/GameLoop.js';
+import { startSession, applyResponseOnly, computeTrainingWeave, generateCurriculumEncounters, endSession } from '$core/GameLoop.js';
 import { detectBleedThrough } from '$core/engines/ThetaDecay.js';
 import { scheduleNextWithHolonicReturn } from '$core/engines/EncounterScheduler.js';
 import { createModuleTaskTypesProvider } from '$core/engines/CandidateGeneration.js';
@@ -540,6 +540,51 @@ export async function declineEncounter(encounter: ScheduledEncounter): Promise<v
   const { encounters } = get(engineStore);
   if (encounters.length < 3) {
     scheduleEncounters();
+  }
+}
+
+// ─── Session end ─────────────────────────────────────────────────────
+
+/**
+ * Close the session and apply everything that only happens at a boundary.
+ *
+ * THIS WAS MISSING ENTIRELY FROM THE BROWSER, and the damage was wider than a counter. `endSession`
+ * is where the kernel does the work that CANNOT happen mid-encounter: theta-decay on neglected
+ * stages, the Choice evaluation at the apex (19 §9.6 — a STATE, with the harvest EVENT only when
+ * eligibility and closure both hold), and the harvest check. `/play` had exactly two exits
+ * (`backToMenu` and the Menu link) and both called `goto('/')`, so a browser player got none of it:
+ * a session never ended, `totalSessions` stayed 0 forever, neglected stages never decayed, and the
+ * Choice was never evaluated. The CLI reached all of it; the browser was not the same product.
+ *
+ * The `encountersCompleted > 0` guard is the KERNEL's (GameLoop P2-1), and it is left doing its job —
+ * a run where every encounter crashed must not count as a session. This function does not decide
+ * that; it hands the accumulated state over and takes the kernel's answer.
+ *
+ * Idempotent by construction: a second call finds `session` null and returns, so a double-tap on
+ * "Menu" cannot double-apply theta decay.
+ */
+export async function endGameSession(): Promise<void> {
+  const { significator, world, session } = get(engineStore);
+  if (!significator || !world || !session) return;
+
+  const closed = endSession(significator, session, Date.now(), world);
+
+  // `endSession` types `world` as optional (the CLI's DQ path calls it without one), so the returned
+  // world is `WorldState | undefined` even though we passed one. Falling back to the world we handed
+  // in keeps the store's non-optional contract instead of widening it for a caller that cannot
+  // produce undefined.
+  const closedWorld = closed.world ?? world;
+
+  engineStore.update((s) => ({
+    ...s,
+    significator: closed.sig,
+    world: closedWorld,
+    session: null, // the boundary has been crossed; a second call must not re-enter
+  }));
+
+  if (saveRepo) {
+    await saveRepo.saveProfile(closed.sig);
+    await saveRepo.saveWorldState(closedWorld);
   }
 }
 

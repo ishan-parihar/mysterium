@@ -126,9 +126,12 @@ describe('Validation benchmark (CI tier)', () => {
     // profile's per-quadrant shadow breakdown — and the failure is an ABSENCE, so no runtime test
     // could see a closed value that was never rendered. The gate reads the templates, stripping
     // comments, `<script>` and `data-*`, and refuses on the rest.
-    expect(suite.results.length).toBe(56);
+    // G57 (2026-09-30): a route nobody can reach. Four routes were fully built, fully gated and
+    // fully tested while being invisible — the three auditor surfaces and /diagnostic. An absence,
+    // so the gate reads the route tree from disk and the link sources, stripping comments first.
+    expect(suite.results.length).toBe(57);
     for (const g of ['G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43', 'G44', 'G45', 'G46', 'G47', 'G48', 'G49', 'G50', 'G51',
-      'G52', 'G53', 'G54', 'G55', 'G56']) {
+      'G52', 'G53', 'G54', 'G55', 'G56', 'G57']) {
       expect(suite.results.map((r) => r.gate).some((x) => x.startsWith(g)), g).toBe(true);
     }
     expect(suite.results.map((r) => r.gate).some((g) => g.includes('authored-seed'))).toBe(true);
