@@ -18,6 +18,9 @@
   import ShadowsDisplay from '$lib/components/displays/ShadowsDisplay.svelte';
   import DrivesCompass from '$lib/components/displays/DrivesCompass.svelte';
   import SessionPosition from '$lib/components/displays/SessionPosition.svelte';
+  import DevelopmentalRadar from '$lib/components/displays/DevelopmentalRadar.svelte';
+  import { getCurriculumRegistry } from '$core/curriculum/CurriculumRegistry.js';
+  import { seedCurriculumRegistry } from '$core/curriculum/CurriculumSeed.js';
   import { gameStore, setSignificator } from '$lib/stores/gameStore.js';
   import { engineStore } from '$lib/engine/gameEngine.js';
   import { loadSignificatorFromStorage } from '$lib/stores/saveHydration.js';
@@ -31,6 +34,20 @@
   import type { Stage } from '$core/domain/Stage.js';
 
   const sig = $derived($gameStore.significator);
+
+  /**
+   * `33 §3.1` View 2 — the curriculum half of the radar.
+   *
+   * Seeded HERE, not only in the layout: `getCurriculumRegistry()` returns an empty registry on a cold
+   * process, so a page that reads it without seeding renders eight empty spokes — which reads as a
+   * learner who has touched nothing rather than a page with no data. The identical defect made the
+   * first draft of G17's devMapping check pass vacuously, so it is recorded here too.
+   */
+  const curriculumHolons = $derived.by(() => {
+    if (!browser) return [];
+    seedCurriculumRegistry();
+    return getCurriculumRegistry().getAll();
+  });
 
   // The articulation ladder moved into <ArticulationLadder> (P1 item 2). It was two hardcoded
   // levels here with no selector, so L0 and L3/L6/L7 — every level `SELF_RENDER_LEVELS` permits —
@@ -167,6 +184,14 @@
           {/each}
         </svg>
       </div>
+
+      <!--
+        `33 §3.1` View 2. Canon §4.2:253 names it an "extension of existing radar component with
+        curriculum data" — the altitude radar above is the existing half, this is the curriculum half,
+        and it is a separate component because the two share a centre and a spoke order and nothing
+        else.
+      -->
+      <DevelopmentalRadar altitudes={sig.altitudes} holons={curriculumHolons} knowledge={sig.knowledge} />
 
       <Card variant="accent" padding="space-5">
         <Stack gap="space-3">
