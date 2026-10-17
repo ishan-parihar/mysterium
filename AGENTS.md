@@ -664,8 +664,7 @@ The 7 game modalities are 7 AXES through which catalyst of a particular frequenc
 The 4 AQAL quadrants (UL interior-individual · UR exterior-individual · LL interior-collective · LR
 exterior-collective) are no longer a missing model. The ratified ontology Mysterium is already
 governed by carries every altitude's markers **per quadrant** — integrity and pathology alike — and
-those are now ingested into code (`StageQuality`, `MY-AD-0030`, canon `02 §3` / KosmOS
-`_Ontology/stages/altitude.md`). `pathologies.md` is the same fourfold model as §5.2 below.
+those are now ingested into code (`StageQuality`, `MY-AD-0030`, canon `02 §3`). The pathologies model is the same fourfold model as §5.2 below.
 
 Three things follow, and one is still deferred:
 
