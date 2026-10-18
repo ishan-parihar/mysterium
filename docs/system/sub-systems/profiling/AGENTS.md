@@ -23,4 +23,10 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 ### Boundaries and invariants (curated - preserved across emits)
 
 *(not yet curated for this organ)*
+
+### Hand-linked records (hand-linked; kept outside the auto-zone)
+
+- [MY-AD-0022 — Preference is inferred under an evidence tier, and only the instrumented tier becomes a field of record](core/decisions/MY-AD-0022-preference-is-inferred-under-an-evidence-tier-and-only-the-i.md)
+- [MY-RG-0020 — A language-derived inference becomes a field of record without a tier, a data class, or consent](core/regressions/MY-RG-0020-a-language-derived-inference-becomes-a-field-of-record-witho.md)
+- [MY-RG-0021 — A preference prior hardens into an identity label](core/regressions/MY-RG-0021-a-preference-prior-hardens-into-an-identity-label.md)
 <!-- arch:manual-zone:end -->

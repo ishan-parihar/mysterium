@@ -22,4 +22,9 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 ### Boundaries and invariants (curated - preserved across emits)
 
 *(not yet curated for this organ)*
+
+### Hand-linked records (hand-linked; kept outside the auto-zone)
+
+- [MY-AD-0021 — World entities are composed from facets, not stored whole](core/decisions/MY-AD-0021-world-entities-are-composed-from-facets-not-stored-whole.md)
+- [MY-RG-0019 — A static store reasserts itself beside the generated one](core/regressions/MY-RG-0019-a-static-store-reasserts-itself-beside-the-generated-one.md)
 <!-- arch:manual-zone:end -->

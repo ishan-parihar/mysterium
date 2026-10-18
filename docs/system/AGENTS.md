@@ -65,3 +65,34 @@ reason the organ boundaries exist:
 
 Vocabulary and ownership: `docs/foundations/44`. Rung/organ structure: `_org.yaml`.
 Process and phases: `docs/ARCHITECTURE-TRANSMUTATION-PLAN.md`.
+
+## 5. System-wide records (hand-linked)
+
+### Decisions
+
+- [MY-AD-0001 — Assessment-module execution replaces the ATB combat spine](core/decisions/MY-AD-0001-assessment-module-execution-replaces-the-atb-combat-spine.md)
+- [MY-AD-0002 — Layer rules: core is pure, infra integrates, surfaces consume, content is data](core/decisions/MY-AD-0002-layer-rules-core-is-pure-infra-integrates-surfaces-consume-c.md)
+- [MY-AD-0003 — Vocabulary is owned by foundations/44; the ladder is ratified](core/decisions/MY-AD-0003-vocabulary-is-owned-by-foundations-44-the-ladder-is-ratified.md)
+- [MY-AD-0004 — The objective is continuing development, not the harvest](core/decisions/MY-AD-0004-the-objective-is-continuing-development-not-the-harvest.md)
+- [MY-AD-0005 — Eligibility is a condition; the closure is an event](core/decisions/MY-AD-0005-eligibility-is-a-condition-the-closure-is-an-event.md)
+- [MY-AD-0006 — Register classes: the full metric register is available at any stage](core/decisions/MY-AD-0006-register-classes-the-full-metric-register-is-available-at-an.md)
+- [MY-AD-0007 — One articulation ladder, two registers, no privilege tiers](core/decisions/MY-AD-0007-one-articulation-ladder-two-registers-no-privilege-tiers.md)
+- [MY-AD-0008 — Objective alignment biases catalyst selection; it never replaces it](core/decisions/MY-AD-0008-objective-alignment-biases-catalyst-selection-it-never-repla.md)
+- [MY-AD-0009 — Two-fold world memory with a per-holon owner worker](core/decisions/MY-AD-0009-two-fold-world-memory-with-a-per-holon-owner-worker.md)
+- [MY-AD-0010 — One foreground orchestrator; background workers for menial jobs](core/decisions/MY-AD-0010-one-foreground-orchestrator-background-workers-for-menial-jo.md)
+- [MY-AD-0011 — Human intervention is integrated, not a privileged handoff path](core/decisions/MY-AD-0011-human-intervention-is-integrated-not-a-privileged-handoff-pa.md)
+- [MY-AD-0012 — Grading is evidence-only; competence and identity never mix](core/decisions/MY-AD-0012-grading-is-evidence-only-competence-and-identity-never-mix.md)
+- [MY-AD-0013 — Documentation is governed as a three-record system](core/decisions/MY-AD-0013-documentation-is-governed-as-a-three-record-system.md)
+
+### Regressions
+
+- [MY-RG-0001 — A one-way migration script looks idempotent and is not](core/regressions/MY-RG-0001-a-one-way-migration-script-looks-idempotent-and-is-not.md)
+- [MY-RG-0002 — Stage vocabulary drift (superseded names reappearing in active canon)](core/regressions/MY-RG-0002-stage-vocabulary-drift-superseded-names-reappearing-in-activ.md)
+- [MY-RG-0003 — A document claims authority it does not own](core/regressions/MY-RG-0003-a-document-claims-authority-it-does-not-own.md)
+- [MY-RG-0004 — A dormant directory reads as live canon](core/regressions/MY-RG-0004-a-dormant-directory-reads-as-live-canon.md)
+- [MY-RG-0005 — Canon and code drift apart on a shared vocabulary](core/regressions/MY-RG-0005-canon-and-code-drift-apart-on-a-shared-vocabulary.md)
+- [MY-RG-0006 — A ratified policy seam with no consumer (dormant proposals)](core/regressions/MY-RG-0006-a-ratified-policy-seam-with-no-consumer-dormant-proposals.md)
+- [MY-RG-0007 — A lifecycle state machine permits a transition the canon forbids](core/regressions/MY-RG-0007-a-lifecycle-state-machine-permits-a-transition-the-canon-for.md)
+- [MY-RG-0008 — Two documents own one formula](core/regressions/MY-RG-0008-two-documents-own-one-formula.md)
+- [MY-RG-0009 — A partial purge leaves the old system's vocabulary in place](core/regressions/MY-RG-0009-a-partial-purge-leaves-the-old-system-s-vocabulary-in-place.md)
+- [MY-RG-0010 — A gate passes because its fixture cannot fail](core/regressions/MY-RG-0010-a-gate-passes-because-its-fixture-cannot-fail.md)

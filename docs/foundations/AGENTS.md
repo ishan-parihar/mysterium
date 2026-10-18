@@ -74,3 +74,7 @@ authority (gate `DG6`).
    `27 §5.4`? If so, update every affected document in the same change.
 4. Record the decision as an AD in `docs/system/core/decisions/` (rung **records**).
 5. Run the iteration protocol (`AGENTS.md §7.5`): workspace-lint → `arch.py validate` → build + tests.
+
+## Additional foundations (hand-linked)
+
+- [37 — K-12+ Curriculum Expansion](37-k12-curriculum-expansion.md)

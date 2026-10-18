@@ -24,4 +24,8 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 ### Boundaries and invariants (curated - preserved across emits)
 
 *(not yet curated for this organ)*
+
+### Hand-linked records (hand-linked; kept outside the auto-zone)
+
+- [MY-AD-0035 — The four missing dashboard views are a ratified build sequence, and 33 section 4.2 is a plan that reads as an inventory](core/decisions/MY-AD-0035-the-four-missing-dashboard-views-are-a-ratified-build-sequen.md)
 <!-- arch:manual-zone:end -->

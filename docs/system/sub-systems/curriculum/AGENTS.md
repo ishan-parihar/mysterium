@@ -23,4 +23,9 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 ### Boundaries and invariants (curated - preserved across emits)
 
 *(not yet curated for this organ)*
+
+### Hand-linked records (hand-linked; kept outside the auto-zone)
+
+- [MY-AD-0023 — Delivery structure is selected from a scaffold library, never authored per encounter and never left unfaded](core/decisions/MY-AD-0023-delivery-structure-is-selected-from-a-scaffold-library-never.md)
+- [MY-AD-0037 — Ecology is Interpersonal, not Naturalist: a declined capacity remapped in the corpus](core/decisions/MY-AD-0037-ecology-is-interpersonal-not-naturalist-a-declined-capacity-.md)
 <!-- arch:manual-zone:end -->

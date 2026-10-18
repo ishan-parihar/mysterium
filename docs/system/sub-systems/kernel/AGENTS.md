@@ -23,4 +23,15 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 ### Boundaries and invariants (curated - preserved across emits)
 
 *(not yet curated for this organ)*
+
+### Hand-linked records (hand-linked; kept outside the auto-zone)
+
+- [MY-AD-0018 — The player's dimensionality is a first-class retrieval key](core/decisions/MY-AD-0018-the-player-s-dimensionality-is-a-first-class-retrieval-key.md)
+- [MY-AD-0019 — World, NPC and scenario libraries are pooled before selection](core/decisions/MY-AD-0019-world-npc-and-scenario-libraries-are-pooled-before-selection.md)
+- [MY-AD-0029 — The ray is a lens over the altitude ladder, never restated per stage](core/decisions/MY-AD-0029-the-ray-is-a-lens-over-the-altitude-ladder-never-restated-pe.md)
+- [MY-AD-0030 — Every altitude carries its quality, per quadrant, and the quadrants are read from it](core/decisions/MY-AD-0030-every-altitude-carries-its-quality-per-quadrant-and-the-quad.md)
+- [MY-AD-0034 — The share mechanism is persona-free; the AL4 descent floor starts at L1](core/decisions/MY-AD-0034-the-share-mechanism-is-persona-free-the-al4-descent-floor-st.md)
+- [MY-RG-0017 — Engagement mechanisms drift into manipulation](core/regressions/MY-RG-0017-engagement-mechanisms-drift-into-manipulation.md)
+- [MY-RG-0025 — A flattened stage-to-ray map absorbs a shared ray by inventing one](core/regressions/MY-RG-0025-a-flattened-stage-to-ray-map-absorbs-a-shared-ray-by-inventi.md)
+- [MY-RG-0027 — An absent optional input takes a meaningful branch instead of its default](core/regressions/MY-RG-0027-an-absent-optional-input-takes-a-meaningful-branch-instead-o.md)
 <!-- arch:manual-zone:end -->

@@ -22,4 +22,9 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 ### Boundaries and invariants (curated - preserved across emits)
 
 *(not yet curated for this organ)*
+
+### Hand-linked records (hand-linked; kept outside the auto-zone)
+
+- [MY-AD-0020 — Ethics and data privacy is a contract on every organ](core/decisions/MY-AD-0020-ethics-and-data-privacy-is-a-binding-contract-on-every-organ.md)
+- [MY-RG-0018 — A stored field has no declared data class](core/regressions/MY-RG-0018-a-stored-field-has-no-declared-data-class.md)
 <!-- arch:manual-zone:end -->

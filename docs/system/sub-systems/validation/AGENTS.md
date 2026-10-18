@@ -22,4 +22,8 @@ Pull the whole bundle with `python3 scripts/arch.py context <code-or-doc-path>`.
 ### Boundaries and invariants (curated - preserved across emits)
 
 *(not yet curated for this organ)*
+
+### Hand-linked records (hand-linked; kept outside the auto-zone)
+
+- [MY-RG-0034 — Six kernel gates exist in code and are named in no live document](core/regressions/MY-RG-0034-six-kernel-gates-exist-in-code-and-are-named-in-no-live-docu.md)
 <!-- arch:manual-zone:end -->
