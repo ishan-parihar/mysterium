@@ -1,3 +1,7 @@
+---
+covers: "src/**"
+---
+
 # docs/system/AGENTS.md — System Rung Router
 
 > **Role:** the canonical entry point for the **system rung** (`_org.yaml → rungs.system`), and its
