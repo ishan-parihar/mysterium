@@ -8,12 +8,7 @@ Law-of-One cosmology as canon.
 
 | If you are… | Read |
 |---|---|
-| an AI agent or contributor working on this repo | **[`AGENTS.md`](AGENTS.md)** — the operating manual (process, protocol, iteration steps) |
-| looking for a document | [`docs/INDEX.md`](docs/INDEX.md) — **generated** index of rungs, organs and records |
-| looking for what a word means | [`docs/foundations/44-system-ontology-and-vocabulary.md`](docs/foundations/44-system-ontology-and-vocabulary.md) — the grammar |
-| looking for the system architecture | [`docs/system/AGENTS.md`](docs/system/AGENTS.md) — the organ map |
 | looking for decisions or past failures | [`docs/system/core/decisions/`](docs/system/core/decisions/) · [`docs/system/core/regressions/`](docs/system/core/regressions/) |
-| looking for the build plan | [`docs/DEVELOPMENT-PLAN.md`](docs/DEVELOPMENT-PLAN.md) |
 | **needing the context for a component** | `python3 scripts/arch.py context src/core/<organ-path>` |
 | **searching the knowledge-base** | `python3 scripts/arch.py search <keyword>` |
 
