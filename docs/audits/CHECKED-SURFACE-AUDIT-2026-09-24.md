@@ -1,5 +1,32 @@
 # Checked-Surface Audit — 2026-09-24
 
+## Contents
+
+- [1. What is actually checked (and what is not)](#1-what-is-actually-checked-and-what-is-not)
+- [2. P0 — the CLI cannot boot (functional break, not type noise)](#2-p0-the-cli-cannot-boot-functional-break-not-type-noise)
+- [3. The 69 errors, classified](#3-the-69-errors-classified)
+- [4. Why this class recurred (the mechanism, not the instance)](#4-why-this-class-recurred-the-mechanism-not-the-instance)
+- [5. What is NOT broken (verified, so the record is honest)](#5-what-is-not-broken-verified-so-the-record-is-honest)
+- [6. Recommendations (→ Phase 14, pending ratification)](#6-recommendations-phase-14-pending-ratification)
+- [7. The second sweep — two deeper findings from driving the CLI](#7-the-second-sweep-two-deeper-findings-from-driving-the-cli)
+  - [F2 (High) — the DEFAULT and ALL headless/JSON paths bypass the orchestration architecture](#f2-high-the-default-and-all-headlessjson-paths-bypass-the-orchestration-architecture)
+  - [F4 (Medium) — CLI flag drift, and a stale regression sweep](#f4-medium-cli-flag-drift-and-a-stale-regression-sweep)
+- [8. Fix status (ratified and executed 2026-09-24)](#8-fix-status-ratified-and-executed-2026-09-24)
+- [9. Open questions carried into Phase 14](#9-open-questions-carried-into-phase-14)
+- [10. The third sweep — the error census after the P0 fix, and what the survivors reveal](#10-the-third-sweep-the-error-census-after-the-p0-fix-and-what-the-survivors-reveal)
+  - [10.1 Census](#101-census)
+  - [10.2 Severity triage — three tiers, not one](#102-severity-triage-three-tiers-not-one)
+  - [10.3 F5 (High) — the retired stage White is still live in scripts/](#103-f5-high-the-retired-stage-white-is-still-live-in-scripts)
+  - [10.4 F6 (Medium) — the ladder is re-declared instead of imported](#104-f6-medium-the-ladder-is-re-declared-instead-of-imported)
+  - [10.5 What this changes about Phase 14](#105-what-this-changes-about-phase-14)
+  - [10.6 Open questions from this sweep](#106-open-questions-from-this-sweep)
+- [11. Build record — d2a + d2b executed (2026-09-24)](#11-build-record-d2a-d2b-executed-2026-09-24)
+  - [d2b — the retired ladder purged (F5)](#d2b-the-retired-ladder-purged-f5)
+  - [d2a — the census retired (63 → 0)](#d2a-the-census-retired-63-0)
+  - [F10 (High, new) — the architecture-live mode was unreachable by any agent](#f10-high-new-the-architecture-live-mode-was-unreachable-by-any-agent)
+  - [Verification (all run after the change)](#verification-all-run-after-the-change)
+  - [Carried forward (recorded, not fixed — outside the ratified d2 scope; F7/F9 since closed by Phase 15 d0 and marked below, F2/d4 and d5 closed by Phase 14 d4/d5)](#carried-forward-recorded-not-fixed-outside-the-ratified-d2-scope-f7f9-since-closed-by-phase-15-d0-and-marked-below-f2d4-and-d5-closed-by-phase-14-d4d5)
+
 **Scope:** whether every production entry point is inside the *checked graph* — the set of files
 that `tsc --noEmit`, the test suite, the kernel gates, and the workspace linter actually read.
 

@@ -1,5 +1,22 @@
 # Education-Surface Audit — 2026-09-26
 
+## Contents
+
+- [0. Verdict](#0-verdict)
+- [1. The tree this audit describes (d9 corrections, verified this session)](#1-the-tree-this-audit-describes-d9-corrections-verified-this-session)
+- [2. Full-surface status](#2-full-surface-status)
+  - [2.1 WebUI parity (the standing largest item)](#21-webui-parity-the-standing-largest-item)
+  - [2.2 CLI surface](#22-cli-surface)
+  - [2.3 Gates + battery](#23-gates-battery)
+  - [2.4 Deployment posture](#24-deployment-posture)
+  - [2.5 Phase 16 open items (carried, unchanged by this audit)](#25-phase-16-open-items-carried-unchanged-by-this-audit)
+- [3. Education canon — completeness, doc by doc](#3-education-canon-completeness-doc-by-doc)
+- [4. Code presence map](#4-code-presence-map)
+- [5. Ranked gap list (implementation + operational)](#5-ranked-gap-list-implementation-operational)
+- [6. Phase 17 (RATIFIED 2026-09-27 — user directive; execution in progress) — the education-system second half](#6-phase-17-ratified-2026-09-27-user-directive-execution-in-progress-the-education-system-second-half)
+- [7. Verification ledger](#7-verification-ledger)
+- [8. Execution status (2026-09-27 — post-d1/d2 addendum; §0–§7 remain the 2026-09-26 record)](#8-execution-status-2026-09-27-post-d1d2-addendum-07-remain-the-2026-09-26-record)
+
 **Scope:** the education-system dimension end to end — canon (`foundations/37–42`, the
 `credentialing`/`cohort`/`curriculum` organs, the auditor surfaces of `16 §10.4` + `33 §7`)
 contrasted against the tree that implements it — plus the full operational surface (WebUI parity,

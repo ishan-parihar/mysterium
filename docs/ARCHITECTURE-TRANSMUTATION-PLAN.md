@@ -1,5 +1,29 @@
 # Mysterium — Architecture Transmutation Plan
 
+## Contents
+
+- [1. What is wrong today (the case for transmutation)](#1-what-is-wrong-today-the-case-for-transmutation)
+- [2. Target architecture](#2-target-architecture)
+  - [2.1 Rungs (the four layers, firewalled)](#21-rungs-the-four-layers-firewalled)
+  - [2.2 The record types](#22-the-record-types)
+  - [2.3 Organ map (RUNG 2 — docs mirror the system, not the old flat list)](#23-organ-map-rung-2-docs-mirror-the-system-not-the-old-flat-list)
+  - [2.4 Target tree](#24-target-tree)
+- [3. The governance CLI (scripts/arch.py, project-local)](#3-the-governance-cli-scriptsarchpy-project-local)
+- [Context / ## Decision / ## Consequences / ## Related      # AD](#context-decision-consequences-related-ad)
+- [Symptom / ## Root Cause / ## Incident N / ## Detection / ## Prevention  # RG (+ Severity:)](#symptom-root-cause-incident-n-detection-prevention-rg-severity)
+  - [3.1 The DG gates (doc-governance, distinct from the kernel gates G1–G21)](#31-the-dg-gates-doc-governance-distinct-from-the-kernel-gates-g1g21)
+- [4. Disposition of every audit finding (nothing is dropped)](#4-disposition-of-every-audit-finding-nothing-is-dropped)
+- [5. Seed ledger (derived from what is already ratified — transcribed, not invented)](#5-seed-ledger-derived-from-what-is-already-ratified-transcribed-not-invented)
+- [6. Phases (each gated; nothing lands ungated)](#6-phases-each-gated-nothing-lands-ungated)
+- [7. What is explicitly negated (redundant or irrelevant to development)](#7-what-is-explicitly-negated-redundant-or-irrelevant-to-development)
+- [8. Non-goals](#8-non-goals)
+- [9. Risks](#9-risks)
+- [10. Success criteria](#10-success-criteria)
+- [11. Decisions — RATIFIED 2026-09-20](#11-decisions-ratified-2026-09-20)
+- [12. Incident 1 — the non-idempotent migration (2026-09-20, P1)](#12-incident-1-the-non-idempotent-migration-2026-09-20-p1)
+- [12b. Execution outcome (P0–P6 complete, 2026-09-20)](#12b-execution-outcome-p0p6-complete-2026-09-20)
+- [13. P1 outcome (vocabulary sweep, 2026-09-20)](#13-p1-outcome-vocabulary-sweep-2026-09-20)
+
 > **Status:** Proposed (awaiting ratification of §11 decisions)
 > **Authority:** the `architecture-discipline` meta-skill ingested 2026-09-20, **localized**: nothing
 > in this plan may live outside the Mysterium repository (no `~/.hermes/`, no external `arch` CLI).

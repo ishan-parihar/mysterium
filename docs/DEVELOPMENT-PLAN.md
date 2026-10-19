@@ -1,5 +1,40 @@
 # Mysterium — Binding Development Plan
 
+## Contents
+
+- [1. What exists (verified against the tree)](#1-what-exists-verified-against-the-tree)
+- [2. Gap closure status — all nine verified against the tree](#2-gap-closure-status-all-nine-verified-against-the-tree)
+  - [2.1 The true gap list is now somewhere else — deliberately](#21-the-true-gap-list-is-now-somewhere-else-deliberately)
+- [3. Sequencing logic (why this order)](#3-sequencing-logic-why-this-order)
+- [4. The phases](#4-the-phases)
+  - [Phase 1 — Delegation Kernel (PG-A) — ✅ implemented](#phase-1-delegation-kernel-pg-a-implemented)
+  - [Phase 2 — Practice Tools on the Live Loop (PG-B)](#phase-2-practice-tools-on-the-live-loop-pg-b)
+  - [Phase 3 — Corpus Expansion (PG-1) — parallel track](#phase-3-corpus-expansion-pg-1-parallel-track)
+  - [Phase 4 — Cohort Pods (PG-C)](#phase-4-cohort-pods-pg-c)
+  - [Phase 5 — Measurement Packs (PG-D)](#phase-5-measurement-packs-pg-d)
+  - [Phase 6 — WebUI Play Parity (PG-2)](#phase-6-webui-play-parity-pg-2)
+  - [Phase 7 — Onboarding Composite (PG-3)](#phase-7-onboarding-composite-pg-3)
+  - [Phase 8 — K-12 Corpus (PG-E)](#phase-8-k-12-corpus-pg-e)
+  - [Phase 9 — Credentialing Surfaces (PG-F)](#phase-9-credentialing-surfaces-pg-f)
+  - [Phase 10 — Generative World & Personalization (ratified 45 / 46 / 47) — ✅ built (2026-09-21)](#phase-10-generative-world-personalization-ratified-45-46-47-built-2026-09-21)
+  - [Phase 11 — Closed-Loop Memory & Preference Intake (ratified + built 2026-09-22) — ✅ built](#phase-11-closed-loop-memory-preference-intake-ratified-built-2026-09-22-built)
+  - [Phase 12 — Semantic Memory Tier (ratified + built 2026-09-22, MY-AD-0032 + foundations/48) — ✅ built](#phase-12-semantic-memory-tier-ratified-built-2026-09-22-my-ad-0032-foundations48-built)
+  - [Phase 13 — Live-Surface Wiring & Council Alignment (planned 2026-09-23) — ✅ COMPLETE: ALL deliverables d1–d12 BUILT (d3–d9 closed 2026-09-24)](#phase-13-live-surface-wiring-council-alignment-planned-2026-09-23-complete-all-deliverables-d1d12-built-d3d9-closed-2026-09-24)
+  - [Phase 14 — Checked-Surface Closure & Operationally-Live Modes (planned 2026-09-24)](#phase-14-checked-surface-closure-operationally-live-modes-planned-2026-09-24)
+  - [Phase 15 — The Simulated Cohort: long-horizon calibration through the live seam (RATIFIED 2026-09-24)](#phase-15-the-simulated-cohort-long-horizon-calibration-through-the-live-seam-ratified-2026-09-24)
+  - [Phase 16 — The Diagnostic Sweep: repair the instrument, then calibrate (RATIFIED 2026-09-24)](#phase-16-the-diagnostic-sweep-repair-the-instrument-then-calibrate-ratified-2026-09-24)
+  - [Phase 17 — The Education-System Second Half (RATIFIED 2026-09-27 — user directive; execution in progress)](#phase-17-the-education-system-second-half-ratified-2026-09-27-user-directive-execution-in-progress)
+  - [Current work (post-plan) — not a phase](#current-work-post-plan-not-a-phase)
+- [5. Standing work-streams (not phases — continuous)](#5-standing-work-streams-not-phases-continuous)
+- [6. Definition of done for the whole plan](#6-definition-of-done-for-the-whole-plan)
+- [7. Risks & mitigations](#7-risks-mitigations)
+- [8. Immediate next actions](#8-immediate-next-actions)
+- [9. Revision record](#9-revision-record)
+- [Audits, archived plans and plans in flight (hand-linked)](#audits-archived-plans-and-plans-in-flight-hand-linked)
+  - [Audits](#audits)
+  - [Archived plans](#archived-plans)
+  - [Plans in flight](#plans-in-flight)
+
 > **Cross-references:** [[AGENTS.md|AGENTS.md (process protocol)]] · [[docs/foundations/43-agentic-orchestration-architecture|43 — Agentic Orchestration Architecture]] · [[docs/foundations/42-developmental-levelling-mechanism|42 — Developmental Levelling Mechanism]] · [[docs/foundations/39-action-induction-journal-system|39 — Action Induction Journal System]] · [[docs/foundations/38-cohort-weave-multiplayer|38 — Cohort Weave Multiplayer]] · [[docs/foundations/37-k12-curriculum-expansion|37 — K12 Curriculum Expansion]] · [[docs/foundations/40-measurement-packs-efficacy-infra|40 — Measurement Packs Efficacy Infra]] · [[docs/foundations/41-global-recognition-credentialing|41 — Global Recognition Credentialing]]
 > **Status:** canonical (the plan `AGENTS.md` §4.2 points at; revised in-place per the
 > update protocol — revisions recorded in §9).

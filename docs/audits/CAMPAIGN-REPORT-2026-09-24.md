@@ -1,5 +1,24 @@
 # Campaign Report — 2026-09-24
 
+## Contents
+
+- [1. Why this report exists](#1-why-this-report-exists)
+- [2. What the campaign found that no gate could](#2-what-the-campaign-found-that-no-gate-could)
+  - [2.1 The fallback path was not architecture-live (the largest finding)](#21-the-fallback-path-was-not-architecture-live-the-largest-finding)
+  - [2.2 F7 was three sites, not one](#22-f7-was-three-sites-not-one)
+  - [2.3 The encounter log rendered a detached label](#23-the-encounter-log-rendered-a-detached-label)
+- [3. The numbers](#3-the-numbers)
+  - [3.1 Poles served — REJECTED](#31-poles-served-rejected)
+  - [3.2 Composition variety — insufficient data, and that is itself the finding](#32-composition-variety-insufficient-data-and-that-is-itself-the-finding)
+  - [3.3 Candidate provenance — what rendered each encounter](#33-candidate-provenance-what-rendered-each-encounter)
+  - [3.4 Per-line coverage — the scheduler reaches a third of the lines](#34-per-line-coverage-the-scheduler-reaches-a-third-of-the-lines)
+  - [3.5 Observables that are pinned or unfit](#35-observables-that-are-pinned-or-unfit)
+  - [3.6 What could not be measured, and why](#36-what-could-not-be-measured-and-why)
+- [4. What the campaign closes, and what it opens](#4-what-the-campaign-closes-and-what-it-opens)
+  - [4.1 Closed](#41-closed)
+  - [4.2 Open, in priority order](#42-open-in-priority-order)
+- [5. What this report is not](#5-what-this-report-is-not)
+
 **Scope:** what the live seam does over trajectory time, measured by running the campaign runner
 (`src/core/simulation/campaign.ts`) over the curated kernel personas plus a generated cohort, through
 the same orchestrator path the CLI uses.

@@ -1,5 +1,21 @@
 # foundations/44 — System Ontology & Vocabulary
 
+## Contents
+
+- [1. Why this document exists](#1-why-this-document-exists)
+- [2. Sources and precedence](#2-sources-and-precedence)
+- [3. The axes — and the firewalls between them](#3-the-axes-and-the-firewalls-between-them)
+  - [3.1 One word, two frameworks: polarity](#31-one-word-two-frameworks-polarity)
+- [4. The ratified ladder (canonical — supersedes every earlier ladder)](#4-the-ratified-ladder-canonical-supersedes-every-earlier-ladder)
+- [5. The closure event (definition)](#5-the-closure-event-definition)
+- [6. Registers and depth (pointers, not definitions)](#6-registers-and-depth-pointers-not-definitions)
+- [7. Log kinds (a firewall)](#7-log-kinds-a-firewall)
+- [8. Term → owner (machine-readable)](#8-term-owner-machine-readable)
+- [9. Superseded vocabulary — the blacklist (machine-readable)](#9-superseded-vocabulary-the-blacklist-machine-readable)
+- [10. The rung map](#10-the-rung-map)
+- [11. How to change this document](#11-how-to-change-this-document)
+- [12. Principles served](#12-principles-served)
+
 > **Status:** Active (ratified 2026-09-20)
 > **Lateral:** the **grammar** of Mysterium. This document owns the alphabet: the axes and their
 > firewalls, the ratified ladder, the term→owner table, and the blacklist of superseded vocabulary.

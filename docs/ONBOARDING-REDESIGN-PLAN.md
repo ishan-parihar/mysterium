@@ -1,5 +1,38 @@
 # Onboarding Redesign Plan
 
+## Contents
+
+- [Part I — Why the Current Onboarding Fails](#part-i-why-the-current-onboarding-fails)
+  - [1.1 Specific UX bugs (observed)](#11-specific-ux-bugs-observed)
+  - [1.2 Structural problems](#12-structural-problems)
+- [Part II — The Redesigned Onboarding Flow](#part-ii-the-redesigned-onboarding-flow)
+  - [2.1 Overview](#21-overview)
+  - [2.2 The binary search algorithm](#22-the-binary-search-algorithm)
+  - [2.3 Quick-calibration mode (single session, ~20 min)](#23-quick-calibration-mode-single-session-20-min)
+- [Part III — Per-Probe Redesign Specifications](#part-iii-per-probe-redesign-specifications)
+  - [3.1 Cognitive Probe → Cognitive Assessment (Red stage)](#31-cognitive-probe-cognitive-assessment-red-stage)
+  - [3.2 Emotional Probe → Emotional Assessment (Red stage)](#32-emotional-probe-emotional-assessment-red-stage)
+  - [3.3 Moral Probe → Moral Assessment (Red/Amber stage)](#33-moral-probe-moral-assessment-redamber-stage)
+  - [3.4 Intrapersonal Probe → Intrapersonal Assessment (Red stage)](#34-intrapersonal-probe-intrapersonal-assessment-red-stage)
+  - [3.5 Spiritual Probe → Spiritual Assessment (Red stage)](#35-spiritual-probe-spiritual-assessment-red-stage)
+  - [3.6 Somatic Probe (keep mostly as-is, extend)](#36-somatic-probe-keep-mostly-as-is-extend)
+  - [3.7 Willpower Probe → Willpower Assessment (Red stage)](#37-willpower-probe-willpower-assessment-red-stage)
+  - [3.8 Interpersonal Probe (keep structure, improve content)](#38-interpersonal-probe-keep-structure-improve-content)
+- [Part IV — Post-Assessment Results Display](#part-iv-post-assessment-results-display)
+  - [4.1 Replace "Strong/Developing/Emerging" with meaningful feedback](#41-replace-strongdevelopingemerging-with-meaningful-feedback)
+  - [4.2 Final profile display](#42-final-profile-display)
+- [Part V — Integration with Existing Systems](#part-v-integration-with-existing-systems)
+  - [5.1 The assessment modules feed into:](#51-the-assessment-modules-feed-into)
+  - [5.2 The lineToTaskSlug mapping](#52-the-linetotaskslug-mapping)
+- [Part VI — Implementation Roadmap](#part-vi-implementation-roadmap)
+  - [Immediate (this sprint): Fix UX bugs in current probes](#immediate-this-sprint-fix-ux-bugs-in-current-probes)
+  - [Short-term (next 2 sprints): Build the assessment module system](#short-term-next-2-sprints-build-the-assessment-module-system)
+  - [Medium-term (next 4 sprints): Complete the 64-module system](#medium-term-next-4-sprints-complete-the-64-module-system)
+- [Part VII — Anti-Gaming Design Principles](#part-vii-anti-gaming-design-principles)
+- [Part VIII — What Changes in the Player Experience](#part-viii-what-changes-in-the-player-experience)
+  - [Before (current):](#before-current)
+  - [After (redesigned):](#after-redesigned)
+
 > **Depends on:** `docs/system/sub-systems/kernel/stage-assessment-architecture.md` (the 64-module system + shadow diagnostics + holonic return)
 > **Depends on:** `foundations/10-shadow-and-pathology.md` (the 128-shadow model)
 > **Purpose:** Define the UX flow and player experience of the composite onboarding. For the underlying architecture (module contracts, scoring rubrics, drive-health probes), see the architecture doc. This document focuses on *how it feels to play*.
