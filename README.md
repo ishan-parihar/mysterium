@@ -16,23 +16,36 @@ Every document in `docs/` is listed with the question it answers in [docs/PAGE-I
 ## The documentation rungs
 
 ```
-canon-root   docs/00-vision · 01-first-principles · 02-glossary · 03-research-methodology canon        docs/foundations/          theory — "what is true" canon-domain docs/{lines,stages,narrative,progression}/ content      docs/concept-drafts/       512-file corpus
-system       docs/system/               contracts, as 13 organs records      docs/system/core/          AD · RG · Log   (decisions, guards, ledger) plans        docs/{DEVELOPMENT,ONBOARDING-REDESIGN,ARCHITECTURE-TRANSMUTATION}-PLAN + REQUIREMENTS historical   docs/historical/           dated; never an authority
-audits       docs/audits/               dated evidence; never an authority generated    docs/INDEX.md + docs/system/sub-systems/*/AGENTS.md   (never hand-edited)
+canon-root   docs/00-vision · 01-first-principles · 02-glossary · 03-research-methodology
+canon        docs/foundations/          theory — "what is true"
+canon-domain docs/{lines,stages,narrative,progression}/
+content      docs/concept-drafts/       512-file corpus
+system       docs/system/               contracts, as 13 organs
+records      docs/system/core/          AD · RG · Log   (decisions, guards, ledger)
+plans        docs/{DEVELOPMENT,ONBOARDING-REDESIGN,ARCHITECTURE-TRANSMUTATION}-PLAN + REQUIREMENTS
+historical   docs/historical/           dated; never an authority
+audits       docs/audits/               dated evidence; never an authority
+generated    docs/INDEX.md + docs/system/sub-systems/*/AGENTS.md   (never hand-edited)
 ```
 
 Declared machine-readably in [`_org.yaml`](_org.yaml). Query the knowledge-base with:
 
 ```bash
-python3 scripts/arch.py validate          # the doc-governance gates (DG1-DG19) python3 scripts/arch.py fixtures          # prove every gate fails on an injected violation python3 scripts/arch.py route <path>      # which rung/organ owns this file or code path?
-python3 scripts/arch.py context <path>    # contract docs + organ documents + records python3 scripts/arch.py search <keyword>  # BM25 search over the live knowledge-base python3 scripts/arch.py related <path|ID> # outbound edges, backlinks, and missing-link suggestions python3 scripts/arch.py doc add --organ O --title T   # author documentation (refuses to create an orphan)
+python3 scripts/arch.py validate          # the doc-governance gates (DG1-DG19)
+python3 scripts/arch.py fixtures          # prove every gate fails on an injected violation
+python3 scripts/arch.py route <path>      # which rung/organ owns this file or code path?
+python3 scripts/arch.py context <path>    # contract docs + organ documents + records
+python3 scripts/arch.py search <keyword>  # BM25 search over the live knowledge-base
+python3 scripts/arch.py related <path|ID> # outbound edges, backlinks, and missing-link suggestions
+python3 scripts/arch.py doc add --organ O --title T   # author documentation (refuses to create an orphan)
 python3 scripts/arch.py emit               # regenerate the derived surfaces
 ```
 
 ## Development
 
 ```bash
-npm run build && npm test                 # build + 1120 tests python3 skills/workspace-lint/scripts/workspace_lint.py --root .
+npm run build && npm test                 # build + 1120 tests
+python3 skills/workspace-lint/scripts/workspace_lint.py --root .
 python3 scripts/arch.py validate
 ```
 
