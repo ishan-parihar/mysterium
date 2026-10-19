@@ -1,6 +1,8 @@
 # Mysterium
 
 A contemplative practice that uses game mechanics as its delivery vehicle: every encounter
+Every document in `docs/` is listed with the question it answers in [docs/PAGE-INDEX.md](docs/PAGE-INDEX.md).
+
 simultaneously diagnoses and heals/evolves the player across all lines of development, with
 Law-of-One cosmology as canon.
 
