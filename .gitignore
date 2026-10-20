@@ -44,3 +44,8 @@ coverage/
 # (no file outside the checked graph) is better served by deleting it than by tracking a file
 # nothing type-checks.
 worker-configuration.d.ts
+
+# genome runtime state (locks, temp files, recon tokens, read marks)
+*.genome-lock
+*.genome-tmp
+.genome/
