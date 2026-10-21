@@ -17,8 +17,8 @@ runbook = "README.md#Development"
 archive = "docs/archive"
 readme = "README.md"
 docs = "docs"
-decisions = "docs/decisions"
-regressions = "docs/regressions"
+decisions = "docs/system/core/decisions"
+regressions = "docs/system/core/regressions"
 records_index = "docs/RECORDS.md"
 evidence = "evidence"
 hypotheses = "docs/kb/HYPOTHESES.md"
@@ -40,7 +40,8 @@ checklist = ["manuals with `covers` reviewed against their code"]             # 
 never_commit = []          # globs `genome close` leaves out of the named-path commit list
 
 [records]
-prefix = ""                # e.g. "PQF" → PQF-AD-001
+prefix = "MY"              # MY-AD-0038 / MY-RG-0035 — the records live under docs/system/core/
+width = 4                  # the same 4-digit form scripts/arch.py mints, so the two writers agree
 mode = "immutable"         # or "amendable" (dated ## Amendment sections)
 
 [research]
@@ -64,3 +65,7 @@ warn_until = "2026-11-18"  # warn until rollout+30d; after it a stale manual blo
 [card]
 status_into = "docs/handoff/STATE.md"
 architecture = "docs/system/AGENTS.md"
+# the 71 AD/RG records live in two homes (docs/system/core/ and each organ's core/),
+# which the genome records module cannot hold. docs/INDEX.md is the generated index
+# over all of them, and the section anchor names the table.
+decisions = "docs/INDEX.md#Records (71)"
