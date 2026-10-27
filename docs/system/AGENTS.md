@@ -1,5 +1,6 @@
 ---
 covers: "src/**"
+verified: "2124f1e"
 ---
 
 # docs/system/AGENTS.md — System Rung Router
@@ -23,7 +24,7 @@ docs/system/
 │   ├── regressions/       MY-RG-NNNN — what broke and the guard against it
 │   └── worklog/           NNNN-<action>-<target>.md — directory-native worklog
 ├── logs/mutations.jsonl   the append-only architectural ledger
-└── sub-systems/<organ>/   the 13 organs, each with its own router + core/{decisions,regressions}
+└── sub-systems/<organ>/   the 14 organs (_org.yaml `organs:`), each with its own router + core/{decisions,regressions}
 ```
 
 **The organ index, the rung map and the record list are generated** — see `docs/INDEX.md`
